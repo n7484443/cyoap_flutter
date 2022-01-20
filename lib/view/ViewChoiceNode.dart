@@ -8,6 +8,9 @@ class ViewChoiceNode extends StatefulWidget {
 }
 
 class _ChoiceState extends State<ViewChoiceNode>{
+  int width = 100;
+  int height = 100;
+
   @override
   Widget build(BuildContext context) {
     throw UnimplementedError();

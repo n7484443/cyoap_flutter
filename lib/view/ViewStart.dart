@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../model/SelectFile.dart';
+import '../viewmodel/ViewModelLoadPlatform.dart';
 import 'ViewMake.dart';
 import 'ViewPlay.dart';
 
@@ -17,7 +17,7 @@ class ViewStart extends StatelessWidget {
           Expanded(
             child: InkWell(
               onTap: () async {
-                if(await SelectFile().openDirectory() == 0) {
+                if(await ViewModelLoadPlatform().openDirectory() == 0) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const ViewPlay()),
@@ -44,11 +44,13 @@ class ViewStart extends StatelessWidget {
           ),
           Expanded(
             child: InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ViewMake()),
-                );
+              onTap: () async {
+                if(await ViewModelLoadPlatform().openDirectory() == 0) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ViewMake()),
+                  );
+                }
               },
               child: Container(
                 width: double.infinity,
