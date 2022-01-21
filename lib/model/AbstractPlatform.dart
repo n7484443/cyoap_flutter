@@ -38,11 +38,11 @@ class AbstractPlatform {
   };
 
   static Future<void> createPlatform(String directory) async {
-    var dataPlatform = await File(directory + '/platform.json').readAsString();
-    if(dataPlatform.isEmpty){
-      instance = AbstractPlatform(800, 800, 0, 0, 1, '', '#909090', 0);
+    var dataPlatform = File(directory + '/platform.json');
+    if(await dataPlatform.exists()){
+      instance = AbstractPlatform.fromJson(jsonDecode(await dataPlatform.readAsString()));
     }else{
-      instance = AbstractPlatform.fromJson(jsonDecode(dataPlatform));
+      instance = AbstractPlatform(800, 800, 0, 0, 1, '', '#909090', 0);
     }
   }
 

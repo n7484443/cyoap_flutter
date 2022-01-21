@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 
+import 'ViewChoiceNode.dart';
+
 class ViewPlay extends StatelessWidget {
   const ViewPlay({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white60,
-      child: TextButton(
-        onPressed: () {Navigator.pop(context);},
-        child: const Text('ㄱㄴㄷ'),
-      ),
-    );
+    return Scaffold(
+        appBar: AppBar(actions: [
+          Container(
+            margin: EdgeInsets.all(20),
+            child: Icon(Icons.menu),
+          )
+        ]),
+        body: Container(
+            child: ViewChoiceNode(),
+        ));
   }
 }
