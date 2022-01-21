@@ -20,11 +20,15 @@ class VMStartPlatform extends ChangeNotifier {
   }
 
   Future<num> openDirectory() async {
-    if (Platform.isAndroid || Platform.isIOS) {
-      var status = await _getStatuses();
-      if (!status) {
-        return -1;
+    try{
+      if (Platform.isAndroid || Platform.isIOS) {
+        var status = await _getStatuses();
+        if (!status) {
+          return -1;
+        }
       }
+    }catch(e){
+
     }
     String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
 
