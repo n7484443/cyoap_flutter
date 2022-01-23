@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'ViewChoiceNode.dart';
+import 'view_choice_node.dart';
 
 class ViewPlay extends StatelessWidget {
   const ViewPlay({Key? key}) : super(key: key);

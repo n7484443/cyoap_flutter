@@ -1,16 +1,17 @@
-import 'dart:collection';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../model/AbstractPlatform.dart';
-import '../model/FrequentPath.dart';
+import '../model/abstract_platform.dart';
+import '../model/frequently_used_path.dart';
+import '../model/image_loader.dart';
 
-class VMStartPlatform extends ChangeNotifier {
+class VMStartPlatform extends GetxController {
   FrequentlyUsedPath frequentlyUsedPath = FrequentlyUsedPath();
-  var pathQueue = Queue<String>();
+  List<String> pathList = [];
   int selected = -1;
 
   Future<bool> _getStatuses() async {
@@ -33,8 +34,8 @@ class VMStartPlatform extends ChangeNotifier {
     String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
 
     if (selectedDirectory != null) {
-      pathQueue = frequentlyUsedPath.addFrequentPath(selectedDirectory);
-      notifyListeners();
+      pathList = frequentlyUsedPath.addFrequentPath(selectedDirectory);
+      update();
       return 0;
     }
     return -1;
@@ -42,26 +43,28 @@ class VMStartPlatform extends ChangeNotifier {
 
   void setDirectory(){
     if(selected >= -1){
-      AbstractPlatform.createPlatform(pathQueue.toList().reversed.elementAt(selected));
+      var path = pathList.reversed.elementAt(selected);
+      AbstractPlatform.createPlatform(path);
+      ImageLoader.instance.loadImages(path);
     }
   }
 
   void initFrequentPath() {
     frequentlyUsedPath.getFrequentPathFromData().then((value) {
-      pathQueue = value;
-      notifyListeners();
+      pathList = value;
+      update();
     });
   }
 
   void selectFrequentPath(int index) {
     selected = index;
-    notifyListeners();
+    update();
   }
 
   void removeFrequentPath(int index){
     frequentlyUsedPath.removeFrequentPath(index).then((value) {
-      pathQueue = value;
-      notifyListeners();
+      pathList = value;
+      update();
     });
   }
 

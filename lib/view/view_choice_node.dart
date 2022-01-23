@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
 
-class ViewChoiceNode extends StatefulWidget {
+import '../model/image_loader.dart';
+
+class ViewChoiceNode extends StatelessWidget {
   const ViewChoiceNode({Key? key}) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => _ChoiceState();
-}
-
-class _ChoiceState extends State<ViewChoiceNode>{
-  int width = 100;
-  int height = 100;
 
   /*
   Card──Container─children─┬──title
@@ -20,17 +14,14 @@ class _ChoiceState extends State<ViewChoiceNode>{
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: SizedBox(
-        width: width.toDouble(),
-        height: height.toDouble(),
-        child: Column(
+      child: Column(
           children: [
             const Text.rich(
               TextSpan(
                 text: 'title',
               ),
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 24,
               ),
             ),
             const Text.rich(
@@ -44,6 +35,30 @@ class _ChoiceState extends State<ViewChoiceNode>{
             ),
           ],
         ),
+    );
+  }
+}
+
+class ViewChoiceNodeWithImage extends StatelessWidget {
+  const ViewChoiceNodeWithImage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Column(
+        children: [
+          const Text.rich(
+            TextSpan(
+              text: 'title',
+            ),
+            style: TextStyle(
+              fontSize: 24,
+            ),
+          ),
+          Image(
+            image: ImageLoader.instance.getImage('img.jpg').image,
+          ),
+        ],
       ),
     );
   }

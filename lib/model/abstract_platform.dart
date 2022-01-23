@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
+
 class AbstractPlatform {
   static late AbstractPlatform instance;
   int halfWidth;
@@ -11,6 +13,7 @@ class AbstractPlatform {
   String stringImageName;
   String colorBackground;
   int flag;
+  List<ChoiceNodeBase> choiceNodes = [];
 
   AbstractPlatform(this.halfWidth, this.halfHeight, this.localX, this.localY,
       this.scale, this.stringImageName, this.colorBackground, this.flag);
