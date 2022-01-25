@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.17.0-45.0.dev <3.0.0"
+  sdk: ">=2.15.0 <3.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -36,6 +36,7 @@ dependencies:
   provider:  ^6.0.2
   shared_preferences: ^2.0.12
   get: ^4.6.1
+  zefyrka: ^1.1.1
 
 dev_dependencies:
   flutter_test:

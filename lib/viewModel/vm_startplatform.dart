@@ -44,8 +44,9 @@ class VMStartPlatform extends GetxController {
   void setDirectory(){
     if(selected >= -1){
       var path = pathList.reversed.elementAt(selected);
-      AbstractPlatform.createPlatform(path);
-      ImageLoader.instance.loadImages(path);
+      ImageLoader.instance.loadImages(path).then((value) {
+        AbstractPlatform.createPlatform(path);
+      });
     }
   }
 

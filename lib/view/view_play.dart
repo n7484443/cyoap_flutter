@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../main.dart';
 import 'view_choice_node.dart';
 
 class ViewPlay extends StatelessWidget {
@@ -8,12 +9,15 @@ class ViewPlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(actions: [
-          Container(
-            margin: EdgeInsets.all(20),
-            child: Icon(Icons.menu),
-          )
-        ]),
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(ConstList.appBarSize),
+          child: AppBar(actions: [
+            Container(
+              margin: const EdgeInsets.only(right:15),
+              child: const Icon(Icons.menu),
+            )
+          ]),
+        ),
         body: Container(
             child: ViewChoiceNode(),
         ));

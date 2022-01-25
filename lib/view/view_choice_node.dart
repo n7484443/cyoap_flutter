@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 import '../model/image_loader.dart';
 
@@ -13,8 +15,14 @@ class ViewChoiceNode extends StatelessWidget {
   */
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Column(
+    return InkWell(
+      onTap: () {},
+      onHover: (val) {},
+      onDoubleTap: () {
+        Get.toNamed('/viewEditor');
+      },
+      child: Card(
+        child: Column(
           children: [
             const Text.rich(
               TextSpan(
@@ -35,30 +43,64 @@ class ViewChoiceNode extends StatelessWidget {
             ),
           ],
         ),
+      ),
     );
   }
 }
 
-class ViewChoiceNodeWithImage extends StatelessWidget {
-  const ViewChoiceNodeWithImage({Key? key}) : super(key: key);
+class ViewChoiceNodeTextWithImage extends StatelessWidget {
+  const ViewChoiceNodeTextWithImage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        children: [
-          const Text.rich(
-            TextSpan(
-              text: 'title',
+    return InkWell(
+      onTap: () {},
+      onHover: (val) {},
+      onDoubleTap: () {
+        Get.toNamed('/viewEditor');
+      },
+      child: Card(
+        child: Column(
+          children: [
+            const Text.rich(
+              TextSpan(
+                text: 'title',
+              ),
+              style: TextStyle(
+                fontSize: 24,
+              ),
             ),
-            style: TextStyle(
-              fontSize: 24,
+            Image(
+              image: ImageLoader.instance.getImage('imgt.jpg').image,
+              width: 200,
             ),
-          ),
-          Image(
-            image: ImageLoader.instance.getImage('img.jpg').image,
-          ),
-        ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ViewChoiceNodeImage extends StatelessWidget {
+  const ViewChoiceNodeImage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {},
+      onHover: (val) {},
+      onDoubleTap: () {
+        Get.toNamed('/viewEditor');
+      },
+      child: Card(
+        child: Column(
+          children: [
+            Image(
+              image: ImageLoader.instance.getImage('img.jpg').image,
+              width: 200,
+            ),
+          ],
+        ),
       ),
     );
   }

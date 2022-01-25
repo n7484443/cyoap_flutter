@@ -9,7 +9,8 @@ class ViewStart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(VMStartPlatform());
+    final vmStart = Get.put(VMStartPlatform());
+    vmStart.initFrequentPath();
     return GetBuilder<VMStartPlatform>(
       builder: (_) => Scaffold(
         body: Row(
@@ -73,13 +74,6 @@ class ViewStart extends StatelessWidget {
             )
           ],
         ),
-        bottomNavigationBar: const BottomAppBar(
-          color: Colors.black12,
-          child: Text(
-            'by n7484443',
-            textAlign: TextAlign.end,
-          ),
-        ),
       ),
     );
   }
@@ -101,7 +95,6 @@ class SelectMode extends StatelessWidget {
               Get.toNamed('/viewPlay');
             },
             child: Container(
-              color: Colors.white,
               child: const Center(
                 child: Text(
                   'Play',
@@ -109,7 +102,7 @@ class SelectMode extends StatelessWidget {
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
-                    fontSize: 64,
+                    fontSize: 56,
                   ),
                 ),
               ),
@@ -123,7 +116,6 @@ class SelectMode extends StatelessWidget {
               Get.toNamed('/viewMake');
             },
             child: Container(
-              color: Colors.black12,
               child: const Center(
                 child: Text(
                   'Make',
@@ -131,7 +123,7 @@ class SelectMode extends StatelessWidget {
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
-                    fontSize: 64,
+                    fontSize: 56,
                   ),
                 ),
               ),
