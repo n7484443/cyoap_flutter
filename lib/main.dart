@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cyoap_flutter/view/view_code_editor.dart';
 import 'package:cyoap_flutter/view/view_editor.dart';
 import 'package:cyoap_flutter/view/view_make.dart';
@@ -5,8 +7,13 @@ import 'package:cyoap_flutter/view/view_play.dart';
 import 'package:cyoap_flutter/view/view_start.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 class ConstList{
   static double appBarSize = 40.0;
+  static late final platformType actualPlatformType;
+}
+enum platformType{
+  desktop, mobile, web,
 }
 void main() {
   runApp(
@@ -20,6 +27,30 @@ void main() {
         GetPage(name: '/viewEditor', page: () => const ViewEditor()),
         GetPage(name: '/viewCodeEditor', page: () => const ViewCodeEditor()),
       ],
+      theme: appThemeData,
+      defaultTransition: Transition.rightToLeftWithFade,
     ),
   );
+  try{
+    if (Platform.isAndroid || Platform.isIOS) {
+      ConstList.actualPlatformType = platformType.mobile;
+    }else{
+      ConstList.actualPlatformType =  platformType.desktop;
+    }
+  }catch(e){
+    ConstList.actualPlatformType =  platformType.web;
+  }
 }
+
+final ThemeData appThemeData = ThemeData(
+  primaryColor: Colors.black,
+  textTheme: GoogleFonts.notoSansTextTheme(),
+  scaffoldBackgroundColor: Colors.white,
+  appBarTheme: const AppBarTheme(
+    color: Colors.white,
+    iconTheme: IconThemeData(
+      color: Colors.black
+    ),
+    elevation: 0,
+  )
+);

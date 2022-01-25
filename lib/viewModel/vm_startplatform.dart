@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../main.dart';
 import '../model/abstract_platform.dart';
 import '../model/frequently_used_path.dart';
 import '../model/image_loader.dart';
@@ -21,15 +22,11 @@ class VMStartPlatform extends GetxController {
   }
 
   Future<num> openDirectory() async {
-    try{
-      if (Platform.isAndroid || Platform.isIOS) {
-        var status = await _getStatuses();
-        if (!status) {
-          return -1;
-        }
+    if(ConstList.actualPlatformType == platformType.mobile){
+      var status = await _getStatuses();
+      if (!status) {
+        return -1;
       }
-    }catch(e){
-
     }
     String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
 

@@ -29,13 +29,19 @@ class ViewMake extends StatelessWidget {
             SliverList(
               delegate: SliverChildListDelegate(
                 List<Widget>.generate(vmPlatform.widgetList.length, (int i) {
-                  return Wrap(
-                    alignment: WrapAlignment.center,
-                    children: List<Widget>.generate(
-                      vmPlatform.widgetList[i].length,
-                      (int j) {
-                        return vmPlatform.widgetList[i][j];
-                      },
+                  return Padding(
+                    padding: const EdgeInsets.only(
+                      top: 12,
+                      bottom: 12,
+                    ),
+                    child: Wrap(
+                      alignment: WrapAlignment.center,
+                      children: List<Widget>.generate(
+                        vmPlatform.widgetList[i].length,
+                        (int j) {
+                          return vmPlatform.widgetList[i][j];
+                        },
+                      ),
                     ),
                   );
                 }),

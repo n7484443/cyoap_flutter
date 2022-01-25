@@ -1,7 +1,11 @@
 # This is a generated file; do not edit or check into version control.
 file_picker=C:\\Users\\kimjuhwan\\Documents\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\file_picker-4.3.2\\
 flutter_plugin_android_lifecycle=C:\\Users\\kimjuhwan\\Documents\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\flutter_plugin_android_lifecycle-2.0.5\\
+path_provider=C:\\Users\\kimjuhwan\\Documents\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\path_provider-2.0.8\\
+path_provider_android=C:\\Users\\kimjuhwan\\Documents\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\path_provider_android-2.0.11\\
+path_provider_ios=C:\\Users\\kimjuhwan\\Documents\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\path_provider_ios-2.0.7\\
 path_provider_linux=C:\\Users\\kimjuhwan\\Documents\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\path_provider_linux-2.1.5\\
+path_provider_macos=C:\\Users\\kimjuhwan\\Documents\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\path_provider_macos-2.0.5\\
 path_provider_windows=C:\\Users\\kimjuhwan\\Documents\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\path_provider_windows-2.0.5\\
 permission_handler=C:\\Users\\kimjuhwan\\Documents\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\permission_handler-8.3.0\\
 shared_preferences=C:\\Users\\kimjuhwan\\Documents\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\shared_preferences-2.0.12\\

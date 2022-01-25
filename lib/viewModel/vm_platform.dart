@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -28,8 +30,10 @@ class VMPlatform extends GetxController{
   Widget getWidgetFromType(int type){
     switch(type){
       case 0:
-        return const ViewChoiceNode();
+        return const ViewTextNode();
       case 1:
+        return const ViewChoiceNode();
+      case 2:
         return const ViewChoiceNodeImage();
       default:
         return const ViewChoiceNodeTextWithImage();

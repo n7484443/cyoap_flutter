@@ -37,6 +37,8 @@ dependencies:
   shared_preferences: ^2.0.12
   get: ^4.6.1
   zefyrka: ^1.1.1
+  google_fonts: ^2.2.0
+  auto_size_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:
