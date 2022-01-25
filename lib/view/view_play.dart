@@ -1,4 +1,5 @@
 import 'package:cyoap_flutter/view/view_choice_grid.dart';
+import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:flutter/material.dart';
 
 import '../main.dart';
@@ -22,23 +23,13 @@ class ViewPlay extends StatelessWidget {
             ],
           ),
         ),
-        drawer: Drawer(
-          child: ListView(
-            controller: _controllerDrawer,
-            padding: EdgeInsets.zero,
-          ),
-        ),
+        drawer: const ViewVariable(),
         body: ChoiceSetGrid(),
       );
     } else {
       return Row(
         children: [
-          Drawer(
-            child: ListView(
-              controller: _controllerDrawer,
-              padding: EdgeInsets.zero,
-            ),
-          ),
+          const ViewVariable(),
           const VerticalDivider(
             width: 1,
             thickness: 1,

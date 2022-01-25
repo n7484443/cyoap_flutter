@@ -28,7 +28,7 @@ void main() {
         GetPage(name: '/viewCodeEditor', page: () => const ViewCodeEditor()),
       ],
       theme: appThemeData,
-      defaultTransition: Transition.rightToLeftWithFade,
+      defaultTransition: Transition.fade,
     ),
   );
   try{

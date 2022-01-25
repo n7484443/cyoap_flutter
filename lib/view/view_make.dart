@@ -1,4 +1,5 @@
 import 'package:cyoap_flutter/view/view_choice_grid.dart';
+import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:flutter/material.dart';
 
 import '../main.dart';
@@ -8,7 +9,6 @@ class ViewMake extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ScrollController _controllerDrawer = ScrollController();
     if (ConstList.actualPlatformType == platformType.mobile) {
       return Scaffold(
         appBar: PreferredSize(
@@ -22,23 +22,13 @@ class ViewMake extends StatelessWidget {
             ],
           ),
         ),
-        drawer: Drawer(
-          child: ListView(
-            controller: _controllerDrawer,
-            padding: EdgeInsets.zero,
-          ),
-        ),
-        body: ChoiceSetGrid(),
+        drawer: const ViewVariable(),
+        body: const ChoiceSetGrid(),
       );
     } else {
       return Row(
         children: [
-          Drawer(
-            child: ListView(
-              controller: _controllerDrawer,
-              padding: EdgeInsets.zero,
-            ),
-          ),
+          const ViewVariable(),
           const VerticalDivider(
             width: 1,
             thickness: 1,
@@ -56,7 +46,7 @@ class ViewMake extends StatelessWidget {
                   ],
                 ),
               ),
-              body: ChoiceSetGrid(),
+              body: const ChoiceSetGrid(),
             ),
           ),
         ],

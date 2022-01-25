@@ -13,7 +13,7 @@ class AbstractPlatform {
   String stringImageName;
   String colorBackground;
   int flag;
-  List<ChoiceNodeBase> choiceNodes = [TextNode(0, 0, 1, 1, 'asdf',false), TextNode(0, 2, 1, 1, 'asdf',true), ImageNode(0, 1, 1, 1, 'asdf'), TextImageNode(1, 0, 1, 1, 'asdf','asdf')];
+  List<ChoiceNodeBase> choiceNodes = [TextNode(0, 0, 2, 1, 'asdf',false), TextNode(0, 1, 1, 1, 'asdf',true), ImageNode(1, 1, 1, 1, 'asdf'), TextImageNode(0, 2, 1, 1, 'asdf','asdf')];
 
   AbstractPlatform(this.halfWidth, this.halfHeight, this.localX, this.localY,
       this.scale, this.stringImageName, this.colorBackground, this.flag);
@@ -60,4 +60,11 @@ class AbstractPlatform {
   int getWidth() => halfWidth * 2;
 
   int getHeight() => halfHeight * 2;
+
+  ChoiceNodeBase? getChoiceNode(int posX, int posY){
+    for(var node in choiceNodes){
+      if(node.x == posX && node.y == posY)return node;
+    }
+    return null;
+  }
 }

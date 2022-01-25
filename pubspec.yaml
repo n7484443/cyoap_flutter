@@ -39,6 +39,7 @@ dependencies:
   zefyrka: ^1.1.1
   google_fonts: ^2.2.0
   auto_size_text: ^3.0.0
+  crop: ^0.5.2
 
 dev_dependencies:
   flutter_test:
