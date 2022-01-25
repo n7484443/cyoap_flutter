@@ -50,35 +50,33 @@ class ViewEditor extends StatelessWidget {
               padding: EdgeInsets.zero,
             ),
           ),
-          VerticalDivider(
+          const VerticalDivider(
             width: 1,
             thickness: 1,
           ),
-          Expanded(
-            child: Scaffold(
-              appBar: PreferredSize(
-                preferredSize: Size.fromHeight(ConstList.appBarSize),
-                child: AppBar(),
-              ),
-              body: const ViewEditorTyping(),
-              bottomNavigationBar: BottomAppBar(
-                child: Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.save),
-                      onPressed: () {
-                        Get.back();
-                      },
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      icon: const Icon(Icons.navigate_next),
-                      onPressed: () {
-                        Get.back();
-                      },
-                    ),
-                  ],
-                ),
+          Scaffold(
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(ConstList.appBarSize),
+              child: AppBar(),
+            ),
+            body: const ViewEditorTyping(),
+            bottomNavigationBar: BottomAppBar(
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.save),
+                    onPressed: () {
+                      Get.back();
+                    },
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Icons.navigate_next),
+                    onPressed: () {
+                      Get.back();
+                    },
+                  ),
+                ],
               ),
             ),
           ),

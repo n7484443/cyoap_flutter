@@ -1,36 +1,66 @@
+import 'package:cyoap_flutter/view/view_choice_grid.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 import '../main.dart';
-import 'view_choice_node.dart';
 
 class ViewPlay extends StatelessWidget {
   const ViewPlay({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        drawer: Drawer(),
+    ScrollController _controllerDrawer = ScrollController();
+    if (ConstList.actualPlatformType == platformType.mobile) {
+      return Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(ConstList.appBarSize),
           child: AppBar(
-            backgroundColor: Colors.deepPurple,
             actions: [
               Container(
                 margin: const EdgeInsets.only(right: 15),
-                child: IconButton(
-                  icon: Icon(Icons.arrow_back),
-                  onPressed: () {
-                    Get.back();
-                  },
-                ),
-              ),
+                child: const Icon(Icons.menu),
+              )
             ],
           ),
         ),
-        body: Container(
-          child: ViewChoiceNode(),
-        ));
+        drawer: Drawer(
+          child: ListView(
+            controller: _controllerDrawer,
+            padding: EdgeInsets.zero,
+          ),
+        ),
+        body: ChoiceSetGrid(),
+      );
+    } else {
+      return Row(
+        children: [
+          Drawer(
+            child: ListView(
+              controller: _controllerDrawer,
+              padding: EdgeInsets.zero,
+            ),
+          ),
+          const VerticalDivider(
+            width: 1,
+            thickness: 1,
+          ),
+          Expanded(
+            child: Scaffold(
+              appBar: PreferredSize(
+                preferredSize: Size.fromHeight(ConstList.appBarSize),
+                child: AppBar(
+                  actions: [
+                    Container(
+                      margin: const EdgeInsets.only(right: 15),
+                      child: const Icon(Icons.menu),
+                    )
+                  ],
+                ),
+              ),
+              body: ChoiceSetGrid(),
+            ),
+          ),
+        ],
+      );
+    }
   }
 }

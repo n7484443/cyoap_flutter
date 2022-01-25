@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/view/view_choice_grid.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,10 +10,9 @@ class ViewMake extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final vmPlatform = Get.put(VMPlatform());
-    vmPlatform.updateWidgetList();
-    return GetBuilder<VMPlatform>(
-      builder: (_) => Scaffold(
+    ScrollController _controllerDrawer = ScrollController();
+    if (ConstList.actualPlatformType == platformType.mobile) {
+      return Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(ConstList.appBarSize),
           child: AppBar(
@@ -24,32 +24,47 @@ class ViewMake extends StatelessWidget {
             ],
           ),
         ),
-        body: CustomScrollView(
-          slivers: <Widget>[
-            SliverList(
-              delegate: SliverChildListDelegate(
-                List<Widget>.generate(vmPlatform.widgetList.length, (int i) {
-                  return Padding(
-                    padding: const EdgeInsets.only(
-                      top: 12,
-                      bottom: 12,
-                    ),
-                    child: Wrap(
-                      alignment: WrapAlignment.center,
-                      children: List<Widget>.generate(
-                        vmPlatform.widgetList[i].length,
-                        (int j) {
-                          return vmPlatform.widgetList[i][j];
-                        },
-                      ),
-                    ),
-                  );
-                }),
-              ),
-            ),
-          ],
+        drawer: Drawer(
+          child: ListView(
+            controller: _controllerDrawer,
+            padding: EdgeInsets.zero,
+          ),
         ),
-      ),
-    );
+        body: ChoiceSetGrid(),
+      );
+    } else {
+      return Row(
+        children: [
+          Drawer(
+            child: ListView(
+              controller: _controllerDrawer,
+              padding: EdgeInsets.zero,
+            ),
+          ),
+          const VerticalDivider(
+            width: 1,
+            thickness: 1,
+          ),
+          Expanded(
+            child: Scaffold(
+              appBar: PreferredSize(
+                preferredSize: Size.fromHeight(ConstList.appBarSize),
+                child: AppBar(
+                  actions: [
+                    Container(
+                      margin: const EdgeInsets.only(right: 15),
+                      child: const Icon(Icons.menu),
+                    )
+                  ],
+                ),
+              ),
+              body: ChoiceSetGrid(),
+            ),
+          ),
+        ],
+      );
+    }
   }
 }
+
+
