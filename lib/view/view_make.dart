@@ -1,7 +1,5 @@
 import 'package:cyoap_flutter/view/view_choice_grid.dart';
-import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../main.dart';
 

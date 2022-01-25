@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../model/image_loader.dart';
 import '../viewmodel/vm_startplatform.dart';
 
 class ViewStart extends StatelessWidget {
@@ -91,8 +90,7 @@ class SelectMode extends StatelessWidget {
         Expanded(
           child: InkWell(
             onTap: () {
-              Get.find<VMStartPlatform>().setDirectory();
-              Get.toNamed('/viewPlay');
+              Get.find<VMStartPlatform>().setDirectory().then((value) => Get.toNamed('/viewPlay'));
             },
             child: Container(
               child: const Center(
@@ -112,8 +110,7 @@ class SelectMode extends StatelessWidget {
         Expanded(
           child: InkWell(
             onTap: () {
-              Get.find<VMStartPlatform>().setDirectory();
-              Get.toNamed('/viewMake');
+              Get.find<VMStartPlatform>().setDirectory().then((value) => Get.toNamed('/viewMake'));
             },
             child: Container(
               child: const Center(

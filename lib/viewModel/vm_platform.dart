@@ -1,28 +1,19 @@
-import 'dart:math';
-
-import 'package:flutter/cupertino.dart';
+import 'package:cyoap_flutter/model/abstract_platform.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../view/view_choice_node.dart';
 
 class VMPlatform extends GetxController{
-  List<List<int>> type = [
-    [0, 1, 2, 0],
-    [0, 1, 0],
-    [0, 2],
-    [1], ];
-  List<List<Widget>> widgetList = [[]];
+  List<List<Widget>> widgetList = List.empty(growable: true);
 
   void updateWidgetList(){
-    widgetList = List.generate(1, (index) => [], growable: true);
-    for(var i = 0; i < type.length; i++){
-      print(i);
-      if(widgetList[i].isEmpty){
-        widgetList.add(<Widget>[]);
+    widgetList.clear();
+    for(var node in AbstractPlatform.instance.choiceNodes) {
+      while(widgetList.length <= node.y){
+        widgetList.add(List.empty(growable: true));
       }
-      for(var j = 0; j < type[i].length; j++){
-        widgetList[i].add(getWidgetFromType(type[i][j]));
-      }
+      widgetList[node.y].insert(node.x, getWidgetFromType(node.type));
     }
     update();
   }
@@ -30,9 +21,9 @@ class VMPlatform extends GetxController{
   Widget getWidgetFromType(int type){
     switch(type){
       case 0:
-        return const ViewTextNode();
+        return const ViewTextWithoutCardNode();
       case 1:
-        return const ViewChoiceNode();
+        return const ViewChoiceTextNode();
       case 2:
         return const ViewChoiceNodeImage();
       default:

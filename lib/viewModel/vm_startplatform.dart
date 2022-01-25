@@ -38,13 +38,14 @@ class VMStartPlatform extends GetxController {
     return -1;
   }
 
-  void setDirectory(){
+  Future<bool> setDirectory() async{
     if(selected >= -1){
       var path = pathList.reversed.elementAt(selected);
-      ImageLoader.instance.loadImages(path).then((value) {
-        AbstractPlatform.createPlatform(path);
-      });
+      await ImageLoader.instance.loadImages(path);
+      await AbstractPlatform.createPlatform(path);
+      return true;
     }
+    return false;
   }
 
   void initFrequentPath() {

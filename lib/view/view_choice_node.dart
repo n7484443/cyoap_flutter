@@ -14,8 +14,8 @@ import '../model/image_loader.dart';
 double nodeBaseWidth = 260;
 double nodeBaseHeight = 300;
 
-class ViewTextNode extends StatelessWidget {
-  const ViewTextNode({Key? key}) : super(key: key);
+class ViewTextWithoutCardNode extends StatelessWidget {
+  const ViewTextWithoutCardNode({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +54,8 @@ class ViewTextNode extends StatelessWidget {
   }
 }
 
-class ViewChoiceNode extends StatelessWidget {
-  const ViewChoiceNode({Key? key}) : super(key: key);
+class ViewChoiceTextNode extends StatelessWidget {
+  const ViewChoiceTextNode({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
