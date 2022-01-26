@@ -7,7 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../main.dart';
 import '../model/abstract_platform.dart';
-import '../model/frequently_used_path.dart';
+import '../model/opening_file_folder.dart';
 import '../model/image_loader.dart';
 
 class VMStartPlatform extends GetxController {
@@ -28,7 +28,17 @@ class VMStartPlatform extends GetxController {
         return -1;
       }
     }
-    String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+    String? selectedDirectory;
+    if(ConstList.actualPlatformType == platformType.web){
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+      if(result != null){
+        openZipInWeb(result.files.single.bytes);
+      }else{
+
+      }
+    }else{
+      selectedDirectory = await FilePicker.platform.getDirectoryPath();
+    }
 
     if (selectedDirectory != null) {
       pathList = frequentlyUsedPath.addFrequentPath(selectedDirectory);

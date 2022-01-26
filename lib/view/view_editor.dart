@@ -11,62 +11,58 @@ class ViewEditor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final VMEditor _vmEditor = Get.put(VMEditor());
     if (ConstList.actualPlatformType == platformType.mobile) {
-      return GetBuilder<VMEditor>(
-        builder: (_) => Scaffold(
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(ConstList.appBarSize),
-            child: AppBar(),
-          ),
-          drawer: const ViewVariable(),
-          body: const ViewEditorTyping(),
-          bottomNavigationBar: BottomAppBar(
-            child: Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.save),
-                  onPressed: () {
-                    Get.back();
-                  },
-                ),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(Icons.navigate_next),
-                  onPressed: () {
-                    Get.back();
-                  },
-                ),
+      return Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(ConstList.appBarSize),
+          child: AppBar(),
+        ),
+        drawer: const ViewVariable(),
+        body: const ViewEditorTyping(),
+        bottomNavigationBar: BottomAppBar(
+          child: Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.save),
+                onPressed: () {
+                  Get.back();
+                },
+              ),
+              const Spacer(),
+              IconButton(
+                icon: const Icon(Icons.navigate_next),
+                onPressed: () {
+                  Get.back();
+                },
+              ),
               ],
             ),
           ),
-        ),
       );
     } else {
-      return GetBuilder<VMEditor>(
-        builder: (_) => Row(
-          children: [
-            const ViewVariable(),
-            const VerticalDivider(
-              width: 1,
-              thickness: 1,
-            ),
-            Expanded(
-              child: Scaffold(
-                appBar: PreferredSize(
-                  preferredSize: Size.fromHeight(ConstList.appBarSize),
-                  child: AppBar(),
-                ),
-                body: const ViewEditorTyping(),
-                bottomNavigationBar: BottomAppBar(
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.save),
-                        onPressed: () {
-                          _vmEditor.save();
-                          Get.back();
-                        },
+      return Row(
+        children: [
+          const ViewVariable(),
+          const VerticalDivider(
+            width: 1,
+            thickness: 1,
+          ),
+          Expanded(
+            child: Scaffold(
+              appBar: PreferredSize(
+                preferredSize: Size.fromHeight(ConstList.appBarSize),
+                child: AppBar(),
+              ),
+              body: const ViewEditorTyping(),
+              bottomNavigationBar: BottomAppBar(
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.save),
+                      onPressed: () {
+                        Get.find<VMEditor>().save();
+                        Get.back();
+                      },
                       ),
                       const Spacer(),
                       IconButton(
@@ -81,30 +77,23 @@ class ViewEditor extends StatelessWidget {
               ),
             ),
           ],
-        ),
       );
     }
   }
 }
 
-class ViewEditorTyping extends StatefulWidget {
+class ViewEditorTyping extends StatelessWidget {
   const ViewEditorTyping({Key? key}) : super(key: key);
 
   @override
-  _ViewEditorTypingState createState() => _ViewEditorTypingState();
-}
-
-class _ViewEditorTypingState extends State<ViewEditorTyping> {
-  final FocusNode _focusBody = FocusNode();
-
-  @override
   Widget build(BuildContext context) {
+    final VMEditor controller = Get.put(VMEditor());
     return Column(
       children: [
         Container(
           color: Colors.black12,
           child: TextField(
-            controller: Get.find<VMEditor>().controllerTitle,
+            controller: controller.controllerTitle,
             textAlign: TextAlign.center,
             decoration: const InputDecoration(hintText: '제목'),
             style: const TextStyle(
@@ -116,7 +105,7 @@ class _ViewEditorTypingState extends State<ViewEditorTyping> {
         Row(
           children: [
             ZefyrToolbar.basic(
-              controller: Get.find<VMEditor>().controllerBody,
+              controller: controller.controllerBody,
               hideLink: true,
               hideQuote: true,
               hideListBullets: true,
@@ -124,13 +113,13 @@ class _ViewEditorTypingState extends State<ViewEditorTyping> {
               hideHorizontalRule: true,
               hideCodeBlock: true,
             ),
-            Spacer(),
+            const Spacer(),
             Padding(
               padding: const EdgeInsets.only(
                 right: 5,
               ),
               child: OutlinedButton(
-                child: Text('Edit Code'),
+                child: const Text('Edit Code'),
                 onPressed: () {
                   Get.toNamed('/viewCodeEditor');
                 },
@@ -148,17 +137,19 @@ class _ViewEditorTypingState extends State<ViewEditorTyping> {
                     border: Border.all(color: Colors.grey),
                   ),
                   child: ZefyrEditor(
-                    controller: Get.find<VMEditor>().controllerBody,
+                    controller: controller.controllerBody,
                     autofocus: true,
-                    focusNode: _focusBody,
+                    focusNode: controller.focusBody,
                     expands: true,
                   ),
                 ),
               ),
-              Visibility(
-                child:
-                    Positioned(top: 6, left: 5, child: Text('여기에 내용을 입력하세요')),
-                visible: Get.find<VMEditor>().contents.value.isBlank ?? true,
+              Obx(
+                () => Visibility(
+                  child: const Positioned(
+                      top: 10, left: 5, child: Text('여기에 내용을 입력하세요')),
+                  visible: controller.contents.value.isBlank ?? true,
+                ),
               ),
             ],
           ),

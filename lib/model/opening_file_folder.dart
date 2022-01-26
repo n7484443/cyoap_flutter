@@ -1,5 +1,7 @@
-import 'dart:collection';
+import 'dart:typed_data';
 
+import 'package:archive/archive.dart';
+import 'package:cyoap_flutter/model/platform_file_system.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FrequentlyUsedPath{
@@ -36,4 +38,10 @@ class FrequentlyUsedPath{
     print(pathList.length);
     return pathList;
   }
+}
+String openZipInWeb(Uint8List? fileData){
+  if(fileData == null)return '';
+  var archive = ZipDecoder().decodeBytes(fileData);
+  PlatformFileSystem(archive);
+  return '';
 }

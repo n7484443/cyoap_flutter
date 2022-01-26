@@ -5,7 +5,7 @@ import 'package:path/path.dart';
 
 class ImageLoader {
   static late final ImageLoader instance = ImageLoader();
-  late String path;
+  late String? path;
   Map<String, Image> imageMap = <String, Image>{};
   Image noImage = Image.asset('images/noImage.png');
 

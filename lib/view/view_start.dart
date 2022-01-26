@@ -17,7 +17,7 @@ class ViewStart extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
-              flex: 3,
+              flex: 9,
               child: Column(
                 children: [
                   Expanded(
@@ -69,6 +69,7 @@ class ViewStart extends StatelessWidget {
               ),
             ),
             const Expanded(
+              flex: 4,
               child: SelectMode(),
             )
           ],

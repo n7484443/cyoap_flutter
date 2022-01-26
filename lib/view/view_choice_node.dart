@@ -1,5 +1,4 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cyoap_flutter/viewModel/vm_editor.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,8 +13,8 @@ import '../util/tuple.dart';
                            └──Card──subChoiceSet
   */
 
-double nodeBaseWidth = 260;
-double nodeBaseHeight = 300;
+double nodeBaseWidth = 240;
+double nodeBaseHeight = 260;
 
 abstract class NodeBase extends StatelessWidget {
   final int posX;

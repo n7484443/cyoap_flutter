@@ -6,15 +6,12 @@ import 'package:zefyrka/zefyrka.dart';
 class VMEditor extends GetxController{
   final TextEditingController controllerTitle = TextEditingController();
   final ZefyrController controllerBody = ZefyrController();
+  final FocusNode focusBody = FocusNode();
 
   var title = ''.obs;
-  var contents = NotusDocument().obs;
+  var contentsDocument = NotusDocument();
+  var contents = ''.obs;
 
-  void updateString(String title, NotusDocument contents){
-    this.title.value = title;
-    this.contents.value = contents;
-    update();
-  }
   @override
   void onInit(){
     controllerTitle.addListener(() {
@@ -22,7 +19,8 @@ class VMEditor extends GetxController{
     });
 
     controllerBody.addListener(() {
-      contents.value = controllerBody.document;
+      contentsDocument = controllerBody.document;
+      contents.value = controllerBody.document.toPlainText();
     });
 
     super.onInit();
