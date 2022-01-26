@@ -16,7 +16,7 @@ class ChoiceSetGrid extends StatelessWidget {
         itemBuilder: (BuildContext context, int i) {
           return Column(
             children: [
-              Divider(),
+              const Divider(),
               Padding(
                 padding: const EdgeInsets.only(
                   top: 12,

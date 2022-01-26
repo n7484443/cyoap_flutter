@@ -1,10 +1,6 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 
 class AbstractPlatform {
-  static late AbstractPlatform instance;
   int halfWidth;
   int halfHeight;
   int localX;
@@ -13,10 +9,25 @@ class AbstractPlatform {
   String stringImageName;
   String colorBackground;
   int flag;
-  List<ChoiceNodeBase> choiceNodes = [TextNode(0, 0, 2, 1, 'asdf',false), TextNode(0, 1, 1, 1, 'asdf',true), ImageNode(1, 1, 1, 1, 'asdf'), TextImageNode(0, 2, 1, 1, 'asdf','asdf')];
+  List<ChoiceNodeBase> choiceNodes = [
+    TextNode(0, 0, 2, 1, 'asdf', false),
+    TextNode(0, 1, 1, 1, 'asdf', true),
+    ImageNode(1, 1, 1, 1, 'asdf'),
+    TextImageNode(0, 2, 1, 1, 'asdf', 'asdf')
+  ];
 
   AbstractPlatform(this.halfWidth, this.halfHeight, this.localX, this.localY,
       this.scale, this.stringImageName, this.colorBackground, this.flag);
+
+  AbstractPlatform.none()
+      : halfWidth = 800,
+        halfHeight = 400,
+        localX = 0,
+        localY = 0,
+        scale = 1.0,
+        stringImageName = '',
+        colorBackground = '#909090',
+        flag = 0;
 
   AbstractPlatform.fromJson(Map<String, dynamic> json)
       : halfWidth = json['halfWidth'],
@@ -39,15 +50,6 @@ class AbstractPlatform {
     'flag' : flag,
 
   };
-
-  static Future<void> createPlatform(String directory) async {
-    var dataPlatform = File(directory + '/platform.json');
-    if(await dataPlatform.exists()){
-      instance = AbstractPlatform.fromJson(jsonDecode(await dataPlatform.readAsString()));
-    }else{
-      instance = AbstractPlatform(800, 800, 0, 0, 1, '', '#909090', 0);
-    }
-  }
 
   int getMinX() => -halfWidth;
 

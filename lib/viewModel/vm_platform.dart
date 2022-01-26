@@ -1,9 +1,9 @@
-import 'package:cyoap_flutter/model/abstract_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../model/choiceNode/choice_node.dart';
 import '../model/editor.dart';
+import '../model/platform_system.dart';
 import '../util/tuple.dart';
 import '../view/view_choice_node.dart';
 
@@ -12,7 +12,7 @@ class VMPlatform extends GetxController{
 
   void updateWidgetList(){
     widgetList.clear();
-    for(var node in AbstractPlatform.instance.choiceNodes) {
+    for(var node in PlatformSystem.getPlatform().choiceNodes) {
       while(widgetList.length <= node.y){
         widgetList.add(List.empty(growable: true));
       }
@@ -35,7 +35,7 @@ class VMPlatform extends GetxController{
   }
 
   Tuple<int, int> getSize(Tuple<int, int> position) {
-    for (var node in AbstractPlatform.instance.choiceNodes) {
+    for (var node in PlatformSystem.getPlatform().choiceNodes) {
       if (node.x == position.data1 && node.y == position.data2) {
         return Tuple(node.width, node.height);
       }
@@ -44,7 +44,7 @@ class VMPlatform extends GetxController{
   }
 
   void setEdit(int posX, int posY) {
-    var node = AbstractPlatform.instance.getChoiceNode(posX, posY);
+    var node = PlatformSystem.getPlatform().getChoiceNode(posX, posY);
 
     if(node == null){
       return;

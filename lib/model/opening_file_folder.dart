@@ -1,7 +1,3 @@
-import 'dart:typed_data';
-
-import 'package:archive/archive.dart';
-import 'package:cyoap_flutter/model/platform_file_system.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FrequentlyUsedPath{
@@ -31,17 +27,9 @@ class FrequentlyUsedPath{
   }
 
   Future<List<String>> removeFrequentPath(int index) async{
-    print('asdf' + (pathList.length - 1 - index).toString());
     pathList = await getFrequentPathFromData();
     pathList.removeAt(pathList.length - 1 - index);
     setFrequentPathFromData(pathList.toList());
-    print(pathList.length);
     return pathList;
   }
-}
-String openZipInWeb(Uint8List? fileData){
-  if(fileData == null)return '';
-  var archive = ZipDecoder().decodeBytes(fileData);
-  PlatformFileSystem(archive);
-  return '';
 }

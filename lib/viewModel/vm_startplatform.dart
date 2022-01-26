@@ -1,14 +1,11 @@
-import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../main.dart';
-import '../model/abstract_platform.dart';
 import '../model/opening_file_folder.dart';
-import '../model/image_loader.dart';
+import '../model/platform_system.dart';
 
 class VMStartPlatform extends GetxController {
   FrequentlyUsedPath frequentlyUsedPath = FrequentlyUsedPath();
@@ -32,18 +29,18 @@ class VMStartPlatform extends GetxController {
     if(ConstList.actualPlatformType == platformType.web){
       FilePickerResult? result = await FilePicker.platform.pickFiles();
       if(result != null){
-        openZipInWeb(result.files.single.bytes);
-      }else{
-
+        PlatformSystem.instance.openPlatformZip(result.files.single.bytes);
+        pathList.add(result.files.single.name);
+        update();
+        return 0;
       }
     }else{
       selectedDirectory = await FilePicker.platform.getDirectoryPath();
-    }
-
-    if (selectedDirectory != null) {
-      pathList = frequentlyUsedPath.addFrequentPath(selectedDirectory);
-      update();
-      return 0;
+      if (selectedDirectory != null) {
+        pathList = frequentlyUsedPath.addFrequentPath(selectedDirectory);
+        update();
+        return 0;
+      }
     }
     return -1;
   }
@@ -51,9 +48,13 @@ class VMStartPlatform extends GetxController {
   Future<bool> setDirectory() async{
     if(selected >= -1){
       var path = pathList.reversed.elementAt(selected);
-      await ImageLoader.instance.loadImages(path);
-      await AbstractPlatform.createPlatform(path);
-      return true;
+      if(ConstList.actualPlatformType == platformType.web){
+        return true;
+      }else{
+        await PlatformSystem.instance.openPlatformFolder(path).then((value) {
+          return true;
+        });
+      }
     }
     return false;
   }

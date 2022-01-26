@@ -2,8 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../model/image_loader.dart';
+import '../model/platform_system.dart';
 import '../util/tuple.dart';
 
 /*
@@ -145,7 +144,7 @@ class ViewChoiceNodeTextWithImage extends NodeBase {
                 ),
               ),
               Image(
-                image: ImageLoader.instance.getImage('imgt.jpg').image,
+                image: PlatformSystem.getImage('imgt.jpg').image,
                 width: 200,
               ),
             ],
@@ -178,7 +177,7 @@ class ViewChoiceNodeImage extends NodeBase {
           child: Column(
             children: [
               Image(
-                image: ImageLoader.instance.getImage('img.jpg').image,
+                image: PlatformSystem.getImage('img.jpg').image,
                 width: 200,
               ),
             ],

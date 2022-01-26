@@ -41,7 +41,7 @@ class ViewStart extends StatelessWidget {
                                     _.pathList.reversed.elementAt(index)),
                               ),
                               IconButton(
-                                icon: Icon(Icons.delete),
+                                icon: const Icon(Icons.delete),
                                 onPressed: () {
                                   _.removeFrequentPath(index);
                                 },
@@ -93,16 +93,14 @@ class SelectMode extends StatelessWidget {
             onTap: () {
               Get.find<VMStartPlatform>().setDirectory().then((value) => Get.toNamed('/viewPlay'));
             },
-            child: Container(
-              child: const Center(
-                child: Text(
-                  'Play',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 56,
-                  ),
+            child: const Center(
+              child: Text(
+                'Play',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 56,
                 ),
               ),
             ),
@@ -113,16 +111,14 @@ class SelectMode extends StatelessWidget {
             onTap: () {
               Get.find<VMStartPlatform>().setDirectory().then((value) => Get.toNamed('/viewMake'));
             },
-            child: Container(
-              child: const Center(
-                child: Text(
-                  'Make',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 56,
-                  ),
+            child: const Center(
+              child: Text(
+                'Make',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 56,
                 ),
               ),
             ),

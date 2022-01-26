@@ -28,5 +28,6 @@ class VMEditor extends GetxController{
 
   void save() {
     print('제목 : $title, 내용 : $contents');
+
   }
 }
