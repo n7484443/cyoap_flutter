@@ -1,7 +1,7 @@
 import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:get/get.dart';
-import 'package:zefyrka/zefyrka.dart';
 
 import '../main.dart';
 import '../viewModel/vm_editor.dart';
@@ -51,29 +51,18 @@ class ViewEditor extends StatelessWidget {
             child: Scaffold(
               appBar: PreferredSize(
                 preferredSize: Size.fromHeight(ConstList.appBarSize),
-                child: AppBar(),
-              ),
-              body: const ViewEditorTyping(),
-              bottomNavigationBar: BottomAppBar(
-                child: Row(
-                  children: [
+                child: AppBar(
+                  actions: [
                     IconButton(
                       icon: const Icon(Icons.save),
                       onPressed: () {
                         Get.find<VMEditor>().save();
-                        Get.back();
                       },
-                      ),
-                      const Spacer(),
-                      IconButton(
-                        icon: const Icon(Icons.navigate_next),
-                        onPressed: () {
-                          Get.back();
-                        },
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+              ),
+              body: const ViewEditorTyping(),
               ),
             ),
           ],
@@ -102,53 +91,45 @@ class ViewEditorTyping extends StatelessWidget {
             ),
           ),
         ),
-        Row(
-          children: [
-            ZefyrToolbar.basic(
-              controller: controller.controllerBody,
-              hideLink: true,
-              hideQuote: true,
-              hideListBullets: true,
-              hideListNumbers: true,
-              hideHorizontalRule: true,
-              hideCodeBlock: true,
-            ),
-            const Spacer(),
-            Padding(
-              padding: const EdgeInsets.only(
-                right: 5,
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              quill.QuillToolbar.basic(
+                controller: controller.controllerBody,
+                showImageButton: false,
+                showLink: false,
+                showVideoButton: false,
+                showCodeBlock: false,
+                showListCheck: false,
               ),
-              child: OutlinedButton(
+              const Spacer(),
+              OutlinedButton(
                 child: const Text('Edit Code'),
                 onPressed: () {
                   Get.toNamed('/viewCodeEditor');
                 },
               ),
-            )
-          ],
+            ],
+          ),
         ),
         Expanded(
           child: Stack(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(0.5),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                  ),
-                  child: ZefyrEditor(
-                    controller: controller.controllerBody,
-                    autofocus: true,
-                    focusNode: controller.focusBody,
-                    expands: true,
-                  ),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
                 ),
-              ),
-              Obx(
-                () => Visibility(
-                  child: const Positioned(
-                      top: 10, left: 5, child: Text('여기에 내용을 입력하세요')),
-                  visible: controller.contents.value.isBlank ?? true,
+                child: quill.QuillEditor(
+                  controller: controller.controllerBody,
+                  readOnly: false,
+                  expands: true,
+                  focusNode: controller.focusBody,
+                  scrollable: true,
+                  scrollController: ScrollController(),
+                  padding: const EdgeInsets.all(0.5),
+                  autoFocus: false,
+                  placeholder: '여기에 내용을 입력하세요',
                 ),
               ),
             ],

@@ -27,4 +27,8 @@ class VMCodeEditor extends GetxController {
 
     super.onInit();
   }
+
+  void save() {
+
+  }
 }

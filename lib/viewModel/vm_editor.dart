@@ -1,15 +1,13 @@
-import 'package:cyoap_flutter/model/editor.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
-import 'package:zefyrka/zefyrka.dart';
 
 class VMEditor extends GetxController{
   final TextEditingController controllerTitle = TextEditingController();
-  final ZefyrController controllerBody = ZefyrController();
+  final QuillController controllerBody = QuillController.basic();
   final FocusNode focusBody = FocusNode();
 
   var title = ''.obs;
-  var contentsDocument = NotusDocument();
   var contents = ''.obs;
 
   @override
@@ -19,7 +17,6 @@ class VMEditor extends GetxController{
     });
 
     controllerBody.addListener(() {
-      contentsDocument = controllerBody.document;
       contents.value = controllerBody.document.toPlainText();
     });
 
@@ -27,7 +24,7 @@ class VMEditor extends GetxController{
   }
 
   void save() {
-    print('제목 : $title, 내용 : $contents');
+    print('제목 : $title, 내용 : $contents ${controllerBody.document.toDelta()}');
 
   }
 }

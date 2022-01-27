@@ -1,6 +1,6 @@
+import 'package:cyoap_flutter/viewModel/vm_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:zefyrka/zefyrka.dart';
 
 import '../main.dart';
 import '../viewModel/vm_code_editor.dart';
@@ -14,7 +14,16 @@ class ViewCodeEditor extends StatelessWidget {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(ConstList.appBarSize),
-        child: AppBar(),
+        child: AppBar(
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.save),
+              onPressed: () {
+                Get.find<VMEditor>().save();
+              },
+            )
+          ],
+        ),
       ),
       body: Column(
         children: [
@@ -45,16 +54,16 @@ class ViewCodeEditor extends StatelessWidget {
         child: Row(
           children: [
             IconButton(
-              icon: const Icon(Icons.save),
+              icon: const Icon(Icons.navigate_before),
               onPressed: () {
                 Get.back();
               },
             ),
             const Spacer(),
             IconButton(
-              icon: const Icon(Icons.navigate_next),
+              icon: const Icon(Icons.save),
               onPressed: () {
-                Get.back();
+                Get.find<VMCodeEditor>().save();
               },
             ),
           ],

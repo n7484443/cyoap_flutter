@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class ViewVariable extends StatelessWidget {
   const ViewVariable({Key? key}) : super(key: key);

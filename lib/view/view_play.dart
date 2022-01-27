@@ -1,6 +1,9 @@
 import 'package:cyoap_flutter/view/view_choice_grid.dart';
 import 'package:cyoap_flutter/view/view_variable_table.dart';
+import 'package:cyoap_flutter/viewModel/vm_editor.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 
 import '../main.dart';
 
@@ -16,9 +19,11 @@ class ViewPlay extends StatelessWidget {
           preferredSize: Size.fromHeight(ConstList.appBarSize),
           child: AppBar(
             actions: [
-              Container(
-                margin: const EdgeInsets.only(right: 15),
-                child: const Icon(Icons.menu),
+              IconButton(
+                icon: const Icon(Icons.save),
+                onPressed: () {
+                  Get.find<VMEditor>().save();
+                },
               )
             ],
           ),
@@ -40,9 +45,11 @@ class ViewPlay extends StatelessWidget {
                 preferredSize: Size.fromHeight(ConstList.appBarSize),
                 child: AppBar(
                   actions: [
-                    Container(
-                      margin: const EdgeInsets.only(right: 15),
-                      child: const Icon(Icons.menu),
+                    IconButton(
+                      icon: const Icon(Icons.save),
+                      onPressed: () {
+                        Get.find<VMEditor>().save();
+                      },
                     )
                   ],
                 ),
