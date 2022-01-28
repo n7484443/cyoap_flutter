@@ -1,10 +1,14 @@
+import 'dart:convert';
+
+import 'package:cyoap_flutter/model/editor.dart';
+import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
 
 class VMEditor extends GetxController{
   final TextEditingController controllerTitle = TextEditingController();
-  final QuillController controllerBody = QuillController.basic();
+  late final QuillController controllerBody;
   final FocusNode focusBody = FocusNode();
 
   var title = ''.obs;
@@ -12,6 +16,16 @@ class VMEditor extends GetxController{
 
   @override
   void onInit(){
+    if(NodeEditor.instance.target.contents.isEmpty){
+      controllerBody = QuillController.basic();
+    }else{
+      controllerBody = QuillController(
+        document: Document.fromJson(jsonDecode(NodeEditor.instance.target.contents)),
+        selection: const TextSelection.collapsed(offset: 0),
+      );
+    }
+    controllerTitle.text = NodeEditor.instance.target.title;
+
     controllerTitle.addListener(() {
       title.value = controllerTitle.text;
     });
@@ -19,12 +33,12 @@ class VMEditor extends GetxController{
     controllerBody.addListener(() {
       contents.value = controllerBody.document.toPlainText();
     });
-
     super.onInit();
   }
 
   void save() {
-    print('제목 : $title, 내용 : $contents ${controllerBody.document.toDelta()}');
-
+    NodeEditor.instance.target.contents = jsonEncode(controllerBody.document.toDelta().toJson());
+    NodeEditor.instance.target.title = title.value;
+    Get.find<VMPlatform>().update();
   }
 }

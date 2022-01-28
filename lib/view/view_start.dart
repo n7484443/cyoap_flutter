@@ -91,7 +91,10 @@ class SelectMode extends StatelessWidget {
         Expanded(
           child: InkWell(
             onTap: () {
-              Get.find<VMStartPlatform>().setDirectory().then((value) => Get.toNamed('/viewPlay'));
+              Get.find<VMStartPlatform>().setDirectory().then((value){
+                Get.find<VMStartPlatform>().setEditable(false);
+                Get.toNamed('/viewPlay');
+              });
             },
             child: const Center(
               child: Text(
@@ -109,7 +112,10 @@ class SelectMode extends StatelessWidget {
         Expanded(
           child: InkWell(
             onTap: () {
-              Get.find<VMStartPlatform>().setDirectory().then((value) => Get.toNamed('/viewMake'));
+              Get.find<VMStartPlatform>().setDirectory().then((value) {
+                Get.find<VMStartPlatform>().setEditable(true);
+                Get.toNamed('/viewMake');
+              });
             },
             child: const Center(
               child: Text(

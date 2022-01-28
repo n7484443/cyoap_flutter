@@ -27,9 +27,13 @@ class VMStartPlatform extends GetxController {
     }
     String? selectedDirectory;
     if(ConstList.actualPlatformType == platformType.web){
-      FilePickerResult? result = await FilePicker.platform.pickFiles();
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['tar'],
+      );
       if(result != null){
-        PlatformSystem.instance.openPlatformZip(result.files.single.bytes);
+        PlatformSystem.instance.openPlatformZip(result.files.single);
+        print(Uri.base);
         pathList.add(result.files.single.name);
         update();
         return 0;
@@ -84,5 +88,9 @@ class VMStartPlatform extends GetxController {
     } else {
       return Colors.red;
     }
+  }
+
+  void setEditable(bool bool) {
+    PlatformSystem.getPlatform().isEditable = bool;
   }
 }

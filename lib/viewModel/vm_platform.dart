@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
 
 import '../model/choiceNode/choice_node.dart';
@@ -9,14 +12,18 @@ import '../view/view_choice_node.dart';
 
 class VMPlatform extends GetxController{
   List<List<Widget>> widgetList = List.empty(growable: true);
+  bool isDrag = false;
 
   void updateWidgetList(){
     widgetList.clear();
-    for(var node in PlatformSystem.getPlatform().choiceNodes) {
-      while(widgetList.length <= node.y){
-        widgetList.add(List.empty(growable: true));
+
+    var list = PlatformSystem.getPlatform().choiceNodes;
+    for(int y = 0; y < list.length; y++) {
+      widgetList.add(List.empty(growable: true));
+      var xList = list[y];
+      for(int x = 0; x < xList.length; x++){
+        widgetList[y].insert(x, getWidgetFromType(xList[x].type, x, y));
       }
-      widgetList[node.y].insert(node.x, getWidgetFromType(node.type, node.x, node.y));
     }
     update();
   }
@@ -35,12 +42,12 @@ class VMPlatform extends GetxController{
   }
 
   Tuple<int, int> getSize(Tuple<int, int> position) {
-    for (var node in PlatformSystem.getPlatform().choiceNodes) {
-      if (node.x == position.data1 && node.y == position.data2) {
-        return Tuple(node.width, node.height);
-      }
-    }
-    return Tuple(1, 1);
+    var node = PlatformSystem.getPlatform().choiceNodes[position.data2][position.data1];
+    return Tuple(node.width, node.height);
+  }
+
+  ChoiceNodeBase? getNode(int x, int y) {
+    return PlatformSystem.getPlatform().choiceNodes[y][x];
   }
 
   void setEdit(int posX, int posY) {
@@ -51,5 +58,37 @@ class VMPlatform extends GetxController{
     }
     ChoiceNodeBase nodeNonnull = node;
     NodeEditor.instance.setTarget(nodeNonnull);
+  }
+
+  QuillController? getNodeController(int x, int y){
+    var node = getNode(x, y);
+    if(node == null)return null;
+    if(node.contents.isEmpty){
+      return QuillController.basic();
+    }else{
+      var json = jsonDecode(node.contents);
+      return QuillController(
+        document: Document.fromJson(json),
+        selection: const TextSelection.collapsed(offset: 0),
+      );
+    }
+  }
+
+  void dragStart() {
+    isDrag = true;
+    update();
+  }
+  void dragEnd() {
+    isDrag = false;
+    update();
+  }
+
+  void changeData(Tuple<int, int> data, Tuple<int, int> pos) {
+    PlatformSystem.getPlatform().changeData(data, pos);
+    updateWidgetList();
+  }
+
+  bool isEditable(){
+    return PlatformSystem.getPlatform().isEditable;
   }
 }

@@ -1,4 +1,4 @@
-import 'package:cyoap_flutter/view/view_choice_grid.dart';
+import 'package:cyoap_flutter/view/view_dragable_nested_map.dart';
 import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:cyoap_flutter/viewModel/vm_editor.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +12,6 @@ class ViewPlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ScrollController _controllerDrawer = ScrollController();
     if (ConstList.actualPlatformType == platformType.mobile) {
       return Scaffold(
         appBar: PreferredSize(
@@ -29,7 +28,7 @@ class ViewPlay extends StatelessWidget {
           ),
         ),
         drawer: const ViewVariable(),
-        body: ChoiceSetGrid(),
+        body: const NestedMap(),
       );
     } else {
       return Row(
@@ -54,7 +53,7 @@ class ViewPlay extends StatelessWidget {
                   ],
                 ),
               ),
-              body: ChoiceSetGrid(),
+              body: const NestedMap(),
             ),
           ),
         ],

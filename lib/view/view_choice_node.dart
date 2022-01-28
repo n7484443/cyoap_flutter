@@ -1,7 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:get/get.dart';
+
 import '../model/platform_system.dart';
 import '../util/tuple.dart';
 
@@ -23,6 +25,7 @@ abstract class NodeBase extends StatelessWidget {
       : super(key: key);
 }
 
+
 class ViewTextWithoutCardNode extends NodeBase {
   const ViewTextWithoutCardNode(
       {Key? key, required int posX, required int posY})
@@ -31,36 +34,48 @@ class ViewTextWithoutCardNode extends NodeBase {
   @override
   Widget build(BuildContext context) {
     var size = Get.find<VMPlatform>().getSize(Tuple(posX, posY));
-    return SizedBox(
-      width: nodeBaseWidth * size.data1,
-      height: nodeBaseHeight * size.data2,
-      child: InkWell(
-        onTap: () {},
-        onHover: (val) {},
-        onDoubleTap: () {
-          Get.find<VMPlatform>().setEdit(posX, posY);
-          Get.toNamed('/viewEditor');
-        },
-        child: Column(
-          children: [
-            const Text.rich(
-              TextSpan(
-                text: 'title',
-              ),
-              style: TextStyle(
-                fontSize: 24,
-              ),
+    var node = Get.find<VMPlatform>().getNode(posX, posY);
+    return Card(
+      elevation:0.0,
+      child: GetBuilder<VMPlatform>(
+        builder: (_) => SizedBox(
+          width: nodeBaseWidth * size.data1,
+          height: nodeBaseHeight * size.data2,
+          child: InkWell(
+            onTap: () {},
+            onHover: (val) {},
+            onDoubleTap: () {
+              Get.find<VMPlatform>().setEdit(posX, posY);
+              Get.toNamed('/viewEditor');
+            },
+            child: Column(
+              children: [
+                Text.rich(
+                  TextSpan(
+                    text: node!.title,
+                  ),
+                  style: const TextStyle(
+                    fontSize: 24,
+                  ),
+                ),
+                IgnorePointer(
+                  child: quill.QuillEditor(
+                    controller:
+                        Get.find<VMPlatform>().getNodeController(posX, posY)!,
+                    scrollController: ScrollController(),
+                    readOnly: true,
+                    showCursor: false,
+                    scrollable: false,
+                    focusNode: FocusNode(),
+                    autoFocus: false,
+                    expands: false,
+                    enableInteractiveSelection: false,
+                    padding: EdgeInsets.zero,
+                  ),
+                ),
+              ],
             ),
-            const AutoSizeText.rich(
-              TextSpan(
-                children: [
-                  TextSpan(text: 'asdf\n'),
-                  TextSpan(text: 'bdef\n'),
-                  TextSpan(text: 'asdf\n'),
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -74,6 +89,7 @@ class ViewChoiceTextNode extends NodeBase {
   @override
   Widget build(BuildContext context) {
     var size = Get.find<VMPlatform>().getSize(Tuple(posX, posY));
+    var node = Get.find<VMPlatform>().getNode(posX, posY);
     return Card(
       elevation:5.0,
       child: InkWell(
@@ -83,29 +99,31 @@ class ViewChoiceTextNode extends NodeBase {
           Get.find<VMPlatform>().setEdit(posX, posY);
           Get.toNamed('/viewEditor');
         },
-        child: SizedBox(
-          width: nodeBaseWidth * size.data1,
-          height: nodeBaseHeight * size.data2,
-          child: Column(
-            children: [
-              const Text.rich(
-                TextSpan(
-                  text: 'title',
-                ),
-                style: TextStyle(
-                  fontSize: 24,
-                ),
+        child: GetBuilder<VMPlatform>(
+          builder: (_) => SizedBox(
+            width: nodeBaseWidth * size.data1,
+            height: nodeBaseHeight * size.data2,
+            child: Column(
+              children: [
+                Text.rich(
+                  TextSpan(
+                    text: node!.title,
+                  ),
+                  style: const TextStyle(
+                    fontSize: 24,
+                  ),
               ),
               const AutoSizeText.rich(
                 TextSpan(
                   children: [
-                    TextSpan(text: 'asdf\n'),
-                    TextSpan(text: 'bdef\n'),
-                    TextSpan(text: 'asdf\n'),
-                  ],
+                      TextSpan(text: 'asdf\n'),
+                      TextSpan(text: 'bdef\n'),
+                      TextSpan(text: 'asdf\n'),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -121,6 +139,7 @@ class ViewChoiceNodeTextWithImage extends NodeBase {
   @override
   Widget build(BuildContext context) {
     var size = Get.find<VMPlatform>().getSize(Tuple(posX, posY));
+    var node = Get.find<VMPlatform>().getNode(posX, posY);
     return Card(
       elevation:5.0,
       child: InkWell(
@@ -130,25 +149,29 @@ class ViewChoiceNodeTextWithImage extends NodeBase {
           Get.find<VMPlatform>().setEdit(posX, posY);
           Get.toNamed('/viewEditor');
         },
-        child: SizedBox(
-          width: nodeBaseWidth * size.data1,
-          height: nodeBaseHeight * size.data2,
-          child: Column(
-            children: [
-              const Text.rich(
-                TextSpan(
-                  text: 'title',
-                ),
-                style: TextStyle(
-                  fontSize: 24,
+        child: GetBuilder<VMPlatform>(
+          builder: (_) => SizedBox(
+            width: nodeBaseWidth * size.data1,
+            height: nodeBaseHeight * size.data2,
+            child: Column(
+              children: [
+                Text.rich(
+                  TextSpan(
+                    text: node!.title,
+                  ),
+                  style: const TextStyle(
+                    fontSize: 24,
+                  ),
+                    ),
+                    Image(
+                      image: PlatformSystem
+                          .getImage('imgt.jpg')
+                          .image,
+                      width: 200,
+                    ),
+                  ],
                 ),
               ),
-              Image(
-                image: PlatformSystem.getImage('imgt.jpg').image,
-                width: 200,
-              ),
-            ],
-          ),
         ),
       ),
     );
@@ -171,16 +194,18 @@ class ViewChoiceNodeImage extends NodeBase {
           Get.find<VMPlatform>().setEdit(posX, posY);
           Get.toNamed('/viewEditor');
         },
-        child: SizedBox(
-          width: nodeBaseWidth * size.data1,
-          height: nodeBaseHeight * size.data2,
-          child: Column(
-            children: [
-              Image(
-                image: PlatformSystem.getImage('img.jpg').image,
-                width: 200,
-              ),
-            ],
+        child: GetBuilder<VMPlatform>(
+          builder: (_) => SizedBox(
+            width: nodeBaseWidth * size.data1,
+            height: nodeBaseHeight * size.data2,
+            child: Column(
+              children: [
+                Image(
+                  image: PlatformSystem.getImage('img.jpg').image,
+                  width: 200,
+                ),
+              ],
+            ),
           ),
         ),
       ),

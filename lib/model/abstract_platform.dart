@@ -1,4 +1,5 @@
 import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
+import 'package:cyoap_flutter/util/tuple.dart';
 
 class AbstractPlatform {
   int halfWidth;
@@ -9,15 +10,23 @@ class AbstractPlatform {
   String stringImageName;
   String colorBackground;
   int flag;
-  List<ChoiceNodeBase> choiceNodes = [
-    TextNode(0, 0, 2, 1, 'asdf', false),
-    TextNode(0, 1, 1, 1, 'asdf', true),
-    ImageNode(1, 1, 1, 1, 'asdf'),
-    TextImageNode(0, 2, 1, 1, 'asdf', 'asdf')
-  ];
+  List<List<ChoiceNodeBase>> choiceNodes = List.empty(growable: true);
+
+  bool isEditable = true;
+
+  void init() {
+    addChoiceNode(0, 0, TextNode(2, 1, 'asdf', '', false));
+    addChoiceNode(0, 1, TextNode(1, 1, 'asdf', '', true));
+    addChoiceNode(1, 1, ImageNode(1, 1, 'asdf', ''));
+    addChoiceNode(0, 2, TextImageNode(1, 1, 'asdf', '', ''));
+
+    checkDataCollect();
+  }
 
   AbstractPlatform(this.halfWidth, this.halfHeight, this.localX, this.localY,
-      this.scale, this.stringImageName, this.colorBackground, this.flag);
+      this.scale, this.stringImageName, this.colorBackground, this.flag) {
+    init();
+  }
 
   AbstractPlatform.none()
       : halfWidth = 800,
@@ -27,7 +36,9 @@ class AbstractPlatform {
         scale = 1.0,
         stringImageName = '',
         colorBackground = '#909090',
-        flag = 0;
+        flag = 0 {
+    init();
+  }
 
   AbstractPlatform.fromJson(Map<String, dynamic> json)
       : halfWidth = json['halfWidth'],
@@ -37,7 +48,9 @@ class AbstractPlatform {
         scale = json['scale'],
         stringImageName = json['stringImageName'],
         colorBackground = json['colorBackground'],
-        flag = json['flag'];
+        flag = json['flag']{
+    init();
+  }
 
   Map<String, dynamic> toJson() => {
     'halfWidth' : halfWidth,
@@ -48,7 +61,6 @@ class AbstractPlatform {
     'stringImageName' : stringImageName,
     'colorBackground' : colorBackground,
     'flag' : flag,
-
   };
 
   int getMinX() => -halfWidth;
@@ -63,10 +75,41 @@ class AbstractPlatform {
 
   int getHeight() => halfHeight * 2;
 
-  ChoiceNodeBase? getChoiceNode(int posX, int posY){
-    for(var node in choiceNodes){
-      if(node.x == posX && node.y == posY)return node;
+  void addChoiceNode(int x, int y, ChoiceNodeBase node) {
+    node.x = x;
+    node.y = y;
+    while (choiceNodes.length <= node.y) {
+      choiceNodes.add(List.empty(growable: true));
     }
-    return null;
+    if(x > choiceNodes[y].length){
+      choiceNodes[y].add(node);
+    }else{
+      choiceNodes[y].insert(x, node);
+    }
+  }
+
+  void removeChoiceNode(int x, int y){
+    choiceNodes[y].removeAt(x);
+    checkDataCollect();
+  }
+
+  ChoiceNodeBase? getChoiceNode(int posX, int posY) {
+    return choiceNodes[posY][posX];
+  }
+
+  void changeData(Tuple<int, int> start, Tuple<int, int> pos) {
+    var node = getChoiceNode(start.data1, start.data2)!;
+    removeChoiceNode(start.data1, start.data2);
+    addChoiceNode(pos.data1, pos.data2, node);
+    checkDataCollect();
+  }
+
+  void checkDataCollect(){
+    for(int y = 0; y < choiceNodes.length; y++){
+      for(int x = 0; x < choiceNodes[y].length; x++){
+        choiceNodes[y][x].x = x;
+        choiceNodes[y][x].y = y;
+      }
+    }
   }
 }

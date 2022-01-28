@@ -22,23 +22,20 @@ class ChoiceNodeBase {
 }
 
 class TextNode extends ChoiceNodeBase {
-  String text;
-
-  TextNode(int x, int y, int width, int height, this.text, bool isCard)
-      : super(x, y, width, height, isCard ? 1 : 0, '', text);
+  TextNode(int width, int height, String title, String contents, bool isCard)
+      : super(0, 0, width, height, isCard ? 1 : 0, title, contents);
 }
 
 class ImageNode extends ChoiceNodeBase {
   String imageString;
 
-  ImageNode(int x, int y, int width, int height, this.imageString)
-      : super(x, y, width, height, 2, '', '');
+  ImageNode(int width, int height, String title, this.imageString)
+      : super(0, 0, width, height, 2, title, '');
 }
 
 class TextImageNode extends ChoiceNodeBase {
-  String Text;
   String imageString;
   
-  TextImageNode(int x, int y, int width, int height, this.Text, this.imageString)
-      : super(x, y, width, height, 3, '', Text);
+  TextImageNode(int width, int height, String title, String contents, this.imageString)
+      : super(0, 0, width, height, 3, title, contents);
 }

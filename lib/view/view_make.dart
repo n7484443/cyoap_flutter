@@ -1,4 +1,4 @@
-import 'package:cyoap_flutter/view/view_choice_grid.dart';
+import 'package:cyoap_flutter/view/view_dragable_nested_map.dart';
 import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:cyoap_flutter/viewModel/vm_editor.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +28,7 @@ class ViewMake extends StatelessWidget {
           ),
         ),
         drawer: const ViewVariable(),
-        body: const ChoiceSetGrid(),
+        body: const NestedMap(),
       );
     } else {
       return Row(
@@ -53,7 +53,7 @@ class ViewMake extends StatelessWidget {
                   ],
                 ),
               ),
-              body: const ChoiceSetGrid(),
+              body: const NestedMap(),
             ),
           ),
         ],

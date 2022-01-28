@@ -1,7 +1,7 @@
-import 'dart:typed_data';
-
 import 'package:archive/archive.dart';
+import 'package:archive/archive_io.dart';
 import 'package:cyoap_flutter/model/platform_file_system.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
 
 import 'abstract_platform.dart';
@@ -10,10 +10,12 @@ class PlatformSystem{
   static PlatformSystem instance = PlatformSystem();
   PlatformFileSystem platformFileSystem = PlatformFileSystem();
 
-  void openPlatformZip(Uint8List? fileData){
-    if(fileData == null)return;
-    var archive = ZipDecoder().decodeBytes(fileData);
-    platformFileSystem.createFromZip(archive);
+  void openPlatformZip(PlatformFile file){
+    var bytes = file.bytes;
+    if(bytes == null)return;
+
+    var archiveBytes = TarDecoder().decodeBytes(bytes);
+    platformFileSystem.createFromZip(archiveBytes);
   }
 
   Future<void> openPlatformFolder(String path) async {

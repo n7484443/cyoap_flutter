@@ -70,24 +70,25 @@ class PlatformFileSystem {
 
   void createFromZip(Archive archive) {
     String? platformJson;
-    for (final file in archive) {
+
+    for (var file in archive) {
+      Uint8List data = file.content as Uint8List;
       if (file.isFile) {
         var fileName = file.name;
         if (fileName.startsWith('images')) {
+          var realName = file.name.split("/")[1];
           int type = isImageFile(fileName);
           if (type == 0) {
             _dirImageNetwork.putIfAbsent(
-                file.name.split("/")[1],
-                () => Image.network(
-                    String.fromCharCodes(file.content as Uint8List)));
+                realName, () => Image.network(String.fromCharCodes(data)));
           } else if (type == 1) {
-            _dirImage.putIfAbsent(file.name.split("/")[1], () => file.content);
+            _dirImage.putIfAbsent(realName, () => data);
           }
         } else if (fileName.startsWith('nodes')) {
-          var str = String.fromCharCodes(file.content);
-          dirNode.putIfAbsent(file.name.split("/")[1], () => str);
+          dirNode.putIfAbsent(
+              file.name.split("/")[1], () => String.fromCharCodes(data));
         } else if (fileName.endsWith('platform.json')) {
-          platformJson = String.fromCharCodes(file.content);
+          platformJson = String.fromCharCodes(data);
         }
       }
     }
