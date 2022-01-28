@@ -15,10 +15,10 @@ class AbstractPlatform {
   bool isEditable = true;
 
   void init() {
-    addChoiceNode(0, 0, TextNode(2, 1, 'asdf', '', false));
-    addChoiceNode(0, 1, TextNode(1, 1, 'asdf', '', true));
-    addChoiceNode(1, 1, ImageNode(1, 1, 'asdf', ''));
-    addChoiceNode(0, 2, TextImageNode(1, 1, 'asdf', '', ''));
+    addChoiceNode(0, 0, ChoiceNodeBase.noTitle(2, 1, false, '', ''));
+    addChoiceNode(0, 1, ChoiceNodeBase.noTitle(1, 1, true, '', ''));
+    addChoiceNode(1, 1, ChoiceNodeBase.noTitle(1, 1, true, '', 'img.jpg'));
+    addChoiceNode(0, 2, ChoiceNodeBase.noTitle(1, 1, true, '', 'kyaru.jpg'));
 
     checkDataCollect();
   }

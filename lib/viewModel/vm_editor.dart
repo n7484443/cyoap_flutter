@@ -16,11 +16,11 @@ class VMEditor extends GetxController{
 
   @override
   void onInit(){
-    if(NodeEditor.instance.target.contents.isEmpty){
+    if(NodeEditor.instance.target.contentsString.isEmpty){
       controllerBody = QuillController.basic();
     }else{
       controllerBody = QuillController(
-        document: Document.fromJson(jsonDecode(NodeEditor.instance.target.contents)),
+        document: Document.fromJson(jsonDecode(NodeEditor.instance.target.contentsString)),
         selection: const TextSelection.collapsed(offset: 0),
       );
     }
@@ -37,7 +37,7 @@ class VMEditor extends GetxController{
   }
 
   void save() {
-    NodeEditor.instance.target.contents = jsonEncode(controllerBody.document.toDelta().toJson());
+    NodeEditor.instance.target.contentsString = jsonEncode(controllerBody.document.toDelta().toJson());
     NodeEditor.instance.target.title = title.value;
     Get.find<VMPlatform>().update();
   }

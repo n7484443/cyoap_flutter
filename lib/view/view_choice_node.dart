@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
@@ -34,7 +33,7 @@ class ViewTextWithoutCardNode extends NodeBase {
   @override
   Widget build(BuildContext context) {
     var size = Get.find<VMPlatform>().getSize(Tuple(posX, posY));
-    var node = Get.find<VMPlatform>().getNode(posX, posY);
+    var node = Get.find<VMPlatform>().getNode(posX, posY)!;
     return Card(
       elevation:0.0,
       child: GetBuilder<VMPlatform>(
@@ -52,7 +51,7 @@ class ViewTextWithoutCardNode extends NodeBase {
               children: [
                 Text.rich(
                   TextSpan(
-                    text: node!.title,
+                    text: node.title,
                   ),
                   style: const TextStyle(
                     fontSize: 24,
@@ -89,7 +88,7 @@ class ViewChoiceTextNode extends NodeBase {
   @override
   Widget build(BuildContext context) {
     var size = Get.find<VMPlatform>().getSize(Tuple(posX, posY));
-    var node = Get.find<VMPlatform>().getNode(posX, posY);
+    var node = Get.find<VMPlatform>().getNode(posX, posY)!;
     return Card(
       elevation:5.0,
       child: InkWell(
@@ -107,19 +106,25 @@ class ViewChoiceTextNode extends NodeBase {
               children: [
                 Text.rich(
                   TextSpan(
-                    text: node!.title,
+                    text: node.title,
                   ),
                   style: const TextStyle(
                     fontSize: 24,
                   ),
-              ),
-              const AutoSizeText.rich(
-                TextSpan(
-                  children: [
-                      TextSpan(text: 'asdf\n'),
-                      TextSpan(text: 'bdef\n'),
-                      TextSpan(text: 'asdf\n'),
-                    ],
+                ),
+                IgnorePointer(
+                  child: quill.QuillEditor(
+                    controller:
+                        Get.find<VMPlatform>().getNodeController(posX, posY)!,
+                    scrollController: ScrollController(),
+                    readOnly: true,
+                    showCursor: false,
+                    scrollable: false,
+                    focusNode: FocusNode(),
+                    autoFocus: false,
+                    expands: false,
+                    enableInteractiveSelection: false,
+                    padding: EdgeInsets.zero,
                   ),
                 ),
               ],
@@ -139,7 +144,7 @@ class ViewChoiceNodeTextWithImage extends NodeBase {
   @override
   Widget build(BuildContext context) {
     var size = Get.find<VMPlatform>().getSize(Tuple(posX, posY));
-    var node = Get.find<VMPlatform>().getNode(posX, posY);
+    var node = Get.find<VMPlatform>().getNode(posX, posY)!;
     return Card(
       elevation:5.0,
       child: InkWell(
@@ -157,19 +162,32 @@ class ViewChoiceNodeTextWithImage extends NodeBase {
               children: [
                 Text.rich(
                   TextSpan(
-                    text: node!.title,
+                    text: node.title,
                   ),
                   style: const TextStyle(
                     fontSize: 24,
                   ),
-                    ),
-                    Image(
-                      image: PlatformSystem
-                          .getImage('imgt.jpg')
-                          .image,
-                      width: 200,
-                    ),
-                  ],
+                ),
+                Image(
+                  image: PlatformSystem.getImage(node.imageString).image,
+                  width: 200,
+                ),
+                IgnorePointer(
+                  child: quill.QuillEditor(
+                    controller:
+                        Get.find<VMPlatform>().getNodeController(posX, posY)!,
+                    scrollController: ScrollController(),
+                    readOnly: true,
+                    showCursor: false,
+                    scrollable: false,
+                    focusNode: FocusNode(),
+                    autoFocus: false,
+                    expands: false,
+                    enableInteractiveSelection: false,
+                    padding: EdgeInsets.zero,
+                  ),
+                ),
+              ],
                 ),
               ),
         ),
@@ -185,6 +203,7 @@ class ViewChoiceNodeImage extends NodeBase {
   @override
   Widget build(BuildContext context) {
     var size = Get.find<VMPlatform>().getSize(Tuple(posX, posY));
+    var node = Get.find<VMPlatform>().getNode(posX, posY)!;
     return Card(
       elevation:5.0,
       child: InkWell(
@@ -201,7 +220,7 @@ class ViewChoiceNodeImage extends NodeBase {
             child: Column(
               children: [
                 Image(
-                  image: PlatformSystem.getImage('img.jpg').image,
+                  image: PlatformSystem.getImage(node.imageString).image,
                   width: 200,
                 ),
               ],

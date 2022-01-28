@@ -1,41 +1,49 @@
+import 'package:english_words/english_words.dart';
+
 class ChoiceNodeBase {
   //grid 단위로 설정
   int x;
   int y;
   int width; //-1 = 무한대
   int height;
-  int type;
+  bool isCard;
   String title;
-  String contents;
+  String contentsString;
+  String imageString;
 
-  ChoiceNodeBase(this.x, this.y, this.width, this.height, this.type, this.title,
-      this.contents);
+  ChoiceNodeBase(this.x, this.y, this.width, this.height,
+      this.isCard, this.title,
+      this.contentsString, this.imageString);
 
-  ChoiceNodeBase.origin()
+  ChoiceNodeBase.origin(this.width, this.height, this.isCard, this.title, this.contentsString, this.imageString)
+      : x = 0,
+        y = 0;
+  ChoiceNodeBase.noTitle(this.width, this.height, this.isCard, this.contentsString, this.imageString)
       : x = 0,
         y = 0,
-        width = 1,
-        height = 1,
-        type = 0,
-        title = '',
-        contents = '';
-}
+        title = nouns.take(10).join("");//랜덤 문자로 제목 중복 방지
 
-class TextNode extends ChoiceNodeBase {
-  TextNode(int width, int height, String title, String contents, bool isCard)
-      : super(0, 0, width, height, isCard ? 1 : 0, title, contents);
-}
+  int getType() {
+    if(!isCard){
+      return 0;
+    }
+    if(imageString.isEmpty){
+      return 1;
+    }
+    if(contentsString.isEmpty){
+      return 2;
+    }
+    return 3;
+  }
 
-class ImageNode extends ChoiceNodeBase {
-  String imageString;
-
-  ImageNode(int width, int height, String title, this.imageString)
-      : super(0, 0, width, height, 2, title, '');
-}
-
-class TextImageNode extends ChoiceNodeBase {
-  String imageString;
-  
-  TextImageNode(int width, int height, String title, String contents, this.imageString)
-      : super(0, 0, width, height, 3, title, contents);
+  Map<String, dynamic> toJson() => {
+    'x' : x,
+    'y' : y,
+    'width' : width,
+    'height' : height,
+    'isCard' : isCard,
+    'title' : title,
+    'contentsString' : contentsString,
+    'imageString' : imageString,
+  };
 }

@@ -30,7 +30,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  file_picker : ^4.3.2
+  file_picker : ^4.3.3
   permission_handler: ^8.3.0
   http: ^0.13.4
   provider:  ^6.0.2
@@ -40,7 +40,8 @@ dependencies:
   auto_size_text: ^3.0.0
   crop: ^0.5.2
   archive: ^3.1.9
-  flutter_quill: ^3.8.3
+  flutter_quill: ^3.8.4
+  english_words: ^4.0.0
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,6 @@
-import 'package:cyoap_flutter/view/view_dragable_nested_map.dart';
+import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
 import 'package:cyoap_flutter/view/view_variable_table.dart';
-import 'package:cyoap_flutter/viewModel/vm_editor.dart';
+import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
@@ -21,7 +21,7 @@ class ViewMake extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.save),
                 onPressed: () {
-                  Get.find<VMEditor>().save();
+                  Get.find<VMPlatform>().save();
                 },
               )
             ],
@@ -47,7 +47,7 @@ class ViewMake extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.save),
                       onPressed: () {
-                        Get.find<VMEditor>().save();
+                        Get.find<VMPlatform>().save();
                       },
                     )
                   ],

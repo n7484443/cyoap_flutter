@@ -11,11 +11,16 @@ import 'package:google_fonts/google_fonts.dart';
 class ConstList{
   static double appBarSize = 40.0;
   static late final platformType actualPlatformType;
+
+  static bool isFileSystem(){
+    return actualPlatformType == platformType.web;
+  }
 }
 enum platformType{
   desktop, mobile, web,
 }
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     GetMaterialApp(
       title: 'CYOAP',

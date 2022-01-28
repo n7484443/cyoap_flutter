@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -57,7 +58,7 @@ class ViewStart extends StatelessWidget {
                   ),
                   Expanded(
                     child: TextButton(
-                      child: const Text('Add Path'),
+                      child: Text(ConstList.actualPlatformType == platformType.web ? 'Add File' : 'Add Path' ),
                       onPressed: () async {
                         if (await _.openDirectory() == 0) {
                           _.selected = 0;

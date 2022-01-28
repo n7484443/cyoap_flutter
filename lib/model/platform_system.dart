@@ -1,9 +1,16 @@
+@JS()
+library _exportRaw;
+
+import 'package:js/js.dart';
+import 'dart:typed_data';
+
 import 'package:archive/archive.dart';
 import 'package:archive/archive_io.dart';
 import 'package:cyoap_flutter/model/platform_file_system.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
 
+import '../main.dart';
 import 'abstract_platform.dart';
 
 class PlatformSystem{
@@ -15,7 +22,7 @@ class PlatformSystem{
     if(bytes == null)return;
 
     var archiveBytes = TarDecoder().decodeBytes(bytes);
-    platformFileSystem.createFromZip(archiveBytes);
+    platformFileSystem.createFromTar(archiveBytes);
   }
 
   Future<void> openPlatformFolder(String path) async {
@@ -29,4 +36,17 @@ class PlatformSystem{
   static AbstractPlatform getPlatform(){
     return instance.platformFileSystem.platform;
   }
+
+
+  void saveFile() async{
+    if(ConstList.isFileSystem()){
+      var archive = await platformFileSystem.saveToTar();
+      var encodedTar = TarEncoder().encode(archive) as Uint8List;
+      _exportRaw('exported.tar', encodedTar);
+    }else{
+    }
+  }
 }
+
+@JS()
+external void _exportRaw(String name, Uint8List data);

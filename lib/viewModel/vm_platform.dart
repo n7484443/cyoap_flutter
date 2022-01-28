@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cyoap_flutter/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
@@ -22,7 +23,7 @@ class VMPlatform extends GetxController{
       widgetList.add(List.empty(growable: true));
       var xList = list[y];
       for(int x = 0; x < xList.length; x++){
-        widgetList[y].insert(x, getWidgetFromType(xList[x].type, x, y));
+        widgetList[y].insert(x, getWidgetFromType(xList[x].getType(), x, y));
       }
     }
     update();
@@ -63,10 +64,10 @@ class VMPlatform extends GetxController{
   QuillController? getNodeController(int x, int y){
     var node = getNode(x, y);
     if(node == null)return null;
-    if(node.contents.isEmpty){
+    if(node.contentsString.isEmpty){
       return QuillController.basic();
     }else{
-      var json = jsonDecode(node.contents);
+      var json = jsonDecode(node.contentsString);
       return QuillController(
         document: Document.fromJson(json),
         selection: const TextSelection.collapsed(offset: 0),
@@ -90,5 +91,9 @@ class VMPlatform extends GetxController{
 
   bool isEditable(){
     return PlatformSystem.getPlatform().isEditable;
+  }
+
+  void save(){
+    PlatformSystem.instance.saveFile();
   }
 }

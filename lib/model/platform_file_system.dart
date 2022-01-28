@@ -13,7 +13,6 @@ import 'abstract_platform.dart';
 class PlatformFileSystem {
   late AbstractPlatform platform;
   final Map<String, Uint8List> _dirImage = {};
-  final Map<String, Image> _dirImageNetwork = {};
   Map<String, String> dirNode = {};
   Image noImage = Image.asset('images/noImage.png');
 
@@ -34,10 +33,10 @@ class PlatformFileSystem {
         var type = isImageFile(name);
         if (f is File && type != -1) {
           if (type == 1) {
-            _dirImageNetwork.putIfAbsent(name, () => Image.file(f));
+            var bytes = await f.readAsBytes();
+            _dirImage.putIfAbsent(name, () => bytes);
           } else {
-            var value = await f.readAsString();
-            _dirImageNetwork.putIfAbsent(name, () => Image.network(value));
+            //지원 아직 x
           }
         }
       }
@@ -68,7 +67,7 @@ class PlatformFileSystem {
     }
   }
 
-  void createFromZip(Archive archive) {
+  void createFromTar(Archive archive) {
     String? platformJson;
 
     for (var file in archive) {
@@ -78,11 +77,10 @@ class PlatformFileSystem {
         if (fileName.startsWith('images')) {
           var realName = file.name.split("/")[1];
           int type = isImageFile(fileName);
-          if (type == 0) {
-            _dirImageNetwork.putIfAbsent(
-                realName, () => Image.network(String.fromCharCodes(data)));
-          } else if (type == 1) {
+          if (type == 1) {
             _dirImage.putIfAbsent(realName, () => data);
+          }else{
+            //아직 지원 x
           }
         } else if (fileName.startsWith('nodes')) {
           dirNode.putIfAbsent(
@@ -97,6 +95,26 @@ class PlatformFileSystem {
     } else {
       platform = AbstractPlatform.none();
     }
+  }
+
+  /*Future<void> saveToFolder(){
+
+  }*/
+  Future<Archive> saveToTar() async{
+    var archive = Archive();
+    for(var imageName in _dirImage.keys){
+      archive.addFile(ArchiveFile('images/$imageName', _dirImage[imageName]!.length, _dirImage[imageName]));
+    }
+    for(int i = 0; i < platform.choiceNodes.length; i++){
+      for(int j = 0; j < platform.choiceNodes[i].length; j++){
+        var node = platform.choiceNodes[i][j];
+        var utf = utf8.encode(jsonEncode(node.toJson()));
+        archive.addFile(ArchiveFile('nodes/${node.title}.json', utf.length, utf));
+      }
+    }
+    var platformJson = utf8.encode(jsonEncode(platform.toJson()));
+    archive.addFile(ArchiveFile('platform.json', platformJson.length, platformJson));
+    return archive;
   }
 
   //1 = 일반 이미지, 0 = 웹 이미지, -1 = 이미지 아님.
@@ -126,8 +144,6 @@ class PlatformFileSystem {
   Image getImage(String name) {
     if (_dirImage[name] != null) {
       return Image.memory(_dirImage[name]!);
-    } else if (_dirImageNetwork[name] != null) {
-      return _dirImageNetwork[name]!;
     } else {
       return noImage;
     }
