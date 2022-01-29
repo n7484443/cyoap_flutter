@@ -1,16 +1,11 @@
-@JS()
-library _exportRaw;
-
-import 'package:js/js.dart';
-import 'dart:typed_data';
-
+import 'saveWithNonJS.dart'
+  if(dart.library.js) 'saveWithJS.dart'
+  if(dart.library.io) 'saveWithNonJS.dart';
 import 'package:archive/archive.dart';
 import 'package:archive/archive_io.dart';
 import 'package:cyoap_flutter/model/platform_file_system.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
-
-import '../main.dart';
 import 'abstract_platform.dart';
 
 class PlatformSystem{
@@ -39,14 +34,6 @@ class PlatformSystem{
 
 
   void saveFile() async{
-    if(ConstList.isFileSystem()){
-      var archive = await platformFileSystem.saveToTar();
-      var encodedTar = TarEncoder().encode(archive) as Uint8List;
-      _exportRaw('exported.tar', encodedTar);
-    }else{
-    }
+    saveRaw('exported.tar', platformFileSystem);
   }
 }
-
-@JS()
-external void _exportRaw(String name, Uint8List data);
