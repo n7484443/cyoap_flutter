@@ -11,26 +11,32 @@ class ChoiceNodeBase {
   String contentsString;
   String imageString;
 
-  ChoiceNodeBase(this.x, this.y, this.width, this.height,
-      this.isCard, this.title,
-      this.contentsString, this.imageString);
+  ChoiceNodeBase(this.x, this.y, this.width, this.height, this.isCard,
+      this.title, this.contentsString, this.imageString);
 
-  ChoiceNodeBase.origin(this.width, this.height, this.isCard, this.title, this.contentsString, this.imageString)
+  ChoiceNodeBase.origin(this.width, this.height, this.isCard, this.title,
+      this.contentsString, this.imageString)
       : x = 0,
         y = 0;
-  ChoiceNodeBase.noTitle(this.width, this.height, this.isCard, this.contentsString, this.imageString)
+
+  ChoiceNodeBase.noTitle(this.width, this.height, this.isCard,
+      this.contentsString, this.imageString)
       : x = 0,
         y = 0,
-        title = nouns.take(10).join("");//랜덤 문자로 제목 중복 방지
+        title = '' {
+    for (int i = 0; i < 2; i++) {
+      title += WordPair.random().asPascalCase;
+    }
+  } //랜덤 문자로 제목 중복 방지
 
   int getType() {
-    if(!isCard){
+    if (!isCard) {
       return 0;
     }
-    if(imageString.isEmpty){
+    if (imageString.isEmpty) {
       return 1;
     }
-    if(contentsString.isEmpty){
+    if (contentsString.isEmpty) {
       return 2;
     }
     return 3;

@@ -97,24 +97,49 @@ class PlatformFileSystem {
     }
   }
 
-  /*Future<void> saveToFolder(){
-
-  }*/
   Future<Archive> saveToTar() async{
     var archive = Archive();
     for(var imageName in _dirImage.keys){
       archive.addFile(ArchiveFile('images/$imageName', _dirImage[imageName]!.length, _dirImage[imageName]));
     }
     for(int i = 0; i < platform.choiceNodes.length; i++){
-      for(int j = 0; j < platform.choiceNodes[i].length; j++){
+      for (int j = 0; j < platform.choiceNodes[i].length; j++) {
         var node = platform.choiceNodes[i][j];
         var utf = utf8.encode(jsonEncode(node.toJson()));
-        archive.addFile(ArchiveFile('nodes/${node.title}.json', utf.length, utf));
+        archive
+            .addFile(ArchiveFile('nodes/${node.title}.json', utf.length, utf));
       }
     }
     var platformJson = utf8.encode(jsonEncode(platform.toJson()));
-    archive.addFile(ArchiveFile('platform.json', platformJson.length, platformJson));
+    archive.addFile(
+        ArchiveFile('platform.json', platformJson.length, platformJson));
     return archive;
+  }
+
+  Future<void> saveToFolder(String path) async {
+    var dirImages = Directory(path + '/images');
+    var dirNodes = Directory(path + '/nodes');
+    var platformJson = File(path + '/platform.json');
+
+    dirImages.deleteSync(recursive: true);
+    dirImages.create();
+    for(var imageName in _dirImage.keys){
+      var fileData = _dirImage[imageName]!;
+      File('$path/images/$imageName').writeAsBytes(fileData);
+    }
+
+    dirNodes.deleteSync(recursive: true);
+    dirNodes.create();
+    for(var x = 0; x < platform.choiceNodes.length; x++){
+      for(var nodes in platform.choiceNodes[x]){
+        print(nodes.title);
+        File('$path/nodes/${nodes.title}.json').writeAsString(jsonEncode(nodes.toJson()));
+      }
+    }
+
+    platformJson.deleteSync(recursive: true);
+    platformJson.create();
+    File('$path/platform.json').writeAsString(jsonEncode(platform.toJson()));
   }
 
   //1 = 일반 이미지, 0 = 웹 이미지, -1 = 이미지 아님.
