@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cyoap_flutter/model/editor.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
+import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
@@ -40,5 +41,6 @@ class VMEditor extends GetxController{
     NodeEditor.instance.target.contentsString = jsonEncode(controllerBody.document.toDelta().toJson());
     NodeEditor.instance.target.title = title.value;
     Get.find<VMPlatform>().update();
+    Get.find<VMVariableTable>().update();
   }
 }

@@ -18,10 +18,19 @@ class ViewMake extends StatelessWidget {
           preferredSize: Size.fromHeight(ConstList.appBarSize),
           child: AppBar(
             actions: [
+              Visibility(
+                child: IconButton(
+                  icon: const Icon(Icons.archive),
+                  onPressed: () {
+                    Get.find<VMPlatform>().save(true);
+                  },
+                ),
+                visible: !ConstList.isFileSystem(),
+              ),
               IconButton(
                 icon: const Icon(Icons.save),
                 onPressed: () {
-                  Get.find<VMPlatform>().save();
+                  Get.find<VMPlatform>().save(false);
                 },
               )
             ],
@@ -44,10 +53,19 @@ class ViewMake extends StatelessWidget {
                 preferredSize: Size.fromHeight(ConstList.appBarSize),
                 child: AppBar(
                   actions: [
+                    Visibility(
+                      child: IconButton(
+                        icon: const Icon(Icons.archive),
+                        onPressed: () {
+                          Get.find<VMPlatform>().save(true);
+                        },
+                      ),
+                      visible: !ConstList.isFileSystem(),
+                    ),
                     IconButton(
                       icon: const Icon(Icons.save),
                       onPressed: () {
-                        Get.find<VMPlatform>().save();
+                        Get.find<VMPlatform>().save(false);
                       },
                     )
                   ],

@@ -93,7 +93,11 @@ class VMPlatform extends GetxController{
     return PlatformSystem.getPlatform().isEditable;
   }
 
-  void save(){
-    PlatformSystem.instance.saveFile();
+  void save(bool saveAsFile){
+    if(saveAsFile){
+      PlatformSystem.instance.saveFile();
+    }else{
+      PlatformSystem.instance.saveFolder();
+    }
   }
 }

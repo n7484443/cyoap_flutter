@@ -39,7 +39,10 @@ class PlatformSystem{
     if(ConstList.isFileSystem()){
       saveRaw('exported.tar', platformFileSystem);
     }else{
-      saveRaw(path!, platformFileSystem);
+      saveZip(path!, platformFileSystem);
     }
+  }
+  void saveFolder() async{
+    saveRaw(path!, platformFileSystem);
   }
 }

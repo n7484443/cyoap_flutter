@@ -21,7 +21,7 @@ class ViewPlay extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.save),
                 onPressed: () {
-                  Get.find<VMPlatform>().save();
+                  Get.find<VMPlatform>().save(false);
                 },
               )
             ],
@@ -47,7 +47,7 @@ class ViewPlay extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.save),
                       onPressed: () {
-                        Get.find<VMPlatform>().save();
+                        Get.find<VMPlatform>().save(false);
                       },
                     )
                   ],
