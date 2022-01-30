@@ -1,3 +1,6 @@
+import 'dart:ffi';
+import 'dart:typed_data';
+
 import '../main.dart';
 import 'saveWithNonJS.dart'
   if(dart.library.js) 'saveWithJS.dart';
@@ -26,10 +29,6 @@ class PlatformSystem{
     await platformFileSystem.createFromFolder(path);
   }
 
-  static Image getImage(String image){
-    return instance.platformFileSystem.getImage(image);
-  }
-
   static AbstractPlatform getPlatform(){
     return instance.platformFileSystem.platform;
   }
@@ -45,4 +44,17 @@ class PlatformSystem{
   void saveFolder() async{
     saveRaw(path!, platformFileSystem);
   }
+
+  static List<Uint8List> getImageList() {
+    return instance.platformFileSystem.getImageList();
+  }
+
+  static String getImageName(int index) {
+    return instance.platformFileSystem.getImageName(index);
+  }
+
+  static Image getImage(String image){
+    return instance.platformFileSystem.getImage(image);
+  }
+
 }

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
@@ -35,9 +37,9 @@ class ViewEditor extends StatelessWidget {
                   Get.back();
                 },
               ),
-              ],
-            ),
+            ],
           ),
+        ),
       );
     } else {
       return Row(
@@ -63,9 +65,9 @@ class ViewEditor extends StatelessWidget {
                 ),
               ),
               body: const ViewEditorTyping(),
-              ),
             ),
-          ],
+          ),
+        ],
       );
     }
   }
@@ -114,6 +116,7 @@ class ViewEditorTyping extends StatelessWidget {
           ),
         ),
         Expanded(
+          flex: 3,
           child: Stack(
             children: [
               Container(
@@ -133,6 +136,33 @@ class ViewEditorTyping extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: ScrollConfiguration(
+            behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
+              PointerDeviceKind.touch,
+              PointerDeviceKind.mouse,
+            }),
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: const AlwaysScrollableScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              controller: ScrollController(),
+              itemCount: controller.getImageLength(),
+              itemBuilder: (BuildContext context, int index) {
+                return Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: GestureDetector(
+                    child: Image.memory(controller.getImage(index)),
+                    onDoubleTap: (){
+                      controller.setImage(index);
+                    },
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ],

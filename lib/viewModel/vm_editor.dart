@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:cyoap_flutter/model/editor.dart';
+import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
 import 'package:flutter/material.dart';
@@ -42,5 +44,18 @@ class VMEditor extends GetxController{
     NodeEditor.instance.target.title = title.value;
     Get.find<VMPlatform>().update();
     Get.find<VMVariableTable>().update();
+  }
+
+  Uint8List getImage(int i){
+    return PlatformSystem.getImageList()[i];
+  }
+
+  void setImage(int index) {
+    NodeEditor.instance.target.imageString = PlatformSystem.getImageName(index);
+    Get.find<VMPlatform>().update();
+  }
+
+  int getImageLength(){
+    return PlatformSystem.getImageList().length;
   }
 }

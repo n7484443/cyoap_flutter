@@ -182,4 +182,11 @@ class PlatformFileSystem {
       return noImage;
     }
   }
+  List<Uint8List> getImageList(){
+    return _dirImage.values.toList();
+  }
+  String getImageName(int index){
+    return _dirImage.keys.toList()[index];
+  }
+
 }
