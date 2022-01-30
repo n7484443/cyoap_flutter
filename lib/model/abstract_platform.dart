@@ -15,10 +15,10 @@ class AbstractPlatform {
   bool isEditable = true;
 
   void init() {
-    addChoiceNode(0, 0, ChoiceNodeBase.noTitle(2, 1, false, '', ''));
-    addChoiceNode(0, 1, ChoiceNodeBase.noTitle(1, 1, true, '', ''));
-    addChoiceNode(1, 1, ChoiceNodeBase.noTitle(1, 1, true, '', 'img.jpg'));
-    addChoiceNode(0, 2, ChoiceNodeBase.noTitle(1, 1, true, '', 'kyaru.jpg'));
+    addData(0, 0, ChoiceNodeBase.noTitle(2, 1, false, '', ''));
+    addData(0, 1, ChoiceNodeBase.noTitle(1, 1, true, '', ''));
+    addData(1, 1, ChoiceNodeBase.noTitle(1, 1, true, '', 'img.jpg'));
+    addData(0, 2, ChoiceNodeBase.noTitle(1, 1, true, '', 'kyaru.jpg'));
 
     checkDataCollect();
   }
@@ -75,7 +75,7 @@ class AbstractPlatform {
 
   int getHeight() => halfHeight * 2;
 
-  void addChoiceNode(int x, int y, ChoiceNodeBase node) {
+  void addData(int x, int y, ChoiceNodeBase node) {
     node.x = x;
     node.y = y;
     while (choiceNodes.length <= node.y) {
@@ -88,7 +88,7 @@ class AbstractPlatform {
     }
   }
 
-  void removeChoiceNode(int x, int y){
+  void removeData(int x, int y){
     choiceNodes[y].removeAt(x);
     checkDataCollect();
   }
@@ -99,8 +99,8 @@ class AbstractPlatform {
 
   void changeData(Tuple<int, int> start, Tuple<int, int> pos) {
     var node = getChoiceNode(start.data1, start.data2)!;
-    removeChoiceNode(start.data1, start.data2);
-    addChoiceNode(pos.data1, pos.data2, node);
+    removeData(start.data1, start.data2);
+    addData(pos.data1, pos.data2, node);
     checkDataCollect();
   }
 

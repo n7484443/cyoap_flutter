@@ -1,4 +1,5 @@
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -13,9 +14,14 @@ class VMStartPlatform extends GetxController {
   int selected = -1;
 
   Future<bool> _getStatuses() async {
-    await [Permission.storage, Permission.camera].request();
+    if(await Permission.storage.isDenied) {
+      await Permission.storage.request();
+    }
+    if(await Permission.manageExternalStorage.isDenied) {
+      await Permission.manageExternalStorage.request();
+    }
 
-    return Future.value(Permission.storage.isGranted);
+    return await Permission.storage.isGranted && await Permission.manageExternalStorage.isGranted;
   }
 
   Future<num> openDirectory() async {
@@ -51,6 +57,13 @@ class VMStartPlatform extends GetxController {
 
   Future<bool> setDirectory() async{
     if(selected >= -1){
+      if(ConstList.actualPlatformType == platformType.mobile){
+        var status = await _getStatuses();
+        if (!status) {
+          return false;
+        }
+      }
+
       var path = pathList.reversed.elementAt(selected);
       if(ConstList.actualPlatformType == platformType.web){
         return true;

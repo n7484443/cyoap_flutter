@@ -12,5 +12,10 @@ void saveRaw(String name, PlatformFileSystem platformFileSystem) async{
 void saveZip(String name, PlatformFileSystem platformFileSystem) async{
   var archive = await platformFileSystem.saveToTar();
   var encodedTar = TarEncoder().encode(archive) as Uint8List;
-  File('$name/extract.tar').writeAsBytes(encodedTar);
+  var file = File('$name/extract.tar');
+  if(file.existsSync()){
+    file.delete();
+  }
+  file.createSync();
+  file.writeAsBytes(encodedTar);
 }

@@ -12,6 +12,8 @@ class ViewPlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final vmPlatform = Get.put(VMPlatform());
+    vmPlatform.updateWidgetList();
     if (ConstList.actualPlatformType == platformType.mobile) {
       return Scaffold(
         appBar: PreferredSize(

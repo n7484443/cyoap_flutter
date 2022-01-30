@@ -1,9 +1,8 @@
+import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/util/tuple.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 class NestedMap extends StatelessWidget {
@@ -11,16 +10,16 @@ class NestedMap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final vmPlatform = Get.put(VMPlatform());
-    vmPlatform.updateWidgetList();
     return GetBuilder<VMPlatform>(
       builder: (_) => ListView.builder(
         shrinkWrap: true,
-        itemCount: vmPlatform.widgetList.length * 2 + 1,
+        itemCount: _.widgetList.length * 2 + 1,
         itemBuilder: (BuildContext context, int x) {
-          if (x < vmPlatform.widgetList.length * 2 - 1) {
+          if (x < _.widgetList.length * 2 - 1) {
             if (x % 2 == 1) {
-              return const Divider();
+              return const Divider(
+                thickness: 4,
+              );
             }
             int i = x ~/ 2;
             return Padding(
@@ -31,7 +30,7 @@ class NestedMap extends StatelessWidget {
               child: Wrap(
                 alignment: WrapAlignment.center,
                 children: List<Widget>.generate(
-                  vmPlatform.widgetList[i].length * 2 + 1,
+                  _.widgetList[i].length * 2 + 1,
                   (int j) {
                     if (j % 2 == 0) {
                       return DragTarget<Tuple<int, int>>(
@@ -43,41 +42,61 @@ class NestedMap extends StatelessWidget {
                               width: nodeBaseWidth / 6,
                               height: nodeBaseHeight,
                             ),
-                            visible: vmPlatform.isDrag,
+                            visible: _.isDrag,
                           );
                         },
                         onAccept: (Tuple<int, int> data) {
-                          vmPlatform.changeData(data, Tuple(j ~/ 2, i));
+                          _.changeData(data, Tuple(j ~/ 2, i));
                         },
                       );
                     } else {
                       int num = j ~/ 2;
-                      if (vmPlatform.isEditable()) {
-                        return Draggable<Tuple<int, int>>(
-                          data: Tuple(num, i),
-                          feedback: Transform.scale(
-                            scale: 0.9,
-                            child: vmPlatform.widgetList[i][num],
-                          ),
-                          onDragStarted: () {
-                            vmPlatform.dragStart();
-                          },
-                          child: vmPlatform.widgetList[i][num],
-                          onDragEnd: (DraggableDetails data) {
-                            vmPlatform.dragEnd();
-                          },
-                        );
+                      if (_.isEditable()) {
+                        if (ConstList.actualPlatformType ==
+                            platformType.mobile) {
+                          return LongPressDraggable<Tuple<int, int>>(
+                            data: Tuple(num, i),
+                            feedback: Transform.scale(
+                              scale: 0.9,
+                              child: _.widgetList[i][num],
+                            ),
+                            onDragStarted: () {
+                              _.dragStart();
+                            },
+                            child: _.widgetList[i][num],
+                            onDragEnd: (DraggableDetails data) {
+                              _.dragEnd();
+                            },
+                          );
+                        } else {
+                          return Draggable<Tuple<int, int>>(
+                            data: Tuple(num, i),
+                            feedback: Transform.scale(
+                              scale: 0.9,
+                              child: _.widgetList[i][num],
+                            ),
+                            onDragStarted: () {
+                              _.dragStart();
+                            },
+                            child: _.widgetList[i][num],
+                            onDragEnd: (DraggableDetails data) {
+                              _.dragEnd();
+                            },
+                          );
+                        }
                       }
-                      return vmPlatform.widgetList[i][num];
+                      return _.widgetList[i][num];
                     }
                   },
                 ),
               ),
             );
-          } else if (x == vmPlatform.widgetList.length * 2 - 1) {
+          } else if (x == _.widgetList.length * 2 - 1) {
             return Visibility(
-              child: const Divider(),
-              visible: vmPlatform.isDrag,
+              child: const Divider(
+                thickness: 4,
+              ),
+              visible: _.isDrag,
             );
           } else {
             return DragTarget<Tuple<int, int>>(
@@ -89,12 +108,11 @@ class NestedMap extends StatelessWidget {
                     width: nodeBaseWidth / 6,
                     height: nodeBaseHeight,
                   ),
-                  visible: vmPlatform.isDrag,
+                  visible: _.isDrag,
                 );
               },
               onAccept: (Tuple<int, int> data) {
-                vmPlatform.changeData(
-                    data, Tuple(0, vmPlatform.widgetList.length));
+                _.changeData(data, Tuple(0, _.widgetList.length));
               },
             );
           }

@@ -121,25 +121,34 @@ class PlatformFileSystem {
     var dirNodes = Directory(path + '/nodes');
     var platformJson = File(path + '/platform.json');
 
-    dirImages.deleteSync(recursive: true);
+    if(dirImages.existsSync()){
+      dirImages.deleteSync(recursive: true);
+    }
     dirImages.create();
     for(var imageName in _dirImage.keys){
       var fileData = _dirImage[imageName]!;
-      File('$path/images/$imageName').writeAsBytes(fileData);
+      var file = File('$path/images/$imageName');
+      file.createSync();
+      file.writeAsBytes(fileData);
     }
 
-    dirNodes.deleteSync(recursive: true);
+    if(dirNodes.existsSync()) {
+      dirNodes.deleteSync(recursive: true);
+    }
     dirNodes.create();
     for(var x = 0; x < platform.choiceNodes.length; x++){
       for(var nodes in platform.choiceNodes[x]){
         print(nodes.title);
-        File('$path/nodes/${nodes.title}.json').writeAsString(jsonEncode(nodes.toJson()));
+        var file = File('$path/nodes/${nodes.title}.json');
+        file.createSync();
+        file.writeAsString(jsonEncode(nodes.toJson()));
       }
     }
-
-    platformJson.deleteSync(recursive: true);
+    if(platformJson.existsSync()) {
+      platformJson.deleteSync(recursive: true);
+    }
     platformJson.create();
-    File('$path/platform.json').writeAsString(jsonEncode(platform.toJson()));
+    platformJson.writeAsString(jsonEncode(platform.toJson()));
   }
 
   //1 = 일반 이미지, 0 = 웹 이미지, -1 = 이미지 아님.

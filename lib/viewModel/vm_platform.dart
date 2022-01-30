@@ -43,12 +43,19 @@ class VMPlatform extends GetxController{
   }
 
   Tuple<int, int> getSize(Tuple<int, int> position) {
-    var node = PlatformSystem.getPlatform().choiceNodes[position.data2][position.data1];
+    var node = getNode(position.data1, position.data2)!;
     return Tuple(node.width, node.height);
   }
 
+  ChoiceNodeBase createNodeForTemp(){
+    return ChoiceNodeBase.noTitle(1, 1, false, '', '');
+  }
+
   ChoiceNodeBase? getNode(int x, int y) {
-    return PlatformSystem.getPlatform().choiceNodes[y][x];
+    if(x == -1 && y == -1){
+      return createNodeForTemp();
+    }
+    return PlatformSystem.getPlatform().getChoiceNode(x, y);
   }
 
   void setEdit(int posX, int posY) {
@@ -85,7 +92,17 @@ class VMPlatform extends GetxController{
   }
 
   void changeData(Tuple<int, int> data, Tuple<int, int> pos) {
-    PlatformSystem.getPlatform().changeData(data, pos);
+    if(data == Tuple(-1, -1)){
+      PlatformSystem.getPlatform().addData(pos.data1, pos.data2, createNodeForTemp());
+      updateWidgetList();
+    }else{
+      PlatformSystem.getPlatform().changeData(data, pos);
+      updateWidgetList();
+    }
+  }
+
+  void removeData(Tuple<int, int> data) {
+    PlatformSystem.getPlatform().removeData(data.data1, data.data2);
     updateWidgetList();
   }
 
@@ -99,5 +116,11 @@ class VMPlatform extends GetxController{
     }else{
       PlatformSystem.instance.saveFolder();
     }
+  }
+
+  void addNode() {
+    PlatformSystem.getPlatform().addData(0, 0, ChoiceNodeBase.noTitle(1, 1, true, '', ''));
+    PlatformSystem.getPlatform().checkDataCollect();
+    updateWidgetList();
   }
 }
