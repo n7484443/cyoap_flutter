@@ -56,7 +56,7 @@ class VMStartPlatform extends GetxController {
   }
 
   Future<bool> setDirectory() async{
-    if(selected >= -1){
+    if(selected >= 0){
       if(ConstList.actualPlatformType == platformType.mobile){
         var status = await _getStatuses();
         if (!status) {
@@ -71,6 +71,11 @@ class VMStartPlatform extends GetxController {
         await PlatformSystem.instance.openPlatformFolder(path).then((value) {
           return true;
         });
+      }
+    }else{
+      if(ConstList.isFileSystem()){
+        PlatformSystem.instance.openPlatformVoid();
+        return true;
       }
     }
     return false;

@@ -96,6 +96,10 @@ class PlatformFileSystem {
       platform = AbstractPlatform.none();
     }
   }
+  void createFromVoid() {
+    platform = AbstractPlatform.none();
+  }
+
 
   Future<Archive> saveToTar() async{
     var archive = Archive();

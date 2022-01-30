@@ -1,15 +1,15 @@
-import 'dart:ffi';
 import 'dart:typed_data';
 
-import '../main.dart';
-import 'saveWithNonJS.dart'
-  if(dart.library.js) 'saveWithJS.dart';
 import 'package:archive/archive.dart';
 import 'package:archive/archive_io.dart';
 import 'package:cyoap_flutter/model/platform_file_system.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
+
+import '../main.dart';
 import 'abstract_platform.dart';
+import 'saveWithNonJS.dart'
+  if(dart.library.js) 'saveWithJS.dart';
 
 class PlatformSystem{
   static PlatformSystem instance = PlatformSystem();
@@ -29,6 +29,10 @@ class PlatformSystem{
     await platformFileSystem.createFromFolder(path);
   }
 
+  void openPlatformVoid(){
+    platformFileSystem.createFromVoid();
+  }
+
   static AbstractPlatform getPlatform(){
     return instance.platformFileSystem.platform;
   }
@@ -36,13 +40,17 @@ class PlatformSystem{
 
   void saveFile() async{
     if(ConstList.isFileSystem()){
-      saveRaw('exported.tar', platformFileSystem);
+      saveZip('exported.tar', platformFileSystem);
     }else{
       saveZip(path!, platformFileSystem);
     }
   }
   void saveFolder() async{
-    saveRaw(path!, platformFileSystem);
+    if(ConstList.isFileSystem()){
+      saveRaw('exported.tar', platformFileSystem);
+    }else{
+      saveRaw(path!, platformFileSystem);
+    }
   }
 
   static List<Uint8List> getImageList() {

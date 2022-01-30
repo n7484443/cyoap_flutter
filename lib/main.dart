@@ -8,6 +8,9 @@ import 'package:cyoap_flutter/view/view_start.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+//flutter build web --base-href=/FlutterCyoapWeb/
+
 class ConstList{
   static double appBarSize = 40.0;
   static late final platformType actualPlatformType;
@@ -37,10 +40,12 @@ void main() {
     ),
   );
   try{
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (Platform.isAndroid) {
       ConstList.actualPlatformType = platformType.mobile;
-    }else{
+    }else if(Platform.isWindows){
       ConstList.actualPlatformType =  platformType.desktop;
+    }else{
+      ConstList.actualPlatformType =  platformType.web;
     }
   }catch(e){
     ConstList.actualPlatformType =  platformType.web;
