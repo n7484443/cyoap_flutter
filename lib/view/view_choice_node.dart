@@ -16,17 +16,13 @@ import '../util/tuple.dart';
 double nodeBaseWidth = 240;
 double nodeBaseHeight = 260;
 
-abstract class NodeBase extends StatelessWidget {
+class ViewChoiceNodeTextWithImage extends StatelessWidget {
   final int posX;
   final int posY;
 
-  const NodeBase({Key? key, required this.posX, required this.posY})
+  const ViewChoiceNodeTextWithImage(
+      {Key? key, required this.posX, required this.posY})
       : super(key: key);
-}
-
-class ViewChoiceTextNode extends NodeBase {
-  const ViewChoiceTextNode({Key? key, required int posX, required int posY})
-      : super(key: key, posX: posX, posY: posY);
 
   @override
   Widget build(BuildContext context) {
@@ -45,72 +41,26 @@ class ViewChoiceTextNode extends NodeBase {
           height: nodeBaseHeight * size.data2,
           child: Column(
             children: [
-              Text.rich(
-                TextSpan(
-                  text: node.title,
-                ),
-                style: const TextStyle(
-                  fontSize: 24,
-                ),
-              ),
-              IgnorePointer(
-                child: quill.QuillEditor(
-                    controller:
-                        Get.find<VMPlatform>().getNodeController(posX, posY)!,
-                    scrollController: ScrollController(),
-                    readOnly: true,
-                    showCursor: false,
-                    scrollable: false,
-                    focusNode: FocusNode(),
-                    autoFocus: false,
-                    expands: false,
-                    enableInteractiveSelection: false,
-                    padding: EdgeInsets.zero,
+              Visibility(
+                child: Text.rich(
+                  TextSpan(
+                    text: node.title,
+                  ),
+                  style: const TextStyle(
+                    fontSize: 24,
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
-    );
-  }
-}
-
-class ViewChoiceNodeTextWithImage extends NodeBase {
-  const ViewChoiceNodeTextWithImage(
-      {Key? key, required int posX, required int posY})
-      : super(key: key, posX: posX, posY: posY);
-
-  @override
-  Widget build(BuildContext context) {
-    var size = Get.find<VMPlatform>().getSize(Tuple(posX, posY));
-    var node = Get.find<VMPlatform>().getNode(posX, posY)!;
-    return InkWell(
-      onTap: () {},
-      onHover: (val) {},
-      onDoubleTap: () {
-        Get.find<VMPlatform>().setEdit(posX, posY);
-        Get.toNamed('/viewEditor');
-      },
-      child: GetBuilder<VMPlatform>(
-        builder: (_) => SizedBox(
-          width: nodeBaseWidth * size.data1,
-          height: nodeBaseHeight * size.data2,
-          child: Column(
-            children: [
-              Text.rich(
-                TextSpan(
-                  text: node.title,
-                ),
-                style: const TextStyle(
-                  fontSize: 24,
-                ),
+                visible: node.title.isNotEmpty,
               ),
-              Image(
-                image: PlatformSystem.getImage(node.imageString).image,
+              Visibility(
+                child: Image(
+                  image: PlatformSystem.getImage(node.imageString).image,
                   width: 200,
                 ),
-                IgnorePointer(
+                visible: node.imageString.isNotEmpty,
+              ),
+              Visibility(
+                child: IgnorePointer(
                   child: quill.QuillEditor(
                     controller:
                         Get.find<VMPlatform>().getNodeController(posX, posY)!,
@@ -125,38 +75,7 @@ class ViewChoiceNodeTextWithImage extends NodeBase {
                     padding: EdgeInsets.zero,
                   ),
                 ),
-              ],
-                ),
-              ),
-      ),
-    );
-  }
-}
-
-class ViewChoiceNodeImage extends NodeBase {
-  const ViewChoiceNodeImage({Key? key, required int posX, required int posY})
-      : super(key: key, posX: posX, posY: posY);
-
-  @override
-  Widget build(BuildContext context) {
-    var size = Get.find<VMPlatform>().getSize(Tuple(posX, posY));
-    var node = Get.find<VMPlatform>().getNode(posX, posY)!;
-    return InkWell(
-      onTap: () {},
-      onHover: (val) {},
-      onDoubleTap: () {
-        Get.find<VMPlatform>().setEdit(posX, posY);
-        Get.toNamed('/viewEditor');
-      },
-      child: GetBuilder<VMPlatform>(
-        builder: (_) => SizedBox(
-          width: nodeBaseWidth * size.data1,
-          height: nodeBaseHeight * size.data2,
-          child: Column(
-            children: [
-              Image(
-                image: PlatformSystem.getImage(node.imageString).image,
-                width: 200,
+                visible: node.contentsString.isNotEmpty,
               ),
             ],
           ),

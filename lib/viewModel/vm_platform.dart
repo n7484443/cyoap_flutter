@@ -30,25 +30,14 @@ class VMPlatform extends GetxController{
   }
 
   Widget getWidgetFromType(int type, bool isCard, int x, int y) {
-    Widget widget;
-    switch (type) {
-      case 0:
-        widget = ViewChoiceTextNode(posX: x, posY: y);
-        break;
-      case 1:
-        widget = ViewChoiceNodeImage(posX: x, posY: y);
-        break;
-      default:
-        widget = ViewChoiceNodeTextWithImage(posX: x, posY: y);
-        break;
-    }
+    Widget widget = ViewChoiceNodeTextWithImage(posX: x, posY: y);
     if (isCard) {
       return Card(
         elevation: 5.0,
         child: widget,
       );
     } else {
-      return widget;
+      return Material(child: widget);
     }
   }
 
