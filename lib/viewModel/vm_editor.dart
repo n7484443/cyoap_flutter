@@ -5,6 +5,7 @@ import 'package:cyoap_flutter/model/editor.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
@@ -70,5 +71,19 @@ class VMEditor extends GetxController{
     isCard = value;
     NodeEditor.instance.target.isCard = value;
     update();
+  }
+
+  Future<void> addImage() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      withData: true,
+      type: FileType.image,
+    );
+    if(result != null){
+      var file = result.files.single;
+
+      if(file.bytes == null)return;
+      PlatformSystem.addImage(file.name, file.bytes!);
+      update();
+    }
   }
 }

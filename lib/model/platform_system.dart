@@ -66,6 +66,10 @@ class PlatformSystem{
     return instance.platformFileSystem.getImage(image);
   }
 
+  static void addImage(String name, Uint8List data){
+    instance.platformFileSystem.addImage(name, data);
+  }
+
   void saveCapture(ui.Image image) async{
     ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     if(byteData == null)return;

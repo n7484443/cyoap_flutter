@@ -193,4 +193,8 @@ class PlatformFileSystem {
     return _dirImage.keys.toList()[index];
   }
 
+  void addImage(String name, Uint8List data) {
+    _dirImage.putIfAbsent(name, () => data);
+  }
+
 }

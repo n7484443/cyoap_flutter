@@ -168,26 +168,28 @@ class ViewEditorTyping extends StatelessWidget {
           child: Row(
             children: [
               IconButton(
-                  onPressed: () {  },
-                  icon : const Icon(Icons.add)
-              ),
+                  onPressed: () {
+                    controller.addImage();
+                  },
+                  icon: const Icon(Icons.add)),
               Expanded(
                 child: ScrollConfiguration(
-                  behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
+                  behavior:
+                      ScrollConfiguration.of(context).copyWith(dragDevices: {
                     PointerDeviceKind.touch,
                     PointerDeviceKind.mouse,
                   }),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    controller: ScrollController(),
-                    itemCount: controller.getImageLength(),
-                    itemBuilder: (BuildContext context, int index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(1.0),
-                        child: GetBuilder<VMEditor>(
-                          builder: (_) => Container(
+                  child: GetBuilder<VMEditor>(
+                    builder: (_) => ListView.builder(
+                      shrinkWrap: true,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      controller: ScrollController(),
+                      itemCount: controller.getImageLength(),
+                      itemBuilder: (BuildContext context, int index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(1.0),
+                          child: Container(
                             decoration: BoxDecoration(
                               border: Border.all(
                                 width: 3,
@@ -199,13 +201,13 @@ class ViewEditorTyping extends StatelessWidget {
                             child: GestureDetector(
                               child: Image.memory(controller.getImage(index)),
                               onDoubleTap: () {
-                                controller.setImage(index);
-                              },
-                            ),
-                          ),
+                                    controller.setImage(index);
+                                  },
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
                   ),
                 ),
               ),
