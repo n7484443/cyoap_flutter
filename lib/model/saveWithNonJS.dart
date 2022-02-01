@@ -8,6 +8,14 @@ void saveRaw(String name, PlatformFileSystem platformFileSystem) async{
   await platformFileSystem.saveToFolder(name);
   print('save Done!');
 }
+void downloadCapture(String name, Uint8List data){
+  var file = File('$name/extract.jpg');
+  if(file.existsSync()){
+    file.delete();
+  }
+  file.createSync();
+  file.writeAsBytesSync(data);
+}
 
 void saveZip(String name, PlatformFileSystem platformFileSystem) async{
   var archive = await platformFileSystem.saveToTar();

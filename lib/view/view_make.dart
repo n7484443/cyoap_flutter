@@ -52,9 +52,15 @@ class ViewMake extends StatelessWidget {
               ],
             ),
             actions: [
+              IconButton(
+                icon: const Icon(Icons.image),
+                onPressed: () {
+                  Get.find<VMPlatform>().exportAsImage();
+                },
+              ),
               Visibility(
                 child: IconButton(
-                  icon: const Icon(Icons.archive),
+                  icon: const Icon(Icons.save_alt),
                   onPressed: () {
                     Get.find<VMPlatform>().save(true);
                   },
@@ -116,9 +122,15 @@ class ViewMake extends StatelessWidget {
                     ],
                   ),
                   actions: [
+                    IconButton(
+                      icon: const Icon(Icons.image),
+                      onPressed: () {
+                        Get.find<VMPlatform>().exportAsImage();
+                      },
+                    ),
                     Visibility(
                       child: IconButton(
-                        icon: const Icon(Icons.archive),
+                        icon: const Icon(Icons.save_alt),
                         onPressed: () {
                           Get.find<VMPlatform>().save(true);
                         },

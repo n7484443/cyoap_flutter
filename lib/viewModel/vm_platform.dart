@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
 
@@ -13,6 +16,7 @@ import '../view/view_choice_node.dart';
 class VMPlatform extends GetxController{
   List<List<Widget>> widgetList = List.empty(growable: true);
   bool isDrag = false;
+  GlobalKey captureKey = GlobalKey();
 
   void updateWidgetList(){
     widgetList.clear();
@@ -37,7 +41,10 @@ class VMPlatform extends GetxController{
         child: widget,
       );
     } else {
-      return Material(child: widget);
+      return Material(
+          color: Colors.white,
+          child: widget
+      );
     }
   }
 
@@ -121,5 +128,10 @@ class VMPlatform extends GetxController{
     PlatformSystem.getPlatform().addData(0, 0, ChoiceNodeBase.noTitle(1, 1, true, '', ''));
     PlatformSystem.getPlatform().checkDataCollect();
     updateWidgetList();
+  }
+
+  Future<void> exportAsImage() async {
+    var boundary = captureKey.currentContext?.findRenderObject() as RenderRepaintBoundary;
+    PlatformSystem.instance.saveCapture(await boundary.toImage());
   }
 }

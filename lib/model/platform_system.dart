@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:archive/archive.dart';
 import 'package:archive/archive_io.dart';
@@ -63,6 +64,16 @@ class PlatformSystem{
 
   static Image getImage(String image){
     return instance.platformFileSystem.getImage(image);
+  }
+
+  void saveCapture(ui.Image image) async{
+    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    if(byteData == null)return;
+    if(ConstList.isFileSystem()) {
+      downloadCapture('exported.jpg', byteData.buffer.asUint8List());
+    }else{
+      downloadCapture(path!, byteData.buffer.asUint8List());
+    }
   }
 
 }

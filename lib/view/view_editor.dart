@@ -48,25 +48,6 @@ class ViewEditor extends StatelessWidget {
         ),
         drawer: const ViewVariable(),
         body: const ViewEditorTyping(),
-        bottomNavigationBar: BottomAppBar(
-          child: Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.save),
-                onPressed: () {
-                  Get.back();
-                },
-              ),
-              const Spacer(),
-              IconButton(
-                icon: const Icon(Icons.navigate_next),
-                onPressed: () {
-                  Get.back();
-                },
-              ),
-            ],
-          ),
-        ),
       );
     } else {
       return Row(
@@ -184,41 +165,51 @@ class ViewEditorTyping extends StatelessWidget {
         ),
         Expanded(
           flex: 1,
-          child: ScrollConfiguration(
-            behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
-              PointerDeviceKind.touch,
-              PointerDeviceKind.mouse,
-            }),
-            child: ListView.builder(
-              shrinkWrap: true,
-              physics: const AlwaysScrollableScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              controller: ScrollController(),
-              itemCount: controller.getImageLength(),
-              itemBuilder: (BuildContext context, int index) {
-                return Padding(
-                  padding: const EdgeInsets.all(3.0),
-                  child: GetBuilder<VMEditor>(
-                    builder: (_) => Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 3,
-                          color: index == controller.index
-                              ? Colors.redAccent
-                              : Colors.white,
+          child: Row(
+            children: [
+              IconButton(
+                  onPressed: () {  },
+                  icon : const Icon(Icons.add)
+              ),
+              Expanded(
+                child: ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
+                    PointerDeviceKind.touch,
+                    PointerDeviceKind.mouse,
+                  }),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    controller: ScrollController(),
+                    itemCount: controller.getImageLength(),
+                    itemBuilder: (BuildContext context, int index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(1.0),
+                        child: GetBuilder<VMEditor>(
+                          builder: (_) => Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 3,
+                                color: index == controller.index
+                                    ? Colors.redAccent
+                                    : Colors.white,
+                              ),
+                            ),
+                            child: GestureDetector(
+                              child: Image.memory(controller.getImage(index)),
+                              onDoubleTap: () {
+                                controller.setImage(index);
+                              },
+                            ),
+                          ),
                         ),
-                      ),
-                      child: GestureDetector(
-                        child: Image.memory(controller.getImage(index)),
-                        onDoubleTap: () {
-                          controller.setImage(index);
-                        },
-                      ),
-                    ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
+                ),
+              ),
+            ],
           ),
         ),
       ],

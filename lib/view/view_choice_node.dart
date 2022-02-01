@@ -53,9 +53,10 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                 visible: node.title.isNotEmpty,
               ),
               Visibility(
-                child: Image(
-                  image: PlatformSystem.getImage(node.imageString).image,
-                  width: 200,
+                child: Expanded(
+                  child: Image(
+                    image: PlatformSystem.getImage(node.imageString).image,
+                  ),
                 ),
                 visible: node.imageString.isNotEmpty,
               ),

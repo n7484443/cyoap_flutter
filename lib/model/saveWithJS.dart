@@ -11,5 +11,9 @@ void saveRaw(String name, PlatformFileSystem platformFileSystem) async {
 }
 void saveZip(String name, PlatformFileSystem platformFileSystem) async {
 }
+void downloadCapture(String name, Uint8List data){
+  _exportRaw(name, data);
+}
+
 @JS()
 external void _exportRaw(String name, Uint8List data);
