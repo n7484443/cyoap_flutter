@@ -37,10 +37,9 @@ dependencies:
   shared_preferences: ^2.0.12
   get: ^4.6.1
   google_fonts: ^2.2.0
-  auto_size_text: ^3.0.0
   crop: ^0.5.2
-  archive: ^3.1.9
-  flutter_quill: ^3.8.4
+  archive: ^3.1.11
+  flutter_quill: ^3.9.3
   english_words: ^4.0.0
 
 dev_dependencies:

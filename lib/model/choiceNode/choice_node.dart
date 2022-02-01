@@ -30,16 +30,13 @@ class ChoiceNodeBase {
   } //랜덤 문자로 제목 중복 방지
 
   int getType() {
-    if (!isCard) {
+    if (imageString.isEmpty) {
       return 0;
     }
-    if (imageString.isEmpty) {
+    if (contentsString.isEmpty) {
       return 1;
     }
-    if (contentsString.isEmpty) {
-      return 2;
-    }
-    return 3;
+    return 2;
   }
 
   Map<String, dynamic> toJson() => {

@@ -15,8 +15,12 @@ class ConstList{
   static double appBarSize = 40.0;
   static late final platformType actualPlatformType;
 
-  static bool isFileSystem(){
+  static bool isFileSystem() {
     return actualPlatformType == platformType.web;
+  }
+
+  static bool isMobile() {
+    return actualPlatformType == platformType.mobile;
   }
 }
 enum platformType{

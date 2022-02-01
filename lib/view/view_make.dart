@@ -38,7 +38,8 @@ class ViewMake extends StatelessWidget {
                   data: Tuple(-1, -1),
                   feedback: Transform.scale(
                     scale: 0.9,
-                    child: Get.find<VMPlatform>().getWidgetFromType(1, -1, -1),
+                    child: Get.find<VMPlatform>()
+                        .getWidgetFromType(0, true, -1, -1),
                   ),
                   onDragStarted: () {
                     Get.find<VMPlatform>().dragStart();
@@ -101,7 +102,8 @@ class ViewMake extends StatelessWidget {
                         data: Tuple(-1, -1),
                         feedback: Transform.scale(
                           scale: 0.9,
-                          child: Get.find<VMPlatform>().getWidgetFromType(1, -1, -1),
+                          child: Get.find<VMPlatform>()
+                              .getWidgetFromType(0, true, -1, -1),
                         ),
                         onDragStarted: () {
                           Get.find<VMPlatform>().dragStart();

@@ -16,17 +16,21 @@ class VMEditor extends GetxController{
 
   var title = ''.obs;
   var contents = ''.obs;
+  var index = -1;
+  var isCard = false;
 
   @override
-  void onInit(){
-    if(NodeEditor.instance.target.contentsString.isEmpty){
+  void onInit() {
+    if (NodeEditor.instance.target.contentsString.isEmpty) {
       controllerBody = QuillController.basic();
-    }else{
+    } else {
       controllerBody = QuillController(
-        document: Document.fromJson(jsonDecode(NodeEditor.instance.target.contentsString)),
+        document: Document.fromJson(
+            jsonDecode(NodeEditor.instance.target.contentsString)),
         selection: const TextSelection.collapsed(offset: 0),
       );
     }
+    isCard = NodeEditor.instance.target.isCard;
     controllerTitle.text = NodeEditor.instance.target.title;
 
     controllerTitle.addListener(() {
@@ -40,8 +44,10 @@ class VMEditor extends GetxController{
   }
 
   void save() {
-    NodeEditor.instance.target.contentsString = jsonEncode(controllerBody.document.toDelta().toJson());
+    NodeEditor.instance.target.contentsString =
+        jsonEncode(controllerBody.document.toDelta().toJson());
     NodeEditor.instance.target.title = title.value;
+    Get.find<VMPlatform>().updateWidgetList();
     Get.find<VMPlatform>().update();
     Get.find<VMVariableTable>().update();
   }
@@ -51,11 +57,18 @@ class VMEditor extends GetxController{
   }
 
   void setImage(int index) {
+    this.index = index;
     NodeEditor.instance.target.imageString = PlatformSystem.getImageName(index);
-    Get.find<VMPlatform>().update();
+    update();
   }
 
-  int getImageLength(){
+  int getImageLength() {
     return PlatformSystem.getImageList().length;
+  }
+
+  void setCard(bool value) {
+    isCard = value;
+    NodeEditor.instance.target.isCard = value;
+    update();
   }
 }

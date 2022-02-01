@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:cyoap_flutter/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
@@ -19,26 +18,37 @@ class VMPlatform extends GetxController{
     widgetList.clear();
 
     var list = PlatformSystem.getPlatform().choiceNodes;
-    for(int y = 0; y < list.length; y++) {
+    for (int y = 0; y < list.length; y++) {
       widgetList.add(List.empty(growable: true));
       var xList = list[y];
-      for(int x = 0; x < xList.length; x++){
-        widgetList[y].insert(x, getWidgetFromType(xList[x].getType(), x, y));
+      for (int x = 0; x < xList.length; x++) {
+        widgetList[y].insert(
+            x, getWidgetFromType(xList[x].getType(), xList[x].isCard, x, y));
       }
     }
     update();
   }
 
-  Widget getWidgetFromType(int type, int x, int y) {
+  Widget getWidgetFromType(int type, bool isCard, int x, int y) {
+    Widget widget;
     switch (type) {
       case 0:
-        return ViewTextWithoutCardNode(posX: x, posY: y);
+        widget = ViewChoiceTextNode(posX: x, posY: y);
+        break;
       case 1:
-        return ViewChoiceTextNode(posX: x, posY: y);
-      case 2:
-        return ViewChoiceNodeImage(posX: x, posY: y);
+        widget = ViewChoiceNodeImage(posX: x, posY: y);
+        break;
       default:
-        return ViewChoiceNodeTextWithImage(posX: x, posY: y);
+        widget = ViewChoiceNodeTextWithImage(posX: x, posY: y);
+        break;
+    }
+    if (isCard) {
+      return Card(
+        elevation: 5.0,
+        child: widget,
+      );
+    } else {
+      return widget;
     }
   }
 

@@ -13,11 +13,38 @@ class ViewEditor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final VMEditor controller = Get.put(VMEditor());
     if (ConstList.actualPlatformType == platformType.mobile) {
       return Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(ConstList.appBarSize),
-          child: AppBar(),
+          child: AppBar(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  '카드 모드',
+                  style: TextStyle(color: Colors.black),
+                ),
+                GetBuilder<VMEditor>(
+                  builder: (_) => Switch(
+                    onChanged: (bool value) {
+                      controller.setCard(value);
+                    },
+                    value: controller.isCard,
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.save),
+                onPressed: () {
+                  Get.find<VMEditor>().save();
+                },
+              ),
+            ],
+          ),
         ),
         drawer: const ViewVariable(),
         body: const ViewEditorTyping(),
@@ -54,6 +81,23 @@ class ViewEditor extends StatelessWidget {
               appBar: PreferredSize(
                 preferredSize: Size.fromHeight(ConstList.appBarSize),
                 child: AppBar(
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        '카드 모드',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      GetBuilder<VMEditor>(
+                        builder: (_) => Switch(
+                          onChanged: (bool value) {
+                            controller.setCard(value);
+                          },
+                          value: controller.isCard,
+                        ),
+                      ),
+                    ],
+                  ),
                   actions: [
                     IconButton(
                       icon: const Icon(Icons.save),
@@ -154,11 +198,23 @@ class ViewEditorTyping extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 return Padding(
                   padding: const EdgeInsets.all(3.0),
-                  child: GestureDetector(
-                    child: Image.memory(controller.getImage(index)),
-                    onDoubleTap: (){
-                      controller.setImage(index);
-                    },
+                  child: GetBuilder<VMEditor>(
+                    builder: (_) => Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 3,
+                          color: index == controller.index
+                              ? Colors.redAccent
+                              : Colors.white,
+                        ),
+                      ),
+                      child: GestureDetector(
+                        child: Image.memory(controller.getImage(index)),
+                        onDoubleTap: () {
+                          controller.setImage(index);
+                        },
+                      ),
+                    ),
                   ),
                 );
               },
