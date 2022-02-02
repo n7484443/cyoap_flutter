@@ -11,17 +11,21 @@ class VMCodeEditor extends GetxController {
   var conditionClickable = ''.obs;
   var conditionVisible = ''.obs;
   var executeCode = ''.obs;
+  bool isChanged = false;
 
   @override
-  void onInit(){
+  void onInit() {
     controllerClickable.addListener(() {
+      isChanged = true;
       conditionClickable.value = controllerClickable.text;
     });
     controllerVisible.addListener(() {
+      isChanged = true;
       conditionVisible.value = controllerVisible.text;
     });
 
     controllerExecute.addListener(() {
+      isChanged = true;
       executeCode.value = controllerExecute.text;
     });
 
@@ -29,6 +33,6 @@ class VMCodeEditor extends GetxController {
   }
 
   void save() {
-
+    isChanged = false;
   }
 }

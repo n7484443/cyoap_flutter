@@ -17,6 +17,7 @@ class VMPlatform extends GetxController{
   List<List<Widget>> widgetList = List.empty(growable: true);
   bool isDrag = false;
   GlobalKey captureKey = GlobalKey();
+  bool isChanged = false;
 
   void updateWidgetList(){
     widgetList.clear();
@@ -31,6 +32,7 @@ class VMPlatform extends GetxController{
       }
     }
     update();
+    isChanged = true;
   }
 
   Widget getWidgetFromType(int type, bool isCard, int x, int y) {
@@ -122,6 +124,7 @@ class VMPlatform extends GetxController{
     }else{
       PlatformSystem.instance.saveFolder();
     }
+    isChanged = false;
   }
 
   void addNode() {

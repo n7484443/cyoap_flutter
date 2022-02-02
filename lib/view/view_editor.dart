@@ -14,38 +14,75 @@ class ViewEditor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final VMEditor controller = Get.put(VMEditor());
+    var appbarWidget = PreferredSize(
+      preferredSize: Size.fromHeight(ConstList.appBarSize),
+      child: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            if(controller.isChanged){
+              showDialog(
+                context: context,
+                builder: (_) => AlertDialog(
+                  title: const Text('뒤로가기'),
+                  content: const Text('저장되지 않은 내용이 있습니다. 저장하시겠습니까?'),
+                  actions: [
+                    ElevatedButton(
+                      onPressed: () {
+                        controller.isChanged = false;
+                        Get.back();
+                        Get.back();
+                      },
+                      child: const Text('아니오'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        controller.isChanged = false;
+                        controller.save();
+                        Get.back();
+                        Get.back();
+                      },
+                      child: const Text('예'),
+                    ),
+                  ],
+                ),
+              );
+            }else{
+              Get.back();
+            }
+          },
+        ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              '카드 모드',
+              style: TextStyle(color: Colors.black),
+            ),
+            GetBuilder<VMEditor>(
+              builder: (_) => Switch(
+                onChanged: (bool value) {
+                  controller.setCard(value);
+                },
+                value: controller.isCard,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.save),
+            onPressed: () {
+              Get.find<VMEditor>().save();
+            },
+          ),
+        ],
+      ),
+    );
+
     if (ConstList.actualPlatformType == platformType.mobile) {
       return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(ConstList.appBarSize),
-          child: AppBar(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  '카드 모드',
-                  style: TextStyle(color: Colors.black),
-                ),
-                GetBuilder<VMEditor>(
-                  builder: (_) => Switch(
-                    onChanged: (bool value) {
-                      controller.setCard(value);
-                    },
-                    value: controller.isCard,
-                  ),
-                ),
-              ],
-            ),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.save),
-                onPressed: () {
-                  Get.find<VMEditor>().save();
-                },
-              ),
-            ],
-          ),
-        ),
+        appBar: appbarWidget,
         drawer: const ViewVariable(),
         body: const ViewEditorTyping(),
       );
@@ -59,36 +96,7 @@ class ViewEditor extends StatelessWidget {
           ),
           Expanded(
             child: Scaffold(
-              appBar: PreferredSize(
-                preferredSize: Size.fromHeight(ConstList.appBarSize),
-                child: AppBar(
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        '카드 모드',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      GetBuilder<VMEditor>(
-                        builder: (_) => Switch(
-                          onChanged: (bool value) {
-                            controller.setCard(value);
-                          },
-                          value: controller.isCard,
-                        ),
-                      ),
-                    ],
-                  ),
-                  actions: [
-                    IconButton(
-                      icon: const Icon(Icons.save),
-                      onPressed: () {
-                        Get.find<VMEditor>().save();
-                      },
-                    ),
-                  ],
-                ),
-              ),
+              appBar: appbarWidget,
               body: const ViewEditorTyping(),
             ),
           ),

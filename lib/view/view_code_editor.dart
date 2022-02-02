@@ -15,6 +15,40 @@ class ViewCodeEditor extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(ConstList.appBarSize),
         child: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              if(_vmCodeEditor.isChanged){
+                showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    title: const Text('뒤로가기'),
+                    content: const Text('저장되지 않은 내용이 있습니다. 저장하시겠습니까?'),
+                    actions: [
+                      ElevatedButton(
+                        onPressed: () {
+                          _vmCodeEditor.isChanged = false;
+                          Get.back();
+                          Get.back();
+                        },
+                        child: const Text('아니오'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          _vmCodeEditor.save();
+                          Get.back();
+                          Get.back();
+                        },
+                        child: const Text('예'),
+                      ),
+                    ],
+                  ),
+                );
+              }else{
+                Get.back();
+              }
+            },
+          ),
           actions: [
             IconButton(
               icon: const Icon(Icons.save),
@@ -49,25 +83,6 @@ class ViewCodeEditor extends StatelessWidget {
             ),
           ),
         ],
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          children: [
-            IconButton(
-              icon: const Icon(Icons.navigate_before),
-              onPressed: () {
-                Get.back();
-              },
-            ),
-            const Spacer(),
-            IconButton(
-              icon: const Icon(Icons.save),
-              onPressed: () {
-                Get.find<VMCodeEditor>().save();
-              },
-            ),
-          ],
-        ),
       ),
     );
   }

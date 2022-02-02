@@ -20,6 +20,8 @@ class VMEditor extends GetxController{
   var index = -1;
   var isCard = false;
 
+  bool isChanged = false;
+
   @override
   void onInit() {
     if (NodeEditor.instance.target.contentsString.isEmpty) {
@@ -36,10 +38,12 @@ class VMEditor extends GetxController{
 
     controllerTitle.addListener(() {
       title.value = controllerTitle.text;
+      isChanged = true;
     });
 
     controllerBody.addListener(() {
       contents.value = controllerBody.document.toPlainText();
+      isChanged = true;
     });
     super.onInit();
   }
@@ -51,6 +55,7 @@ class VMEditor extends GetxController{
     Get.find<VMPlatform>().updateWidgetList();
     Get.find<VMPlatform>().update();
     Get.find<VMVariableTable>().update();
+    isChanged = false;
   }
 
   Uint8List getImage(int i){
@@ -60,6 +65,7 @@ class VMEditor extends GetxController{
   void setImage(int index) {
     this.index = index;
     NodeEditor.instance.target.imageString = PlatformSystem.getImageName(index);
+    isChanged = true;
     update();
   }
 
@@ -70,6 +76,7 @@ class VMEditor extends GetxController{
   void setCard(bool value) {
     isCard = value;
     NodeEditor.instance.target.isCard = value;
+    isChanged = true;
     update();
   }
 
@@ -83,6 +90,7 @@ class VMEditor extends GetxController{
 
       if(file.bytes == null)return;
       PlatformSystem.addImage(file.name, file.bytes!);
+      Get.find<VMPlatform>().isChanged = true;
       update();
     }
   }
