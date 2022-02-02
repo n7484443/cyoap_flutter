@@ -8,12 +8,12 @@ import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
 
 import 'abstract_platform.dart';
+import 'choiceNode/choice_node.dart';
 
 //platformFileSystem - abstractPlatform
 class PlatformFileSystem {
   late AbstractPlatform platform;
   final Map<String, Uint8List> _dirImage = {};
-  Map<String, String> dirNode = {};
   Image noImage = Image.asset('images/noImage.png');
 
   PlatformFileSystem();
@@ -41,19 +41,6 @@ class PlatformFileSystem {
         }
       }
     }
-    var existNodes = await dirNodes.exists();
-    if (!existNodes) {
-      dirNodes.create();
-    } else {
-      var dirList = await dirNodes.list().toList();
-      for (FileSystemEntity f in dirList) {
-        var name = basename(f.path);
-        if (f is File) {
-          var value = await f.readAsString();
-          dirNode.putIfAbsent(name, () => value);
-        }
-      }
-    }
     var existJson = await platformJson.exists();
     if (existJson) {
       var data = await platformJson.readAsString();
@@ -65,11 +52,27 @@ class PlatformFileSystem {
     } else {
       platform = AbstractPlatform.none();
     }
+
+    var existNodes = await dirNodes.exists();
+    if (!existNodes) {
+      dirNodes.create();
+    } else {
+      var dirList = await dirNodes.list().toList();
+      for (FileSystemEntity f in dirList) {
+        var name = basename(f.path);
+        if (f is File) {
+          var value = await f.readAsString();
+          var node = ChoiceNodeBase.fromJson(jsonDecode(value));
+          platform.addData(node.x, node.y, node);
+        }
+      }
+    }
   }
 
   void createFromTar(Archive archive) {
     String? platformJson;
 
+    List<ChoiceNodeBase> nodeList = List.empty(growable: true);
     for (var file in archive) {
       Uint8List data = file.content as Uint8List;
       if (file.isFile) {
@@ -83,8 +86,7 @@ class PlatformFileSystem {
             //아직 지원 x
           }
         } else if (fileName.startsWith('nodes')) {
-          dirNode.putIfAbsent(
-              file.name.split("/")[1], () => String.fromCharCodes(data));
+          nodeList.add(ChoiceNodeBase.fromJson(jsonDecode(String.fromCharCodes(data))));
         } else if (fileName.endsWith('platform.json')) {
           platformJson = String.fromCharCodes(data);
         }
@@ -94,6 +96,10 @@ class PlatformFileSystem {
       platform = AbstractPlatform.fromJson(jsonDecode(platformJson));
     } else {
       platform = AbstractPlatform.none();
+    }
+
+    for(var node in nodeList){
+      platform.addData(node.x, node.y, node);
     }
   }
   void createFromVoid() {
