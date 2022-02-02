@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:get/get.dart';
 
+import '../main.dart';
 import '../model/platform_system.dart';
 import '../util/tuple.dart';
 
@@ -29,8 +30,18 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
     var size = Get.find<VMPlatform>().getSize(Tuple(posX, posY));
     var node = Get.find<VMPlatform>().getNode(posX, posY)!;
     return InkWell(
-      onTap: () {},
-      onHover: (val) {},
+      onTap: () {
+        if (ConstList.isMobile()) {
+          Get.find<VMPlatform>().setHover(posX, posY);
+        }
+      },
+      onHover: (val) {
+        if (!ConstList.isMobile()) {
+          if (val) {
+            Get.find<VMPlatform>().setHover(posX, posY);
+          }
+        }
+      },
       onDoubleTap: () {
         Get.find<VMPlatform>().setEdit(posX, posY);
         Get.toNamed('/viewEditor');
@@ -41,16 +52,119 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
           height: nodeBaseHeight * size.data2,
           child: Column(
             children: [
-              Visibility(
-                child: Text.rich(
-                  TextSpan(
-                    text: node.title,
+              Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: Visibility(
+                      child: Text.rich(
+                        TextSpan(
+                          text: node.title,
+                        ),
+                        style: const TextStyle(
+                          fontSize: 24,
+                        ),
+                      ),
+                      visible: node.title.isNotEmpty,
+                    ),
                   ),
-                  style: const TextStyle(
-                    fontSize: 24,
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Visibility(
+                      child: PopupMenuButton<int>(
+                        icon: const Icon(Icons.more_vert),
+                        onSelected: (result) {
+                          if (result == 0){
+                            Get.find<VMPlatform>().sizeSet.data1 = size.data1;
+                            Get.find<VMPlatform>().sizeSet.data2 = size.data2;
+                            showDialog(
+                              context: context,
+                              builder: (builder) => GetBuilder<VMPlatform>(
+                                builder: (_) => AlertDialog(
+                                  scrollable: true,
+                                  alignment: Alignment.center,
+                                  title: const Text('크기 수정'),
+                                  content: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text('길이'),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(Icons.chevron_left),
+                                            onPressed: () {
+                                              Get.find<VMPlatform>()
+                                                  .sizeChange(-1, 0);
+                                            },
+                                          ),
+                                          Text(
+                                              '${Get.find<VMPlatform>().sizeSet.data1}'),
+                                          IconButton(
+                                            icon: const Icon(Icons.chevron_right),
+                                            onPressed: () {
+                                              Get.find<VMPlatform>()
+                                                  .sizeChange(1, 0);
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                      const Text('높이'),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(Icons.chevron_left),
+                                            onPressed: () {
+                                              Get.find<VMPlatform>()
+                                                  .sizeChange(0, -1);
+                                            },
+                                          ),
+                                          Text(
+                                              '${Get.find<VMPlatform>().sizeSet.data2}'),
+                                          IconButton(
+                                            icon: const Icon(Icons.chevron_right),
+                                            onPressed: () {
+                                              Get.find<VMPlatform>()
+                                                  .sizeChange(0, 1);
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      child: const Text('변경'),
+                                      onPressed: () {
+                                        Get.find<VMPlatform>().setSize(Tuple(posX, posY), Get.find<VMPlatform>().sizeSet);
+                                        Get.find<VMPlatform>().updateWidgetList();
+                                        Get.back();
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                        itemBuilder: (context) {
+                          return [
+                            const PopupMenuItem(
+                              value: 0,
+                              child: Text('크기 수정'),
+                            ),
+                          ];
+                        },
+                      ),
+                      visible: Get.find<VMPlatform>().mouseHover ==
+                          Tuple(posX, posY),
+                    ),
                   ),
-                ),
-                visible: node.title.isNotEmpty,
+                ],
               ),
               Visibility(
                 child: Expanded(

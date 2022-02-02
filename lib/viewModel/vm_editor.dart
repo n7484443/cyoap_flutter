@@ -35,6 +35,9 @@ class VMEditor extends GetxController{
     }
     isCard = NodeEditor.instance.target.isCard;
     controllerTitle.text = NodeEditor.instance.target.title;
+    title.value = controllerTitle.text;
+
+    contents.value = controllerBody.document.toPlainText();
 
     controllerTitle.addListener(() {
       title.value = controllerTitle.text;
@@ -49,9 +52,9 @@ class VMEditor extends GetxController{
   }
 
   void save() {
+    NodeEditor.instance.target.title = title.value;
     NodeEditor.instance.target.contentsString =
         jsonEncode(controllerBody.document.toDelta().toJson());
-    NodeEditor.instance.target.title = title.value;
     Get.find<VMPlatform>().updateWidgetList();
     Get.find<VMPlatform>().update();
     Get.find<VMVariableTable>().update();

@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
-import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -18,6 +16,8 @@ class VMPlatform extends GetxController{
   bool isDrag = false;
   GlobalKey captureKey = GlobalKey();
   bool isChanged = false;
+  Tuple<int, int> mouseHover = Tuple(-1, -1);
+  Tuple<int, int> sizeSet = Tuple(1, 1);
 
   void updateWidgetList(){
     widgetList.clear();
@@ -50,9 +50,20 @@ class VMPlatform extends GetxController{
     }
   }
 
+  void setHover(int x, int y){
+    mouseHover = Tuple(x, y);
+    update();
+  }
+
   Tuple<int, int> getSize(Tuple<int, int> position) {
     var node = getNode(position.data1, position.data2)!;
     return Tuple(node.width, node.height);
+  }
+
+  void setSize(Tuple<int, int> position, Tuple<int, int> size) {
+    var node = getNode(position.data1, position.data2)!;
+    node.width = size.data1;
+    node.height = size.data2;
   }
 
   ChoiceNodeBase createNodeForTemp(){
@@ -136,5 +147,17 @@ class VMPlatform extends GetxController{
   Future<void> exportAsImage() async {
     var boundary = captureKey.currentContext?.findRenderObject() as RenderRepaintBoundary;
     PlatformSystem.instance.saveCapture(await boundary.toImage());
+  }
+
+  void sizeChange(int x, int y){
+    sizeSet.data1 += x;
+    sizeSet.data2 += y;
+    if(sizeSet.data1 < 1){
+      sizeSet.data1 = 1;
+    }
+    if(sizeSet.data2 < 1){
+      sizeSet.data2 = 1;
+    }
+    update();
   }
 }
