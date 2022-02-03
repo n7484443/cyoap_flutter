@@ -5,18 +5,34 @@ import 'value_type.dart';
 
 abstract class RecursiveUnit{
   List<RecursiveUnit> childNode = List.empty(growable: true);
+
   // 노드마다 가지는 최대의 데이터:3
   // if ( a, then, else) 가 최대
 
   ValueType value;
+
   // 함수 or 값
+  RecursiveUnit() :
+        value = ValueType(valueTypeData.none);
 
-  RecursiveUnit(this.value);
+  RecursiveUnit.fromValue(this.value);
 
-  void add(RecursiveUnit unit){
+
+  RecursiveUnit.fromJson(Map<String, dynamic> json)
+      : childNode = json['childNode'],
+        value = json['value'];
+
+  Map<String, dynamic> toJson() =>
+      {
+        'childNode': childNode,
+        'value': value,
+      };
+
+  void add(RecursiveUnit unit) {
     childNode.add(unit);
   }
-  int checkParser(int i){
+
+  int checkParser(int i) {
     for (int k = 0; k < childNode.length; k++) {
       i++;
       i = childNode[k].checkParser(i);
@@ -33,20 +49,32 @@ abstract class RecursiveUnit{
     }
     return '$value | $childNode';
   }
-
-
 }
 
 class RecursiveParser extends RecursiveUnit {
-  RecursiveParser(ValueType value) : super(value);
+  RecursiveParser(ValueType value) : super.fromValue(value);
+
+  @override
+  Map<String, dynamic> toJson() =>
+      {
+        'childNode': childNode,
+        'value': value,
+      };
+
+  RecursiveParser.fromJson(Map<String, dynamic> json){
+    super.childNode = json['childNode'];
+    super.value = json['value'];
+  }
+
 
   @override
   ValueType unzip() {
-    switch(childNode.length){
+    switch (childNode.length) {
       case 0:
         return value.data(ValueType.none(), ValueType.none(), ValueType.none());
       case 1:
-        return value.data(childNode[0].unzip(), ValueType.none(), ValueType.none());
+        return value.data(
+            childNode[0].unzip(), ValueType.none(), ValueType.none());
       case 2:
         return value.data(childNode[0].unzip(), childNode[1].unzip(), ValueType.none());
       default:
@@ -65,21 +93,34 @@ class RecursiveParser extends RecursiveUnit {
 
 class RecursiveData extends RecursiveUnit {
   bool dontReplace = false;
-  RecursiveData(ValueType value) : super(value);
+
+  RecursiveData(ValueType value) : super.fromValue(value);
 
   @override
-  int checkParser(int i){
-    print('$i : ${value.toString()}');
-    return i;
+  RecursiveData.fromJson(Map<String, dynamic> json)
+      : dontReplace = json['dontReplace']{
+    super.value = json['value'];
+    super.childNode = json['childNode'];
   }
 
   @override
-  ValueType unzip(){
-    if(value.data is VariableUnit) {
+  Map<String, dynamic> toJson() =>
+      {
+        'childNode': childNode,
+        'value': value,
+        'dontReplace': dontReplace,
+      };
+
+  @override
+  ValueType unzip() {
+    if (value.data is VariableUnit) {
       var variable = value.data as VariableUnit;
-      if(VariableDataBase.instance.hasValue(variable.varName) && !dontReplace){
-        return ValueType(VariableDataBase.instance.getValue(variable.varName)?.data);
-      }else{
+      if (VariableDataBase.instance.hasValue(variable.varName) &&
+          !dontReplace) {
+        return ValueType(VariableDataBase.instance
+            .getValue(variable.varName)
+            ?.data);
+      } else {
         return value;
       }
     }

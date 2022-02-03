@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cyoap_flutter/model/grammar/variable_db.dart';
 import 'package:cyoap_flutter/model/grammar/analyser.dart';
 import 'package:flutter_test/flutter_test.dart';

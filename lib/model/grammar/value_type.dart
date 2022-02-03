@@ -15,11 +15,17 @@ class ValueType {
 
   @override
   String toString() {
-    if(data is Function){
+    if (data is Function) {
       return data.toString().split('\'')[1];
     }
     return 'value Type : $data';
   }
+
+  ValueType.fromJson(Map<String, dynamic> json) : data = json['data'];
+
+  Map<String, dynamic> toJson() => {
+        'data': data is VariableUnit ? (data as VariableUnit).toJson() : data.toString(),
+      };
 }
 
 class VariableUnit {
@@ -28,9 +34,15 @@ class VariableUnit {
   VariableUnit(this.varName);
 
   @override
-  String toString(){
+  String toString() {
     return 'Data From DB: "$varName"';
   }
+
+  VariableUnit.fromJson(Map<String, dynamic> json) : varName = json['varName'];
+
+  Map<String, dynamic> toJson() => {
+    'varName': varName,
+  };
 }
 
 enum valueTypeData{
