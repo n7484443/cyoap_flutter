@@ -20,7 +20,7 @@ class SemanticAnalyser {
       return Tuple(motherUnit, i);
     }
     switch (tokens[i].type) {
-      case AnalyserConst.function_start:
+      case AnalyserConst.functionStart:
         while (true) {
           var inner = recursiveCreate(i + 1, tokens, motherUnit);
           i = inner.data2;
@@ -35,12 +35,12 @@ class SemanticAnalyser {
           motherUnit.add(innerParser);
         }
         return Tuple(motherUnit, i);
-      case AnalyserConst.function_end:
+      case AnalyserConst.functionEnd:
         return Tuple(parserNull, i);
       case AnalyserConst.function:
         var funcParser = RecursiveParser(ValueType(tokens[i].toData()));
         return recursiveCreate(i + 1, tokens, funcParser);
-      case AnalyserConst.function_comma:
+      case AnalyserConst.functionComma:
         i++;
         return Tuple(parserComma, i);
       default:
@@ -52,7 +52,7 @@ class SemanticAnalyser {
         }
 
         if (tokens.length >= i + 2) {
-          if (tokens[i + 1].type == AnalyserConst.function_unspecified) {
+          if (tokens[i + 1].type == AnalyserConst.functionUnspecified) {
             var functionParser =
                 RecursiveParser(ValueType(tokens[i + 1].toData()));
             var v = recursiveCreate(i + 2, tokens, functionParser);
@@ -73,7 +73,7 @@ class SemanticAnalyser {
         analysedData[0].type == AnalyserConst.function) {
       List<int> comma = [0, 0];
       for (int i = 0; i < analysedData.length; i++) {
-        if (analysedData[i].type == AnalyserConst.function_comma) {
+        if (analysedData[i].type == AnalyserConst.functionComma) {
           if (comma[0] == 0) {
             comma[0] = i;
           } else {

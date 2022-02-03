@@ -25,13 +25,11 @@ class Token {
         return int.tryParse(data);
       case AnalyserConst.doubles:
         return double.tryParse(data);
-      case AnalyserConst.trues:
-        return true;
-      case AnalyserConst.falses:
-        return false;
+      case AnalyserConst.bools:
+        return data == 'true';
       case AnalyserConst.strs:
         return data;
-      case AnalyserConst.function_unspecified:
+      case AnalyserConst.functionUnspecified:
       case AnalyserConst.function:
         return Analyser.instance.functionList.getFunction(data);
       default:
