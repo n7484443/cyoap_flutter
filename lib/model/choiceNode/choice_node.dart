@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/model/grammar/recursive_parser.dart';
 import 'package:english_words/english_words.dart';
 
 class ChoiceNodeBase {
@@ -10,6 +11,12 @@ class ChoiceNodeBase {
   String title;
   String contentsString;
   String imageString;
+  RecursiveUnit? conditionClickableRecursive;
+  RecursiveUnit? conditionVisibleRecursive;
+  List<RecursiveUnit>? executeCodeRecursive;
+  String conditionClickableString = '';
+  String conditionVisibleString = '';
+  String executeCodeString = '';
 
   ChoiceNodeBase(this.x, this.y, this.width, this.height, this.isCard,
       this.title, this.contentsString, this.imageString);
@@ -39,16 +46,20 @@ class ChoiceNodeBase {
     return 2;
   }
 
-  Map<String, dynamic> toJson() => {
-    'x' : x,
-    'y' : y,
-    'width' : width,
-    'height' : height,
-    'isCard' : isCard,
-    'title' : title,
-    'contentsString' : contentsString,
-    'imageString' : imageString,
-  };
+  Map<String, dynamic> toJson() =>
+      {
+        'x': x,
+        'y': y,
+        'width': width,
+        'height': height,
+        'isCard': isCard,
+        'title': title,
+        'contentsString': contentsString,
+        'imageString': imageString,
+        'conditionClickableRecursive': conditionClickableRecursive,
+        'conditionVisibleRecursive': conditionVisibleRecursive,
+        'executeCodeRecursive': executeCodeRecursive,
+      };
 
   ChoiceNodeBase.fromJson(Map<String, dynamic> json)
       : x = json['x'],
@@ -58,5 +69,8 @@ class ChoiceNodeBase {
         isCard = json['isCard'],
         title = json['title'],
         contentsString = json['contentsString'],
-        imageString = json['imageString'];
+        imageString = json['imageString'],
+        conditionClickableRecursive = json['conditionClickableRecursive'],
+        conditionVisibleRecursive = json['conditionVisibleRecursive'],
+        executeCodeRecursive = json['executeCodeRecursive'];
 }

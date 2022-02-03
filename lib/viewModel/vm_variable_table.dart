@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/model/grammar/variable_db.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
@@ -11,5 +12,13 @@ class VMVariableTable extends GetxController {
       }
     }
     return nodeNameList;
+  }
+
+  List<String> getVariableList(){
+    List<String> variableList = List.empty(growable: true);
+    for(var key in VariableDataBase.instance.varMap.keys){
+      variableList.add('$key | ${VariableDataBase.instance.varMap[key]?.data.runtimeType}');
+    }
+    return variableList;
   }
 }

@@ -14,12 +14,11 @@ class ViewVariable extends StatelessWidget {
       builder: (_) => Drawer(
         child: Column(
           children: [
-            const ExpansionTile(
-              title: Text('변수'),
-              children: [
-                ListTile(title: Text('세부')),
-                ListTile(title: Text('세부2')),
-              ],
+            ExpansionTile(
+              title: const Text('변수'),
+              children: List<Widget>.generate(_.getVariableList().length, (index) {
+                return ListTile(title: Text(_.getVariableList()[index]));
+              }),
             ),
             ExpansionTile(
               title: const Text('노드'),

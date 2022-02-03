@@ -86,6 +86,12 @@ class ViewMake extends StatelessWidget {
         ),
         actions: [
           IconButton(
+            icon: const Icon(Icons.play_arrow),
+            onPressed: () {
+              Get.find<VMPlatform>().loadVariable();
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.image),
             onPressed: () {
               Get.find<VMPlatform>().exportAsImage();

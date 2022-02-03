@@ -1,4 +1,6 @@
 
+import 'package:cyoap_flutter/model/editor.dart';
+import 'package:cyoap_flutter/model/grammar/analyser.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,6 +17,10 @@ class VMCodeEditor extends GetxController {
 
   @override
   void onInit() {
+    controllerClickable.text = NodeEditor.instance.target.conditionClickableString;
+    controllerVisible.text = NodeEditor.instance.target.conditionVisibleString;
+    controllerExecute.text = NodeEditor.instance.target.executeCodeString;
+
     controllerClickable.addListener(() {
       isChanged = true;
       conditionClickable.value = controllerClickable.text;
@@ -33,6 +39,18 @@ class VMCodeEditor extends GetxController {
   }
 
   void save() {
+    var conditionClickableRecursive = Analyser.analyseCodes(conditionClickable.value);
+    var conditionVisibleRecursive = Analyser.analyseCodes(conditionVisible.value);
+    var executeCodeRecursive = Analyser.analyseCodes(executeCode.value);
+
+    NodeEditor.instance.target.conditionClickableRecursive = conditionClickableRecursive[0];
+    NodeEditor.instance.target.conditionVisibleRecursive = conditionVisibleRecursive[0];
+    NodeEditor.instance.target.executeCodeRecursive = executeCodeRecursive;
+
+    NodeEditor.instance.target.conditionClickableString = conditionClickable.value;
+    NodeEditor.instance.target.conditionVisibleString = conditionVisible.value;
+    NodeEditor.instance.target.executeCodeString = executeCode.value;
+
     isChanged = false;
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -152,12 +153,25 @@ class VMPlatform extends GetxController{
   void sizeChange(int x, int y){
     sizeSet.data1 += x;
     sizeSet.data2 += y;
-    if(sizeSet.data1 < 1){
+    if (sizeSet.data1 < 1) {
       sizeSet.data1 = 1;
     }
-    if(sizeSet.data2 < 1){
+    if (sizeSet.data2 < 1) {
       sizeSet.data2 = 1;
     }
     update();
+  }
+
+  void loadVariable() {
+    for (var ys in PlatformSystem.getPlatform().choiceNodes) {
+      for (var node in ys) {
+        if(node.executeCodeRecursive != null){
+          for (var codes in node.executeCodeRecursive!) {
+            codes.unzip();
+          }
+        }
+      }
+    }
+    Get.find<VMVariableTable>().update();
   }
 }
