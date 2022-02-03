@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -163,6 +164,7 @@ class VMPlatform extends GetxController{
   }
 
   void loadVariable() {
+    VariableDataBase.instance.clear();
     for (var ys in PlatformSystem.getPlatform().choiceNodes) {
       for (var node in ys) {
         if(node.executeCodeRecursive != null){

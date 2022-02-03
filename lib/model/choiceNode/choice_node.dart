@@ -59,6 +59,9 @@ class ChoiceNodeBase {
         'conditionClickableRecursive': conditionClickableRecursive,
         'conditionVisibleRecursive': conditionVisibleRecursive,
         'executeCodeRecursive': executeCodeRecursive,
+        'conditionClickableString': conditionClickableString,
+        'conditionVisibleString': conditionVisibleString,
+        'executeCodeString': executeCodeString,
       };
 
   ChoiceNodeBase.fromJson(Map<String, dynamic> json)
@@ -70,7 +73,30 @@ class ChoiceNodeBase {
         title = json['title'],
         contentsString = json['contentsString'],
         imageString = json['imageString'],
-        conditionClickableRecursive = json['conditionClickableRecursive'],
-        conditionVisibleRecursive = json['conditionVisibleRecursive'],
-        executeCodeRecursive = json['executeCodeRecursive'];
+        conditionClickableString = json['conditionClickableString'],
+        conditionVisibleString = json['conditionVisibleString'],
+        executeCodeString = json['executeCodeString'] {
+    if (json['conditionClickableRecursive'] == null) {
+      conditionClickableRecursive = null;
+    } else {
+      conditionClickableRecursive =
+          RecursiveParser.fromJson(json['conditionClickableRecursive']);
+    }
+    if (json['conditionVisibleRecursive'] == null) {
+      conditionVisibleRecursive = null;
+    } else {
+      conditionVisibleRecursive =
+          RecursiveParser.fromJson(json['conditionVisibleRecursive']);
+    }
+
+    if (json['executeCodeRecursive'] == null) {
+      executeCodeRecursive = null;
+    } else {
+      executeCodeRecursive =
+          List.generate((json['executeCodeRecursive'] as List).length, (index) {
+        return RecursiveParser.fromJson(
+            (json['executeCodeRecursive'] as List)[index]);
+      });
+    }
+  }
 }

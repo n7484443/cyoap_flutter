@@ -1,4 +1,4 @@
-import 'package:cyoap_flutter/model/grammar/variable_db.dart';
+import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 

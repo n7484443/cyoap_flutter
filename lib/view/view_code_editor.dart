@@ -53,7 +53,7 @@ class ViewCodeEditor extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.save),
               onPressed: () {
-                Get.find<VMEditor>().save();
+                Get.find<VMCodeEditor>().save();
               },
             )
           ],
@@ -75,6 +75,7 @@ class ViewCodeEditor extends StatelessWidget {
             child: TextField(
               controller: _vmCodeEditor.controllerExecute,
               textAlign: TextAlign.center,
+              scrollController: ScrollController(),
               maxLines: null,
               expands: true,
               decoration: const InputDecoration(

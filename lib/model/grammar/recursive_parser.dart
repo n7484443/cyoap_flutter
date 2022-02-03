@@ -1,4 +1,4 @@
-import 'package:cyoap_flutter/model/grammar/variable_db.dart';
+import 'package:cyoap_flutter/model/variable_db.dart';
 
 import 'analyser.dart';
 import 'value_type.dart';
@@ -57,13 +57,20 @@ class RecursiveParser extends RecursiveUnit {
   @override
   Map<String, dynamic> toJson() =>
       {
+        'class': 'RecursiveParser',
         'childNode': childNode,
         'value': value,
       };
 
   RecursiveParser.fromJson(Map<String, dynamic> json){
-    super.childNode = json['childNode'];
-    super.value = json['value'];
+    super.childNode = json.containsKey('childNode') ? (json['childNode'] as List).map((e){
+      if(json['class'] == 'RecursiveParser') {
+        return RecursiveParser.fromJson(e);
+      }else{
+        return RecursiveData.fromJson(e);
+      }
+    }).toList() : List.empty(growable: true);
+    super.value = ValueType.fromJson(json['value']);
   }
 
 
@@ -99,13 +106,20 @@ class RecursiveData extends RecursiveUnit {
   @override
   RecursiveData.fromJson(Map<String, dynamic> json)
       : dontReplace = json['dontReplace']{
-    super.value = json['value'];
-    super.childNode = json['childNode'];
+    super.childNode = json.containsKey('childNode') ? (json['childNode'] as List).map((e){
+      if(json['class'] == 'RecursiveParser') {
+        return RecursiveParser.fromJson(e);
+      }else{
+        return RecursiveData.fromJson(e);
+      }
+    }).toList() : List.empty(growable: true);
+    super.value = ValueType.fromJson(json['value']);
   }
 
   @override
   Map<String, dynamic> toJson() =>
       {
+        'class': 'RecursiveData',
         'childNode': childNode,
         'value': value,
         'dontReplace': dontReplace,

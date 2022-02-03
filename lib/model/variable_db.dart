@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import 'value_type.dart';
+import 'grammar/value_type.dart';
 
 class VariableDataBase {
   static final VariableDataBase instance = VariableDataBase();
@@ -46,5 +46,9 @@ class VariableDataBase {
   @override
   String toString() {
     return varMap.toString();
+  }
+
+  void clear() {
+    varMap.clear();
   }
 }
