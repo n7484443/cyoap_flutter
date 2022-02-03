@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import 'ValueType.dart';
+import 'value_type.dart';
 
 class VariableDataBase {
   static final VariableDataBase instance = VariableDataBase();
@@ -40,7 +40,11 @@ class VariableDataBase {
   }
 
   ValueType? getValue(String name) {
-    var t = varMap[name];
-    return t;
+    return varMap[name];
+  }
+
+  @override
+  String toString() {
+    return varMap.toString();
   }
 }

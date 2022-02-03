@@ -1,6 +1,6 @@
-class AnalyzerConst {
+class AnalyserConst {
   static const int ints = 1; // 정수
-  static const int floats = 2; // 소수점 붙음
+  static const int doubles = 2; // 소수점 붙음
   static const int trues = 3; // 그외
   static const int falses = 4; // 그외
   static const int strs = 5; // string, ""로 표시
