@@ -39,7 +39,7 @@ dependencies:
   google_fonts: ^2.2.0
   crop: ^0.5.2
   archive: ^3.1.11
-  flutter_quill: ^3.9.3
+  flutter_quill: ^3.9.4
   english_words: ^4.0.0
 
 dev_dependencies:
