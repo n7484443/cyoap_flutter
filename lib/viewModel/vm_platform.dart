@@ -176,4 +176,14 @@ class VMPlatform extends GetxController{
     }
     Get.find<VMVariableTable>().update();
   }
+
+  void select(int posX, int posY) {
+    PlatformSystem.getPlatform().setSelect(posX, posY);
+    update();
+  }
+
+  bool isSelect(int posX, int posY) {
+    if(posX == -1 && posY == -1)return false;
+    return PlatformSystem.getPlatform().isSelect(posX, posY);
+  }
 }

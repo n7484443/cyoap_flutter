@@ -17,6 +17,7 @@ class ChoiceNodeBase {
   String conditionClickableString = '';
   String conditionVisibleString = '';
   String executeCodeString = '';
+  bool select = false;
 
   ChoiceNodeBase(this.x, this.y, this.width, this.height, this.isCard,
       this.title, this.contentsString, this.imageString);
@@ -98,5 +99,9 @@ class ChoiceNodeBase {
             (json['executeCodeRecursive'] as List)[index]);
       });
     }
+  }
+
+  void selectNode() {
+    select = !select;
   }
 }

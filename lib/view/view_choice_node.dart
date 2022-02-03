@@ -32,7 +32,12 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
     return InkWell(
       onTap: () {
         if (ConstList.isMobile()) {
-          Get.find<VMPlatform>().setHover(posX, posY);
+          if(Get.find<VMPlatform>().isEditable()){
+            Get.find<VMPlatform>().setHover(posX, posY);
+          }
+        }
+        if(!Get.find<VMPlatform>().isEditable()) {
+          Get.find<VMPlatform>().select(posX, posY);
         }
       },
       onHover: (val) {
@@ -43,11 +48,14 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
         }
       },
       onDoubleTap: () {
-        Get.find<VMPlatform>().setEdit(posX, posY);
-        Get.toNamed('/viewEditor');
+        if(Get.find<VMPlatform>().isEditable()) {
+          Get.find<VMPlatform>().setEdit(posX, posY);
+          Get.toNamed('/viewEditor');
+        }
       },
       child: GetBuilder<VMPlatform>(
-        builder: (_) => SizedBox(
+        builder: (_) => Container(
+          color: Get.find<VMPlatform>().isSelect(posX, posY) ? Colors.blueAccent : Colors.white,
           width: nodeBaseWidth * size.data1,
           height: nodeBaseHeight * size.data2,
           child: Column(
@@ -161,7 +169,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                         },
                       ),
                       visible: Get.find<VMPlatform>().mouseHover ==
-                          Tuple(posX, posY),
+                          Tuple(posX, posY) && Get.find<VMPlatform>().isEditable(),
                     ),
                   ),
                 ],

@@ -107,4 +107,12 @@ class AbstractPlatform {
       }
     }
   }
+
+  void setSelect(int posX, int posY) {
+    getChoiceNode(posX, posY)?.selectNode();
+  }
+
+  bool isSelect(int posX, int posY) {
+    return getChoiceNode(posX, posY)?.select ?? false;
+  }
 }
