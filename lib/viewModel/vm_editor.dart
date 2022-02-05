@@ -57,7 +57,6 @@ class VMEditor extends GetxController{
         jsonEncode(controllerBody.document.toDelta().toJson());
     Get.find<VMPlatform>().updateWidgetList();
     Get.find<VMPlatform>().update();
-    Get.find<VMVariableTable>().update();
     isChanged = false;
   }
 

@@ -10,8 +10,8 @@ class ViewVariable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var vmVariable = Get.put(VMVariableTable());
     return GetBuilder<VMVariableTable>(
-      init: Get.put(VMVariableTable()),
       builder: (_) => Drawer(
         child: Column(
           children: [

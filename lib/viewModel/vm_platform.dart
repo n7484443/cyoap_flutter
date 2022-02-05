@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
 import 'package:flutter/material.dart';
@@ -174,7 +175,6 @@ class VMPlatform extends GetxController{
         }
       }
     }
-    Get.find<VMVariableTable>().update();
   }
 
   void select(int posX, int posY) {

@@ -1,11 +1,13 @@
 import 'dart:collection';
 
+import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
+
 import 'grammar/value_type.dart';
 
 class VariableDataBase {
   static final VariableDataBase instance = VariableDataBase();
   var varMap = HashMap<String, ValueType>();
-  bool isUpdated = false;
+  VMVariableTable? viewModel;
 
   static VariableDataBase getInstance() {
     return instance;
@@ -13,30 +15,12 @@ class VariableDataBase {
 
   void setValue(String name, ValueType value) {
     varMap[name] = value;
-    isUpdated = true;
+    viewModel?.updateLists();
   }
 
 
   bool hasValue(String name) {
     return varMap.containsKey(name);
-  }
-
-  void changeValue(String name, ValueType value) {
-    var v = varMap[name];
-    if (v == null) {
-      setValue(name, value);
-      return;
-    }
-
-    if (v.data is int && value.data is int) {
-      v.data = v.data + value.data;
-    } else if ((v.data is int || v.data is double) && (value.data is int || value.data is double)) {
-      v.data = v.data + value.data;
-    }else{
-      varMap[name]?.data += value.data;
-    }
-
-    isUpdated = true;
   }
 
   ValueType? getValue(String name) {
@@ -50,5 +34,6 @@ class VariableDataBase {
 
   void clear() {
     varMap.clear();
+    viewModel?.updateLists();
   }
 }
