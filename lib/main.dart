@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cyoap_flutter/view/view_code_editor.dart';
 import 'package:cyoap_flutter/view/view_editor.dart';
+import 'package:cyoap_flutter/view/view_global_settings.dart';
 import 'package:cyoap_flutter/view/view_make.dart';
 import 'package:cyoap_flutter/view/view_play.dart';
 import 'package:cyoap_flutter/view/view_start.dart';
@@ -38,6 +39,7 @@ void main() {
         GetPage(name: '/viewStart', page: () => const ViewStart()),
         GetPage(name: '/viewEditor', page: () => const ViewEditor()),
         GetPage(name: '/viewCodeEditor', page: () => const ViewCodeEditor()),
+        GetPage(name: '/viewGlobalSetting', page: () => const ViewGlobalSetting()),
       ],
       theme: appThemeData,
       defaultTransition: Transition.fade,
