@@ -13,64 +13,69 @@ class ViewStart extends StatelessWidget {
     vmStart.initFrequentPath();
     return GetBuilder<VMStartPlatform>(
       builder: (_) => Scaffold(
-        body: Row(
+        body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
               flex: 9,
-              child: Column(
-                children: [
-                  Expanded(
-                    flex: 18,
-                    child: ListView.separated(
-                      itemCount: _.pathList.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Row(
-                            children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  _.selectFrequentPath(index);
-                                },
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.resolveWith((states) {
-                                    return _.getColor(index);
-                                  }),
+              child: Container(
+                decoration: const BoxDecoration(
+                  border: Border(bottom: BorderSide(color: Colors.lightBlue),),
+                ),
+                child: Column(
+                  children: [
+                    Expanded(
+                      flex: 12,
+                      child: ListView.separated(
+                        itemCount: _.pathList.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Row(
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    _.selectFrequentPath(index);
+                                  },
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.resolveWith((states) {
+                                      return _.getColor(index);
+                                    }),
+                                  ),
+                                  child: Text(
+                                      _.pathList.reversed.elementAt(index)),
                                 ),
-                                child: Text(
-                                    _.pathList.reversed.elementAt(index)),
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.delete),
-                                onPressed: () {
-                                  _.removeFrequentPath(index);
-                                },
-                              )
-                            ],
-                          ),
-                        );
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return const Divider();
-                      },
+                                IconButton(
+                                  icon: const Icon(Icons.delete),
+                                  onPressed: () {
+                                    _.removeFrequentPath(index);
+                                  },
+                                )
+                              ],
+                            ),
+                          );
+                        },
+                        separatorBuilder: (BuildContext context, int index) {
+                          return const Divider();
+                        },
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: TextButton(
-                      child: Text(ConstList.actualPlatformType == platformType.web ? 'Add File' : 'Add Path' ),
-                      onPressed: () async {
-                        if (await _.openDirectory() == 0) {
-                          _.selected = 0;
-                        }
-                      },
-                    ),
-                  )
-                ],
+                    Expanded(
+                      child: TextButton(
+                        child: Text(ConstList.actualPlatformType == platformType.web ? 'Add File' : 'Add Path' ),
+                        onPressed: () async {
+                          if (await _.openDirectory() == 0) {
+                            _.selected = 0;
+                          }
+                        },
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
             const Expanded(
-              flex: 4,
+              flex: 2,
               child: SelectMode(),
             )
           ],
@@ -85,9 +90,7 @@ class SelectMode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return Row(
       children: [
         Expanded(
           child: InkWell(
