@@ -10,7 +10,7 @@ class Analyser{
   LexicalAnalyser lexicalAnalyser = LexicalAnalyser();
   SyntaxAnalyser syntaxAnalyser = SyntaxAnalyser();
   SemanticAnalyser semanticAnalyser = SemanticAnalyser();
-  FunctionList functionList = FunctionList();
+  Functions functionList = Functions()..init();
 
   List<RecursiveUnit> analyse(String codeInput){
     List<RecursiveUnit> recursiveList = List.empty(growable: true);

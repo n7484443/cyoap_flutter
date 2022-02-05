@@ -18,6 +18,7 @@ class ChoiceNodeBase {
   String conditionVisibleString = '';
   String executeCodeString = '';
   bool select = false;
+  bool isSelectable = false;
 
   ChoiceNodeBase(this.x, this.y, this.width, this.height, this.isCard,
       this.title, this.contentsString, this.imageString);

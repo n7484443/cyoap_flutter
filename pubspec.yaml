@@ -34,12 +34,12 @@ dependencies:
   permission_handler: ^8.3.0
   http: ^0.13.4
   provider:  ^6.0.2
-  shared_preferences: ^2.0.12
+  shared_preferences: ^2.0.13
   get: ^4.6.1
-  google_fonts: ^2.2.0
+  google_fonts: 2.2.0
   crop: ^0.5.2
   archive: ^3.1.11
-  flutter_quill: ^3.9.4
+  flutter_quill: ^3.9.7
   english_words: ^4.0.0
 
 dev_dependencies:

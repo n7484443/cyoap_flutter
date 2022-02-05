@@ -1,3 +1,5 @@
+import 'analyser.dart';
+
 class ValueType {
   dynamic data;
 
@@ -21,10 +23,19 @@ class ValueType {
     return 'value Type : $data';
   }
 
-  ValueType.fromJson(Map<String, dynamic> json) : data = json['data'];
+  ValueType.fromJson(Map<String, dynamic> json) {
+    if(json['data'].toString().startsWith('func')){
+      data = Analyser.instance.functionList.getFunction(json['data'].toString().replaceFirst('func', ''));
+      print(data);
+    }else if(json['data'] is Map && (json['data'] as Map).containsKey('varName')){
+      data = VariableUnit.fromJson(json['data']);
+    }else{
+      data = json['data'];
+    }
+  }
 
   Map<String, dynamic> toJson() => {
-        'data': data is VariableUnit ? (data as VariableUnit).toJson() : data.toString(),
+        'data': data is VariableUnit ? (data as VariableUnit).toJson() : (data is Function ? 'func${data.toString().split('\'')[1]}' : data.toString()),
       };
 }
 

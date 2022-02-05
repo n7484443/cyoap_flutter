@@ -128,24 +128,16 @@ class ViewEditorTyping extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              quill.QuillToolbar.basic(
-                controller: controller.controllerBody,
-                showImageButton: false,
-                showLink: false,
-                showVideoButton: false,
-                showCodeBlock: false,
-                showListCheck: false,
-              ),
-              const Spacer(),
-              OutlinedButton(
-                child: const Text('Edit Code'),
-                onPressed: () {
-                  Get.toNamed('/viewCodeEditor');
-                },
-              ),
-            ],
+          child: quill.QuillToolbar.basic(
+            controller: controller.controllerBody,
+            showImageButton: false,
+            showLink: false,
+            showVideoButton: false,
+            showCodeBlock: false,
+            showListCheck: false,
+            showCameraButton: false,
+            showInlineCode: false,
+            showAlignmentButtons: true,
           ),
         ),
         Expanded(
@@ -171,6 +163,28 @@ class ViewEditorTyping extends StatelessWidget {
             ],
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              OutlinedButton(
+                child: const Text('Edit Code'),
+                onPressed: () {
+                  Get.toNamed('/viewCodeEditor');
+                },
+              ),
+              const SizedBox(
+                width: 100,
+                child: TextField(
+                  keyboardType: TextInputType.number,
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(hintText: '포인트 증감'),
+                ),
+              ),
+            ],
+          ),
+        ),
         Expanded(
           flex: 1,
           child: Row(
@@ -181,41 +195,53 @@ class ViewEditorTyping extends StatelessWidget {
                   },
                   icon: const Icon(Icons.add)),
               Expanded(
-                child: ScrollConfiguration(
-                  behavior:
-                      ScrollConfiguration.of(context).copyWith(dragDevices: {
-                    PointerDeviceKind.touch,
-                    PointerDeviceKind.mouse,
-                  }),
-                  child: GetBuilder<VMEditor>(
-                    builder: (_) => ListView.builder(
-                      shrinkWrap: true,
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      controller: ScrollController(),
-                      itemCount: controller.getImageLength(),
-                      itemBuilder: (BuildContext context, int index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(1.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 3,
-                                color: index == controller.index
-                                    ? Colors.redAccent
-                                    : Colors.white,
-                              ),
-                            ),
-                            child: GestureDetector(
-                              child: Image.memory(controller.getImage(index)),
-                              onDoubleTap: () {
-                                    controller.setImage(index);
-                                  },
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          offset: Offset(4.0, 4.0),
+                          color: Colors.black38,
+                          blurRadius: 5.0,
+                          spreadRadius: 1.0,
+                        )
+                      ],
+                    ),
+                    child: ScrollConfiguration(
+                    behavior:
+                        ScrollConfiguration.of(context).copyWith(dragDevices: {
+                      PointerDeviceKind.touch,
+                      PointerDeviceKind.mouse,
+                    }),
+                    child: GetBuilder<VMEditor>(
+                      builder: (_) => ListView.builder(
+                        shrinkWrap: true,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        controller: ScrollController(),
+                        itemCount: controller.getImageLength(),
+                        itemBuilder: (BuildContext context, int index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(1.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 3,
+                                  color: index == controller.index
+                                      ? Colors.redAccent
+                                      : Colors.white,
                                 ),
                               ),
-                            );
-                          },
-                        ),
+                              child: GestureDetector(
+                                child: Image.memory(controller.getImage(index)),
+                                onDoubleTap: () {
+                                  controller.setImage(index);
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ),

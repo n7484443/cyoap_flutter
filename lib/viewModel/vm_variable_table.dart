@@ -16,8 +16,14 @@ class VMVariableTable extends GetxController {
 
   List<String> getVariableList(){
     List<String> variableList = List.empty(growable: true);
-    for(var key in VariableDataBase.instance.varMap.keys){
-      variableList.add('$key | ${VariableDataBase.instance.varMap[key]?.data.runtimeType}');
+    if(PlatformSystem.getPlatform().isEditable){
+      for(var key in VariableDataBase.instance.varMap.keys){
+        variableList.add('$key | ${VariableDataBase.instance.varMap[key]?.data.runtimeType}');
+      }
+    }else{
+      for(var key in VariableDataBase.instance.varMap.keys){
+        variableList.add('$key | ${VariableDataBase.instance.varMap[key]?.data}');
+      }
     }
     return variableList;
   }

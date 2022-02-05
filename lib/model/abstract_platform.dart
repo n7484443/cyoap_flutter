@@ -1,5 +1,9 @@
 import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
+import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/util/tuple.dart';
+import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 
 class AbstractPlatform {
   int halfWidth;
@@ -110,9 +114,25 @@ class AbstractPlatform {
 
   void setSelect(int posX, int posY) {
     getChoiceNode(posX, posY)?.selectNode();
+    updateSelectable();
   }
 
   bool isSelect(int posX, int posY) {
     return getChoiceNode(posX, posY)?.select ?? false;
+  }
+
+  void updateSelectable() {
+    VariableDataBase.instance.clear();
+    for (var nodeY in choiceNodes) {
+      for (var node in nodeY) {
+        if(node.select && node.executeCodeRecursive != null){
+          for (var codes in node.executeCodeRecursive!) {
+            print(codes.toString());
+            codes.unzip();
+          }
+        }
+      }
+    }
+    Get.find<VMVariableTable>().update();
   }
 }
