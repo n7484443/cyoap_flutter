@@ -77,8 +77,6 @@ class Functions {
   }
 
   ValueType funcPlus(ValueType a, ValueType b, ValueType c) {
-    print(a.data.toString() + ":" + b.data.toString());
-    print(a.data.runtimeType.toString() + ":" + b.data.runtimeType.toString());
     if (a.data is num && b.data is num) {
       return ValueType(a.data + b.data);
     } else {

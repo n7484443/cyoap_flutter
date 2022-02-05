@@ -20,11 +20,25 @@ class ViewVariable extends StatelessWidget {
                 return ListTile(title: Text(_.getVariableList()[index]));
               }),
             ),
-            ExpansionTile(
-              title: const Text('노드'),
-              children: List<Widget>.generate(_.getNodeNameList().length, (index) {
-                return ListTile(title: Text(_.getNodeNameList()[index]));
-              }),
+            Visibility(
+              child: ExpansionTile(
+                title: const Text('노드'),
+                children: List<Widget>.generate(_.getNodeNameList().length, (index) {
+                  return ListTile(title: Text(_.getNodeNameList()[index]));
+                }),
+              ),
+              visible: _.isEditable(),
+            ),
+            InkWell(
+              child: Visibility(
+                child: const ListTile(
+                  title: Text('CYOA 설정'),
+                ),
+                visible: _.isEditable(),
+              ),
+              onDoubleTap: (){
+
+              },
             ),
           ],
         ),

@@ -27,4 +27,8 @@ class VMVariableTable extends GetxController {
     }
     return variableList;
   }
+
+  bool isEditable() {
+    return PlatformSystem.getPlatform().isEditable;
+  }
 }

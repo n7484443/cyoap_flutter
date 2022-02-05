@@ -24,18 +24,37 @@ class ValueType {
   }
 
   ValueType.fromJson(Map<String, dynamic> json) {
-    if(json['data'].toString().startsWith('func')){
-      data = Analyser.instance.functionList.getFunction(json['data'].toString().replaceFirst('func', ''));
-      print(data);
-    }else if(json['data'] is Map && (json['data'] as Map).containsKey('varName')){
-      data = VariableUnit.fromJson(json['data']);
-    }else{
-      data = json['data'];
+    switch (json['type']) {
+      case 'function':
+        data = Analyser.instance.functionList
+            .getFunction(json['data'].toString().replaceFirst('func', ''));
+        break;
+      case 'VariableUnit':
+        data = VariableUnit.fromJson(json['data']);
+        break;
+      case 'int':
+        data = int.tryParse(json['data']);
+        break;
+      case 'double':
+        data = double.tryParse(json['data']);
+        break;
+      case 'bool':
+        data = json['data'] == 'true';
+        break;
+      case 'String':
+        data = json['data'] as String;
+        break;
     }
   }
 
-  Map<String, dynamic> toJson() => {
-        'data': data is VariableUnit ? (data as VariableUnit).toJson() : (data is Function ? 'func${data.toString().split('\'')[1]}' : data.toString()),
+  Map<String, dynamic> toJson() =>
+      {
+        'data': data is VariableUnit
+            ? (data as VariableUnit).toJson()
+            : (data is Function
+                ? data.toString().split('\'')[1]
+                : data.toString()),
+        'type': data is Function ? 'function' : data.runtimeType.toString(),
       };
 }
 
