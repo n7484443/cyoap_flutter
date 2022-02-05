@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/util/tuple.dart';
 import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
+import 'grammar/value_type.dart';
 
 class AbstractPlatform {
   int halfWidth;
@@ -15,10 +18,14 @@ class AbstractPlatform {
   String colorBackground;
   int flag;
   List<List<ChoiceNodeBase>> choiceNodes = List.empty(growable: true);
+  List<Tuple<String, ValueTypeVisible>> globalSetting = List.empty(growable: true);
 
   bool isEditable = true;
 
   void init() {
+    for(var initialValue in globalSetting){
+      VariableDataBase.instance.setValue(initialValue.data1, initialValue.data2.valueType);
+    }
     checkDataCollect();
   }
 
@@ -47,7 +54,8 @@ class AbstractPlatform {
         scale = json['scale'],
         stringImageName = json['stringImageName'],
         colorBackground = json['colorBackground'],
-        flag = json['flag']{
+        flag = json['flag'],
+        globalSetting = (json['globalSetting'] as List).map((e) => Tuple<String, ValueTypeVisible>.fromJson(e)).toList() {
     init();
   }
 
@@ -60,6 +68,7 @@ class AbstractPlatform {
     'stringImageName' : stringImageName,
     'colorBackground' : colorBackground,
     'flag' : flag,
+    'globalSetting' : globalSetting,
   };
 
   int getMinX() => -halfWidth;
@@ -123,16 +132,23 @@ class AbstractPlatform {
 
   void updateSelectable() {
     VariableDataBase.instance.clear();
+    for(var initialValue in globalSetting){
+      VariableDataBase.instance.setValue(initialValue.data1, initialValue.data2.valueType);
+    }
     for (var nodeY in choiceNodes) {
       for (var node in nodeY) {
         if(node.select && node.executeCodeRecursive != null){
           for (var codes in node.executeCodeRecursive!) {
-            print(codes.toString());
             codes.unzip();
           }
         }
       }
     }
     Get.find<VMVariableTable>().update();
+  }
+
+  void setGlobalSetting(List<Tuple<String, ValueTypeVisible>> units){
+    globalSetting.clear();
+    globalSetting.addAll(units);
   }
 }

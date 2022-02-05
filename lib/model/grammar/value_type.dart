@@ -78,3 +78,18 @@ class VariableUnit {
 enum valueTypeData{
   none, comma,
 }
+
+class ValueTypeVisible{
+  ValueType valueType;
+  bool visible;
+  ValueTypeVisible(this.valueType, this.visible);
+
+  ValueTypeVisible.fromJson(Map<String, dynamic> json) :
+        valueType = ValueType.fromJson(json['valueType']),
+        visible = json['visible'] == 'true';
+
+  Map<String, dynamic> toJson() => {
+    'visible': visible.toString().toLowerCase(),
+    'valueType': valueType.toJson(),
+  };
+}

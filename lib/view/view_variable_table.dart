@@ -37,7 +37,7 @@ class ViewVariable extends StatelessWidget {
                 ),
                 visible: _.isEditable(),
               ),
-              onDoubleTap: (){
+              onTap: (){
                 Get.toNamed('/viewGlobalSetting');
               },
             ),
