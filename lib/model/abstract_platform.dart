@@ -1,11 +1,10 @@
-import 'dart:convert';
-
 import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/util/tuple.dart';
 import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
+
 import 'grammar/value_type.dart';
 
 class AbstractPlatform {

@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:cyoap_flutter/model/editor.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
-import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';

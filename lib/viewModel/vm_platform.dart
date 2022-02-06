@@ -1,8 +1,6 @@
 import 'dart:convert';
 
-import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
-import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_quill/flutter_quill.dart';

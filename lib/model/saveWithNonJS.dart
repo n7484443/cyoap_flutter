@@ -1,8 +1,8 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:cyoap_flutter/model/platform_file_system.dart';
-import 'dart:io';
 
 void saveRaw(String name, PlatformFileSystem platformFileSystem) async{
   await platformFileSystem.saveToFolder(name);
