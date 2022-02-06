@@ -204,4 +204,8 @@ class PlatformFileSystem {
     _dirImage.putIfAbsent(name, () => data);
   }
 
+  int getImageIndex(String name) {
+    return _dirImage.keys.toList().indexOf(name);
+  }
+
 }

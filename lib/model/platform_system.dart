@@ -80,4 +80,8 @@ class PlatformSystem{
     }
   }
 
+  static int getImageIndex(String name) {
+    return instance.platformFileSystem.getImageIndex(name);
+  }
+
 }

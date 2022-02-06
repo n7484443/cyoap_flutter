@@ -57,7 +57,6 @@ class VMEditor extends GetxController{
     NodeEditor.instance.target.contentsString =
         jsonEncode(controllerBody.document.toDelta().toJson());
     Get.find<VMPlatform>().updateWidgetList();
-    Get.find<VMPlatform>().update();
     isChanged = false;
   }
 
@@ -100,7 +99,10 @@ class VMEditor extends GetxController{
 
       if(file.bytes == null)return;
       PlatformSystem.addImage(file.name, file.bytes!);
+      NodeEditor.instance.target.imageString = file.name;
+      index = PlatformSystem.getImageIndex(file.name);
       Get.find<VMPlatform>().isChanged = true;
+      isChanged = true;
       update();
     }
   }

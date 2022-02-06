@@ -1,7 +1,5 @@
 import 'dart:collection';
-
 import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
-
 import 'grammar/value_type.dart';
 
 class VariableDataBase {

@@ -52,7 +52,7 @@ class ViewCodeEditor extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.save),
               onPressed: () {
-                Get.find<VMCodeEditor>().save();
+                _vmCodeEditor.save();
               },
             )
           ],
