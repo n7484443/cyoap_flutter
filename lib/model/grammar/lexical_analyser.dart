@@ -17,13 +17,14 @@ class LexicalAnalyser {
       var size = func.length - 1;
       switch (c) {
         case '-':
-          if (func[size].type != AnalyserConst.doubles &&
-              func[size].type != AnalyserConst.ints) {
-            func.add(Token(AnalyserConst.ints, '0'));
-            func.add(Token(AnalyserConst.functionUnspecified, c.toString()));
-          } else {
-            func.add(Token(AnalyserConst.functionUnspecified, c.toString()));
+          if(i + 1 < str.length && str[i + 1] != '='){
+            if (func[size].type != AnalyserConst.doubles &&
+                func[size].type != AnalyserConst.ints) {
+              func.add(Token(AnalyserConst.ints, '0'));
+            }
           }
+          func.add(Token(AnalyserConst.functionUnspecified, c.toString()));
+
           break;
         case '+':
         case '*':

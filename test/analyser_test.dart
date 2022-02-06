@@ -31,6 +31,8 @@ void main() {
                 if(numberTest0 != -5.5, gamma = 12, omega = 16)
                 test_alpha = 1
                 test_alpha += 3
+                test_beta = 1
+                test_beta -= 5
                 """;
   var recursiveData = Analyser.analyseCodes(strTest);
   for(var recursive in recursiveData){
@@ -77,5 +79,6 @@ void main() {
   });
   test('addTest', (){
     expect(ins.getValue('test_alpha')?.data, 4);
+    expect(ins.getValue('test_beta')?.data, -4);
   });
 }

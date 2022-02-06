@@ -76,6 +76,7 @@ class RecursiveParser extends RecursiveUnit {
 
   @override
   ValueType unzip() {
+    if(value.data == null)return ValueType.none();
     switch (childNode.length) {
       case 0:
         return value.data(ValueType.none(), ValueType.none(), ValueType.none());
