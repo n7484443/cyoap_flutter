@@ -19,6 +19,7 @@ class VMEditor extends GetxController{
   var contents = ''.obs;
   var index = -1;
   var isCard = false;
+  var isSelectable = true;
 
   bool isChanged = false;
 
@@ -78,6 +79,13 @@ class VMEditor extends GetxController{
   void setCard(bool value) {
     isCard = value;
     NodeEditor.instance.target.isCard = value;
+    isChanged = true;
+    update();
+  }
+
+  void setSelectable(bool value) {
+    isSelectable = value;
+    NodeEditor.instance.target.isSelectable = value;
     isChanged = true;
     update();
   }

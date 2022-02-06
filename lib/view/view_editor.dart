@@ -52,23 +52,6 @@ class ViewEditor extends StatelessWidget {
             }
           },
         ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              '카드 모드',
-              style: TextStyle(color: Colors.black),
-            ),
-            GetBuilder<VMEditor>(
-              builder: (_) => Switch(
-                onChanged: (bool value) {
-                  controller.setCard(value);
-                },
-                value: controller.isCard,
-              ),
-            ),
-          ],
-        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.save),
@@ -80,11 +63,73 @@ class ViewEditor extends StatelessWidget {
       ),
     );
 
+    var editingNodeValues = SizedBox(
+      child: GetBuilder<VMEditor>(
+        builder: (_) => Column(
+          children: [
+            Row(
+              children: [
+                const Text(
+                  '카드 모드',
+                  style: TextStyle(color: Colors.black),
+                ),
+                Switch(
+                  onChanged: (bool value) {
+                    controller.setCard(value);
+                  },
+                  value: controller.isCard,
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                const Text(
+                  '선택 가능',
+                  style: TextStyle(color: Colors.black),
+                ),
+                Switch(
+                  onChanged: (bool value) {
+                    controller.setSelectable(value);
+                  },
+                  value: controller.isSelectable,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+
     if (ConstList.actualPlatformType == platformType.mobile) {
       return Scaffold(
         appBar: appbarWidget,
         drawer: const ViewVariable(),
-        body: const ViewEditorTyping(),
+        body: Column(
+          children: [
+            Container(
+              color: Colors.black12,
+              child: TextField(
+                controller: controller.controllerTitle,
+                textAlign: TextAlign.center,
+                decoration: const InputDecoration(hintText: '제목'),
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  const Expanded(
+                    child: ViewEditorTyping(),
+                  ),
+                  editingNodeValues,
+                ],
+              ),
+            ),
+          ],
+        ),
       );
     } else {
       return Row(
@@ -97,7 +142,32 @@ class ViewEditor extends StatelessWidget {
           Expanded(
             child: Scaffold(
               appBar: appbarWidget,
-              body: const ViewEditorTyping(),
+              body: Column(
+                children: [
+                  Container(
+                    color: Colors.black12,
+                    child: TextField(
+                      controller: controller.controllerTitle,
+                      textAlign: TextAlign.center,
+                      decoration: const InputDecoration(hintText: '제목'),
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        const Expanded(
+                          child: ViewEditorTyping(),
+                        ),
+                        editingNodeValues,
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -114,18 +184,6 @@ class ViewEditorTyping extends StatelessWidget {
     final VMEditor controller = Get.put(VMEditor());
     return Column(
       children: [
-        Container(
-          color: Colors.black12,
-          child: TextField(
-            controller: controller.controllerTitle,
-            textAlign: TextAlign.center,
-            decoration: const InputDecoration(hintText: '제목'),
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: quill.QuillToolbar.basic(

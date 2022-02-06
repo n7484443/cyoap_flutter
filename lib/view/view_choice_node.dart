@@ -15,7 +15,7 @@ import '../util/tuple.dart';
                            └──Card──subChoiceSet
   */
 
-double nodeBaseWidth = 240;
+double nodeBaseWidth = 200;
 double nodeBaseHeight = 360;
 
 class ViewChoiceNodeTextWithImage extends StatelessWidget {
@@ -70,7 +70,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                       alignment: Alignment.topCenter,
                       child: Visibility(
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
                           child: ClipRRect(
                             borderRadius: const BorderRadius.all(Radius.circular(5)),
                             child: Image(
@@ -222,23 +222,25 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                   ],
                 ),
               ),
-              Visibility(
-                child: IgnorePointer(
-                  child: quill.QuillEditor(
-                    controller:
-                        Get.find<VMPlatform>().getNodeController(posX, posY)!,
-                    scrollController: ScrollController(),
-                    readOnly: true,
-                    showCursor: false,
-                    scrollable: false,
-                    focusNode: FocusNode(),
-                    autoFocus: false,
-                    expands: false,
-                    enableInteractiveSelection: false,
-                    padding: EdgeInsets.zero,
+              Expanded(
+                child: Visibility(
+                  child: IgnorePointer(
+                    child: quill.QuillEditor(
+                      controller:
+                          Get.find<VMPlatform>().getNodeController(posX, posY)!,
+                      scrollController: ScrollController(),
+                      readOnly: true,
+                      showCursor: false,
+                      scrollable: false,
+                      focusNode: FocusNode(),
+                      autoFocus: false,
+                      expands: false,
+                      enableInteractiveSelection: false,
+                      padding: EdgeInsets.zero,
+                    ),
                   ),
+                  visible: node.contentsString.isNotEmpty,
                 ),
-                visible: node.contentsString.isNotEmpty,
               ),
             ],
           ),
