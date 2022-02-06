@@ -18,7 +18,8 @@ class ChoiceNodeBase {
   String conditionVisibleString = '';
   String executeCodeString = '';
   bool select = false;
-  bool isSelectable = false;
+  bool isSelectable = true;
+  bool isSelectableCheck = true;
 
   ChoiceNodeBase(this.x, this.y, this.width, this.height, this.isCard,
       this.title, this.contentsString, this.imageString);
@@ -55,6 +56,7 @@ class ChoiceNodeBase {
         'width': width,
         'height': height,
         'isCard': isCard,
+        'isSelectable': isSelectable,
         'title': title,
         'contentsString': contentsString,
         'imageString': imageString,
@@ -72,6 +74,7 @@ class ChoiceNodeBase {
         width = json['width'],
         height = json['height'],
         isCard = json['isCard'],
+        isSelectable = json['isSelectable'],
         title = json['title'],
         contentsString = json['contentsString'],
         imageString = json['imageString'],
@@ -104,5 +107,9 @@ class ChoiceNodeBase {
 
   void selectNode() {
     select = !select;
+  }
+
+  bool isSelectableWithCheck(){
+    return isSelectable && isSelectableCheck;
   }
 }

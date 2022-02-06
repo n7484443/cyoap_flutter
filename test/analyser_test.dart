@@ -34,6 +34,12 @@ void main() {
                 test_beta = 1
                 test_beta -= 5
                 """;
+  String strTest2 = """
+  numberTest0 < 0
+  """;
+  String strTest3 = """
+  numberTest4 >= 19
+  """;
   var recursiveData = Analyser.analyseCodes(strTest);
   for(var recursive in recursiveData){
     recursive.unzip();
@@ -80,5 +86,15 @@ void main() {
   test('addTest', (){
     expect(ins.getValue('test_alpha')?.data, 4);
     expect(ins.getValue('test_beta')?.data, -4);
+  });
+
+  test('return Test', (){
+    var recursiveData = Analyser.analyseCodes(strTest2);
+    var ret = recursiveData[0].unzip();
+    expect(ret.data as bool, true);
+
+    recursiveData = Analyser.analyseCodes(strTest3);
+    ret = recursiveData[0].unzip();
+    expect(ret.data as bool, false);
   });
 }

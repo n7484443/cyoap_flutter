@@ -137,6 +137,14 @@ class AbstractPlatform {
     }
     for (var nodeY in choiceNodes) {
       for (var node in nodeY) {
+        if(node.conditionClickableRecursive != null){
+          var data = node.conditionClickableRecursive!.unzip().data;
+          if(data != valueTypeData.none){
+            node.isSelectableCheck = data as bool;
+          }
+        }else{
+          node.isSelectableCheck = true;
+        }
         if(node.select && node.executeCodeRecursive != null){
           for (var codes in node.executeCodeRecursive!) {
             codes.unzip();

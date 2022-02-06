@@ -35,6 +35,7 @@ class VMEditor extends GetxController{
       );
     }
     isCard = NodeEditor.instance.target.isCard;
+    isSelectable = NodeEditor.instance.target.isSelectable;
     controllerTitle.text = NodeEditor.instance.target.title;
     title.value = controllerTitle.text;
 
