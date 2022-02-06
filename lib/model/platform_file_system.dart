@@ -59,7 +59,6 @@ class PlatformFileSystem {
     } else {
       var dirList = await dirNodes.list().toList();
       for (FileSystemEntity f in dirList) {
-        var name = basename(f.path);
         if (f is File) {
           var value = await f.readAsString();
           var node = ChoiceNodeBase.fromJson(jsonDecode(value));
@@ -67,6 +66,7 @@ class PlatformFileSystem {
         }
       }
     }
+    platform.init();
   }
 
   void createFromTar(Archive archive) {
@@ -101,6 +101,7 @@ class PlatformFileSystem {
     for(var node in nodeList){
       platform.addData(node.x, node.y, node);
     }
+    platform.init();
   }
   void createFromVoid() {
     platform = AbstractPlatform.none();

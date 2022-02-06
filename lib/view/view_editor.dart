@@ -122,7 +122,10 @@ class ViewEditor extends StatelessWidget {
               child: Row(
                 children: [
                   const Expanded(
-                    child: ViewEditorTyping(),
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: ViewEditorTyping(),
+                    ),
                   ),
                   editingNodeValues,
                 ],
@@ -160,7 +163,10 @@ class ViewEditor extends StatelessWidget {
                     child: Row(
                       children: [
                         const Expanded(
-                          child: ViewEditorTyping(),
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: ViewEditorTyping(),
+                          ),
                         ),
                         editingNodeValues,
                       ],

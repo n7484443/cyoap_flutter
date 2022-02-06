@@ -246,12 +246,13 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
     } else {
       return GetBuilder<VMPlatform>(
         builder: (_) => IgnorePointer(
-          ignoring: !vmPlatform.isSelectable(posX, posY),
+          ignoring: ! vmPlatform.isSelectable(posX, posY),
           child: InkWell(
             onTap: () {
               vmPlatform.select(posX, posY);
             },
-            child: mainNode,
+            child: Opacity(
+                opacity: vmPlatform.isSelectablePreCheck(posX, posY) ? 1.0 : 0.5, child: mainNode),
           ),
         ),
       );

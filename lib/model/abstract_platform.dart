@@ -22,17 +22,12 @@ class AbstractPlatform {
   bool isEditable = true;
 
   void init() {
-    for(var initialValue in globalSetting){
-      VariableDataBase.instance.setValue(initialValue.data1, initialValue.data2.valueType);
-    }
     checkDataCollect();
     updateSelectable();
   }
 
   AbstractPlatform(this.halfWidth, this.halfHeight, this.localX, this.localY,
-      this.scale, this.stringImageName, this.colorBackground, this.flag) {
-    init();
-  }
+      this.scale, this.stringImageName, this.colorBackground, this.flag);
 
   AbstractPlatform.none()
       : halfWidth = 800,
@@ -42,9 +37,7 @@ class AbstractPlatform {
         scale = 1.0,
         stringImageName = '',
         colorBackground = '#909090',
-        flag = 0 {
-    init();
-  }
+        flag = 0 ;
 
   AbstractPlatform.fromJson(Map<String, dynamic> json)
       : halfWidth = json['halfWidth'],
@@ -55,9 +48,7 @@ class AbstractPlatform {
         stringImageName = json['stringImageName'],
         colorBackground = json['colorBackground'],
         flag = json['flag'],
-        globalSetting = (json['globalSetting'] as List).map((e) => Tuple<String, ValueTypeVisible>.fromJson(e)).toList() {
-    init();
-  }
+        globalSetting = (json['globalSetting'] as List).map((e) => Tuple<String, ValueTypeVisible>.fromJson(e)).toList();
 
   Map<String, dynamic> toJson() => {
     'halfWidth' : halfWidth,
