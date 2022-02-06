@@ -26,6 +26,7 @@ class AbstractPlatform {
       VariableDataBase.instance.setValue(initialValue.data1, initialValue.data2.valueType);
     }
     checkDataCollect();
+    updateSelectable();
   }
 
   AbstractPlatform(this.halfWidth, this.halfHeight, this.localX, this.localY,
@@ -151,7 +152,6 @@ class AbstractPlatform {
         }
       }
     }
-    Get.find<VMVariableTable>().update();
   }
 
   void setGlobalSetting(List<Tuple<String, ValueTypeVisible>> units){
