@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/model/grammar/analyser.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -33,6 +31,10 @@ void main() {
                 test_alpha += 3
                 test_beta = 1
                 test_beta -= 5
+                
+                and_test_alpha = true
+                and_test_beta = true
+                and_test = and(and_test_alpha, and_test_beta)
                 """;
   String strTest2 = """
   numberTest0 < 0
@@ -88,6 +90,10 @@ void main() {
     expect(ins.getValue('test_beta')?.data, -4);
   });
 
+  test('and Test', (){
+    expect(ins.getValue('and_test')?.data, true);
+  });
+
   test('return Test', (){
     var recursiveData = Analyser.analyseCodes(strTest2);
     var ret = recursiveData[0].unzip();
@@ -97,4 +103,5 @@ void main() {
     ret = recursiveData[0].unzip();
     expect(ret.data as bool, false);
   });
+
 }

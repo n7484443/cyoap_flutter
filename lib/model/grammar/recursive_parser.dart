@@ -29,7 +29,11 @@ abstract class RecursiveUnit{
       };
 
   void add(RecursiveUnit unit) {
-    childNode.add(unit);
+    if(childNode.length < 3){
+      childNode.add(unit);
+    }else{
+      throw Error();
+    }
   }
 
   int checkParser(int i) {
@@ -44,19 +48,24 @@ abstract class RecursiveUnit{
 
   @override
   String toString() {
-    if(childNode.isEmpty){
+    if (childNode.isEmpty) {
       return '$value';
     }
     return '$value | $childNode';
   }
 }
 
+RecursiveUnit getClassFromJson(Map<String, dynamic> json) {
+  return json['class'] == 'RecursiveParser'
+      ? RecursiveParser.fromJson(json)
+      : RecursiveData.fromJson(json);
+}
+
 class RecursiveParser extends RecursiveUnit {
   RecursiveParser(ValueType value) : super.fromValue(value);
 
   @override
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'class': 'RecursiveParser',
         'childNode': childNode,
         'value': value,
@@ -64,13 +73,9 @@ class RecursiveParser extends RecursiveUnit {
 
   RecursiveParser.fromJson(Map<String, dynamic> json){
     super.value = ValueType.fromJson(json['value']);
-    super.childNode = json.containsKey('childNode') ? (json['childNode'] as List).map((e){
-      if(e['class'] == 'RecursiveParser') {
-        return RecursiveParser.fromJson(e);
-      }else{
-        return RecursiveData.fromJson(e);
-      }
-    }).toList() : List.empty(growable: true);
+    super.childNode = json.containsKey('childNode')
+        ? (json['childNode'] as List).map((e) => getClassFromJson(e)).toList()
+        : List.empty(growable: true);
   }
 
 

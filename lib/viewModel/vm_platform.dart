@@ -186,7 +186,7 @@ class VMPlatform extends GetxController{
   }
 
   bool isSelectable(int posX, int posY) {
-    return getNode(posX, posY)!.isSelectableWithCheck();
+    return getNode(posX, posY)?.isSelectableWithCheck() ?? false;
   }
 
   bool isSelectablePreCheck(int posX, int posY) {

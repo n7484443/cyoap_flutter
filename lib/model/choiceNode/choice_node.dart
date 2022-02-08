@@ -1,5 +1,8 @@
 import 'package:cyoap_flutter/model/grammar/recursive_parser.dart';
+import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:english_words/english_words.dart';
+
+import '../grammar/value_type.dart';
 
 class ChoiceNodeBase {
   //grid 단위로 설정
@@ -85,13 +88,13 @@ class ChoiceNodeBase {
       conditionClickableRecursive = null;
     } else {
       conditionClickableRecursive =
-          RecursiveParser.fromJson(json['conditionClickableRecursive']);
+          getClassFromJson(json['conditionClickableRecursive']);
     }
     if (json['conditionVisibleRecursive'] == null) {
       conditionVisibleRecursive = null;
     } else {
       conditionVisibleRecursive =
-          RecursiveParser.fromJson(json['conditionVisibleRecursive']);
+          getClassFromJson(json['conditionVisibleRecursive']);
     }
 
     if (json['executeCodeRecursive'] == null) {
@@ -99,17 +102,24 @@ class ChoiceNodeBase {
     } else {
       executeCodeRecursive =
           List.generate((json['executeCodeRecursive'] as List).length, (index) {
-        return RecursiveParser.fromJson(
-            (json['executeCodeRecursive'] as List)[index]);
+        return getClassFromJson((json['executeCodeRecursive'] as List)[index]);
       });
     }
   }
 
   void selectNode() {
     select = !select;
+    VariableDataBase.instance
+        .setValue('${title.trim()}:select', ValueType(select));
   }
 
-  bool isSelectableWithCheck(){
+  void selectNodeWithValue(bool s) {
+    select = s;
+    VariableDataBase.instance
+        .setValue('${title.trim()}:select', ValueType(select));
+  }
+
+  bool isSelectableWithCheck() {
     return isSelectable && isSelectableCheck;
   }
 }

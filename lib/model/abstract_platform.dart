@@ -125,12 +125,29 @@ class AbstractPlatform {
       VariableDataBase.instance
           .setValue(initialValue, globalSetting[initialValue]!.valueType);
     }
+    for(var nodeY in choiceNodes){
+      for(var node in nodeY){
+        VariableDataBase.instance.setValue('${node.title.replaceAll(" ", "")}:select', ValueType(node.select));
+      }
+    }
     for (var nodeY in choiceNodes) {
       for (var node in nodeY) {
         if (node.conditionClickableRecursive != null) {
           var data = node.conditionClickableRecursive!.unzip().data;
-          if (data != valueTypeData.none) {
-            node.isSelectableCheck = data as bool;
+          if (data != null && data != valueTypeData.none) {
+            if (data is VariableUnit) {
+              var varData = VariableDataBase.instance.getValue(data.varName);
+              node.isSelectableCheck = (varData != null && varData as bool) ? varData as bool : true;
+              print(varData);
+              if (node.isSelectableCheck == false) {
+                node.selectNodeWithValue(false);
+              }
+            } else {
+              node.isSelectableCheck = data as bool;
+              if (node.isSelectableCheck == false) {
+                node.selectNodeWithValue(false);
+              }
+            }
           }
         } else {
           node.isSelectableCheck = true;
