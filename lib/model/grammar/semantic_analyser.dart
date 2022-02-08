@@ -37,7 +37,6 @@ class SemanticAnalyser {
         return parserEnd;
       case AnalyserConst.function:
         var funcParser = RecursiveParser(ValueType(t.toData()));
-        print(funcParser);
         return recursiveCreate(funcParser);
       case AnalyserConst.functionComma:
         return parserComma;

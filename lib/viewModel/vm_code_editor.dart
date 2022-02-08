@@ -43,8 +43,8 @@ class VMCodeEditor extends GetxController {
     var conditionVisibleRecursive = Analyser.analyseCodes(conditionVisible.value);
     var executeCodeRecursive = Analyser.analyseCodes(executeCode.value);
 
-    NodeEditor.instance.target.conditionClickableRecursive = conditionClickableRecursive[0];
-    NodeEditor.instance.target.conditionVisibleRecursive = conditionVisibleRecursive[0];
+    NodeEditor.instance.target.conditionClickableRecursive = conditionClickableRecursive.isNotEmpty ? conditionClickableRecursive[0] : null;
+    NodeEditor.instance.target.conditionVisibleRecursive = conditionVisibleRecursive.isNotEmpty ? conditionVisibleRecursive[0] : null;
     NodeEditor.instance.target.executeCodeRecursive = executeCodeRecursive;
 
     NodeEditor.instance.target.conditionClickableString = conditionClickable.value;
