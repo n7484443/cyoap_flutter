@@ -121,13 +121,11 @@ class AbstractPlatform {
 
   void updateSelectable() {
     VariableDataBase.instance.clear();
-    for (var initialValue in globalSetting.keys) {
-      VariableDataBase.instance
-          .setValue(initialValue, ValueTypeWrapper.normal(globalSetting[initialValue]!.valueType));
-    }
+
+    VariableDataBase.instance.varMap.addAll(globalSetting);
     for(var nodeY in choiceNodes){
       for(var node in nodeY){
-        VariableDataBase.instance.setValue('${node.title.replaceAll(" ", "")}:select', ValueTypeWrapper.normal(ValueType(node.select)));
+        VariableDataBase.instance.setValue(node.title.replaceAll(" ", ""), ValueTypeWrapper(ValueType(node.select), false, true));
       }
     }
     for (var nodeY in choiceNodes) {
