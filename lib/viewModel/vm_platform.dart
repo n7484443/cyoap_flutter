@@ -15,10 +15,14 @@ import '../view/view_choice_node.dart';
 class VMPlatform extends GetxController{
   List<List<Widget>> widgetList = List.empty(growable: true);
   bool isDrag = false;
-  GlobalKey captureKey = GlobalKey();
   bool isChanged = false;
   Tuple<int, int> mouseHover = Tuple(-1, -1);
   Tuple<int, int> sizeSet = Tuple(1, 1);
+
+  GlobalKey captureKey = GlobalKey();
+  GlobalKey keyListView = GlobalKey();
+
+  ScrollController scroller = ScrollController();
 
   void updateWidgetList(){
     widgetList.clear();

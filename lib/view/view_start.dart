@@ -11,75 +11,90 @@ class ViewStart extends StatelessWidget {
   Widget build(BuildContext context) {
     final vmStart = Get.put(VMStartPlatform());
     vmStart.initFrequentPath();
-    return GetBuilder<VMStartPlatform>(
-      builder: (_) => Scaffold(
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              flex: 9,
-              child: Container(
-                decoration: const BoxDecoration(
-                  border: Border(bottom: BorderSide(color: Colors.lightBlue),),
-                ),
-                child: Column(
-                  children: [
-                    Expanded(
-                      flex: 12,
-                      child: ListView.separated(
-                        itemCount: _.pathList.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Row(
-                              children: [
-                                ElevatedButton(
-                                  onPressed: () {
-                                    _.selectFrequentPath(index);
-                                  },
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.resolveWith((states) {
-                                      return _.getColor(index);
-                                    }),
-                                  ),
-                                  child: Text(
-                                      _.pathList.reversed.elementAt(index)),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () {
-                                    _.removeFrequentPath(index);
-                                  },
-                                )
-                              ],
-                            ),
-                          );
-                        },
-                        separatorBuilder: (BuildContext context, int index) {
-                          return const Divider();
-                        },
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            flex: 9,
+            child: Stack(
+              children: [
+                GetBuilder<VMStartPlatform>(
+                  builder: (_) => Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(color: Colors.lightBlue),
                       ),
                     ),
-                    Expanded(
-                      child: TextButton(
-                        child: Text(ConstList.actualPlatformType == platformType.web ? 'Add File' : 'Add Path' ),
-                        onPressed: () async {
-                          if (await _.openDirectory() == 0) {
-                            _.selected = 0;
-                          }
-                        },
-                      ),
-                    )
-                  ],
+                    child: Column(
+                      children: [
+                        Expanded(
+                          flex: 12,
+                          child: ListView.separated(
+                            itemCount: _.pathList.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: Row(
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        _.selectFrequentPath(index);
+                                      },
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.resolveWith(
+                                                (states) {
+                                          return _.getColor(index);
+                                        }),
+                                      ),
+                                      child: Text(
+                                          _.pathList.reversed.elementAt(index)),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.delete),
+                                      onPressed: () {
+                                        _.removeFrequentPath(index);
+                                      },
+                                    )
+                                  ],
+                                ),
+                              );
+                            },
+                            separatorBuilder: (BuildContext context, int index) {
+                              return const Divider();
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          child: TextButton(
+                            child: Text(
+                                ConstList.actualPlatformType == platformType.web
+                                    ? 'Add File'
+                                    : 'Add Path'),
+                            onPressed: () async {
+                              if (await _.openDirectory() == 0) {
+                                _.selected = 0;
+                              }
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+                Align(
+                    child: Text('version : ${ConstList.version}'),
+                  alignment: Alignment.topRight,
+                ),
+              ],
             ),
-            const Expanded(
-              flex: 2,
-              child: SelectMode(),
-            )
-          ],
-        ),
+          ),
+          const Expanded(
+            flex: 2,
+            child: SelectMode(),
+          ),
+        ],
       ),
     );
   }

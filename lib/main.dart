@@ -9,6 +9,7 @@ import 'package:cyoap_flutter/view/view_start.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 //flutter build web --base-href=/FlutterCyoapWeb/
 
@@ -23,12 +24,30 @@ class ConstList{
   static bool isMobile() {
     return actualPlatformType == platformType.mobile;
   }
+  static late String version;
+  static void init() async{
+    try{
+      if (Platform.isAndroid) {
+        ConstList.actualPlatformType = platformType.mobile;
+      }else if(Platform.isWindows){
+        ConstList.actualPlatformType =  platformType.desktop;
+      }else{
+        ConstList.actualPlatformType =  platformType.web;
+      }
+    }catch(e){
+      ConstList.actualPlatformType =  platformType.web;
+    }
+
+    var packageInfo = await PackageInfo.fromPlatform();
+    version = packageInfo.version;
+  }
 }
 enum platformType{
   desktop, mobile, web,
 }
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  ConstList.init();
   runApp(
     GetMaterialApp(
       title: 'CYOAP',
@@ -45,17 +64,6 @@ void main() {
       defaultTransition: Transition.fade,
     ),
   );
-  try{
-    if (Platform.isAndroid) {
-      ConstList.actualPlatformType = platformType.mobile;
-    }else if(Platform.isWindows){
-      ConstList.actualPlatformType =  platformType.desktop;
-    }else{
-      ConstList.actualPlatformType =  platformType.web;
-    }
-  }catch(e){
-    ConstList.actualPlatformType =  platformType.web;
-  }
 }
 
 final ThemeData appThemeData = ThemeData(

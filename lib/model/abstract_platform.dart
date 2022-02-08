@@ -136,7 +136,6 @@ class AbstractPlatform {
             if (data is VariableUnit) {
               var varData = VariableDataBase.instance.getValueTypeWrapper(data.varName);
               node.isSelectableCheck = (varData != null && varData as bool) ? varData as bool : true;
-              print(varData);
               if (node.isSelectableCheck == false) {
                 node.selectNodeWithValue(false);
               }
