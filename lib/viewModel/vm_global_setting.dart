@@ -1,6 +1,5 @@
 import 'package:cyoap_flutter/model/grammar/value_type.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
-import 'package:cyoap_flutter/util/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
@@ -11,11 +10,12 @@ class VMGlobalSetting extends GetxController{
   final TextEditingController controllerValue = TextEditingController();
 
   bool isChanged = false;
+  bool visibleSwitch = true;
 
   Map<String, ValueTypeVisible> initialValueList = {};
 
   @override
-  void onInit(){
+  void onInit() {
     initialValueList.clear();
     initialValueList.addAll(PlatformSystem.getPlatform().globalSetting);
     super.onInit();
@@ -33,8 +33,20 @@ class VMGlobalSetting extends GetxController{
     }
   }
 
-  void addInitialValue(String name, ValueTypeVisible type){
-    initialValueList.putIfAbsent(name, () => type);
+  void addInitialValue(String name, ValueTypeVisible type) {
+    int t = 0;
+    if (!initialValueList.containsKey(name)) {
+      initialValueList.putIfAbsent(name, () => type);
+    } else {
+      while (true) {
+        if (initialValueList.containsKey(name + t.toString())) {
+          t += 1;
+        } else {
+          initialValueList.putIfAbsent(name + t.toString(), () => type);
+          break;
+        }
+      }
+    }
     update();
     isChanged = true;
   }
@@ -46,10 +58,11 @@ class VMGlobalSetting extends GetxController{
   }
 
   void editInitialValue(int index){
-    if(index != -1){
+    if (index != -1) {
       deleteInitialValue(index);
     }
-    addInitialValue(controllerName.text, ValueTypeVisible(getType(controllerValue.text), true));
+    addInitialValue(controllerName.text,
+        ValueTypeVisible(getType(controllerValue.text), visibleSwitch));
     controllerName.clear();
     controllerValue.clear();
     isChanged = true;
@@ -58,19 +71,39 @@ class VMGlobalSetting extends GetxController{
   void loadInitialValue(int index){
     if(index != -1){
       var key = getKey(index);
-      controllerName.text = key;
-      var data = initialValueList[index]?.valueType.data;
+      var data = initialValueList[key]?.valueType.data;
 
+      controllerName.text = key;
       controllerValue.text = data is String ? '"$data"' : data.toString();
     }
   }
 
-  String getKey(int index){
+  String getKey(int index) {
     return initialValueList.keys.elementAt(index);
   }
 
-  void save(){
+  ValueTypeVisible? getValue(int index) {
+    return initialValueList[getKey(index)];
+  }
+
+  void save() {
     PlatformSystem.getPlatform().setGlobalSetting(initialValueList);
     isChanged = false;
+  }
+
+  bool isVisible(int index) {
+    if (index == -1) {
+      return true;
+    }
+    return initialValueList[getKey(index)]!.visible;
+  }
+
+  void setVisible(int index, bool value) {
+    visibleSwitch = value;
+    if (index == -1) {
+    } else {
+      initialValueList[getKey(index)]!.visible = value;
+    }
+    update();
   }
 }

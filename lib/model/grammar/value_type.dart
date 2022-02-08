@@ -92,4 +92,9 @@ class ValueTypeVisible{
     'visible': visible.toString().toLowerCase(),
     'valueType': valueType.toJson(),
   };
+
+  @override
+  String toString() {
+    return '$valueType : $visible';
+  }
 }

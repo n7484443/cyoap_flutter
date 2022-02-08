@@ -76,8 +76,8 @@ class ViewGlobalSetting extends StatelessWidget {
         confirm: TextButton(
           child: const Text('저장'),
           onPressed: () {
-            Get.back();
             vmGlobalSetting.editInitialValue(index);
+            Get.back();
           },
         ),
         content: Padding(
@@ -107,6 +107,26 @@ class ViewGlobalSetting extends StatelessWidget {
                     label: Text('변수 초기값'),
                   ),
                   textAlign: TextAlign.right,
+                ),
+              ),
+              const Spacer(),
+              Flexible(
+                flex: 4,
+                child: Column(
+                  children: [
+                    GetBuilder<VMGlobalSetting>(
+                      builder: (_) => Switch(
+                        value: vmGlobalSetting.isVisible(index),
+                        onChanged: (bool value) {
+                          vmGlobalSetting.setVisible(index, value);
+                        },
+                      ),
+                    ),
+                    const Text(
+                      '플레이시 표시',
+                      style: TextStyle(fontSize: 14),
+                    )
+                  ],
                 ),
               )
             ],
@@ -138,7 +158,8 @@ class ViewGlobalSetting extends StatelessWidget {
                               editDialog(index);
                             },
                             child: Text(
-                                vmGlobalSetting.getKey(index)),
+                              '${vmGlobalSetting.getKey(index)}  |  ${vmGlobalSetting.getValue(index)?.valueType.data}',
+                            ),
                           ),
                           IconButton(
                             icon: const Icon(Icons.delete),
