@@ -131,8 +131,8 @@ class RecursiveData extends RecursiveUnit {
       if (VariableDataBase.instance.hasValue(variable.varName) &&
           !dontReplace) {
         return ValueType(VariableDataBase.instance
-            .getValue(variable.varName)
-            ?.data);
+            .getValueTypeWrapper(variable.varName)
+            ?.valueType.data);
       } else {
         return value;
       }

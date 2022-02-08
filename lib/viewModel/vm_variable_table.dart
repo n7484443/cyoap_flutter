@@ -24,14 +24,16 @@ class VMVariableTable extends GetxController {
       }
     }
 
-    if(isEditable()){
-      for(var key in VariableDataBase.instance.varMap.keys){
-        variableList.add('$key | ${VariableDataBase.instance.varMap[key]?.data.runtimeType}');
-      }
-    }else{
-      for(var key in VariableDataBase.instance.varMap.keys){
-        if(PlatformSystem.getPlatform().globalSetting[key]?.visible ?? false){
-          variableList.add('$key | ${VariableDataBase.instance.varMap[key]?.data}');
+    for(var key in VariableDataBase.instance.varMap.keys) {
+      var values = PlatformSystem.getPlatform().globalSetting[key];
+      if (values == null) continue;
+      if (values.visible && !values.isFromNode) {
+        if (isEditable()) {
+          variableList.add(
+              '$key | ${VariableDataBase.instance.getValueType(key)?.data.runtimeType}');
+        } else {
+          variableList.add(
+              '$key | ${VariableDataBase.instance.getValueType(key)?.data}');
         }
       }
     }

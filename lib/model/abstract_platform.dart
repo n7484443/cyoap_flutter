@@ -14,7 +14,7 @@ class AbstractPlatform {
   String colorBackground;
   int flag;
   List<List<ChoiceNodeBase>> choiceNodes = List.empty(growable: true);
-  Map<String, ValueTypeVisible> globalSetting = {};
+  Map<String, ValueTypeWrapper> globalSetting = {};
 
   bool isEditable = true;
 
@@ -46,7 +46,7 @@ class AbstractPlatform {
         colorBackground = json['colorBackground'],
         flag = json['flag'],
         globalSetting = (json['globalSetting'] as Map)
-            .map((k, v) => MapEntry(k, ValueTypeVisible.fromJson(v)));
+            .map((k, v) => MapEntry(k, ValueTypeWrapper.fromJson(v)));
 
   Map<String, dynamic> toJson() => {
     'halfWidth' : halfWidth,
@@ -123,11 +123,11 @@ class AbstractPlatform {
     VariableDataBase.instance.clear();
     for (var initialValue in globalSetting.keys) {
       VariableDataBase.instance
-          .setValue(initialValue, globalSetting[initialValue]!.valueType);
+          .setValue(initialValue, ValueTypeWrapper.normal(globalSetting[initialValue]!.valueType));
     }
     for(var nodeY in choiceNodes){
       for(var node in nodeY){
-        VariableDataBase.instance.setValue('${node.title.replaceAll(" ", "")}:select', ValueType(node.select));
+        VariableDataBase.instance.setValue('${node.title.replaceAll(" ", "")}:select', ValueTypeWrapper.normal(ValueType(node.select)));
       }
     }
     for (var nodeY in choiceNodes) {
@@ -136,7 +136,7 @@ class AbstractPlatform {
           var data = node.conditionClickableRecursive!.unzip().data;
           if (data != null && data != valueTypeData.none) {
             if (data is VariableUnit) {
-              var varData = VariableDataBase.instance.getValue(data.varName);
+              var varData = VariableDataBase.instance.getValueTypeWrapper(data.varName);
               node.isSelectableCheck = (varData != null && varData as bool) ? varData as bool : true;
               print(varData);
               if (node.isSelectableCheck == false) {
@@ -161,7 +161,7 @@ class AbstractPlatform {
     }
   }
 
-  void setGlobalSetting(Map<String, ValueTypeVisible> units) {
+  void setGlobalSetting(Map<String, ValueTypeWrapper> units) {
     globalSetting.clear();
     globalSetting.addAll(units);
   }

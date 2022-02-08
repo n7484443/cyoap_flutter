@@ -110,13 +110,13 @@ class ChoiceNodeBase {
   void selectNode() {
     select = !select;
     VariableDataBase.instance
-        .setValue('${title.trim()}:select', ValueType(select));
+        .setValue('${title.trim()}:select', ValueTypeWrapper(ValueType(select), false, true));
   }
 
   void selectNodeWithValue(bool s) {
     select = s;
     VariableDataBase.instance
-        .setValue('${title.trim()}:select', ValueType(select));
+        .setValue('${title.trim()}:select', ValueTypeWrapper(ValueType(select), false, true));
   }
 
   bool isSelectableWithCheck() {

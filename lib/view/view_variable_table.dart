@@ -10,10 +10,10 @@ class ViewVariable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var vmVariable = Get.put(VMVariableTable());
     return GetBuilder<VMVariableTable>(
       builder: (_) => Drawer(
-        child: Column(
+        child: ListView(
+          controller: ScrollController(),
           children: [
             ExpansionTile(
               title: const Text('변수'),

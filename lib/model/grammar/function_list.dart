@@ -110,7 +110,7 @@ class Functions {
 
   ValueType funcSet(ValueType a, ValueType b, ValueType c) {
     if(a.data is VariableUnit){
-      VariableDataBase.instance.setValue((a.data as VariableUnit).varName, b);
+      VariableDataBase.instance.setValue((a.data as VariableUnit).varName, ValueTypeWrapper.normal(b));
     }
     return a;
   }

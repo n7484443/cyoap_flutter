@@ -12,7 +12,7 @@ class VMGlobalSetting extends GetxController{
   bool isChanged = false;
   bool visibleSwitch = true;
 
-  Map<String, ValueTypeVisible> initialValueList = {};
+  Map<String, ValueTypeWrapper> initialValueList = {};
 
   @override
   void onInit() {
@@ -33,7 +33,7 @@ class VMGlobalSetting extends GetxController{
     }
   }
 
-  void addInitialValue(String name, ValueTypeVisible type) {
+  void addInitialValue(String name, ValueTypeWrapper type) {
     int t = 0;
     if (!initialValueList.containsKey(name)) {
       initialValueList.putIfAbsent(name, () => type);
@@ -62,7 +62,7 @@ class VMGlobalSetting extends GetxController{
       deleteInitialValue(index);
     }
     addInitialValue(controllerName.text,
-        ValueTypeVisible(getType(controllerValue.text), visibleSwitch));
+        ValueTypeWrapper(getType(controllerValue.text), visibleSwitch, false));
     controllerName.clear();
     controllerValue.clear();
     isChanged = true;
@@ -82,7 +82,7 @@ class VMGlobalSetting extends GetxController{
     return initialValueList.keys.elementAt(index);
   }
 
-  ValueTypeVisible? getValue(int index) {
+  ValueTypeWrapper? getValue(int index) {
     return initialValueList[getKey(index)];
   }
 
