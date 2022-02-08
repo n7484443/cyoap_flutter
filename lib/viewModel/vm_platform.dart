@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
+import 'package:zefyr/zefyr.dart';
 
 import '../model/choiceNode/choice_node.dart';
 import '../model/editor.dart';
@@ -88,17 +88,15 @@ class VMPlatform extends GetxController{
     NodeEditor.instance.setTarget(nodeNonnull);
   }
 
-  QuillController? getNodeController(int x, int y){
+  ZefyrController? getNodeController(int x, int y){
     var node = getNode(x, y);
     if(node == null)return null;
     if(node.contentsString.isEmpty){
-      return QuillController.basic();
+      return ZefyrController();
     }else{
       var json = jsonDecode(node.contentsString);
-      return QuillController(
-        document: Document.fromJson(json),
-        selection: const TextSelection.collapsed(offset: 0),
-      );
+      var document = NotusDocument.fromJson(json);
+      return ZefyrController(document);
     }
   }
 

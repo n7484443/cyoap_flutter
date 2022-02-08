@@ -38,11 +38,10 @@ dependencies:
   google_fonts: ^2.3.1
   crop: ^0.5.2
   archive: ^3.1.11
-  flutter_quill:
-    git:
-      url: https://github.com/singerdmx/flutter-quill
-      ref: upgrade
   english_words: ^4.0.0
+  image_cropping: ^0.0.9
+  tuple: ^2.0.0
+  zefyr: ^1.0.0-rc.5
 
 dev_dependencies:
   flutter_test:

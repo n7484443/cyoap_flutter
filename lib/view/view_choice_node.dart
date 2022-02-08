@@ -1,8 +1,8 @@
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:zefyr/zefyr.dart';
 
 import '../main.dart';
 import '../model/platform_system.dart';
@@ -196,17 +196,12 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
             Expanded(
               child: Visibility(
                 child: IgnorePointer(
-                  child: quill.QuillEditor(
+                  child: ZefyrEditor(
                     controller: vmPlatform.getNodeController(posX, posY)!,
-                    scrollController: ScrollController(),
-                    readOnly: true,
-                    showCursor: false,
-                    scrollable: false,
                     focusNode: FocusNode(),
-                    autoFocus: false,
-                    expands: false,
-                    enableInteractiveSelection: false,
-                    padding: EdgeInsets.zero,
+                    readOnly: true,
+                    autofocus: false,
+                    expands: true,
                   ),
                 ),
                 visible: node.contentsString.isNotEmpty,

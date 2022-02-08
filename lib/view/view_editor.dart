@@ -2,8 +2,8 @@ import 'dart:ui';
 
 import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:get/get.dart';
+import 'package:zefyr/zefyr.dart';
 
 import '../main.dart';
 import '../viewModel/vm_editor.dart';
@@ -192,39 +192,26 @@ class ViewEditorTyping extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: quill.QuillToolbar.basic(
-            controller: controller.controllerBody,
-            showImageButton: false,
-            showLink: false,
-            showVideoButton: false,
-            showCodeBlock: false,
-            showListCheck: false,
-            showCameraButton: false,
-            showInlineCode: false,
-            showAlignmentButtons: true,
+          child: ZefyrToolbar.basic(
+            controller: controller.zefyrController,
+            hideListChecks: true,
+            hideCodeBlock: true,
+            hideInlineCode: true,
+            hideDirection: true,
           ),
         ),
         Expanded(
           flex: 3,
-          child: Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                ),
-                child: quill.QuillEditor(
-                  controller: controller.controllerBody,
-                  readOnly: false,
-                  expands: true,
-                  focusNode: controller.focusBody,
-                  scrollable: true,
-                  scrollController: ScrollController(),
-                  padding: const EdgeInsets.all(0.5),
-                  autoFocus: false,
-                  placeholder: '여기에 내용을 입력하세요',
-                ),
-              ),
-            ],
+          child: Card(
+            elevation: 5.0,
+            child: ZefyrEditor(
+              padding: const EdgeInsets.all(3),
+              controller: controller.zefyrController,
+              focusNode: FocusNode(),
+              expands: true,
+              scrollable: true,
+
+            ),
           ),
         ),
         Padding(
