@@ -492,13 +492,6 @@
             </list>
           </value>
         </entry>
-        <entry key="tuple">
-          <value>
-            <list>
-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/tuple-2.0.0/lib" />
-            </list>
-          </value>
-        </entry>
         <entry key="typed_data">
           <value>
             <list>
@@ -673,7 +666,6 @@
       <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/string_scanner-1.1.0/lib" />
       <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/term_glyph-1.2.0/lib" />
       <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/test_api-0.4.8/lib" />
-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/tuple-2.0.0/lib" />
       <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/typed_data-1.3.0/lib" />
       <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher-6.0.18/lib" />
       <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher_android-6.0.14/lib" />

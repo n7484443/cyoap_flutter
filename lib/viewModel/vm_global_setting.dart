@@ -12,7 +12,7 @@ class VMGlobalSetting extends GetxController{
 
   bool isChanged = false;
 
-  List<Tuple<String, ValueTypeVisible>> initialValueList = List.empty(growable: true);
+  Map<String, ValueTypeVisible> initialValueList = {};
 
   @override
   void onInit(){
@@ -34,13 +34,13 @@ class VMGlobalSetting extends GetxController{
   }
 
   void addInitialValue(String name, ValueTypeVisible type){
-    initialValueList.add(Tuple(name, type));
+    initialValueList.putIfAbsent(name, () => type);
     update();
     isChanged = true;
   }
 
   void deleteInitialValue(int index){
-    initialValueList.removeAt(index);
+    initialValueList.remove(getKey(index));
     update();
     isChanged = true;
   }
@@ -57,11 +57,16 @@ class VMGlobalSetting extends GetxController{
 
   void loadInitialValue(int index){
     if(index != -1){
-      controllerName.text = initialValueList[index].data1;
-      var data = initialValueList[index].data2.valueType.data;
+      var key = getKey(index);
+      controllerName.text = key;
+      var data = initialValueList[index]?.valueType.data;
 
       controllerValue.text = data is String ? '"$data"' : data.toString();
     }
+  }
+
+  String getKey(int index){
+    return initialValueList.keys.elementAt(index);
   }
 
   void save(){

@@ -1,9 +1,6 @@
 import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/util/tuple.dart';
-import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
 
 import 'grammar/value_type.dart';
 
@@ -17,7 +14,7 @@ class AbstractPlatform {
   String colorBackground;
   int flag;
   List<List<ChoiceNodeBase>> choiceNodes = List.empty(growable: true);
-  List<Tuple<String, ValueTypeVisible>> globalSetting = List.empty(growable: true);
+  Map<String, ValueTypeVisible> globalSetting = {};
 
   bool isEditable = true;
 
@@ -48,7 +45,8 @@ class AbstractPlatform {
         stringImageName = json['stringImageName'],
         colorBackground = json['colorBackground'],
         flag = json['flag'],
-        globalSetting = (json['globalSetting'] as List).map((e) => Tuple<String, ValueTypeVisible>.fromJson(e)).toList();
+        globalSetting = (json['globalSetting'] as Map)
+            .map((k, v) => MapEntry(k, ValueTypeVisible.fromJson(v)));
 
   Map<String, dynamic> toJson() => {
     'halfWidth' : halfWidth,
@@ -123,20 +121,21 @@ class AbstractPlatform {
 
   void updateSelectable() {
     VariableDataBase.instance.clear();
-    for(var initialValue in globalSetting){
-      VariableDataBase.instance.setValue(initialValue.data1, initialValue.data2.valueType);
+    for (var initialValue in globalSetting.keys) {
+      VariableDataBase.instance
+          .setValue(initialValue, globalSetting[initialValue]!.valueType);
     }
     for (var nodeY in choiceNodes) {
       for (var node in nodeY) {
-        if(node.conditionClickableRecursive != null){
+        if (node.conditionClickableRecursive != null) {
           var data = node.conditionClickableRecursive!.unzip().data;
-          if(data != valueTypeData.none){
+          if (data != valueTypeData.none) {
             node.isSelectableCheck = data as bool;
           }
-        }else{
+        } else {
           node.isSelectableCheck = true;
         }
-        if(node.select && node.executeCodeRecursive != null){
+        if (node.select && node.executeCodeRecursive != null) {
           for (var codes in node.executeCodeRecursive!) {
             codes.unzip();
           }
@@ -145,7 +144,7 @@ class AbstractPlatform {
     }
   }
 
-  void setGlobalSetting(List<Tuple<String, ValueTypeVisible>> units){
+  void setGlobalSetting(Map<String, ValueTypeVisible> units) {
     globalSetting.clear();
     globalSetting.addAll(units);
   }

@@ -30,7 +30,9 @@ class VMVariableTable extends GetxController {
       }
     }else{
       for(var key in VariableDataBase.instance.varMap.keys){
-        variableList.add('$key | ${VariableDataBase.instance.varMap[key]?.data}');
+        if(PlatformSystem.getPlatform().globalSetting[key]?.visible ?? false){
+          variableList.add('$key | ${VariableDataBase.instance.varMap[key]?.data}');
+        }
       }
     }
     update();

@@ -138,7 +138,7 @@ class ViewGlobalSetting extends StatelessWidget {
                               editDialog(index);
                             },
                             child: Text(
-                                vmGlobalSetting.initialValueList[index].data1),
+                                vmGlobalSetting.getKey(index)),
                           ),
                           IconButton(
                             icon: const Icon(Icons.delete),
