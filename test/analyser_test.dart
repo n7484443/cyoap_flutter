@@ -34,7 +34,10 @@ void main() {
                 
                 and_test_alpha = true
                 and_test_beta = true
-                and_test = and(and_test_alpha, and_test_beta)
+                and_test_1 = and(and_test_alpha, and_test_beta)
+                and_test_2 = and(false, true)
+                and_test_3 = and(true, false)
+                and_test_4 = and(false, false)
                 """;
   String strTest2 = """
   numberTest0 < 0
@@ -91,7 +94,10 @@ void main() {
   });
 
   test('and Test', (){
-    expect(ins.getValueType('and_test')?.data, true);
+    expect(ins.getValueType('and_test_1')?.data, true);
+    expect(ins.getValueType('and_test_2')?.data, false);
+    expect(ins.getValueType('and_test_3')?.data, false);
+    expect(ins.getValueType('and_test_4')?.data, false);
   });
 
   test('return Test', (){

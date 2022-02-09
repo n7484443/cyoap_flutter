@@ -26,18 +26,28 @@ class Functions {
     functionMap.putIfAbsent('and', () => funcAnd);
     functionMap.putIfAbsent('or', () => funcOr);
     functionMap.putIfAbsent('random', () => funcRandom);
+    functionMap.putIfAbsent('none', () => funcNone);
   }
 
   Function getFunction(String name) {
-    if(functionMap[name] == null){
-      for(var f in functionMap.values){
-        if(f.toString().contains(name)){
+    if (functionMap[name] == null) {
+      for (var f in functionMap.values) {
+        if (f.toString().contains(name)) {
           return f;
         }
       }
       return funcNone;
     }
     return functionMap[name]!;
+  }
+
+  String getFunctionName(Function function) {
+    for (var key in functionMap.keys) {
+      if (functionMap[key] == function) {
+        return key;
+      }
+    }
+    return 'none';
   }
 
   ValueType funcNone(ValueType a, ValueType b, ValueType c) {

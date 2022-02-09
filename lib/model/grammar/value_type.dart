@@ -26,8 +26,7 @@ class ValueType {
   ValueType.fromJson(Map<String, dynamic> json) {
     switch (json['type']) {
       case 'function':
-        data = Analyser.instance.functionList
-            .getFunction(json['data'].toString().replaceFirst('func', ''));
+        data = Analyser.instance.functionList.getFunction(json['data']);
         break;
       case 'VariableUnit':
         data = VariableUnit.fromJson(json['data']);
@@ -52,7 +51,7 @@ class ValueType {
         'data': data is VariableUnit
             ? (data as VariableUnit).toJson()
             : (data is Function
-                ? data.toString().split('\'')[1]
+                ? Analyser.instance.functionList.getFunctionName(data)
                 : data.toString()),
         'type': data is Function ? 'function' : data.runtimeType.toString(),
       };
