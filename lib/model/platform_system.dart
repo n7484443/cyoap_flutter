@@ -17,12 +17,12 @@ class PlatformSystem{
   PlatformFileSystem platformFileSystem = PlatformFileSystem();
   String? path;
 
-  void openPlatformZip(PlatformFile file){
+  Future<void> openPlatformZip(PlatformFile file) async{
     var bytes = file.bytes;
     if(bytes == null)return;
 
     var archiveBytes = ZipDecoder().decodeBytes(bytes);
-    platformFileSystem.createFromZip(archiveBytes);
+    await platformFileSystem.createFromZip(archiveBytes);
   }
 
   Future<void> openPlatformFolder(String path) async {

@@ -69,7 +69,7 @@ class PlatformFileSystem {
     platform.init();
   }
 
-  void createFromZip(Archive archive) {
+  Future<void> createFromZip(Archive archive) async{
     String? platformJson;
 
     List<ChoiceNodeBase> nodeList = List.empty(growable: true);

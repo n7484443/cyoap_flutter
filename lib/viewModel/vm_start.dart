@@ -11,6 +11,7 @@ class VMStartPlatform extends GetxController {
   FrequentlyUsedPath frequentlyUsedPath = FrequentlyUsedPath();
   List<String> pathList = [];
   int selected = -1;
+  List<Future<void>> isAdded = List.empty(growable: true);
 
   Future<bool> _getStatuses() async {
     if(await Permission.storage.isDenied) {
@@ -37,8 +38,7 @@ class VMStartPlatform extends GetxController {
         allowedExtensions: ['zip'],
       );
       if(result != null){
-        PlatformSystem.instance.openPlatformZip(result.files.single);
-        print(Uri.base);
+        isAdded.add(PlatformSystem.instance.openPlatformZip(result.files.single));
         pathList.add(result.files.single.name);
         update();
         return 0;
@@ -63,14 +63,16 @@ class VMStartPlatform extends GetxController {
         }
       }
 
-      var path = pathList.reversed.elementAt(selected);
-      if(ConstList.actualPlatformType == platformType.web){
-        return true;
-      }else{
-        await PlatformSystem.instance.openPlatformFolder(path).then((value) {
+      Future.wait(isAdded).then((value) {
+        isAdded.clear();
+        var path = pathList.reversed.elementAt(selected);
+        if(ConstList.actualPlatformType == platformType.web){
           return true;
-        });
-      }
+        }else{
+          isAdded.add(PlatformSystem.instance.openPlatformFolder(path));
+          return true;
+        }
+      });
     }else{
       if(ConstList.isFileSystem()){
         PlatformSystem.instance.openPlatformVoid();
