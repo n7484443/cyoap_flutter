@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:cyoap_flutter/view/view_code_editor.dart';
@@ -47,15 +46,6 @@ enum platformType{
   desktop, mobile, web,
 }
 void main() {
-  String name = String.fromCharCodes(Utf8Encoder().convert('images/가나다.png'));
-
-  print(name);
-  String name2 = String.fromCharCodes(utf8.encode('images/가나다.png'));
-  print(name2);
-  String name3 = utf8.decode(utf8.encode('images/가나다.png'));
-  print(name3);
-
-
   WidgetsFlutterBinding.ensureInitialized();
   ConstList.init().then((value){
     runApp(

@@ -25,6 +25,7 @@ class Functions {
     functionMap.putIfAbsent('<=', () => funcSmallerEqual);
     functionMap.putIfAbsent('and', () => funcAnd);
     functionMap.putIfAbsent('or', () => funcOr);
+    functionMap.putIfAbsent('not', () => funcNot);
     functionMap.putIfAbsent('random', () => funcRandom);
     functionMap.putIfAbsent('none', () => funcNone);
   }
@@ -182,6 +183,14 @@ class Functions {
   ValueType funcOr(ValueType a, ValueType b, ValueType c) {
     if (a.data is bool && b.data is bool) {
       return ValueType(a.data || b.data);
+    } else {
+      return ValueType(false);
+    }
+  }
+
+  ValueType funcNot(ValueType a, ValueType b, ValueType c) {
+    if (a.data is bool) {
+      return ValueType(!a.data);
     } else {
       return ValueType(false);
     }
