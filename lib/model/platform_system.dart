@@ -21,8 +21,8 @@ class PlatformSystem{
     var bytes = file.bytes;
     if(bytes == null)return;
 
-    var archiveBytes = TarDecoder().decodeBytes(bytes);
-    platformFileSystem.createFromTar(archiveBytes);
+    var archiveBytes = ZipDecoder().decodeBytes(bytes);
+    platformFileSystem.createFromZip(archiveBytes);
   }
 
   Future<void> openPlatformFolder(String path) async {
@@ -41,14 +41,14 @@ class PlatformSystem{
 
   void saveFile() async{
     if(ConstList.isFileSystem()){
-      saveZip('exported.tar', platformFileSystem);
+      saveZip('exported.zip', platformFileSystem);
     }else{
       saveZip(path!, platformFileSystem);
     }
   }
   void saveFolder() async{
     if(ConstList.isFileSystem()){
-      saveRaw('exported.tar', platformFileSystem);
+      saveRaw('exported.zip', platformFileSystem);
     }else{
       saveRaw(path!, platformFileSystem);
     }

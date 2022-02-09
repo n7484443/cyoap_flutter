@@ -69,7 +69,7 @@ class PlatformFileSystem {
     platform.init();
   }
 
-  void createFromTar(Archive archive) {
+  void createFromZip(Archive archive) {
     String? platformJson;
 
     List<ChoiceNodeBase> nodeList = List.empty(growable: true);
@@ -78,10 +78,9 @@ class PlatformFileSystem {
       if (file.isFile) {
         var fileName = file.name;
         if (fileName.startsWith('images')) {
-          var realName = utf8.decode(file.name.split("/")[1].codeUnits);
           int type = isImageFile(fileName);
           if (type == 1) {
-            _dirImage.putIfAbsent(realName, () => data);
+            _dirImage.putIfAbsent(fileName.split("/")[1], () => data);
           }else{
             //아직 지원 x
           }
@@ -108,19 +107,17 @@ class PlatformFileSystem {
   }
 
 
-  Future<Archive> saveToTar() async{
+  Future<Archive> saveToZip() async{
     var archive = Archive();
     for(var imageName in _dirImage.keys) {
-      var name = utf8.decode(utf8.encode('images/$imageName'));
       archive.addFile(ArchiveFile(
-          name, _dirImage[imageName]!.length, _dirImage[imageName]));
+          'images/$imageName', _dirImage[imageName]!.length, _dirImage[imageName]));
     }
     for(int i = 0; i < platform.choiceNodes.length; i++){
       for (int j = 0; j < platform.choiceNodes[i].length; j++) {
         var node = platform.choiceNodes[i][j];
         var utf = utf8.encode(jsonEncode(node.toJson()));
-        var name = utf8.decode(utf8.encode('nodes/${node.title}.json'));
-        archive.addFile(ArchiveFile(name, utf.length, utf));
+        archive.addFile(ArchiveFile('nodes/${node.title}.json', utf.length, utf));
       }
     }
     var platformJson = utf8.encode(jsonEncode(platform.toJson()));

@@ -18,12 +18,12 @@ void downloadCapture(String name, Uint8List data){
 }
 
 void saveZip(String name, PlatformFileSystem platformFileSystem) async{
-  var archive = await platformFileSystem.saveToTar();
-  var encodedTar = TarEncoder().encode(archive) as Uint8List;
-  var file = File('$name/extract.tar');
+  var archive = await platformFileSystem.saveToZip();
+  var encodedZip = ZipEncoder().encode(archive, level: Deflate.NO_COMPRESSION) as Uint8List;
+  var file = File('$name/extract.zip');
   if(file.existsSync()){
     file.delete();
   }
   file.createSync();
-  file.writeAsBytes(encodedTar);
+  file.writeAsBytes(encodedZip);
 }

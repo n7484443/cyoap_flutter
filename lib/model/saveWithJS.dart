@@ -5,8 +5,8 @@ import 'package:cyoap_flutter/model/platform_file_system.dart';
 import 'package:js/js.dart';
 
 void saveRaw(String name, PlatformFileSystem platformFileSystem) async {
-  var archive = await platformFileSystem.saveToTar();
-  var encodedTar = TarEncoder().encode(archive) as Uint8List;
+  var archive = await platformFileSystem.saveToZip();
+  var encodedTar = ZipEncoder().encode(archive, level: Deflate.NO_COMPRESSION) as Uint8List;
   _exportRaw(name, encodedTar);
 }
 void saveZip(String name, PlatformFileSystem platformFileSystem) async {

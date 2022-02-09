@@ -34,7 +34,7 @@ class VMStartPlatform extends GetxController {
     if(ConstList.actualPlatformType == platformType.web){
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
-        allowedExtensions: ['tar'],
+        allowedExtensions: ['zip'],
       );
       if(result != null){
         PlatformSystem.instance.openPlatformZip(result.files.single);
