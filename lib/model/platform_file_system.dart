@@ -86,9 +86,9 @@ class PlatformFileSystem {
             //아직 지원 x
           }
         } else if (fileName.startsWith('nodes')) {
-          nodeList.add(ChoiceNodeBase.fromJson(jsonDecode(String.fromCharCodes(data))));
+          nodeList.add(ChoiceNodeBase.fromJson(jsonDecode(utf8.decode(data))));
         } else if (fileName.endsWith('platform.json')) {
-          platformJson = String.fromCharCodes(data);
+          platformJson = utf8.decode(data);
         }
       }
     }

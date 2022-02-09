@@ -123,9 +123,10 @@ class AbstractPlatform {
     VariableDataBase.instance.clear();
 
     VariableDataBase.instance.varMap.addAll(globalSetting);
-    for(var nodeY in choiceNodes){
-      for(var node in nodeY){
-        VariableDataBase.instance.setValue(node.title.replaceAll(" ", ""), ValueTypeWrapper(ValueType(node.select), false, true));
+    for(var nodeY in choiceNodes) {
+      for (var node in nodeY) {
+        VariableDataBase.instance.setValue(node.title.replaceAll(" ", ""),
+            ValueTypeWrapper(ValueType(node.select), false, true));
       }
     }
     for (var nodeY in choiceNodes) {
@@ -135,12 +136,12 @@ class AbstractPlatform {
           if (data != null && data != valueTypeData.none) {
             if (data is VariableUnit) {
               var varData = VariableDataBase.instance.getValueTypeWrapper(data.varName);
-              node.isSelectableCheck = (varData != null && varData as bool) ? varData as bool : true;
+              node.isSelectableCheck = (varData != null && varData.valueType.data is bool) ? varData.valueType.data as bool : true;
               if (node.isSelectableCheck == false) {
                 node.selectNodeWithValue(false);
               }
-            } else {
-              node.isSelectableCheck = data as bool;
+            } else if(data is bool){
+              node.isSelectableCheck = data;
               if (node.isSelectableCheck == false) {
                 node.selectNodeWithValue(false);
               }

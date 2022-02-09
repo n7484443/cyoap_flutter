@@ -25,7 +25,7 @@ class ConstList{
     return actualPlatformType == platformType.mobile;
   }
   static late String version;
-  static void init() async{
+  static Future<void> init() async{
     try{
       if (Platform.isAndroid) {
         ConstList.actualPlatformType = platformType.mobile;
@@ -47,23 +47,24 @@ enum platformType{
 }
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  ConstList.init();
-  runApp(
-    GetMaterialApp(
-      title: 'CYOAP',
-      home: const ViewStart(),
-      getPages: [
-        GetPage(name: '/viewMake', page: () => const ViewMake()),
-        GetPage(name: '/viewPlay', page: () => const ViewPlay()),
-        GetPage(name: '/viewStart', page: () => const ViewStart()),
-        GetPage(name: '/viewEditor', page: () => const ViewEditor()),
-        GetPage(name: '/viewCodeEditor', page: () => const ViewCodeEditor()),
-        GetPage(name: '/viewGlobalSetting', page: () => const ViewGlobalSetting()),
-      ],
-      theme: appThemeData,
-      defaultTransition: Transition.fade,
-    ),
-  );
+  ConstList.init().then((value){
+    runApp(
+      GetMaterialApp(
+        title: 'CYOAP',
+        home: const ViewStart(),
+        getPages: [
+          GetPage(name: '/viewMake', page: () => const ViewMake()),
+          GetPage(name: '/viewPlay', page: () => const ViewPlay()),
+          GetPage(name: '/viewStart', page: () => const ViewStart()),
+          GetPage(name: '/viewEditor', page: () => const ViewEditor()),
+          GetPage(name: '/viewCodeEditor', page: () => const ViewCodeEditor()),
+          GetPage(name: '/viewGlobalSetting', page: () => const ViewGlobalSetting()),
+        ],
+        theme: appThemeData,
+        defaultTransition: Transition.fade,
+      ),
+    );
+  });
 }
 
 final ThemeData appThemeData = ThemeData(
