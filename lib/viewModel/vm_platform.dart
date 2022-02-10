@@ -50,8 +50,8 @@ class VMPlatform extends GetxController{
       );
     } else {
       return Material(
-          color: Colors.white,
-          child: widget
+        color: Colors.white,
+        child: widget,
       );
     }
   }
@@ -211,5 +211,59 @@ class VMPlatform extends GetxController{
     if (details.localPosition.dy > bottomY - detectedRange) {
       scroller.jumpTo(scroller.offset + moveDistance);
     }
+  }
+
+  double getScale() {
+    var context = captureKey.currentContext;
+    if (context == null) return 1;
+    return ConstList.isSmallDisplay(context) ? 0.5 : 1;
+  }
+
+  ZefyrThemeData getZefyrThemeData(BuildContext context){
+    final defaultStyle = DefaultTextStyle.of(context);
+    final baseStyle = defaultStyle.style.copyWith(
+      fontSize: 16.0 * getScale(),
+      height: 1.3 * getScale(),
+    );
+    const baseSpacing = VerticalSpacing(top: 6.0, bottom: 10);
+    var paragraph = TextBlockTheme(
+      style: baseStyle,
+      spacing: baseSpacing,
+      // lineSpacing is not relevant for paragraphs since they consist of one line
+    );
+    var heading1 = TextBlockTheme(
+      style: defaultStyle.style.copyWith(
+        fontSize: 34.0 * getScale(),
+        color: defaultStyle.style.color?.withOpacity(0.70),
+        height: 1.15 * getScale(),
+        fontWeight: FontWeight.w300,
+      ),
+      spacing: VerticalSpacing(top: 16.0 * getScale(), bottom: 0.0),
+    );
+    var heading2 = TextBlockTheme(
+      style: TextStyle(
+        fontSize: 24.0 * getScale(),
+        color: defaultStyle.style.color?.withOpacity(0.70),
+        height: 1.15 * getScale(),
+        fontWeight: FontWeight.normal,
+      ),
+      spacing: VerticalSpacing(bottom: 0.0, top: 8.0 * getScale()),
+    );
+    var heading3 = TextBlockTheme(
+      style: TextStyle(
+        fontSize: 20.0 * getScale(),
+        color: defaultStyle.style.color?.withOpacity(0.70),
+        height: 1.25 * getScale(),
+        fontWeight: FontWeight.w500,
+      ),
+      spacing: VerticalSpacing(bottom: 0.0, top: 8.0 * getScale()),
+    );
+
+    return ZefyrThemeData.fallback(context).copyWith(
+      heading1: heading1,
+      heading2: heading2,
+      heading3: heading3,
+      paragraph: paragraph,
+    );
   }
 }

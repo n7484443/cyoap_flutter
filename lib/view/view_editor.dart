@@ -198,6 +198,7 @@ class ViewEditorTyping extends StatelessWidget {
             hideCodeBlock: true,
             hideInlineCode: true,
             hideDirection: true,
+            hideLink: true,
           ),
         ),
         Expanded(

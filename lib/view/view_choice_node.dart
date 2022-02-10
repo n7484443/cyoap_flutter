@@ -37,8 +37,8 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
         color: vmPlatform.isSelect(posX, posY)
             ? Colors.lightBlueAccent
             : Colors.white,
-        width: nodeBaseWidth * size.data1,
-        height: nodeBaseHeight * size.data2,
+        width: nodeBaseWidth * size.data1 * _.getScale(),
+        height: nodeBaseHeight * size.data2 * _.getScale(),
         child: Column(
           children: [
             Expanded(
@@ -73,7 +73,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                             style: GoogleFonts.notoSans(
                                 textStyle: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 18,
+                              fontSize: 18 * _.getScale(),
                               foreground: Paint()
                                 ..style = PaintingStyle.stroke
                                 ..strokeWidth = 4
@@ -83,9 +83,9 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                           Text(
                             node.title,
                             style: GoogleFonts.notoSans(
-                              textStyle: const TextStyle(
+                              textStyle: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 18,
+                                fontSize: 18 * _.getScale(),
                                 color: Colors.black87,
                               ),
                             ),
@@ -196,12 +196,15 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
             Expanded(
               child: Visibility(
                 child: IgnorePointer(
-                  child: ZefyrEditor(
-                    controller: vmPlatform.getNodeController(posX, posY)!,
-                    focusNode: FocusNode(),
-                    readOnly: true,
-                    autofocus: false,
-                    expands: true,
+                  child: ZefyrTheme(
+                    data: _.getZefyrThemeData(context),
+                    child: ZefyrEditor(
+                      controller: vmPlatform.getNodeController(posX, posY)!,
+                      focusNode: FocusNode(),
+                      readOnly: true,
+                      autofocus: false,
+                      expands: true,
+                    ),
                   ),
                 ),
                 visible: node.contentsString.isNotEmpty,
