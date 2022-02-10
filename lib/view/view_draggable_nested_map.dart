@@ -2,7 +2,6 @@ import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/util/tuple.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 
@@ -12,21 +11,8 @@ class NestedMap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<VMPlatform>(
-      builder: (_) => Listener(
-        onPointerMove: (PointerMoveEvent event) {
-          double topY = 0;
-          double bottomY = topY + MediaQuery.of(context).size.height;
-
-          const detectedRange = 100;
-          const moveDistance = 1.5;
-          if (event.position.dy < topY + detectedRange) {
-            _.scroller.jumpTo(_.scroller.offset - moveDistance);
-          }
-          if (event.position.dy > bottomY - detectedRange) {
-            _.scroller.jumpTo(_.scroller.offset + moveDistance);
-          }
-        },
-        child: Container(
+      builder: (_) => LayoutBuilder(
+        builder: (context, constrains) => Container(
           decoration: const BoxDecoration(color: Colors.white),
           child: RepaintBoundary(
             key: _.captureKey,
@@ -66,12 +52,12 @@ class NestedMap extends StatelessWidget {
                                   );
                                 },
                                 onAccept: (Tuple<int, int> data) {
-                                  if(_.drag == Tuple(-1, -1)){
+                                  if (_.drag == Tuple(-1, -1)) {
                                     _.changeData(data, Tuple(j ~/ 2, i));
-                                  }else{
-                                    if((j - 2) > (_.drag!.data2 * 2)){
+                                  } else {
+                                    if ((j - 2) > (_.drag!.data2 * 2)) {
                                       _.changeData(data, Tuple(j ~/ 2 - 1, i));
-                                    }else{
+                                    } else {
                                       _.changeData(data, Tuple(j ~/ 2, i));
                                     }
                                   }
@@ -100,26 +86,29 @@ class NestedMap extends StatelessWidget {
                                   },
                                 );
                               } else {
-                                return Draggable<Tuple<int, int>>(
-                                  data: Tuple(num, i),
-                                  feedback: Transform.scale(
-                                    scale: 0.9,
-                                    child: _.widgetList[i][num],
+                                return GestureDetector(
+                                  child: Draggable<Tuple<int, int>>(
+                                    onDragUpdate: (details) => _.dragUpdate(constrains, details),
+                                    data: Tuple(num, i),
+                                    feedback: Transform.scale(
+                                      scale: 0.9,
+                                      child: _.widgetList[i][num],
+                                    ),
+                                    onDragStarted: () {
+                                      _.dragStart(i, num);
+                                    },
+                                    child: Visibility(
+                                      child: _.widgetList[i][num],
+                                      visible: _.drag != Tuple(i, num),
+                                    ),
+                                    onDragEnd: (DraggableDetails data) {
+                                      _.dragEnd();
+                                    },
+                                    onDraggableCanceled:
+                                        (Velocity velocity, Offset offset) {
+                                      _.dragEnd();
+                                    },
                                   ),
-                                  onDragStarted: () {
-                                    _.dragStart(i, num);
-                                  },
-                                  child: Visibility(
-                                    child: _.widgetList[i][num],
-                                    visible: _.drag != Tuple(i, num),
-                                  ),
-                                  onDragEnd: (DraggableDetails data) {
-                                    _.dragEnd();
-                                  },
-                                  onDraggableCanceled:
-                                      (Velocity velocity, Offset offset) {
-                                    _.dragEnd();
-                                  },
                                 );
                               }
                             }

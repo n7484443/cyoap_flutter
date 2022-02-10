@@ -196,4 +196,18 @@ class VMPlatform extends GetxController{
   bool isSelectablePreCheck(int posX, int posY) {
     return getNode(posX, posY)!.isSelectableCheck;
   }
+
+  void dragUpdate(BoxConstraints constrains, DragUpdateDetails details){
+    double topY = 0;
+    double bottomY = topY + constrains.maxHeight;
+
+    var detectedRange = constrains.maxHeight * 0.1;
+    const moveDistance = 1.5;
+    if (details.localPosition.dy < topY + detectedRange) {
+      scroller.jumpTo(scroller.offset - moveDistance);
+    }
+    if (details.localPosition.dy > bottomY - detectedRange) {
+      scroller.jumpTo(scroller.offset + moveDistance);
+    }
+  }
 }
