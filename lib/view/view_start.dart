@@ -131,7 +131,7 @@ class SelectMode extends StatelessWidget {
         Expanded(
           child: InkWell(
             onTap: () {
-              Get.find<VMStartPlatform>().setDirectory().then((value) {
+              Get.find<VMStartPlatform>().setDirectory().then((value){
                 Get.find<VMStartPlatform>().setEditable(true);
                 Get.toNamed('/viewMake');
               });

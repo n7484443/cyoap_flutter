@@ -55,24 +55,25 @@ class VMStartPlatform extends GetxController {
   }
 
   Future<bool> setDirectory() async{
-    if(selected >= 0){
-      if(ConstList.actualPlatformType == platformType.mobile){
-        var status = await _getStatuses();
-        if (!status) {
-          return false;
-        }
+    if(selected >= 0) {
+      if (ConstList.actualPlatformType == platformType.mobile) {
+        _getStatuses().then((value) {
+          if (!value) {
+            return false;
+          }
+        });
       }
 
-      Future.wait(isAdded).then((value) {
-        isAdded.clear();
-        var path = pathList.reversed.elementAt(selected);
-        if(ConstList.actualPlatformType == platformType.web){
-          return true;
-        }else{
-          isAdded.add(PlatformSystem.instance.openPlatformFolder(path));
-          return true;
-        }
-      });
+      await Future.wait(isAdded);
+
+      isAdded.clear();
+      var path = pathList.reversed.elementAt(selected);
+      if (ConstList.actualPlatformType == platformType.web) {
+        return true;
+      } else {
+        await PlatformSystem.instance.openPlatformFolder(path);
+        return true;
+      }
     }else{
       if(ConstList.isFileSystem()){
         PlatformSystem.instance.openPlatformVoid();

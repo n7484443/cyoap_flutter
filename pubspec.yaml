@@ -30,6 +30,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  image: ^3.1.1
   file_picker : ^4.3.3
   permission_handler: ^8.3.0
   http: ^0.13.4

@@ -7,6 +7,7 @@ import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image/image.dart';
 import 'package:zefyr/zefyr.dart';
 
 class VMEditor extends GetxController{
@@ -95,7 +96,13 @@ class VMEditor extends GetxController{
       var file = result.files.single;
 
       if(file.bytes == null)return;
-      PlatformSystem.addImage(file.name, file.bytes!);
+      var names = file.name;
+      var bytes = file.bytes!;
+      /*if(file.name.endsWith('.gif')){
+        names = names.replaceAll('.gif', '.apng');
+        bytes = encodePngAnimation(decodeGifAnimation(bytes)!, level: 0) as Uint8List;
+      }*/
+      PlatformSystem.addImage(names, bytes);
       NodeEditor.instance.target.imageString = file.name;
       index = PlatformSystem.getImageIndex(file.name);
       Get.find<VMPlatform>().isChanged = true;
