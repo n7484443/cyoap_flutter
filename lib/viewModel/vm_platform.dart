@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -198,12 +199,12 @@ class VMPlatform extends GetxController{
     return getNode(posX, posY)!.isSelectableCheck;
   }
 
-  void dragUpdate(BoxConstraints constrains, DragUpdateDetails details){
+  void dragUpdate(BoxConstraints constrains, DragUpdateDetails details, BuildContext context){
     double topY = 0;
     double bottomY = topY + constrains.maxHeight;
 
     var detectedRange = constrains.maxHeight * 0.1;
-    const moveDistance = 1.5;
+    var moveDistance = ConstList.isSmallDisplay(context) ? 1.5 : 3;
     if (details.localPosition.dy < topY + detectedRange) {
       scroller.jumpTo(scroller.offset - moveDistance);
     }

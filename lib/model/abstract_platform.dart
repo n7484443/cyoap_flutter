@@ -42,7 +42,7 @@ class AbstractPlatform {
         stringImageName = '',
         colorBackground = '#909090',
         flag = 0,
-        version = ConstList.version;
+        version = ConstList.version ?? '';
 
   AbstractPlatform.fromJson(Map<String, dynamic> json)
       : halfWidth = json['halfWidth'] ?? 800,

@@ -25,24 +25,25 @@ class ConstList{
     return actualPlatformType == platformType.mobile;
   }
 
-  static bool isSmallDisplay(BuildContext context){
-    if(isMobile())return true;
-    if(MediaQuery.of(context).size.width < 1000)return true;
+  static bool isSmallDisplay(BuildContext context) {
+    if (isMobile()) return true;
+    if (MediaQuery.of(context).size.width < 1000) return true;
     return false;
   }
 
-  static late String version;
-  static Future<void> init() async{
-    try{
+  static String? version;
+
+  static Future<void> init() async {
+    try {
       if (Platform.isAndroid) {
         ConstList.actualPlatformType = platformType.mobile;
-      }else if(Platform.isWindows){
-        ConstList.actualPlatformType =  platformType.desktop;
-      }else{
-        ConstList.actualPlatformType =  platformType.web;
+      } else if (Platform.isWindows) {
+        ConstList.actualPlatformType = platformType.desktop;
+      } else {
+        ConstList.actualPlatformType = platformType.web;
       }
-    }catch(e){
-      ConstList.actualPlatformType =  platformType.web;
+    } catch (e) {
+      ConstList.actualPlatformType = platformType.web;
     }
 
     var packageInfo = await PackageInfo.fromPlatform();
@@ -54,24 +55,24 @@ enum platformType{
 }
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  ConstList.init().then((value){
-    runApp(
-      GetMaterialApp(
-        title: 'CYOAP',
-        home: const ViewStart(),
-        getPages: [
-          GetPage(name: '/viewMake', page: () => const ViewMake()),
-          GetPage(name: '/viewPlay', page: () => const ViewPlay()),
-          GetPage(name: '/viewStart', page: () => const ViewStart()),
-          GetPage(name: '/viewEditor', page: () => const ViewEditor()),
-          GetPage(name: '/viewCodeEditor', page: () => const ViewCodeEditor()),
-          GetPage(name: '/viewGlobalSetting', page: () => const ViewGlobalSetting()),
-        ],
-        theme: appThemeData,
-        defaultTransition: Transition.fade,
-      ),
-    );
-  });
+  runApp(
+    GetMaterialApp(
+      title: 'CYOAP',
+      home: const ViewStart(),
+      getPages: [
+        GetPage(name: '/viewMake', page: () => const ViewMake()),
+        GetPage(name: '/viewPlay', page: () => const ViewPlay()),
+        GetPage(name: '/viewStart', page: () => const ViewStart()),
+        GetPage(name: '/viewEditor', page: () => const ViewEditor()),
+        GetPage(name: '/viewCodeEditor', page: () => const ViewCodeEditor()),
+        GetPage(
+            name: '/viewGlobalSetting', page: () => const ViewGlobalSetting()),
+      ],
+      theme: appThemeData,
+      defaultTransition: Transition.fade,
+    ),
+  );
+  ConstList.init();
 }
 
 final ThemeData appThemeData = ThemeData(

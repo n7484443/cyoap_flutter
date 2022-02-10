@@ -84,7 +84,7 @@ class ViewStart extends StatelessWidget {
                   ),
                 ),
                 Align(
-                    child: Text('version : ${ConstList.version}'),
+                    child: Text('version : ${ConstList.version ?? ''}'),
                   alignment: Alignment.topRight,
                 ),
               ],
