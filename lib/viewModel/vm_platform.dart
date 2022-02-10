@@ -216,7 +216,7 @@ class VMPlatform extends GetxController{
   double getScale() {
     var context = captureKey.currentContext;
     if (context == null) return 1;
-    return ConstList.isSmallDisplay(context) ? 0.5 : 1;
+    return ConstList.isSmallDisplay(context) ? 0.75 : 1;
   }
 
   ZefyrThemeData getZefyrThemeData(BuildContext context){
