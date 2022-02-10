@@ -67,55 +67,61 @@ class NestedMap extends StatelessWidget {
                                   _.drag != Tuple(i, j ~/ 2 - 1),
                             );
                           } else {
-                            int num = j ~/ 2;
-                            if (_.isEditable()) {
-                              if (ConstList.actualPlatformType ==
-                                  platformType.mobile) {
-                                return LongPressDraggable<Tuple<int, int>>(
-                                  data: Tuple(num, i),
-                                  feedback: Transform.scale(
-                                    scale: 0.9,
-                                    child: _.widgetList[i][num],
-                                  ),
-                                  onDragStarted: () {
-                                    _.dragStart(num, i);
-                                  },
-                                  child: _.widgetList[i][num],
-                                  onDragEnd: (DraggableDetails data) {
-                                    _.dragEnd();
-                                  },
-                                );
-                              } else {
-                                return GestureDetector(
-                                  child: Draggable<Tuple<int, int>>(
-                                    onDragUpdate: (details) => _.dragUpdate(
-                                        constrains, details, context),
-                                    data: Tuple(num, i),
-                                    feedback: Transform.scale(
-                                      scale: 0.9,
-                                      child: _.widgetList[i][num],
-                                    ),
-                                    onDragStarted: () {
-                                      _.dragStart(i, num);
-                                    },
-                                    child: Visibility(
-                                      child: _.widgetList[i][num],
-                                      visible: _.drag != Tuple(i, num),
-                                    ),
-                                    onDragEnd: (DraggableDetails data) {
-                                      _.dragEnd();
-                                    },
-                                    onDraggableCanceled:
-                                        (Velocity velocity, Offset offset) {
-                                      _.dragEnd();
-                                    },
-                                  ),
-                                );
+                                int num = j ~/ 2;
+                                if (_.isEditable()) {
+                                  if (ConstList.isSmallDisplay(context)) {
+                                    return LongPressDraggable<Tuple<int, int>>(
+                                      onDragUpdate: (details) => _.dragUpdate(
+                                          constrains, details, context),
+                                      data: Tuple(num, i),
+                                      feedback: Transform.scale(
+                                        scale: 0.9,
+                                        child: _.widgetList[i][num],
+                                      ),
+                                      onDragStarted: () {
+                                        _.dragStart(i, num);
+                                      },
+                                      child: Visibility(
+                                        child: _.widgetList[i][num],
+                                        visible: _.drag != Tuple(i, num),
+                                      ),
+                                      onDragEnd: (DraggableDetails data) {
+                                        _.dragEnd();
+                                      },
+                                      onDraggableCanceled:
+                                          (Velocity velocity, Offset offset) {
+                                        _.dragEnd();
+                                      },
+                                    );
+                                  } else {
+                                    return Draggable<Tuple<int, int>>(
+                                      onDragUpdate: (details) => _.dragUpdate(
+                                          constrains, details, context),
+                                      data: Tuple(num, i),
+                                      feedback: Transform.scale(
+                                        scale: 0.9,
+                                        child: _.widgetList[i][num],
+                                      ),
+                                      onDragStarted: () {
+                                        _.dragStart(i, num);
+                                      },
+                                      child: Visibility(
+                                        child: _.widgetList[i][num],
+                                        visible: _.drag != Tuple(i, num),
+                                      ),
+                                      onDragEnd: (DraggableDetails data) {
+                                        _.dragEnd();
+                                      },
+                                      onDraggableCanceled:
+                                          (Velocity velocity, Offset offset) {
+                                        _.dragEnd();
+                                      },
+                                    );
+                                  }
+                                }
+                                return _.widgetList[i][num];
                               }
-                            }
-                            return _.widgetList[i][num];
-                          }
-                        },
+                            },
                       ),
                     ),
                   );
