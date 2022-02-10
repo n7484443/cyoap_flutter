@@ -116,7 +116,7 @@ class ViewMake extends StatelessWidget {
       ),
     );
     
-    if (ConstList.actualPlatformType == platformType.mobile) {
+    if (ConstList.isSmallDisplay(context)) {
       return Scaffold(
         appBar: appbarWidget,
         drawer: const ViewVariable(),

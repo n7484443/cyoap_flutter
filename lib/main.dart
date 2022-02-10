@@ -24,6 +24,13 @@ class ConstList{
   static bool isMobile() {
     return actualPlatformType == platformType.mobile;
   }
+
+  static bool isSmallDisplay(BuildContext context){
+    if(isMobile())return true;
+    if(MediaQuery.of(context).size.width < 1000)return true;
+    return false;
+  }
+
   static late String version;
   static Future<void> init() async{
     try{

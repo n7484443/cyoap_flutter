@@ -74,7 +74,7 @@ class ViewCodeEditor extends StatelessWidget {
       ],
     );
 
-    if (ConstList.isMobile()) {
+    if (ConstList.isSmallDisplay(context)) {
       return Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(ConstList.appBarSize),
