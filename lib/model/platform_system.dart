@@ -26,6 +26,7 @@ class PlatformSystem{
   }
 
   Future<void> openPlatformFolder(String path) async {
+    this.path = path;
     await platformFileSystem.createFromFolder(path);
   }
 

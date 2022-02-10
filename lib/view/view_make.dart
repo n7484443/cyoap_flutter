@@ -75,7 +75,7 @@ class ViewMake extends StatelessWidget {
                     .getWidgetFromType(0, true, -1, -1),
               ),
               onDragStarted: () {
-                Get.find<VMPlatform>().dragStart();
+                Get.find<VMPlatform>().dragStart(-1, -1);
               },
               onDragEnd: (DraggableDetails data) {
                 Get.find<VMPlatform>().dragEnd();

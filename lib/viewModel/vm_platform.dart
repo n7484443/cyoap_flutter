@@ -14,7 +14,7 @@ import '../view/view_choice_node.dart';
 
 class VMPlatform extends GetxController{
   List<List<Widget>> widgetList = List.empty(growable: true);
-  bool isDrag = false;
+  Tuple<int, int>? drag;
   bool isChanged = false;
   Tuple<int, int> mouseHover = Tuple(-1, -1);
   Tuple<int, int> sizeSet = Tuple(1, 1);
@@ -104,12 +104,12 @@ class VMPlatform extends GetxController{
     }
   }
 
-  void dragStart() {
-    isDrag = true;
+  void dragStart(int posX, int posY) {
+    drag = Tuple(posX, posY);
     update();
   }
   void dragEnd() {
-    isDrag = false;
+    drag = null;
     update();
   }
 

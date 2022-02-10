@@ -54,22 +54,31 @@ class NestedMap extends StatelessWidget {
                         _.widgetList[i].length * 2 + 1,
                         (int j) {
                           if (j % 2 == 0) {
-                            return DragTarget<Tuple<int, int>>(
-                              builder: (BuildContext context,
-                                  List<dynamic> accepted,
-                                  List<dynamic> rejected) {
-                                return Visibility(
-                                  child: Container(
+                            return Visibility(
+                              child: DragTarget<Tuple<int, int>>(
+                                builder: (BuildContext context,
+                                    List<dynamic> accepted,
+                                    List<dynamic> rejected) {
+                                  return Container(
                                     color: Colors.black12,
                                     width: nodeBaseWidth / 6,
                                     height: nodeBaseHeight,
-                                  ),
-                                  visible: _.isDrag,
-                                );
-                              },
-                              onAccept: (Tuple<int, int> data) {
-                                _.changeData(data, Tuple(j ~/ 2, i));
-                              },
+                                  );
+                                },
+                                onAccept: (Tuple<int, int> data) {
+                                  if(_.drag == Tuple(-1, -1)){
+                                    _.changeData(data, Tuple(j ~/ 2, i));
+                                  }else{
+                                    if((j - 2) > (_.drag!.data2 * 2)){
+                                      _.changeData(data, Tuple(j ~/ 2 - 1, i));
+                                    }else{
+                                      _.changeData(data, Tuple(j ~/ 2, i));
+                                    }
+                                  }
+                                },
+                              ),
+                              visible: _.drag != null &&
+                                  _.drag != Tuple(i, j ~/ 2 - 1),
                             );
                           } else {
                             int num = j ~/ 2;
@@ -83,7 +92,7 @@ class NestedMap extends StatelessWidget {
                                     child: _.widgetList[i][num],
                                   ),
                                   onDragStarted: () {
-                                    _.dragStart();
+                                    _.dragStart(num, i);
                                   },
                                   child: _.widgetList[i][num],
                                   onDragEnd: (DraggableDetails data) {
@@ -98,9 +107,12 @@ class NestedMap extends StatelessWidget {
                                     child: _.widgetList[i][num],
                                   ),
                                   onDragStarted: () {
-                                    _.dragStart();
+                                    _.dragStart(i, num);
                                   },
-                                  child: _.widgetList[i][num],
+                                  child: Visibility(
+                                    child: _.widgetList[i][num],
+                                    visible: _.drag != Tuple(i, num),
+                                  ),
                                   onDragEnd: (DraggableDetails data) {
                                     _.dragEnd();
                                   },
@@ -122,7 +134,7 @@ class NestedMap extends StatelessWidget {
                     child: const Divider(
                       thickness: 4,
                     ),
-                    visible: _.isDrag,
+                    visible: _.drag != null,
                   );
                 } else {
                   return DragTarget<Tuple<int, int>>(
@@ -134,7 +146,7 @@ class NestedMap extends StatelessWidget {
                           width: nodeBaseWidth / 6,
                           height: nodeBaseHeight,
                         ),
-                        visible: _.isDrag,
+                        visible: _.drag != null,
                       );
                     },
                     onAccept: (Tuple<int, int> data) {
