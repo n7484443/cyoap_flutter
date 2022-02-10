@@ -106,6 +106,8 @@ class AbstractPlatform {
   }
 
   ChoiceNodeBase? getChoiceNode(int posX, int posY) {
+    if(choiceNodes.length <= posY)return null;
+    if(choiceNodes[posY].length <= posX)return null;
     return choiceNodes[posY][posX];
   }
 
@@ -116,13 +118,13 @@ class AbstractPlatform {
     checkDataCollect();
   }
 
-  void checkDataCollect(){
+  void compress(){
     choiceNodes.removeWhere((item) => item.isEmpty);
+    checkDataCollect();
+  }
 
+  void checkDataCollect(){
     for(int y = 0; y < choiceNodes.length; y++){
-      if(choiceNodes[y].isEmpty){
-        choiceNodes.removeAt(y);
-      }
       for(int x = 0; x < choiceNodes[y].length; x++){
         choiceNodes[y][x].x = x;
         choiceNodes[y][x].y = y;

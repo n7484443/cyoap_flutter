@@ -94,8 +94,7 @@ class VMPlatform extends GetxController{
 
   ZefyrController? getNodeController(int x, int y){
     var node = getNode(x, y);
-    if(node == null)return null;
-    if(node.contentsString.isEmpty){
+    if(node == null || node.contentsString.isEmpty){
       return ZefyrController();
     }else{
       var json = jsonDecode(node.contentsString);
@@ -133,6 +132,8 @@ class VMPlatform extends GetxController{
   }
 
   void save(bool saveAsFile){
+    PlatformSystem.getPlatform().compress();
+    updateWidgetList();
     if(saveAsFile){
       PlatformSystem.instance.saveFile();
     }else{
