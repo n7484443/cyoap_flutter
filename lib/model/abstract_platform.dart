@@ -8,8 +8,6 @@ import 'grammar/value_type.dart';
 class AbstractPlatform {
   int halfWidth;
   int halfHeight;
-  int localX;
-  int localY;
   double scale;
   String stringImageName;
   String colorBackground;
@@ -35,14 +33,11 @@ class AbstractPlatform {
     return true;
   }
 
-  AbstractPlatform(this.halfWidth, this.halfHeight, this.localX, this.localY,
-      this.scale, this.stringImageName, this.colorBackground, this.flag, this.version);
+  AbstractPlatform(this.halfWidth, this.halfHeight, this.scale, this.stringImageName, this.colorBackground, this.flag, this.version);
 
   AbstractPlatform.none()
       : halfWidth = 800,
         halfHeight = 400,
-        localX = 0,
-        localY = 0,
         scale = 1.0,
         stringImageName = '',
         colorBackground = '#909090',
@@ -50,23 +45,19 @@ class AbstractPlatform {
         version = ConstList.version;
 
   AbstractPlatform.fromJson(Map<String, dynamic> json)
-      : halfWidth = json['halfWidth'],
-        halfHeight = json['halfHeight'],
-        localX = json['localX'],
-        localY = json['localY'],
-        scale = json['scale'],
-        stringImageName = json['stringImageName'],
-        colorBackground = json['colorBackground'],
-        flag = json['flag'],
+      : halfWidth = json['halfWidth'] ?? 800,
+        halfHeight = json['halfHeight'] ?? 400,
+        scale = json['scale'] ?? 1.0,
+        stringImageName = json['stringImageName'] ?? '',
+        colorBackground = json['colorBackground'] ?? '#909090',
+        flag = json['flag'] ?? 0,
         globalSetting = (json['globalSetting'] as Map)
             .map((k, v) => MapEntry(k, ValueTypeWrapper.fromJson(v))),
-        version = json['version'];
+        version = json['version'] ?? ConstList.version;
 
   Map<String, dynamic> toJson() => {
     'halfWidth' : halfWidth,
     'halfHeight' : halfHeight,
-    'localX' : localX,
-    'localY' : localY,
     'scale' : scale,
     'stringImageName' : stringImageName,
     'colorBackground' : colorBackground,
