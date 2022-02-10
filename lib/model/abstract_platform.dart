@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/util/tuple.dart';
@@ -15,6 +16,7 @@ class AbstractPlatform {
   int flag;
   List<List<ChoiceNodeBase>> choiceNodes = List.empty(growable: true);
   Map<String, ValueTypeWrapper> globalSetting = {};
+  String version;
 
   bool isEditable = true;
 
@@ -23,8 +25,18 @@ class AbstractPlatform {
     updateSelectable();
   }
 
+  bool versionCheck(String versionProgram){
+    var vPlatform = version.split('.');
+    var vProgram = versionProgram.split('.');
+    for(int i = 0; i < 3; i ++){
+      if(int.parse(vPlatform[i]) < int.parse(vProgram[i]))return false;
+    }
+
+    return true;
+  }
+
   AbstractPlatform(this.halfWidth, this.halfHeight, this.localX, this.localY,
-      this.scale, this.stringImageName, this.colorBackground, this.flag);
+      this.scale, this.stringImageName, this.colorBackground, this.flag, this.version);
 
   AbstractPlatform.none()
       : halfWidth = 800,
@@ -34,7 +46,8 @@ class AbstractPlatform {
         scale = 1.0,
         stringImageName = '',
         colorBackground = '#909090',
-        flag = 0 ;
+        flag = 0,
+        version = ConstList.version;
 
   AbstractPlatform.fromJson(Map<String, dynamic> json)
       : halfWidth = json['halfWidth'],
@@ -46,7 +59,8 @@ class AbstractPlatform {
         colorBackground = json['colorBackground'],
         flag = json['flag'],
         globalSetting = (json['globalSetting'] as Map)
-            .map((k, v) => MapEntry(k, ValueTypeWrapper.fromJson(v)));
+            .map((k, v) => MapEntry(k, ValueTypeWrapper.fromJson(v))),
+        version = json['version'];
 
   Map<String, dynamic> toJson() => {
     'halfWidth' : halfWidth,
@@ -58,6 +72,7 @@ class AbstractPlatform {
     'colorBackground' : colorBackground,
     'flag' : flag,
     'globalSetting' : globalSetting,
+    'version' : version,
   };
 
   int getMinX() => -halfWidth;
@@ -102,7 +117,12 @@ class AbstractPlatform {
   }
 
   void checkDataCollect(){
+    choiceNodes.removeWhere((item) => item.isEmpty);
+
     for(int y = 0; y < choiceNodes.length; y++){
+      if(choiceNodes[y].isEmpty){
+        choiceNodes.removeAt(y);
+      }
       for(int x = 0; x < choiceNodes[y].length; x++){
         choiceNodes[y][x].x = x;
         choiceNodes[y][x].y = y;

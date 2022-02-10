@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../main.dart';
 
@@ -99,7 +100,7 @@ class ViewMake extends StatelessWidget {
           ),
           Visibility(
             child: IconButton(
-              icon: const Icon(Icons.save_alt),
+              icon: const Icon(MdiIcons.zipBox),
               onPressed: () {
                 Get.find<VMPlatform>().save(true);
               },
