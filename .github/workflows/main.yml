@@ -14,8 +14,9 @@ jobs:
       - run: flutter config --enable-windows-desktop
       - run: flutter build windows
 
-      - name: zip artifacts
-        run: zip -r build/windows/build.zip build/windows/runner/Release/*
+      - uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r build/windows/build.zip build/windows/runner/Release
 
       - name: Release
         uses: softprops/action-gh-release@v1
