@@ -19,18 +19,18 @@ jobs:
       - run: flutter config --enable-windows-desktop
       - run: flutter build windows
 
-      - name: Get the version
+      - name: Get latest release version number
         id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+        uses: battila7/get-version-action@v2
 
-      - run: 7z a build/windows/cyoap_windows_${{ steps.get_version.outputs.VERSION }}.zip build/windows/runner/Release
+      - run: 7z a build/windows/cyoap_windows_${{ steps.get_version.outputs.version-without-v }}.zip ./build/windows/runner/Release/*
       - run: flutter build apk
-      - run: Rename-Item "build/app/outputs/flutter-apk/app-release.apk" "cyoap_android_${{ steps.get_version.outputs.VERSION }}.apk"
+      - run: Rename-Item "build/app/outputs/flutter-apk/app-release.apk" "cyoap_android_${{ steps.get_version.outputs.version-without-v }}.apk"
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.RELEASE_ACTION }}
           files: |
-            build/windows/cyoap_windows_${{ steps.get_version.outputs.VERSION }}.zip
-            build/app/outputs/flutter-apk/cyoap_android_${{ steps.get_version.outputs.VERSION }}.apk
+            build/windows/cyoap_windows_${{ steps.get_version.outputs.version-without-v }}.zip
+            build/app/outputs/flutter-apk/cyoap_android_${{ steps.get_version.outputs.version-without-v }}.apk
