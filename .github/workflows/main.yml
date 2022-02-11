@@ -24,7 +24,6 @@ jobs:
         run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
 
       - run: 7z a build/windows/cyoap_windows_${{ steps.get_version.outputs.VERSION }}.zip build/windows/runner/Release
-        -
       - run: flutter build apk
       - run: Rename-Item "build/app/outputs/flutter-apk/app-release.apk" "cyoap_android_${{ steps.get_version.outputs.VERSION }}.apk"
 
