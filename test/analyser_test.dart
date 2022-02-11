@@ -38,6 +38,8 @@ void main() {
                 and_test_2 = and(false, true)
                 and_test_3 = and(true, false)
                 and_test_4 = and(false, false)
+                
+                multiple_test_1 = and(not(and(true, false)), true)
                 """;
   String strTest2 = """
   numberTest0 < 0
@@ -98,6 +100,11 @@ void main() {
     expect(ins.getValueType('and_test_2')?.data, false);
     expect(ins.getValueType('and_test_3')?.data, false);
     expect(ins.getValueType('and_test_4')?.data, false);
+  });
+
+
+  test('multiple Test', (){
+    expect(ins.getValueType('multiple_test_1')?.data, true);
   });
 
   test('return Test', (){
