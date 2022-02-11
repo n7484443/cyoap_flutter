@@ -19,7 +19,7 @@ jobs:
 
       - name: Release
         uses: softprops/action-gh-release@v1
-        with::
+        with:
           token: ${{ secrets.RELEASE_ACTION }}
           files: |
             build/windows/build.zip
