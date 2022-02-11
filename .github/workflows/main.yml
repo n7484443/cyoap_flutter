@@ -1,0 +1,26 @@
+name: CYOAP release
+on:
+  push:
+    tags:
+      - v*
+jobs:
+  build_windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+      - run: flutter config --enable-windows-desktop
+      - run: flutter build windows
+
+      - name: zip artifacts
+        run: zip -r build/windows/build.zip build/windows/runner/Release/*
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            build/windows/build.zip
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
