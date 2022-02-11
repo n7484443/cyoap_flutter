@@ -26,8 +26,7 @@ jobs:
         with:
           channel: 'stable'
 
-      - run: flutter pub get
-      - run: flutter test
+
       - run: flutter build apk
       - run: Rename-Item -Path "build/app/outputs/flutter-apk/app-release.apk" -NewName "cyoap_android_${{ github.ref }}.apk"
 
