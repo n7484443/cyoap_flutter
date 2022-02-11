@@ -14,9 +14,7 @@ jobs:
       - run: flutter config --enable-windows-desktop
       - run: flutter build windows
 
-      - uses: montudor/action-zip@v1
-        with:
-          args: zip -qq -r build/windows/build.zip build/windows/runner/Release
+      - run: 7z a build/windows/build.zip build/windows/runner/Release
 
       - name: Release
         uses: softprops/action-gh-release@v1
