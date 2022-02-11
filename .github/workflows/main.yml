@@ -28,7 +28,7 @@ jobs:
 
 
       - run: flutter build apk
-      - run: Rename-Item -Path "build/app/outputs/flutter-apk/app-release.apk" -NewName "cyoap_android_${{ github.ref }}.apk"
+      - run: Rename-Item "build/app/outputs/flutter-apk/app-release.apk" "cyoap_android_${{ github.ref }}.apk"
 
       - name: Release
         uses: softprops/action-gh-release@v1
