@@ -14,11 +14,27 @@ jobs:
       - run: flutter config --enable-windows-desktop
       - run: flutter build windows
 
-      - run: 7z a build/windows/build.zip build/windows/runner/Release
+      - run: 7z a build/windows/cyoap_windows_${{ github.ref }}.zip build/windows/runner/Release
+
+
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - run: flutter pub get
+      - run: flutter test
+      - run: flutter build apk
+      - run: Rename-Item -Path "build/app/outputs/flutter-apk/app-release.apk" -NewName "cyoap_android_${{ github.ref }}.apk"
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.RELEASE_ACTION }}
           files: |
-            build/windows/build.zip
+            build/windows/cyoap_windows_${{ github.ref }}.zip
+            build/app/outputs/flutter-apk/cyoap_android_${{ github.ref }}.apk
