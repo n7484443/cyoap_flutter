@@ -11,6 +11,9 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          cache: true
+          cache-key: flutter
+          cache-path: ${{ runner.tool_cache }}/flutter
       - uses: actions/setup-java@v2
         with:
           distribution: 'zulu'
@@ -24,6 +27,7 @@ jobs:
         uses: battila7/get-version-action@v2
 
       - run: 7z a build/windows/cyoap_windows_${{ steps.get_version.outputs.version-without-v }}.zip ./build/windows/runner/Release/*
+      
       - run: flutter build apk
       - run: Rename-Item "build/app/outputs/flutter-apk/app-release.apk" "cyoap_android_${{ steps.get_version.outputs.version-without-v }}.apk"
 
