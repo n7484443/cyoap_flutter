@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:cyoap_flutter/main.dart';
-import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
@@ -167,16 +166,8 @@ class VMPlatform extends GetxController{
   }
 
   void loadVariable() {
-    VariableDataBase.instance.clear();
-    for (var ys in PlatformSystem.getPlatform().choiceNodes) {
-      for (var node in ys.data1) {
-        if(node.executeCodeRecursive != null){
-          for (var codes in node.executeCodeRecursive!) {
-            codes.unzip();
-          }
-        }
-      }
-    }
+    PlatformSystem.getPlatform().generateRecursiveParser();
+    PlatformSystem.getPlatform().updateSelectable();
   }
 
   void select(int posX, int posY) {

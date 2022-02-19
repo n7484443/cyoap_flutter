@@ -21,6 +21,7 @@ class AbstractPlatform {
 
   void init() {
     checkDataCollect();
+    generateRecursiveParser();
     updateSelectable();
   }
 
@@ -213,6 +214,15 @@ class AbstractPlatform {
         } else {
           node.isSelectableCheck = true;
         }
+      }
+    }
+  }
+
+  void generateRecursiveParser(){
+    for(var yList in choiceNodes){
+      yList.data2.generateParser();
+      for(var node in yList.data1){
+        node.generateParser();
       }
     }
   }

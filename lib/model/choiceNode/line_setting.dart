@@ -1,6 +1,8 @@
+import '../grammar/analyser.dart';
 import '../grammar/recursive_parser.dart';
+import 'generable_parser.dart';
 
-class LineSetting {
+class LineSetting extends GenerableParser{
   int y;
   int maxSelect;
   RecursiveUnit? clickableRecursive;
@@ -31,5 +33,14 @@ class LineSetting {
 
   bool isNeedToCheck() {
     return maxSelect > 0;
+  }
+
+  @override
+  void generateParser() {
+    var conditionClickableRecursiveParsed = Analyser.analyseCodes(getClickableString());
+    var executeCodeRecursiveParsed = Analyser.analyseCodes(getExecuteString());
+
+    clickableRecursive = conditionClickableRecursiveParsed.isNotEmpty ? conditionClickableRecursiveParsed[0] : null;
+    executeRecursive = executeCodeRecursiveParsed.isNotEmpty ? executeCodeRecursiveParsed[0] : null;
   }
 }

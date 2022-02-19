@@ -2,9 +2,11 @@ import 'package:cyoap_flutter/model/grammar/recursive_parser.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:english_words/english_words.dart';
 
+import '../grammar/analyser.dart';
 import '../grammar/value_type.dart';
+import 'generable_parser.dart';
 
-class ChoiceNodeBase {
+class ChoiceNodeBase extends GenerableParser{
   //grid 단위로 설정
   int x;
   int y;
@@ -121,5 +123,16 @@ class ChoiceNodeBase {
 
   bool isSelectableWithCheck() {
     return isSelectable && isSelectableCheck;
+  }
+
+  @override
+  void generateParser() {
+    var conditionClickableRecursiveParsed = Analyser.analyseCodes(conditionClickableString);
+    var conditionVisibleRecursiveParsed = Analyser.analyseCodes(conditionVisibleString);
+    var executeCodeRecursiveParsed = Analyser.analyseCodes(executeCodeString);
+
+    conditionClickableRecursive = conditionClickableRecursiveParsed.isNotEmpty ? conditionClickableRecursiveParsed[0] : null;
+    conditionVisibleRecursive = conditionVisibleRecursiveParsed.isNotEmpty ? conditionVisibleRecursiveParsed[0] : null;
+    executeCodeRecursive = executeCodeRecursiveParsed;
   }
 }
