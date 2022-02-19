@@ -13837,6 +13837,8 @@ package_info_plus_web
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 permission_handler
+permission_handler_android
+permission_handler_apple
 permission_handler_platform_interface
 
 MIT License
