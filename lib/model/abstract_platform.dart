@@ -162,17 +162,21 @@ class AbstractPlatform {
 
     for (var nodeY in choiceNodes) {
       var lineSetting = nodeY.data2;
+      if(lineSetting.isNeedToCheck()){
+
+      }
       for (var node in nodeY.data1) {
-        if(!node.select) {
           if (node.conditionClickableRecursive != null) {
+            if (!node.select) {
             var data = node.conditionClickableRecursive!.unzip().data;
             if (data != null && data != valueTypeData.none) {
               if (data is VariableUnit) {
-                var varData = VariableDataBase.instance.getValueTypeWrapper(
-                    data.varName);
+                var varData =
+                    VariableDataBase.instance.getValueTypeWrapper(data.varName);
                 node.isSelectableCheck =
-                (varData != null && varData.valueType.data is bool) ? varData
-                    .valueType.data as bool : true;
+                    (varData != null && varData.valueType.data is bool)
+                        ? varData.valueType.data as bool
+                        : true;
                 if (node.isSelectableCheck == false) {
                   node.selectNodeWithValue(false);
                 }
@@ -183,9 +187,9 @@ class AbstractPlatform {
                 }
               }
             }
-          } else {
-            node.isSelectableCheck = true;
           }
+        } else {
+          node.isSelectableCheck = true;
         }
       }
     }
