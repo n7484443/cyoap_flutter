@@ -55,6 +55,7 @@ class PlatformFileSystem {
     }
 
     var existNodes = await dirNodes.exists();
+    List<ChoiceNodeBase> nodeList = List.empty(growable: true);
     if (!existNodes) {
       dirNodes.create();
     } else {
@@ -67,11 +68,13 @@ class PlatformFileSystem {
             platform.addLineSettingData(lineSetting);
           }else{
             var node = ChoiceNodeBase.fromJson(jsonDecode(value));
-            platform.addData(node.x, node.y, node);
+            nodeList.add(node);
           }
         }
       }
     }
+
+    platform.addDataAll(nodeList);
     platform.init();
   }
 
@@ -108,9 +111,7 @@ class PlatformFileSystem {
       platform = AbstractPlatform.none();
     }
 
-    for(var node in nodeList){
-      platform.addData(node.x, node.y, node);
-    }
+    platform.addDataAll(nodeList);
     for(var lineSetting in lineSettingList){
       platform.addLineSettingData(lineSetting);
     }

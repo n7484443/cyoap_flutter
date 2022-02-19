@@ -22,7 +22,7 @@ class LineSetting {
         executeRecursive = json['executeRecursive'] == null ? null : getClassFromJson(json['executeRecursive']);
 
   String getClickableString() {
-    return 'lineSetting_$y = $maxSelect';
+    return 'lineSetting_$y < $maxSelect';
   }
 
   String getExecuteString() {

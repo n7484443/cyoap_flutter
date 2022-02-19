@@ -99,6 +99,23 @@ class AbstractPlatform {
     }
   }
 
+
+  void addDataAll(List<ChoiceNodeBase> nodeList) {
+    List<List<ChoiceNodeBase>> nodeListAdditional = List.empty(growable: true);
+    for(var node in nodeList){
+      while(nodeListAdditional.length <= node.y){
+        nodeListAdditional.add(List.empty(growable: true));
+      }
+      nodeListAdditional[node.y].add(node);
+    }
+    for(var nodeY in nodeListAdditional){
+      nodeY.sort((a, b) => a.x.compareTo(b.x));
+      for(var node in nodeY){
+        addData(node.x, node.y, node);
+      }
+    }
+  }
+
   void removeData(int x, int y){
     choiceNodes[y].data1.removeAt(x);
     checkDataCollect();

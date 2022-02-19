@@ -20,6 +20,9 @@ class VMCodeEditor extends GetxController {
     controllerClickable.text = NodeEditor.instance.target.conditionClickableString;
     controllerVisible.text = NodeEditor.instance.target.conditionVisibleString;
     controllerExecute.text = NodeEditor.instance.target.executeCodeString;
+    conditionClickable.value = controllerClickable.text;
+    conditionVisible.value = controllerVisible.text;
+    executeCode.value = controllerExecute.text;
 
     controllerClickable.addListener(() {
       isChanged = true;
