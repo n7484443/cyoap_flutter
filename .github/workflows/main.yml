@@ -40,5 +40,9 @@ jobs:
             build/app/outputs/flutter-apk/cyoap_android_${{ steps.get_version.outputs.version-without-v }}.apk
 
       - run: flutter build web --base-href=/FlutterCyoap/
-      - name: gitPushWeb
-        run: git subtree push -f --prefix build/web origin gh-pages
+
+      - name: Deploy Web
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web
