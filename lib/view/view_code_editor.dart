@@ -12,34 +12,36 @@ class ViewCodeEditor extends StatelessWidget {
   Widget build(BuildContext context) {
     final VMCodeEditor _vmCodeEditor = Get.put(VMCodeEditor());
 
+    var showDialogFunction = AlertDialog(
+      title: const Text('뒤로가기'),
+      content: const Text('저장되지 않은 내용이 있습니다. 저장하시겠습니까?'),
+      actions: [
+        ElevatedButton(
+          onPressed: () {
+            _vmCodeEditor.isChanged = false;
+            Get.back();
+            Get.back();
+          },
+          child: const Text('아니오'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            _vmCodeEditor.save();
+            Get.back();
+            Get.back();
+          },
+          child: const Text('예'),
+        ),
+      ],
+    );
+
     var leadingWidget = IconButton(
       icon: const Icon(Icons.arrow_back),
       onPressed: () {
         if (_vmCodeEditor.isChanged) {
           showDialog(
             context: context,
-            builder: (_) => AlertDialog(
-              title: const Text('뒤로가기'),
-              content: const Text('저장되지 않은 내용이 있습니다. 저장하시겠습니까?'),
-              actions: [
-                ElevatedButton(
-                  onPressed: () {
-                    _vmCodeEditor.isChanged = false;
-                    Get.back();
-                    Get.back();
-                  },
-                  child: const Text('아니오'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    _vmCodeEditor.save();
-                    Get.back();
-                    Get.back();
-                  },
-                  child: const Text('예'),
-                ),
-              ],
-            ),
+            builder: (_) => showDialogFunction,
           );
         } else {
           Get.back();
@@ -75,23 +77,31 @@ class ViewCodeEditor extends StatelessWidget {
     );
 
     if (ConstList.isSmallDisplay(context)) {
-      return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(ConstList.appBarSize),
-          child: AppBar(
-            leading: leadingWidget,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.save),
-                onPressed: () {
-                  _vmCodeEditor.save();
-                },
-              )
-            ],
+      return WillPopScope(
+        child: Scaffold(
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(ConstList.appBarSize),
+            child: AppBar(
+              leading: leadingWidget,
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.save),
+                  onPressed: () {
+                    _vmCodeEditor.save();
+                  },
+                )
+              ],
+            ),
           ),
+          body: inputText,
+          drawer: const ViewVariable(),
         ),
-        body: inputText,
-        drawer: const ViewVariable(),
+        onWillPop: (){
+          return showDialog(
+            context: context,
+            builder: (_) => showDialogFunction,
+          ) as Future<bool>;
+        },
       );
     } else {
       return Row(

@@ -17,6 +17,28 @@ class ViewMake extends StatelessWidget {
   Widget build(BuildContext context) {
     final vmPlatform = Get.put(VMPlatform());
     vmPlatform.updateWidgetList();
+    var dialog = AlertDialog(
+      title: const Text('뒤로가기'),
+      content: const Text('저장되지 않은 내용이 있습니다. 저장하시겠습니까?'),
+      actions: [
+        ElevatedButton(
+          onPressed: () {
+            vmPlatform.isChanged = false;
+            Get.back();
+            Get.back();
+          },
+          child: const Text('아니오'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            vmPlatform.save(ConstList.isFileSystem());
+            Get.back();
+            Get.back();
+          },
+          child: const Text('예'),
+        ),
+      ],
+    );
     var appbarWidget = PreferredSize(
       preferredSize: Size.fromHeight(ConstList.appBarSize),
       child: AppBar(
@@ -26,28 +48,7 @@ class ViewMake extends StatelessWidget {
             if(vmPlatform.isChanged){
               showDialog(
                 context: context,
-                builder: (_) => AlertDialog(
-                  title: const Text('뒤로가기'),
-                  content: const Text('저장되지 않은 내용이 있습니다. 저장하시겠습니까?'),
-                  actions: [
-                    ElevatedButton(
-                      onPressed: () {
-                        vmPlatform.isChanged = false;
-                        Get.back();
-                        Get.back();
-                      },
-                      child: const Text('아니오'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        vmPlatform.save(ConstList.isFileSystem());
-                        Get.back();
-                        Get.back();
-                      },
-                      child: const Text('예'),
-                    ),
-                  ],
-                ),
+                builder: (_) => dialog,
               );
             }else{
               Get.back();
@@ -118,10 +119,18 @@ class ViewMake extends StatelessWidget {
     );
     
     if (ConstList.isSmallDisplay(context)) {
-      return Scaffold(
-        appBar: appbarWidget,
-        drawer: const ViewVariable(),
-        body: const NestedMap(),
+      return WillPopScope(
+        onWillPop: () {
+          return showDialog(
+            context: context,
+            builder: (_) => dialog,
+          ) as Future<bool>;
+        },
+        child: Scaffold(
+          appBar: appbarWidget,
+          drawer: const ViewVariable(),
+          body: const NestedMap(),
+        ),
       );
     } else {
       return Row(

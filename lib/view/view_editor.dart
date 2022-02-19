@@ -14,6 +14,31 @@ class ViewEditor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final VMEditor controller = Get.put(VMEditor());
+
+    var alert = AlertDialog(
+      title: const Text('뒤로가기'),
+      content: const Text('저장되지 않은 내용이 있습니다. 저장하시겠습니까?'),
+      actions: [
+        ElevatedButton(
+          onPressed: () {
+            controller.isChanged = false;
+            Get.back();
+            Get.back();
+          },
+          child: const Text('아니오'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            controller.isChanged = false;
+            controller.save();
+            Get.back();
+            Get.back();
+          },
+          child: const Text('예'),
+        ),
+      ],
+    );
+
     var appbarWidget = PreferredSize(
       preferredSize: Size.fromHeight(ConstList.appBarSize),
       child: AppBar(
@@ -23,29 +48,7 @@ class ViewEditor extends StatelessWidget {
             if(controller.isChanged){
               showDialog(
                 context: context,
-                builder: (_) => AlertDialog(
-                  title: const Text('뒤로가기'),
-                  content: const Text('저장되지 않은 내용이 있습니다. 저장하시겠습니까?'),
-                  actions: [
-                    ElevatedButton(
-                      onPressed: () {
-                        controller.isChanged = false;
-                        Get.back();
-                        Get.back();
-                      },
-                      child: const Text('아니오'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        controller.isChanged = false;
-                        controller.save();
-                        Get.back();
-                        Get.back();
-                      },
-                      child: const Text('예'),
-                    ),
-                  ],
-                ),
+                builder: (_) => alert,
               );
             }else{
               Get.back();
@@ -101,38 +104,46 @@ class ViewEditor extends StatelessWidget {
     );
 
     if (ConstList.isSmallDisplay(context)) {
-      return Scaffold(
-        appBar: appbarWidget,
-        drawer: const ViewVariable(),
-        body: Column(
-          children: [
-            Container(
-              color: Colors.black12,
-              child: TextField(
-                controller: controller.controllerTitle,
-                textAlign: TextAlign.center,
-                decoration: const InputDecoration(hintText: '제목'),
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+      return WillPopScope(
+        child: Scaffold(
+          appBar: appbarWidget,
+          drawer: const ViewVariable(),
+          body: Column(
+            children: [
+              Container(
+                color: Colors.black12,
+                child: TextField(
+                  controller: controller.controllerTitle,
+                  textAlign: TextAlign.center,
+                  decoration: const InputDecoration(hintText: '제목'),
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              child: Row(
-                children: [
-                  const Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: ViewEditorTyping(),
+              Expanded(
+                child: Row(
+                  children: [
+                    const Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: ViewEditorTyping(),
+                      ),
                     ),
-                  ),
-                  editingNodeValues,
-                ],
+                    editingNodeValues,
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
+        onWillPop: (){
+          return showDialog(
+            context: context,
+            builder: (_) => alert,
+          ) as Future<bool>;
+        },
       );
     } else {
       return Row(
