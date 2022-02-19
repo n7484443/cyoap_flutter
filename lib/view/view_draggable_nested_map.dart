@@ -13,12 +13,35 @@ class NodeDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var vmPlatform = Get.find<VMPlatform>();
+    var maxSelectText =Visibility(
+      child: Stack(children: [
+        Text(
+          '최대 ${vmPlatform.getMaxSelect(y)}개만큼 선택 가능',
+          style: TextStyle(
+            fontSize: 18,
+            foreground: Paint()
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 4
+              ..color = Colors.white,
+          ),
+        ),
+        Text(
+          '최대 ${vmPlatform.getMaxSelect(y)}개만큼 선택 가능',
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
+      ]),
+      visible: vmPlatform.getMaxSelect(y) != '무한',
+    );
     if (vmPlatform.isEditable()) {
       return Stack(
         children: [
           const Divider(
             thickness: 4,
           ),
+          maxSelectText,
           Align(
             alignment: Alignment.centerRight,
             child: PopupMenuButton<int>(
@@ -73,8 +96,14 @@ class NodeDivider extends StatelessWidget {
         alignment: Alignment.center,
       );
     } else {
-      return const Divider(
-        thickness: 4,
+      return Stack(
+        children: [
+          const Divider(
+            thickness: 4,
+          ),
+          maxSelectText,
+        ],
+        alignment: Alignment.center,
       );
     }
   }
