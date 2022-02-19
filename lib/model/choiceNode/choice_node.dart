@@ -127,12 +127,24 @@ class ChoiceNodeBase extends GenerableParser{
 
   @override
   void generateParser() {
-    var conditionClickableRecursiveParsed = Analyser.analyseCodes(conditionClickableString);
-    var conditionVisibleRecursiveParsed = Analyser.analyseCodes(conditionVisibleString);
+    var conditionClickableRecursiveParsed =
+        Analyser.analyseCodes(conditionClickableString);
+    var conditionVisibleRecursiveParsed =
+        Analyser.analyseCodes(conditionVisibleString);
     var executeCodeRecursiveParsed = Analyser.analyseCodes(executeCodeString);
 
-    conditionClickableRecursive = conditionClickableRecursiveParsed.isNotEmpty ? conditionClickableRecursiveParsed[0] : null;
-    conditionVisibleRecursive = conditionVisibleRecursiveParsed.isNotEmpty ? conditionVisibleRecursiveParsed[0] : null;
+    conditionClickableRecursive = conditionClickableRecursiveParsed.isNotEmpty
+        ? conditionClickableRecursiveParsed[0]
+        : null;
+    conditionVisibleRecursive = conditionVisibleRecursiveParsed.isNotEmpty
+        ? conditionVisibleRecursiveParsed[0]
+        : null;
     executeCodeRecursive = executeCodeRecursiveParsed;
+  }
+
+  @override
+  void initValueTypeWrapper() {
+    VariableDataBase.instance.setValue(title.replaceAll(" ", ""),
+        ValueTypeWrapper(ValueType(select), false, true));
   }
 }

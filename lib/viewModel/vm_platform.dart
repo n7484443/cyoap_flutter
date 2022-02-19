@@ -133,7 +133,7 @@ class VMPlatform extends GetxController{
 
   void save(bool saveAsFile){
     PlatformSystem.getPlatform().compress();
-    updateWidgetList();
+    PlatformSystem.getPlatform().generateRecursiveParser();
     if(saveAsFile){
       PlatformSystem.instance.saveFile();
     }else{

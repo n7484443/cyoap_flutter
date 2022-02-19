@@ -10,7 +10,7 @@ class ViewVariable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var vmVariable = Get.put(VMVariableTable());
+    Get.put(VMVariableTable());
     return GetBuilder<VMVariableTable>(
       builder: (_) => Drawer(
         child: ListView(
@@ -22,14 +22,24 @@ class ViewVariable extends StatelessWidget {
                 return ListTile(title: Text(_.getVariableList()[index]));
               }),
             ),
-            Visibility(
-              child: ExpansionTile(
-                title: const Text('노드'),
-                children: List<Widget>.generate(_.getNodeNameList().length, (index) {
-                  return ListTile(title: Text(_.getNodeNameList()[index]));
-                }),
-              ),
-              visible: _.isEditable(),
+            ExpansionTile(
+              title: const Text('노드'),
+              children:
+                  List<Widget>.generate(_.getNodeNameList().length, (index) {
+                return ListTile(
+                  title: Row(
+                    children: [
+                      Text(_.getNodeNameList()[index].data1),
+                      Visibility(
+                        child: Icon(_.getNodeNameList()[index].data2
+                            ? Icons.check_box
+                            : Icons.check_box_outline_blank),
+                        visible: !_.isEditable(),
+                      )
+                    ],
+                  ),
+                );
+              }),
             ),
             InkWell(
               child: Visibility(

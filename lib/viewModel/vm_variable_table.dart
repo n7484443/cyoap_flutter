@@ -2,8 +2,10 @@ import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
+import '../util/tuple.dart';
+
 class VMVariableTable extends GetxController {
-  List<String> nodeNameList = List.empty(growable: true);
+  List<Tuple<String, bool>> nodeNameList = List.empty(growable: true);
   List<String> variableList = List.empty(growable: true);
 
   @override
@@ -20,27 +22,27 @@ class VMVariableTable extends GetxController {
     var nodes = PlatformSystem.getPlatform().choiceNodes;
     for(var t in nodes){
       for(var node in t.data1){
-        nodeNameList.add(node.title);
+        nodeNameList.add(Tuple(node.title, isEditable() ? true : node.select));
       }
     }
 
     for(var key in VariableDataBase.instance.varMap.keys) {
-      var values = PlatformSystem.getPlatform().globalSetting[key];
+      var values = VariableDataBase.instance.varMap[key];
       if (values == null) continue;
       if (values.visible && !values.isFromNode) {
         if (isEditable()) {
           variableList.add(
-              '$key | ${VariableDataBase.instance.getValueType(key)?.data.runtimeType}');
+              '$key | ${values.valueType.data.runtimeType}');
         } else {
           variableList.add(
-              '$key | ${VariableDataBase.instance.getValueType(key)?.data}');
+              '$key | ${values.valueType.data}');
         }
       }
     }
     update();
   }
 
-  List<String> getNodeNameList(){
+  List<Tuple<String, bool>> getNodeNameList(){
     return nodeNameList;
   }
 

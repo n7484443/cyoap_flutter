@@ -121,7 +121,13 @@ class Functions {
 
   ValueType funcSet(ValueType a, ValueType b, ValueType c) {
     if(a.data is VariableUnit){
-      VariableDataBase.instance.setValue((a.data as VariableUnit).varName, ValueTypeWrapper.normal(b));
+      var varName = (a.data as VariableUnit).varName;
+      if(VariableDataBase.instance.hasValue(varName)){
+        var config = VariableDataBase.instance.getValueTypeWrapper(varName)!;
+        VariableDataBase.instance.setValue(varName, ValueTypeWrapper(b, config.visible, config.isFromNode));
+      }else{
+        VariableDataBase.instance.setValue(varName, ValueTypeWrapper.normal(b));
+      }
     }
     return a;
   }

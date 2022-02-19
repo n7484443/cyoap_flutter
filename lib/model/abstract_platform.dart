@@ -21,7 +21,9 @@ class AbstractPlatform {
 
   void init() {
     checkDataCollect();
-    generateRecursiveParser();
+    if (isEditable) {
+      generateRecursiveParser();
+    }
     updateSelectable();
   }
 
@@ -168,50 +170,63 @@ class AbstractPlatform {
 
     VariableDataBase.instance.varMap.addAll(globalSetting);
     for(var nodeY in choiceNodes) {
+      nodeY.data2.initValueTypeWrapper();
       for (var node in nodeY.data1) {
-        VariableDataBase.instance.setValue(node.title.replaceAll(" ", ""),
-            ValueTypeWrapper(ValueType(node.select), false, true));
+        node.initValueTypeWrapper();
       }
     }
     for (var nodeY in choiceNodes) {
+      var lineSetting = nodeY.data2;
       for (var node in nodeY.data1) {
-        if (node.select && node.executeCodeRecursive != null) {
-          for (var codes in node.executeCodeRecursive!) {
-            codes.unzip();
+        if (node.select) {
+          if (node.executeCodeRecursive != null) {
+            for (var codes in node.executeCodeRecursive!) {
+              codes.unzip();
+            }
           }
+          lineSetting.executeRecursive?.unzip();
         }
       }
     }
 
     for (var nodeY in choiceNodes) {
       var lineSetting = nodeY.data2;
-      if(lineSetting.isNeedToCheck()){
-
+      var clickableLine = lineSetting.clickableRecursive?.unzip().dataUnzip();
+      bool clickableLineTest = true;
+      if (clickableLine != null) {
+        if (clickableLine is bool) {
+          clickableLineTest = clickableLine;
+        } else if (clickableLine is ValueTypeWrapper) {
+          var data = clickableLine.valueType.data;
+          clickableLineTest = data is bool ? data : true;
+        }
       }
       for (var node in nodeY.data1) {
-          if (node.conditionClickableRecursive != null) {
-            if (!node.select) {
-            var data = node.conditionClickableRecursive!.unzip().data;
-            if (data != null && data != valueTypeData.none) {
-              if (data is VariableUnit) {
-                var varData =
-                    VariableDataBase.instance.getValueTypeWrapper(data.varName);
-                node.isSelectableCheck =
-                    (varData != null && varData.valueType.data is bool)
-                        ? varData.valueType.data as bool
-                        : true;
-                if (node.isSelectableCheck == false) {
-                  node.selectNodeWithValue(false);
-                }
-              } else if (data is bool) {
-                node.isSelectableCheck = data;
-                if (node.isSelectableCheck == false) {
-                  node.selectNodeWithValue(false);
-                }
+        if (node.conditionClickableRecursive != null) {
+          if (!node.select) {
+            var data = node.conditionClickableRecursive!.unzip().dataUnzip();
+            bool checkClickable = true;
+            if (data != null) {
+              if (data is bool) {
+                checkClickable = data;
+              } else if (data is ValueTypeWrapper) {
+                checkClickable =
+                    data.valueType.data is bool ? data.valueType.data : true;
               }
             }
+            checkClickable &= clickableLineTest;
+
+            node.isSelectableCheck = checkClickable;
+            if (node.isSelectableCheck == false) {
+              node.selectNodeWithValue(false);
+            }
           }
-        } else {
+        } else if (!node.select) {
+          node.isSelectableCheck = clickableLineTest;
+          if (node.isSelectableCheck == false) {
+            node.selectNodeWithValue(false);
+          }
+        } else{
           node.isSelectableCheck = true;
         }
       }

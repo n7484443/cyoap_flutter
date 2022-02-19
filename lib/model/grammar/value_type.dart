@@ -1,3 +1,4 @@
+import '../variable_db.dart';
 import 'analyser.dart';
 
 class ValueType {
@@ -13,6 +14,17 @@ class ValueType {
 
   void set(ValueType a) {
     data = a.data;
+  }
+
+  dynamic dataUnzip(){
+    if(data == null)return null;
+    if (data != valueTypeData.none) {
+      if (data is VariableUnit) {
+        return VariableDataBase.instance.getValueTypeWrapper(data.varName);
+      }
+      return data;
+    }
+    return null;
   }
 
   @override
@@ -100,6 +112,6 @@ class ValueTypeWrapper{
 
   @override
   String toString() {
-    return '$valueType : $visible';
+    return '($valueType : $visible)';
   }
 }

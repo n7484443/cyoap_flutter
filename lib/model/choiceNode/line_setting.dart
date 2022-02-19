@@ -1,5 +1,7 @@
 import '../grammar/analyser.dart';
 import '../grammar/recursive_parser.dart';
+import '../grammar/value_type.dart';
+import '../variable_db.dart';
 import 'generable_parser.dart';
 
 class LineSetting extends GenerableParser{
@@ -24,6 +26,7 @@ class LineSetting extends GenerableParser{
         executeRecursive = json['executeRecursive'] == null ? null : getClassFromJson(json['executeRecursive']);
 
   String getClickableString() {
+
     return 'lineSetting_$y < $maxSelect';
   }
 
@@ -37,10 +40,20 @@ class LineSetting extends GenerableParser{
 
   @override
   void generateParser() {
-    var conditionClickableRecursiveParsed = Analyser.analyseCodes(getClickableString());
-    var executeCodeRecursiveParsed = Analyser.analyseCodes(getExecuteString());
+    if(isNeedToCheck()){
+      var conditionClickableRecursiveParsed = Analyser.analyseCodes(getClickableString());
+      var executeCodeRecursiveParsed = Analyser.analyseCodes(getExecuteString());
 
-    clickableRecursive = conditionClickableRecursiveParsed.isNotEmpty ? conditionClickableRecursiveParsed[0] : null;
-    executeRecursive = executeCodeRecursiveParsed.isNotEmpty ? executeCodeRecursiveParsed[0] : null;
+      clickableRecursive = conditionClickableRecursiveParsed.isNotEmpty ? conditionClickableRecursiveParsed[0] : null;
+      executeRecursive = executeCodeRecursiveParsed.isNotEmpty ? executeCodeRecursiveParsed[0] : null;
+    }
+  }
+
+  @override
+  void initValueTypeWrapper() {
+    if(isNeedToCheck()) {
+      VariableDataBase.instance.setValue('lineSetting_$y',
+          ValueTypeWrapper(ValueType(0), false, false));
+    }
   }
 }
