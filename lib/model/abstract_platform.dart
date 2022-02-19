@@ -151,30 +151,40 @@ class AbstractPlatform {
       }
     }
     for (var nodeY in choiceNodes) {
-      var lineSetting = nodeY.data2;
       for (var node in nodeY.data1) {
-        if (node.conditionClickableRecursive != null) {
-          var data = node.conditionClickableRecursive!.unzip().data;
-          if (data != null && data != valueTypeData.none) {
-            if (data is VariableUnit) {
-              var varData = VariableDataBase.instance.getValueTypeWrapper(data.varName);
-              node.isSelectableCheck = (varData != null && varData.valueType.data is bool) ? varData.valueType.data as bool : true;
-              if (node.isSelectableCheck == false) {
-                node.selectNodeWithValue(false);
-              }
-            } else if(data is bool){
-              node.isSelectableCheck = data;
-              if (node.isSelectableCheck == false) {
-                node.selectNodeWithValue(false);
-              }
-            }
-          }
-        } else {
-          node.isSelectableCheck = true;
-        }
         if (node.select && node.executeCodeRecursive != null) {
           for (var codes in node.executeCodeRecursive!) {
             codes.unzip();
+          }
+        }
+      }
+    }
+
+    for (var nodeY in choiceNodes) {
+      var lineSetting = nodeY.data2;
+      for (var node in nodeY.data1) {
+        if(!node.select) {
+          if (node.conditionClickableRecursive != null) {
+            var data = node.conditionClickableRecursive!.unzip().data;
+            if (data != null && data != valueTypeData.none) {
+              if (data is VariableUnit) {
+                var varData = VariableDataBase.instance.getValueTypeWrapper(
+                    data.varName);
+                node.isSelectableCheck =
+                (varData != null && varData.valueType.data is bool) ? varData
+                    .valueType.data as bool : true;
+                if (node.isSelectableCheck == false) {
+                  node.selectNodeWithValue(false);
+                }
+              } else if (data is bool) {
+                node.isSelectableCheck = data;
+                if (node.isSelectableCheck == false) {
+                  node.selectNodeWithValue(false);
+                }
+              }
+            }
+          } else {
+            node.isSelectableCheck = true;
           }
         }
       }
