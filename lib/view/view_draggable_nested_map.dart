@@ -30,7 +30,7 @@ class NodeDivider extends StatelessWidget {
                     builder: (builder) => GetBuilder<VMPlatform>(
                       builder: (_) => AlertDialog(
                         scrollable: true,
-                        title: const Text('최대 선택 가능 설정'),
+                        title: const Text('최대 선택지 개수 설정'),
                         content: Column(
                           children: [
                             Row(
@@ -39,23 +39,21 @@ class NodeDivider extends StatelessWidget {
                                 const Spacer(),
                                 IconButton(
                                   icon: const Icon(Icons.chevron_left),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    vmPlatform.addMaxSelect(y, -1);
+                                  },
                                 ),
-                                const Text('asdf'),
+                                Text(vmPlatform.getMaxSelect(y)),
                                 IconButton(
                                   icon: const Icon(Icons.chevron_right),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    vmPlatform.addMaxSelect(y, 1);
+                                  },
                                 ),
                               ],
                             ),
                           ],
                         ),
-                        actions: [
-                          TextButton(
-                            child: const Text('변경'),
-                            onPressed: () {},
-                          ),
-                        ],
                       ),
                     ),
                   );

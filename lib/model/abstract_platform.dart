@@ -127,6 +127,11 @@ class AbstractPlatform {
     return choiceNodes[posY].data1[posX];
   }
 
+  LineSetting? getLineSetting(int y){
+    if(choiceNodes.length <= y)return null;
+    return choiceNodes[y].data2;
+  }
+
   void changeData(Tuple<int, int> start, Tuple<int, int> pos) {
     var node = getChoiceNode(start.data1, start.data2)!;
     removeData(start.data1, start.data2);

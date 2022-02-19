@@ -266,4 +266,17 @@ class VMPlatform extends GetxController{
       paragraph: paragraph,
     );
   }
+
+  void addMaxSelect(int y, int max){
+    if((PlatformSystem.getPlatform().getLineSetting(y)!.maxSelect + max) >= -1){
+      PlatformSystem.getPlatform().getLineSetting(y)?.maxSelect += max;
+    }
+    update();
+    isChanged = true;
+  }
+
+  String getMaxSelect(int y){
+    var max = PlatformSystem.getPlatform().getLineSetting(y)?.maxSelect;
+    return max == -1 ? '무한' : '$max';
+  }
 }
