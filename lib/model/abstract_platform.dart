@@ -3,6 +3,7 @@ import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/util/tuple.dart';
 
+import 'choiceNode/line_setting.dart';
 import 'grammar/value_type.dart';
 
 class AbstractPlatform {
@@ -12,7 +13,7 @@ class AbstractPlatform {
   String stringImageName;
   String colorBackground;
   int flag;
-  List<List<ChoiceNodeBase>> choiceNodes = List.empty(growable: true);
+  List<Tuple<List<ChoiceNodeBase>, LineSetting>> choiceNodes = List.empty(growable: true);
   Map<String, ValueTypeWrapper> globalSetting = {};
   String version;
 
@@ -78,28 +79,35 @@ class AbstractPlatform {
 
   int getHeight() => halfHeight * 2;
 
+  void addLineSettingData(LineSetting lineSetting) {
+    while (choiceNodes.length <= lineSetting.y) {
+      choiceNodes.add(Tuple(List.empty(growable: true), LineSetting(choiceNodes.length)));
+    }
+    choiceNodes[lineSetting.y].data2 = lineSetting;
+  }
+
   void addData(int x, int y, ChoiceNodeBase node) {
     node.x = x;
     node.y = y;
     while (choiceNodes.length <= node.y) {
-      choiceNodes.add(List.empty(growable: true));
+      choiceNodes.add(Tuple(List.empty(growable: true), LineSetting(choiceNodes.length)));
     }
-    if(x > choiceNodes[y].length){
-      choiceNodes[y].add(node);
+    if(x > choiceNodes[y].data1.length){
+      choiceNodes[y].data1.add(node);
     }else{
-      choiceNodes[y].insert(x, node);
+      choiceNodes[y].data1.insert(x, node);
     }
   }
 
   void removeData(int x, int y){
-    choiceNodes[y].removeAt(x);
+    choiceNodes[y].data1.removeAt(x);
     checkDataCollect();
   }
 
   ChoiceNodeBase? getChoiceNode(int posX, int posY) {
     if(choiceNodes.length <= posY)return null;
-    if(choiceNodes[posY].length <= posX)return null;
-    return choiceNodes[posY][posX];
+    if(choiceNodes[posY].data1.length <= posX)return null;
+    return choiceNodes[posY].data1[posX];
   }
 
   void changeData(Tuple<int, int> start, Tuple<int, int> pos) {
@@ -110,15 +118,15 @@ class AbstractPlatform {
   }
 
   void compress(){
-    choiceNodes.removeWhere((item) => item.isEmpty);
+    choiceNodes.removeWhere((item) => item.data1.isEmpty);
     checkDataCollect();
   }
 
   void checkDataCollect(){
     for(int y = 0; y < choiceNodes.length; y++){
-      for(int x = 0; x < choiceNodes[y].length; x++){
-        choiceNodes[y][x].x = x;
-        choiceNodes[y][x].y = y;
+      for(int x = 0; x < choiceNodes[y].data1.length; x++){
+        choiceNodes[y].data1[x].x = x;
+        choiceNodes[y].data1[x].y = y;
       }
     }
   }
@@ -137,13 +145,14 @@ class AbstractPlatform {
 
     VariableDataBase.instance.varMap.addAll(globalSetting);
     for(var nodeY in choiceNodes) {
-      for (var node in nodeY) {
+      for (var node in nodeY.data1) {
         VariableDataBase.instance.setValue(node.title.replaceAll(" ", ""),
             ValueTypeWrapper(ValueType(node.select), false, true));
       }
     }
     for (var nodeY in choiceNodes) {
-      for (var node in nodeY) {
+      var lineSetting = nodeY.data2;
+      for (var node in nodeY.data1) {
         if (node.conditionClickableRecursive != null) {
           var data = node.conditionClickableRecursive!.unzip().data;
           if (data != null && data != valueTypeData.none) {
@@ -176,4 +185,5 @@ class AbstractPlatform {
     globalSetting.clear();
     globalSetting.addAll(units);
   }
+
 }

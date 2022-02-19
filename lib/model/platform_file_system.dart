@@ -9,6 +9,7 @@ import 'package:path/path.dart';
 
 import 'abstract_platform.dart';
 import 'choiceNode/choice_node.dart';
+import 'choiceNode/line_setting.dart';
 
 //platformFileSystem - abstractPlatform
 class PlatformFileSystem {
@@ -61,8 +62,13 @@ class PlatformFileSystem {
       for (FileSystemEntity f in dirList) {
         if (f is File) {
           var value = await f.readAsString();
-          var node = ChoiceNodeBase.fromJson(jsonDecode(value));
-          platform.addData(node.x, node.y, node);
+          if(f.path.contains('lineSetting_')){
+            var lineSetting = LineSetting.fromJson(jsonDecode(value));
+            platform.addLineSettingData(lineSetting);
+          }else{
+            var node = ChoiceNodeBase.fromJson(jsonDecode(value));
+            platform.addData(node.x, node.y, node);
+          }
         }
       }
     }
@@ -73,6 +79,7 @@ class PlatformFileSystem {
     String? platformJson;
 
     List<ChoiceNodeBase> nodeList = List.empty(growable: true);
+    List<LineSetting> lineSettingList = List.empty(growable: true);
     for (var file in archive) {
       Uint8List data = file.content as Uint8List;
       if (file.isFile) {
@@ -85,7 +92,11 @@ class PlatformFileSystem {
             //아직 지원 x
           }
         } else if (fileName.startsWith('nodes')) {
-          nodeList.add(ChoiceNodeBase.fromJson(jsonDecode(utf8.decode(data))));
+          if(fileName.contains('lineSetting_')){
+            lineSettingList.add(LineSetting.fromJson(jsonDecode(utf8.decode(data))));
+          }else{
+            nodeList.add(ChoiceNodeBase.fromJson(jsonDecode(utf8.decode(data))));
+          }
         } else if (fileName.endsWith('platform.json')) {
           platformJson = utf8.decode(data);
         }
@@ -99,6 +110,9 @@ class PlatformFileSystem {
 
     for(var node in nodeList){
       platform.addData(node.x, node.y, node);
+    }
+    for(var lineSetting in lineSettingList){
+      platform.addLineSettingData(lineSetting);
     }
     platform.init();
   }
@@ -114,8 +128,12 @@ class PlatformFileSystem {
           'images/$imageName', _dirImage[imageName]!.length, _dirImage[imageName]));
     }
     for(int i = 0; i < platform.choiceNodes.length; i++){
-      for (int j = 0; j < platform.choiceNodes[i].length; j++) {
-        var node = platform.choiceNodes[i][j];
+      var tuple = platform.choiceNodes[i];
+      var data = utf8.encode(jsonEncode(tuple.data2.toJson()));
+      archive.addFile(ArchiveFile('nodes/lineSetting_${tuple.data2.y}.json', data.length, data));
+
+      for (int j = 0; j < tuple.data1.length; j++) {
+        var node = platform.choiceNodes[i].data1[j];
         var utf = utf8.encode(jsonEncode(node.toJson()));
         archive.addFile(ArchiveFile('nodes/${node.title}.json', utf.length, utf));
       }
@@ -148,7 +166,12 @@ class PlatformFileSystem {
     }
     dirNodes.create();
     for(var x = 0; x < platform.choiceNodes.length; x++){
-      for(var nodes in platform.choiceNodes[x]){
+      var tuple = platform.choiceNodes[x];
+      var file = File('$path/nodes/lineSetting_${tuple.data2.y}.json');
+      file.createSync();
+      file.writeAsString(jsonEncode(tuple.data2.toJson()));
+
+      for(var nodes in tuple.data1){
         var file = File('$path/nodes/${nodes.title}.json');
         file.createSync();
         file.writeAsString(jsonEncode(nodes.toJson()));

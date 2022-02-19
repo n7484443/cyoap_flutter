@@ -32,9 +32,9 @@ class VMPlatform extends GetxController{
     for (int y = 0; y < list.length; y++) {
       widgetList.add(List.empty(growable: true));
       var xList = list[y];
-      for (int x = 0; x < xList.length; x++) {
+      for (int x = 0; x < xList.data1.length; x++) {
         widgetList[y].insert(
-            x, getWidgetFromType(xList[x].getType(), xList[x].isCard, x, y));
+            x, getWidgetFromType(xList.data1[x].getType(), xList.data1[x].isCard, x, y));
       }
     }
     update();
@@ -169,7 +169,7 @@ class VMPlatform extends GetxController{
   void loadVariable() {
     VariableDataBase.instance.clear();
     for (var ys in PlatformSystem.getPlatform().choiceNodes) {
-      for (var node in ys) {
+      for (var node in ys.data1) {
         if(node.executeCodeRecursive != null){
           for (var codes in node.executeCodeRecursive!) {
             codes.unzip();

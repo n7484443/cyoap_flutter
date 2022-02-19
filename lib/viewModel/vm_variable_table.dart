@@ -19,7 +19,7 @@ class VMVariableTable extends GetxController {
 
     var nodes = PlatformSystem.getPlatform().choiceNodes;
     for(var t in nodes){
-      for(var node in t){
+      for(var node in t.data1){
         nodeNameList.add(node.title);
       }
     }
