@@ -41,4 +41,4 @@ jobs:
 
       - run: flutter build web --base-href=/FlutterCyoap/
       - name: gitPushWeb
-        run: git subtree push --prefix build/web origin gh-pages
+        run: git subtree push -f --prefix build/web origin gh-pages
