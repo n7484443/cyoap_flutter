@@ -45,6 +45,7 @@ dependencies:
   package_info_plus: 1.3.0
   material_design_icons_flutter: ^5.0.6595
   github: ^9.0.0
+  flex_color_picker: ^2.3.0
 
 dev_dependencies:
   flutter_test:

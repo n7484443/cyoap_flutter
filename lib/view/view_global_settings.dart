@@ -1,5 +1,6 @@
 import 'package:cyoap_flutter/model/grammar/value_type.dart';
 import 'package:cyoap_flutter/viewModel/vm_global_setting.dart';
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
@@ -192,25 +193,54 @@ class ViewGlobalSetting extends StatelessWidget {
 
     return Scaffold(
       appBar: appbarWidget,
-      body: Column(
+      body: Row(
         children: [
           Expanded(
-            child: initialValueList,
-          ),
-          const Divider(
-            thickness: 5,
+            flex: 3,
+            child: Column(
+              children: [
+                Expanded(
+                  child: initialValueList,
+                ),
+                const Divider(
+                  thickness: 5,
+                ),
+                Expanded(
+                  child: GetBuilder<VMGlobalSetting>(
+                    builder: (_) => TextField(
+                      controller: vmGlobalSetting.controllerGlobal,
+                      textAlign: TextAlign.center,
+                      scrollController: ScrollController(),
+                      maxLines: null,
+                      expands: true,
+                      decoration: const InputDecoration(
+                        hintText: '기초 코드(미구현)',
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           Expanded(
-            child: GetBuilder<VMGlobalSetting>(
-              builder: (_) => TextField(
-                controller: vmGlobalSetting.controllerGlobal,
-                textAlign: TextAlign.center,
-                scrollController: ScrollController(),
-                maxLines: null,
-                expands: true,
-                decoration: const InputDecoration(
-                  hintText: '기초 코드(미구현)',
-                ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      controller: ScrollController(),
+                      child: ColorPicker(
+                        heading: const Text('배경 색 설정'),
+                        subheading: const Text('색조 설정'),
+                        onColorChanged: (Color value) {},
+                        width: 22,
+                        height: 22,
+                        borderRadius: 22,
+                      ),
+                    ),
+                  )
+                ],
               ),
             ),
           ),

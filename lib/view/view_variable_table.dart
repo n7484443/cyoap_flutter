@@ -44,7 +44,7 @@ class ViewVariable extends StatelessWidget {
             InkWell(
               child: Visibility(
                 child: const ListTile(
-                  title: Text('CYOA 설정'),
+                  title: Text('전역 설정'),
                 ),
                 visible: _.isEditable(),
               ),

@@ -56,6 +56,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                           child: Image(
                             image:
                                 PlatformSystem.getImage(node.imageString).image,
+                            filterQuality: FilterQuality.high,
                             isAntiAlias: true,
                           ),
                         ),
