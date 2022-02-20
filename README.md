@@ -5,6 +5,14 @@
 * .tar - 불러오기는 웹에서만 지원. 그 외는 모든 플랫폼이 지원.
 * 폴더 - 윈도우, 안드로이드에서만 지원. 보다 빠른 편집.
 
+| | android | windows | web |
+|---:|:---:|:---:|:---:|
+| tar file read | X | X | O |
+| tar file write | O | O | O |
+| directory read | O | O | X |
+| directory write | O | O | X |
+
+
 ## 함수 리스트
 * if
 * floor
