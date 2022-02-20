@@ -44,7 +44,7 @@ class LexicalAnalyser {
               str[i - 1] == '*' ||
               str[i - 1] == '/') {
             func[size] = Token(AnalyserConst.equal, "=");
-            func.add(Token(AnalyserConst.variable_name,
+            func.add(Token(AnalyserConst.variableName,
                 func[0].data)); //a += b 를 a = a + b 꼴로 변환
             func.add(Token(AnalyserConst.functionUnspecified,
                 sFront)); //a += b 를 a = a + b 꼴로 변환
@@ -56,7 +56,7 @@ class LexicalAnalyser {
           boolForStringInput = !boolForStringInput;
           break;
         case '(':
-          if (func[size].type == AnalyserConst.variable_name) {
+          if (func[size].type == AnalyserConst.variableName) {
             func[size] = func[size].changeUnitType(AnalyserConst.function);
             func.add(Token(AnalyserConst.functionStart, "("));
           }
@@ -81,7 +81,7 @@ class LexicalAnalyser {
             var isDigit = isStringDouble(c);
             if (func.isEmpty) {
               func.add(Token(
-                  isDigit ? AnalyserConst.ints : AnalyserConst.variable_name,
+                  isDigit ? AnalyserConst.ints : AnalyserConst.variableName,
                   c.toString()));
             } else if (c == '.') {
               func[size] = Token(AnalyserConst.doubles, func[size].data + c);
@@ -90,7 +90,7 @@ class LexicalAnalyser {
               }
             } else if (isDigit) {
               switch (func[size].type) {
-                case AnalyserConst.variable_name:
+                case AnalyserConst.variableName:
                 case AnalyserConst.ints:
                 case AnalyserConst.doubles:
                   func[size] = func[size].addUnitData(c);
@@ -100,7 +100,7 @@ class LexicalAnalyser {
                   break;
               }
             } else {
-              if (func[size].type == AnalyserConst.variable_name) {
+              if (func[size].type == AnalyserConst.variableName) {
                 func[size] = func[size].addUnitData(c);
                 if (func[size].data.toLowerCase() == "true") {
                   func[size] = Token(AnalyserConst.bools, 'true');
@@ -108,7 +108,7 @@ class LexicalAnalyser {
                   func[size] = Token(AnalyserConst.bools, 'false');
                 }
               } else if (func[size].type != AnalyserConst.ints) {
-                func.add(Token(AnalyserConst.variable_name, c.toString()));
+                func.add(Token(AnalyserConst.variableName, c.toString()));
                 if (func[size].data.toLowerCase() == "true") {
                   func[size] = Token(AnalyserConst.bools, 'true');
                 } else if (func[size].data.toLowerCase() == "false") {
@@ -134,7 +134,7 @@ class LexicalAnalyser {
         return "string";
       case AnalyserConst.function:
         return Function;
-      case AnalyserConst.variable_name:
+      case AnalyserConst.variableName:
         return "var";
       default:
         return;

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cyoap_flutter/model/grammar/value_type.dart';
 
 class Tuple<A, B>{
@@ -26,4 +28,8 @@ class Tuple<A, B>{
   Tuple.fromJson(Map<String, dynamic> json):
     data1 = json['data1'],
     data2 = json['typeB'] == 'ValueTypeVisible' ? ValueTypeWrapper.fromJson(json['data2']) : json['data2'];
+
+  @override
+  int get hashCode => hashValues(data1.hashCode, data2.hashCode);
+
 }

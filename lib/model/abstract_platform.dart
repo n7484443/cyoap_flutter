@@ -3,6 +3,7 @@ import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/util/tuple.dart';
 
+import '../util/version.dart';
 import 'choiceNode/line_setting.dart';
 import 'grammar/value_type.dart';
 
@@ -27,14 +28,8 @@ class AbstractPlatform {
     updateSelectable();
   }
 
-  bool versionCheck(String versionProgram){
-    var vPlatform = version.split('.');
-    var vProgram = versionProgram.split('.');
-    for(int i = 0; i < 3; i ++){
-      if(int.parse(vPlatform[i]) < int.parse(vProgram[i]))return false;
-    }
-
-    return true;
+  bool versionCheckWithPlatform(String versionProgram){
+    return versionCheck(versionProgram, version) >= 0;
   }
 
   AbstractPlatform(this.halfWidth, this.halfHeight, this.scale, this.stringImageName, this.colorBackground, this.flag, this.version);

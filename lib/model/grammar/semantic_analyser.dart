@@ -42,7 +42,7 @@ class SemanticAnalyser {
         return parserComma;
       default:
         RecursiveData newParser;
-        if (t.type == AnalyserConst.variable_name) {
+        if (t.type == AnalyserConst.variableName) {
           newParser = RecursiveData(ValueType(VariableUnit(t.data)));
         } else {
           newParser = RecursiveData(ValueType(t.toData()));
@@ -105,7 +105,7 @@ class SemanticAnalyser {
     tokens = analysedData.sublist(equalPos + 1);
     var parserAns = recursiveCreate( parser);
 
-    if (analysedData[equalPos - 1].type == AnalyserConst.variable_name) {
+    if (analysedData[equalPos - 1].type == AnalyserConst.variableName) {
       var recursive = RecursiveData(
           ValueType(VariableUnit(analysedData[equalPos - 1].data)))
         ..dontReplace = true;

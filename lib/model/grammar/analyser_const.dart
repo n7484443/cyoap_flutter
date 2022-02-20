@@ -6,7 +6,7 @@ class AnalyserConst {
 
   static const int equal = -1;
 
-  static const int variable_name = 10; // 변수명
+  static const int variableName = 10; // 변수명
 
   static const int functionUnspecified = 19;
   static const int function = 20;

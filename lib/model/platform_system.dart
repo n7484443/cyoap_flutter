@@ -9,8 +9,8 @@ import 'package:flutter/widgets.dart';
 
 import '../main.dart';
 import 'abstract_platform.dart';
-import 'saveWithNonJS.dart'
-  if(dart.library.js) 'saveWithJS.dart';
+import 'save_non_js.dart'
+  if(dart.library.js) 'save_js.dart';
 
 class PlatformSystem{
   static PlatformSystem instance = PlatformSystem();

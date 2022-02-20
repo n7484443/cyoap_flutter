@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../main.dart';
+import '../model/check_update.dart';
 import '../model/opening_file_folder.dart';
 import '../model/platform_system.dart';
 
@@ -12,6 +13,14 @@ class VMStartPlatform extends GetxController {
   List<String> pathList = [];
   int selected = -1;
   List<Future<void>> isAdded = List.empty(growable: true);
+
+  bool needUpdate = false;
+
+  @override
+  void onInit() {
+    isNeedUpdate();
+    super.onInit();
+  }
 
   Future<bool> _getStatuses() async {
     if(await Permission.storage.isDenied) {
@@ -112,5 +121,12 @@ class VMStartPlatform extends GetxController {
 
   void setEditable(bool bool) {
     PlatformSystem.getPlatform().isEditable = bool;
+  }
+
+  void isNeedUpdate(){
+    CheckUpdate.needUpdateCheck().then((value) {
+      needUpdate = value;
+      update();
+    });
   }
 }

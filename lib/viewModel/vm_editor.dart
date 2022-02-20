@@ -7,7 +7,6 @@ import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image/image.dart';
 import 'package:zefyr/zefyr.dart';
 
 class VMEditor extends GetxController{

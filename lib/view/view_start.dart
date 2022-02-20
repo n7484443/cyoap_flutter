@@ -18,10 +18,10 @@ class ViewStart extends StatelessWidget {
         children: [
           Expanded(
             flex: 9,
-            child: Stack(
-              children: [
-                GetBuilder<VMStartPlatform>(
-                  builder: (_) => Container(
+            child: GetBuilder<VMStartPlatform>(
+              builder: (_) => Stack(
+                children: [
+                  Container(
                     decoration: const BoxDecoration(
                       border: Border(
                         bottom: BorderSide(color: Colors.lightBlue),
@@ -82,12 +82,21 @@ class ViewStart extends StatelessWidget {
                       ],
                     ),
                   ),
-                ),
                 Align(
-                    child: Text('version : ${ConstList.version ?? ''}'),
-                  alignment: Alignment.topRight,
-                ),
-              ],
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text('version : ${ConstList.version ?? ''}'),
+                        Visibility(
+                          child: const Text('새로운 버전이 나왔습니다!', style: TextStyle(color: Colors.redAccent)),
+                          visible: _.needUpdate,
+                        ),
+                      ],
+                    ),
+                    alignment: Alignment.topRight,
+                  ),
+                ],
+              ),
             ),
           ),
           const Expanded(
