@@ -67,16 +67,29 @@ class ViewStart extends StatelessWidget {
                           ),
                         ),
                         Expanded(
-                          child: TextButton(
-                            child: Text(
-                                ConstList.actualPlatformType == platformType.web
-                                    ? 'Add File'
-                                    : 'Add Path'),
-                            onPressed: () async {
-                              if (await _.openDirectory() == 0) {
-                                _.selected = 0;
-                              }
-                            },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              TextButton(
+                                child: const Text('Add File'),
+                                onPressed: () async {
+                                  if (await _.openFile() == 0) {
+                                    _.selected = 0;
+                                  }
+                                },
+                              ),
+                              Visibility(
+                                child: TextButton(
+                                  child: const Text('Add Path'),
+                                  onPressed: () async {
+                                    if (await _.openDirectory() == 0) {
+                                      _.selected = 0;
+                                    }
+                                  },
+                                ),
+                                visible: !ConstList.isOnlyFileAccept(),
+                              ),
+                            ],
                           ),
                         )
                       ],

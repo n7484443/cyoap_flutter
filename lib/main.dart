@@ -17,7 +17,7 @@ class ConstList{
   static double appBarSize = 40.0;
   static late final platformType actualPlatformType;
 
-  static bool isFileSystem() {
+  static bool isOnlyFileAccept() {
     return actualPlatformType == platformType.web;
   }
 

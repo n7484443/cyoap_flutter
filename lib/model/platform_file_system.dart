@@ -16,10 +16,12 @@ class PlatformFileSystem {
   late AbstractPlatform platform;
   final Map<String, Uint8List> _dirImage = {};
   Image noImage = Image.asset('images/noImage.png');
+  bool openAsFile = false;
 
   PlatformFileSystem();
 
   Future<void> createFromFolder(String path) async {
+    openAsFile = false;
     var dirImages = Directory(path + '/images');
     var dirNodes = Directory(path + '/nodes');
     var platformJson = File(path + '/platform.json');
@@ -79,6 +81,7 @@ class PlatformFileSystem {
   }
 
   Future<void> createFromZip(Archive archive) async{
+    openAsFile = true;
     String? platformJson;
 
     List<ChoiceNodeBase> nodeList = List.empty(growable: true);

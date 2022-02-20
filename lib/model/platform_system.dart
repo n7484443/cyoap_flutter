@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -25,6 +26,13 @@ class PlatformSystem{
     await platformFileSystem.createFromZip(archiveBytes);
   }
 
+  Future<void> openPlatformZipFromFile(File file) async{
+    var bytes = await file.readAsBytes();
+
+    var archiveBytes = ZipDecoder().decodeBytes(bytes);
+    await platformFileSystem.createFromZip(archiveBytes);
+  }
+
   Future<void> openPlatformFolder(String path) async {
     this.path = path;
     await platformFileSystem.createFromFolder(path);
@@ -40,14 +48,14 @@ class PlatformSystem{
 
 
   void saveFile() async{
-    if(ConstList.isFileSystem()){
+    if(ConstList.isOnlyFileAccept()){
       saveZip('exported.zip', platformFileSystem);
     }else{
       saveZip(path!, platformFileSystem);
     }
   }
   void saveFolder() async{
-    if(ConstList.isFileSystem()){
+    if(ConstList.isOnlyFileAccept()){
       saveRaw('exported.zip', platformFileSystem);
     }else{
       saveRaw(path!, platformFileSystem);
@@ -73,7 +81,7 @@ class PlatformSystem{
   void saveCapture(ui.Image image) async{
     ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     if(byteData == null)return;
-    if(ConstList.isFileSystem()) {
+    if(ConstList.isOnlyFileAccept()) {
       downloadCapture('exported.jpg', byteData.buffer.asUint8List());
     }else{
       downloadCapture(path!, byteData.buffer.asUint8List());

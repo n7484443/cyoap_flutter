@@ -46,7 +46,7 @@ class AbstractPlatform {
   AbstractPlatform.fromJson(Map<String, dynamic> json)
       : halfWidth = json['halfWidth'] ?? 800,
         halfHeight = json['halfHeight'] ?? 400,
-        scale = json['scale'] ?? 1.0,
+        scale = 1.0,
         stringImageName = json['stringImageName'] ?? '',
         colorBackground = json['colorBackground'] ?? '#909090',
         flag = json['flag'] ?? 0,
@@ -57,7 +57,6 @@ class AbstractPlatform {
   Map<String, dynamic> toJson() => {
     'halfWidth' : halfWidth,
     'halfHeight' : halfHeight,
-    'scale' : scale,
     'stringImageName' : stringImageName,
     'colorBackground' : colorBackground,
     'flag' : flag,

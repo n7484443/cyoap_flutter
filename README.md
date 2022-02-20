@@ -7,7 +7,7 @@
 
 | | android | windows | web |
 |---:|:---:|:---:|:---:|
-| tar file read | X | X | O |
+| tar file read | O | O | O |
 | tar file write | O | O | O |
 | directory read | O | O | X |
 | directory write | O | O | X |

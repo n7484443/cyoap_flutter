@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,49 +25,60 @@ class VMStartPlatform extends GetxController {
   }
 
   Future<bool> _getStatuses() async {
-    if(await Permission.storage.isDenied) {
+    if (await Permission.storage.isDenied) {
       await Permission.storage.request();
     }
-    if(await Permission.manageExternalStorage.isDenied) {
+    if (await Permission.manageExternalStorage.isDenied) {
       await Permission.manageExternalStorage.request();
     }
 
-    return await Permission.storage.isGranted && await Permission.manageExternalStorage.isGranted;
+    return await Permission.storage.isGranted &&
+        await Permission.manageExternalStorage.isGranted;
   }
 
   Future<num> openDirectory() async {
-    if(ConstList.actualPlatformType == platformType.mobile){
+    if (ConstList.actualPlatformType == platformType.mobile) {
       var status = await _getStatuses();
       if (!status) {
         return -1;
       }
     }
-    String? selectedDirectory;
-    if(ConstList.actualPlatformType == platformType.web){
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['zip'],
-      );
-      if(result != null){
-        isAdded.add(PlatformSystem.instance.openPlatformZip(result.files.single));
-        pathList.add(result.files.single.name);
-        update();
-        return 0;
-      }
-    }else{
-      selectedDirectory = await FilePicker.platform.getDirectoryPath();
-      if (selectedDirectory != null) {
-        pathList = frequentlyUsedPath.addFrequentPath(selectedDirectory);
-        update();
-        return 0;
-      }
+    String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+    if (selectedDirectory != null) {
+      pathList = frequentlyUsedPath.addFrequentPath(selectedDirectory);
+      update();
+      return 0;
     }
     return -1;
   }
 
-  Future<bool> setDirectory() async{
-    if(selected >= 0) {
-      if (ConstList.actualPlatformType == platformType.mobile) {
+  Future<num> openFile() async {
+    if (ConstList.actualPlatformType == platformType.mobile) {
+      var status = await _getStatuses();
+      if (!status) {
+        return -1;
+      }
+    }
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['zip'],
+    );
+    if (result != null) {
+      if (ConstList.isOnlyFileAccept()) {
+        isAdded.add(PlatformSystem.instance.openPlatformZip(result.files.single));
+        pathList.add(result.files.single.name);
+      } else {
+        pathList = frequentlyUsedPath.addFrequentPath(result.files.single.path!);
+      }
+      update();
+      return 0;
+    }
+    return -1;
+  }
+
+  Future<bool> setDirectory() async {
+    if (selected >= 0) {
+      if (ConstList.isMobile()) {
         _getStatuses().then((value) {
           if (!value) {
             return false;
@@ -77,14 +90,19 @@ class VMStartPlatform extends GetxController {
 
       isAdded.clear();
       var path = pathList.reversed.elementAt(selected);
-      if (ConstList.actualPlatformType == platformType.web) {
+      if (ConstList.isOnlyFileAccept()) {
         return true;
-      } else {
-        await PlatformSystem.instance.openPlatformFolder(path);
+      } else if(path.isNotEmpty){
+        if(path.endsWith('.zip')){
+          var file = File(path);
+          await PlatformSystem.instance.openPlatformZipFromFile(file);
+        }else{
+          await PlatformSystem.instance.openPlatformFolder(path);
+        }
         return true;
       }
     }else{
-      if(ConstList.isFileSystem()){
+      if(ConstList.isOnlyFileAccept()){
         PlatformSystem.instance.openPlatformVoid();
         return true;
       }

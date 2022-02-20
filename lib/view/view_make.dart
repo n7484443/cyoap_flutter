@@ -9,6 +9,7 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../main.dart';
+import '../model/platform_system.dart';
 
 class ViewMake extends StatelessWidget {
   const ViewMake({Key? key}) : super(key: key);
@@ -31,7 +32,7 @@ class ViewMake extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () {
-            vmPlatform.save(ConstList.isFileSystem());
+            vmPlatform.save(ConstList.isOnlyFileAccept());
             Get.back();
             Get.back();
           },
@@ -106,13 +107,16 @@ class ViewMake extends StatelessWidget {
                 Get.find<VMPlatform>().save(true);
               },
             ),
-            visible: !ConstList.isFileSystem(),
+            visible: !ConstList.isOnlyFileAccept(),
           ),
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: () {
-              Get.find<VMPlatform>().save(false);
-            },
+          Visibility(
+            child: IconButton(
+              icon: const Icon(Icons.save),
+              onPressed: () {
+                Get.find<VMPlatform>().save(false);
+              },
+            ),
+            visible: !PlatformSystem.instance.platformFileSystem.openAsFile,
           )
         ],
       ),
