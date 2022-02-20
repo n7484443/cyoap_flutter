@@ -114,12 +114,14 @@ class VMGlobalSetting extends GetxController {
     PlatformSystem.getPlatform().titleFont = font;
     update();
     Get.find<VMPlatform>().update();
+    isChanged = true;
   }
 
   void setMainFont(String font) {
     PlatformSystem.getPlatform().mainFont = font;
     update();
     Get.find<VMPlatform>().update();
+    isChanged = true;
   }
 
   TextStyle getTitleFont() {
