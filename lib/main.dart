@@ -74,6 +74,7 @@ class ConstList{
   static Map<String, TextStyle> textFontMap = {
     "jua": GoogleFonts.jua(color: Colors.black),
     "notoSans": GoogleFonts.notoSans(color: Colors.black),
+    "나눔고딕": GoogleFonts.nanumGothic(color:Colors.black),
   };
 
   static TextStyle getFont(String font) {
