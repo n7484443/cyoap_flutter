@@ -1,9 +1,10 @@
 import 'dart:ui';
 
+import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:get/get.dart';
-import 'package:zefyr/zefyr.dart';
 
 import '../main.dart';
 import '../viewModel/vm_editor.dart';
@@ -203,26 +204,33 @@ class ViewEditorTyping extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: ZefyrToolbar.basic(
-            controller: controller.zefyrController,
-            hideListChecks: true,
-            hideCodeBlock: true,
-            hideInlineCode: true,
-            hideDirection: true,
-            hideLink: true,
+          child: quill.QuillToolbar.basic(
+            controller: controller.quillController,
+            showListCheck: false,
+            showInlineCode: false,
+            showVideoButton: false,
+            showCameraButton: false,
+            showImageButton: false,
+            showLink: false,
+            showCodeBlock: false,
+            showHeaderStyle: false,
+            showAlignmentButtons: true,
           ),
         ),
         Expanded(
           flex: 3,
           child: Card(
             elevation: 5.0,
-            child: ZefyrEditor(
+            child: quill.QuillEditor(
               padding: const EdgeInsets.all(3),
-              controller: controller.zefyrController,
+              controller: controller.quillController,
               focusNode: FocusNode(),
               expands: true,
               scrollable: true,
-
+              autoFocus: false,
+              readOnly: false,
+              scrollController: ScrollController(),
+              customStyles: ConstList.getDefaultThemeData(context, 1, fontStyle: ConstList.getFont(PlatformSystem.getPlatform().mainFont)),
             ),
           ),
         ),

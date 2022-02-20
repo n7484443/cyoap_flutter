@@ -41,11 +41,12 @@ dependencies:
   archive: ^3.2.1
   english_words: ^4.0.0
   image_cropping: ^0.0.11
-  zefyr: ^1.0.0-rc.5
+  flutter_quill: ^4.0.2
   package_info_plus: 1.3.0
   material_design_icons_flutter: ^5.0.6595
   github: ^9.0.0
   flex_color_picker: ^2.3.0
+  tuple: ^2.0.0
 
 dev_dependencies:
   flutter_test:

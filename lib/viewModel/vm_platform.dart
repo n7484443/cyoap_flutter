@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:cyoap_flutter/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
-import 'package:zefyr/zefyr.dart';
 
 import '../model/choiceNode/choice_node.dart';
 import '../model/editor.dart';
@@ -92,14 +92,16 @@ class VMPlatform extends GetxController{
     NodeEditor.instance.setTarget(nodeNonnull);
   }
 
-  ZefyrController? getNodeController(int x, int y){
+  QuillController? getNodeController(int x, int y) {
     var node = getNode(x, y);
-    if(node == null || node.contentsString.isEmpty){
-      return ZefyrController();
-    }else{
+    if (node == null || node.contentsString.isEmpty) {
+      return QuillController.basic();
+    } else {
       var json = jsonDecode(node.contentsString);
-      var document = NotusDocument.fromJson(json);
-      return ZefyrController(document);
+      var document = Document.fromJson(json);
+      return QuillController(
+          document: document,
+          selection: const TextSelection.collapsed(offset: 0));
     }
   }
 
@@ -208,54 +210,6 @@ class VMPlatform extends GetxController{
     var context = captureKey.currentContext;
     if (context == null) return 1;
     return ConstList.isSmallDisplay(context) ? 0.75 : 1;
-  }
-
-  ZefyrThemeData getZefyrThemeData(BuildContext context){
-    final defaultStyle = DefaultTextStyle.of(context);
-    final baseStyle = defaultStyle.style.copyWith(
-      fontSize: 16.0 * getScale(),
-      height: 1.3 * getScale(),
-    );
-    const baseSpacing = VerticalSpacing(top: 6.0, bottom: 10);
-    var paragraph = TextBlockTheme(
-      style: baseStyle,
-      spacing: baseSpacing,
-      // lineSpacing is not relevant for paragraphs since they consist of one line
-    );
-    var heading1 = TextBlockTheme(
-      style: defaultStyle.style.copyWith(
-        fontSize: 34.0 * getScale(),
-        color: defaultStyle.style.color?.withOpacity(0.70),
-        height: 1.15 * getScale(),
-        fontWeight: FontWeight.w300,
-      ),
-      spacing: VerticalSpacing(top: 16.0 * getScale(), bottom: 0.0),
-    );
-    var heading2 = TextBlockTheme(
-      style: TextStyle(
-        fontSize: 24.0 * getScale(),
-        color: defaultStyle.style.color?.withOpacity(0.70),
-        height: 1.15 * getScale(),
-        fontWeight: FontWeight.normal,
-      ),
-      spacing: VerticalSpacing(bottom: 0.0, top: 8.0 * getScale()),
-    );
-    var heading3 = TextBlockTheme(
-      style: TextStyle(
-        fontSize: 20.0 * getScale(),
-        color: defaultStyle.style.color?.withOpacity(0.70),
-        height: 1.25 * getScale(),
-        fontWeight: FontWeight.w500,
-      ),
-      spacing: VerticalSpacing(bottom: 0.0, top: 8.0 * getScale()),
-    );
-
-    return ZefyrThemeData.fallback(context).copyWith(
-      heading1: heading1,
-      heading2: heading2,
-      heading3: heading3,
-      paragraph: paragraph,
-    );
   }
 
   void addMaxSelect(int y, int max){

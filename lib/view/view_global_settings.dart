@@ -8,6 +8,7 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 import '../main.dart';
+import '../model/platform_system.dart';
 
 class ViewGlobalSetting extends StatelessWidget {
   const ViewGlobalSetting({Key? key}) : super(key: key);
@@ -182,12 +183,77 @@ class ViewGlobalSetting extends StatelessWidget {
               child: TextButton(
                 child: const Text('초기값 추가'),
                 onPressed: () {
-                  vmGlobalSetting.addInitialValue('point', ValueTypeWrapper(ValueType(0), true, false));
+                  vmGlobalSetting.addInitialValue(
+                      'point', ValueTypeWrapper(ValueType(0), true, false));
                 },
               ),
             )
           ],
         ),
+      ),
+    );
+
+    var fontSelector = GetBuilder<VMGlobalSetting>(
+      builder: (_) => Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Card(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0, bottom: 8.0, right: 16.0, left: 16.0),
+                  child: Text(
+                    '제목은 이렇게 표시됩니다',
+                    style: _.getTitleFont(),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0, bottom: 16.0, right: 16.0, left: 16.0),
+                  child: Text(
+                    '본문은 이렇게 표시됩니다',
+                    style: _.getMainFont(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Card(
+            child: ListTile(
+              title: const Text('제목 폰트'),
+              trailing: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  items: ConstList.textFontMap.keys
+                      .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
+                          child: Text(name, style: ConstList.getFont(name)),
+                          value: name))
+                      .toList(),
+                  onChanged: (String? t) {
+                    if (t != null) _.setTitleFont(t);
+                  },
+                  value: PlatformSystem.getPlatform().titleFont,
+                ),
+              ),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              title: const Text('내용 폰트'),
+              trailing: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  items: ConstList.textFontMap.keys
+                      .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
+                          child: Text(name, style: ConstList.getFont(name)),
+                          value: name))
+                      .toList(),
+                  onChanged: (String? t) {
+                    if (t != null) _.setMainFont(t);
+                  },
+                  value: PlatformSystem.getPlatform().mainFont,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
 
@@ -231,7 +297,7 @@ class ViewGlobalSetting extends StatelessWidget {
                     child: SingleChildScrollView(
                       controller: ScrollController(),
                       child: ColorPicker(
-                        heading: const Text('배경 색 설정'),
+                        heading: const Text('배경 색 설정(구현중)'),
                         subheading: const Text('색조 설정'),
                         onColorChanged: (Color value) {},
                         width: 22,
@@ -239,7 +305,10 @@ class ViewGlobalSetting extends StatelessWidget {
                         borderRadius: 22,
                       ),
                     ),
-                  )
+                  ),
+                  Expanded(
+                    child: fontSelector,
+                  ),
                 ],
               ),
             ),

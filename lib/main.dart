@@ -7,9 +7,11 @@ import 'package:cyoap_flutter/view/view_make.dart';
 import 'package:cyoap_flutter/view/view_play.dart';
 import 'package:cyoap_flutter/view/view_start.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:tuple/tuple.dart';
 
 //flutter build web --base-href=/FlutterCyoapWeb/
 
@@ -48,6 +50,34 @@ class ConstList{
 
     var packageInfo = await PackageInfo.fromPlatform();
     version = packageInfo.version;
+  }
+
+  static DefaultStyles getDefaultThemeData(BuildContext context, double scale,
+      {TextStyle? fontStyle}) {
+    var defaultTextStyle = fontStyle ?? DefaultTextStyle.of(context).style;
+    var baseStyle = defaultTextStyle.copyWith(
+      fontSize: 16 * scale,
+      height: 1.3 * scale,
+    );
+    var baseStyle2 = defaultTextStyle.copyWith(
+      fontSize: 16 * scale * 0.75,
+      height: 1.3 * scale,
+    );
+    return DefaultStyles(
+      paragraph: DefaultTextBlockStyle(
+          baseStyle, const Tuple2(0, 0), const Tuple2(0, 0), null),
+      small: baseStyle2,
+    );
+  }
+
+  static TextStyle defaultFont = GoogleFonts.notoSans(color: Colors.black);
+  static Map<String, TextStyle> textFontMap = {
+    "jua": GoogleFonts.jua(color: Colors.black),
+    "notoSans": GoogleFonts.notoSans(color: Colors.black),
+  };
+
+  static TextStyle getFont(String font) {
+    return textFontMap[font] ?? defaultFont;
   }
 }
 enum platformType{

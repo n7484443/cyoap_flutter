@@ -21,8 +21,10 @@ void saveZip(String name, PlatformFileSystem platformFileSystem) async{
   var archive = await platformFileSystem.saveToZip();
   var encodedZip = ZipEncoder().encode(archive, level: Deflate.NO_COMPRESSION) as Uint8List;
   var file = File('$name/extract.zip');
-  if(file.existsSync()){
-    file.delete();
+  int i = 0;
+  while(file.existsSync()){
+    file = File('$name/extract_$i.zip');
+    i++;
   }
   file.createSync();
   file.writeAsBytes(encodedZip);

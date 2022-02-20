@@ -18,6 +18,9 @@ class AbstractPlatform {
   Map<String, ValueTypeWrapper> globalSetting = {};
   String version;
 
+  String titleFont;
+  String mainFont;
+
   bool isEditable = true;
 
   void init() {
@@ -32,7 +35,10 @@ class AbstractPlatform {
     return versionCheck(versionProgram, version) >= 0;
   }
 
-  AbstractPlatform(this.halfWidth, this.halfHeight, this.scale, this.stringImageName, this.colorBackground, this.flag, this.version);
+  AbstractPlatform(this.halfWidth, this.halfHeight, this.scale, this.stringImageName, this.colorBackground, this.flag, this.version, {
+    this.titleFont = "notoSans",
+    this.mainFont = "notoSans",
+  });
 
   AbstractPlatform.none()
       : halfWidth = 800,
@@ -41,7 +47,9 @@ class AbstractPlatform {
         stringImageName = '',
         colorBackground = '#909090',
         flag = 0,
-        version = ConstList.version ?? '';
+        version = ConstList.version ?? '',
+        titleFont = "notoSans",
+        mainFont = "notoSans";
 
   AbstractPlatform.fromJson(Map<String, dynamic> json)
       : halfWidth = json['halfWidth'] ?? 800,
@@ -52,7 +60,9 @@ class AbstractPlatform {
         flag = json['flag'] ?? 0,
         globalSetting = (json['globalSetting'] as Map)
             .map((k, v) => MapEntry(k, ValueTypeWrapper.fromJson(v))),
-        version = json['version'] ?? ConstList.version;
+        version = json['version'] ?? ConstList.version,
+        titleFont = json['titleFont'] ?? 'notoSans',
+        mainFont = json['mainFont'] ?? 'notoSans';
 
   Map<String, dynamic> toJson() => {
     'halfWidth' : halfWidth,
@@ -62,6 +72,8 @@ class AbstractPlatform {
     'flag' : flag,
     'globalSetting' : globalSetting,
     'version' : version,
+    'titleFont' : titleFont,
+    'mainFont' : mainFont,
   };
 
   int getMinX() => -halfWidth;

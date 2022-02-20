@@ -1,8 +1,7 @@
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:zefyr/zefyr.dart';
 
 import '../main.dart';
 import '../model/platform_system.dart';
@@ -71,24 +70,21 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                         children: [
                           Text(
                             node.title,
-                            style: GoogleFonts.notoSans(
-                                textStyle: TextStyle(
+                            style: ConstList.getFont(PlatformSystem.getPlatform().titleFont).copyWith(
                               fontWeight: FontWeight.bold,
                               fontSize: 18 * _.getScale(),
                               foreground: Paint()
                                 ..style = PaintingStyle.stroke
                                 ..strokeWidth = 4
                                 ..color = Colors.white,
-                            )),
+                            ),
                           ),
                           Text(
                             node.title,
-                            style: GoogleFonts.notoSans(
-                              textStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18 * _.getScale(),
-                                color: Colors.black87,
-                              ),
+                            style: ConstList.getFont(PlatformSystem.getPlatform().titleFont).copyWith(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18 * _.getScale(),
+                              color: Colors.black87,
                             ),
                           ),
                         ],
@@ -197,15 +193,18 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
             Expanded(
               child: Visibility(
                 child: IgnorePointer(
-                  child: ZefyrTheme(
-                    data: _.getZefyrThemeData(context),
-                    child: ZefyrEditor(
-                      controller: vmPlatform.getNodeController(posX, posY)!,
-                      focusNode: FocusNode(),
-                      readOnly: true,
-                      autofocus: false,
-                      expands: true,
-                    ),
+                  child: quill.QuillEditor(
+                    controller: vmPlatform.getNodeController(posX, posY)!,
+                    focusNode: FocusNode(),
+                    readOnly: true,
+                    autoFocus: false,
+                    expands: true,
+                    padding: const EdgeInsets.all(0),
+                    scrollController: ScrollController(),
+                    scrollable: false,
+                    customStyles: ConstList.getDefaultThemeData(
+                        context, _.getScale(),
+                        fontStyle: ConstList.getFont(PlatformSystem.getPlatform().mainFont)),
                   ),
                 ),
                 visible: node.contentsString.isNotEmpty,

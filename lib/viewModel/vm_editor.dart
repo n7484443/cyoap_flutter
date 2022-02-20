@@ -6,12 +6,12 @@ import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
-import 'package:zefyr/zefyr.dart';
 
 class VMEditor extends GetxController{
   final TextEditingController controllerTitle = TextEditingController();
-  late final ZefyrController zefyrController;
+  late final QuillController quillController;
   final FocusNode focusBody = FocusNode();
 
   var title = ''.obs;
@@ -25,25 +25,25 @@ class VMEditor extends GetxController{
   @override
   void onInit() {
     if (NodeEditor.instance.target.contentsString.isEmpty) {
-      zefyrController = ZefyrController();
+      quillController = QuillController.basic();
     } else {
-      var document = NotusDocument.fromJson(jsonDecode(NodeEditor.instance.target.contentsString));
-      zefyrController = ZefyrController(document);
+      var document = Document.fromJson(jsonDecode(NodeEditor.instance.target.contentsString));
+      quillController = QuillController(document: document, selection: const TextSelection.collapsed(offset: 0));
     }
     isCard = NodeEditor.instance.target.isCard;
     isSelectable = NodeEditor.instance.target.isSelectable;
     controllerTitle.text = NodeEditor.instance.target.title;
     title.value = controllerTitle.text;
 
-    contents.value = zefyrController.document.toPlainText();
+    contents.value = quillController.document.toPlainText();
 
     controllerTitle.addListener(() {
       title.value = controllerTitle.text;
       isChanged = true;
     });
 
-    zefyrController.addListener(() {
-      contents.value = zefyrController.document.toPlainText();
+    quillController.addListener(() {
+      contents.value = quillController.document.toPlainText();
       isChanged = true;
     });
     super.onInit();
@@ -52,7 +52,7 @@ class VMEditor extends GetxController{
   void save() {
     NodeEditor.instance.target.title = title.value;
     NodeEditor.instance.target.contentsString =
-        jsonEncode(zefyrController.document.toJson());
+        jsonEncode(quillController.document.toDelta().toJson());
     Get.find<VMPlatform>().updateWidgetList();
     isChanged = false;
   }

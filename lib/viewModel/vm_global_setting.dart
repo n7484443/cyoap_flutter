@@ -1,9 +1,14 @@
 import 'package:cyoap_flutter/model/grammar/value_type.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
+import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
-class VMGlobalSetting extends GetxController{
+import '../main.dart';
+
+class VMGlobalSetting extends GetxController {
   final TextEditingController controllerGlobal = TextEditingController();
 
   final TextEditingController controllerName = TextEditingController();
@@ -105,5 +110,24 @@ class VMGlobalSetting extends GetxController{
       initialValueList[getKey(index)]!.visible = value;
     }
     update();
+  }
+
+  void setTitleFont(String font) {
+    PlatformSystem.getPlatform().titleFont = font;
+    update();
+    Get.find<VMPlatform>().update();
+  }
+
+  void setMainFont(String font) {
+    PlatformSystem.getPlatform().mainFont = font;
+    update();
+    Get.find<VMPlatform>().update();
+  }
+
+  TextStyle getTitleFont() {
+    return ConstList.getFont(PlatformSystem.getPlatform().titleFont);
+  }
+  TextStyle getMainFont() {
+    return ConstList.getFont(PlatformSystem.getPlatform().mainFont);
   }
 }
