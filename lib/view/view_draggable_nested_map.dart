@@ -148,8 +148,8 @@ class NestedMap extends StatelessWidget {
                                         List<dynamic> rejected) {
                                       return Container(
                                         color: Colors.black12,
-                                        width: nodeBaseWidth / 6 * _.getScale(),
-                                        height: nodeBaseHeight * _.getScale(),
+                                        width: nodeBaseWidth / 6 * _.getScale().data1,
+                                        height: nodeBaseHeight * _.getScale().data2,
                                       );
                                     },
                                 onAccept: (Tuple<int, int> data) {
@@ -241,8 +241,8 @@ class NestedMap extends StatelessWidget {
                           return Visibility(
                             child: Container(
                               color: Colors.black12,
-                              width: nodeBaseWidth / 6 * _.getScale(),
-                              height: nodeBaseHeight * _.getScale(),
+                              width: nodeBaseWidth / 6 * _.getScale().data1,
+                              height: nodeBaseHeight * _.getScale().data2,
                             ),
                             visible: _.drag != null,
                           );

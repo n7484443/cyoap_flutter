@@ -36,8 +36,8 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
         color: vmPlatform.isSelect(posX, posY)
             ? Colors.lightBlueAccent
             : Colors.white,
-        width: nodeBaseWidth * size.data1 * _.getScale(),
-        height: nodeBaseHeight * size.data2 * _.getScale(),
+        width: nodeBaseWidth * size.data1 * _.getScale().data1,
+        height: nodeBaseHeight * size.data2 * _.getScale().data2,
         child: Column(
           children: [
             Expanded(
@@ -72,7 +72,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                             node.title,
                             style: ConstList.getFont(PlatformSystem.getPlatform().titleFont).copyWith(
                               fontWeight: FontWeight.bold,
-                              fontSize: 18 * _.getScale(),
+                              fontSize: 18 * _.getScale().data2,
                               foreground: Paint()
                                 ..style = PaintingStyle.stroke
                                 ..strokeWidth = 4
@@ -83,7 +83,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                             node.title,
                             style: ConstList.getFont(PlatformSystem.getPlatform().titleFont).copyWith(
                               fontWeight: FontWeight.bold,
-                              fontSize: 18 * _.getScale(),
+                              fontSize: 18 * _.getScale().data2,
                               color: Colors.black87,
                             ),
                           ),
@@ -203,7 +203,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                     scrollController: ScrollController(),
                     scrollable: false,
                     customStyles: ConstList.getDefaultThemeData(
-                        context, _.getScale(),
+                        context, _.getScale().data2,
                         fontStyle: ConstList.getFont(PlatformSystem.getPlatform().mainFont)),
                   ),
                 ),

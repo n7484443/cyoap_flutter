@@ -209,10 +209,10 @@ class VMPlatform extends GetxController{
     }
   }
 
-  double getScale() {
+  Tuple<double, double> getScale() {
     var context = captureKey.currentContext;
-    if (context == null) return 1;
-    return ConstList.isSmallDisplay(context) ? 0.75 : 1;
+    if (context == null) return Tuple(drag == null ? 1 : 0.9, 1);
+    return Tuple(drag == null ? 1 : 0.9, ConstList.isSmallDisplay(context) ? 0.75 : 1);
   }
 
   void addMaxSelect(int y, int max){

@@ -25,7 +25,6 @@ class ProgressData {
   void addProgress() {
     progress++;
     progressPercent = progress / progressMax;
-    print('$progress | $progressMax | $progressPercent');
   }
 }
 
@@ -202,10 +201,11 @@ class PlatformFileSystem {
   Future<void> saveToFolder(String path) async {
     saveProgress.update((val) {
       val?.progress = 0;
-      val?.progressMax = _dirImage.length + platform.choiceNodes.length + 1;
+      val?.progressMax = _dirImage.length + platform.choiceNodes.length * 2 + 1;
     });
     var dirImages = Directory(path + '/images');
     var dirNodes = Directory(path + '/nodes');
+    var dirNodesBackUp = Directory(path + '/nodes_backup');
     var platformJson = File(path + '/platform.json');
 
     List<String> skipImage = List.empty(growable: true);
@@ -233,9 +233,30 @@ class PlatformFileSystem {
       saveProgress.update((val) => val?.addProgress());
     }
 
+
+    if(dirNodesBackUp.existsSync()) {
+      dirNodesBackUp.deleteSync(recursive: true);
+    }
+
+    dirNodesBackUp.create();
+    for(var x = 0; x < platform.choiceNodes.length; x++){
+      var tuple = platform.choiceNodes[x];
+      var file = File('$path/nodes_backup/lineSetting_${tuple.data2.y}.json');
+      file.createSync();
+      file.writeAsString(jsonEncode(tuple.data2.toJson()));
+
+      for (var nodes in tuple.data1) {
+        var file = File('$path/nodes_backup/${nodes.title}.json');
+        file.createSync();
+        file.writeAsString(jsonEncode(nodes.toJson()));
+      }
+      saveProgress.update((val) => val?.addProgress());
+    }
+
     if(dirNodes.existsSync()) {
       dirNodes.deleteSync(recursive: true);
     }
+
     dirNodes.create();
     for(var x = 0; x < platform.choiceNodes.length; x++){
       var tuple = platform.choiceNodes[x];
@@ -250,6 +271,8 @@ class PlatformFileSystem {
       }
       saveProgress.update((val) => val?.addProgress());
     }
+
+
     if (platformJson.existsSync()) {
       platformJson.deleteSync(recursive: true);
     }
