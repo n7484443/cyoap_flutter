@@ -194,10 +194,6 @@ class PlatformFileSystem {
     return archive;
   }
 
-  bool hasImageNameNotWebp(String name){
-    return basename(name).contains(RegExp('[.](png|jpg|jpeg)'));
-  }
-
   Future<void> saveToFolder(String path) async {
     saveProgress.update((val) {
       val?.progress = 0;
@@ -212,7 +208,7 @@ class PlatformFileSystem {
     if (dirImages.existsSync()) {
       for (var existImage in await dirImages.list().toList()) {
         var name = basename(existImage.path);
-        if (!_dirImage.containsKey(name) && hasImageNameNotWebp(name)) {
+        if (!_dirImage.containsKey(name)) {
           await existImage.delete();
         }else{
           skipImage.add(name);
