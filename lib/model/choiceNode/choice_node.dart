@@ -11,7 +11,7 @@ class ChoiceNodeBase extends GenerableParser{
   int x;
   int y;
   int width; //-1 = 무한대
-  int height;
+  int height; //0 == 1/2
   bool isCard;
   String title;
   String contentsString;

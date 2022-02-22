@@ -100,7 +100,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                         onSelected: (result) {
                           if (result == 0) {
                             vmPlatform.sizeSet.data1 = size.data1;
-                            vmPlatform.sizeSet.data2 = size.data2;
+                            vmPlatform.sizeSet.data2 = (size.data2 - 0.5).abs() <= 1e-5 ? 0 : size.data2.toInt();
                             showDialog(
                               context: context,
                               builder: (builder) => GetBuilder<VMPlatform>(
@@ -146,7 +146,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                                               vmPlatform.sizeChange(0, -1);
                                             },
                                           ),
-                                          Text('${vmPlatform.sizeSet.data2}'),
+                                          Text('${vmPlatform.sizeSet.data2 < 1 ? 0.5 : vmPlatform.sizeSet.data2}'),
                                           IconButton(
                                             icon:
                                                 const Icon(Icons.chevron_right),
