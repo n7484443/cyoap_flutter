@@ -16,6 +16,10 @@ class VariableDataBase {
     viewModel?.updateLists();
   }
 
+  void deleteValue(String name) {
+    varMap.remove(name);
+  }
+
 
   bool hasValue(String name) {
     return varMap.containsKey(name);

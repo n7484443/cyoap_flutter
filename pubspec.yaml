@@ -42,7 +42,7 @@ dependencies:
   english_words: ^4.0.0
   image_cropping: ^0.0.11
   flutter_quill: ^4.0.5
-  package_info_plus: ^1.4.0
+  package_info_plus: 1.3.0
   material_design_icons_flutter: ^5.0.6595
   github: ^9.0.0
   flex_color_picker: ^2.3.0

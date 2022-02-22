@@ -46,6 +46,9 @@ class LineSetting extends GenerableParser{
 
       clickableRecursive = conditionClickableRecursiveParsed.isNotEmpty ? conditionClickableRecursiveParsed[0] : null;
       executeRecursive = executeCodeRecursiveParsed.isNotEmpty ? executeCodeRecursiveParsed[0] : null;
+    }else{
+      clickableRecursive = null;
+      executeRecursive = null;
     }
   }
 
@@ -54,6 +57,8 @@ class LineSetting extends GenerableParser{
     if(isNeedToCheck()) {
       VariableDataBase.instance.setValue('lineSetting_$y',
           ValueTypeWrapper(ValueType(0), false, false));
+    }else{
+      VariableDataBase.instance.deleteValue('lineSetting_$y');
     }
   }
 }

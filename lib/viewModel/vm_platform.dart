@@ -60,9 +60,9 @@ class VMPlatform extends GetxController{
     update();
   }
 
-  Tuple<int, double> getSize(Tuple<int, int> position) {
+  Tuple<int, int> getSize(Tuple<int, int> position) {
     var node = getNode(position.data1, position.data2)!;
-    return Tuple(node.width, node.height == 0 ? 0.5 : node.height.toDouble());
+    return Tuple(node.width, node.height);
   }
 
   void setSize(Tuple<int, int> position, Tuple<int, int> size) {
@@ -72,7 +72,7 @@ class VMPlatform extends GetxController{
   }
 
   ChoiceNodeBase createNodeForTemp(){
-    return ChoiceNodeBase.noTitle(1, 1, false, '', '');
+    return ChoiceNodeBase.noTitle(1, 10, false, '', '');
   }
 
   ChoiceNodeBase? getNode(int x, int y) {
@@ -164,8 +164,8 @@ class VMPlatform extends GetxController{
     if (sizeSet.data1 < 1) {
       sizeSet.data1 = 1;
     }
-    if (sizeSet.data2 < 0) {
-      sizeSet.data2 = 0;
+    if (sizeSet.data2 < 5) {
+      sizeSet.data2 = 5;
     }
     update();
   }

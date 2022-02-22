@@ -149,7 +149,7 @@ class NestedMap extends StatelessWidget {
                                       return Container(
                                         color: Colors.black12,
                                         width: nodeBaseWidth / 6 * _.getScale().data1,
-                                        height: nodeBaseHeight * _.getScale().data2,
+                                        height: nodeBaseHeight * 10 * _.getScale().data2,
                                       );
                                     },
                                 onAccept: (Tuple<int, int> data) {

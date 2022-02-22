@@ -15,7 +15,7 @@ import '../util/tuple.dart';
   */
 
 double nodeBaseWidth = 200;
-double nodeBaseHeight = 360;
+double nodeBaseHeight = 20;
 
 class ViewChoiceNodeTextWithImage extends StatelessWidget {
   final int posX;
@@ -100,7 +100,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                         onSelected: (result) {
                           if (result == 0) {
                             vmPlatform.sizeSet.data1 = size.data1;
-                            vmPlatform.sizeSet.data2 = (size.data2 - 0.5).abs() <= 1e-5 ? 0 : size.data2.toInt();
+                            vmPlatform.sizeSet.data2 = size.data2;
                             showDialog(
                               context: context,
                               builder: (builder) => GetBuilder<VMPlatform>(
@@ -139,6 +139,17 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
                                         children: [
+                                          RotatedBox(
+                                            quarterTurns: 2,
+                                            child: IconButton(
+                                              icon: const Icon(
+                                                Icons.double_arrow,
+                                              ),
+                                              onPressed: () {
+                                                vmPlatform.sizeChange(0, -5);
+                                              },
+                                            ),
+                                          ),
                                           IconButton(
                                             icon:
                                                 const Icon(Icons.chevron_left),
@@ -146,12 +157,21 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                                               vmPlatform.sizeChange(0, -1);
                                             },
                                           ),
-                                          Text('${vmPlatform.sizeSet.data2 < 1 ? 0.5 : vmPlatform.sizeSet.data2}'),
+                                          Text(
+                                              '${vmPlatform.sizeSet.data2/10}'),
                                           IconButton(
                                             icon:
                                                 const Icon(Icons.chevron_right),
                                             onPressed: () {
                                               vmPlatform.sizeChange(0, 1);
+                                            },
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.double_arrow,
+                                            ),
+                                            onPressed: () {
+                                              vmPlatform.sizeChange(0, 5);
                                             },
                                           ),
                                         ],
@@ -190,25 +210,24 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                 ],
               ),
             ),
-            Expanded(
-              child: Visibility(
-                child: IgnorePointer(
-                  child: quill.QuillEditor(
-                    controller: vmPlatform.getNodeController(posX, posY)!,
-                    focusNode: FocusNode(),
-                    readOnly: true,
-                    autoFocus: false,
-                    expands: true,
-                    padding: const EdgeInsets.all(0),
-                    scrollController: ScrollController(),
-                    scrollable: false,
-                    customStyles: ConstList.getDefaultThemeData(
-                        context, _.getScale().data2,
-                        fontStyle: ConstList.getFont(PlatformSystem.getPlatform().mainFont)),
-                  ),
+            Visibility(
+              child: IgnorePointer(
+                child: quill.QuillEditor(
+                  controller: vmPlatform.getNodeController(posX, posY)!,
+                  focusNode: FocusNode(),
+                  readOnly: true,
+                  autoFocus: false,
+                  expands: false,
+                  padding: const EdgeInsets.all(0),
+                  scrollController: ScrollController(),
+                  scrollable: false,
+                  customStyles: ConstList.getDefaultThemeData(
+                      context, _.getScale().data2,
+                      fontStyle: ConstList.getFont(
+                          PlatformSystem.getPlatform().mainFont)),
                 ),
-                visible: node.contentsString.isNotEmpty,
               ),
+              visible: node.contentsString.isNotEmpty,
             ),
           ],
         ),
