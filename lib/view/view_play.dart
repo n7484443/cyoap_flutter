@@ -19,14 +19,14 @@ class ViewPlay extends StatelessWidget {
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(ConstList.appBarSize),
           child: AppBar(
-            actions: [
+            /*actions: [
               IconButton(
                 icon: const Icon(Icons.save),
                 onPressed: () {
                   Get.find<VMPlatform>().save(false);
                 },
               )
-            ],
+            ],*/
           ),
         ),
         drawer: const ViewVariable(),
@@ -45,14 +45,14 @@ class ViewPlay extends StatelessWidget {
               appBar: PreferredSize(
                 preferredSize: Size.fromHeight(ConstList.appBarSize),
                 child: AppBar(
-                  actions: [
+                  /*actions: [
                     IconButton(
                       icon: const Icon(Icons.save),
                       onPressed: () {
                         Get.find<VMPlatform>().save(false);
                       },
                     )
-                  ],
+                  ],*/
                 ),
               ),
               body: const NestedMap(),

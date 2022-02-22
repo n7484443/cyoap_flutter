@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../main.dart';
@@ -18,6 +19,7 @@ class ViewMake extends StatelessWidget {
   Widget build(BuildContext context) {
     final vmPlatform = Get.put(VMPlatform());
     vmPlatform.updateWidgetList();
+
     var dialog = AlertDialog(
       title: const Text('뒤로가기'),
       content: const Text('저장되지 않은 내용이 있습니다. 저장하시겠습니까?'),
@@ -104,6 +106,22 @@ class ViewMake extends StatelessWidget {
             child: IconButton(
               icon: const Icon(MdiIcons.zipBox),
               onPressed: () {
+                Get.defaultDialog(
+                  barrierDismissible: false,
+                  title: '압축중...',
+                  content: Obx(() => Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          LinearProgressIndicator(
+                            value: PlatformSystem.instance.platformFileSystem
+                                .saveProgress.value.progressPercent,
+                          ),
+                          Text(
+                              '${PlatformSystem.instance.platformFileSystem.saveProgress.value.progress} / ${PlatformSystem.instance.platformFileSystem.saveProgress.value.progressMax}'),
+                        ],
+                      )),
+                );
                 Get.find<VMPlatform>().save(true);
               },
             ),
@@ -113,6 +131,22 @@ class ViewMake extends StatelessWidget {
             child: IconButton(
               icon: const Icon(Icons.save),
               onPressed: () {
+                Get.defaultDialog(
+                  barrierDismissible: false,
+                  title: '저장중...',
+                  content: Obx(() => Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          LinearProgressIndicator(
+                            value: PlatformSystem.instance.platformFileSystem
+                                .saveProgress.value.progressPercent,
+                          ),
+                          Text(
+                              '${PlatformSystem.instance.platformFileSystem.saveProgress.value.progress} / ${PlatformSystem.instance.platformFileSystem.saveProgress.value.progressMax}'),
+                        ],
+                      )),
+                );
                 Get.find<VMPlatform>().save(false);
               },
             ),

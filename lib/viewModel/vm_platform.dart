@@ -117,11 +117,10 @@ class VMPlatform extends GetxController{
   void changeData(Tuple<int, int> data, Tuple<int, int> pos) {
     if(data == Tuple(-1, -1)){
       PlatformSystem.getPlatform().addData(pos.data1, pos.data2, createNodeForTemp());
-      updateWidgetList();
     }else{
       PlatformSystem.getPlatform().changeData(data, pos);
-      updateWidgetList();
     }
+    updateWidgetList();
   }
 
   void removeData(Tuple<int, int> data) {
@@ -137,11 +136,15 @@ class VMPlatform extends GetxController{
     PlatformSystem.getPlatform().compress();
     PlatformSystem.getPlatform().generateRecursiveParser();
     if(saveAsFile){
-      PlatformSystem.instance.saveFile();
+      PlatformSystem.instance.saveFile().then((value)=>saveEnd());
     }else{
-      PlatformSystem.instance.saveFolder();
+      PlatformSystem.instance.saveFolder().then((value)=>saveEnd());
     }
     isChanged = false;
+  }
+
+  void saveEnd(){
+    Get.back();
   }
 
   void addNode() {

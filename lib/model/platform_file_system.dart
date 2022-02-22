@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 import 'package:image_compression_flutter/image_compression_flutter.dart';
 import 'package:path/path.dart';
 
@@ -14,6 +15,20 @@ import 'choiceNode/choice_node.dart';
 import 'choiceNode/line_setting.dart';
 
 //platformFileSystem - abstractPlatform
+class ProgressData {
+  int progress;
+  int progressMax;
+  double progressPercent;
+
+  ProgressData({this.progress = 0, this.progressMax = 0, this.progressPercent = 0});
+
+  void addProgress() {
+    progress++;
+    progressPercent = progress / progressMax;
+    print('$progress | $progressMax | $progressPercent');
+  }
+}
+
 class PlatformFileSystem {
   late AbstractPlatform platform;
   final Map<String, Uint8List> _dirImage = {};
@@ -21,6 +36,8 @@ class PlatformFileSystem {
   bool openAsFile = false;
 
   PlatformFileSystem();
+
+  var saveProgress = ProgressData().obs;
 
   Future<void> createFromFolder(String path) async {
     openAsFile = false;
@@ -144,28 +161,37 @@ class PlatformFileSystem {
   }
 
 
-  Future<Archive> saveToZip() async{
+  Future<Archive> saveToZip() async {
+    saveProgress.update((val) {
+      val?.progress = 0;
+      val?.progressMax = _dirImage.length + platform.choiceNodes.length + 1;
+    });
     var archive = Archive();
-    for(var imageName in _dirImage.keys) {
+    for (var imageName in _dirImage.keys) {
       var converted = await convertImage(imageName, _dirImage[imageName]!);
-      archive.addFile(ArchiveFile(
-          'images/${converted.data1}', converted.data2.length, converted.data2));
+      archive.addFile(ArchiveFile('images/${converted.data1}',
+          converted.data2.length, converted.data2));
+      saveProgress.update((val) => val?.addProgress());
     }
-    for(int i = 0; i < platform.choiceNodes.length; i++){
+    for (int i = 0; i < platform.choiceNodes.length; i++) {
       var tuple = platform.choiceNodes[i];
       var data = utf8.encode(jsonEncode(tuple.data2.toJson()));
-      archive.addFile(ArchiveFile('nodes/lineSetting_${tuple.data2.y}.json', data.length, data));
+      archive.addFile(ArchiveFile(
+          'nodes/lineSetting_${tuple.data2.y}.json', data.length, data));
 
       for (int j = 0; j < tuple.data1.length; j++) {
         var node = platform.choiceNodes[i].data1[j];
         var utf = utf8.encode(jsonEncode(node.toJson()));
-        archive.addFile(ArchiveFile('nodes/${node.title}.json', utf.length, utf));
+        archive
+            .addFile(ArchiveFile('nodes/${node.title}.json', utf.length, utf));
       }
+      saveProgress.update((val) => val?.addProgress());
     }
     var platformJson = utf8.encode(jsonEncode(platform.toJson()));
     archive.addFile(
         ArchiveFile('platform.json', platformJson.length, platformJson));
 
+    saveProgress.update((val) => val?.addProgress());
     return archive;
   }
 
@@ -174,15 +200,19 @@ class PlatformFileSystem {
   }
 
   Future<void> saveToFolder(String path) async {
+    saveProgress.update((val) {
+      val?.progress = 0;
+      val?.progressMax = _dirImage.length + platform.choiceNodes.length + 1;
+    });
     var dirImages = Directory(path + '/images');
     var dirNodes = Directory(path + '/nodes');
     var platformJson = File(path + '/platform.json');
 
     List<String> skipImage = List.empty(growable: true);
-    if(dirImages.existsSync()){
-      for(var existImage in await dirImages.list().toList()){
+    if (dirImages.existsSync()) {
+      for (var existImage in await dirImages.list().toList()) {
         var name = basename(existImage.path);
-        if(!_dirImage.containsKey(name) && hasImageNameNotWebp(name)){
+        if (!_dirImage.containsKey(name) && hasImageNameNotWebp(name)) {
           await existImage.delete();
         }else{
           skipImage.add(name);
@@ -191,12 +221,16 @@ class PlatformFileSystem {
     }else{
       dirImages.create();
     }
-    for(var imageName in _dirImage.keys){
-      if(skipImage.contains(imageName))continue;
+    for(var imageName in _dirImage.keys) {
+      if (skipImage.contains(imageName)) {
+        saveProgress.update((val) => val?.addProgress());
+        continue;
+      }
       var converted = await convertImage(imageName, _dirImage[imageName]!);
       var file = File('$path/images/${converted.data1}');
       file.createSync();
       file.writeAsBytes(converted.data2);
+      saveProgress.update((val) => val?.addProgress());
     }
 
     if(dirNodes.existsSync()) {
@@ -209,17 +243,19 @@ class PlatformFileSystem {
       file.createSync();
       file.writeAsString(jsonEncode(tuple.data2.toJson()));
 
-      for(var nodes in tuple.data1){
+      for (var nodes in tuple.data1) {
         var file = File('$path/nodes/${nodes.title}.json');
         file.createSync();
         file.writeAsString(jsonEncode(nodes.toJson()));
       }
+      saveProgress.update((val) => val?.addProgress());
     }
-    if(platformJson.existsSync()) {
+    if (platformJson.existsSync()) {
       platformJson.deleteSync(recursive: true);
     }
     platformJson.create();
     platformJson.writeAsString(jsonEncode(platform.toJson()));
+    saveProgress.update((val) => val?.addProgress());
   }
 
   //1 = 일반 이미지, 0 = 웹 이미지, -1 = 이미지 아님.

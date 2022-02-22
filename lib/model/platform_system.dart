@@ -48,18 +48,18 @@ class PlatformSystem{
   }
 
 
-  void saveFile() async{
+  Future<void> saveFile() async{
     if(ConstList.isOnlyFileAccept()){
-      saveZip('exported.zip', platformFileSystem);
+      await saveZip('exported.zip', platformFileSystem);
     }else{
-      saveZip(path!, platformFileSystem);
+      await saveZip(path!, platformFileSystem);
     }
   }
-  void saveFolder() async{
+  Future<void> saveFolder() async{
     if(ConstList.isOnlyFileAccept()){
-      saveRaw('exported.zip', platformFileSystem);
+      await saveRaw('exported.zip', platformFileSystem);
     }else{
-      saveRaw(path!, platformFileSystem);
+      await saveRaw(path!, platformFileSystem);
     }
   }
 
