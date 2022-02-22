@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
 
+import '../util/tuple.dart';
+
 class VMEditor extends GetxController{
   final TextEditingController controllerTitle = TextEditingController();
   late final QuillController quillController;
@@ -21,14 +23,18 @@ class VMEditor extends GetxController{
   var isSelectable = true;
 
   bool isChanged = false;
+  bool isConvertImage = false;
 
   @override
   void onInit() {
     if (NodeEditor.instance.target.contentsString.isEmpty) {
       quillController = QuillController.basic();
     } else {
-      var document = Document.fromJson(jsonDecode(NodeEditor.instance.target.contentsString));
-      quillController = QuillController(document: document, selection: const TextSelection.collapsed(offset: 0));
+      var document = Document.fromJson(
+          jsonDecode(NodeEditor.instance.target.contentsString));
+      quillController = QuillController(
+          document: document,
+          selection: const TextSelection.collapsed(offset: 0));
     }
     isCard = NodeEditor.instance.target.isCard;
     isSelectable = NodeEditor.instance.target.isSelectable;
@@ -87,26 +93,31 @@ class VMEditor extends GetxController{
   }
 
   Future<void> addImage() async {
+    isConvertImage = true;
+    update();
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       withData: true,
       type: FileType.image,
     );
     if(result != null){
-      var file = result.files.single;
-
-      if(file.bytes == null)return;
-      var names = file.name;
-      var bytes = file.bytes!;
-      /*if(file.name.endsWith('.gif')){
-        names = names.replaceAll('.gif', '.apng');
-        bytes = encodePngAnimation(decodeGifAnimation(bytes)!, level: 0) as Uint8List;
-      }*/
+      var value = await convertImage(result.files.single);
+      var names = value.data1;
+      var bytes = value.data2;
       PlatformSystem.addImage(names, bytes);
-      NodeEditor.instance.target.imageString = file.name;
-      index = PlatformSystem.getImageIndex(file.name);
+      NodeEditor.instance.target.imageString = names;
+      index = PlatformSystem.getImageIndex(names);
+      isConvertImage = false;
       Get.find<VMPlatform>().isChanged = true;
-      isChanged = true;
-      update();
     }
+    isChanged = true;
+    update();
+  }
+  Future<Tuple<String, Uint8List>> convertImage(PlatformFile file) async{
+    if (file.bytes == null) throw 'image processing error!';
+    var names = file.name;
+    var bytes = file.bytes!;
+
+
+    return Tuple(names, bytes);
   }
 }

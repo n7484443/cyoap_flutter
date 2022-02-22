@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  image_compression_flutter
   url_launcher_windows
 )
 

@@ -54,6 +54,10 @@ class ChoiceNodeBase extends GenerableParser{
     return 2;
   }
 
+  String convertToWebp(String name){
+    return name.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
+  }
+
   Map<String, dynamic> toJson() =>
       {
         'x': x,
@@ -64,7 +68,7 @@ class ChoiceNodeBase extends GenerableParser{
         'isSelectable': isSelectable,
         'title': title,
         'contentsString': contentsString,
-        'imageString': imageString,
+        'imageString': convertToWebp(imageString),
         'conditionClickableRecursive': conditionClickableRecursive,
         'conditionVisibleRecursive': conditionVisibleRecursive,
         'executeCodeRecursive': executeCodeRecursive,

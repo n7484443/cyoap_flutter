@@ -5,8 +5,10 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:flutter/widgets.dart';
+import 'package:image_compression_flutter/image_compression_flutter.dart';
 import 'package:path/path.dart';
 
+import '../util/tuple.dart';
 import 'abstract_platform.dart';
 import 'choiceNode/choice_node.dart';
 import 'choiceNode/line_setting.dart';
@@ -123,13 +125,31 @@ class PlatformFileSystem {
   void createFromVoid() {
     platform = AbstractPlatform.none();
   }
+  Configuration config = const Configuration(
+    outputType: ImageOutputType.webpThenPng,
+    quality: 100,
+  );
+
+  Future<Tuple<String, Uint8List>> convertImage(String name, Uint8List data) async{
+    if (name.endsWith('.png') ||
+        name.endsWith('.jpg') ||
+        name.endsWith('.jpeg')) {
+      name = name.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
+      ImageFile input = ImageFile(rawBytes: data, filePath: name);
+      final param = ImageFileConfiguration(input: input, config: config);
+      final output = await compressor.compress(param);
+      data = output.rawBytes;
+    }
+    return Tuple(name, data);
+  }
 
 
   Future<Archive> saveToZip() async{
     var archive = Archive();
     for(var imageName in _dirImage.keys) {
+      var converted = await convertImage(imageName, _dirImage[imageName]!);
       archive.addFile(ArchiveFile(
-          'images/$imageName', _dirImage[imageName]!.length, _dirImage[imageName]));
+          'images/${converted.data1}', converted.data2.length, converted.data2));
     }
     for(int i = 0; i < platform.choiceNodes.length; i++){
       var tuple = platform.choiceNodes[i];
@@ -149,20 +169,34 @@ class PlatformFileSystem {
     return archive;
   }
 
+  bool hasImageNameNotWebp(String name){
+    return basename(name).contains(RegExp('[.](png|jpg|jpeg)'));
+  }
+
   Future<void> saveToFolder(String path) async {
     var dirImages = Directory(path + '/images');
     var dirNodes = Directory(path + '/nodes');
     var platformJson = File(path + '/platform.json');
 
+    List<String> skipImage = List.empty(growable: true);
     if(dirImages.existsSync()){
-      dirImages.deleteSync(recursive: true);
+      for(var existImage in await dirImages.list().toList()){
+        var name = basename(existImage.path);
+        if(!_dirImage.containsKey(name) && hasImageNameNotWebp(name)){
+          await existImage.delete();
+        }else{
+          skipImage.add(name);
+        }
+      }
+    }else{
+      dirImages.create();
     }
-    dirImages.create();
     for(var imageName in _dirImage.keys){
-      var fileData = _dirImage[imageName]!;
-      var file = File('$path/images/$imageName');
+      if(skipImage.contains(imageName))continue;
+      var converted = await convertImage(imageName, _dirImage[imageName]!);
+      var file = File('$path/images/${converted.data1}');
       file.createSync();
-      file.writeAsBytes(fileData);
+      file.writeAsBytes(converted.data2);
     }
 
     if(dirNodes.existsSync()) {

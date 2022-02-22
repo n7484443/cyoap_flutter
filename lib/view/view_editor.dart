@@ -260,24 +260,35 @@ class ViewEditorTyping extends StatelessWidget {
           flex: 1,
           child: Row(
             children: [
-              IconButton(
-                  onPressed: () {
-                    controller.addImage();
-                  },
-                  icon: const Icon(Icons.add)),
-              Expanded(
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          offset: Offset(4.0, 4.0),
-                          color: Colors.black38,
-                          blurRadius: 5.0,
-                          spreadRadius: 1.0,
-                        )
-                      ],
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        controller.addImage();
+                      },
+                      icon: const Icon(Icons.add)),
+                  GetBuilder<VMEditor>(
+                    builder: (_) => Visibility(
+                      child: const CircularProgressIndicator(),
+                      visible: controller.isConvertImage,
                     ),
-                    child: ScrollConfiguration(
+                  ),
+                ],
+              ),
+              Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        offset: Offset(4.0, 4.0),
+                        color: Colors.black38,
+                        blurRadius: 5.0,
+                        spreadRadius: 1.0,
+                      )
+                    ],
+                  ),
+                  child: ScrollConfiguration(
                     behavior:
                         ScrollConfiguration.of(context).copyWith(dragDevices: {
                       PointerDeviceKind.touch,
