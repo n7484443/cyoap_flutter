@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import '../main.dart';
 import '../model/check_update.dart';
@@ -24,21 +23,9 @@ class VMStartPlatform extends GetxController {
     super.onInit();
   }
 
-  Future<bool> _getStatuses() async {
-    if (await Permission.storage.isDenied) {
-      await Permission.storage.request();
-    }
-    if (await Permission.manageExternalStorage.isDenied) {
-      await Permission.manageExternalStorage.request();
-    }
-
-    return await Permission.storage.isGranted &&
-        await Permission.manageExternalStorage.isGranted;
-  }
-
   Future<num> openDirectory() async {
-    if (ConstList.actualPlatformType == platformType.mobile) {
-      var status = await _getStatuses();
+    if (ConstList.isMobile()) {
+      var status = await frequentlyUsedPath.getStatuses();
       if (!status) {
         return -1;
       }
@@ -53,8 +40,8 @@ class VMStartPlatform extends GetxController {
   }
 
   Future<num> openFile() async {
-    if (ConstList.actualPlatformType == platformType.mobile) {
-      var status = await _getStatuses();
+    if (ConstList.isMobile()) {
+      var status = await frequentlyUsedPath.getStatuses();
       if (!status) {
         return -1;
       }
@@ -79,7 +66,7 @@ class VMStartPlatform extends GetxController {
   Future<bool> setDirectory() async {
     if (selected >= 0) {
       if (ConstList.isMobile()) {
-        _getStatuses().then((value) {
+        frequentlyUsedPath.getStatuses().then((value) {
           if (!value) {
             return false;
           }

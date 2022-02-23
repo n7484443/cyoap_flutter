@@ -35,29 +35,23 @@ class ViewStart extends StatelessWidget {
                             itemCount: _.pathList.length,
                             itemBuilder: (context, index) {
                               return ListTile(
-                                title: Row(
-                                  children: [
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        _.selectFrequentPath(index);
-                                      },
-                                      style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.resolveWith(
-                                                (states) {
-                                          return _.getColor(index);
-                                        }),
-                                      ),
-                                      child: Text(
-                                          _.pathList.reversed.elementAt(index)),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.delete),
-                                      onPressed: () {
-                                        _.removeFrequentPath(index);
-                                      },
-                                    )
-                                  ],
+                                title: ElevatedButton(
+                                  onPressed: () => _.selectFrequentPath(index),
+                                  style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.resolveWith(
+                                            (states) {
+                                      return _.getColor(index);
+                                    }),
+                                  ),
+                                  child: Text(
+                                      _.pathList.reversed.elementAt(index)),
+                                ),
+                                trailing: IconButton(
+                                  icon: const Icon(Icons.delete),
+                                  onPressed: () {
+                                    _.removeFrequentPath(index);
+                                  },
                                 ),
                               );
                             },

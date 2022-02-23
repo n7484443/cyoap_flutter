@@ -1,7 +1,16 @@
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FrequentlyUsedPath{
   List<String> pathList = [];
+
+  Future<bool> getStatuses() async {
+    if (await Permission.storage.isDenied) {
+      await Permission.storage.request();
+    }
+
+    return await Permission.storage.isGranted;
+  }
 
   Future<List<String>> getFrequentPathFromData() async {
     var prefs = await SharedPreferences.getInstance();
