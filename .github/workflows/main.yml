@@ -30,10 +30,10 @@ jobs:
 
       - name: base64-to-file
         uses: timheuer/base64-to-file@v1.1
-          with:
-            fileName: 'key.properties'
-            fileDir: './android/'
-            encodedString: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        with:
+          fileName: 'key.properties'
+          fileDir: './android/'
+          encodedString: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
       - run: flutter build apk
       - run: Rename-Item "build/app/outputs/flutter-apk/app-release.apk" "cyoap_android_${{ steps.get_version.outputs.version-without-v }}.apk"
 
