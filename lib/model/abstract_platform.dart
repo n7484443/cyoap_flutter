@@ -8,8 +8,6 @@ import 'choiceNode/line_setting.dart';
 import 'grammar/value_type.dart';
 
 class AbstractPlatform {
-  int halfWidth;
-  int halfHeight;
   double scale;
   String stringImageName;
   String colorBackground;
@@ -35,15 +33,18 @@ class AbstractPlatform {
     return versionCheck(versionProgram, version) >= 0;
   }
 
-  AbstractPlatform(this.halfWidth, this.halfHeight, this.scale, this.stringImageName, this.colorBackground, this.flag, this.version, {
+  AbstractPlatform(
+    this.scale,
+    this.stringImageName,
+    this.colorBackground,
+    this.flag,
+    this.version, {
     this.titleFont = "notoSans",
     this.mainFont = "notoSans",
   });
 
   AbstractPlatform.none()
-      : halfWidth = 800,
-        halfHeight = 400,
-        scale = 1.0,
+      : scale = 1.0,
         stringImageName = '',
         colorBackground = '#909090',
         flag = 0,
@@ -52,9 +53,7 @@ class AbstractPlatform {
         mainFont = "notoSans";
 
   AbstractPlatform.fromJson(Map<String, dynamic> json)
-      : halfWidth = json['halfWidth'] ?? 800,
-        halfHeight = json['halfHeight'] ?? 400,
-        scale = 1.0,
+      : scale = 1.0,
         stringImageName = json['stringImageName'] ?? '',
         colorBackground = json['colorBackground'] ?? '#909090',
         flag = json['flag'] ?? 0,
@@ -65,8 +64,6 @@ class AbstractPlatform {
         mainFont = json['mainFont'] ?? 'notoSans';
 
   Map<String, dynamic> toJson() => {
-    'halfWidth' : halfWidth,
-    'halfHeight' : halfHeight,
     'stringImageName' : stringImageName,
     'colorBackground' : colorBackground,
     'flag' : flag,
@@ -75,18 +72,6 @@ class AbstractPlatform {
     'titleFont' : titleFont,
     'mainFont' : mainFont,
   };
-
-  int getMinX() => -halfWidth;
-
-  int getMinY() => -halfHeight;
-
-  int getMaxX() => halfWidth;
-
-  int getMaxY() => halfHeight;
-
-  int getWidth() => halfWidth * 2;
-
-  int getHeight() => halfHeight * 2;
 
   void addLineSettingData(LineSetting lineSetting) {
     while (choiceNodes.length <= lineSetting.y) {

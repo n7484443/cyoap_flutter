@@ -1,9 +1,8 @@
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/util/tuple.dart';
-import 'package:cyoap_flutter/view/view_choice_node.dart';
+import 'package:cyoap_flutter/view/view_text_outline.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 
 class NodeDivider extends StatelessWidget {
@@ -14,26 +13,8 @@ class NodeDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var vmPlatform = Get.find<VMPlatform>();
-    var maxSelectText =Visibility(
-      child: Stack(children: [
-        Text(
-          '최대 ${vmPlatform.getMaxSelect(y)}개만큼 선택 가능',
-          style: TextStyle(
-            fontSize: 18,
-            foreground: Paint()
-              ..style = PaintingStyle.stroke
-              ..strokeWidth = 4
-              ..color = Colors.white,
-          ),
-        ),
-        Text(
-          '최대 ${vmPlatform.getMaxSelect(y)}개만큼 선택 가능',
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
-        ),
-      ]),
+    var maxSelectText = Visibility(
+      child: TextOutline('최대 ${vmPlatform.getMaxSelect(y)}개만큼 선택 가능', 18.0),
       visible: vmPlatform.getMaxSelect(y) != '무한',
     );
     if (vmPlatform.isEditable()) {
@@ -140,46 +121,51 @@ class NestedMap extends StatelessWidget {
                                 bottom: 12,
                               ),
                               child: Wrap(
-                                alignment: WrapAlignment.center,
-                                children: List<Widget>.generate(
-                                  _.widgetList[i].length * 2 + 1,
-                                      (int j) {
-                                    if (j % 2 == 0) {
-                                      return Visibility(
-                                        child: DragTarget<Tuple<int, int>>(
-                                          builder: (BuildContext context,
-                                              List<dynamic> accepted,
-                                              List<dynamic> rejected) {
-                                            return Container(
-                                              color: Colors.black12,
-                                              width: nodeBaseWidth / 6 * _.getScale().data1,
-                                              height: nodeBaseHeight * 10 * _.getScale().data2,
-                                            );
-                                          },
-                                          onAccept: (Tuple<int, int> data) {
-                                            if (_.drag == Tuple(-1, -1)) {
-                                              _.changeData(data, Tuple(j ~/ 2, i));
-                                            } else {
-                                              if ((j - 2) > (_.drag!.data2 * 2)) {
-                                                _.changeData(
-                                                    data, Tuple(j ~/ 2 - 1, i));
-                                              } else {
-                                                _.changeData(data, Tuple(j ~/ 2, i));
-                                              }
-                                            }
-                                          },
-                                        ),
-                                        visible: _.drag != null &&
-                                            _.drag != Tuple(i, j ~/ 2 - 1),
+                          spacing: 2,
+                          alignment: WrapAlignment.center,
+                          children: List<Widget>.generate(
+                            _.widgetList[i].length * 2 + 1,
+                            (int j) {
+                              if (j % 2 == 0) {
+                                return Visibility(
+                                  child: DragTarget<Tuple<int, int>>(
+                                    builder: (BuildContext context,
+                                        List<dynamic> accepted,
+                                        List<dynamic> rejected) {
+                                      return Container(
+                                        color: Colors.black12,
+                                        width: _.nodeBaseWidth /
+                                            6 *
+                                            _.getScale().data1,
+                                        height: _.nodeBaseHeight *
+                                            10 *
+                                            _.getScale().data2,
                                       );
-                                    } else {
-                                      int num = j ~/ 2;
-                                      if (_.isEditable()) {
-                                        if (ConstList.isSmallDisplay(context)) {
-                                          return LongPressDraggable<Tuple<int, int>>(
-                                            onDragUpdate: (details) => _.dragUpdate(
-                                                constrains, details, context),
-                                            data: Tuple(num, i),
+                                    },
+                                    onAccept: (Tuple<int, int> data) {
+                                      if (_.drag == Tuple(-1, -1)) {
+                                        _.changeData(data, Tuple(j ~/ 2, i));
+                                      } else {
+                                        if ((j - 2) > (_.drag!.data2 * 2)) {
+                                          _.changeData(
+                                              data, Tuple(j ~/ 2 - 1, i));
+                                        } else {
+                                          _.changeData(data, Tuple(j ~/ 2, i));
+                                        }
+                                      }
+                                    },
+                                  ),
+                                  visible: _.drag != null &&
+                                      _.drag != Tuple(i, j ~/ 2 - 1),
+                                );
+                              } else {
+                                int num = j ~/ 2;
+                                if (_.isEditable()) {
+                                  if (ConstList.isSmallDisplay(context)) {
+                                    return LongPressDraggable<Tuple<int, int>>(
+                                      onDragUpdate: (details) => _.dragUpdate(
+                                          constrains, details, context),
+                                      data: Tuple(num, i),
                                             feedback: Transform.scale(
                                               scale: 0.9,
                                               child: _.widgetList[i][num],
@@ -241,20 +227,21 @@ class NestedMap extends StatelessWidget {
                           } else {
                             return DragTarget<Tuple<int, int>>(
                               builder: (BuildContext context, List<dynamic> accepted,
-                                  List<dynamic> rejected) {
-                                return Visibility(
-                                  child: Container(
-                                    color: Colors.black12,
-                                    width: nodeBaseWidth / 6 * _.getScale().data1,
-                                    height: nodeBaseHeight * _.getScale().data2,
-                                  ),
-                                  visible: _.drag != null,
-                                );
-                              },
-                              onAccept: (Tuple<int, int> data) {
-                                _.changeData(data, Tuple(0, _.widgetList.length));
-                              },
-                            );
+                            List<dynamic> rejected) {
+                          return Visibility(
+                            child: Container(
+                              color: Colors.black12,
+                              width: _.nodeBaseWidth / 6 * _.getScale().data1,
+                              height:
+                                  _.nodeBaseHeight * 10 * _.getScale().data2,
+                            ),
+                            visible: _.drag != null,
+                          );
+                        },
+                        onAccept: (Tuple<int, int> data) {
+                          _.changeData(data, Tuple(0, _.widgetList.length));
+                        },
+                      );
                           }
                         },
                         ),

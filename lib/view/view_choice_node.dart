@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/view/view_text_outline.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
@@ -14,8 +15,6 @@ import '../util/tuple.dart';
                            └──Card──subChoiceSet
   */
 
-double nodeBaseWidth = 200;
-double nodeBaseHeight = 20;
 
 class ViewChoiceNodeTextWithImage extends StatelessWidget {
   final int posX;
@@ -29,6 +28,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
   Widget build(BuildContext context) {
     var vmPlatform = Get.find<VMPlatform>();
     var size = vmPlatform.getSize(Tuple(posX, posY));
+    var realSize = vmPlatform.getRealSize(Tuple(posX, posY));
     var node = vmPlatform.getNode(posX, posY)!;
 
     var mainNode = GetBuilder<VMPlatform>(
@@ -36,8 +36,8 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
         color: vmPlatform.isSelect(posX, posY)
             ? Colors.lightBlueAccent
             : Colors.white,
-        width: nodeBaseWidth * size.data1 * _.getScale().data1,
-        height: nodeBaseHeight * size.data2 * _.getScale().data2,
+        width: realSize.data1 * _.getScale().data1,
+        height: realSize.data2 * _.getScale().data2,
         child: Column(
           children: [
             Expanded(
@@ -66,29 +66,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                   Align(
                     alignment: Alignment.topCenter,
                     child: Visibility(
-                      child: Stack(
-                        children: [
-                          Text(
-                            node.title,
-                            style: ConstList.getFont(PlatformSystem.getPlatform().titleFont).copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18 * _.getScale().data2,
-                              foreground: Paint()
-                                ..style = PaintingStyle.stroke
-                                ..strokeWidth = 4
-                                ..color = Colors.white,
-                            ),
-                          ),
-                          Text(
-                            node.title,
-                            style: ConstList.getFont(PlatformSystem.getPlatform().titleFont).copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18 * _.getScale().data2,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ],
-                      ),
+                      child: TextOutline(node.title,18 * _.getScale().data2),
                       visible: node.title.isNotEmpty,
                     ),
                   ),
@@ -124,7 +102,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                                               vmPlatform.sizeChange(-1, 0);
                                             },
                                           ),
-                                          Text('${vmPlatform.sizeSet.data1}'),
+                                          Text('${vmPlatform.sizeSet.data1 == 0 ? 'max': vmPlatform.sizeSet.data1}'),
                                           IconButton(
                                             icon:
                                                 const Icon(Icons.chevron_right),

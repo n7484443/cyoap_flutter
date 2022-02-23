@@ -65,6 +65,20 @@ class VMPlatform extends GetxController{
     return Tuple(node.width, node.height);
   }
 
+  double nodeBaseWidth = 200;
+  double nodeBaseHeight = 20;
+
+  Tuple<int, int> getRealSize(Tuple<int, int> position) {
+    var node = getSize(position);
+    var width = node.data1 == 0 ? findMaxWidth() : node.data1 * nodeBaseWidth;
+    var height = node.data2 * nodeBaseHeight;
+    return Tuple(width.toInt(), height.toInt());
+  }
+
+  int findMaxWidth(){
+    return (captureKey.currentContext!.width * 0.9).toInt();
+  }
+
   void setSize(Tuple<int, int> position, Tuple<int, int> size) {
     var node = getNode(position.data1, position.data2)!;
     node.width = size.data1;
@@ -161,8 +175,8 @@ class VMPlatform extends GetxController{
   void sizeChange(int x, int y){
     sizeSet.data1 += x;
     sizeSet.data2 += y;
-    if (sizeSet.data1 < 1) {
-      sizeSet.data1 = 1;
+    if (sizeSet.data1 < 0) {
+      sizeSet.data1 = 0;
     }
     if (sizeSet.data2 < 5) {
       sizeSet.data2 = 5;
