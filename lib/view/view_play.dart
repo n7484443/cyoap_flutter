@@ -18,34 +18,17 @@ class ViewPlay extends StatelessWidget {
       return Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(ConstList.appBarSize),
-          child: AppBar(
-            /*actions: [
-              IconButton(
-                icon: const Icon(Icons.save),
-                onPressed: () {
-                  Get.find<VMPlatform>().save(false);
-                },
-              )
-            ],*/
-          ),
+          child: AppBar(),
         ),
         drawer: const ViewVariable(),
         body: const NestedMap(),
       );
     } else {
-      return Row(
-        children: [
-          const ViewVariable(),
-          const VerticalDivider(
-            width: 1,
-            thickness: 1,
-          ),
-          Expanded(
-            child: Scaffold(
-              appBar: PreferredSize(
-                preferredSize: Size.fromHeight(ConstList.appBarSize),
-                child: AppBar(
-                  /*actions: [
+      return Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(ConstList.appBarSize),
+          child: AppBar(
+              /*actions: [
                     IconButton(
                       icon: const Icon(Icons.save),
                       onPressed: () {
@@ -53,12 +36,20 @@ class ViewPlay extends StatelessWidget {
                       },
                     )
                   ],*/
-                ),
               ),
-              body: const NestedMap(),
+        ),
+        body: Row(
+          children: [
+            const ViewVariable(),
+            const VerticalDivider(
+              width: 1,
+              thickness: 1,
             ),
-          ),
-        ],
+            const Expanded(
+              child: NestedMap(),
+            ),
+          ],
+        ),
       );
     }
   }

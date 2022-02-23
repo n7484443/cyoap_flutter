@@ -104,33 +104,29 @@ class ViewCodeEditor extends StatelessWidget {
         },
       );
     } else {
-      return Row(
-        children: [
-          const ViewVariable(),
-          const VerticalDivider(
-            width: 1,
-            thickness: 1,
+      return Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(ConstList.appBarSize),
+          child: AppBar(
+            leading: leadingWidget,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.save),
+                onPressed: () {
+                  _vmCodeEditor.save();
+                },
+              )
+            ],
           ),
-          Expanded(
-            child: Scaffold(
-              appBar: PreferredSize(
-                preferredSize: Size.fromHeight(ConstList.appBarSize),
-                child: AppBar(
-                  leading: leadingWidget,
-                  actions: [
-                    IconButton(
-                      icon: const Icon(Icons.save),
-                      onPressed: () {
-                        _vmCodeEditor.save();
-                      },
-                    )
-                  ],
-                ),
-              ),
-              body: inputText,
+        ),
+        body: Row(
+          children: [
+            const ViewVariable(),
+            Expanded(
+              child: inputText,
             ),
-          ),
-        ],
+          ],
+        ),
       );
     }
   }

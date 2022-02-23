@@ -147,17 +147,13 @@ class ViewEditor extends StatelessWidget {
         },
       );
     } else {
-      return Row(
-        children: [
-          const ViewVariable(),
-          const VerticalDivider(
-            width: 1,
-            thickness: 1,
-          ),
-          Expanded(
-            child: Scaffold(
-              appBar: appbarWidget,
-              body: Column(
+      return Scaffold(
+        appBar: appbarWidget,
+        body: Row(
+          children: [
+            const ViewVariable(),
+            Expanded(
+              child: Column(
                 children: [
                   Container(
                     color: Colors.black12,
@@ -187,8 +183,8 @@ class ViewEditor extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
     }
   }

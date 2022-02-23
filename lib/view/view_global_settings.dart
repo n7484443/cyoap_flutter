@@ -262,7 +262,7 @@ class ViewGlobalSetting extends StatelessWidget {
       body: Row(
         children: [
           Expanded(
-            flex: 3,
+            flex: ConstList.isSmallDisplay(context) ? 1 : 3,
             child: Column(
               children: [
                 Expanded(

@@ -110,11 +110,19 @@ final ThemeData appThemeData = ThemeData(
   primaryColor: Colors.black,
   textTheme: GoogleFonts.notoSansTextTheme(),
   scaffoldBackgroundColor: Colors.white,
-  appBarTheme: const AppBarTheme(
-    color: Colors.white,
-    iconTheme: IconThemeData(
+  iconTheme: const IconThemeData(
       color: Colors.black
+  ),
+  appBarTheme: const AppBarTheme(
+    iconTheme: IconThemeData(
+        color: Colors.black
     ),
-    elevation: 0,
-  )
+    color: Colors.white,
+    elevation: 3,
+  ),
+  drawerTheme: const DrawerThemeData(
+    backgroundColor: Colors.white,
+    elevation: 3,
+  ),
+  useMaterial3: true,
 );

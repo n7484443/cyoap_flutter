@@ -171,20 +171,16 @@ class ViewMake extends StatelessWidget {
         ),
       );
     } else {
-      return Row(
-        children: [
-          const ViewVariable(),
-          const VerticalDivider(
-            width: 1,
-            thickness: 1,
-          ),
-          Expanded(
-            child: Scaffold(
-              appBar: appbarWidget,
-              body: const NestedMap(),
+      return Scaffold(
+        appBar: appbarWidget,
+        body: Row(
+          children: const [
+            ViewVariable(),
+            Expanded(
+              child: NestedMap(),
             ),
-          ),
-        ],
+          ],
+        ),
       );
     }
   }

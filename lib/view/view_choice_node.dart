@@ -218,7 +218,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                   readOnly: true,
                   autoFocus: false,
                   expands: false,
-                  padding: const EdgeInsets.all(0),
+                  padding: const EdgeInsets.only(top:4),
                   scrollController: ScrollController(),
                   scrollable: false,
                   customStyles: ConstList.getDefaultThemeData(

@@ -1,4 +1,4 @@
-package com.example.cyoap_flutter
+package com.clearApple.cyoap_flutter
 
 import io.flutter.embedding.android.FlutterActivity
 
