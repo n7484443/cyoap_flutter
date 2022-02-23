@@ -2,7 +2,7 @@ import 'package:cyoap_flutter/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../viewmodel/vm_start.dart';
+import '../viewModel/vm_start.dart';
 
 class ViewStart extends StatelessWidget {
   const ViewStart({Key? key}) : super(key: key);

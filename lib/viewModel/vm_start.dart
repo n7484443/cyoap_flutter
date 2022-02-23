@@ -120,7 +120,7 @@ class VMStartPlatform extends GetxController {
     if (selected == index) {
       return Colors.blue;
     } else {
-      return Colors.red;
+      return Colors.black54;
     }
   }
 

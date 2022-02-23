@@ -316,7 +316,7 @@ class PlatformFileSystem {
   }
 
   void addImage(String name, Uint8List data) {
-    _dirImage.putIfAbsent(name, () => data);
+    _dirImage[name] = data;
   }
 
   int getImageIndex(String name) {

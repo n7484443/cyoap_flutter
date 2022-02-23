@@ -106,23 +106,31 @@ class ViewMake extends StatelessWidget {
             child: IconButton(
               icon: const Icon(MdiIcons.zipBox),
               onPressed: () {
+                Get.find<VMPlatform>().stopwatch.start();
                 Get.defaultDialog(
                   barrierDismissible: false,
                   title: '압축중...',
-                  content: Obx(() => Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          LinearProgressIndicator(
-                            value: PlatformSystem.instance.platformFileSystem
-                                .saveProgress.value.progressPercent,
-                          ),
-                          Text(
-                              '${PlatformSystem.instance.platformFileSystem.saveProgress.value.progress} / ${PlatformSystem.instance.platformFileSystem.saveProgress.value.progressMax}'),
-                        ],
-                      )),
+                  content: Obx(
+                    () => Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        LinearProgressIndicator(
+                          value: PlatformSystem.instance.platformFileSystem
+                              .saveProgress.value.progressPercent,
+                        ),
+                        Text(
+                            '${PlatformSystem.instance.platformFileSystem.saveProgress.value.progress} / ${PlatformSystem.instance.platformFileSystem.saveProgress.value.progressMax}'),
+                        Text(Get.find<VMPlatform>()
+                            .stopwatch
+                            .elapsed
+                            .toString()),
+                      ],
+                    ),
+                  ),
                 );
                 Get.find<VMPlatform>().save(true);
+                Get.find<VMPlatform>().stopwatch.stop();
               },
             ),
             visible: !ConstList.isOnlyFileAccept(),

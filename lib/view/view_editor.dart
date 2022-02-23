@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:cyoap_flutter/model/platform_system.dart';
@@ -5,6 +6,7 @@ import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:get/get.dart';
+import 'package:image_cropping/image_cropping.dart';
 
 import '../main.dart';
 import '../viewModel/vm_editor.dart';
@@ -261,15 +263,19 @@ class ViewEditorTyping extends StatelessWidget {
                 children: [
                   IconButton(
                       onPressed: () {
-                        controller.addImage();
+                        var name = controller.addImage();
+                        name.then((String name) {
+                          if (controller.imageLast != null) {
+                            ImageCropping.cropImage(
+                              context: context,
+                              imageBytes: controller.imageLast!,
+                              onImageDoneListener: (data) => controller
+                                  .addImageCrop(name, data as Uint8List),
+                            );
+                          }
+                        });
                       },
                       icon: const Icon(Icons.add)),
-                  GetBuilder<VMEditor>(
-                    builder: (_) => Visibility(
-                      child: const CircularProgressIndicator(),
-                      visible: controller.isConvertImage,
-                    ),
-                  ),
                 ],
               ),
               Expanded(
@@ -286,7 +292,7 @@ class ViewEditorTyping extends StatelessWidget {
                   ),
                   child: ScrollConfiguration(
                     behavior:
-                        ScrollConfiguration.of(context).copyWith(dragDevices: {
+                    ScrollConfiguration.of(context).copyWith(dragDevices: {
                       PointerDeviceKind.touch,
                       PointerDeviceKind.mouse,
                     }),

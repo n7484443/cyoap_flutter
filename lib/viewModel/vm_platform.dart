@@ -24,6 +24,8 @@ class VMPlatform extends GetxController{
 
   ScrollController scroller = ScrollController();
 
+  Stopwatch stopwatch = Stopwatch();
+
   void updateWidgetList(){
     widgetList.clear();
 
@@ -65,7 +67,7 @@ class VMPlatform extends GetxController{
     return Tuple(node.width, node.height);
   }
 
-  double nodeBaseWidth = 200;
+  double nodeBaseWidth = 180;
   double nodeBaseHeight = 20;
 
   Tuple<int, int> getRealSize(Tuple<int, int> position) {
