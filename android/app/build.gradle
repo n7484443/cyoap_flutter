@@ -47,7 +47,6 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.clearApple.cyoap_flutter"
         minSdkVersion 21
         targetSdkVersion 30
@@ -66,11 +65,10 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.release
-            manifyEnabled true
-            useProguard true
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
