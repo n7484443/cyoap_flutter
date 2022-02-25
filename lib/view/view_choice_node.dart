@@ -1,6 +1,5 @@
 import 'package:cyoap_flutter/view/view_text_outline.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
-import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:get/get.dart';
@@ -26,10 +25,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
 
     var mainNode = GetBuilder<VMDraggableNestedMap>(
       builder: (_) => Container(
-        padding: const EdgeInsets.all(3),
-        color: vmDraggableNestedMap.isSelect(posX, posY)
-            ? Colors.lightBlueAccent
-            : Colors.white,
+        padding: const EdgeInsets.all(6),
         width: realSize.data1 * _.getScale().data1,
         height: realSize.data2 * _.getScale().data2,
         child: Column(
@@ -75,7 +71,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                             vmDraggableNestedMap.sizeSet.data2 = size.data2;
                             showDialog(
                               context: context,
-                              builder: (builder) => GetBuilder<VMPlatform>(
+                              builder: (builder) => GetBuilder<VMDraggableNestedMap>(
                                 builder: (_) => AlertDialog(
                                   scrollable: true,
                                   alignment: Alignment.center,
@@ -207,7 +203,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
     );
 
     if (vmDraggableNestedMap.isEditable()) {
-      return GetBuilder<VMPlatform>(
+      return GetBuilder<VMDraggableNestedMap>(
         builder: (_) => InkWell(
           onTap: () {
             if (ConstList.isMobile()) {
@@ -233,7 +229,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
         ),
       );
     } else {
-      return GetBuilder<VMPlatform>(
+      return GetBuilder<VMDraggableNestedMap>(
         builder: (_) => IgnorePointer(
           ignoring: !vmDraggableNestedMap.isSelectable(posX, posY),
           child: InkWell(
@@ -241,7 +237,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
               vmDraggableNestedMap.select(posX, posY);
             },
             child: Opacity(
-                opacity: vmDraggableNestedMap.isSelectablePreCheck(posX, posY) ? 1.0 : 0.5, child: mainNode),
+                opacity: vmDraggableNestedMap.isSelectablePreCheck(posX, posY) ? 1.0 : 0.6, child: mainNode),
           ),
         ),
       );

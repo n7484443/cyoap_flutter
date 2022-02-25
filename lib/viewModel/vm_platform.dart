@@ -1,6 +1,7 @@
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../model/platform_system.dart';
 import '../view/view_choice_node.dart';
 
@@ -27,18 +28,29 @@ class VMPlatform extends GetxController{
 Widget getWidgetFromType(int type, bool isCard, int x, int y) {
   var widget = ViewChoiceNodeTextWithImage(posX: x, posY: y);
   if (isCard) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
+    return GetBuilder<VMDraggableNestedMap>(
+      builder: (_) => Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          side: BorderSide(
+            color: _.isSelect(x, y) ? Colors.lightBlueAccent : Colors.white,
+            width: 4,
+          ),
+        ),
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        elevation: 20.0,
+        child: widget,
       ),
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      elevation: 20.0,
-      child: widget,
     );
   } else {
-    return Material(
-      color: Colors.white,
-      child: widget,
+    return GetBuilder<VMDraggableNestedMap>(
+      builder: (_) => Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: _.isSelect(x, y) ? Colors.lightBlueAccent : Colors.white, width: 4),
+          color: Colors.white,
+        ),
+        child: widget,
+      ),
     );
   }
 }

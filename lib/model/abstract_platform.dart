@@ -4,6 +4,7 @@ import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/util/tuple.dart';
+import 'package:flutter/material.dart';
 
 import '../util/version.dart';
 import 'choiceNode/line_setting.dart';
@@ -57,7 +58,7 @@ class AbstractPlatform {
   AbstractPlatform.fromJson(Map<String, dynamic> json)
       : scale = 1.0,
         stringImageName = json['stringImageName'] ?? '',
-        colorBackground = Color((json['colorBackground'] != null && json['colorBackground'] is int) ? json['colorBackground'] : 0xffffffff),
+        colorBackground = (json['colorBackground'] != null && json['colorBackground'] is int) ? Color(json['colorBackground']) : Colors.white,
         flag = json['flag'] ?? 0,
         globalSetting = (json['globalSetting'] as Map)
             .map((k, v) => MapEntry(k, ValueTypeWrapper.fromJson(v))),
@@ -67,7 +68,7 @@ class AbstractPlatform {
 
   Map<String, dynamic> toJson() => {
     'stringImageName' : stringImageName,
-    'colorBackground' : colorBackground,
+    'colorBackground' : colorBackground.value,
     'flag' : flag,
     'globalSetting' : globalSetting,
     'version' : version,
