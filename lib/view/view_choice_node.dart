@@ -9,14 +9,6 @@ import '../main.dart';
 import '../model/platform_system.dart';
 import '../util/tuple.dart';
 
-/*
-  Card──Container─children─┬──title
-                           ├──image
-                           ├──area
-                           └──Card──subChoiceSet
-  */
-
-
 class ViewChoiceNodeTextWithImage extends StatelessWidget {
   final int posX;
   final int posY;
@@ -34,6 +26,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
 
     var mainNode = GetBuilder<VMDraggableNestedMap>(
       builder: (_) => Container(
+        padding: const EdgeInsets.all(3),
         color: vmDraggableNestedMap.isSelect(posX, posY)
             ? Colors.lightBlueAccent
             : Colors.white,

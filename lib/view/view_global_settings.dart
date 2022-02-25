@@ -297,9 +297,13 @@ class ViewGlobalSetting extends StatelessWidget {
                     child: SingleChildScrollView(
                       controller: ScrollController(),
                       child: ColorPicker(
-                        heading: const Text('배경 색 설정(구현중)'),
+                        heading: const Text('배경색 설정(구현중)'),
                         subheading: const Text('색조 설정'),
-                        onColorChanged: (Color value) {},
+                        onColorChanged: (Color value) {
+                          vmGlobalSetting.updateColor(value);
+                        },
+                        pickersEnabled: {ColorPickerType.wheel: true, ColorPickerType.accent: false},
+                        pickerTypeLabels: {ColorPickerType.primary: "배경색", ColorPickerType.wheel: "색상 선택"},
                         width: 22,
                         height: 22,
                         borderRadius: 22,

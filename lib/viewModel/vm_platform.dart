@@ -28,7 +28,11 @@ Widget getWidgetFromType(int type, bool isCard, int x, int y) {
   Widget widget = ViewChoiceNodeTextWithImage(posX: x, posY: y);
   if (isCard) {
     return Card(
-      elevation: 5.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      elevation: 20.0,
       child: widget,
     );
   } else {

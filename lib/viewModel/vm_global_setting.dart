@@ -1,5 +1,6 @@
 import 'package:cyoap_flutter/model/grammar/value_type.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
+import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,6 +22,7 @@ class VMGlobalSetting extends GetxController {
   void onInit() {
     initialValueList.clear();
     initialValueList.addAll(getPlatform().globalSetting);
+
     super.onInit();
   }
 
@@ -127,7 +129,13 @@ class VMGlobalSetting extends GetxController {
   TextStyle getTitleFont() {
     return ConstList.getFont(getPlatform().titleFont);
   }
+
   TextStyle getMainFont() {
     return ConstList.getFont(getPlatform().mainFont);
+  }
+
+  void updateColor(Color color) {
+    getPlatform().colorBackground = color.value;
+    Get.find<VMDraggableNestedMap>().update();
   }
 }
