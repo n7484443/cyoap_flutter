@@ -1,4 +1,5 @@
 import 'package:cyoap_flutter/view/view_text_outline.dart';
+import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
@@ -26,14 +27,14 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var vmPlatform = Get.find<VMPlatform>();
-    var size = vmPlatform.getSize(Tuple(posX, posY));
-    var realSize = vmPlatform.getRealSize(Tuple(posX, posY));
-    var node = vmPlatform.getNode(posX, posY)!;
+    var vmDraggableNestedMap = Get.find<VMDraggableNestedMap>();
+    var size = vmDraggableNestedMap.getSize(Tuple(posX, posY));
+    var realSize = vmDraggableNestedMap.getRealSize(Tuple(posX, posY));
+    var node = vmDraggableNestedMap.getNode(posX, posY)!;
 
-    var mainNode = GetBuilder<VMPlatform>(
+    var mainNode = GetBuilder<VMDraggableNestedMap>(
       builder: (_) => Container(
-        color: vmPlatform.isSelect(posX, posY)
+        color: vmDraggableNestedMap.isSelect(posX, posY)
             ? Colors.lightBlueAccent
             : Colors.white,
         width: realSize.data1 * _.getScale().data1,
@@ -77,8 +78,8 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                         icon: const Icon(Icons.more_vert),
                         onSelected: (result) {
                           if (result == 0) {
-                            vmPlatform.sizeSet.data1 = size.data1;
-                            vmPlatform.sizeSet.data2 = size.data2;
+                            vmDraggableNestedMap.sizeSet.data1 = size.data1;
+                            vmDraggableNestedMap.sizeSet.data2 = size.data2;
                             showDialog(
                               context: context,
                               builder: (builder) => GetBuilder<VMPlatform>(
@@ -99,15 +100,15 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                                             icon:
                                                 const Icon(Icons.chevron_left),
                                             onPressed: () {
-                                              vmPlatform.sizeChange(-1, 0);
+                                              vmDraggableNestedMap.sizeChange(-1, 0);
                                             },
                                           ),
-                                          Text('${vmPlatform.sizeSet.data1 == 0 ? 'max': vmPlatform.sizeSet.data1}'),
+                                          Text('${vmDraggableNestedMap.sizeSet.data1 == 0 ? 'max': vmDraggableNestedMap.sizeSet.data1}'),
                                           IconButton(
                                             icon:
                                                 const Icon(Icons.chevron_right),
                                             onPressed: () {
-                                              vmPlatform.sizeChange(1, 0);
+                                              vmDraggableNestedMap.sizeChange(1, 0);
                                             },
                                           ),
                                         ],
@@ -124,7 +125,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                                                 Icons.double_arrow,
                                               ),
                                               onPressed: () {
-                                                vmPlatform.sizeChange(0, -5);
+                                                vmDraggableNestedMap.sizeChange(0, -5);
                                               },
                                             ),
                                           ),
@@ -132,16 +133,16 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                                             icon:
                                                 const Icon(Icons.chevron_left),
                                             onPressed: () {
-                                              vmPlatform.sizeChange(0, -1);
+                                              vmDraggableNestedMap.sizeChange(0, -1);
                                             },
                                           ),
                                           Text(
-                                              '${vmPlatform.sizeSet.data2/10}'),
+                                              '${vmDraggableNestedMap.sizeSet.data2/10}'),
                                           IconButton(
                                             icon:
                                                 const Icon(Icons.chevron_right),
                                             onPressed: () {
-                                              vmPlatform.sizeChange(0, 1);
+                                              vmDraggableNestedMap.sizeChange(0, 1);
                                             },
                                           ),
                                           IconButton(
@@ -149,7 +150,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                                               Icons.double_arrow,
                                             ),
                                             onPressed: () {
-                                              vmPlatform.sizeChange(0, 5);
+                                              vmDraggableNestedMap.sizeChange(0, 5);
                                             },
                                           ),
                                         ],
@@ -160,9 +161,9 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                                     TextButton(
                                       child: const Text('변경'),
                                       onPressed: () {
-                                        vmPlatform.setSize(Tuple(posX, posY),
-                                            vmPlatform.sizeSet);
-                                        vmPlatform.updateWidgetList();
+                                        vmDraggableNestedMap.setSize(Tuple(posX, posY),
+                                            vmDraggableNestedMap.sizeSet);
+                                        vmDraggableNestedMap.updateWidgetList();
                                         Get.back();
                                       },
                                     ),
@@ -181,8 +182,8 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                           ];
                         },
                       ),
-                      visible: vmPlatform.mouseHover == Tuple(posX, posY) &&
-                          vmPlatform.isEditable(),
+                      visible: vmDraggableNestedMap.mouseHover == Tuple(posX, posY) &&
+                          vmDraggableNestedMap.isEditable(),
                     ),
                   ),
                 ],
@@ -191,7 +192,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
             Visibility(
               child: IgnorePointer(
                 child: quill.QuillEditor(
-                  controller: vmPlatform.getNodeController(posX, posY)!,
+                  controller: vmDraggableNestedMap.getNodeController(posX, posY)!,
                   focusNode: FocusNode(),
                   readOnly: true,
                   autoFocus: false,
@@ -212,26 +213,26 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
       ),
     );
 
-    if (vmPlatform.isEditable()) {
+    if (vmDraggableNestedMap.isEditable()) {
       return GetBuilder<VMPlatform>(
         builder: (_) => InkWell(
           onTap: () {
             if (ConstList.isMobile()) {
-              if (vmPlatform.isEditable()) {
-                vmPlatform.setHover(posX, posY);
+              if (vmDraggableNestedMap.isEditable()) {
+                vmDraggableNestedMap.setHover(posX, posY);
               }
             }
           },
           onHover: (val) {
             if (!ConstList.isMobile()) {
               if (val) {
-                vmPlatform.setHover(posX, posY);
+                vmDraggableNestedMap.setHover(posX, posY);
               }
             }
           },
           onDoubleTap: () {
-            if (vmPlatform.isEditable()) {
-              vmPlatform.setEdit(posX, posY);
+            if (vmDraggableNestedMap.isEditable()) {
+              vmDraggableNestedMap.setEdit(posX, posY);
               Get.toNamed('/viewEditor');
             }
           },
@@ -241,13 +242,13 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
     } else {
       return GetBuilder<VMPlatform>(
         builder: (_) => IgnorePointer(
-          ignoring: !vmPlatform.isSelectable(posX, posY),
+          ignoring: !vmDraggableNestedMap.isSelectable(posX, posY),
           child: InkWell(
             onTap: () {
-              vmPlatform.select(posX, posY);
+              vmDraggableNestedMap.select(posX, posY);
             },
             child: Opacity(
-                opacity: vmPlatform.isSelectablePreCheck(posX, posY) ? 1.0 : 0.5, child: mainNode),
+                opacity: vmDraggableNestedMap.isSelectablePreCheck(posX, posY) ? 1.0 : 0.5, child: mainNode),
           ),
         ),
       );

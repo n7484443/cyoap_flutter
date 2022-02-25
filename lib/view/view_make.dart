@@ -11,6 +11,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 import '../main.dart';
 import '../model/platform_system.dart';
+import '../viewModel/vm_draggable_nested_map.dart';
 
 class ViewMake extends StatelessWidget {
   const ViewMake({Key? key}) : super(key: key);
@@ -18,7 +19,6 @@ class ViewMake extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vmPlatform = Get.put(VMPlatform());
-    vmPlatform.updateWidgetList();
 
     var dialog = AlertDialog(
       title: const Text('뒤로가기'),
@@ -26,7 +26,6 @@ class ViewMake extends StatelessWidget {
       actions: [
         ElevatedButton(
           onPressed: () {
-            vmPlatform.isChanged = false;
             Get.back();
             Get.back();
           },
@@ -48,7 +47,7 @@ class ViewMake extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            if(vmPlatform.isChanged){
+            if(Get.find<VMDraggableNestedMap>().isChanged){
               showDialog(
                 context: context,
                 builder: (_) => dialog,
@@ -67,7 +66,7 @@ class ViewMake extends StatelessWidget {
                 return const Icon(Icons.delete);
               },
               onAccept: (Tuple<int, int> data) {
-                Get.find<VMPlatform>().removeData(data);
+                Get.find<VMDraggableNestedMap>().removeData(data);
               },
               onMove: (DragTargetDetails<Tuple<int, int>> details){
               },
@@ -76,14 +75,13 @@ class ViewMake extends StatelessWidget {
               data: Tuple(-1, -1),
               feedback: Transform.scale(
                 scale: 0.9,
-                child: Get.find<VMPlatform>()
-                    .getWidgetFromType(0, true, -1, -1),
+                child: getWidgetFromType(0, true, -1, -1),
               ),
               onDragStarted: () {
-                Get.find<VMPlatform>().dragStart(-1, -1);
+                Get.find<VMDraggableNestedMap>().dragStart(-1, -1);
               },
               onDragEnd: (DraggableDetails data) {
-                Get.find<VMPlatform>().dragEnd();
+                Get.find<VMDraggableNestedMap>().dragEnd();
               },
               child: const Icon(Icons.add),
             ),
@@ -99,7 +97,7 @@ class ViewMake extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.image),
             onPressed: () {
-              Get.find<VMPlatform>().exportAsImage();
+              Get.find<VMDraggableNestedMap>().exportAsImage();
             },
           ),
           Visibility(

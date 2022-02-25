@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:cyoap_flutter/model/editor.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
-import 'package:cyoap_flutter/viewModel/vm_platform.dart';
+import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -56,7 +56,7 @@ class VMEditor extends GetxController{
     NodeEditor.instance.target.title = title.value;
     NodeEditor.instance.target.contentsString =
         jsonEncode(quillController.document.toDelta().toJson());
-    Get.find<VMPlatform>().updateWidgetList();
+    Get.find<VMDraggableNestedMap>().updateWidgetList();
     isChanged = false;
   }
 
@@ -109,7 +109,7 @@ class VMEditor extends GetxController{
     PlatformSystem.addImage(name, data);
     NodeEditor.instance.target.imageString = name;
     index = PlatformSystem.getImageIndex(name);
-    Get.find<VMPlatform>().isChanged = true;
+    Get.find<VMDraggableNestedMap>().isChanged = true;
     imageLast = null;
 
     isChanged = true;

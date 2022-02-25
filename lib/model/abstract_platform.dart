@@ -10,7 +10,7 @@ import 'grammar/value_type.dart';
 class AbstractPlatform {
   double scale;
   String stringImageName;
-  String colorBackground;
+  int colorBackground;
   int flag;
   List<Tuple<List<ChoiceNodeBase>, LineSetting>> choiceNodes = List.empty(growable: true);
   Map<String, ValueTypeWrapper> globalSetting = {};
@@ -46,7 +46,7 @@ class AbstractPlatform {
   AbstractPlatform.none()
       : scale = 1.0,
         stringImageName = '',
-        colorBackground = '#909090',
+        colorBackground = 0xff909090,
         flag = 0,
         version = ConstList.version ?? '',
         titleFont = "notoSans",
@@ -55,7 +55,7 @@ class AbstractPlatform {
   AbstractPlatform.fromJson(Map<String, dynamic> json)
       : scale = 1.0,
         stringImageName = json['stringImageName'] ?? '',
-        colorBackground = json['colorBackground'] ?? '#909090',
+        colorBackground = (json['colorBackground'] != null && json['colorBackground'] is int) ? json['colorBackground'] : 0xffffffff,
         flag = json['flag'] ?? 0,
         globalSetting = (json['globalSetting'] as Map)
             .map((k, v) => MapEntry(k, ValueTypeWrapper.fromJson(v))),

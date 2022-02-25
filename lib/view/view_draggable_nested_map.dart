@@ -5,6 +5,8 @@ import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../viewModel/vm_draggable_nested_map.dart';
+
 class NodeDivider extends StatelessWidget {
   final int y;
 
@@ -13,11 +15,12 @@ class NodeDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var vmPlatform = Get.find<VMPlatform>();
+    var vmDraggableNestedMap = Get.find<VMDraggableNestedMap>();
     var maxSelectText = Visibility(
       child: TextOutline('최대 ${vmPlatform.getMaxSelect(y)}개만큼 선택 가능', 18.0),
       visible: vmPlatform.getMaxSelect(y) != '무한',
     );
-    if (vmPlatform.isEditable()) {
+    if (vmDraggableNestedMap.isEditable()) {
       return Stack(
         children: [
           const Divider(
@@ -45,14 +48,14 @@ class NodeDivider extends StatelessWidget {
                                 IconButton(
                                   icon: const Icon(Icons.chevron_left),
                                   onPressed: () {
-                                    vmPlatform.addMaxSelect(y, -1);
+                                    vmDraggableNestedMap.addMaxSelect(y, -1);
                                   },
                                 ),
                                 Text(vmPlatform.getMaxSelect(y)),
                                 IconButton(
                                   icon: const Icon(Icons.chevron_right),
                                   onPressed: () {
-                                    vmPlatform.addMaxSelect(y, 1);
+                                    vmDraggableNestedMap.addMaxSelect(y, 1);
                                   },
                                 ),
                               ],
@@ -96,7 +99,9 @@ class NestedMap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<VMPlatform>(
+    var vmDraggableNestedMap = Get.put(VMDraggableNestedMap());
+    vmDraggableNestedMap.updateWidgetList();
+    return GetBuilder<VMDraggableNestedMap>(
       builder: (_) =>
           LayoutBuilder(
             builder: (context, constrains) =>
@@ -105,7 +110,7 @@ class NestedMap extends StatelessWidget {
                   child: RepaintBoundary(
                     key: _.captureKey,
                     child: Container(
-                      decoration: const BoxDecoration(color: Colors.white),
+                      decoration: BoxDecoration(color: _.getBackgroundColor()),
                       child: Column(
                         key: _.keyListView,
                         children: List<Widget>.generate(

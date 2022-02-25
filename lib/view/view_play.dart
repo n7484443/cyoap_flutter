@@ -1,6 +1,6 @@
 import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
 import 'package:cyoap_flutter/view/view_variable_table.dart';
-import 'package:cyoap_flutter/viewModel/vm_platform.dart';
+import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
@@ -12,8 +12,8 @@ class ViewPlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final vmPlatform = Get.put(VMPlatform());
-    vmPlatform.updateWidgetList();
+    final vmDraggableNestedMap = Get.put(VMDraggableNestedMap());
+    vmDraggableNestedMap.updateWidgetList();
     if (ConstList.isSmallDisplay(context)) {
       return Scaffold(
         appBar: PreferredSize(
