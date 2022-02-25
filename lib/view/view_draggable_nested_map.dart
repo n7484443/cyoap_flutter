@@ -101,8 +101,8 @@ class NestedMap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(VMDraggableNestedMap()..updateWidgetList());
     return GetBuilder<VMDraggableNestedMap>(
-      init: VMDraggableNestedMap()..updateWidgetList(),
       builder: (_) => LayoutBuilder(
         builder: (context, constrains) => SingleChildScrollView(
           controller: _.scroller,
