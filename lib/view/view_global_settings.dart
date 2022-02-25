@@ -297,6 +297,7 @@ class ViewGlobalSetting extends StatelessWidget {
                     child: SingleChildScrollView(
                       controller: ScrollController(),
                       child: ColorPicker(
+                        color: getPlatform().colorBackground,
                         heading: const Text('배경색 설정(구현중)'),
                         subheading: const Text('색조 설정'),
                         onColorChanged: (Color value) {

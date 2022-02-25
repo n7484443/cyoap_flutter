@@ -135,7 +135,7 @@ class VMGlobalSetting extends GetxController {
   }
 
   void updateColor(Color color) {
-    getPlatform().colorBackground = color.value;
+    getPlatform().colorBackground = color;
     Get.find<VMDraggableNestedMap>().update();
   }
 }

@@ -114,7 +114,7 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   Color getBackgroundColor() {
-    return Color(getPlatform().colorBackground);
+    return getPlatform().colorBackground;
   }
 
   Tuple<double, double> getScale() {

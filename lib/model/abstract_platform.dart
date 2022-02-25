@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
@@ -10,7 +12,7 @@ import 'grammar/value_type.dart';
 class AbstractPlatform {
   double scale;
   String stringImageName;
-  int colorBackground;
+  Color colorBackground;
   int flag;
   List<Tuple<List<ChoiceNodeBase>, LineSetting>> choiceNodes = List.empty(growable: true);
   Map<String, ValueTypeWrapper> globalSetting = {};
@@ -46,7 +48,7 @@ class AbstractPlatform {
   AbstractPlatform.none()
       : scale = 1.0,
         stringImageName = '',
-        colorBackground = 0xff909090,
+        colorBackground = const Color(0xff909090),
         flag = 0,
         version = ConstList.version ?? '',
         titleFont = "notoSans",
@@ -55,7 +57,7 @@ class AbstractPlatform {
   AbstractPlatform.fromJson(Map<String, dynamic> json)
       : scale = 1.0,
         stringImageName = json['stringImageName'] ?? '',
-        colorBackground = (json['colorBackground'] != null && json['colorBackground'] is int) ? json['colorBackground'] : 0xffffffff,
+        colorBackground = Color((json['colorBackground'] != null && json['colorBackground'] is int) ? json['colorBackground'] : 0xffffffff),
         flag = json['flag'] ?? 0,
         globalSetting = (json['globalSetting'] as Map)
             .map((k, v) => MapEntry(k, ValueTypeWrapper.fromJson(v))),

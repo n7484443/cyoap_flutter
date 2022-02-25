@@ -1,4 +1,5 @@
 import 'package:cyoap_flutter/main.dart';
+import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/util/tuple.dart';
 import 'package:cyoap_flutter/view/view_text_outline.dart';
 import 'package:flutter/material.dart';
@@ -22,8 +23,9 @@ class NodeDivider extends StatelessWidget {
     if (vmDraggableNestedMap.isEditable()) {
       return Stack(
         children: [
-          const Divider(
+          Divider(
             thickness: 4,
+            color: getPlatform().colorBackground.computeLuminance() > 0.5 ? Colors.black : Colors.white,
           ),
           maxSelectText,
           Align(
@@ -82,8 +84,9 @@ class NodeDivider extends StatelessWidget {
     } else {
       return Stack(
         children: [
-          const Divider(
+          Divider(
             thickness: 4,
+            color: getPlatform().colorBackground.computeLuminance() > 0.5 ? Colors.black : Colors.white,
           ),
           maxSelectText,
         ],
