@@ -203,7 +203,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                   customStyles: ConstList.getDefaultThemeData(
                       context, _.getScale().data2,
                       fontStyle: ConstList.getFont(
-                          PlatformSystem.getPlatform().mainFont)),
+                          getPlatform().mainFont)),
                 ),
               ),
               visible: node.contentsString.isNotEmpty,

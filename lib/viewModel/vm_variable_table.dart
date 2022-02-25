@@ -19,7 +19,7 @@ class VMVariableTable extends GetxController {
     nodeNameList.clear();
     variableList.clear();
 
-    var nodes = PlatformSystem.getPlatform().choiceNodes;
+    var nodes = getPlatform().choiceNodes;
     for(var t in nodes){
       for(var node in t.data1){
         nodeNameList.add(Tuple(node.title, isEditable() ? true : node.select));
@@ -51,6 +51,6 @@ class VMVariableTable extends GetxController {
   }
 
   bool isEditable() {
-    return PlatformSystem.getPlatform().isEditable;
+    return getPlatform().isEditable;
   }
 }

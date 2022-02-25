@@ -8,28 +8,19 @@ class VMPlatform extends GetxController{
   Stopwatch stopwatch = Stopwatch();
 
   void save(bool saveAsFile){
-    PlatformSystem.getPlatform().compress();
-    PlatformSystem.getPlatform().generateRecursiveParser();
+    getPlatform().compress();
+    getPlatform().generateRecursiveParser();
     if(saveAsFile){
-      PlatformSystem.instance.saveFile().then((value)=>saveEnd());
+      PlatformSystem.instance.saveFile().then((value)=>Get.back());
     }else{
-      PlatformSystem.instance.saveFolder().then((value)=>saveEnd());
+      PlatformSystem.instance.saveFolder().then((value)=>Get.back());
     }
     Get.find<VMDraggableNestedMap>().isChanged = false;
   }
 
-  void saveEnd(){
-    Get.back();
-  }
-
   void loadVariable() {
-    PlatformSystem.getPlatform().generateRecursiveParser();
-    PlatformSystem.getPlatform().updateSelectable();
-  }
-
-  String getMaxSelect(int y){
-    var max = PlatformSystem.getPlatform().getLineSetting(y)?.maxSelect;
-    return max == -1 ? '무한' : '$max';
+    getPlatform().generateRecursiveParser();
+    getPlatform().updateSelectable();
   }
 }
 

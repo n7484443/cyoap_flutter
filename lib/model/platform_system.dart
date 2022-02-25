@@ -43,11 +43,6 @@ class PlatformSystem{
     platformFileSystem.createFromVoid();
   }
 
-  static AbstractPlatform getPlatform(){
-    return instance.platformFileSystem.platform;
-  }
-
-
   Future<void> saveFile() async{
     if(ConstList.isOnlyFileAccept()){
       await saveZip('exported.zip', platformFileSystem);
@@ -92,4 +87,8 @@ class PlatformSystem{
   static int getImageIndex(String name) {
     return instance.platformFileSystem.getImageIndex(name);
   }
+}
+
+AbstractPlatform getPlatform(){
+  return PlatformSystem.instance.platformFileSystem.platform;
 }

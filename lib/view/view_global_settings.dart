@@ -230,7 +230,7 @@ class ViewGlobalSetting extends StatelessWidget {
                   onChanged: (String? t) {
                     if (t != null) _.setTitleFont(t);
                   },
-                  value: PlatformSystem.getPlatform().titleFont,
+                  value: getPlatform().titleFont,
                 ),
               ),
             ),
@@ -248,7 +248,7 @@ class ViewGlobalSetting extends StatelessWidget {
                   onChanged: (String? t) {
                     if (t != null) _.setMainFont(t);
                   },
-                  value: PlatformSystem.getPlatform().mainFont,
+                  value: getPlatform().mainFont,
                 ),
               ),
             ),

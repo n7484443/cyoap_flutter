@@ -20,7 +20,7 @@ class VMGlobalSetting extends GetxController {
   @override
   void onInit() {
     initialValueList.clear();
-    initialValueList.addAll(PlatformSystem.getPlatform().globalSetting);
+    initialValueList.addAll(getPlatform().globalSetting);
     super.onInit();
   }
 
@@ -90,7 +90,7 @@ class VMGlobalSetting extends GetxController {
   }
 
   void save() {
-    PlatformSystem.getPlatform().setGlobalSetting(initialValueList);
+    getPlatform().setGlobalSetting(initialValueList);
     isChanged = false;
   }
 
@@ -111,23 +111,23 @@ class VMGlobalSetting extends GetxController {
   }
 
   void setTitleFont(String font) {
-    PlatformSystem.getPlatform().titleFont = font;
+    getPlatform().titleFont = font;
     update();
     Get.find<VMPlatform>().update();
     isChanged = true;
   }
 
   void setMainFont(String font) {
-    PlatformSystem.getPlatform().mainFont = font;
+    getPlatform().mainFont = font;
     update();
     Get.find<VMPlatform>().update();
     isChanged = true;
   }
 
   TextStyle getTitleFont() {
-    return ConstList.getFont(PlatformSystem.getPlatform().titleFont);
+    return ConstList.getFont(getPlatform().titleFont);
   }
   TextStyle getMainFont() {
-    return ConstList.getFont(PlatformSystem.getPlatform().mainFont);
+    return ConstList.getFont(getPlatform().mainFont);
   }
 }

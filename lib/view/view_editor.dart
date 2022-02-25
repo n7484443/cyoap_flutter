@@ -228,7 +228,7 @@ class ViewEditorTyping extends StatelessWidget {
               autoFocus: false,
               readOnly: false,
               scrollController: ScrollController(),
-              customStyles: ConstList.getDefaultThemeData(context, 1, fontStyle: ConstList.getFont(PlatformSystem.getPlatform().mainFont)),
+              customStyles: ConstList.getDefaultThemeData(context, 1, fontStyle: ConstList.getFont(getPlatform().mainFont)),
             ),
           ),
         ),

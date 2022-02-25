@@ -125,7 +125,7 @@ class VMStartPlatform extends GetxController {
   }
 
   void setEditable(bool bool) {
-    PlatformSystem.getPlatform().isEditable = bool;
+    getPlatform().isEditable = bool;
   }
 
   void isNeedUpdate(){

@@ -28,7 +28,7 @@ class VMDraggableNestedMap extends GetxController {
   void updateWidgetList() {
     widgetList.clear();
 
-    var list = PlatformSystem.getPlatform().choiceNodes;
+    var list = getPlatform().choiceNodes;
     for (int y = 0; y < list.length; y++) {
       widgetList.add(List.empty(growable: true));
       var xList = list[y];
@@ -64,16 +64,16 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   void removeData(Tuple<int, int> data) {
-    PlatformSystem.getPlatform().removeData(data.data1, data.data2);
+    getPlatform().removeData(data.data1, data.data2);
     updateWidgetList();
   }
 
   void changeData(Tuple<int, int> data, Tuple<int, int> pos) {
     if (data == Tuple(-1, -1)) {
-      PlatformSystem.getPlatform()
+      getPlatform()
           .addData(pos.data1, pos.data2, createNodeForTemp());
     } else {
-      PlatformSystem.getPlatform().changeData(data, pos);
+      getPlatform().changeData(data, pos);
     }
     updateWidgetList();
   }
@@ -114,7 +114,7 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   Color getBackgroundColor() {
-    return Color(PlatformSystem.getPlatform().colorBackground);
+    return Color(getPlatform().colorBackground);
   }
 
   Tuple<double, double> getScale() {
@@ -125,14 +125,14 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   bool isEditable() {
-    return PlatformSystem.getPlatform().isEditable;
+    return getPlatform().isEditable;
   }
 
   ChoiceNodeBase? getNode(int x, int y) {
     if (x == -1 && y == -1) {
       return createNodeForTemp();
     }
-    return PlatformSystem.getPlatform().getChoiceNode(x, y);
+    return getPlatform().getChoiceNode(x, y);
   }
 
   ChoiceNodeBase createNodeForTemp() {
@@ -153,9 +153,9 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   void addNode() {
-    PlatformSystem.getPlatform()
+    getPlatform()
         .addData(0, 0, ChoiceNodeBase.noTitle(1, 1, true, '', ''));
-    PlatformSystem.getPlatform().checkDataCollect();
+    getPlatform().checkDataCollect();
     updateWidgetList();
   }
 
@@ -167,7 +167,7 @@ class VMDraggableNestedMap extends GetxController {
 
   void select(int posX, int posY) {
     if (getNode(posX, posY)!.isSelectableWithCheck()) {
-      PlatformSystem.getPlatform().setSelect(posX, posY);
+      getPlatform().setSelect(posX, posY);
       update();
     }
   }
@@ -193,9 +193,9 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   void addMaxSelect(int y, int max) {
-    if ((PlatformSystem.getPlatform().getLineSetting(y)!.maxSelect + max) >=
+    if ((getPlatform().getLineSetting(y)!.maxSelect + max) >=
         -1) {
-      PlatformSystem.getPlatform().getLineSetting(y)?.maxSelect += max;
+      getPlatform().getLineSetting(y)?.maxSelect += max;
     }
     update();
     isChanged = true;
@@ -203,16 +203,21 @@ class VMDraggableNestedMap extends GetxController {
 
   bool isSelect(int posX, int posY) {
     if (posX == -1 && posY == -1) return false;
-    return PlatformSystem.getPlatform().isSelect(posX, posY);
+    return getPlatform().isSelect(posX, posY);
   }
 
   void setEdit(int posX, int posY) {
-    var node = PlatformSystem.getPlatform().getChoiceNode(posX, posY);
+    var node = getPlatform().getChoiceNode(posX, posY);
 
     if(node == null){
       return;
     }
     ChoiceNodeBase nodeNonnull = node;
     NodeEditor.instance.setTarget(nodeNonnull);
+  }
+
+  String getMaxSelect(int y){
+    var max = getPlatform().getLineSetting(y)?.maxSelect;
+    return max == -1 ? '무한' : '$max';
   }
 }
