@@ -44,16 +44,6 @@ class ChoiceNodeBase extends GenerableParser{
     }
   } //랜덤 문자로 제목 중복 방지
 
-  int getType() {
-    if (imageString.isEmpty) {
-      return 0;
-    }
-    if (contentsString.isEmpty) {
-      return 1;
-    }
-    return 2;
-  }
-
   String convertToWebp(String name){
     return name.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
   }

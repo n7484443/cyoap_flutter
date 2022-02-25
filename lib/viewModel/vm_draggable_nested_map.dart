@@ -35,8 +35,7 @@ class VMDraggableNestedMap extends GetxController {
       for (int x = 0; x < xList.data1.length; x++) {
         widgetList[y].insert(
             x,
-            getWidgetFromType(
-                xList.data1[x].getType(), xList.data1[x].isCard, x, y));
+            getWidgetFromType(xList.data1[x].isCard, x, y));
       }
     }
     update();
