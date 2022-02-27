@@ -90,5 +90,9 @@ class PlatformSystem{
 }
 
 AbstractPlatform getPlatform(){
-  return PlatformSystem.instance.platformFileSystem.platform;
+  return getPlatformFileSystem().platform;
+}
+
+PlatformFileSystem getPlatformFileSystem(){
+  return PlatformSystem.instance.platformFileSystem;
 }

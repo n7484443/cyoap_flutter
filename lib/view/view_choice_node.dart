@@ -34,6 +34,18 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
               child: Stack(
                 children: [
                   Align(
+                    alignment: Alignment.topLeft,
+                    child:Visibility(
+                      child: TextButton(
+                        child: const Text('출처'),
+                        onPressed: () {
+                          getPlatformFileSystem().getSource(node.imageString);
+                        },
+                      ),
+                      visible: getPlatformFileSystem().hasSource(node.imageString) && getPlatform().isVisibleSource,
+                    ),
+                  ),
+                  Align(
                     alignment: Alignment.topCenter,
                     child: Visibility(
                       child: Padding(
@@ -191,8 +203,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                   scrollable: false,
                   customStyles: ConstList.getDefaultThemeData(
                       context, _.getScale().data2,
-                      fontStyle: ConstList.getFont(
-                          getPlatform().mainFont)),
+                      fontStyle: ConstList.getFont(getPlatform().mainFont)),
                 ),
               ),
               visible: node.contentsString.isNotEmpty,
@@ -237,7 +248,10 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
               vmDraggableNestedMap.select(posX, posY);
             },
             child: Opacity(
-                opacity: vmDraggableNestedMap.isSelectablePreCheck(posX, posY) ? 1.0 : 0.6, child: mainNode),
+                opacity: vmDraggableNestedMap.isSelectablePreCheck(posX, posY)
+                    ? 1.0
+                    : 0.4,
+                child: mainNode),
           ),
         ),
       );

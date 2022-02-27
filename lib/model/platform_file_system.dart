@@ -31,6 +31,7 @@ class ProgressData {
 class PlatformFileSystem {
   late AbstractPlatform platform;
   final Map<String, Uint8List> _dirImage = {};
+  final Map<String, String> _imageSource = {};
   Image noImage = Image.asset('images/noImage.png');
   bool openAsFile = false;
 
@@ -43,6 +44,7 @@ class PlatformFileSystem {
     var dirImages = Directory(path + '/images');
     var dirNodes = Directory(path + '/nodes');
     var platformJson = File(path + '/platform.json');
+    var imageSourceJson = File(path + '/imageSource.json');
 
     var existImages = await dirImages.exists();
     if (!existImages) {
@@ -72,6 +74,14 @@ class PlatformFileSystem {
       }
     } else {
       platform = AbstractPlatform.none();
+    }
+
+    var existImageSource = await imageSourceJson.exists();
+    if (existImageSource) {
+      var data = await imageSourceJson.readAsString();
+      if (data.isNotEmpty) {
+        _imageSource.addAll(jsonDecode(data));
+      }
     }
 
     var existNodes = await dirNodes.exists();
@@ -106,23 +116,30 @@ class PlatformFileSystem {
     List<LineSetting> lineSettingList = List.empty(growable: true);
     for (var file in archive) {
       Uint8List data = file.content as Uint8List;
+
       if (file.isFile) {
         var fileName = file.name;
         if (fileName.startsWith('images')) {
           int type = isImageFile(fileName);
           if (type == 1) {
             _dirImage.putIfAbsent(fileName.split("/")[1], () => data);
-          }else{
+          } else {
             //아직 지원 x
           }
-        } else if (fileName.startsWith('nodes')) {
-          if(fileName.contains('lineSetting_')){
-            lineSettingList.add(LineSetting.fromJson(jsonDecode(utf8.decode(data))));
-          }else{
-            nodeList.add(ChoiceNodeBase.fromJson(jsonDecode(utf8.decode(data))));
+        } else {
+          String dataConverted = utf8.decode(data);
+          if (fileName.startsWith('nodes')) {
+            if (fileName.contains('lineSetting_')) {
+              lineSettingList
+                  .add(LineSetting.fromJson(jsonDecode(dataConverted)));
+            } else {
+              nodeList.add(ChoiceNodeBase.fromJson(jsonDecode(dataConverted)));
+            }
+          } else if (fileName.endsWith('platform.json')) {
+            platformJson = dataConverted;
+          } else if (fileName.endsWith('imageSource.json')) {
+            _imageSource.addAll(jsonDecode(dataConverted));
           }
-        } else if (fileName.endsWith('platform.json')) {
-          platformJson = utf8.decode(data);
         }
       }
     }
@@ -189,7 +206,11 @@ class PlatformFileSystem {
     var platformJson = utf8.encode(jsonEncode(platform.toJson()));
     archive.addFile(
         ArchiveFile('platform.json', platformJson.length, platformJson));
+    saveProgress.update((val) => val?.addProgress());
 
+    var imageSource = utf8.encode(jsonEncode(_imageSource));
+    archive.addFile(
+        ArchiveFile('imageSource.json', imageSource.length, imageSource));
     saveProgress.update((val) => val?.addProgress());
     return archive;
   }
@@ -197,12 +218,13 @@ class PlatformFileSystem {
   Future<void> saveToFolder(String path) async {
     saveProgress.update((val) {
       val?.progress = 0;
-      val?.progressMax = _dirImage.length + platform.choiceNodes.length * 2 + 1;
+      val?.progressMax = _dirImage.length + platform.choiceNodes.length * 2 + 1 + 1;
     });
     var dirImages = Directory(path + '/images');
     var dirNodes = Directory(path + '/nodes');
     var dirNodesBackUp = Directory(path + '/nodes_backup');
     var platformJson = File(path + '/platform.json');
+    var imageSourceJson = File(path + '/imageSource.json');
 
     List<String> skipImage = List.empty(growable: true);
     if (dirImages.existsSync()) {
@@ -275,6 +297,13 @@ class PlatformFileSystem {
     platformJson.create();
     platformJson.writeAsString(jsonEncode(platform.toJson()));
     saveProgress.update((val) => val?.addProgress());
+
+    if (imageSourceJson.existsSync()) {
+      imageSourceJson.deleteSync(recursive: true);
+    }
+    imageSourceJson.create();
+    imageSourceJson.writeAsString(jsonEncode(_imageSource));
+    saveProgress.update((val) => val?.addProgress());
   }
 
   //1 = 일반 이미지, 0 = 웹 이미지, -1 = 이미지 아님.
@@ -323,4 +352,15 @@ class PlatformFileSystem {
     return _dirImage.keys.toList().indexOf(name);
   }
 
+  void addSource(String image, String source) {
+    _imageSource[image] = source;
+  }
+
+  String? getSource(String image) {
+    return _imageSource[image];
+  }
+
+  bool hasSource(String image) {
+    return _imageSource[image] != null;
+  }
 }

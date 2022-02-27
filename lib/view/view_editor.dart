@@ -255,18 +255,40 @@ class ViewEditorTyping extends StatelessWidget {
                 alignment: Alignment.center,
                 children: [
                   IconButton(
-                      onPressed: () {
-                        var name = controller.addImage();
-                        name.then((String name) {
-                          if (controller.imageLast != null) {
-                            ImageCropping.cropImage(
-                              context: context,
-                              imageBytes: controller.imageLast!,
-                              onImageDoneListener: (data) => controller
-                                  .addImageCrop(name, data as Uint8List),
-                            );
-                          }
-                        });
+                      onPressed: () async{
+                        var name = await controller.addImage();
+                        await showDialog(
+                          builder: (_) => AlertDialog(
+                            title: const Text('출처'),
+                            content: TextField(
+                              controller: controller.controllerSource,
+                              decoration: const InputDecoration(
+                                hintText: '출처를 모르거나 없을 경우 비워두세요.',
+                              ),
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  controller.addImageSource(name);
+                                  Get.back();
+                                },
+                                child: const Text('예'),
+                              ),
+                            ],
+                          ),
+                          context: context,
+                        );
+                        if (controller.imageLast != null) {
+                          ImageCropping.cropImage(
+                            context: context,
+                            imageBytes: controller.imageLast!,
+                            onImageDoneListener: (data) => controller
+                                .addImageCrop(name, data as Uint8List),
+                            squareBorderWidth: 2,
+                            colorForWhiteSpace: Colors.black,
+
+                          );
+                        }
                       },
                       icon: const Icon(Icons.add)),
                 ],

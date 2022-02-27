@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
@@ -23,6 +21,8 @@ class AbstractPlatform {
   String mainFont;
 
   bool isEditable = true;
+
+  bool get isVisibleSource => true;
 
   void init() {
     checkDataCollect();

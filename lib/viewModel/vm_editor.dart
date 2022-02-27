@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 
 class VMEditor extends GetxController{
   final TextEditingController controllerTitle = TextEditingController();
+  final TextEditingController controllerSource = TextEditingController();
   late final QuillController quillController;
   final FocusNode focusBody = FocusNode();
 
@@ -114,5 +115,9 @@ class VMEditor extends GetxController{
 
     isChanged = true;
     update();
+  }
+
+  void addImageSource(String name) {
+    getPlatformFileSystem().addSource(name, controllerSource.text);
   }
 }
