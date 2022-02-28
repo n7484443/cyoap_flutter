@@ -247,11 +247,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
             onTap: () {
               vmDraggableNestedMap.select(posX, posY);
             },
-            child: Opacity(
-                opacity: vmDraggableNestedMap.isSelectablePreCheck(posX, posY)
-                    ? 1.0
-                    : 0.4,
-                child: mainNode),
+            child: mainNode,
           ),
         ),
       );

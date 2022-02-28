@@ -29,27 +29,37 @@ Widget getWidgetFromType(bool isCard, int x, int y) {
   var widget = ViewChoiceNodeTextWithImage(posX: x, posY: y);
   if (isCard) {
     return GetBuilder<VMDraggableNestedMap>(
-      builder: (_) => Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-          side: BorderSide(
-            color: _.isSelect(x, y) ? Colors.lightBlueAccent : Colors.white,
-            width: 4,
+      builder: (_) => ColorFiltered(
+        colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.5),
+            _.isSelectablePreCheck(x, y) ? BlendMode.dst : BlendMode.srcATop),
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            side: BorderSide(
+              color: _.isSelect(x, y) ? Colors.lightBlueAccent : Colors.white,
+              width: 4,
+            ),
           ),
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          elevation: 20.0,
+          child: widget,
         ),
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        elevation: 20.0,
-        child: widget,
       ),
     );
   } else {
     return GetBuilder<VMDraggableNestedMap>(
-      builder: (_) => Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: _.isSelect(x, y) ? Colors.lightBlueAccent : Colors.white, width: 4),
-          color: Colors.white,
+      builder: (_) => ColorFiltered(
+        colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.5),
+            _.isSelectablePreCheck(x, y) ? BlendMode.dst : BlendMode.srcATop),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+                color: _.isSelect(x, y) ? Colors.lightBlueAccent : Colors.white,
+                width: 4),
+            color: Colors.white,
+          ),
+          child: widget,
         ),
-        child: widget,
       ),
     );
   }
