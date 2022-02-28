@@ -267,12 +267,20 @@ class ViewEditorTyping extends StatelessWidget {
                               ),
                             ),
                             actions: [
-                              ElevatedButton(
+                              TextButton(
                                 onPressed: () {
                                   controller.addImageSource(name);
                                   Get.back();
                                 },
-                                child: const Text('예'),
+                                child: const Text('자르기'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  controller.addImageSource(name);
+                                  controller.addImageCrop(name, controller.imageLast!);
+                                  Get.back();
+                                },
+                                child: const Text('저장하기'),
                               ),
                             ],
                           ),
@@ -286,7 +294,8 @@ class ViewEditorTyping extends StatelessWidget {
                                 .addImageCrop(name, data as Uint8List),
                             squareBorderWidth: 2,
                             colorForWhiteSpace: Colors.black,
-
+                            isConstrain: true,
+                            imageEdgeInsets: const EdgeInsets.all(10),
                           );
                         }
                       },

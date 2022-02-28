@@ -1,5 +1,7 @@
 # CYOA Player
-웹버전 : https://n7484443.github.io/FlutterCyoap/
+<img src="https://img.shields.io/badge/CYOAP-0.1.4-green"></img>
+
+[web 버전](https://n7484443.github.io/FlutterCyoap/)
 
 ## 프로젝트 파일 형식
 * zip - 불러오기는 웹에서만 지원. 그 외는 모든 플랫폼이 지원.
