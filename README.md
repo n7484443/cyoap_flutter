@@ -1,5 +1,5 @@
 # CYOA Player
-<img src="https://img.shields.io/badge/CYOAP-0.1.4-green"></img>
+<img src="https://img.shields.io/github/v/release/n7484443/FlutterCyoap"></img>
 
 [web 버전](https://n7484443.github.io/FlutterCyoap/)
 
