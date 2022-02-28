@@ -1,5 +1,6 @@
 # CYOA Player
 <img src="https://img.shields.io/github/v/release/n7484443/FlutterCyoap"></img>
+[![pages-build-deployment](https://github.com/n7484443/FlutterCyoap/actions/workflows/pages/pages-build-deployment/badge.svg?branch=gh-pages)](https://github.com/n7484443/FlutterCyoap/actions/workflows/pages/pages-build-deployment)
 
 [web 버전](https://n7484443.github.io/FlutterCyoap/)
 
