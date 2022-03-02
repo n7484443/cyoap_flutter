@@ -17,7 +17,7 @@ class NodeDivider extends StatelessWidget {
     var vmDraggableNestedMap = Get.find<VMDraggableNestedMap>();
     var maxSelectText = Visibility(
       child: TextOutline(
-          '최대 ${vmDraggableNestedMap.getMaxSelect(y)}개만큼 선택 가능', 18.0),
+          '최대 ${vmDraggableNestedMap.getMaxSelect(y)}개만큼 선택 가능', 18.0, strokeWidth: 5.0,),
       visible: vmDraggableNestedMap.getMaxSelect(y) != '무한',
     );
     if (vmDraggableNestedMap.isEditable()) {

@@ -5,12 +5,13 @@ class LexicalAnalyser {
   // 같은 값이 반환시->다음값으로
   // null 일때->함수 입력 끝
   bool boolForStringInput = false;
+  RegExp pattern = RegExp(r'[^\s"]+|"[^"]*"');
 
   /*
     어휘분석기. 토큰으로 변환한다.
      */
   List<Token> analyze(String s) {
-    var str = s.replaceAll(" ", "").replaceAll("\n", "");
+    var str = pattern.allMatches(s).map((e) => e.group(0)).join();
     List<Token> func = [];
     for (int i = 0; i < str.length; i++) {
       var c = str[i];

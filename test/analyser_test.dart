@@ -19,7 +19,7 @@ void main() {
                 ceilTest = ceil(4.8)
                 floorTest = floor(4.8)
                 
-                stringTest = "문자열테스트String1"
+                stringTest = "문자열 테스트String1"
                 stringAddTest = "문자" + "열테스트1"
                 
                 comp1 = numberTest0 == -5.5
@@ -74,7 +74,7 @@ void main() {
   });
 
   test('stringTest', (){
-    expect(ins.getValueType('stringTest')?.data, "문자열테스트String1");
+    expect(ins.getValueType('stringTest')?.data, "문자열 테스트String1");
     expect(ins.getValueType('stringAddTest')?.data, "문자열테스트1");
   });
 

@@ -5,10 +5,11 @@ import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_quill/flutter_quill.dart' as quill;
-import 'package:flutter_quill/src/translations/toolbar.i18n.dart'
-    as quill_translate;
+import 'package:flutter_quill/src/translations/toolbar.i18n.dart';
 import 'package:flutter_quill/src/utils/color.dart' as quill_color;
+
 import 'package:get/get.dart';
 import 'package:image_cropping/image_cropping.dart';
 
