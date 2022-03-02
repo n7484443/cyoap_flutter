@@ -22,7 +22,7 @@ class AbstractPlatform {
 
   bool isEditable = true;
 
-  bool get isVisibleSource => true;
+  bool isVisibleSource = false;
 
   void init() {
     checkDataCollect();

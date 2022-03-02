@@ -1,6 +1,7 @@
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
+import 'package:get/get.dart';
 
 import '../util/tuple.dart';
 
@@ -53,4 +54,12 @@ class VMVariableTable extends GetxController {
   bool isEditable() {
     return getPlatform().isEditable;
   }
+
+  void setSourceVisible(bool value) {
+    getPlatform().isVisibleSource = value;
+    Get.find<VMDraggableNestedMap>().update();
+    update();
+  }
+
+  bool getSourceVisible() => getPlatform().isVisibleSource;
 }

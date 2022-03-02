@@ -3,6 +3,7 @@ import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../main.dart';
 import '../model/platform_system.dart';
@@ -39,7 +40,10 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                       child: TextButton(
                         child: const Text('출처'),
                         onPressed: () {
-                          getPlatformFileSystem().getSource(node.imageString);
+                          var url = getPlatformFileSystem().getSource(node.imageString);
+                          if(url != null && url.isNotEmpty){
+                            launch(url);
+                          }
                         },
                       ),
                       visible: getPlatformFileSystem().hasSource(node.imageString) && getPlatform().isVisibleSource,

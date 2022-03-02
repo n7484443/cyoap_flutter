@@ -80,7 +80,10 @@ class PlatformFileSystem {
     if (existImageSource) {
       var data = await imageSourceJson.readAsString();
       if (data.isNotEmpty) {
-        _imageSource.addAll(jsonDecode(data));
+        var map = jsonDecode(data) as Map;
+        for(var source in map.keys){
+          _imageSource[source] = map[source];
+        }
       }
     }
 
@@ -138,7 +141,10 @@ class PlatformFileSystem {
           } else if (fileName.endsWith('platform.json')) {
             platformJson = dataConverted;
           } else if (fileName.endsWith('imageSource.json')) {
-            _imageSource.addAll(jsonDecode(dataConverted));
+            Map map = jsonDecode(dataConverted);
+            for(var source in map.keys){
+              _imageSource[source] = map[source];
+            }
           }
         }
       }
@@ -176,6 +182,10 @@ class PlatformFileSystem {
     return Tuple(name, data);
   }
 
+  String convertImageName(String name){
+    return name.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
+  }
+
 
   Future<Archive> saveToZip() async {
     saveProgress.update((val) {
@@ -208,7 +218,11 @@ class PlatformFileSystem {
         ArchiveFile('platform.json', platformJson.length, platformJson));
     saveProgress.update((val) => val?.addProgress());
 
-    var imageSource = utf8.encode(jsonEncode(_imageSource));
+    var map = {};
+    for(var name in _imageSource.keys){
+      map[convertImageName(name)] = _imageSource[name];
+    }
+    var imageSource = utf8.encode(jsonEncode(map));
     archive.addFile(
         ArchiveFile('imageSource.json', imageSource.length, imageSource));
     saveProgress.update((val) => val?.addProgress());
@@ -302,7 +316,11 @@ class PlatformFileSystem {
       imageSourceJson.deleteSync(recursive: true);
     }
     imageSourceJson.create();
-    imageSourceJson.writeAsString(jsonEncode(_imageSource));
+    var map = {};
+    for(var name in _imageSource.keys){
+      map[convertImageName(name)] = _imageSource[name];
+    }
+    imageSourceJson.writeAsString(jsonEncode(map));
     saveProgress.update((val) => val?.addProgress());
   }
 
@@ -361,6 +379,6 @@ class PlatformFileSystem {
   }
 
   bool hasSource(String image) {
-    return _imageSource[image] != null;
+    return _imageSource[image]?.isNotEmpty ?? false;
   }
 }

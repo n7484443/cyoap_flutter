@@ -49,6 +49,7 @@ dependencies:
   flex_color_picker: ^2.3.0
   tuple: ^2.0.0
   image_compression_flutter: ^1.0.2
+  url_launcher: ^6.0.20
 
 dev_dependencies:
   flutter_test:
