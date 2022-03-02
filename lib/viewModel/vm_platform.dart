@@ -29,12 +29,8 @@ Widget getWidgetFromType(bool isCard, int x, int y) {
   var widget = ViewChoiceNodeTextWithImage(posX: x, posY: y);
   if (isCard) {
     return GetBuilder<VMDraggableNestedMap>(
-      builder: (_) => ColorFiltered(
-        colorFilter: ColorFilter.mode(
-            Colors.black.withOpacity(0.5),
-            !_.isEditable() && !_.isSelectablePreCheck(x, y)
-                ? BlendMode.srcATop
-                : BlendMode.dst),
+      builder: (_) => Opacity(
+        opacity: !_.isEditable() && !_.isSelectablePreCheck(x, y) ? 0.5 : 1.0,
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
@@ -51,12 +47,8 @@ Widget getWidgetFromType(bool isCard, int x, int y) {
     );
   } else {
     return GetBuilder<VMDraggableNestedMap>(
-      builder: (_) => ColorFiltered(
-        colorFilter: ColorFilter.mode(
-            Colors.black.withOpacity(0.5),
-            !_.isEditable() && !_.isSelectablePreCheck(x, y)
-                ? BlendMode.srcATop
-                : BlendMode.dst),
+      builder: (_) => Opacity(
+        opacity: !_.isEditable() && !_.isSelectablePreCheck(x, y) ? 0.5 : 1.0,
         child: Container(
           decoration: BoxDecoration(
             border: Border.all(

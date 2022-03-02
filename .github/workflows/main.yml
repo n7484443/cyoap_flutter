@@ -45,7 +45,7 @@ jobs:
             build/windows/cyoap_windows_${{ steps.get_version.outputs.version-without-v }}.zip
             build/app/outputs/flutter-apk/cyoap_android_${{ steps.get_version.outputs.version-without-v }}.apk
 
-      - run: flutter build web --base-href=/FlutterCyoap/
+      - run: flutter build web --release --base-href=/FlutterCyoap/
 
       - name: Deploy Web
         uses: peaceiris/actions-gh-pages@v3
