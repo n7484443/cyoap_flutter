@@ -7,8 +7,9 @@ class TextOutline extends StatelessWidget {
   final double strokeWidth;
   final double fontSize;
   final FontWeight fontWeight;
+  final TextStyle style;
 
-  const TextOutline(this.text, this.fontSize,
+  const TextOutline(this.text, this.fontSize, this.style,
       {this.textColor = Colors.black,
       this.outlineColor = Colors.white,
       this.strokeWidth = 4.0,
@@ -21,7 +22,7 @@ class TextOutline extends StatelessWidget {
     return Stack(children: [
       Text(
         text,
-        style: TextStyle(
+        style: style.copyWith(
           fontSize: fontSize,
           foreground: Paint()
             ..style = PaintingStyle.stroke
@@ -31,7 +32,7 @@ class TextOutline extends StatelessWidget {
       ),
       Text(
         text,
-        style: TextStyle(
+        style: style.copyWith(
           fontWeight: fontWeight,
           fontSize: fontSize,
           color: textColor,

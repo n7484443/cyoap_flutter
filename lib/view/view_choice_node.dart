@@ -72,7 +72,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                   Align(
                     alignment: Alignment.topCenter,
                     child: Visibility(
-                      child: TextOutline(node.title,18 * _.getScale().data2),
+                      child: TextOutline(node.title,18 * _.getScale().data2, _.getTitleFont()),
                       visible: node.title.isNotEmpty,
                     ),
                   ),

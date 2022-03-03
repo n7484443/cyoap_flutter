@@ -219,4 +219,8 @@ class VMDraggableNestedMap extends GetxController {
     var max = getPlatform().getLineSetting(y)?.maxSelect;
     return max == -1 ? '무한' : '$max';
   }
+
+  TextStyle getTitleFont() {
+    return ConstList.getFont(getPlatform().titleFont);
+  }
 }

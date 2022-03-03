@@ -209,7 +209,7 @@ class PlatformFileSystem {
         var node = platform.choiceNodes[i].data1[j];
         var utf = utf8.encode(jsonEncode(node.toJson()));
         archive
-            .addFile(ArchiveFile('nodes/${node.title}.json', utf.length, utf));
+            .addFile(ArchiveFile('nodes/node_${node.y}_${node.x}.json', utf.length, utf));
       }
       saveProgress.update((val) => val?.addProgress());
     }
@@ -277,10 +277,10 @@ class PlatformFileSystem {
       file.createSync();
       file.writeAsString(jsonEncode(tuple.data2.toJson()));
 
-      for (var nodes in tuple.data1) {
-        var file = File('$path/nodes_backup/${nodes.title}.json');
+      for (var node in tuple.data1) {
+        var file = File('$path/nodes_backup/node_${node.y}_${node.x}.json');
         file.createSync();
-        file.writeAsString(jsonEncode(nodes.toJson()));
+        file.writeAsString(jsonEncode(node.toJson()));
       }
       saveProgress.update((val) => val?.addProgress());
     }
@@ -296,10 +296,10 @@ class PlatformFileSystem {
       file.createSync();
       file.writeAsString(jsonEncode(tuple.data2.toJson()));
 
-      for (var nodes in tuple.data1) {
-        var file = File('$path/nodes/${nodes.title}.json');
+      for (var node in tuple.data1) {
+        var file = File('$path/nodes/node_${node.y}_${node.x}.json');
         file.createSync();
-        file.writeAsString(jsonEncode(nodes.toJson()));
+        file.writeAsString(jsonEncode(node.toJson()));
       }
       saveProgress.update((val) => val?.addProgress());
     }
