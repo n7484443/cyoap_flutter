@@ -188,7 +188,11 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   bool isSelectablePreCheck(int posX, int posY) {
-    return getNode(posX, posY)!.isSelectableCheck;
+    var node = getNode(posX, posY)!;
+    if(node.isSelectable){
+      return node.isSelectableCheck;
+    }
+    return true;
   }
 
   void addMaxSelect(int y, int max) {

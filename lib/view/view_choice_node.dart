@@ -35,21 +35,6 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
               child: Stack(
                 children: [
                   Align(
-                    alignment: Alignment.topLeft,
-                    child:Visibility(
-                      child: TextButton(
-                        child: const Text('출처'),
-                        onPressed: () {
-                          var url = getPlatformFileSystem().getSource(node.imageString);
-                          if(url != null && url.isNotEmpty){
-                            launch(url);
-                          }
-                        },
-                      ),
-                      visible: getPlatformFileSystem().hasSource(node.imageString) && getPlatform().isVisibleSource,
-                    ),
-                  ),
-                  Align(
                     alignment: Alignment.topCenter,
                     child: Visibility(
                       child: Padding(
@@ -67,6 +52,21 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                         ),
                       ),
                       visible: node.imageString.isNotEmpty,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child:Visibility(
+                      child: TextButton(
+                        child: const Text('출처'),
+                        onPressed: () {
+                          var url = getPlatformFileSystem().getSource(node.imageString);
+                          if(url != null && url.isNotEmpty){
+                            launch(url);
+                          }
+                        },
+                      ),
+                      visible: getPlatformFileSystem().hasSource(node.imageString) && getPlatform().isVisibleSource,
                     ),
                   ),
                   Align(
