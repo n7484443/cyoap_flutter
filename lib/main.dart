@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cyoap_flutter/util/webp_converter.dart';
 import 'package:cyoap_flutter/view/view_code_editor.dart';
 import 'package:cyoap_flutter/view/view_editor.dart';
 import 'package:cyoap_flutter/view/view_global_settings.dart';
@@ -50,6 +51,7 @@ class ConstList{
 
     var packageInfo = await PackageInfo.fromPlatform();
     version = packageInfo.version;
+    WebpConverterWindows.instance = WebpConverterWindows();
   }
 
   static DefaultStyles getDefaultThemeData(BuildContext context, double scale,

@@ -77,10 +77,11 @@ class PlatformSystem{
   void saveCapture(ui.Image image) async{
     ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     if(byteData == null)return;
+    var converted = await getPlatformFileSystem().convertImage('exported.png', byteData.buffer.asUint8List());
     if(ConstList.isOnlyFileAccept()) {
-      downloadCapture('exported.jpg', byteData.buffer.asUint8List());
+      downloadCapture(converted.data1, converted.data2);
     }else{
-      downloadCapture(path!, byteData.buffer.asUint8List());
+      downloadCapture('$path/${converted.data1}', converted.data2);
     }
   }
 

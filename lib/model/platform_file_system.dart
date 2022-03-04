@@ -4,12 +4,14 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
+import 'package:cyoap_flutter/main.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:image_compression_flutter/image_compression_flutter.dart';
 import 'package:path/path.dart';
 
 import '../util/tuple.dart';
+import '../util/webp_converter.dart';
 import 'abstract_platform.dart';
 import 'choiceNode/choice_node.dart';
 import 'choiceNode/line_setting.dart';
@@ -175,9 +177,15 @@ class PlatformFileSystem {
         name.endsWith('.jpeg')) {
       name = name.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
       ImageFile input = ImageFile(rawBytes: data, filePath: name);
-      final param = ImageFileConfiguration(input: input, config: config);
-      final output = await compressor.compress(param);
-      data = output.rawBytes;
+      if(ConstList.isMobile()){
+        final param = ImageFileConfiguration(input: input, config: config);
+        final output = await compressor.compress(param);
+        data = output.rawBytes;
+      }else if(ConstList.actualPlatformType == platformType.desktop){
+        data = await WebpConverterWindows.instance.convert(data, name.endsWith('.png') ? "png" : "jpg");
+      }else{
+
+      }
     }
     return Tuple(name, data);
   }

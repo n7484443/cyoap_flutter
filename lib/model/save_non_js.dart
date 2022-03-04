@@ -9,7 +9,7 @@ Future<void> saveRaw(String name, PlatformFileSystem platformFileSystem) async{
   print('save Done!');
 }
 void downloadCapture(String name, Uint8List data){
-  var file = File('$name/extract.jpg');
+  var file = File(name);
   if(file.existsSync()){
     file.delete();
   }
