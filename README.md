@@ -8,13 +8,13 @@
 * zip - 불러오기는 웹에서만 지원. 그 외는 모든 플랫폼이 지원.
 * 폴더 - 윈도우, 안드로이드에서만 지원. 보다 빠르고 관리가 쉬운 편집.
 
-|                 | android | windows | web |
-|----------------:|:-------:|:-------:|:---:|
-|   zip file read |    O    |    O    |  O  |
-|  zip file write |    O    |    O    |  O  |
-|  directory read |    O    |    O    |  X  |
-| directory write |    O    |    O    |  X  |
-
+|                  | android | windows | web |
+|-----------------:|:-------:|:-------:|:---:|
+|    zip file read |    O    |    O    |  O  |
+|   zip file write |    O    |    O    |  O  |
+|   directory read |    O    |    O    |  X  |
+|  directory write |    O    |    O    |  X  |
+| webp compression |    O    |    O    |  X  |
 
 ## 함수 리스트
 * if
