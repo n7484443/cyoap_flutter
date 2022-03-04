@@ -33,12 +33,12 @@ class WebpConverterWindows {
         return input;
     }
 
-    var inputBuff = calloc.allocate<Uint8>(decodeImage.width * decodeImage.height * 3);
+    var inputBuff = malloc.allocate<Uint8>(decodeImage.width * decodeImage.height * 3);
     var inputBuffered = decodeImage.getBytes(format: Format.rgb);
     for(int i = 0; i < decodeImage.width * decodeImage.height * 3; i++){
       inputBuff[i] = inputBuffered[i];
     }
-    Pointer<Pointer<Uint8>> outputBuff = calloc.allocate<Pointer<Uint8>>(0);
+    Pointer<Pointer<Uint8>> outputBuff = malloc.allocate<Pointer<Uint8>>(0);
 
     var outputSize = webPEncodeLosslessRGB(inputBuff, decodeImage.width, decodeImage.height, decodeImage.width*3, outputBuff);
     Uint8List output = outputBuff.value.asTypedList(outputSize);

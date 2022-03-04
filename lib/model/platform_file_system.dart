@@ -175,6 +175,7 @@ class PlatformFileSystem {
     if (name.endsWith('.png') ||
         name.endsWith('.jpg') ||
         name.endsWith('.jpeg')) {
+      var isPng = name.endsWith('.png') ? "png" : "jpg";
       name = name.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
       ImageFile input = ImageFile(rawBytes: data, filePath: name);
       if(ConstList.isMobile()){
@@ -182,7 +183,7 @@ class PlatformFileSystem {
         final output = await compressor.compress(param);
         data = output.rawBytes;
       }else if(ConstList.actualPlatformType == platformType.desktop){
-        data = await WebpConverterWindows.instance.convert(data, name.endsWith('.png') ? "png" : "jpg");
+        data = await WebpConverterWindows.instance.convert(data, isPng);
       }else{
 
       }
