@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cyoap_flutter/util/webp_converter.dart';
 import 'package:cyoap_flutter/view/view_code_editor.dart';
 import 'package:cyoap_flutter/view/view_editor.dart';
 import 'package:cyoap_flutter/view/view_global_settings.dart';
@@ -18,14 +17,14 @@ import 'package:tuple/tuple.dart';
 
 class ConstList{
   static double appBarSize = 40.0;
-  static late final platformType actualPlatformType;
+  static late final PlatformType actualPlatformType;
 
   static bool isOnlyFileAccept() {
-    return actualPlatformType == platformType.web;
+    return actualPlatformType == PlatformType.web;
   }
 
   static bool isMobile() {
-    return actualPlatformType == platformType.mobile;
+    return actualPlatformType == PlatformType.mobile;
   }
 
   static bool isSmallDisplay(BuildContext context) {
@@ -39,19 +38,18 @@ class ConstList{
   static Future<void> init() async {
     try {
       if (Platform.isAndroid) {
-        ConstList.actualPlatformType = platformType.mobile;
+        ConstList.actualPlatformType = PlatformType.mobile;
       } else if (Platform.isWindows) {
-        ConstList.actualPlatformType = platformType.desktop;
+        ConstList.actualPlatformType = PlatformType.desktop;
       } else {
-        ConstList.actualPlatformType = platformType.web;
+        ConstList.actualPlatformType = PlatformType.web;
       }
     } catch (e) {
-      ConstList.actualPlatformType = platformType.web;
+      ConstList.actualPlatformType = PlatformType.web;
     }
 
     var packageInfo = await PackageInfo.fromPlatform();
     version = packageInfo.version;
-    WebpConverterWindows.instance = WebpConverterWindows();
   }
 
   static DefaultStyles getDefaultThemeData(BuildContext context, double scale,
@@ -83,7 +81,7 @@ class ConstList{
     return textFontMap[font] ?? defaultFont;
   }
 }
-enum platformType{
+enum PlatformType{
   desktop, mobile, web,
 }
 void main() {

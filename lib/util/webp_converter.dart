@@ -1,49 +1,21 @@
-import 'dart:ffi';
 import 'dart:typed_data';
-import 'package:ffi/ffi.dart';
-import 'package:image/image.dart';
+import '../util/webp_converter_android.dart'
+if(dart.library.html) '../util/webp_converter_web.dart'
+if(dart.library.ffi) '../util/webp_converter_windows.dart';
 
-class WebpConverterWindows {
-  final DynamicLibrary nativeWebp = DynamicLibrary.open('windows/libwebp.dll');
-  static late WebpConverterWindows instance;
-  Future<Uint8List> convert(Uint8List input, String type) async {
-    final webPEncodeRGB = nativeWebp.lookupFunction<
-        Size Function(
-            Pointer<Uint8>, Int, Int, Int, Float, Pointer<Pointer<Uint8>>),
-        int Function(
-            Pointer<Uint8> rgb,
-            int width,
-            int height,
-            int stride,
-            double qualityFactor,
-            Pointer<Pointer<Uint8>> output)>('WebPEncodeRGB');
-    final webPEncodeLosslessRGB = nativeWebp.lookupFunction<
-        Size Function(Pointer<Uint8>, Int, Int, Int, Pointer<Pointer<Uint8>>),
-        int Function(Pointer<Uint8> rgb, int width, int height, int stride,
-            Pointer<Pointer<Uint8>> output)>('WebPEncodeLosslessRGB');
-    Image decodeImage;
-    switch(type){
-      case "png":
-        decodeImage = PngDecoder().decodeImage(input)!;
-        break;
-      case "jpg":
-        decodeImage = JpegDecoder().decodeImage(input)!;
-        break;
-      default:
-        return input;
-    }
+abstract class WebpConverter{
+  static WebpConverter? instance;
+  WebpConverter getWebpConverter();
 
-    var inputBuff = malloc.allocate<Uint8>(decodeImage.width * decodeImage.height * 3);
-    var inputBuffered = decodeImage.getBytes(format: Format.rgb);
-    for(int i = 0; i < decodeImage.width * decodeImage.height * 3; i++){
-      inputBuff[i] = inputBuffered[i];
-    }
-    Pointer<Pointer<Uint8>> outputBuff = malloc.allocate<Pointer<Uint8>>(0);
+  Future<Uint8List> convert(Uint8List input, String type) async => throw "doesn't work in this platform";
 
-    var outputSize = webPEncodeLosslessRGB(inputBuff, decodeImage.width, decodeImage.height, decodeImage.width*3, outputBuff);
-    Uint8List output = outputBuff.value.asTypedList(outputSize);
-    malloc.free(inputBuff);
-    malloc.free(outputBuff);
-    return output;
+  void init() {}
+}
+
+WebpConverter getWebpConverterInstance() {
+  if(WebpConverter.instance == null){
+    WebpConverter.instance = WebpConverterImp();
+    WebpConverter.instance!.init();
   }
+  return WebpConverter.instance!.getWebpConverter();
 }

@@ -4,10 +4,8 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
-import 'package:cyoap_flutter/main.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:image_compression_flutter/image_compression_flutter.dart';
 import 'package:path/path.dart';
 
 import '../util/tuple.dart';
@@ -166,10 +164,6 @@ class PlatformFileSystem {
   void createFromVoid() {
     platform = AbstractPlatform.none();
   }
-  Configuration config = const Configuration(
-    outputType: ImageOutputType.webpThenPng,
-    quality: 100,
-  );
 
   Future<Tuple<String, Uint8List>> convertImage(String name, Uint8List data) async{
     if (name.endsWith('.png') ||
@@ -177,16 +171,7 @@ class PlatformFileSystem {
         name.endsWith('.jpeg')) {
       var isPng = name.endsWith('.png') ? "png" : "jpg";
       name = name.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
-      ImageFile input = ImageFile(rawBytes: data, filePath: name);
-      if(ConstList.isMobile()){
-        final param = ImageFileConfiguration(input: input, config: config);
-        final output = await compressor.compress(param);
-        data = output.rawBytes;
-      }else if(ConstList.actualPlatformType == platformType.desktop){
-        data = await WebpConverterWindows.instance.convert(data, isPng);
-      }else{
-
-      }
+      data = await getWebpConverterInstance().convert(data, isPng);
     }
     return Tuple(name, data);
   }

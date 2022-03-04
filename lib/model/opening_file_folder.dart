@@ -1,3 +1,4 @@
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -5,11 +6,21 @@ class FrequentlyUsedPath{
   List<String> pathList = [];
 
   Future<bool> getStatuses() async {
+    var deviceInfoPlugin = DeviceInfoPlugin();
+    var androidInfo = await deviceInfoPlugin.androidInfo;
+
     if (await Permission.storage.isDenied) {
       await Permission.storage.request();
     }
+    if (androidInfo.version.sdkInt! >= 11){
+      if (await Permission.manageExternalStorage.isDenied){
+        await Permission.manageExternalStorage.request();
+      }
+      return await Permission.storage.isGranted && await Permission.manageExternalStorage.isGranted;
+    }else{
+      return await Permission.storage.isGranted;
+    }
 
-    return await Permission.storage.isGranted;
   }
 
   Future<List<String>> getFrequentPathFromData() async {

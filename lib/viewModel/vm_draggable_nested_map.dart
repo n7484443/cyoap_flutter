@@ -52,7 +52,7 @@ class VMDraggableNestedMap extends GetxController {
     return Tuple(node.width, node.height);
   }
 
-  double nodeBaseWidth = 180;
+  double nodeBaseWidth = 160;
   double nodeBaseHeight = 20;
 
   Tuple<int, int> getRealSize(Tuple<int, int> position) {
