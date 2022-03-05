@@ -48,7 +48,7 @@ dependencies:
   github: ^9.0.0
   flex_color_picker: ^2.3.1
   tuple: ^2.0.0
-  image_compression_flutter: ^1.0.2
+  flutter_image_compress: ^1.1.0
   url_launcher: ^6.0.20
   ffi: ^1.2.0-dev.0
   device_info_plus: ^3.2.2
