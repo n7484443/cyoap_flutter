@@ -3,9 +3,19 @@ import 'dart:io' ;
 import 'dart:typed_data';
 import 'package:cyoap_flutter/util/webp_converter.dart';
 import 'package:ffi/ffi.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image/image.dart';
 
 class WebpConverterImp extends WebpConverter {
+  @override
+  WebpConverter getWebpConverterImp(){
+    if(Platform.isWindows){
+      return WebpConverterImpWindows();
+    }
+    return WebpConverterImpAndroid();
+  }
+}
+class WebpConverterImpWindows extends WebpConverter {
   late final DynamicLibrary nativeWebp;
   late final int Function(Pointer<Uint8> rgb,
       int width,
@@ -42,7 +52,7 @@ class WebpConverterImp extends WebpConverter {
   }
 
   @override
-  Future<Uint8List> convert(Uint8List input, String type) async {
+  Future<Uint8List> convert(Uint8List input, String type, int width, int height) async {
     Image decodeImage;
     switch(type){
       case "png":
@@ -68,6 +78,25 @@ class WebpConverterImp extends WebpConverter {
     malloc.free(outputBuff);
     return output;
   }
+  @override
+  bool canConvert() => true;
+}
+class WebpConverterImpAndroid extends WebpConverter{
+  @override
+  Future<Uint8List> convert(Uint8List input, String type, int width, int height) async {
+    var output = await FlutterImageCompress.compressWithList(input,
+      format:CompressFormat.webp,
+      quality: 100,
+      minWidth: width,
+      minHeight: height,
+
+    );
+    return output;
+  }
+
+  @override
+  void init() {}
+
   @override
   bool canConvert() => true;
 }

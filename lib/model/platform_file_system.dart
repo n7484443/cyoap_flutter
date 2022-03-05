@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:archive/archive.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:image/image.dart' show decodeImage;
 import 'package:path/path.dart';
 
 import '../util/tuple.dart';
@@ -172,7 +173,8 @@ class PlatformFileSystem {
         name.endsWith('.jpeg')) {
       var isPng = name.endsWith('.png') ? "png" : "jpg";
       name = convertImageName(name);
-      data = await getWebpConverterInstance().convert(data, isPng);
+      var image = decodeImage(data)!;
+      data = await getWebpConverterInstance().convert(data, isPng, image.width, image.height);
     }
     return Tuple(name, data);
   }
@@ -265,16 +267,15 @@ class PlatformFileSystem {
       dirNodesBackUp.deleteSync(recursive: true);
     }
 
-    dirNodesBackUp.create();
     for(var x = 0; x < platform.choiceNodes.length; x++){
       var tuple = platform.choiceNodes[x];
       var file = File('$path/nodes_backup/lineSetting_${tuple.data2.y}.json');
-      file.createSync();
+      file.createSync(recursive: true);
       file.writeAsString(jsonEncode(tuple.data2.toJson()));
 
       for (var node in tuple.data1) {
         var file = File('$path/nodes_backup/node_${node.y}_${node.x}.json');
-        file.createSync();
+        file.createSync(recursive: true);
         file.writeAsString(jsonEncode(node.toJson()));
       }
       saveProgress.update((val) => val?.addProgress());
@@ -284,16 +285,15 @@ class PlatformFileSystem {
       dirNodes.deleteSync(recursive: true);
     }
 
-    dirNodes.create();
     for(var x = 0; x < platform.choiceNodes.length; x++){
       var tuple = platform.choiceNodes[x];
       var file = File('$path/nodes/lineSetting_${tuple.data2.y}.json');
-      file.createSync();
+      file.createSync(recursive: true);
       file.writeAsString(jsonEncode(tuple.data2.toJson()));
 
       for (var node in tuple.data1) {
         var file = File('$path/nodes/node_${node.y}_${node.x}.json');
-        file.createSync();
+        file.createSync(recursive: true);
         file.writeAsString(jsonEncode(node.toJson()));
       }
       saveProgress.update((val) => val?.addProgress());
