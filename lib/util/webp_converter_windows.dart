@@ -52,6 +52,8 @@ class WebpConverterImp extends WebpConverter {
     malloc.free(outputBuff);
     return output;
   }
+  @override
+  bool canConvert() => true;
 
   @override
   WebpConverter getWebpConverter() => WebpConverterImp();

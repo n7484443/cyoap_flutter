@@ -10,6 +10,7 @@ abstract class WebpConverter{
   Future<Uint8List> convert(Uint8List input, String type) async => throw "doesn't work in this platform";
 
   void init() {}
+  bool canConvert() => false;
 }
 
 WebpConverter getWebpConverterInstance() {

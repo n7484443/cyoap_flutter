@@ -166,11 +166,12 @@ class PlatformFileSystem {
   }
 
   Future<Tuple<String, Uint8List>> convertImage(String name, Uint8List data) async{
+    if(!getWebpConverterInstance().canConvert())return Tuple(name, data);
     if (name.endsWith('.png') ||
         name.endsWith('.jpg') ||
         name.endsWith('.jpeg')) {
       var isPng = name.endsWith('.png') ? "png" : "jpg";
-      name = name.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
+      name = convertImageName(name);
       data = await getWebpConverterInstance().convert(data, isPng);
     }
     return Tuple(name, data);
