@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'dart:io' ;
 import 'dart:typed_data';
 import 'package:cyoap_flutter/util/webp_converter.dart';
 import 'package:ffi/ffi.dart';
@@ -6,14 +7,25 @@ import 'package:image/image.dart';
 
 class WebpConverterImp extends WebpConverter {
   late final DynamicLibrary nativeWebp;
+  late final int Function(Pointer<Uint8> rgb,
+      int width,
+      int height,
+      int stride,
+      double qualityFactor,
+      Pointer<Pointer<Uint8>> output) webPEncodeRGB;
+  late final Function(Pointer<Uint8> rgb, int width, int height, int stride,
+      Pointer<Pointer<Uint8>> output) webPEncodeLosslessRGB;
   @override
   void init(){
-    nativeWebp = DynamicLibrary.open('windows/libwebp.dll');
-  }
+    var startPath = Platform.script.resolve("windows/libwebp.dll").toFilePath();
+    // 'windows/libwebp.dll'
+    File f = File(startPath);
+    if(!f.existsSync()){
+      startPath = "windows/libwebp.dll";
+    }
+    nativeWebp = DynamicLibrary.open(startPath);
 
-  @override
-  Future<Uint8List> convert(Uint8List input, String type) async {
-    final webPEncodeRGB = nativeWebp.lookupFunction<
+    webPEncodeRGB = nativeWebp.lookupFunction<
         Size Function(
             Pointer<Uint8>, Int, Int, Int, Float, Pointer<Pointer<Uint8>>),
         int Function(
@@ -23,10 +35,14 @@ class WebpConverterImp extends WebpConverter {
             int stride,
             double qualityFactor,
             Pointer<Pointer<Uint8>> output)>('WebPEncodeRGB');
-    final webPEncodeLosslessRGB = nativeWebp.lookupFunction<
+    webPEncodeLosslessRGB = nativeWebp.lookupFunction<
         Size Function(Pointer<Uint8>, Int, Int, Int, Pointer<Pointer<Uint8>>),
         int Function(Pointer<Uint8> rgb, int width, int height, int stride,
             Pointer<Pointer<Uint8>> output)>('WebPEncodeLosslessRGB');
+  }
+
+  @override
+  Future<Uint8List> convert(Uint8List input, String type) async {
     Image decodeImage;
     switch(type){
       case "png":
@@ -54,7 +70,4 @@ class WebpConverterImp extends WebpConverter {
   }
   @override
   bool canConvert() => true;
-
-  @override
-  WebpConverter getWebpConverter() => WebpConverterImp();
 }

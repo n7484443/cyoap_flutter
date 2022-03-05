@@ -5,7 +5,6 @@ if(dart.library.ffi) '../util/webp_converter_windows.dart';
 
 abstract class WebpConverter{
   static WebpConverter? instance;
-  WebpConverter getWebpConverter();
 
   Future<Uint8List> convert(Uint8List input, String type) async => throw "doesn't work in this platform";
 
@@ -18,5 +17,5 @@ WebpConverter getWebpConverterInstance() {
     WebpConverter.instance = WebpConverterImp();
     WebpConverter.instance!.init();
   }
-  return WebpConverter.instance!.getWebpConverter();
+  return WebpConverter.instance!;
 }
