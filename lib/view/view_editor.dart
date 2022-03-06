@@ -267,6 +267,7 @@ class ViewEditorTyping extends StatelessWidget {
                                 hintText: '출처를 모르거나 없을 경우 비워두세요.',
                               ),
                             ),
+                            actionsAlignment: MainAxisAlignment.spaceBetween,
                             actions: [
                               TextButton(
                                 onPressed: () {
