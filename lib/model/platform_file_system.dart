@@ -166,17 +166,9 @@ class PlatformFileSystem {
     platform = AbstractPlatform.none();
   }
 
-  Future<Tuple<String, Uint8List>> convertImage(String name, Uint8List data) async{
-    if(!getWebpConverterInstance().canConvert())return Tuple(name, data);
-    if (name.endsWith('.png') ||
-        name.endsWith('.jpg') ||
-        name.endsWith('.jpeg')) {
-      var isPng = name.endsWith('.png') ? "png" : "jpg";
-      name = convertImageName(name);
-      var image = decodeImage(data)!;
-      data = await getWebpConverterInstance().convert(data, isPng, image.width, image.height);
-    }
-    return Tuple(name, data);
+  Future<Tuple<Uint8List, String>> convertImage(String name, Uint8List data) async{
+    var image = decodeImage(data)!;
+    return await getWebpConverterInstance().convert(data, name, image.width, image.height);
   }
 
   String convertImageName(String name){
@@ -192,8 +184,8 @@ class PlatformFileSystem {
     var archive = Archive();
     for (var imageName in _dirImage.keys) {
       var converted = await convertImage(imageName, _dirImage[imageName]!);
-      archive.addFile(ArchiveFile('images/${converted.data1}',
-          converted.data2.length, converted.data2));
+      archive.addFile(ArchiveFile('images/${converted.data2}',
+          converted.data1.length, converted.data1));
       saveProgress.update((val) => val?.addProgress());
     }
     for (int i = 0; i < platform.choiceNodes.length; i++) {
@@ -256,9 +248,9 @@ class PlatformFileSystem {
         continue;
       }
       var converted = await convertImage(imageName, _dirImage[imageName]!);
-      var file = File('$path/images/${converted.data1}');
+      var file = File('$path/images/${converted.data2}');
       file.createSync();
-      file.writeAsBytes(converted.data2);
+      file.writeAsBytes(converted.data1);
       saveProgress.update((val) => val?.addProgress());
     }
 

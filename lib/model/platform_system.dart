@@ -79,9 +79,9 @@ class PlatformSystem{
     if(byteData == null)return;
     var converted = await getPlatformFileSystem().convertImage('exported.png', byteData.buffer.asUint8List());
     if(ConstList.isOnlyFileAccept()) {
-      downloadCapture(converted.data1, converted.data2);
+      downloadCapture(converted.data2, converted.data1);
     }else{
-      downloadCapture('$path/${converted.data1}', converted.data2);
+      downloadCapture('$path/${converted.data2}', converted.data1);
     }
   }
 

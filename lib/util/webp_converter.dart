@@ -1,11 +1,13 @@
 import 'dart:typed_data';
+import 'package:cyoap_flutter/util/tuple.dart';
+
 import '../util/webp_converter_vm.dart'
 if(dart.library.html) '../util/webp_converter_web.dart';
 
 abstract class WebpConverter{
   static WebpConverter? instance;
 
-  Future<Uint8List> convert(Uint8List input, String type, int width, int height) async => throw "doesn't work in this platform";
+  Future<Tuple<Uint8List, String>> convert(Uint8List input, String name, int width, int height) async => throw "doesn't work in this platform";
 
   void init() {}
   bool canConvert() => false;
