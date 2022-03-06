@@ -27,11 +27,11 @@ class WebpConverterImpWindows extends WebpConverter {
       Pointer<Pointer<Uint8>> output) webPEncodeLosslessRGB;
   @override
   void init(){
-    var startPath = Platform.script.resolve("windows/libwebp.dll").toFilePath();
+    var startPath = Platform.script.resolve("libwebp.dll").toFilePath();
     // 'windows/libwebp.dll'
     File f = File(startPath);
     if(!f.existsSync()){
-      startPath = "windows/libwebp.dll";
+      startPath = "libwebp.dll";
     }
     nativeWebp = DynamicLibrary.open(startPath);
 

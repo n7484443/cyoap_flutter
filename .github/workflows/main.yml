@@ -26,11 +26,6 @@ jobs:
         id: get_version
         uses: battila7/get-version-action@v2
 
-      - run: cd build/windows/runner/Release
-      - run: mkdir build/windows/runner/Release/windows
-      - run: cd ../../../../
-      - run: Copy-Item "windows/libwebp.dll" "build/windows/runner/Release/windows/"
-
       - run: 7z a build/windows/cyoap_windows_${{ steps.get_version.outputs.version-without-v }}.zip ./build/windows/runner/Release/*
 
       - name: base64-to-file

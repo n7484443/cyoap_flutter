@@ -4,7 +4,6 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
-import 'package:get/get_state_manager/src/simple/simple_builder.dart';
 
 class ViewVariable extends StatelessWidget {
   const ViewVariable({Key? key}) : super(key: key);
@@ -19,23 +18,17 @@ class ViewVariable extends StatelessWidget {
         onTap: () {
           Get.toNamed('/viewGlobalSetting');
         },
-        title: const Text('전역 설정'),
         leading: const Icon(Icons.settings),
+        title: const Text('전역 설정'),
       );
     } else {
       widget = ListTile(
-        title: Row(
-          children: [
-            ValueBuilder<bool>(
-              initialValue: vmVariableTable.getSourceVisible(),
-              builder: (value, updateFn) => Switch(
-                value: value,
-                onChanged: updateFn,
-              ),
-              onUpdate: (value) => vmVariableTable.setSourceVisible(value),
-            ),
-            const Text('출처 보기'),
-          ],
+        leading: const Text('출처 보기'),
+        trailing: GetBuilder<VMVariableTable>(
+          builder: (_) => Switch(
+            value: _.getSourceVisible(),
+            onChanged: (value) => _.setSourceVisible(value),
+          ),
         ),
       );
     }
