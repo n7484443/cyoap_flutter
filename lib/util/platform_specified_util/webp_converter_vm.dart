@@ -2,7 +2,7 @@ import 'dart:ffi';
 import 'dart:io' ;
 import 'dart:typed_data';
 import 'package:cyoap_flutter/util/tuple.dart';
-import 'package:cyoap_flutter/util/webp_converter.dart';
+import 'package:cyoap_flutter/util/platform_specified_util/webp_converter.dart';
 import 'package:ffi/ffi.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image/image.dart';

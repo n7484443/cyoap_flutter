@@ -36,7 +36,7 @@ Widget getChoiceWidget(bool isCard, int x, int y) {
             borderRadius: BorderRadius.circular(10.0),
             side: BorderSide(
               color: _.isSelect(x, y) ? Colors.lightBlueAccent : Colors.white,
-              width: 4,
+              width: 6,
             ),
           ),
           clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -53,7 +53,7 @@ Widget getChoiceWidget(bool isCard, int x, int y) {
           decoration: BoxDecoration(
             border: Border.all(
                 color: _.isSelect(x, y) ? Colors.lightBlueAccent : Colors.white,
-                width: 4),
+                width: 6),
             color: Colors.white,
           ),
           child: widget,

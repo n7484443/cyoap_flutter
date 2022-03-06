@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 import 'package:cyoap_flutter/util/tuple.dart';
 
-import '../util/webp_converter_vm.dart'
-if(dart.library.html) '../util/webp_converter_web.dart';
+import 'webp_converter_vm.dart'
+if(dart.library.html) 'webp_converter_web.dart';
 
 abstract class WebpConverter{
   static WebpConverter? instance;

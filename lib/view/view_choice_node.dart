@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/util/ColorUtil.dart';
 import 'package:cyoap_flutter/view/view_text_outline.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ class ViewChoiceNode extends StatelessWidget {
         padding: const EdgeInsets.all(6),
         width: realSize.data1 * _.getScale().data1,
         height: realSize.data2 * _.getScale().data2,
+        color: node.isCard ? null : getPlatform().colorBackground.lighten(),
         child: Column(
           children: [
             Expanded(

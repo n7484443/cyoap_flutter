@@ -10,7 +10,7 @@ import 'package:image/image.dart' show decodeImage;
 import 'package:path/path.dart';
 
 import '../util/tuple.dart';
-import '../util/webp_converter.dart';
+import '../util/platform_specified_util/webp_converter.dart';
 import 'abstract_platform.dart';
 import 'choiceNode/choice_node.dart';
 import 'choiceNode/line_setting.dart';

@@ -5,6 +5,7 @@ import 'package:cyoap_flutter/view/view_editor.dart';
 import 'package:cyoap_flutter/view/view_global_settings.dart';
 import 'package:cyoap_flutter/view/view_make.dart';
 import 'package:cyoap_flutter/view/view_play.dart';
+import 'package:cyoap_flutter/view/view_source.dart';
 import 'package:cyoap_flutter/view/view_start.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -98,6 +99,8 @@ void main() {
         GetPage(name: '/viewCodeEditor', page: () => const ViewCodeEditor()),
         GetPage(
             name: '/viewGlobalSetting', page: () => const ViewGlobalSetting()),
+        GetPage(
+            name: '/viewSource', page: () => const ViewSource()),
       ],
       theme: appThemeData,
       defaultTransition: Transition.fade,

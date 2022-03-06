@@ -180,11 +180,11 @@ class VMDraggableNestedMap extends GetxController {
   double nodeBaseWidth = 160;
   double nodeBaseHeight = 20;
 
-  Tuple<int, int> getRealSize(Tuple<int, int> position) {
+  Tuple<double, double> getRealSize(Tuple<int, int> position) {
     var node = getSize(position);
-    var width = node.data1 == 0 ? findMaxWidth() : node.data1 * nodeBaseWidth;
+    var width = node.data1 == 0 ? double.infinity : node.data1 * nodeBaseWidth;
     var height = node.data2 * nodeBaseHeight;
-    return Tuple(width.toInt(), height.toInt());
+    return Tuple(width, height);
   }
 
   void removeData(Tuple<int, int> data) {
@@ -211,8 +211,8 @@ class VMDraggableNestedMap extends GetxController {
     update();
   }
 
-  int findMaxWidth() {
-    return (captureKey.currentContext!.width * 0.9).toInt();
+  double findMaxWidth() {
+    return captureKey.currentContext!.width;
   }
 
   void setSize(Tuple<int, int> position, Tuple<int, int> size) {

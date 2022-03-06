@@ -6,7 +6,6 @@ import 'package:cyoap_flutter/model/platform_file_system.dart';
 
 Future<void> saveRaw(String name, PlatformFileSystem platformFileSystem) async{
   await platformFileSystem.saveToFolder(name);
-  print('save Done!');
 }
 void downloadCapture(String name, Uint8List data){
   var file = File(name);
