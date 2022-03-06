@@ -11,9 +11,10 @@ import '../model/choiceNode/choice_node.dart';
 import '../model/editor.dart';
 import '../model/platform_system.dart';
 import '../util/tuple.dart';
+import '../view/view_draggable_nested_map.dart';
 
 class VMDraggableNestedMap extends GetxController {
-  List<List<Widget>> widgetList = List.empty(growable: true);
+  List<Widget> widgetList = List.empty(growable: true);
   Tuple<int, int>? drag;
   Tuple<int, int> mouseHover = Tuple(-1, -1);
   Tuple<int, int> sizeSet = Tuple(1, 1);
@@ -25,20 +26,148 @@ class VMDraggableNestedMap extends GetxController {
 
   bool isChanged = false;
 
-  void updateWidgetList() {
+  void updateWidgetList(BuildContext context, BoxConstraints constrains) {
     widgetList.clear();
 
-    var list = getPlatform().choiceNodes;
-    for (int y = 0; y < list.length; y++) {
-      widgetList.add(List.empty(growable: true));
-      var xList = list[y];
-      for (int x = 0; x < xList.data1.length; x++) {
-        widgetList[y].insert(
-            x,
-            getWidgetFromType(xList.data1[x].isCard, x, y));
+    var choiceNodeList = getPlatform().choiceNodes;
+
+    widgetList = List<Widget>.generate(choiceNodeList.length * 2 + 1, (y) {
+      if (y <= choiceNodeList.length * 2 - 2) {
+        if (y.isEven) {
+          var xList = choiceNodeList[y ~/ 2];
+          return Padding(
+            padding: const EdgeInsets.only(
+              top: 12,
+              bottom: 12,
+            ),
+            child: GetBuilder<VMDraggableNestedMap>(
+              builder: (_) => Wrap(
+                spacing: 2,
+                alignment: WrapAlignment.center,
+                children: List<Widget>.generate(
+                  xList.data1.length * 2 + 1,
+                  (x) {
+                    var i = x ~/ 2;
+                    var j = y ~/ 2;
+                    if (x.isOdd) {
+                      var widget = getChoiceWidget(xList.data1[i].isCard, i, j);
+                      if (_.isEditable()) {
+                        var pos = Tuple(i, j);
+                        if (ConstList.isSmallDisplay(context)) {
+                          return LongPressDraggable<Tuple<int, int>>(
+                            onDragUpdate: (details) =>
+                                _.dragUpdate(constrains, details, context),
+                            data: pos,
+                            feedback: Transform.scale(
+                              scale: 0.9,
+                              child: widget,
+                            ),
+                            onDragStarted: () {
+                              _.dragStart(pos);
+                            },
+                            child: Visibility(
+                              child: widget,
+                              visible: _.drag != pos,
+                            ),
+                            onDragEnd: (DraggableDetails data) {
+                              _.dragEnd();
+                            },
+                            onDraggableCanceled:
+                                (Velocity velocity, Offset offset) {
+                              _.dragEnd();
+                            },
+                          );
+                        } else {
+                          return Draggable<Tuple<int, int>>(
+                            onDragUpdate: (details) =>
+                                _.dragUpdate(constrains, details, context),
+                            data: pos,
+                            feedback: Transform.scale(
+                              scale: 0.9,
+                              child: widget,
+                            ),
+                            onDragStarted: () {
+                              _.dragStart(pos);
+                            },
+                            child: Visibility(
+                              child: widget,
+                              visible: _.drag != pos,
+                            ),
+                            onDragEnd: (DraggableDetails data) {
+                              _.dragEnd();
+                            },
+                            onDraggableCanceled:
+                                (Velocity velocity, Offset offset) {
+                              _.dragEnd();
+                            },
+                          );
+                        }
+                      } else {
+                        return widget;
+                      }
+                    } else {
+                      return Visibility(
+                        child: DragTarget<Tuple<int, int>>(
+                          builder: (BuildContext context,
+                              List<dynamic> accepted, List<dynamic> rejected) {
+                            return Container(
+                              color: Colors.black12,
+                              width: nodeBaseWidth / 6 * getScale().data1,
+                              height: nodeBaseHeight * 10 * getScale().data2,
+                            );
+                          },
+                          onAccept: (Tuple<int, int> data) {
+                            if (drag == Tuple(-1, -1)) {
+                              changeData(data, Tuple(i, j));
+                            } else {
+                              if ((j - 2) > (drag!.data2 * 2)) {
+                                changeData(data, Tuple(i, j - 1));
+                              } else {
+                                changeData(data, Tuple(i, j));
+                              }
+                            }
+                          },
+                        ),
+                        visible: drag != null && drag != Tuple(i - 1, j),
+                      );
+                    }
+                  },
+                ),
+              ),
+            ),
+          );
+        } else {
+          return NodeDivider(y ~/ 2 + 1);
+        }
+      } else {
+        if (y.isEven) {
+          return Visibility(
+            child: DragTarget<Tuple<int, int>>(
+              builder: (BuildContext context,
+                  List<dynamic> accepted, List<dynamic> rejected) {
+                return Container(
+                  color: Colors.black12,
+                  width: nodeBaseWidth / 6 * getScale().data1,
+                  height: nodeBaseHeight * 10 * getScale().data2,
+                );
+              },
+              onAccept: (Tuple<int, int> data) {
+                changeData(data, Tuple(0, choiceNodeList.length));
+              },
+            ),
+            visible: drag != null,
+          );
+        } else {
+          return GetBuilder<VMDraggableNestedMap>(
+            builder: (_) => Visibility(
+              child: NodeDivider(y ~/ 2 + 1),
+              visible: drag != null,
+            ),
+          );
+        }
       }
-    }
-    update();
+    });
+
     isChanged = true;
   }
 
@@ -64,21 +193,20 @@ class VMDraggableNestedMap extends GetxController {
 
   void removeData(Tuple<int, int> data) {
     getPlatform().removeData(data.data1, data.data2);
-    updateWidgetList();
+    update();
   }
 
   void changeData(Tuple<int, int> data, Tuple<int, int> pos) {
     if (data == Tuple(-1, -1)) {
-      getPlatform()
-          .addData(pos.data1, pos.data2, createNodeForTemp());
+      getPlatform().addData(pos.data1, pos.data2, createNodeForTemp());
     } else {
       getPlatform().changeData(data, pos);
     }
-    updateWidgetList();
+    update();
   }
 
-  void dragStart(int posX, int posY) {
-    drag = Tuple(posX, posY);
+  void dragStart(Tuple<int, int> pos) {
+    drag = pos;
     update();
   }
 
@@ -205,15 +333,16 @@ class VMDraggableNestedMap extends GetxController {
   void setEdit(int posX, int posY) {
     var node = getPlatform().getChoiceNode(posX, posY);
 
-    if(node == null){
+    if (node == null) {
       return;
     }
     ChoiceNodeBase nodeNonnull = node;
     NodeEditor.instance.setTarget(nodeNonnull);
   }
 
-  String getMaxSelect(int y){
-    var max = getPlatform().getLineSetting(y)?.maxSelect;
+  String getMaxSelect(int y) {
+    var line = getPlatform().getLineSetting(y);
+    var max = line == null ? -1 : line.maxSelect;
     return max == -1 ? '무한' : '$max';
   }
 

@@ -49,7 +49,7 @@ class AbstractPlatform {
   AbstractPlatform.none()
       : scale = 1.0,
         stringImageName = '',
-        colorBackground = const Color(0xff909090),
+        colorBackground = Colors.white,
         flag = 0,
         version = ConstList.version ?? '',
         titleFont = "notoSans",

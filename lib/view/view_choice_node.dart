@@ -9,11 +9,11 @@ import '../main.dart';
 import '../model/platform_system.dart';
 import '../util/tuple.dart';
 
-class ViewChoiceNodeTextWithImage extends StatelessWidget {
+class ViewChoiceNode extends StatelessWidget {
   final int posX;
   final int posY;
 
-  const ViewChoiceNodeTextWithImage(
+  const ViewChoiceNode(
       {Key? key, required this.posX, required this.posY})
       : super(key: key);
 
@@ -168,7 +168,7 @@ class ViewChoiceNodeTextWithImage extends StatelessWidget {
                                       onPressed: () {
                                         vmDraggableNestedMap.setSize(Tuple(posX, posY),
                                             vmDraggableNestedMap.sizeSet);
-                                        vmDraggableNestedMap.updateWidgetList();
+                                        vmDraggableNestedMap.update();
                                         Get.back();
                                       },
                                     ),

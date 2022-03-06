@@ -25,8 +25,8 @@ class VMPlatform extends GetxController{
   }
 }
 
-Widget getWidgetFromType(bool isCard, int x, int y) {
-  var widget = ViewChoiceNodeTextWithImage(posX: x, posY: y);
+Widget getChoiceWidget(bool isCard, int x, int y) {
+  var widget = ViewChoiceNode(posX: x, posY: y);
   if (isCard) {
     return GetBuilder<VMDraggableNestedMap>(
       builder: (_) => Opacity(

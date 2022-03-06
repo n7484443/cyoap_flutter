@@ -75,10 +75,10 @@ class ViewMake extends StatelessWidget {
               data: Tuple(-1, -1),
               feedback: Transform.scale(
                 scale: 0.9,
-                child: getWidgetFromType(true, -1, -1),
+                child: getChoiceWidget(true, -1, -1),
               ),
               onDragStarted: () {
-                Get.find<VMDraggableNestedMap>().dragStart(-1, -1);
+                Get.find<VMDraggableNestedMap>().dragStart(Tuple(-1, -1));
               },
               onDragEnd: (DraggableDetails data) {
                 Get.find<VMDraggableNestedMap>().dragEnd();

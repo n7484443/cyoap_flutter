@@ -41,4 +41,8 @@ class Tuple<A, B>{
     throw 'none null mul';
   }
 
+  Tuple<A, B> copy(){
+    return Tuple(data1, data2);
+  }
+
 }

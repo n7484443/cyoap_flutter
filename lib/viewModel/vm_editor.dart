@@ -57,7 +57,7 @@ class VMEditor extends GetxController{
     NodeEditor.instance.target.title = title.value;
     NodeEditor.instance.target.contentsString =
         jsonEncode(quillController.document.toDelta().toJson());
-    Get.find<VMDraggableNestedMap>().updateWidgetList();
+    Get.find<VMDraggableNestedMap>().update();
     isChanged = false;
   }
 
