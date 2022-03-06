@@ -539,12 +539,17 @@ class _ColorButtonExtensionState extends State<ColorButtonExtension> {
       builder: (context) => AlertDialog(
         title: Text('Select Color'.i18n),
         backgroundColor: Theme.of(context).canvasColor,
-        content: ColorPicker(
-          pickersEnabled: {ColorPickerType.wheel: true},
-          color: const Color(0x00000000),
-          onColorChanged: (color) {
-            newColor = color;
-          },
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ColorPicker(
+              pickersEnabled: {ColorPickerType.both: true, ColorPickerType.primary: false, ColorPickerType.accent: false},
+              color: const Color(0x00000000),
+              onColorChanged: (color) {
+                newColor = color;
+              },
+            ),
+          ],
         ),
         actionsAlignment: MainAxisAlignment.spaceEvenly,
         actions: [

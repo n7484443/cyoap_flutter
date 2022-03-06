@@ -266,6 +266,7 @@ class ViewGlobalSetting extends StatelessWidget {
             child: Column(
               children: [
                 Expanded(
+                  flex: 3,
                   child: initialValueList,
                 ),
                 const Divider(

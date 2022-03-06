@@ -135,7 +135,7 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   ChoiceNodeBase createNodeForTemp() {
-    return ChoiceNodeBase.noTitle(1, 10, false, '', '');
+    return ChoiceNodeBase.noTitle(1, 10, true, '', '');
   }
 
   QuillController? getNodeController(int x, int y) {
@@ -149,13 +149,6 @@ class VMDraggableNestedMap extends GetxController {
           document: document,
           selection: const TextSelection.collapsed(offset: 0));
     }
-  }
-
-  void addNode() {
-    getPlatform()
-        .addData(0, 0, ChoiceNodeBase.noTitle(1, 1, true, '', ''));
-    getPlatform().checkDataCollect();
-    updateWidgetList();
   }
 
   Future<void> exportAsImage() async {
