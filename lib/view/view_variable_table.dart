@@ -36,45 +36,51 @@ class ViewVariable extends StatelessWidget {
     return GetBuilder<VMVariableTable>(
       builder: (_) => Drawer(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            ListView(
-              controller: ScrollController(),
-              shrinkWrap: true,
+            Flexible(
+              child: ListView(
+                controller: ScrollController(),
+                shrinkWrap: true,
+                children: [
+                  ExpansionTile(
+                    title: const Text('변수'),
+                    children: List<Widget>.generate(_.getVariableList().length,
+                        (index) {
+                      return ListTile(title: Text(_.getVariableList()[index]));
+                    }),
+                  ),
+                  ExpansionTile(
+                    title: const Text('노드'),
+                    children: List<Widget>.generate(_.getNodeNameList().length,
+                        (index) {
+                      return ListTile(
+                        title: Row(
+                          children: [
+                            Text(_.getNodeNameList()[index].data1),
+                            Visibility(
+                              child: Icon(_.getNodeNameList()[index].data2
+                                  ? Icons.check_box
+                                  : Icons.check_box_outline_blank),
+                              visible: !_.isEditable(),
+                            )
+                          ],
+                        ),
+                      );
+                    }),
+                  ),
+                ],
+              ),
+            ),
+            Column(
               children: [
-                ExpansionTile(
-                  title: const Text('변수'),
-                  children: List<Widget>.generate(_.getVariableList().length,
-                      (index) {
-                    return ListTile(title: Text(_.getVariableList()[index]));
-                  }),
+                const ListTile(
+                  leading: Icon(Icons.settings),
+                  title: Text('이미지 출처 설정 | 개발중'),
                 ),
-                ExpansionTile(
-                  title: const Text('노드'),
-                  children: List<Widget>.generate(_.getNodeNameList().length,
-                      (index) {
-                    return ListTile(
-                      title: Row(
-                        children: [
-                          Text(_.getNodeNameList()[index].data1),
-                          Visibility(
-                            child: Icon(_.getNodeNameList()[index].data2
-                                ? Icons.check_box
-                                : Icons.check_box_outline_blank),
-                            visible: !_.isEditable(),
-                          )
-                        ],
-                      ),
-                    );
-                  }),
-                ),
+                widget,
               ],
             ),
-            const Spacer(),
-            const ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('이미지 출처 설정 | 개발중'),
-            ),
-            widget,
           ],
         ),
       ),

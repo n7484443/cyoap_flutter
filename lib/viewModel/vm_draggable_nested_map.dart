@@ -27,8 +27,6 @@ class VMDraggableNestedMap extends GetxController {
   bool isChanged = false;
 
   void updateWidgetList(BuildContext context, BoxConstraints constrains) {
-    widgetList.clear();
-
     var choiceNodeList = getPlatform().choiceNodes;
 
     widgetList = List<Widget>.generate(choiceNodeList.length * 2 + 1, (y) {
@@ -147,7 +145,7 @@ class VMDraggableNestedMap extends GetxController {
                   List<dynamic> accepted, List<dynamic> rejected) {
                 return Container(
                   color: Colors.black12,
-                  width: nodeBaseWidth / 6 * getScale().data1,
+                  width: double.infinity,
                   height: nodeBaseHeight * 10 * getScale().data2,
                 );
               },
@@ -167,8 +165,6 @@ class VMDraggableNestedMap extends GetxController {
         }
       }
     });
-
-    isChanged = true;
   }
 
   void setHover(int x, int y) {
