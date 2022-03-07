@@ -1,4 +1,3 @@
-import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -20,7 +19,7 @@ class ViewCodeEditor extends StatelessWidget {
           onPressed: () {
             _vmCodeEditor.isChanged = false;
             Get.back();
-            Get.back();
+            Get.back(id: 1);
           },
           child: const Text('아니오'),
         ),
@@ -28,7 +27,7 @@ class ViewCodeEditor extends StatelessWidget {
           onPressed: () {
             _vmCodeEditor.save();
             Get.back();
-            Get.back();
+            Get.back(id: 1);
           },
           child: const Text('예'),
         ),
@@ -44,7 +43,7 @@ class ViewCodeEditor extends StatelessWidget {
             builder: (_) => showDialogFunction,
           );
         } else {
-          Get.back();
+          Get.back(id: 1);
         }
       },
     );
@@ -76,35 +75,8 @@ class ViewCodeEditor extends StatelessWidget {
       ],
     );
 
-    if (ConstList.isSmallDisplay(context)) {
-      return WillPopScope(
-        child: Scaffold(
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(ConstList.appBarSize),
-            child: AppBar(
-              leading: leadingWidget,
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.save),
-                  onPressed: () {
-                    _vmCodeEditor.save();
-                  },
-                )
-              ],
-            ),
-          ),
-          body: inputText,
-          drawer: const ViewVariable(),
-        ),
-        onWillPop: (){
-          return showDialog(
-            context: context,
-            builder: (_) => showDialogFunction,
-          ) as Future<bool>;
-        },
-      );
-    } else {
-      return Scaffold(
+    return WillPopScope(
+      child: Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(ConstList.appBarSize),
           child: AppBar(
@@ -119,15 +91,14 @@ class ViewCodeEditor extends StatelessWidget {
             ],
           ),
         ),
-        body: Row(
-          children: [
-            const ViewVariable(),
-            Expanded(
-              child: inputText,
-            ),
-          ],
-        ),
-      );
-    }
+        body: inputText,
+      ),
+      onWillPop: (){
+        return showDialog(
+          context: context,
+          builder: (_) => showDialogFunction,
+        ) as Future<bool>;
+      },
+    );
   }
 }

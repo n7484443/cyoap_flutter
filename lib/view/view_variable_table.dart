@@ -19,11 +19,11 @@ class ViewVariable extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.settings),
             title: const Text('이미지 출처 설정 | 개발중'),
-            onTap: () => Get.toNamed("/viewSource"),
+            onTap: () => Get.toNamed("/viewSource", id: 1),
           ),
           ListTile(
             onTap: () {
-              Get.toNamed('/viewGlobalSetting');
+              Get.toNamed('/viewGlobalSetting', id: 1);
             },
             leading: const Icon(Icons.settings),
             title: const Text('전역 설정'),

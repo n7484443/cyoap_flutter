@@ -1,6 +1,5 @@
 import 'package:cyoap_flutter/util/tuple.dart';
 import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
-import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -27,7 +26,7 @@ class ViewMake extends StatelessWidget {
         ElevatedButton(
           onPressed: () {
             Get.back();
-            Get.back();
+            Get.back(id: 1);
           },
           child: const Text('아니오'),
         ),
@@ -35,14 +34,14 @@ class ViewMake extends StatelessWidget {
           onPressed: () {
             vmPlatform.save(ConstList.isOnlyFileAccept());
             Get.back();
-            Get.back();
+            Get.back(id: 1);
           },
           child: const Text('예'),
         ),
       ],
     );
     var appbarWidget = PreferredSize(
-      preferredSize: Size.fromHeight(ConstList.appBarSize),
+      preferredSize: const Size.fromHeight(ConstList.appBarSize),
       child: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -161,34 +160,19 @@ class ViewMake extends StatelessWidget {
         ],
       ),
     );
-    
-    if (ConstList.isSmallDisplay(context)) {
-      return WillPopScope(
-        onWillPop: () {
-          return showDialog(
-            context: context,
-            builder: (_) => dialog,
-          ) as Future<bool>;
-        },
-        child: Scaffold(
-          appBar: appbarWidget,
-          drawer: const ViewVariable(),
-          body: const NestedMap(),
-        ),
-      );
-    } else {
-      return Scaffold(
+
+    return WillPopScope(
+      onWillPop: () {
+        return showDialog(
+          context: context,
+          builder: (_) => dialog,
+        ) as Future<bool>;
+      },
+      child: Scaffold(
         appBar: appbarWidget,
-        body: Row(
-          children: const [
-            ViewVariable(),
-            Expanded(
-              child: NestedMap(),
-            ),
-          ],
-        ),
-      );
-    }
+        body: const NestedMap(),
+      ),
+    );
   }
 }
 

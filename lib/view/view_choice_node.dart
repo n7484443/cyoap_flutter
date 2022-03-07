@@ -168,10 +168,11 @@ class ViewChoiceNode extends StatelessWidget {
                                     TextButton(
                                       child: const Text('변경'),
                                       onPressed: () {
-                                        vmDraggableNestedMap.setSize(Tuple(posX, posY),
+                                        vmDraggableNestedMap.setSize(
+                                            Tuple(posX, posY),
                                             vmDraggableNestedMap.sizeSet);
                                         vmDraggableNestedMap.update();
-                                        Get.back();
+                                        Get.back(id: 1);
                                       },
                                     ),
                                   ],
@@ -239,7 +240,7 @@ class ViewChoiceNode extends StatelessWidget {
           onDoubleTap: () {
             if (vmDraggableNestedMap.isEditable()) {
               vmDraggableNestedMap.setEdit(posX, posY);
-              Get.toNamed('/viewEditor');
+              Get.toNamed('/viewEditor', id: 1);
             }
           },
           child: mainNode,

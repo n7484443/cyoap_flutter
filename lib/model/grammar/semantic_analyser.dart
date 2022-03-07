@@ -6,9 +6,9 @@ import 'package:cyoap_flutter/model/grammar/value_type.dart';
 import 'analyser.dart';
 
 class SemanticAnalyser {
-  RecursiveUnit parserNull = RecursiveData(ValueType(valueTypeData.none));
-  RecursiveUnit parserComma = RecursiveData(ValueType(valueTypeData.comma));
-  RecursiveUnit parserEnd = RecursiveData(ValueType(valueTypeData.comma));
+  RecursiveUnit parserNull = RecursiveData(ValueType(ValueTypeData.none));
+  RecursiveUnit parserComma = RecursiveData(ValueType(ValueTypeData.comma));
+  RecursiveUnit parserEnd = RecursiveData(ValueType(ValueTypeData.comma));
 
   RecursiveUnit compile(List<Token> tokens) {
     return analyseLines(tokens);

@@ -13,7 +13,7 @@ abstract class RecursiveUnit{
 
   // 함수 or 값
   RecursiveUnit() :
-        value = ValueType(valueTypeData.none);
+        value = ValueType(ValueTypeData.none);
 
   RecursiveUnit.fromValue(this.value);
 

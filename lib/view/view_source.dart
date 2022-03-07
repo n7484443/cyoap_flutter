@@ -1,6 +1,6 @@
 import 'package:cyoap_flutter/model/platform_system.dart';
-import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../main.dart';
 
@@ -47,35 +47,24 @@ class ViewSource extends StatelessWidget {
       itemCount: getPlatformFileSystem().getImageList().length,
     );
 
-    if (ConstList.isSmallDisplay(context)) {
-      return WillPopScope(
-        child: Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(ConstList.appBarSize),
-            child: AppBar(),
-          ),
-          drawer: const ViewVariable(),
-          body: widget,
-        ),
-        onWillPop: () async {
-          return false;
-        },
-      );
-    } else {
-      return Scaffold(
+    return WillPopScope(
+      child: Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(ConstList.appBarSize),
-          child: AppBar(),
-        ),
-        body: Row(
-          children: [
-            const ViewVariable(),
-            Expanded(
-              child: widget,
+          child: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: (){
+                Get.back(id: 1);
+              },
             ),
-          ],
+          ),
         ),
-      );
-    }
+        body: widget,
+      ),
+      onWillPop: () async {
+        return false;
+      },
+    );
   }
 }

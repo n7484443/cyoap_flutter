@@ -33,16 +33,16 @@ class ViewGlobalSetting extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {
                         vmGlobalSetting.isChanged = false;
-                        Get.back();
-                        Get.back();
+                        Get.back(id: 1);
+                        Get.back(id: 1);
                       },
                       child: const Text('아니오'),
                     ),
                     ElevatedButton(
                       onPressed: () {
                         vmGlobalSetting.save();
-                        Get.back();
-                        Get.back();
+                        Get.back(id: 1);
+                        Get.back(id: 1);
                       },
                       child: const Text('예'),
                     ),
@@ -50,7 +50,7 @@ class ViewGlobalSetting extends StatelessWidget {
                 ),
               );
             }else{
-              Get.back();
+              Get.back(id: 1);
             }
           },
         ),
@@ -72,14 +72,14 @@ class ViewGlobalSetting extends StatelessWidget {
         cancel: TextButton(
           child: const Text('취소'),
           onPressed: () {
-            Get.back();
+            Get.back(id: 1);
           },
         ),
         confirm: TextButton(
           child: const Text('저장'),
           onPressed: () {
             vmGlobalSetting.editInitialValue(index);
-            Get.back();
+            Get.back(id: 1);
           },
         ),
         content: Padding(

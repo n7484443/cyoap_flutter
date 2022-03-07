@@ -10,7 +10,7 @@ class ValueType {
     }
   }
 
-  ValueType.none() : data = valueTypeData.none;
+  ValueType.none() : data = ValueTypeData.none;
 
   void set(ValueType a) {
     data = a.data;
@@ -18,7 +18,7 @@ class ValueType {
 
   dynamic dataUnzip(){
     if(data == null)return null;
-    if (data != valueTypeData.none) {
+    if (data != ValueTypeData.none) {
       if (data is VariableUnit) {
         return VariableDataBase.instance.getValueTypeWrapper(data.varName);
       }
@@ -86,7 +86,7 @@ class VariableUnit {
   };
 }
 
-enum valueTypeData{
+enum ValueTypeData{
   none, comma,
 }
 

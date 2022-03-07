@@ -1,11 +1,7 @@
 import 'dart:io';
 
-import 'package:cyoap_flutter/view/view_code_editor.dart';
-import 'package:cyoap_flutter/view/view_editor.dart';
-import 'package:cyoap_flutter/view/view_global_settings.dart';
-import 'package:cyoap_flutter/view/view_make.dart';
+import 'package:cyoap_flutter/view/view_make_platform.dart';
 import 'package:cyoap_flutter/view/view_play.dart';
-import 'package:cyoap_flutter/view/view_source.dart';
 import 'package:cyoap_flutter/view/view_start.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -91,17 +87,11 @@ void main() {
   runApp(
     GetMaterialApp(
       title: 'CYOAP',
-      home: const ViewStart(),
+      initialRoute: '/',
       getPages: [
-        GetPage(name: '/viewMake', page: () => const ViewMake()),
+        GetPage(name: '/', page: () => const ViewStart()),
         GetPage(name: '/viewPlay', page: () => const ViewPlay()),
-        GetPage(name: '/viewStart', page: () => const ViewStart()),
-        GetPage(name: '/viewEditor', page: () => const ViewEditor()),
-        GetPage(name: '/viewCodeEditor', page: () => const ViewCodeEditor()),
-        GetPage(
-            name: '/viewGlobalSetting', page: () => const ViewGlobalSetting()),
-        GetPage(
-            name: '/viewSource', page: () => const ViewSource()),
+        GetPage(name: '/viewMake', page: () => const ViewMakePlatform()),
       ],
       theme: appThemeData,
       defaultTransition: Transition.fade,
@@ -126,7 +116,7 @@ final ThemeData appThemeData = ThemeData(
   ),
   drawerTheme: const DrawerThemeData(
     backgroundColor: Colors.white,
-    elevation: 1,
+    elevation: ConstList.elevation,
   ),
   useMaterial3: true,
 );

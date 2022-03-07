@@ -2,7 +2,6 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:cyoap_flutter/model/platform_system.dart';
-import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
@@ -29,7 +28,7 @@ class ViewEditor extends StatelessWidget {
           onPressed: () {
             controller.isChanged = false;
             Get.back();
-            Get.back();
+            Get.back(id: 1);
           },
           child: const Text('아니오'),
         ),
@@ -38,7 +37,7 @@ class ViewEditor extends StatelessWidget {
             controller.isChanged = false;
             controller.save();
             Get.back();
-            Get.back();
+            Get.back(id: 1);
           },
           child: const Text('예'),
         ),
@@ -57,7 +56,7 @@ class ViewEditor extends StatelessWidget {
                 builder: (_) => alert,
               );
             }else{
-              Get.back();
+              Get.back(id: 1);
             }
           },
         ),
@@ -108,90 +107,46 @@ class ViewEditor extends StatelessWidget {
         ),
       ),
     );
-
-    if (ConstList.isSmallDisplay(context)) {
-      return WillPopScope(
-        child: Scaffold(
-          appBar: appbarWidget,
-          drawer: const ViewVariable(),
-          body: Column(
-            children: [
-              Container(
-                color: Colors.black12,
-                child: TextField(
-                  controller: controller.controllerTitle,
-                  textAlign: TextAlign.center,
-                  decoration: const InputDecoration(hintText: '제목'),
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Row(
-                  children: [
-                    const Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: ViewEditorTyping(),
-                      ),
-                    ),
-                    editingNodeValues,
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        onWillPop: (){
-          return showDialog(
-            context: context,
-            builder: (_) => alert,
-          ) as Future<bool>;
-        },
-      );
-    } else {
-      return Scaffold(
+    return WillPopScope(
+      child: Scaffold(
         appBar: appbarWidget,
-        body: Row(
+        body: Column(
           children: [
-            const ViewVariable(),
+            Container(
+              color: Colors.black12,
+              child: TextField(
+                controller: controller.controllerTitle,
+                textAlign: TextAlign.center,
+                decoration: const InputDecoration(hintText: '제목'),
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
             Expanded(
-              child: Column(
+              child: Row(
                 children: [
-                  Container(
-                    color: Colors.black12,
-                    child: TextField(
-                      controller: controller.controllerTitle,
-                      textAlign: TextAlign.center,
-                      decoration: const InputDecoration(hintText: '제목'),
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  const Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: ViewEditorTyping(),
                     ),
                   ),
-                  Expanded(
-                    child: Row(
-                      children: [
-                        const Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: ViewEditorTyping(),
-                          ),
-                        ),
-                        editingNodeValues,
-                      ],
-                    ),
-                  ),
+                  editingNodeValues,
                 ],
               ),
             ),
           ],
         ),
-      );
-    }
+      ),
+      onWillPop: (){
+        return showDialog(
+          context: context,
+          builder: (_) => alert,
+        ) as Future<bool>;
+      },
+    );
   }
 }
 
@@ -230,7 +185,7 @@ class ViewEditorTyping extends StatelessWidget {
           child: OutlinedButton(
             child: const Text('Edit Code'),
             onPressed: () {
-              Get.toNamed('/viewCodeEditor');
+              Get.toNamed('/viewCodeEditor', id: 1);
             },
           ),
         ),
@@ -257,15 +212,16 @@ class ViewEditorTyping extends StatelessWidget {
                               TextButton(
                                 onPressed: () {
                                   controller.addImageSource(name);
-                                  Get.back();
+                                  Get.back(id: 1);
                                 },
                                 child: const Text('자르기'),
                               ),
                               TextButton(
                                 onPressed: () {
                                   controller.addImageSource(name);
-                                  controller.addImageCrop(name, controller.imageLast!);
-                                  Get.back();
+                                  controller.addImageCrop(
+                                      name, controller.imageLast!);
+                                  Get.back(id: 1);
                                 },
                                 child: const Text('저장하기'),
                               ),
@@ -533,14 +489,14 @@ class _ColorButtonExtensionState extends State<ColorButtonExtension> {
           IconButton(
             icon: const Icon(Icons.close),
             onPressed: () {
-              Get.back();
+              Get.back(id: 1);
             },
           ),
           IconButton(
             icon: const Icon(Icons.check),
             onPressed: () {
               _changeColor(context, newColor);
-              Get.back();
+              Get.back(id: 1);
             },
           ),
         ],
