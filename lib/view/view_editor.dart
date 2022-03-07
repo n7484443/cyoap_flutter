@@ -5,11 +5,9 @@ import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_quill/src/translations/toolbar.i18n.dart';
 import 'package:flutter_quill/src/utils/color.dart' as quill_color;
-
 import 'package:get/get.dart';
 import 'package:image_cropping/image_cropping.dart';
 
@@ -212,7 +210,7 @@ class ViewEditorTyping extends StatelessWidget {
         Expanded(
           flex: 3,
           child: Card(
-            elevation: 5.0,
+            elevation: ConstList.elevation,
             child: quill.QuillEditor(
               padding: const EdgeInsets.all(3),
               controller: controller.quillController,
@@ -222,41 +220,28 @@ class ViewEditorTyping extends StatelessWidget {
               autoFocus: false,
               readOnly: false,
               scrollController: ScrollController(),
-              customStyles: ConstList.getDefaultThemeData(context, 1, fontStyle: ConstList.getFont(getPlatform().mainFont)),
+              customStyles: ConstList.getDefaultThemeData(context, 1,
+                  fontStyle: ConstList.getFont(getPlatform().mainFont)),
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              OutlinedButton(
-                child: const Text('Edit Code'),
-                onPressed: () {
-                  Get.toNamed('/viewCodeEditor');
-                },
-              ),
-              const SizedBox(
-                width: 100,
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(hintText: '포인트 증감'),
-                ),
-              ),
-            ],
+        Align(
+          alignment: Alignment.centerLeft,
+          child: OutlinedButton(
+            child: const Text('Edit Code'),
+            onPressed: () {
+              Get.toNamed('/viewCodeEditor');
+            },
           ),
         ),
         Expanded(
-          flex: 1,
           child: Row(
             children: [
               Stack(
                 alignment: Alignment.center,
                 children: [
                   IconButton(
-                      onPressed: () async{
+                      onPressed: () async {
                         var name = await controller.addImage();
                         await showDialog(
                           builder: (_) => AlertDialog(
@@ -305,25 +290,16 @@ class ViewEditorTyping extends StatelessWidget {
                 ],
               ),
               Expanded(
-                child: Container(
-                  decoration: const BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(4.0, 4.0),
-                        color: Colors.black38,
-                        blurRadius: 5.0,
-                        spreadRadius: 1.0,
-                      )
-                    ],
-                  ),
-                  child: ScrollConfiguration(
-                    behavior:
-                    ScrollConfiguration.of(context).copyWith(dragDevices: {
-                      PointerDeviceKind.touch,
-                      PointerDeviceKind.mouse,
-                    }),
-                    child: GetBuilder<VMEditor>(
-                      builder: (_) => ListView.builder(
+                child: GetBuilder<VMEditor>(
+                  builder: (_) => Card(
+                    elevation: ConstList.elevation,
+                    child: ScrollConfiguration(
+                      behavior: ScrollConfiguration.of(context)
+                          .copyWith(dragDevices: {
+                        PointerDeviceKind.touch,
+                        PointerDeviceKind.mouse,
+                      }),
+                      child: ListView.builder(
                         shrinkWrap: true,
                         physics: const AlwaysScrollableScrollPhysics(),
                         scrollDirection: Axis.horizontal,
@@ -342,7 +318,8 @@ class ViewEditorTyping extends StatelessWidget {
                                 ),
                               ),
                               child: GestureDetector(
-                                child: Image.memory(controller.getImage(index)),
+                                child: Image.memory(controller.getImage(index),
+                                    filterQuality: FilterQuality.high),
                                 onDoubleTap: () {
                                   controller.setImage(index);
                                 },

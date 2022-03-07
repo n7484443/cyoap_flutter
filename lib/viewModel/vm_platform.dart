@@ -2,6 +2,7 @@ import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../main.dart';
 import '../model/platform_system.dart';
 import '../view/view_choice_node.dart';
 
@@ -40,7 +41,7 @@ Widget getChoiceWidget(bool isCard, int x, int y) {
             ),
           ),
           clipBehavior: Clip.antiAliasWithSaveLayer,
-          elevation: 20.0,
+          elevation: ConstList.elevation,
           child: widget,
         ),
       ),

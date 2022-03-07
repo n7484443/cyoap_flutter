@@ -17,7 +17,8 @@ import 'package:tuple/tuple.dart';
 //flutter build web --base-href=/FlutterCyoapWeb/
 
 class ConstList{
-  static double appBarSize = 40.0;
+  static const double appBarSize = 40.0;
+  static const double elevation = 6.0;
   static late final PlatformType actualPlatformType;
 
   static bool isOnlyFileAccept() {
@@ -121,11 +122,11 @@ final ThemeData appThemeData = ThemeData(
         color: Colors.black
     ),
     color: Colors.white,
-    elevation: 3,
+    elevation: ConstList.elevation,
   ),
   drawerTheme: const DrawerThemeData(
     backgroundColor: Colors.white,
-    elevation: 3,
+    elevation: 1,
   ),
   useMaterial3: true,
 );

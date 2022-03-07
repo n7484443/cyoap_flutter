@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:image/image.dart' show decodeImage;
@@ -337,7 +338,7 @@ class PlatformFileSystem {
 
   Image getImage(String name) {
     if (_dirImage[name] != null) {
-      return Image.memory(_dirImage[name]!);
+      return Image.memory(_dirImage[name]!, filterQuality: FilterQuality.high);
     } else {
       return noImage;
     }
