@@ -14,12 +14,21 @@ class ViewVariable extends StatelessWidget {
 
     Widget widget;
     if (vmVariableTable.isEditable()) {
-      widget = ListTile(
-        onTap: () {
-          Get.toNamed('/viewGlobalSetting');
-        },
-        leading: const Icon(Icons.settings),
-        title: const Text('전역 설정'),
+      widget = Column(
+        children: [
+          ListTile(
+            leading: const Icon(Icons.settings),
+            title: const Text('이미지 출처 설정 | 개발중'),
+            onTap: () => Get.toNamed("/viewSource"),
+          ),
+          ListTile(
+            onTap: () {
+              Get.toNamed('/viewGlobalSetting');
+            },
+            leading: const Icon(Icons.settings),
+            title: const Text('전역 설정'),
+          ),
+        ],
       );
     } else {
       widget = ListTile(
@@ -72,16 +81,7 @@ class ViewVariable extends StatelessWidget {
                 ],
               ),
             ),
-            Column(
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.settings),
-                  title: const Text('이미지 출처 설정 | 개발중'),
-                  onTap: () => Get.toNamed("/viewSource"),
-                ),
-                widget,
-              ],
-            ),
+            widget,
           ],
         ),
       ),
