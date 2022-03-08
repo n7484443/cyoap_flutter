@@ -85,9 +85,8 @@ class NodeDraggableTarget extends GetView<VMDraggableNestedMap> {
         builder: (BuildContext context, List<dynamic> accepted,
             List<dynamic> rejected) {
           var nodeBefore = controller.getNode(x - 1, y);
-          var nodeAfter = controller.getNode(x, y);
-          if ((nodeBefore != null && nodeBefore.width == 0) &&
-              (nodeAfter != null && nodeAfter.width == 0)) {
+          var node = controller.getNode(x, y);
+          if ((node != null && node.width == 0) || (nodeBefore != null && node == null && nodeBefore.width == 0)) {
             return Container(
               color: baseColor,
               width: double.infinity,
