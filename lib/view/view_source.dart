@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../main.dart';
+import '../viewModel/vm_source.dart';
 
 class ViewSource extends StatelessWidget {
   const ViewSource({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var controller = Get.put(VMSource());
     var widget = ListView.builder(
       itemBuilder: (BuildContext context, int index) {
         var name = getPlatformFileSystem().getImageName(index);
@@ -36,6 +38,7 @@ class ViewSource extends StatelessWidget {
                             getPlatformFileSystem().getSource(name) ?? '출처를 여기에 적어주세요!',
                         alignLabelWithHint: true,
                       ),
+                      controller: controller.getTextEditor(name),
                     ),
                   ],
                 ),
