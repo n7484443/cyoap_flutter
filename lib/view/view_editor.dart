@@ -45,7 +45,7 @@ class ViewEditor extends StatelessWidget {
     );
 
     var appbarWidget = PreferredSize(
-      preferredSize: Size.fromHeight(ConstList.appBarSize),
+      preferredSize: const Size.fromHeight(ConstList.appBarSize),
       child: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -212,7 +212,7 @@ class ViewEditorTyping extends StatelessWidget {
                               TextButton(
                                 onPressed: () {
                                   controller.addImageSource(name);
-                                  Get.back(id: 1);
+                                  Get.back();
                                 },
                                 child: const Text('자르기'),
                               ),
@@ -221,7 +221,7 @@ class ViewEditorTyping extends StatelessWidget {
                                   controller.addImageSource(name);
                                   controller.addImageCrop(
                                       name, controller.imageLast!);
-                                  Get.back(id: 1);
+                                  Get.back();
                                 },
                                 child: const Text('저장하기'),
                               ),
@@ -489,14 +489,14 @@ class _ColorButtonExtensionState extends State<ColorButtonExtension> {
           IconButton(
             icon: const Icon(Icons.close),
             onPressed: () {
-              Get.back(id: 1);
+              Get.back();
             },
           ),
           IconButton(
             icon: const Icon(Icons.check),
             onPressed: () {
               _changeColor(context, newColor);
-              Get.back(id: 1);
+              Get.back();
             },
           ),
         ],

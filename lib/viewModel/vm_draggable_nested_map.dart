@@ -76,6 +76,7 @@ class VMDraggableNestedMap extends GetxController {
         }
       }
     });
+    isChanged = true;
     return widgetList;
   }
 
