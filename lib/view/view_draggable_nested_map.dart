@@ -3,7 +3,129 @@ import 'package:cyoap_flutter/view/view_text_outline.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../main.dart';
+import '../util/tuple.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
+import '../viewModel/vm_platform.dart';
+
+class NodeDraggable extends GetView<VMDraggableNestedMap> {
+  final int x;
+  final int y;
+  final BoxConstraints constrains;
+  const NodeDraggable(this.x, this.y, this.constrains, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var widget = getChoiceWidget(getPlatform().getChoiceNode(x, y)!.isCard, x, y);
+    var pos = Tuple(x, y);
+    if (ConstList.isSmallDisplay(context)) {
+      return LongPressDraggable<Tuple<int, int>>(
+        onDragUpdate: (details) =>
+            controller.dragUpdate(constrains, details, context),
+        data: pos,
+        feedback: Transform.scale(
+          scale: 0.9,
+          child: widget,
+        ),
+        onDragStarted: () {
+          controller.dragStart(pos);
+        },
+        child: Visibility(
+          child: widget,
+          visible: controller.drag != pos,
+        ),
+        onDragEnd: (DraggableDetails data) {
+          controller.dragEnd();
+        },
+        onDraggableCanceled:
+            (Velocity velocity, Offset offset) {
+              controller.dragEnd();
+        },
+      );
+    } else {
+      return Draggable<Tuple<int, int>>(
+        onDragUpdate: (details) =>
+            controller.dragUpdate(constrains, details, context),
+        data: pos,
+        feedback: Transform.scale(
+          scale: 0.9,
+          child: widget,
+        ),
+        onDragStarted: () {
+          controller.dragStart(pos);
+        },
+        child: Visibility(
+          child: widget,
+          visible: controller.drag != pos,
+        ),
+        onDragEnd: (DraggableDetails data) {
+          controller.dragEnd();
+        },
+        onDraggableCanceled:
+            (Velocity velocity, Offset offset) {
+              controller.dragEnd();
+        },
+      );
+    }
+  }
+}
+
+
+class NodeDraggableTarget extends GetView<VMDraggableNestedMap> {
+  final int x;
+  final int y;
+  final Color baseColor = Colors.black26;
+
+  const NodeDraggableTarget(this.x, this.y, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Visibility(
+      child: DragTarget<Tuple<int, int>>(
+        builder: (BuildContext context, List<dynamic> accepted,
+            List<dynamic> rejected) {
+          var nodeBefore = controller.getNode(x - 1, y);
+          var nodeAfter = controller.getNode(x, y);
+          if ((nodeBefore != null && nodeBefore.width == 0) &&
+              (nodeAfter != null && nodeAfter.width == 0)) {
+            return Container(
+              color: baseColor,
+              width: double.infinity,
+              height:
+                  controller.nodeBaseHeight * 2 * controller.getScale().data2,
+            );
+          }
+          if(y == getPlatform().choiceNodes.length){
+            return Container(
+              color: baseColor,
+              width: double.infinity,
+              height:
+              controller.nodeBaseHeight * 10 * controller.getScale().data2,
+            );
+          }
+          return Container(
+            color: baseColor,
+            width: controller.nodeBaseWidth / 6 * controller.getScale().data1,
+            height:
+                controller.nodeBaseHeight * 10 * controller.getScale().data2,
+          );
+        },
+        onAccept: (Tuple<int, int> data) {
+          if (controller.drag == Tuple(-10, -10)) {
+            controller.changeData(data, Tuple(x, y));
+          } else {
+            if ((x - 2) > (controller.drag!.data1 * 2)) {
+              controller.changeData(data, Tuple(x - 1, y));
+            } else {
+              controller.changeData(data, Tuple(x, y));
+            }
+          }
+        },
+      ),
+      visible: controller.drag != null && controller.drag != Tuple(x - 1, y),
+    );
+  }
+}
 
 class NodeDivider extends StatelessWidget {
   final int y;
@@ -102,7 +224,6 @@ class NestedMap extends StatelessWidget {
     Get.put(VMDraggableNestedMap());
     return GetBuilder<VMDraggableNestedMap>(
       builder: (_) => LayoutBuilder(builder: (context, constrains) {
-        _.updateWidgetList(context, constrains);
         return SingleChildScrollView(
           controller: _.scroller,
           child: RepaintBoundary(
@@ -111,7 +232,7 @@ class NestedMap extends StatelessWidget {
               decoration: BoxDecoration(color: _.getBackgroundColor()),
               child: Column(
                 key: _.keyListView,
-                children: _.widgetList,
+                children: _.updateWidgetList(context, constrains),
               ),
             ),
           ),

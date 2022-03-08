@@ -71,13 +71,13 @@ class ViewMake extends StatelessWidget {
               },
             ),
             Draggable<Tuple<int, int>>(
-              data: Tuple(-1, -1),
+              data: Tuple(-10, -10),
               feedback: Transform.scale(
                 scale: 0.9,
-                child: getChoiceWidget(true, -1, -1),
+                child: getChoiceWidget(true, -10, -10),
               ),
               onDragStarted: () {
-                Get.find<VMDraggableNestedMap>().dragStart(Tuple(-1, -1));
+                Get.find<VMDraggableNestedMap>().dragStart(Tuple(-10, -10));
               },
               onDragEnd: (DraggableDetails data) {
                 Get.find<VMDraggableNestedMap>().dragEnd();

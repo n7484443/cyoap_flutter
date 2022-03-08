@@ -172,7 +172,7 @@ class ViewChoiceNode extends StatelessWidget {
                                             Tuple(posX, posY),
                                             vmDraggableNestedMap.sizeSet);
                                         vmDraggableNestedMap.update();
-                                        Get.back(id: 1);
+                                        Get.back();
                                       },
                                     ),
                                   ],

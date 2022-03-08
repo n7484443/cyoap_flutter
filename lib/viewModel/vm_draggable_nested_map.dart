@@ -14,9 +14,8 @@ import '../util/tuple.dart';
 import '../view/view_draggable_nested_map.dart';
 
 class VMDraggableNestedMap extends GetxController {
-  List<Widget> widgetList = List.empty(growable: true);
   Tuple<int, int>? drag;
-  Tuple<int, int> mouseHover = Tuple(-1, -1);
+  Tuple<int, int> mouseHover = Tuple(-10, -10);
   Tuple<int, int> sizeSet = Tuple(1, 1);
 
   GlobalKey captureKey = GlobalKey();
@@ -26,10 +25,10 @@ class VMDraggableNestedMap extends GetxController {
 
   bool isChanged = false;
 
-  void updateWidgetList(BuildContext context, BoxConstraints constrains) {
+  List<Widget> updateWidgetList(BuildContext context, BoxConstraints constrains) {
     var choiceNodeList = getPlatform().choiceNodes;
 
-    widgetList = List<Widget>.generate(choiceNodeList.length * 2 + 1, (y) {
+    var widgetList = List<Widget>.generate(choiceNodeList.length * 2 + 1, (y) {
       if (y <= choiceNodeList.length * 2 - 2) {
         if (y.isEven) {
           var xList = choiceNodeList[y ~/ 2];
@@ -48,86 +47,13 @@ class VMDraggableNestedMap extends GetxController {
                     var i = x ~/ 2;
                     var j = y ~/ 2;
                     if (x.isOdd) {
-                      var widget = getChoiceWidget(xList.data1[i].isCard, i, j);
                       if (_.isEditable()) {
-                        var pos = Tuple(i, j);
-                        if (ConstList.isSmallDisplay(context)) {
-                          return LongPressDraggable<Tuple<int, int>>(
-                            onDragUpdate: (details) =>
-                                _.dragUpdate(constrains, details, context),
-                            data: pos,
-                            feedback: Transform.scale(
-                              scale: 0.9,
-                              child: widget,
-                            ),
-                            onDragStarted: () {
-                              _.dragStart(pos);
-                            },
-                            child: Visibility(
-                              child: widget,
-                              visible: _.drag != pos,
-                            ),
-                            onDragEnd: (DraggableDetails data) {
-                              _.dragEnd();
-                            },
-                            onDraggableCanceled:
-                                (Velocity velocity, Offset offset) {
-                              _.dragEnd();
-                            },
-                          );
-                        } else {
-                          return Draggable<Tuple<int, int>>(
-                            onDragUpdate: (details) =>
-                                _.dragUpdate(constrains, details, context),
-                            data: pos,
-                            feedback: Transform.scale(
-                              scale: 0.9,
-                              child: widget,
-                            ),
-                            onDragStarted: () {
-                              _.dragStart(pos);
-                            },
-                            child: Visibility(
-                              child: widget,
-                              visible: _.drag != pos,
-                            ),
-                            onDragEnd: (DraggableDetails data) {
-                              _.dragEnd();
-                            },
-                            onDraggableCanceled:
-                                (Velocity velocity, Offset offset) {
-                              _.dragEnd();
-                            },
-                          );
-                        }
+                        return NodeDraggable(i, j, constrains);
                       } else {
-                        return widget;
+                        return  getChoiceWidget(xList.data1[i].isCard, i, j);
                       }
                     } else {
-                      return Visibility(
-                        child: DragTarget<Tuple<int, int>>(
-                          builder: (BuildContext context,
-                              List<dynamic> accepted, List<dynamic> rejected) {
-                            return Container(
-                              color: Colors.black12,
-                              width: nodeBaseWidth / 6 * getScale().data1,
-                              height: nodeBaseHeight * 10 * getScale().data2,
-                            );
-                          },
-                          onAccept: (Tuple<int, int> data) {
-                            if (drag == Tuple(-1, -1)) {
-                              changeData(data, Tuple(i, j));
-                            } else {
-                              if ((j - 2) > (drag!.data2 * 2)) {
-                                changeData(data, Tuple(i, j - 1));
-                              } else {
-                                changeData(data, Tuple(i, j));
-                              }
-                            }
-                          },
-                        ),
-                        visible: drag != null && drag != Tuple(i - 1, j),
-                      );
+                      return NodeDraggableTarget(i, j);
                     }
                   },
                 ),
@@ -139,22 +65,7 @@ class VMDraggableNestedMap extends GetxController {
         }
       } else {
         if (y.isEven) {
-          return Visibility(
-            child: DragTarget<Tuple<int, int>>(
-              builder: (BuildContext context,
-                  List<dynamic> accepted, List<dynamic> rejected) {
-                return Container(
-                  color: Colors.black12,
-                  width: double.infinity,
-                  height: nodeBaseHeight * 10 * getScale().data2,
-                );
-              },
-              onAccept: (Tuple<int, int> data) {
-                changeData(data, Tuple(0, choiceNodeList.length));
-              },
-            ),
-            visible: drag != null,
-          );
+          return NodeDraggableTarget(0, choiceNodeList.length);
         } else {
           return GetBuilder<VMDraggableNestedMap>(
             builder: (_) => Visibility(
@@ -165,6 +76,7 @@ class VMDraggableNestedMap extends GetxController {
         }
       }
     });
+    return widgetList;
   }
 
   void setHover(int x, int y) {
@@ -182,7 +94,16 @@ class VMDraggableNestedMap extends GetxController {
 
   Tuple<double, double> getRealSize(Tuple<int, int> position) {
     var node = getSize(position);
-    var width = node.data1 == 0 ? double.infinity : node.data1 * nodeBaseWidth;
+    double width;
+    if(node.data1 == 0){
+      if(drag == null){
+        width = double.infinity;
+      }else{
+        width = getMaxWidth();
+      }
+    }else{
+      width = node.data1 * nodeBaseWidth;
+    }
     var height = node.data2 * nodeBaseHeight;
     return Tuple(width, height);
   }
@@ -193,7 +114,7 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   void changeData(Tuple<int, int> data, Tuple<int, int> pos) {
-    if (data == Tuple(-1, -1)) {
+    if (data == Tuple(-10, -10)) {
       getPlatform().addData(pos.data1, pos.data2, createNodeForTemp());
     } else {
       getPlatform().changeData(data, pos);
@@ -211,7 +132,7 @@ class VMDraggableNestedMap extends GetxController {
     update();
   }
 
-  double findMaxWidth() {
+  double getMaxWidth() {
     return captureKey.currentContext!.width;
   }
 
@@ -252,8 +173,12 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   ChoiceNodeBase? getNode(int x, int y) {
-    if (x == -1 && y == -1) {
+    if (x == -10 && y == -10) {
       return createNodeForTemp();
+    }else if(y < 0 || y >= getPlatform().choiceNodes.length){
+      return null;
+    }else if(x < 0 || x >= getPlatform().choiceNodes[y].data1.length){
+      return null;
     }
     return getPlatform().getChoiceNode(x, y);
   }
@@ -322,7 +247,7 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   bool isSelect(int posX, int posY) {
-    if (posX == -1 && posY == -1) return false;
+    if (posX == -10 && posY == -10) return false;
     return getPlatform().isSelect(posX, posY);
   }
 
