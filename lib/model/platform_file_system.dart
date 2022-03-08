@@ -179,7 +179,7 @@ class PlatformFileSystem {
   Future<Archive> saveToZip() async {
     saveProgress.update((val) {
       val?.progress = 0;
-      val?.progressMax = _dirImage.length + platform.choiceNodes.length + 1;
+      val?.progressMax = _dirImage.length + platform.choiceNodes.length + 2;
     });
     var archive = Archive();
     for (var imageName in _dirImage.keys) {
@@ -221,7 +221,7 @@ class PlatformFileSystem {
   Future<void> saveToFolder(String path) async {
     saveProgress.update((val) {
       val?.progress = 0;
-      val?.progressMax = _dirImage.length + platform.choiceNodes.length * 2 + 1 + 1;
+      val?.progressMax = _dirImage.length + platform.choiceNodes.length * 2 + 2;
     });
     var dirImages = Directory(path + '/images');
     var dirNodes = Directory(path + '/nodes');

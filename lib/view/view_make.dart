@@ -100,7 +100,7 @@ class ViewMake extends StatelessWidget {
           Visibility(
             child: IconButton(
               icon: const Icon(MdiIcons.zipBox),
-              onPressed: () {
+              onPressed: () async{
                 Get.find<VMPlatform>().stopwatch.start();
                 Get.defaultDialog(
                   barrierDismissible: false,
@@ -133,7 +133,7 @@ class ViewMake extends StatelessWidget {
           Visibility(
             child: IconButton(
               icon: const Icon(Icons.save),
-              onPressed: () {
+              onPressed: () async{
                 Get.defaultDialog(
                   barrierDismissible: false,
                   title: '저장중...',
