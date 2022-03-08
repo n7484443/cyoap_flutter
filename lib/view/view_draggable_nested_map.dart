@@ -25,7 +25,10 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
         data: pos,
         feedback: Transform.scale(
           scale: 0.9,
-          child: widget,
+          child: Opacity(
+            opacity: 0.6,
+            child: widget
+          ),
         ),
         onDragStarted: () {
           controller.dragStart(pos);
@@ -49,7 +52,10 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
         data: pos,
         feedback: Transform.scale(
           scale: 0.9,
-          child: widget,
+          child: Opacity(
+              opacity: 0.6,
+              child: widget
+          ),
         ),
         onDragStarted: () {
           controller.dragStart(pos);
