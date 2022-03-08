@@ -26,12 +26,14 @@ class ViewMake extends StatelessWidget {
         ElevatedButton(
           onPressed: () {
             Get.back();
+            Get.back();
           },
           child: const Text('아니오'),
         ),
         ElevatedButton(
           onPressed: () {
             vmPlatform.save(ConstList.isOnlyFileAccept());
+            Get.back();
             Get.back();
           },
           child: const Text('예'),

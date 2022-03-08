@@ -15,7 +15,7 @@ class ViewPlay extends StatelessWidget {
     if (ConstList.isSmallDisplay(context)) {
       return Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(ConstList.appBarSize),
+          preferredSize: const Size.fromHeight(ConstList.appBarSize),
           child: AppBar(),
         ),
         drawer: const ViewVariable(),
@@ -24,7 +24,7 @@ class ViewPlay extends StatelessWidget {
     } else {
       return Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(ConstList.appBarSize),
+          preferredSize: const Size.fromHeight(ConstList.appBarSize),
           child: AppBar(),
         ),
         body: Row(

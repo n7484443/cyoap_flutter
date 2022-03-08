@@ -9,8 +9,8 @@ import 'package:get/get.dart';
 import 'package:image/image.dart' show decodeImage;
 import 'package:path/path.dart';
 
-import '../util/tuple.dart';
 import '../util/platform_specified_util/webp_converter.dart';
+import '../util/tuple.dart';
 import 'abstract_platform.dart';
 import 'choiceNode/choice_node.dart';
 import 'choiceNode/line_setting.dart';
@@ -337,7 +337,11 @@ class PlatformFileSystem {
 
   Image getImage(String name) {
     if (_dirImage[name] != null) {
-      return Image.memory(_dirImage[name]!, filterQuality: FilterQuality.high);
+      return Image.memory(
+        _dirImage[name]!,
+        filterQuality: FilterQuality.high,
+        isAntiAlias: true,
+      );
     } else {
       return noImage;
     }

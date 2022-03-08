@@ -39,6 +39,8 @@ class ViewMakePlatform extends StatelessWidget {
             return GetPageRoute(
               page: () => const ViewSource(),
             );
+          default:
+            return null;
         }
       },
     );
@@ -48,8 +50,10 @@ class ViewMakePlatform extends StatelessWidget {
           return false;
         },
         child: Scaffold(
-          drawer: const ViewVariable(),
-          body: Flexible(child: navigator),
+          drawer: const Drawer(
+            child: ViewVariable(),
+          ),
+          body: navigator,
         ),
       );
     }
@@ -60,8 +64,13 @@ class ViewMakePlatform extends StatelessWidget {
       child: Scaffold(
         body: Row(
           children: [
-            const ViewVariable(),
-            Flexible(child: navigator),
+            const LimitedBox(
+              maxWidth: 250,
+              child: ViewVariable(),
+            ),
+            Flexible(
+              child: navigator,
+            ),
           ],
         ),
       ),

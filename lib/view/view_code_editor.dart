@@ -78,7 +78,7 @@ class ViewCodeEditor extends StatelessWidget {
     return WillPopScope(
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(ConstList.appBarSize),
+          preferredSize: const Size.fromHeight(ConstList.appBarSize),
           child: AppBar(
             leading: leadingWidget,
             actions: [

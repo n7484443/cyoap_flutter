@@ -18,7 +18,7 @@ class ViewVariable extends StatelessWidget {
         children: [
           ListTile(
             leading: const Icon(Icons.settings),
-            title: const Text('이미지 출처 설정'),
+            title: const Text('출처 설정'),
             onTap: () => Get.toNamed("/viewSource", id: 1),
           ),
           ListTile(
@@ -43,47 +43,52 @@ class ViewVariable extends StatelessWidget {
     }
 
     return GetBuilder<VMVariableTable>(
-      builder: (_) => Drawer(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Flexible(
-              child: ListView(
-                controller: ScrollController(),
-                shrinkWrap: true,
-                children: [
-                  ExpansionTile(
-                    title: const Text('변수'),
-                    children: List<Widget>.generate(_.getVariableList().length,
-                        (index) {
-                      return ListTile(title: Text(_.getVariableList()[index]));
-                    }),
-                  ),
-                  ExpansionTile(
-                    title: const Text('노드'),
-                    children: List<Widget>.generate(_.getNodeNameList().length,
-                        (index) {
-                      return ListTile(
-                        title: Row(
-                          children: [
-                            Text(_.getNodeNameList()[index].data1),
-                            Visibility(
-                              child: Icon(_.getNodeNameList()[index].data2
-                                  ? Icons.check_box
-                                  : Icons.check_box_outline_blank),
-                              visible: !_.isEditable(),
-                            )
-                          ],
-                        ),
-                      );
-                    }),
-                  ),
-                ],
-              ),
+      builder: (_) => Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(
+            child: ListView(
+              controller: ScrollController(),
+              shrinkWrap: true,
+              children: [
+                ExpansionTile(
+                  title: const Text('변수'),
+                  children: List<Widget>.generate(_.getVariableList().length,
+                      (index) {
+                    return ListTile(
+                        title: Text(
+                      _.getVariableList()[index],
+                      softWrap: true,
+                    ));
+                  }),
+                ),
+                ExpansionTile(
+                  title: const Text('노드'),
+                  children: List<Widget>.generate(_.getNodeNameList().length,
+                      (index) {
+                    return ListTile(
+                      title: Row(
+                        children: [
+                          Text(
+                            _.getNodeNameList()[index].data1,
+                            softWrap: true,
+                          ),
+                          Visibility(
+                            child: Icon(_.getNodeNameList()[index].data2
+                                ? Icons.check_box
+                                : Icons.check_box_outline_blank),
+                            visible: !_.isEditable(),
+                          )
+                        ],
+                      ),
+                    );
+                  }),
+                ),
+              ],
             ),
-            widget,
-          ],
-        ),
+          ),
+          widget,
+        ],
       ),
     );
   }

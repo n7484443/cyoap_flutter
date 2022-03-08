@@ -18,7 +18,7 @@ class ViewGlobalSetting extends StatelessWidget {
     final vmGlobalSetting = Get.put(VMGlobalSetting());
 
     var appbarWidget = PreferredSize(
-      preferredSize: Size.fromHeight(ConstList.appBarSize),
+      preferredSize: const Size.fromHeight(ConstList.appBarSize),
       child: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),

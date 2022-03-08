@@ -25,6 +25,9 @@ class VMDraggableNestedMap extends GetxController {
 
   bool isChanged = false;
 
+  double nodeBaseWidth = 176;
+  double nodeBaseHeight = 24;
+
   List<Widget> updateWidgetList(BuildContext context, BoxConstraints constrains) {
     var choiceNodeList = getPlatform().choiceNodes;
 
@@ -89,9 +92,6 @@ class VMDraggableNestedMap extends GetxController {
     var node = getNode(position.data1, position.data2)!;
     return Tuple(node.width, node.height);
   }
-
-  double nodeBaseWidth = 160;
-  double nodeBaseHeight = 20;
 
   Tuple<double, double> getRealSize(Tuple<int, int> position) {
     var node = getSize(position);
@@ -204,7 +204,8 @@ class VMDraggableNestedMap extends GetxController {
   Future<void> exportAsImage() async {
     var boundary =
         captureKey.currentContext?.findRenderObject() as RenderRepaintBoundary;
-    PlatformSystem.instance.saveCapture(await boundary.toImage());
+    PlatformSystem.instance.saveCapture(await boundary.toImage(pixelRatio: 3));
+    print('captured!');
   }
 
   void select(int posX, int posY) {
