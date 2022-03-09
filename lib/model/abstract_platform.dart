@@ -1,9 +1,15 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:archive/archive.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/util/tuple.dart';
 import 'package:flutter/material.dart';
+import 'package:image/image.dart' as im;
 
+import '../util/platform_specified_util/webp_converter.dart';
 import '../util/version.dart';
 import 'choiceNode/line_setting.dart';
 import 'grammar/value_type.dart';
@@ -36,15 +42,14 @@ class AbstractPlatform {
     return versionCheck(versionProgram, version) >= 0;
   }
 
-  AbstractPlatform(
-    this.scale,
-    this.stringImageName,
-    this.colorBackground,
-    this.flag,
-    this.version, {
-    this.titleFont = "notoSans",
-    this.mainFont = "notoSans",
-  });
+  AbstractPlatform(this.scale,
+      this.stringImageName,
+      this.colorBackground,
+      this.flag,
+      this.version, {
+        this.titleFont = "notoSans",
+        this.mainFont = "notoSans",
+      });
 
   AbstractPlatform.none()
       : scale = 1.0,
@@ -205,7 +210,7 @@ class AbstractPlatform {
                 checkClickable = data;
               } else if (data is ValueTypeWrapper) {
                 checkClickable =
-                    data.valueType.data is bool ? data.valueType.data : true;
+                data.valueType.data is bool ? data.valueType.data : true;
               }
             }
             checkClickable &= clickableLineTest;
@@ -241,4 +246,51 @@ class AbstractPlatform {
     globalSetting.addAll(units);
   }
 
+  Future<Archive> toArchive(
+      Map<String, Uint8List> mapImage,
+      Map<String, String> mapSource,
+      List<ChoiceNodeBase> nodeIn,
+      List<LineSetting> lineIn) async {
+    var archive = Archive();
+    for (var imageName in mapImage.keys) {
+      var converted = await convertImage(imageName, mapImage[imageName]!);
+      archive.addFile(ArchiveFile('images/${converted.data2}',
+          converted.data1.length, converted.data1));
+    }
+    for (int i = 0; i < nodeIn.length; i++) {
+      var node = nodeIn[i];
+      var utf = utf8.encode(jsonEncode(node.toJson()));
+      archive.addFile(
+          ArchiveFile('nodes/node_${node.y}_${node.x}.json', utf.length, utf));
+    }
+    for (int i = 0; i < lineIn.length; i++) {
+      var data = utf8.encode(jsonEncode(lineIn[i].toJson()));
+      archive.addFile(ArchiveFile(
+          'nodes/lineSetting_${lineIn[i].y}.json', data.length, data));
+    }
+
+    var platformJson = utf8.encode(jsonEncode(toJson()));
+    archive.addFile(
+        ArchiveFile('platform.json', platformJson.length, platformJson));
+
+    var map = {};
+    for (var name in mapSource.keys) {
+      map[convertImageName(name)] = mapSource[name];
+    }
+    var imageSource = utf8.encode(jsonEncode(map));
+    archive.addFile(
+        ArchiveFile('imageSource.json', imageSource.length, imageSource));
+    return archive;
+  }
+
+  String convertImageName(String name) {
+    return name.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
+  }
+
+  Future<Tuple<Uint8List, String>> convertImage(
+      String name, Uint8List data) async {
+    var image = im.decodeImage(data)!;
+    return await getWebpConverterInstance()
+        .convert(data, name, image.width, image.height);
+  }
 }

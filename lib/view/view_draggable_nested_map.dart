@@ -86,13 +86,18 @@ class NodeDraggableTarget extends GetView<VMDraggableNestedMap> {
 
   @override
   Widget build(BuildContext context) {
+    var nodeBefore = controller.getNode(x - 1, y);
+    var node = controller.getNode(x, y);
+
+    bool long = (node != null && node.width == 0) || (nodeBefore != null && node == null && nodeBefore.width == 0);
+    bool long2 = y == getPlatform().choiceNodes.length;
+    bool realLong = long || long2;
+
     return Visibility(
       child: DragTarget<Tuple<int, int>>(
         builder: (BuildContext context, List<dynamic> accepted,
             List<dynamic> rejected) {
-          var nodeBefore = controller.getNode(x - 1, y);
-          var node = controller.getNode(x, y);
-          if ((node != null && node.width == 0) || (nodeBefore != null && node == null && nodeBefore.width == 0)) {
+          if (long) {
             return Container(
               color: baseColor,
               width: double.infinity,
@@ -100,7 +105,7 @@ class NodeDraggableTarget extends GetView<VMDraggableNestedMap> {
                   controller.nodeBaseHeight * 2 * controller.getScale().data2,
             );
           }
-          if(y == getPlatform().choiceNodes.length){
+          if(long2){
             return Container(
               color: baseColor,
               width: double.infinity,
@@ -128,9 +133,9 @@ class NodeDraggableTarget extends GetView<VMDraggableNestedMap> {
         },
       ),
       visible: controller.drag != null && controller.drag != Tuple(x - 1, y),
-      maintainSize: true,
-      maintainAnimation: true,
-      maintainState: true,
+      maintainSize: realLong,
+      maintainAnimation: realLong,
+      maintainState: realLong,
     );
   }
 }

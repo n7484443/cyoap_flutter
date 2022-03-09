@@ -101,53 +101,47 @@ class ViewMake extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(MdiIcons.zipBox),
-            onPressed: () async {
-              Get.find<VMPlatform>().stopwatch.start();
+            onPressed: ()  {
               Get.defaultDialog(
                 barrierDismissible: false,
                 title: '압축중...',
-                content: Obx(
-                  () => Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                        LinearProgressIndicator(
-                          value: PlatformSystem.instance.platformFileSystem
-                              .saveProgress.value.progressPercent,
-                        ),
-                        Text(
-                            '${PlatformSystem.instance.platformFileSystem.saveProgress.value.progress} / ${PlatformSystem.instance.platformFileSystem.saveProgress.value.progressMax}'),
-                        Text(Get.find<VMPlatform>()
-                            .stopwatch
-                            .elapsed
-                            .toString()),
-                      ],
-                    ),
-                  ),
-                );
-                Get.find<VMPlatform>().save(true);
-                Get.find<VMPlatform>().stopwatch.stop();
+                content: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const CircularProgressIndicator(),
+                    Obx(() => Text(Get.find<VMPlatform>()
+                        .stopwatch
+                        .value
+                        .elapsed
+                        .toString())),
+                  ],
+                ),
+              );
+              Get.find<VMPlatform>().save(true);
               },
             ),
           Visibility(
             child: IconButton(
               icon: const Icon(Icons.save),
-              onPressed: () async{
+              onPressed: () {
                 Get.defaultDialog(
                   barrierDismissible: false,
                   title: '저장중...',
-                  content: Obx(() => Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          LinearProgressIndicator(
-                            value: PlatformSystem.instance.platformFileSystem
-                                .saveProgress.value.progressPercent,
-                          ),
-                          Text(
-                              '${PlatformSystem.instance.platformFileSystem.saveProgress.value.progress} / ${PlatformSystem.instance.platformFileSystem.saveProgress.value.progressMax}'),
-                        ],
-                      )),
+                  content: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const CircularProgressIndicator(),
+                      Obx(() => Text(Get.find<VMPlatform>()
+                          .stopwatch
+                          .value
+                          .elapsed
+                          .toString())),
+                    ],
+                  ),
                 );
                 Get.find<VMPlatform>().save(false);
               },

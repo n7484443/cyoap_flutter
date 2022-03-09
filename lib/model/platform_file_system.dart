@@ -5,7 +5,6 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
 import 'package:image/image.dart' show decodeImage;
 import 'package:path/path.dart';
 
@@ -31,14 +30,21 @@ class ProgressData {
 
 class PlatformFileSystem {
   late AbstractPlatform platform;
+
   final Map<String, Uint8List> _dirImage = {};
+  Map<String, String> get imageMap => _dirImage.map((key, value) => MapEntry(key, String.fromCharCodes(value)));
+  static Map<String, Uint8List> fromImageMap(Map<String, String> imageMap){
+    return imageMap.map((key, value) => MapEntry(key, Uint8List.fromList(value.codeUnits)));
+  }
+
+
   final Map<String, String> _imageSource = {};
+  Map<String, String> get imageSource => _imageSource;
+
   Image noImage = Image.asset('images/noImage.png');
   bool openAsFile = false;
 
   PlatformFileSystem();
-
-  var saveProgress = ProgressData().obs;
 
   Future<void> createFromFolder(String path) async {
     openAsFile = false;
@@ -175,54 +181,7 @@ class PlatformFileSystem {
     return name.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
   }
 
-
-  Future<Archive> saveToZip() async {
-    saveProgress.update((val) {
-      val?.progress = 0;
-      val?.progressMax = _dirImage.length + platform.choiceNodes.length + 2;
-    });
-    var archive = Archive();
-    for (var imageName in _dirImage.keys) {
-      var converted = await convertImage(imageName, _dirImage[imageName]!);
-      archive.addFile(ArchiveFile('images/${converted.data2}',
-          converted.data1.length, converted.data1));
-      saveProgress.update((val) => val?.addProgress());
-    }
-    for (int i = 0; i < platform.choiceNodes.length; i++) {
-      var tuple = platform.choiceNodes[i];
-      var data = utf8.encode(jsonEncode(tuple.data2.toJson()));
-      archive.addFile(ArchiveFile(
-          'nodes/lineSetting_${tuple.data2.y}.json', data.length, data));
-
-      for (int j = 0; j < tuple.data1.length; j++) {
-        var node = platform.choiceNodes[i].data1[j];
-        var utf = utf8.encode(jsonEncode(node.toJson()));
-        archive
-            .addFile(ArchiveFile('nodes/node_${node.y}_${node.x}.json', utf.length, utf));
-      }
-      saveProgress.update((val) => val?.addProgress());
-    }
-    var platformJson = utf8.encode(jsonEncode(platform.toJson()));
-    archive.addFile(
-        ArchiveFile('platform.json', platformJson.length, platformJson));
-    saveProgress.update((val) => val?.addProgress());
-
-    var map = {};
-    for(var name in _imageSource.keys){
-      map[convertImageName(name)] = _imageSource[name];
-    }
-    var imageSource = utf8.encode(jsonEncode(map));
-    archive.addFile(
-        ArchiveFile('imageSource.json', imageSource.length, imageSource));
-    saveProgress.update((val) => val?.addProgress());
-    return archive;
-  }
-
   Future<void> saveToFolder(String path) async {
-    saveProgress.update((val) {
-      val?.progress = 0;
-      val?.progressMax = _dirImage.length + platform.choiceNodes.length * 2 + 2;
-    });
     var dirImages = Directory(path + '/images');
     var dirNodes = Directory(path + '/nodes');
     var dirNodesBackUp = Directory(path + '/nodes_backup');
@@ -244,16 +203,13 @@ class PlatformFileSystem {
     }
     for(var imageName in _dirImage.keys) {
       if (skipImage.contains(imageName)) {
-        saveProgress.update((val) => val?.addProgress());
         continue;
       }
       var converted = await convertImage(imageName, _dirImage[imageName]!);
       var file = File('$path/images/${converted.data2}');
       file.createSync();
       file.writeAsBytes(converted.data1);
-      saveProgress.update((val) => val?.addProgress());
     }
-
 
     if(dirNodesBackUp.existsSync()) {
       dirNodesBackUp.deleteSync(recursive: true);
@@ -270,7 +226,6 @@ class PlatformFileSystem {
         file.createSync(recursive: true);
         file.writeAsString(jsonEncode(node.toJson()));
       }
-      saveProgress.update((val) => val?.addProgress());
     }
 
     if(dirNodes.existsSync()) {
@@ -288,7 +243,6 @@ class PlatformFileSystem {
         file.createSync(recursive: true);
         file.writeAsString(jsonEncode(node.toJson()));
       }
-      saveProgress.update((val) => val?.addProgress());
     }
 
 
@@ -297,7 +251,6 @@ class PlatformFileSystem {
     }
     platformJson.create();
     platformJson.writeAsString(jsonEncode(platform.toJson()));
-    saveProgress.update((val) => val?.addProgress());
 
     if (imageSourceJson.existsSync()) {
       imageSourceJson.deleteSync(recursive: true);
@@ -308,7 +261,6 @@ class PlatformFileSystem {
       map[convertImageName(name)] = _imageSource[name];
     }
     imageSourceJson.writeAsString(jsonEncode(map));
-    saveProgress.update((val) => val?.addProgress());
   }
 
   //1 = 일반 이미지, 0 = 웹 이미지, -1 = 이미지 아님.

@@ -43,19 +43,15 @@ class PlatformSystem{
     platformFileSystem.createFromVoid();
   }
 
-  Future<void> saveFile() async{
-    if(ConstList.isOnlyFileAccept()){
-      await saveRaw('exported.zip', platformFileSystem);
+  Future<void> saveFile(Map<String, dynamic> input) async{
+    if(input['bool'] as bool){
+      await saveZip('exported.zip', input);
     }else{
-      await saveZip(path!, platformFileSystem);
+      await saveZip(path!, input);
     }
   }
-  Future<void> saveFolder() async{
-    if(ConstList.isOnlyFileAccept()){
-      await saveRaw('exported.zip', platformFileSystem);
-    }else{
-      await saveRaw(path!, platformFileSystem);
-    }
+  Future<void> saveFolder(PlatformFileSystem platformFileSystem) async{
+    await saveRaw(path!, platformFileSystem);
   }
 
   static List<Uint8List> getImageList() {
