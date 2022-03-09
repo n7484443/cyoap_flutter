@@ -12,13 +12,13 @@ import '../../model/abstract_platform.dart';
 Future<void> saveRaw(String name, PlatformFileSystem platformFileSystem) async{
   await platformFileSystem.saveToFolder(name);
 }
-void downloadCapture(String name, Uint8List data){
+Future<void> downloadCapture(String name, Uint8List data) async{
   var file = File(name);
   if(file.existsSync()){
     file.delete();
   }
-  file.createSync();
-  file.writeAsBytesSync(data);
+  await file.create();
+  await file.writeAsBytes(data);
 }
 
 Future<void> saveZip(String name, Map<String, dynamic> dataInput) async{
@@ -38,6 +38,6 @@ Future<void> saveZip(String name, Map<String, dynamic> dataInput) async{
     file = File('$name/extract_$i.zip');
     i++;
   }
-  file.createSync();
-  file.writeAsBytesSync(encodedZip);
+  await file.create();
+  await file.writeAsBytes(encodedZip);
 }

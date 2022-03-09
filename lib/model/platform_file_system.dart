@@ -177,8 +177,12 @@ class PlatformFileSystem {
     return await getWebpConverterInstance().convert(data, name, image.width, image.height);
   }
 
+  Future<Tuple<Uint8List, String>> convertCapturedImage(String name, Uint8List data, int width, int height) async{
+    return await getWebpConverterInstance().convert(data, name, width, height);
+  }
+
   String convertImageName(String name){
-    return name.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
+    return name.replaceAll(RegExp('[.](png|jpg|jpeg|rawRgba)'), '.webp');
   }
 
   Future<void> saveToFolder(String path) async {

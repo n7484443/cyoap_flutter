@@ -23,7 +23,7 @@ Future<void> saveZip(String name, Map<String, dynamic> dataInput) async {
   var encodedTar = ZipEncoder().encode(archive, level: Deflate.NO_COMPRESSION) as Uint8List;
   _exportRaw(name, encodedTar);
 }
-void downloadCapture(String name, Uint8List data){
+Future<void> downloadCapture(String name, Uint8List data) async{
   _exportRaw(name, data);
 }
 

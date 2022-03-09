@@ -204,8 +204,7 @@ class VMDraggableNestedMap extends GetxController {
   Future<void> exportAsImage() async {
     var boundary =
         captureKey.currentContext?.findRenderObject() as RenderRepaintBoundary;
-    PlatformSystem.instance.saveCapture(await boundary.toImage(pixelRatio: 3));
-    print('captured!');
+    PlatformSystem.instance.saveCapture(await boundary.toImage(pixelRatio: 2));
   }
 
   void select(int posX, int posY) {

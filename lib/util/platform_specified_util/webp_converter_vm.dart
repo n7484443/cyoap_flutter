@@ -68,27 +68,26 @@ class WebpConverterImpWindows extends WebpConverter {
     }else{
       return Tuple(input, name);
     }
-
     Pointer<Pointer<Uint8>> outputBuff = malloc.allocate<Pointer<Uint8>>(0);
     Pointer<Uint8> inputBuff;
     Uint8List output;
     dynamic outputSize;
     if(decodeImage.channels == Channels.rgb){
-      int size = decodeImage.width * decodeImage.height * 3;
+      int size = width * height * 3;
       inputBuff = malloc.allocate<Uint8>(size);
       var inputBuffered = decodeImage.getBytes(format: Format.rgb);
       for(int i = 0; i < size; i++){
         inputBuff[i] = inputBuffered[i];
       }
-      outputSize = webPEncodeLosslessRGB(inputBuff, decodeImage.width, decodeImage.height, decodeImage.width*3, outputBuff);
+      outputSize = webPEncodeLosslessRGB(inputBuff, width, height, width*3, outputBuff);
     }else{//rgba
-      int size = decodeImage.width * decodeImage.height * 4;
+      int size = width * height * 4;
       inputBuff = malloc.allocate<Uint8>(size);
       var inputBuffered = decodeImage.getBytes(format: Format.rgba);
       for(int i = 0; i < size; i++){
         inputBuff[i] = inputBuffered[i];
       }
-      outputSize = webPEncodeLosslessRGBA(inputBuff, decodeImage.width, decodeImage.height, decodeImage.width*4, outputBuff);
+      outputSize = webPEncodeLosslessRGBA(inputBuff, width, height, width*4, outputBuff);
     }
     output = outputBuff.value.asTypedList(outputSize);
     malloc.free(inputBuff);

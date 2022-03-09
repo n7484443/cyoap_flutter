@@ -7,6 +7,8 @@ import 'package:archive/archive_io.dart';
 import 'package:cyoap_flutter/model/platform_file_system.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
+import 'package:image/image.dart' show Format, PngEncoder;
+import 'package:image/image.dart' as im;
 
 import '../main.dart';
 import 'abstract_platform.dart';
@@ -71,9 +73,11 @@ class PlatformSystem{
   }
 
   void saveCapture(ui.Image image) async{
-    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
     if(byteData == null)return;
-    var converted = await getPlatformFileSystem().convertImage('exported.png', byteData.buffer.asUint8List());
+    var decodeOutput = im.Image.fromBytes(image.width, image.height, byteData.buffer.asUint8List(), format: Format.rgba);
+    var out = PngEncoder().encodeImage(decodeOutput);
+    var converted = await getPlatformFileSystem().convertCapturedImage('exported.png', out as Uint8List, image.width, image.height);
     if(ConstList.isOnlyFileAccept()) {
       downloadCapture(converted.data2, converted.data1);
     }else{
