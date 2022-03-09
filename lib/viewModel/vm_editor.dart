@@ -61,8 +61,8 @@ class VMEditor extends GetxController{
     isChanged = false;
   }
 
-  Uint8List getImage(int i){
-    return PlatformSystem.getImageList()[i];
+  Image getImage(int i){
+    return PlatformSystem.getImage(PlatformSystem.getImageName(i));
   }
 
   void setImage(int index) {

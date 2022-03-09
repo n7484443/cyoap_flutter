@@ -274,11 +274,7 @@ class ViewEditorTyping extends StatelessWidget {
                                 ),
                               ),
                               child: GestureDetector(
-                                child: Image.memory(
-                                  controller.getImage(index),
-                                  filterQuality: FilterQuality.high,
-                                  isAntiAlias: true,
-                                ),
+                                child: controller.getImage(index),
                                 onDoubleTap: () {
                                   controller.setImage(index);
                                 },

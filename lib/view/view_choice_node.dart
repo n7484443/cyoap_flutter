@@ -45,12 +45,7 @@ class ViewChoiceNode extends StatelessWidget {
                         child: ClipRRect(
                           borderRadius:
                               const BorderRadius.all(Radius.circular(5)),
-                          child: Image(
-                            image:
-                                PlatformSystem.getImage(node.imageString).image,
-                            filterQuality: FilterQuality.high,
-                            isAntiAlias: true,
-                          ),
+                          child: PlatformSystem.getImage(node.imageString),
                         ),
                       ),
                       visible: node.imageString.isNotEmpty,

@@ -339,13 +339,14 @@ class PlatformFileSystem {
     if (_dirImage[name] != null) {
       return Image.memory(
         _dirImage[name]!,
-        filterQuality: FilterQuality.high,
+        filterQuality: FilterQuality.medium,
         isAntiAlias: true,
       );
     } else {
       return noImage;
     }
   }
+
   List<Uint8List> getImageList(){
     return _dirImage.values.toList();
   }
