@@ -99,19 +99,18 @@ class ViewMake extends StatelessWidget {
               Get.find<VMDraggableNestedMap>().exportAsImage();
             },
           ),
-          Visibility(
-            child: IconButton(
-              icon: const Icon(MdiIcons.zipBox),
-              onPressed: () async{
-                Get.find<VMPlatform>().stopwatch.start();
-                Get.defaultDialog(
-                  barrierDismissible: false,
-                  title: '압축중...',
-                  content: Obx(
-                    () => Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
+          IconButton(
+            icon: const Icon(MdiIcons.zipBox),
+            onPressed: () async {
+              Get.find<VMPlatform>().stopwatch.start();
+              Get.defaultDialog(
+                barrierDismissible: false,
+                title: '압축중...',
+                content: Obx(
+                  () => Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
                         LinearProgressIndicator(
                           value: PlatformSystem.instance.platformFileSystem
                               .saveProgress.value.progressPercent,
@@ -130,8 +129,6 @@ class ViewMake extends StatelessWidget {
                 Get.find<VMPlatform>().stopwatch.stop();
               },
             ),
-            visible: !ConstList.isOnlyFileAccept(),
-          ),
           Visibility(
             child: IconButton(
               icon: const Icon(Icons.save),

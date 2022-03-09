@@ -128,6 +128,9 @@ class NodeDraggableTarget extends GetView<VMDraggableNestedMap> {
         },
       ),
       visible: controller.drag != null && controller.drag != Tuple(x - 1, y),
+      maintainSize: true,
+      maintainAnimation: true,
+      maintainState: true,
     );
   }
 }
