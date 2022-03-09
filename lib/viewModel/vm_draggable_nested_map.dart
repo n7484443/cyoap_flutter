@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
 
@@ -199,12 +198,6 @@ class VMDraggableNestedMap extends GetxController {
           document: document,
           selection: const TextSelection.collapsed(offset: 0));
     }
-  }
-
-  Future<void> exportAsImage() async {
-    var boundary =
-        captureKey.currentContext?.findRenderObject() as RenderRepaintBoundary;
-    PlatformSystem.instance.saveCapture(await boundary.toImage(pixelRatio: 2));
   }
 
   void select(int posX, int posY) {

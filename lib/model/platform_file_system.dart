@@ -13,6 +13,10 @@ import '../util/tuple.dart';
 import 'abstract_platform.dart';
 import 'choiceNode/choice_node.dart';
 import 'choiceNode/line_setting.dart';
+import 'package:image/image.dart' show Format, PngEncoder;
+import 'package:image/image.dart' as im;
+import 'package:cyoap_flutter/util/platform_specified_util/save_non_js.dart'
+if(dart.library.js) 'package:cyoap_flutter/util/platform_specified_util/save_js.dart';
 
 //platformFileSystem - abstractPlatform
 class ProgressData {
@@ -328,5 +332,21 @@ class PlatformFileSystem {
 
   bool hasSource(String image) {
     return _imageSource[image]?.isNotEmpty ?? false;
+  }
+
+  Future<void> saveCapture(Map<String, dynamic> map) async{
+    int width = map['width'];
+    int height = map['height'];
+    var input = Uint8List.fromList(map['uint8list'].codeUnits);
+
+    var decodeOutput = im.Image.fromBytes(width, height, input, format: Format.rgba);
+    var out = PngEncoder().encodeImage(decodeOutput) as Uint8List;
+
+    var converted = await convertCapturedImage('exported.png', out, width, height);
+    if(map['isOnlyFileAccept']) {
+      await downloadCapture(converted.data2, converted.data1);
+    }else{
+      await downloadCapture('${map['path']}/${converted.data2}', converted.data1);
+    }
   }
 }

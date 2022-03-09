@@ -96,7 +96,24 @@ class ViewMake extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.image),
             onPressed: () {
-              Get.find<VMDraggableNestedMap>().exportAsImage();
+              Get.defaultDialog(
+                barrierDismissible: false,
+                title: '이미지로 추출중...',
+                content: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const CircularProgressIndicator(),
+                    Obx(() => Text(Get.find<VMPlatform>()
+                        .stopwatch
+                        .value
+                        .elapsed
+                        .toString())),
+                  ],
+                ),
+              );
+              Get.find<VMPlatform>().exportAsImage();
             },
           ),
           IconButton(

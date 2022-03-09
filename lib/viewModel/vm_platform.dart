@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 
 import '../main.dart';
@@ -45,15 +46,45 @@ class VMPlatform extends GetxController{
       output = PlatformSystem.instance.saveFolder(getPlatformFileSystem());
     }
     var timer = Timer.periodic(const Duration(milliseconds: 10), (Timer timer){
-      stopwatch.update((val){});
+      stopwatch.update((val) {});
     });
-    output.then((value){
+    output.then((value) {
       stopwatch.update((val) => val?.stop());
       timer.cancel();
       Get.back();
     });
 
     Get.find<VMDraggableNestedMap>().isChanged = false;
+  }
+
+  void exportAsImage() async {
+    stopwatch.update((val) => val?.reset());
+    stopwatch.update((val) => val?.start());
+
+    var vmDraggable = Get.find<VMDraggableNestedMap>();
+    var boundary = vmDraggable.captureKey.currentContext?.findRenderObject()
+        as RenderRepaintBoundary;
+    var imageOutput = await boundary.toImage(pixelRatio: 2);
+    var byteData = (await imageOutput.toByteData())!.buffer.asUint8List();
+
+    Map<String, dynamic> map = {
+      'uint8list': String.fromCharCodes(byteData),
+      'width': imageOutput.width,
+      'height': imageOutput.height,
+      'isOnlyFileAccept' : ConstList.isOnlyFileAccept(),
+      'path': PlatformSystem.instance.path,
+    };
+
+    var output = compute(getPlatformFileSystem().saveCapture, map);
+
+    var timer = Timer.periodic(const Duration(milliseconds: 10), (Timer timer) {
+      stopwatch.update((val) {});
+    });
+    output.then((value) {
+      stopwatch.update((val) => val?.stop());
+      timer.cancel();
+      Get.back();
+    });
   }
 
   void loadVariable() {

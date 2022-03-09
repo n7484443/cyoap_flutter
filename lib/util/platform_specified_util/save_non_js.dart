@@ -14,8 +14,8 @@ Future<void> saveRaw(String name, PlatformFileSystem platformFileSystem) async{
 }
 Future<void> downloadCapture(String name, Uint8List data) async{
   var file = File(name);
-  if(file.existsSync()){
-    file.delete();
+  if(await file.exists()){
+    await file.delete();
   }
   await file.create();
   await file.writeAsBytes(data);
