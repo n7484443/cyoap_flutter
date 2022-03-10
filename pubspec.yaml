@@ -52,6 +52,7 @@ dependencies:
   url_launcher: ^6.0.20
   ffi: ^1.2.0-dev.0
   device_info_plus: ^3.2.2
+  isolated_worker: ^0.1.0
 
 dev_dependencies:
   flutter_test:

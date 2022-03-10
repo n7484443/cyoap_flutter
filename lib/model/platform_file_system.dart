@@ -18,20 +18,6 @@ import 'package:image/image.dart' as im;
 import 'package:cyoap_flutter/util/platform_specified_util/save_non_js.dart'
 if(dart.library.js) 'package:cyoap_flutter/util/platform_specified_util/save_js.dart';
 
-//platformFileSystem - abstractPlatform
-class ProgressData {
-  int progress;
-  int progressMax;
-  double progressPercent;
-
-  ProgressData({this.progress = 0, this.progressMax = 0, this.progressPercent = 0});
-
-  void addProgress() {
-    progress++;
-    progressPercent = progress / progressMax;
-  }
-}
-
 class PlatformFileSystem {
   late AbstractPlatform platform;
 
@@ -173,6 +159,7 @@ class PlatformFileSystem {
     platform.init();
   }
   void createFromVoid() {
+    openAsFile = true;
     platform = AbstractPlatform.none();
   }
 

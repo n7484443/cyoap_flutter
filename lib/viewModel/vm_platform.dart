@@ -36,7 +36,7 @@ class VMPlatform extends GetxController{
       'bool': ConstList.isOnlyFileAccept(),
       'imageMap': getPlatformFileSystem().imageMap,
       'imageSource': getPlatformFileSystem().imageSource,
-      'platform': utf8.encode(jsonEncode(getPlatform().toJson())),
+      'platform': getPlatform().toJson(),
       'choiceNodes': choiceNodes,
       'lineSetting': lineSetting,
     };

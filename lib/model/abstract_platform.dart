@@ -247,16 +247,18 @@ class AbstractPlatform {
   }
 
   Future<Archive> toArchive(
-      Map<String, Uint8List> mapImage,
-      Map<String, String> mapSource,
-      List<ChoiceNodeBase> nodeIn,
-      List<LineSetting> lineIn) async {
+      List<ChoiceNodeBase> nodeIn, List<LineSetting> lineIn,
+      {Map<String, Uint8List>? mapImage,
+      Map<String, String>? mapSource}) async {
     var archive = Archive();
-    for (var imageName in mapImage.keys) {
-      var converted = await convertImage(imageName, mapImage[imageName]!);
-      archive.addFile(ArchiveFile('images/${converted.data2}',
-          converted.data1.length, converted.data1));
+    if (mapImage != null) {
+      for (var imageName in mapImage.keys) {
+        var converted = await convertImage(imageName, mapImage[imageName]!);
+        archive.addFile(ArchiveFile('images/${converted.data2}',
+            converted.data1.length, converted.data1));
+      }
     }
+
     for (int i = 0; i < nodeIn.length; i++) {
       var node = nodeIn[i];
       var utf = utf8.encode(jsonEncode(node.toJson()));
@@ -273,13 +275,15 @@ class AbstractPlatform {
     archive.addFile(
         ArchiveFile('platform.json', platformJson.length, platformJson));
 
-    var map = {};
-    for (var name in mapSource.keys) {
-      map[convertImageName(name)] = mapSource[name];
+    if (mapSource != null) {
+      var map = {};
+      for (var name in mapSource.keys) {
+        map[convertImageName(name)] = mapSource[name];
+      }
+      var imageSource = utf8.encode(jsonEncode(map));
+      archive.addFile(
+          ArchiveFile('imageSource.json', imageSource.length, imageSource));
     }
-    var imageSource = utf8.encode(jsonEncode(map));
-    archive.addFile(
-        ArchiveFile('imageSource.json', imageSource.length, imageSource));
     return archive;
   }
 
