@@ -29,10 +29,9 @@ class ViewPlay extends StatelessWidget {
         ),
         body: Row(
           children: [
-            const ViewVariable(),
-            const VerticalDivider(
-              width: 1,
-              thickness: 1,
+            const LimitedBox(
+              maxWidth: 250,
+              child: ViewVariable(),
             ),
             const Expanded(
               child: NestedMap(),
