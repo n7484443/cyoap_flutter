@@ -18,8 +18,11 @@
 
   <title>cyoap_flutter</title>
   <link rel="manifest" href="manifest.json">
+
   <script src="save_web.js" type="application/javascript"></script>
   <script src="webp_convert.js" type="application/javascript"></script>
+  <script src="jszip.js" type="application/javascript"></script>
+  <script src="FileSaver.js" type="application/javascript"></script>
 
   <style>
     .loading {
@@ -75,7 +78,7 @@
     <div class="loader"></div>
   </div>
   <script>
-    var serviceWorkerVersion = '3866641596';
+    var serviceWorkerVersion = '1879789257';
     var scriptLoaded = false;
     function loadMainDartJs() {
       if (scriptLoaded) {
