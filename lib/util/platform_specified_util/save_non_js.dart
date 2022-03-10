@@ -25,8 +25,7 @@ Future<void> saveZip(String name, Map<String, dynamic> dataInput) async{
   Map<String, Uint8List> mapImage =
       PlatformFileSystem.fromImageMap(dataInput['imageMap']);
   Map<String, String> mapSource = dataInput['imageSource'];
-  AbstractPlatform platform =
-      AbstractPlatform.fromJson(jsonDecode(dataInput['platform']));
+  AbstractPlatform platform = AbstractPlatform.fromJson(jsonDecode(jsonEncode(dataInput['platform'])));
   List<String> nodes = dataInput['choiceNodes'];
   List<String> lineSetting = dataInput['lineSetting'];
   List<ChoiceNodeBase> nodeIn =
