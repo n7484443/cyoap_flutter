@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/foundation.dart';
@@ -64,7 +65,12 @@ class VMPlatform extends GetxController{
     var vmDraggable = Get.find<VMDraggableNestedMap>();
     var boundary = vmDraggable.captureKey.currentContext?.findRenderObject()
         as RenderRepaintBoundary;
-    var imageOutput = await boundary.toImage(pixelRatio: 2);
+    var imageOutput = await boundary.toImage(pixelRatio: 1);
+    var width = imageOutput.width;
+    var height = imageOutput.height;
+    var maxed = max<int>(width, height) + 1;
+
+    imageOutput = await boundary.toImage(pixelRatio: 16383/maxed);
     var byteData = (await imageOutput.toByteData())!.buffer.asUint8List();
 
     Map<String, dynamic> map = {

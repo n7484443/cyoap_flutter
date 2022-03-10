@@ -68,30 +68,31 @@ class WebpConverterImpWindows extends WebpConverter {
     }else{
       return Tuple(input, name);
     }
-    Pointer<Pointer<Uint8>> outputBuff = malloc.allocate<Pointer<Uint8>>(0);
+    Pointer<Pointer<Uint8>> outputBuff = calloc.allocate<Pointer<Uint8>>(0);
     Pointer<Uint8> inputBuff;
     Uint8List output;
-    dynamic outputSize;
+    int outputSize;
     if(decodeImage.channels == Channels.rgb){
-      int size = width * height * 3;
-      inputBuff = malloc.allocate<Uint8>(size);
       var inputBuffered = decodeImage.getBytes(format: Format.rgb);
-      for(int i = 0; i < size; i++){
+      int size = inputBuffered.length;
+      inputBuff = calloc.allocate<Uint8>(size + 1);
+      for(int i = 0; i < inputBuffered.length; i++){
         inputBuff[i] = inputBuffered[i];
       }
       outputSize = webPEncodeLosslessRGB(inputBuff, width, height, width*3, outputBuff);
     }else{//rgba
-      int size = width * height * 4;
-      inputBuff = malloc.allocate<Uint8>(size);
       var inputBuffered = decodeImage.getBytes(format: Format.rgba);
-      for(int i = 0; i < size; i++){
+      int size = inputBuffered.length;
+      inputBuff = calloc.allocate<Uint8>(size + 1);
+      for(int i = 0; i < inputBuffered.length; i++){
         inputBuff[i] = inputBuffered[i];
       }
       outputSize = webPEncodeLosslessRGBA(inputBuff, width, height, width*4, outputBuff);
     }
+    if(outputSize == 0)throw 'encoding error!';
     output = outputBuff.value.asTypedList(outputSize);
-    malloc.free(inputBuff);
-    malloc.free(outputBuff);
+    calloc.free(inputBuff);
+    calloc.free(outputBuff);
     return Tuple(output, name.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp'));
   }
   @override
