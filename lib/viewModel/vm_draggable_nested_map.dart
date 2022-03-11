@@ -27,7 +27,7 @@ class VMDraggableNestedMap extends GetxController {
   double nodeBaseHeight = 24;
 
   int getLength(){
-    return isEditable() ? (getPlatform().choiceNodes.length * 2 + 1) : (getPlatform().choiceNodes.length * 2 - 1);
+    return isEditable() ? (getPlatform().choiceNodes.length * 2 + 2) : (getPlatform().choiceNodes.length * 2);
   }
 
   List<Widget> updateWidgetList({BoxConstraints? constrains}) {
@@ -38,8 +38,8 @@ class VMDraggableNestedMap extends GetxController {
     if (edit) {
       widgetList = List<Widget>.generate(
           getLength(), (y) {
-        if (y <= choiceNodeList.length * 2 - 2) {
-          if (y.isEven) {
+        if (y < choiceNodeList.length * 2) {
+          if (y.isOdd) {
             var xList = choiceNodeList[y ~/ 2];
             return Padding(
               padding: const EdgeInsets.only(
@@ -70,15 +70,15 @@ class VMDraggableNestedMap extends GetxController {
               ),
             );
           } else {
-            return NodeDivider(y ~/ 2 + 1);
+            return NodeDivider(y ~/ 2);
           }
         } else {
-          if (y.isEven) {
+          if (y.isOdd) {
             return NodeDraggableTarget(0, choiceNodeList.length);
           } else {
             return GetBuilder<VMDraggableNestedMap>(
               builder: (_) => Visibility(
-                child: NodeDivider(y ~/ 2 + 1),
+                child: NodeDivider(y ~/ 2 ),
                 visible: drag != null,
               ),
             );
@@ -88,7 +88,7 @@ class VMDraggableNestedMap extends GetxController {
     } else {
       widgetList = List<Widget>.generate(
           getLength(), (y) {
-        if (y.isEven) {
+        if (y.isOdd) {
           var xList = choiceNodeList[y ~/ 2];
           return Padding(
             padding: const EdgeInsets.only(
@@ -300,5 +300,9 @@ class VMDraggableNestedMap extends GetxController {
 
   TextStyle getTitleFont() {
     return ConstList.getFont(getPlatform().titleFont);
+  }
+
+  void setDefaultHeight(int y) {
+
   }
 }

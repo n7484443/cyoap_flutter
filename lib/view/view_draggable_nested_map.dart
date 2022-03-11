@@ -140,25 +140,77 @@ class NodeDraggableTarget extends GetView<VMDraggableNestedMap> {
   }
 }
 
-class NodeDivider extends StatelessWidget {
+class NodeDivider extends GetView<VMDraggableNestedMap> {
   final int y;
 
   const NodeDivider(this.y, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var vmDraggableNestedMap = Get.find<VMDraggableNestedMap>();
-    var maxSelectText = Visibility(
-      child: TextOutline(
-          '최대 ${vmDraggableNestedMap.getMaxSelect(y)}개만큼 선택 가능', 18.0, vmDraggableNestedMap.getTitleFont(), strokeWidth: 5.0),
-      visible: vmDraggableNestedMap.getMaxSelect(y) != '무한',
+    Future dialog() => Get.defaultDialog(
+      title: '최대 선택지 개수 설정',
+      content: GetBuilder<VMDraggableNestedMap>(
+        builder: (_) => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                const Text('선택 가능'),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.chevron_left),
+                  onPressed: () {
+                    _.addMaxSelect(y, -1);
+                  },
+                ),
+                Text(_.getMaxSelect(y)),
+                IconButton(
+                  icon: const Icon(Icons.chevron_right),
+                  onPressed: () {
+                    _.addMaxSelect(y, 1);
+                  },
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                const Text('탭 높이 설정'),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.chevron_left),
+                  onPressed: () {
+                    _.addMaxSelect(y, -1);
+                  },
+                ),
+                Text(_.getMaxSelect(y)),
+                IconButton(
+                  icon: const Icon(Icons.chevron_right),
+                  onPressed: () {
+                    _.addMaxSelect(y, 1);
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
-    if (vmDraggableNestedMap.isEditable()) {
+
+    var maxSelectText = Visibility(
+      child: TextOutline('최대 ${controller.getMaxSelect(y)}개만큼 선택 가능', 18.0,
+          controller.getTitleFont(),
+          strokeWidth: 5.0),
+      visible: controller.getMaxSelect(y) != '무한',
+    );
+
+    if (controller.isEditable()) {
       return Stack(
         children: [
           Divider(
             thickness: 4,
-            color: getPlatform().colorBackground.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+            color: getPlatform().colorBackground.computeLuminance() > 0.5
+                ? Colors.black
+                : Colors.white,
           ),
           maxSelectText,
           Align(
@@ -167,38 +219,7 @@ class NodeDivider extends StatelessWidget {
               icon: const Icon(Icons.more_vert),
               onSelected: (result) {
                 if (result == 0) {
-                  showDialog(
-                    context: context,
-                    builder: (builder) => GetBuilder<VMDraggableNestedMap>(
-                      builder: (_) => AlertDialog(
-                        scrollable: true,
-                        title: const Text('최대 선택지 개수 설정'),
-                        content: Column(
-                          children: [
-                            Row(
-                              children: [
-                                const Text('선택 가능'),
-                                const Spacer(),
-                                IconButton(
-                                  icon: const Icon(Icons.chevron_left),
-                                  onPressed: () {
-                                    _.addMaxSelect(y, -1);
-                                  },
-                                ),
-                                Text(_.getMaxSelect(y)),
-                                IconButton(
-                                  icon: const Icon(Icons.chevron_right),
-                                  onPressed: () {
-                                    _.addMaxSelect(y, 1);
-                                  },
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
+                  dialog();
                 }
               },
               itemBuilder: (BuildContext context) {
