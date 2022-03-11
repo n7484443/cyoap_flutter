@@ -27,14 +27,67 @@ class VMDraggableNestedMap extends GetxController {
   double nodeBaseHeight = 24;
 
   int getLength(){
-    return getPlatform().choiceNodes.length * 2 + 1;
+    return isEditable() ? (getPlatform().choiceNodes.length * 2 + 1) : (getPlatform().choiceNodes.length * 2 - 1);
   }
 
   List<Widget> updateWidgetList({BoxConstraints? constrains}) {
     var choiceNodeList = getPlatform().choiceNodes;
+    var edit = isEditable();
 
-    var widgetList = List<Widget>.generate(getPlatform().choiceNodes.length * 2 + 1, (y) {
-      if (y <= choiceNodeList.length * 2 - 2) {
+    List<Widget> widgetList;
+    if (edit) {
+      widgetList = List<Widget>.generate(
+          getLength(), (y) {
+        if (y <= choiceNodeList.length * 2 - 2) {
+          if (y.isEven) {
+            var xList = choiceNodeList[y ~/ 2];
+            return Padding(
+              padding: const EdgeInsets.only(
+                top: 12,
+                bottom: 12,
+              ),
+              child: GetBuilder<VMDraggableNestedMap>(
+                builder: (_) => Wrap(
+                  spacing: 2,
+                  alignment: WrapAlignment.center,
+                  children: List<Widget>.generate(
+                    xList.data1.length * 2 + 1,
+                    (x) {
+                      var i = x ~/ 2;
+                      var j = y ~/ 2;
+                      if (x.isOdd) {
+                        if (constrains != null) {
+                          return NodeDraggable(i, j, constrains);
+                        } else {
+                          return getChoiceWidget(xList.data1[i].isCard, i, j);
+                        }
+                      } else {
+                        return NodeDraggableTarget(i, j);
+                      }
+                    },
+                  ),
+                ),
+              ),
+            );
+          } else {
+            return NodeDivider(y ~/ 2 + 1);
+          }
+        } else {
+          if (y.isEven) {
+            return NodeDraggableTarget(0, choiceNodeList.length);
+          } else {
+            return GetBuilder<VMDraggableNestedMap>(
+              builder: (_) => Visibility(
+                child: NodeDivider(y ~/ 2 + 1),
+                visible: drag != null,
+              ),
+            );
+          }
+        }
+      });
+    } else {
+      widgetList = List<Widget>.generate(
+          getLength(), (y) {
         if (y.isEven) {
           var xList = choiceNodeList[y ~/ 2];
           return Padding(
@@ -47,19 +100,10 @@ class VMDraggableNestedMap extends GetxController {
                 spacing: 2,
                 alignment: WrapAlignment.center,
                 children: List<Widget>.generate(
-                  xList.data1.length * 2 + 1,
+                  xList.data1.length,
                   (x) {
-                    var i = x ~/ 2;
                     var j = y ~/ 2;
-                    if (x.isOdd) {
-                      if (constrains != null) {
-                        return NodeDraggable(i, j, constrains);
-                      } else {
-                        return getChoiceWidget(xList.data1[i].isCard, i, j);
-                      }
-                    } else {
-                      return NodeDraggableTarget(i, j);
-                    }
+                    return getChoiceWidget(xList.data1[x].isCard, x, j);
                   },
                 ),
               ),
@@ -68,19 +112,9 @@ class VMDraggableNestedMap extends GetxController {
         } else {
           return NodeDivider(y ~/ 2 + 1);
         }
-      } else {
-        if (y.isEven) {
-          return NodeDraggableTarget(0, choiceNodeList.length);
-        } else {
-          return GetBuilder<VMDraggableNestedMap>(
-            builder: (_) => Visibility(
-              child: NodeDivider(y ~/ 2 + 1),
-              visible: drag != null,
-            ),
-          );
-        }
-      }
-    });
+      });
+    }
+
     isChanged = true;
     return widgetList;
   }
