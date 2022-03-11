@@ -234,23 +234,38 @@ class NestedMap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(VMDraggableNestedMap());
-    return GetBuilder<VMDraggableNestedMap>(
-      builder: (_) => LayoutBuilder(builder: (context, constrains) {
-        return SingleChildScrollView(
-          controller: _.scroller,
-          child: RepaintBoundary(
+    var controller = Get.put(VMDraggableNestedMap());
+    if (controller.isEditable()) {
+      return GetBuilder<VMDraggableNestedMap>(
+        builder: (_) => LayoutBuilder(builder: (context, constrains) {
+          return RepaintBoundary(
             key: _.captureKey,
             child: Container(
               decoration: BoxDecoration(color: _.getBackgroundColor()),
-              child: Column(
-                key: _.keyListView,
-                children: _.updateWidgetList(context, constrains),
+              child: ListView(
+                controller: _.scroller,
+                children: _.updateWidgetList(constrains: constrains),
               ),
             ),
-          ),
-        );
-      }),
-    );
+          );
+        }),
+      );
+    } else {
+      return GetBuilder<VMDraggableNestedMap>(
+        builder: (_) {
+          var inner = _.updateWidgetList();
+          return Container(
+            decoration: BoxDecoration(color: _.getBackgroundColor()),
+            child: ListView.builder(
+              controller: _.scroller,
+              itemCount: _.getLength(),
+              itemBuilder: (BuildContext context, int index) {
+                return inner[index];
+              },
+            ),
+          );
+        },
+      );
+    }
   }
 }

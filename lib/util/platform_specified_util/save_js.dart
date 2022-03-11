@@ -21,7 +21,7 @@ Future<void> saveZip(String name, Map<String, dynamic> dataInput) async {
     var decoded = jsonDecode(node);
     int y = decoded['y'];
     int x = decoded['x'];
-    map['nodes/node_${y}_${x}.json'] = node;
+    map['nodes/node_${y}_$x.json'] = node;
   }
 
   for(var node in dataInput['lineSetting'] as List<String>){

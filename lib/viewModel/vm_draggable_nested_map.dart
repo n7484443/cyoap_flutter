@@ -18,7 +18,6 @@ class VMDraggableNestedMap extends GetxController {
   Tuple<int, int> sizeSet = Tuple(1, 1);
 
   GlobalKey captureKey = GlobalKey();
-  GlobalKey keyListView = GlobalKey();
 
   ScrollController scroller = ScrollController();
 
@@ -27,10 +26,14 @@ class VMDraggableNestedMap extends GetxController {
   double nodeBaseWidth = 176;
   double nodeBaseHeight = 24;
 
-  List<Widget> updateWidgetList(BuildContext context, BoxConstraints constrains) {
+  int getLength(){
+    return getPlatform().choiceNodes.length * 2 + 1;
+  }
+
+  List<Widget> updateWidgetList({BoxConstraints? constrains}) {
     var choiceNodeList = getPlatform().choiceNodes;
 
-    var widgetList = List<Widget>.generate(choiceNodeList.length * 2 + 1, (y) {
+    var widgetList = List<Widget>.generate(getPlatform().choiceNodes.length * 2 + 1, (y) {
       if (y <= choiceNodeList.length * 2 - 2) {
         if (y.isEven) {
           var xList = choiceNodeList[y ~/ 2];
@@ -49,10 +52,10 @@ class VMDraggableNestedMap extends GetxController {
                     var i = x ~/ 2;
                     var j = y ~/ 2;
                     if (x.isOdd) {
-                      if (_.isEditable()) {
+                      if (constrains != null) {
                         return NodeDraggable(i, j, constrains);
                       } else {
-                        return  getChoiceWidget(xList.data1[i].isCard, i, j);
+                        return getChoiceWidget(xList.data1[i].isCard, i, j);
                       }
                     } else {
                       return NodeDraggableTarget(i, j);
