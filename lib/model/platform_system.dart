@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:archive/archive_io.dart';
+import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/model/platform_file_system.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
@@ -16,7 +17,12 @@ class PlatformSystem{
   PlatformFileSystem platformFileSystem = PlatformFileSystem();
   String? path;
 
+  Future<void> platformInit() async{
+    await ImageDB.instance.init();
+  }
+
   Future<void> openPlatformZip(PlatformFile file) async{
+    await platformInit();
     var bytes = file.bytes;
     if(bytes == null)return;
 
@@ -25,6 +31,7 @@ class PlatformSystem{
   }
 
   Future<void> openPlatformZipFromFile(File file) async{
+    await platformInit();
     var bytes = await file.readAsBytes();
     path = file.parent.path;
 
@@ -33,11 +40,13 @@ class PlatformSystem{
   }
 
   Future<void> openPlatformFolder(String path) async {
+    await platformInit();
     this.path = path;
     await platformFileSystem.createFromFolder(path);
   }
 
-  void openPlatformVoid(){
+  Future<void> openPlatformVoid() async{
+    await platformInit();
     platformFileSystem.createFromVoid();
   }
 
@@ -52,20 +61,16 @@ class PlatformSystem{
     await saveRaw(path!, platformFileSystem);
   }
 
-  static List<Uint8List> getImageList() {
-    return instance.platformFileSystem.getImageList();
-  }
-
   static String getImageName(int index) {
     return instance.platformFileSystem.getImageName(index);
   }
 
-  static Image getImage(String image){
+  static FutureBuilder getImage(String image){
     return instance.platformFileSystem.getImage(image);
   }
 
   static void addImage(String name, Uint8List data){
-    instance.platformFileSystem.addImage(name, data);
+    ImageDB.instance.uploadImages(name, data);
   }
 
   static int getImageIndex(String name) {

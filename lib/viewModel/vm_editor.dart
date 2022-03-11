@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cyoap_flutter/model/editor.dart';
+import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:file_picker/file_picker.dart';
@@ -61,7 +62,7 @@ class VMEditor extends GetxController{
     isChanged = false;
   }
 
-  Image getImage(int i){
+  FutureBuilder getImage(int i){
     return PlatformSystem.getImage(PlatformSystem.getImageName(i));
   }
 
@@ -73,7 +74,7 @@ class VMEditor extends GetxController{
   }
 
   int getImageLength() {
-    return PlatformSystem.getImageList().length;
+    return ImageDB.instance.imageList.length;
   }
 
   void setCard(bool value) {

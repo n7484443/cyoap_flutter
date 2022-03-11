@@ -1,9 +1,12 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
+import 'package:cyoap_flutter/model/image_db.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image/image.dart' show decodeImage;
 import 'package:path/path.dart';
@@ -20,13 +23,6 @@ if(dart.library.js) 'package:cyoap_flutter/util/platform_specified_util/save_js.
 
 class PlatformFileSystem {
   late AbstractPlatform platform;
-
-  final Map<String, Uint8List> _dirImage = {};
-  Map<String, String> get imageMap => _dirImage.map((key, value) => MapEntry(key, String.fromCharCodes(value)));
-  static Map<String, Uint8List> fromImageMap(Map<String, String> imageMap){
-    return imageMap.map((key, value) => MapEntry(key, Uint8List.fromList(value.codeUnits)));
-  }
-
 
   final Map<String, String> _imageSource = {};
   Map<String, String> get imageSource => _imageSource;
@@ -54,7 +50,7 @@ class PlatformFileSystem {
         if (f is File && type != -1) {
           if (type == 1) {
             var bytes = await f.readAsBytes();
-            _dirImage.putIfAbsent(name, () => bytes);
+            ImageDB.instance.uploadImages(name, bytes);
           } else {
             //지원 아직 x
           }
@@ -122,7 +118,7 @@ class PlatformFileSystem {
         if (fileName.startsWith('images')) {
           int type = isImageFile(fileName);
           if (type == 1) {
-            _dirImage.putIfAbsent(fileName.split("/")[1], () => data);
+            ImageDB.instance.uploadImages(fileName.split("/")[1], data);
           } else {
             //아직 지원 x
           }
@@ -187,7 +183,7 @@ class PlatformFileSystem {
     if (dirImages.existsSync()) {
       for (var existImage in await dirImages.list().toList()) {
         var name = basename(existImage.path);
-        if (!_dirImage.containsKey(name)) {
+        if (!await ImageDB.instance.hasImage(name)) {
           await existImage.delete();
         }else{
           skipImage.add(name);
@@ -196,11 +192,12 @@ class PlatformFileSystem {
     }else{
       dirImages.create();
     }
-    for(var imageName in _dirImage.keys) {
+    for(var imageName in ImageDB.instance.imageList) {
       if (skipImage.contains(imageName)) {
         continue;
       }
-      var converted = await convertImage(imageName, _dirImage[imageName]!);
+      var image = await ImageDB.instance.getImage(imageName);
+      var converted = await convertImage(imageName, image!);
       var file = File('$path/images/${converted.data2}');
       file.createSync();
       file.writeAsBytes(converted.data1);
@@ -282,31 +279,55 @@ class PlatformFileSystem {
     return -1;
   }
 
-  Image getImage(String name) {
-    if (_dirImage[name] != null) {
+  Queue<Tuple<String, Uint8List>> temp = Queue();
+
+  Future<Image> _getImage(String name) async{
+    Uint8List? image;
+    if(temp.any((element) => element.data1 == name)){
+      var tmp = temp.firstWhere((element) => element.data1 == name);
+      image = tmp.data2;
+    }else if (await ImageDB.instance.hasImage(name)) {
+      image = await ImageDB.instance.getImage(name);
+      if(image != null){
+        temp.addFirst(Tuple(name, image));
+        while(temp.length > 10){
+          temp.removeLast();
+        }
+      }
+    }
+
+    if(image != null){
       return Image.memory(
-        _dirImage[name]!,
+        image,
         filterQuality: FilterQuality.medium,
         isAntiAlias: true,
       );
-    } else {
+    }else {
       return noImage;
     }
   }
 
-  List<Uint8List> getImageList(){
-    return _dirImage.values.toList();
-  }
-  String getImageName(int index){
-    return _dirImage.keys.toList()[index];
+  FutureBuilder getImage(String name){
+    return FutureBuilder(
+      future: _getImage(name),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if(snapshot.hasData == false){
+          return const CircularProgressIndicator();
+        }else if(snapshot.hasError){
+          return noImage;
+        }else{
+          return snapshot.data as Image;
+        }
+      },
+    );
   }
 
-  void addImage(String name, Uint8List data) {
-    _dirImage[name] = data;
+  String getImageName(int index){
+    return ImageDB.instance.imageList[index];
   }
 
   int getImageIndex(String name) {
-    return _dirImage.keys.toList().indexOf(name);
+    return ImageDB.instance.imageList.indexOf(name);
   }
 
   void addSource(String image, String source) {

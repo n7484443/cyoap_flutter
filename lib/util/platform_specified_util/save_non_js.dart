@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:archive/archive.dart';
 import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/choiceNode/line_setting.dart';
+import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/model/platform_file_system.dart';
 
 import '../../model/abstract_platform.dart';
@@ -23,7 +24,7 @@ Future<void> downloadCapture(String name, Uint8List data) async{
 
 Future<void> saveZip(String name, Map<String, dynamic> dataInput) async{
   Map<String, Uint8List> mapImage =
-      PlatformFileSystem.fromImageMap(dataInput['imageMap']);
+      ImageDB.fromImageMap(dataInput['imageMap']);
   Map<String, String> mapSource = dataInput['imageSource'];
   AbstractPlatform platform = AbstractPlatform.fromJson(jsonDecode(jsonEncode(dataInput['platform'])));
   List<String> nodes = dataInput['choiceNodes'];

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../main.dart';
+import '../model/image_db.dart';
 import '../viewModel/vm_source.dart';
 
 class ViewSource extends StatelessWidget {
@@ -47,7 +48,7 @@ class ViewSource extends StatelessWidget {
           ],
         );
       },
-      itemCount: getPlatformFileSystem().getImageList().length,
+      itemCount: ImageDB.instance.imageList.length,
     );
 
     return WillPopScope(

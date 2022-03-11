@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,7 @@ class VMPlatform extends GetxController{
         .toList();
     var input = {
       'bool': ConstList.isOnlyFileAccept(),
-      'imageMap': getPlatformFileSystem().imageMap,
+      'imageMap': await ImageDB.instance.imageMap,
       'imageSource': getPlatformFileSystem().imageSource,
       'platform': getPlatform().toJson(),
       'choiceNodes': choiceNodes,

@@ -90,7 +90,7 @@ class VMStartPlatform extends GetxController {
       }
     }else{
       if(ConstList.isOnlyFileAccept()){
-        PlatformSystem.instance.openPlatformVoid();
+        await PlatformSystem.instance.openPlatformVoid();
         return true;
       }
     }
