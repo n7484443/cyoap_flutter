@@ -6,9 +6,6 @@ import 'value_type.dart';
 abstract class RecursiveUnit{
   List<RecursiveUnit> childNode = List.empty(growable: true);
 
-  // 노드마다 가지는 최대의 데이터:3
-  // if ( a, then, else) 가 최대
-
   ValueType value;
 
   // 함수 or 값
@@ -29,11 +26,7 @@ abstract class RecursiveUnit{
       };
 
   void add(RecursiveUnit unit) {
-    if(childNode.length < 3){
-      childNode.add(unit);
-    }else{
-      throw Error();
-    }
+    childNode.add(unit);
   }
 
   int checkParser(int i) {
@@ -81,26 +74,17 @@ class RecursiveParser extends RecursiveUnit {
 
   @override
   ValueType unzip() {
-    if(value.data == null)return ValueType.none();
-    switch (childNode.length) {
-      case 0:
-        return value.data(ValueType.none(), ValueType.none(), ValueType.none());
-      case 1:
-        return value.data(
-            childNode[0].unzip(), ValueType.none(), ValueType.none());
-      case 2:
-        return value.data(childNode[0].unzip(), childNode[1].unzip(), ValueType.none());
-      default:
-        if(value.data == Analyser.instance.functionList.funcIf){
-          if(childNode[0].unzip().data){
-            return childNode[1].unzip();
-          }else{
-            return childNode[2].unzip();
-          }
-        }else{
-          return value.data(childNode[0].unzip(), childNode[1].unzip(), childNode[2].unzip());
-        }
+    if (value.data == null) return ValueType.none();
+    if (childNode.length == 3 &&
+        value.data == Analyser.instance.functionList.funcIf) {
+      if (childNode[0].unzip().data) {
+        return childNode[1].unzip();
+      } else {
+        return childNode[2].unzip();
+      }
     }
+    var input = childNode.map((e) => e.unzip()).toList();
+    return value.data(input);
   }
 }
 

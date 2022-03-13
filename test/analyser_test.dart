@@ -34,8 +34,8 @@ void main() {
                 
                 and_test_alpha = true
                 and_test_beta = true
-                and_test_1 = and(and_test_alpha, and_test_beta)
-                and_test_2 = and(false, true)
+                and_test_1 = and(true, and_test_beta, true, true, true, true)
+                and_test_2 = and(false, true, true, true)
                 and_test_3 = and(true, false)
                 and_test_4 = and(false, false)
                 

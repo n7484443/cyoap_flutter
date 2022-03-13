@@ -51,152 +51,154 @@ class Functions {
     return 'none';
   }
 
-  ValueType funcNone(ValueType a, ValueType b, ValueType c) {
-    return a;
+  ValueType funcNone(List<ValueType> input) {
+    return input[0];
   }
 
-  ValueType funcIf(ValueType a, ValueType b, ValueType c) {
-    if (a.data is bool && a.data) {
-      return b;
+  ValueType funcIf(List<ValueType> input) {
+    if (input[0].data is bool && input[0].data) {
+      return input[1];
     } else {
-      return c;
+      return input[2];
     }
   }
 
-  ValueType funcFloor(ValueType a, ValueType b, ValueType c) {
-    if (a.data is num) {
-      return ValueType((a.data as num).floor());
+  ValueType funcFloor(List<ValueType> input) {
+    if (input[0].data is num) {
+      return ValueType((input[0].data as num).floor());
     } else {
-      return a;
+      return input[0];
     }
   }
 
-  ValueType funcRound(ValueType a, ValueType b, ValueType c) {
-    if (a.data is num) {
-      return ValueType((a.data as num).round());
+  ValueType funcRound(List<ValueType> input) {
+    if (input[0].data is num) {
+      return ValueType((input[0].data as num).round());
     } else {
-      return a;
+      return input[0];
     }
   }
 
-  ValueType funcCeil(ValueType a, ValueType b, ValueType c) {
-    if (a.data is num) {
-      return ValueType((a.data as num).ceil());
+  ValueType funcCeil(List<ValueType> input) {
+    if (input[0].data is num) {
+      return ValueType((input[0].data as num).ceil());
     } else {
-      return a;
+      return input[0];
     }
   }
 
-  ValueType funcPlus(ValueType a, ValueType b, ValueType c) {
-    if (a.data is num && b.data is num) {
-      return ValueType(a.data + b.data);
+  ValueType funcPlus(List<ValueType> input) {
+    if (input[0].data is num && input[1].data is num) {
+      return ValueType(input[0].data + input[1].data);
     } else {
-      return ValueType(a.data.toString() + b.data.toString());
+      return ValueType(input[0].data.toString() + input[1].data.toString());
     }
   }
 
-  ValueType funcMinus(ValueType a, ValueType b, ValueType c) {
-    if (a.data is num && b.data is num) {
-      return ValueType(a.data - b.data);
+  ValueType funcMinus(List<ValueType> input) {
+    if (input[0].data is num && input[1].data is num) {
+      return ValueType(input[0].data - input[1].data);
     } else {
-      return a;
+      return input[0];
     }
   }
 
-  ValueType funcMulti(ValueType a, ValueType b, ValueType c) {
-    if (a.data is num && b.data is num) {
-      return ValueType(a.data * b.data);
+  ValueType funcMulti(List<ValueType> input) {
+    if (input[0].data is num && input[1].data is num) {
+      return ValueType(input[0].data * input[1].data);
     } else {
-      return a;
+      return input[0];
     }
   }
 
-  ValueType funcDiv(ValueType a, ValueType b, ValueType c) {
-    if (a.data is num && b.data is num) {
-      return ValueType(a.data / b.data);
+  ValueType funcDiv(List<ValueType> input) {
+    if (input[0].data is num && input[1].data is num) {
+      return ValueType(input[0].data / input[1].data);
     } else {
-      return a;
+      return input[0];
     }
   }
 
-  ValueType funcSet(ValueType a, ValueType b, ValueType c) {
-    if(a.data is VariableUnit){
-      var varName = (a.data as VariableUnit).varName;
+  ValueType funcSet(List<ValueType> input) {
+    if(input[0].data is VariableUnit){
+      var varName = (input[0].data as VariableUnit).varName;
       if(VariableDataBase.instance.hasValue(varName)){
         var config = VariableDataBase.instance.getValueTypeWrapper(varName)!;
-        VariableDataBase.instance.setValue(varName, ValueTypeWrapper(b, config.visible, config.isFromNode));
+        VariableDataBase.instance.setValue(varName, ValueTypeWrapper(input[1], config.visible, config.isFromNode));
       }else{
-        VariableDataBase.instance.setValue(varName, ValueTypeWrapper.normal(b));
+        VariableDataBase.instance.setValue(varName, ValueTypeWrapper.normal(input[1]));
       }
     }
-    return a;
+    return input[0];
   }
 
   var epsilon = 0.000001;
 
-  ValueType funcEqual(ValueType a, ValueType b, ValueType c) {
-    if (a.data is num && b.data is num) {
-      return ValueType((a.data - b.data as num).abs() <= epsilon);
+  ValueType funcEqual(List<ValueType> input) {
+    if (input[0].data is num && input[1].data is num) {
+      return ValueType((input[0].data - input[1].data as num).abs() <= epsilon);
     } else {
       return ValueType(false);
     }
   }
 
-  ValueType funcNotEqual(ValueType a, ValueType b, ValueType c) {
-    return ValueType(!funcEqual(a, b, c).data);
+  ValueType funcNotEqual(List<ValueType> input) {
+    return ValueType(!funcEqual(input).data);
   }
 
-  ValueType funcBigger(ValueType a, ValueType b, ValueType c) {
-    if (a.data is num && b.data is num) {
-      return ValueType(a.data > b.data);
+  ValueType funcBigger(List<ValueType> input) {
+    if (input[0].data is num && input[1].data is num) {
+      return ValueType(input[0].data > input[1].data);
     } else {
       return ValueType(false);
     }
   }
 
-  ValueType funcSmaller(ValueType a, ValueType b, ValueType c) {
-    if (a.data is num && b.data is num) {
-      return ValueType(a.data < b.data);
+  ValueType funcSmaller(List<ValueType> input) {
+    if (input[0].data is num && input[1].data is num) {
+      return ValueType(input[0].data < input[1].data);
     } else {
       return ValueType(false);
     }
   }
 
-  ValueType funcBiggerEqual(ValueType a, ValueType b, ValueType c) {
-    return ValueType(!funcSmaller(a, b, c).data);
+  ValueType funcBiggerEqual(List<ValueType> input) {
+    return ValueType(!funcSmaller(input).data);
   }
 
-  ValueType funcSmallerEqual(ValueType a, ValueType b, ValueType c) {
-    return ValueType(!funcBigger(a, b, c).data);
+  ValueType funcSmallerEqual(List<ValueType> input) {
+    return ValueType(!funcBigger(input).data);
   }
 
-  ValueType funcRandom(ValueType a, ValueType b, ValueType c) {
-    if (a.data is int) {
-      return ValueType(Random().nextInt(a.data as int));
+  ValueType funcRandom(List<ValueType> input) {
+    if (input[0].data is int) {
+      return ValueType(Random().nextInt(input[0].data as int));
     } else {
       return ValueType(Random().nextBool());
     }
   }
 
-  ValueType funcAnd(ValueType a, ValueType b, ValueType c) {
-    if (a.data is bool && b.data is bool) {
-      return ValueType(a.data && b.data);
-    } else {
-      return ValueType(false);
+  ValueType funcAnd(List<ValueType> input) {
+    for(var i in input){
+      if(!(i.data is bool && i.data == true)){
+        return ValueType(false);
+      }
     }
+    return ValueType(true);
   }
 
-  ValueType funcOr(ValueType a, ValueType b, ValueType c) {
-    if (a.data is bool && b.data is bool) {
-      return ValueType(a.data || b.data);
-    } else {
-      return ValueType(false);
+  ValueType funcOr(List<ValueType> input) {
+    for(var i in input){
+      if(i.data is bool && i.data == true){
+        return ValueType(true);
+      }
     }
+    return ValueType(false);
   }
 
-  ValueType funcNot(ValueType a, ValueType b, ValueType c) {
-    if (a.data is bool) {
-      return ValueType(!a.data);
+  ValueType funcNot(List<ValueType> input) {
+    if (input[0].data is bool) {
+      return ValueType(!input[0].data);
     } else {
       return ValueType(false);
     }
