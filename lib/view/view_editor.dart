@@ -231,14 +231,16 @@ class ViewEditorTyping extends StatelessWidget {
                         );
                         if (controller.imageLast != null) {
                           ImageCropping.cropImage(
-                            context: context,
+                            context: Get.nestedKey(1)!.currentContext!,
                             imageBytes: controller.imageLast!,
                             onImageDoneListener: (data) => controller
                                 .addImageCrop(name, data as Uint8List),
                             squareBorderWidth: 2,
                             colorForWhiteSpace: Colors.black,
+                            selectedImageRatio: ImageRatio.FREE,
                             isConstrain: true,
                             imageEdgeInsets: const EdgeInsets.all(10),
+                            rootNavigator: true,
                           );
                         }
                       },

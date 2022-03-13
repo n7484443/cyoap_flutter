@@ -185,7 +185,8 @@ class ViewChoiceNode extends StatelessWidget {
                           ];
                         },
                       ),
-                      visible: vmDraggableNestedMap.mouseHover == Tuple(posX, posY) &&
+                      visible: vmDraggableNestedMap.mouseHover ==
+                              Tuple(posX, posY) &&
                           vmDraggableNestedMap.isEditable(),
                     ),
                   ),
@@ -193,19 +194,25 @@ class ViewChoiceNode extends StatelessWidget {
               ),
             ),
             Visibility(
-              child: IgnorePointer(
-                child: quill.QuillEditor(
-                  controller: vmDraggableNestedMap.getNodeController(posX, posY)!,
-                  focusNode: FocusNode(),
-                  readOnly: true,
-                  autoFocus: false,
-                  expands: false,
-                  padding: const EdgeInsets.only(top:4),
-                  scrollController: ScrollController(),
-                  scrollable: false,
-                  customStyles: ConstList.getDefaultThemeData(
-                      context, _.getScale().data2,
-                      fontStyle: ConstList.getFont(getPlatform().mainFont)),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: realSize.data2 * _.getScale().data2 - 45,
+                ),
+                child: IgnorePointer(
+                  child: quill.QuillEditor(
+                    controller:
+                        vmDraggableNestedMap.getNodeController(posX, posY)!,
+                    focusNode: FocusNode(),
+                    readOnly: true,
+                    autoFocus: false,
+                    expands: false,
+                    padding: const EdgeInsets.only(top: 4),
+                    scrollController: ScrollController(),
+                    scrollable: false,
+                    customStyles: ConstList.getDefaultThemeData(
+                        context, _.getScale().data2,
+                        fontStyle: ConstList.getFont(getPlatform().mainFont)),
+                  ),
                 ),
               ),
               visible: node.contentsString.isNotEmpty,
