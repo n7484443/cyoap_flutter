@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/util/tuple.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,10 @@ class JsonProjectParser{
       if(input['image'] == null || (input['image'] as String).isEmpty)return null;
       return await Base64ToImage.convertToImage(input['image'], input['id']);
     }
+    return null;
+  }
+  Future<ChoiceNodeBase?> parseToChoiceNode(Map<String, dynamic> input) async{
+
     return null;
   }
 }

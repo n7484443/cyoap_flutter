@@ -23,18 +23,20 @@ class ViewPlay extends StatelessWidget {
       );
     } else {
       return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(ConstList.appBarSize),
-          child: AppBar(),
-        ),
         body: Row(
           children: [
             const LimitedBox(
               maxWidth: 250,
               child: ViewVariable(),
             ),
-            const Expanded(
-              child: NestedMap(),
+            Flexible(
+              child: Scaffold(
+                appBar: PreferredSize(
+                  preferredSize: const Size.fromHeight(ConstList.appBarSize),
+                  child: AppBar(),
+                ),
+                body: const NestedMap(),
+              ),
             ),
           ],
         ),
