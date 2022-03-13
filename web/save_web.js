@@ -22,7 +22,12 @@ function _compressToZip(nameDataMap){
             zip.file(key, obj[key]);
         }
     }
-    return zip.generateAsync({type:"uint8array"}).then(
+    return zip.generateAsync({
+        type:"uint8array",
+        compression: "DEFLATE",
+        compressionOptions: {
+            level: 1
+        }}).then(
         function (output) {
             return output;
         }

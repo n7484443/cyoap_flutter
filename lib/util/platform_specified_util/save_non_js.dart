@@ -37,7 +37,7 @@ Future<void> saveZip(String name, Map<String, dynamic> dataInput) async{
   var archive = await platform.toArchive(nodeIn, lineIn,
       mapImage: mapImage, mapSource: mapSource);
   var encodedZip =
-      ZipEncoder().encode(archive, level: Deflate.NO_COMPRESSION) as Uint8List;
+      ZipEncoder().encode(archive, level: Deflate.BEST_SPEED) as Uint8List;
   var file = File('$name/extract.zip');
   int i = 0;
   while (file.existsSync()) {
