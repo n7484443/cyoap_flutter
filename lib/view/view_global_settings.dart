@@ -56,6 +56,12 @@ class ViewGlobalSetting extends StatelessWidget {
         ),
         actions: [
           IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: (){
+              Get.toNamed('/viewFontSource', id: 1);
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.save),
             onPressed: () {
               vmGlobalSetting.save();
@@ -295,25 +301,31 @@ class ViewGlobalSetting extends StatelessWidget {
               child: Column(
                 children: [
                   Expanded(
-                    child: SingleChildScrollView(
+                    child: ListView(
                       controller: ScrollController(),
-                      child: ColorPicker(
-                        color: getPlatform().colorBackground,
-                        heading: const Text('배경색 설정'),
-                        subheading: const Text('색조 설정'),
-                        onColorChanged: (Color value) {
-                          vmGlobalSetting.updateColor(value);
-                        },
-                        pickersEnabled: {ColorPickerType.wheel: true, ColorPickerType.accent: false},
-                        pickerTypeLabels: {ColorPickerType.primary: "배경색", ColorPickerType.wheel: "색상 선택"},
-                        width: 22,
-                        height: 22,
-                        borderRadius: 22,
-                      ),
+                      children: [
+                        ColorPicker(
+                          color: getPlatform().colorBackground,
+                          heading: const Text('배경색 설정'),
+                          subheading: const Text('색조 설정'),
+                          onColorChanged: (Color value) {
+                            vmGlobalSetting.updateColor(value);
+                          },
+                          pickersEnabled: {
+                            ColorPickerType.wheel: true,
+                            ColorPickerType.accent: false
+                          },
+                          pickerTypeLabels: {
+                            ColorPickerType.primary: "배경색",
+                            ColorPickerType.wheel: "색상 선택"
+                          },
+                          width: 22,
+                          height: 22,
+                          borderRadius: 22,
+                        ),
+                        fontSelector
+                      ],
                     ),
-                  ),
-                  Expanded(
-                    child: fontSelector,
                   ),
                 ],
               ),

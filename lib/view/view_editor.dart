@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart' as quill;
+import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:flutter_quill/src/translations/toolbar.i18n.dart';
 import 'package:flutter_quill/src/utils/color.dart' as quill_color;
 import 'package:get/get.dart';
@@ -71,40 +71,49 @@ class ViewEditor extends StatelessWidget {
       ),
     );
 
-    var editingNodeValues = SizedBox(
-      child: GetBuilder<VMEditor>(
-        builder: (_) => Column(
-          children: [
-            Row(
-              children: [
-                const Text(
-                  '카드 모드',
-                  style: TextStyle(color: Colors.black),
-                ),
-                Switch(
-                  onChanged: (bool value) {
-                    controller.setCard(value);
-                  },
-                  value: controller.isCard,
-                ),
-              ],
+    var editingNodeValues = GetBuilder<VMEditor>(
+      builder: (_) => Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            children: [
+              const Text(
+                '카드 모드',
+                style: TextStyle(color: Colors.black),
+              ),
+              Switch(
+                onChanged: (bool value) {
+                  controller.setCard(value);
+                },
+                value: controller.isCard,
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              const Text(
+                '선택 가능',
+                style: TextStyle(color: Colors.black),
+              ),
+              Switch(
+                onChanged: (bool value) {
+                  controller.setSelectable(value);
+                },
+                value: controller.isSelectable,
+              ),
+            ],
+          ),
+          const Spacer(),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10.0),
+            child: OutlinedButton(
+              child: const Text('코드 수정'),
+              onPressed: () {
+                Get.toNamed('/viewCodeEditor', id: 1);
+              },
             ),
-            Row(
-              children: [
-                const Text(
-                  '선택 가능',
-                  style: TextStyle(color: Colors.black),
-                ),
-                Switch(
-                  onChanged: (bool value) {
-                    controller.setSelectable(value);
-                  },
-                  value: controller.isSelectable,
-                ),
-              ],
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
     return WillPopScope(
@@ -166,7 +175,7 @@ class ViewEditorTyping extends StatelessWidget {
           flex: 3,
           child: Card(
             elevation: ConstList.elevation,
-            child: quill.QuillEditor(
+            child: QuillEditor(
               padding: const EdgeInsets.all(3),
               controller: controller.quillController,
               focusNode: FocusNode(),
@@ -178,15 +187,6 @@ class ViewEditorTyping extends StatelessWidget {
               customStyles: ConstList.getDefaultThemeData(context, 1,
                   fontStyle: ConstList.getFont(getPlatform().mainFont)),
             ),
-          ),
-        ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: OutlinedButton(
-            child: const Text('Edit Code'),
-            onPressed: () {
-              Get.toNamed('/viewCodeEditor', id: 1);
-            },
           ),
         ),
         Expanded(
@@ -250,25 +250,25 @@ class ViewEditorTyping extends StatelessWidget {
                 ],
               ),
               Expanded(
-                child: GetBuilder<VMEditor>(
-                  builder: (_) => Card(
-                    elevation: ConstList.elevation,
+                child: Card(
+                  elevation: ConstList.elevation,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
                     child: ScrollConfiguration(
                       behavior: ScrollConfiguration.of(context)
                           .copyWith(dragDevices: {
                         PointerDeviceKind.touch,
                         PointerDeviceKind.mouse,
                       }),
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        controller: ScrollController(),
-                        itemCount: controller.getImageLength(),
-                        itemBuilder: (BuildContext context, int index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(1.0),
-                            child: Container(
+                      child: GetBuilder<VMEditor>(
+                        builder: (_) => ListView.builder(
+                          shrinkWrap: true,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          controller: ScrollController(),
+                          itemCount: controller.getImageLength(),
+                          itemBuilder: (BuildContext context, int index) {
+                            return Container(
                               decoration: BoxDecoration(
                                 border: Border.all(
                                   width: 3,
@@ -283,9 +283,9 @@ class ViewEditorTyping extends StatelessWidget {
                                   controller.setImage(index);
                                 },
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),
@@ -299,8 +299,8 @@ class ViewEditorTyping extends StatelessWidget {
   }
 }
 
-quill.QuillToolbar getQuillToolbar(quill.QuillController controller) {
-  var quillToolbar = quill.QuillToolbar.basic(
+QuillToolbar getQuillToolbar(QuillController controller) {
+  var quillToolbar = QuillToolbar.basic(
     controller: controller,
     showListCheck: false,
     showInlineCode: false,
@@ -314,11 +314,11 @@ quill.QuillToolbar getQuillToolbar(quill.QuillController controller) {
   );
   bool b = true;
   List<Widget> children = quillToolbar.children.map((e) {
-    if (e is quill.ColorButton) {
+    if (e is ColorButton) {
       if (b) {
         var button = ColorButtonExtension(
           icon: Icons.color_lens,
-          iconSize: quill.kDefaultIconSize,
+          iconSize: kDefaultIconSize,
           controller: controller,
           background: false,
         );
@@ -327,7 +327,7 @@ quill.QuillToolbar getQuillToolbar(quill.QuillController controller) {
       } else {
         var button = ColorButtonExtension(
           icon: Icons.format_color_fill,
-          iconSize: quill.kDefaultIconSize,
+          iconSize: kDefaultIconSize,
           controller: controller,
           background: true,
         );
@@ -336,7 +336,7 @@ quill.QuillToolbar getQuillToolbar(quill.QuillController controller) {
     }
     return e;
   }).toList();
-  return quill.QuillToolbar(
+  return QuillToolbar(
     children: children,
   );
 }
@@ -346,7 +346,7 @@ class ColorButtonExtension extends StatefulWidget {
     required this.icon,
     required this.controller,
     required this.background,
-    this.iconSize = quill.kDefaultIconSize,
+    this.iconSize = kDefaultIconSize,
     this.iconTheme,
     Key? key,
   }) : super(key: key);
@@ -354,8 +354,8 @@ class ColorButtonExtension extends StatefulWidget {
   final IconData icon;
   final double iconSize;
   final bool background;
-  final quill.QuillController controller;
-  final quill.QuillIconTheme? iconTheme;
+  final QuillController controller;
+  final QuillIconTheme? iconTheme;
 
   @override
   _ColorButtonExtensionState createState() => _ColorButtonExtensionState();
@@ -367,7 +367,7 @@ class _ColorButtonExtensionState extends State<ColorButtonExtension> {
   late bool _isWhite;
   late bool _isWhiteBackground;
 
-  quill.Style get _selectionStyle => widget.controller.getSelectionStyle();
+  Style get _selectionStyle => widget.controller.getSelectionStyle();
 
   void _didChangeEditingValue() {
     setState(() {
@@ -394,12 +394,12 @@ class _ColorButtonExtensionState extends State<ColorButtonExtension> {
     widget.controller.addListener(_didChangeEditingValue);
   }
 
-  bool _getIsToggledColor(Map<String, quill.Attribute> attrs) {
-    return attrs.containsKey(quill.Attribute.color.key);
+  bool _getIsToggledColor(Map<String, Attribute> attrs) {
+    return attrs.containsKey(Attribute.color.key);
   }
 
-  bool _getIsToggledBackground(Map<String, quill.Attribute> attrs) {
-    return attrs.containsKey(quill.Attribute.background.key);
+  bool _getIsToggledBackground(Map<String, Attribute> attrs) {
+    return attrs.containsKey(Attribute.background.key);
   }
 
   @override
@@ -445,10 +445,10 @@ class _ColorButtonExtensionState extends State<ColorButtonExtension> {
             ? quill_color.stringToColor('#ffffff')
             : (widget.iconTheme?.iconUnselectedFillColor ?? theme.canvasColor);
 
-    return quill.QuillIconButton(
+    return QuillIconButton(
       highlightElevation: 0,
       hoverElevation: 0,
-      size: widget.iconSize * quill.kIconButtonFactor,
+      size: widget.iconSize * kIconButtonFactor,
       icon: Icon(widget.icon,
           size: widget.iconSize,
           color: widget.background ? iconColorBackground : iconColor),
@@ -463,9 +463,8 @@ class _ColorButtonExtensionState extends State<ColorButtonExtension> {
       hex = hex.substring(2);
     }
     hex = '#$hex';
-    widget.controller.formatSelection(widget.background
-        ? quill.BackgroundAttribute(hex)
-        : quill.ColorAttribute(hex));
+    widget.controller.formatSelection(
+        widget.background ? BackgroundAttribute(hex) : ColorAttribute(hex));
   }
 
   void _showColorPicker() {

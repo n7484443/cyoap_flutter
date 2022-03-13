@@ -73,6 +73,10 @@ class ConstList{
     "jua": GoogleFonts.jua(color: Colors.black),
     "notoSans": GoogleFonts.notoSans(color: Colors.black),
     "나눔고딕": GoogleFonts.nanumGothic(color:Colors.black),
+    "이순신체": const TextStyle(fontFamily: 'YiSunShin', color: Colors.black),
+    "메이플스토리체": const TextStyle(fontFamily: 'MapleStory', color: Colors.black),
+    "넥슨 Lv2 고딕": const TextStyle(fontFamily: 'NexonLv2Gothic', color: Colors.black),
+    "Neo 둥근모": const TextStyle(fontFamily: 'NeoDGM', color: Colors.black),
   };
 
   static TextStyle getFont(String font) {

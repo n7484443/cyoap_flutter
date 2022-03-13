@@ -27,7 +27,7 @@ class PlatformFileSystem {
   final Map<String, String> _imageSource = {};
   Map<String, String> get imageSource => _imageSource;
 
-  Image noImage = Image.asset('images/noImage.png');
+  Image noImage = Image.asset('asset/images/noImage.png');
   bool openAsFile = false;
 
   PlatformFileSystem();
