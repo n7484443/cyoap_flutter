@@ -48,11 +48,11 @@ class VMStartPlatform extends GetxController {
     }
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['zip'],
+      allowedExtensions: ['zip', 'json'],
     );
     if (result != null) {
       if (ConstList.isOnlyFileAccept()) {
-        isAdded.add(PlatformSystem.instance.openPlatformZip(result.files.single));
+        isAdded.add(PlatformSystem.instance.openPlatformZipForWeb(result.files.single));
         pathList.add(result.files.single.name);
       } else {
         pathList = frequentlyUsedPath.addFrequentPath(result.files.single.path!);
@@ -82,7 +82,10 @@ class VMStartPlatform extends GetxController {
       } else if(path.isNotEmpty){
         if(path.endsWith('.zip')){
           var file = File(path);
-          await PlatformSystem.instance.openPlatformZipFromFile(file);
+          await PlatformSystem.instance.openPlatformZip(file);
+        }else if(path.endsWith('.json')){
+          var file = File(path);
+          await PlatformSystem.instance.openPlatformJson(file);
         }else{
           await PlatformSystem.instance.openPlatformFolder(path);
         }

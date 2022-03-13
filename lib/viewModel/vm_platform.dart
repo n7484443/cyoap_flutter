@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
@@ -72,12 +73,10 @@ class VMPlatform extends GetxController{
     var maxed = max<int>(width, height) + 1;
 
     imageOutput = await boundary.toImage(pixelRatio: 16383/maxed);
-    var byteData = (await imageOutput.toByteData())!.buffer.asUint8List();
+    var byteData = (await imageOutput.toByteData(format: ImageByteFormat.png))!.buffer.asUint8List();
 
     Map<String, dynamic> map = {
       'uint8list': String.fromCharCodes(byteData),
-      'width': imageOutput.width,
-      'height': imageOutput.height,
       'isOnlyFileAccept' : ConstList.isOnlyFileAccept(),
       'path': PlatformSystem.instance.path,
     };

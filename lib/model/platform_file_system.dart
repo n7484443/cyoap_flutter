@@ -7,17 +7,14 @@ import 'dart:typed_data';
 import 'package:archive/archive.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:image/image.dart' show decodeImage;
 import 'package:path/path.dart';
 
+import '../util/json_file_parsing.dart';
 import '../util/platform_specified_util/webp_converter.dart';
 import '../util/tuple.dart';
 import 'abstract_platform.dart';
 import 'choiceNode/choice_node.dart';
 import 'choiceNode/line_setting.dart';
-import 'package:image/image.dart' show Format, PngEncoder;
-import 'package:image/image.dart' as im;
 import 'package:cyoap_flutter/util/platform_specified_util/save_non_js.dart'
 if(dart.library.js) 'package:cyoap_flutter/util/platform_specified_util/save_js.dart';
 
@@ -154,18 +151,20 @@ class PlatformFileSystem {
     }
     platform.init();
   }
+
+  Future<void> createFromJson(String input, String path) async{
+    var jsonParser = JsonProjectParser(path);
+    platform = await jsonParser.getPlatform(input);
+    platform.init();
+  }
+
   void createFromVoid() {
     openAsFile = true;
     platform = AbstractPlatform.none();
   }
 
   Future<Tuple<Uint8List, String>> convertImage(String name, Uint8List data) async{
-    var image = decodeImage(data)!;
-    return await getWebpConverterInstance().convert(data, name, image.width, image.height);
-  }
-
-  Future<Tuple<Uint8List, String>> convertCapturedImage(String name, Uint8List data, int width, int height) async{
-    return await getWebpConverterInstance().convert(data, name, width, height);
+    return await getWebpConverterInstance().convert(data, name);
   }
 
   String convertImageName(String name){
@@ -343,14 +342,9 @@ class PlatformFileSystem {
   }
 
   Future<void> saveCapture(Map<String, dynamic> map) async{
-    int width = map['width'];
-    int height = map['height'];
     var input = Uint8List.fromList(map['uint8list'].codeUnits);
 
-    var decodeOutput = im.Image.fromBytes(width, height, input, format: Format.rgba);
-    var out = PngEncoder().encodeImage(decodeOutput) as Uint8List;
-
-    var converted = await convertCapturedImage('exported.png', out, width, height);
+    var converted = await convertImage('exported.png', input);
     if(map['isOnlyFileAccept']) {
       await downloadCapture(converted.data2, converted.data1);
     }else{

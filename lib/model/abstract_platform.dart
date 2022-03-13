@@ -7,7 +7,6 @@ import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/util/tuple.dart';
 import 'package:flutter/material.dart';
-import 'package:image/image.dart' as im;
 
 import '../util/platform_specified_util/webp_converter.dart';
 import '../util/version.dart';
@@ -15,7 +14,7 @@ import 'choiceNode/line_setting.dart';
 import 'grammar/value_type.dart';
 
 class AbstractPlatform {
-  double scale;
+  double scale = 1.0;
   String stringImageName;
   Color colorBackground;
   int flag;
@@ -42,8 +41,7 @@ class AbstractPlatform {
     return versionCheck(versionProgram, version) >= 0;
   }
 
-  AbstractPlatform(this.scale,
-      this.stringImageName,
+  AbstractPlatform(this.stringImageName,
       this.colorBackground,
       this.flag,
       this.version, {
@@ -52,8 +50,7 @@ class AbstractPlatform {
       });
 
   AbstractPlatform.none()
-      : scale = 1.0,
-        stringImageName = '',
+      : stringImageName = '',
         colorBackground = Colors.white,
         flag = 0,
         version = ConstList.version ?? '',
@@ -61,8 +58,7 @@ class AbstractPlatform {
         mainFont = "notoSans";
 
   AbstractPlatform.fromJson(Map<String, dynamic> json)
-      : scale = 1.0,
-        stringImageName = json['stringImageName'] ?? '',
+      : stringImageName = json['stringImageName'] ?? '',
         colorBackground = (json['colorBackground'] != null && json['colorBackground'] is int) ? Color(json['colorBackground']) : Colors.white,
         flag = json['flag'] ?? 0,
         globalSetting = (json['globalSetting'] as Map)
@@ -293,8 +289,6 @@ class AbstractPlatform {
 
   Future<Tuple<Uint8List, String>> convertImage(
       String name, Uint8List data) async {
-    var image = im.decodeImage(data)!;
-    return await getWebpConverterInstance()
-        .convert(data, name, image.width, image.height);
+    return await getWebpConverterInstance().convert(data, name);
   }
 }

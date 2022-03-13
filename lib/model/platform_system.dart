@@ -5,14 +5,14 @@ import 'package:archive/archive.dart';
 import 'package:archive/archive_io.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/model/platform_file_system.dart';
+import 'package:cyoap_flutter/util/platform_specified_util/save_non_js.dart'
+    if (dart.library.js) 'package:cyoap_flutter/util/platform_specified_util/save_js.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
 
 import 'abstract_platform.dart';
-import 'package:cyoap_flutter/util/platform_specified_util/save_non_js.dart'
-if(dart.library.js) 'package:cyoap_flutter/util/platform_specified_util/save_js.dart';
 
-class PlatformSystem{
+class PlatformSystem {
   static PlatformSystem instance = PlatformSystem();
   PlatformFileSystem platformFileSystem = PlatformFileSystem();
   String? path;
@@ -21,16 +21,16 @@ class PlatformSystem{
     await ImageDB.instance.init();
   }
 
-  Future<void> openPlatformZip(PlatformFile file) async{
+  Future<void> openPlatformZipForWeb(PlatformFile file) async {
     await platformInit();
     var bytes = file.bytes;
-    if(bytes == null)return;
+    if (bytes == null) return;
 
     var archiveBytes = ZipDecoder().decodeBytes(bytes);
     await platformFileSystem.createFromZip(archiveBytes);
   }
 
-  Future<void> openPlatformZipFromFile(File file) async{
+  Future<void> openPlatformZip(File file) async {
     await platformInit();
     var bytes = await file.readAsBytes();
     path = file.parent.path;
@@ -39,13 +39,20 @@ class PlatformSystem{
     await platformFileSystem.createFromZip(archiveBytes);
   }
 
+  Future<void> openPlatformJson(File file) async {
+    await platformInit();
+    path = file.parent.path;
+
+    await platformFileSystem.createFromJson(file.readAsStringSync(), path!);
+  }
+
   Future<void> openPlatformFolder(String path) async {
     await platformInit();
     this.path = path;
     await platformFileSystem.createFromFolder(path);
   }
 
-  Future<void> openPlatformVoid() async{
+  Future<void> openPlatformVoid() async {
     await platformInit();
     platformFileSystem.createFromVoid();
   }

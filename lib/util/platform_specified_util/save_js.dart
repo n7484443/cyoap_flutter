@@ -30,7 +30,7 @@ Future<void> saveZip(String name, Map<String, dynamic> dataInput) async {
     map['nodes/lineSetting_$y.json'] = node;
   }
 
-  await JsIsolatedWorker().importScripts(['save_web.js', 'jszip.js', 'FileSaver.js']);
+  await JsIsolatedWorker().importScripts(['save_web.js', 'jszip.js']);
   Uint8List output = await JsIsolatedWorker().run(functionName: '_compressToZip', arguments: jsonEncode(map));
   downloadCapture(name, output);
 }
