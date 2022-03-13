@@ -127,9 +127,9 @@ class ViewEditor extends StatelessWidget {
                 controller: controller.controllerTitle,
                 textAlign: TextAlign.center,
                 decoration: const InputDecoration(hintText: '제목'),
-                style: const TextStyle(
-                  fontSize: 24,
+                style: ConstList.getFont(getPlatform().titleFont).copyWith(
                   fontWeight: FontWeight.bold,
+                  fontSize: 24,
                 ),
               ),
             ),
