@@ -198,50 +198,52 @@ class ViewEditorTyping extends StatelessWidget {
                   IconButton(
                       onPressed: () async {
                         var name = await controller.addImage();
-                        await showDialog(
-                          builder: (_) => AlertDialog(
-                            title: const Text('출처'),
-                            content: TextField(
-                              controller: controller.controllerSource,
-                              decoration: const InputDecoration(
-                                hintText: '출처를 모르거나 없을 경우 비워두세요.',
+                        if(name != ''){
+                          await showDialog(
+                            builder: (_) => AlertDialog(
+                              title: const Text('출처'),
+                              content: TextField(
+                                controller: controller.controllerSource,
+                                decoration: const InputDecoration(
+                                  hintText: '출처를 모르거나 없을 경우 비워두세요.',
+                                ),
                               ),
+                              actionsAlignment: MainAxisAlignment.spaceBetween,
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    controller.addImageSource(name);
+                                    Get.back();
+                                  },
+                                  child: const Text('자르기'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    controller.addImageSource(name);
+                                    controller.addImageCrop(
+                                        name, controller.imageLast!);
+                                    Get.back();
+                                  },
+                                  child: const Text('저장하기'),
+                                ),
+                              ],
                             ),
-                            actionsAlignment: MainAxisAlignment.spaceBetween,
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  controller.addImageSource(name);
-                                  Get.back();
-                                },
-                                child: const Text('자르기'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  controller.addImageSource(name);
-                                  controller.addImageCrop(
-                                      name, controller.imageLast!);
-                                  Get.back();
-                                },
-                                child: const Text('저장하기'),
-                              ),
-                            ],
-                          ),
-                          context: context,
-                        );
-                        if (controller.imageLast != null) {
-                          ImageCropping.cropImage(
-                            context: Get.nestedKey(1)!.currentContext!,
-                            imageBytes: controller.imageLast!,
-                            onImageDoneListener: (data) => controller
-                                .addImageCrop(name, data as Uint8List),
-                            squareBorderWidth: 2,
-                            colorForWhiteSpace: Colors.black,
-                            selectedImageRatio: ImageRatio.FREE,
-                            isConstrain: true,
-                            imageEdgeInsets: const EdgeInsets.all(10),
-                            rootNavigator: true,
+                            context: context,
                           );
+                          if (controller.imageLast != null) {
+                            ImageCropping.cropImage(
+                              context: Get.nestedKey(1)!.currentContext!,
+                              imageBytes: controller.imageLast!,
+                              onImageDoneListener: (data) => controller
+                                  .addImageCrop(name, data as Uint8List),
+                              squareBorderWidth: 2,
+                              colorForWhiteSpace: Colors.black,
+                              selectedImageRatio: ImageRatio.FREE,
+                              isConstrain: true,
+                              imageEdgeInsets: const EdgeInsets.all(10),
+                              rootNavigator: true,
+                            );
+                          }
                         }
                       },
                       icon: const Icon(Icons.add)),

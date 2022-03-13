@@ -102,8 +102,8 @@ class VMEditor extends GetxController{
     if (result != null) {
       name = result.files.single.name;
       imageLast = result.files.single.bytes!;
+      isChanged = true;
     }
-    isChanged = true;
     return name;
   }
 
