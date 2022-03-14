@@ -6,6 +6,8 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
+import 'package:cyoap_flutter/util/platform_specified_util/save_non_js.dart'
+    if (dart.library.js) 'package:cyoap_flutter/util/platform_specified_util/save_js.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 
@@ -15,8 +17,6 @@ import '../util/tuple.dart';
 import 'abstract_platform.dart';
 import 'choiceNode/choice_node.dart';
 import 'choiceNode/line_setting.dart';
-import 'package:cyoap_flutter/util/platform_specified_util/save_non_js.dart'
-if(dart.library.js) 'package:cyoap_flutter/util/platform_specified_util/save_js.dart';
 
 class PlatformFileSystem {
   late AbstractPlatform platform;
@@ -146,10 +146,12 @@ class PlatformFileSystem {
     }
 
     platform.addDataAll(nodeList);
-    for(var lineSetting in lineSettingList){
+    for (var lineSetting in lineSettingList) {
       platform.addLineSettingData(lineSetting);
     }
     platform.init();
+
+    archive.clear();
   }
 
   Future<void> createFromJson(String input, String path) async{
@@ -278,32 +280,32 @@ class PlatformFileSystem {
     return -1;
   }
 
-  Queue<Tuple<String, Uint8List>> temp = Queue();
+  Queue<Tuple<String, Image>> temp = Queue();
 
-  Future<Image> _getImage(String name) async{
+  Future<Image> _getImage(String name) async {
     Uint8List? image;
-    if(temp.any((element) => element.data1 == name)){
+    if (temp.any((element) => element.data1 == name)) {
       var tmp = temp.firstWhere((element) => element.data1 == name);
-      image = tmp.data2;
-    }else if (await ImageDB.instance.hasImage(name)) {
+      temp.remove(tmp);
+      temp.add(tmp);
+      return tmp.data2;
+    } else if (await ImageDB.instance.hasImage(name)) {
       image = await ImageDB.instance.getImage(name);
-      if(image != null){
-        temp.addFirst(Tuple(name, image));
-        while(temp.length > 10){
-          temp.removeLast();
+      if(image != null) {
+        var output = Image.memory(
+          image,
+          filterQuality: FilterQuality.medium,
+          isAntiAlias: true,
+        );
+        temp.add(Tuple(name, output));
+        while (temp.length > 30) {
+          temp.removeFirst();
         }
+        return output;
       }
     }
 
-    if(image != null){
-      return Image.memory(
-        image,
-        filterQuality: FilterQuality.medium,
-        isAntiAlias: true,
-      );
-    }else {
-      return noImage;
-    }
+    return noImage;
   }
 
   FutureBuilder getImage(String name){

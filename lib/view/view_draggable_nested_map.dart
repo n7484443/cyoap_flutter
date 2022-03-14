@@ -283,6 +283,7 @@ class NestedMap extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 return inner[index];
               },
+              cacheExtent: 100,
             ),
           );
         },

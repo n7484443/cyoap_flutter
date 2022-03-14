@@ -26,13 +26,17 @@ Future<void> saveZip(String name, Map<String, dynamic> dataInput) async{
   Map<String, Uint8List> mapImage =
       ImageDB.fromImageMap(dataInput['imageMap']);
   Map<String, String> mapSource = dataInput['imageSource'];
-  AbstractPlatform platform = AbstractPlatform.fromJson(jsonDecode(jsonEncode(dataInput['platform'])));
-  List<String> nodes = dataInput['choiceNodes'];
-  List<String> lineSetting = dataInput['lineSetting'];
-  List<ChoiceNodeBase> nodeIn =
-      nodes.map((e) => ChoiceNodeBase.fromJson(jsonDecode(e))).toList();
-  List<LineSetting> lineIn =
-      lineSetting.map((e) => LineSetting.fromJson(jsonDecode(e))).toList();
+  AbstractPlatform platform = AbstractPlatform.fromJson(jsonDecode(dataInput['platform']));
+  Map<String, String> nodes = dataInput['choiceNodes'];
+  Map<String, String> lineSetting = dataInput['lineSetting'];
+  List<ChoiceNodeBase> nodeIn = List.empty(growable: true);
+  List<LineSetting> lineIn = List.empty(growable: true);
+  for(var nodeName in nodes.keys){
+    nodeIn.add(ChoiceNodeBase.fromJson(jsonDecode(nodes[nodeName]!)));
+  }
+  for(var nodeName in lineSetting.keys){
+    lineIn.add(LineSetting.fromJson(jsonDecode(lineSetting[nodeName]!)));
+  }
 
   var archive = await platform.toArchive(nodeIn, lineIn,
       mapImage: mapImage, mapSource: mapSource);
@@ -46,4 +50,6 @@ Future<void> saveZip(String name, Map<String, dynamic> dataInput) async{
   }
   await file.create();
   await file.writeAsBytes(encodedZip);
+
+  archive.clear();
 }

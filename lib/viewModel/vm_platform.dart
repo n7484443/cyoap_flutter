@@ -17,37 +17,42 @@ import '../view/view_choice_node.dart';
 class VMPlatform extends GetxController{
   var stopwatch = Stopwatch().obs;
 
-  void save(bool saveAsFile) async {
-    stopwatch.update((val) => val?.reset());
-    stopwatch.update((val) => val?.start());
-    getPlatform().compress();
-    getPlatform().generateRecursiveParser();
-
-    List<String> choiceNodes = List<String>.empty(growable: true);
+  Future saveAsFile() async{
+    Map<String, String> choiceNodes = {};
+    Map<String, String> lineSetting = {};
     for (var nodeY in getPlatform().choiceNodes) {
+      var line = nodeY.data2;
+      lineSetting['lineSetting_${line.y}.json'] = jsonEncode(line.toJson());
       for (var node in nodeY.data1) {
-        choiceNodes.add(jsonEncode(node.toJson()));
+        choiceNodes['node_${node.y}_${node.x}.json'] = jsonEncode(node.toJson());
       }
     }
 
-    List<String> lineSetting = getPlatform()
-        .choiceNodes
-        .map((e) => jsonEncode(e.data2.toJson()))
-        .toList();
     var input = {
       'bool': ConstList.isOnlyFileAccept(),
       'imageMap': await ImageDB.instance.imageMap,
       'imageSource': getPlatformFileSystem().imageSource,
-      'platform': getPlatform().toJson(),
+      'platform': jsonEncode(getPlatform().toJson()),
       'choiceNodes': choiceNodes,
       'lineSetting': lineSetting,
     };
+    return compute(PlatformSystem.instance.saveFile, input);
+  }
+
+  void save(bool toFile) async {
+    stopwatch.update((val) => val?.reset());
+    stopwatch.update((val) => val?.start());
+
+    getPlatform().compress();
+    getPlatform().generateRecursiveParser();
+
     Future output;
-    if (saveAsFile) {
-      output = compute(PlatformSystem.instance.saveFile, input);
+    if (toFile) {
+      output = saveAsFile();
     } else {
       output = PlatformSystem.instance.saveFolder(getPlatformFileSystem());
     }
+
     var timer = Timer.periodic(const Duration(milliseconds: 10), (Timer timer){
       stopwatch.update((val) {});
     });

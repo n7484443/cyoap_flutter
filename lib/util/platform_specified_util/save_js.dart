@@ -8,7 +8,7 @@ Future<void> saveRaw(String name, PlatformFileSystem platformFileSystem) async {
 }
 Future<void> saveZip(String name, Map<String, dynamic> dataInput) async {
   Map<String, dynamic> map = {
-    'platform.json': utf8.encode(jsonEncode(dataInput['platform'])),
+    'platform.json': utf8.encode(dataInput['platform']),
     'imageSource.json': utf8.encode(jsonEncode(dataInput['imageSource']))
   };
 
@@ -17,17 +17,14 @@ Future<void> saveZip(String name, Map<String, dynamic> dataInput) async {
     map['images/$name'] = image[name]!;
   }
 
-  for(var node in dataInput['choiceNodes'] as List<String>){
-    var decoded = jsonDecode(node);
-    int y = decoded['y'];
-    int x = decoded['x'];
-    map['nodes/node_${y}_$x.json'] = node;
+  var choiceNodes = dataInput['choiceNodes'] as Map<String, String>;
+  for(var nodeName in choiceNodes.keys){
+    map['nodes/$nodeName'] = choiceNodes[nodeName];
   }
 
-  for(var node in dataInput['lineSetting'] as List<String>){
-    var decoded = jsonDecode(node);
-    int y = decoded['y'];
-    map['nodes/lineSetting_$y.json'] = node;
+  var lineSetting = dataInput['lineSetting'] as Map<String, String>;
+  for(var nodeName in lineSetting.keys){
+    map['nodes/$nodeName'] = lineSetting[nodeName];
   }
 
   await JsIsolatedWorker().importScripts(['save_web.js', 'jszip.js']);
