@@ -1,7 +1,13 @@
+import 'dart:typed_data';
+
+import 'package:archive/archive.dart';
 import 'package:cyoap_flutter/main.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../model/platform_system.dart';
+import '../util/platform_specified_util/check_distribute.dart';
 import '../viewModel/vm_start.dart';
 
 class ViewStart extends StatelessWidget {
@@ -11,6 +17,34 @@ class ViewStart extends StatelessWidget {
   Widget build(BuildContext context) {
     final vmStart = Get.put(VMStartPlatform());
     vmStart.initFrequentPath();
+    if (ConstList.checkDistribute()) {
+      var data = getDistribute().getFileDistributed();
+      data.then((value) {
+        var achieve = ZipDecoder().decodeBytes(value!.buffer.asUint8List());
+        var file = achieve.files[0];
+        PlatformFile platformFile = PlatformFile(
+            bytes: file.content as Uint8List,
+            size: file.size,
+            name: 'dist.zip');
+        PlatformSystem.instance
+            .openPlatformZipForWeb(platformFile)
+            .then((output) {
+          Get.find<VMStartPlatform>().setEditable(false);
+          Get.toNamed('/viewPlay');
+        });
+      });
+      return Scaffold(
+        body: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: const [
+              CircularProgressIndicator(),
+              Text('로딩중입니다. 잠시만 기다려주세요.'),
+            ],
+          ),
+        ),
+      );
+    }
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -22,88 +56,88 @@ class ViewStart extends StatelessWidget {
               builder: (_) => Stack(
                 children: [
                   Container(
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: Colors.lightBlue),
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          flex: 12,
-                          child: ListView.separated(
-                            itemCount: _.pathList.length,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                title: ElevatedButton(
-                                  onPressed: () => _.selectFrequentPath(index),
-                                  style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.resolveWith(
-                                            (states) {
-                                      return _.getColor(index);
-                                    }),
-                                  ),
-                                  child: Text(
-                                      _.pathList.reversed.elementAt(index)),
-                                ),
-                                trailing: IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () {
-                                    _.removeFrequentPath(index);
-                                  },
-                                ),
-                              );
-                            },
-                            separatorBuilder: (BuildContext context, int index) {
-                              return const Divider();
-                            },
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(color: Colors.lightBlue),
                           ),
                         ),
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              TextButton(
-                                child: const Text('Add File'),
-                                onPressed: () async {
-                                  if (await _.openFile() == 0) {
-                                    _.selected = 0;
-                                  }
+                        child: Column(
+                          children: [
+                            Expanded(
+                              flex: 12,
+                              child: ListView.separated(
+                                itemCount: _.pathList.length,
+                                itemBuilder: (context, index) {
+                                  return ListTile(
+                                    title: ElevatedButton(
+                                      onPressed: () => _.selectFrequentPath(index),
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                        MaterialStateProperty.resolveWith(
+                                                (states) {
+                                              return _.getColor(index);
+                                            }),
+                                      ),
+                                      child: Text(
+                                          _.pathList.reversed.elementAt(index)),
+                                    ),
+                                    trailing: IconButton(
+                                      icon: const Icon(Icons.delete),
+                                      onPressed: () {
+                                        _.removeFrequentPath(index);
+                                      },
+                                    ),
+                                  );
+                                },
+                                separatorBuilder: (BuildContext context, int index) {
+                                  return const Divider();
                                 },
                               ),
-                              Visibility(
-                                child: TextButton(
-                                  child: const Text('Add Path'),
-                                  onPressed: () async {
-                                    if (await _.openDirectory() == 0) {
-                                      _.selected = 0;
-                                    }
-                                  },
-                                ),
-                                visible: !ConstList.isOnlyFileAccept(),
+                            ),
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  TextButton(
+                                    child: const Text('Add File'),
+                                    onPressed: () async {
+                                      if (await _.openFile() == 0) {
+                                        _.selected = 0;
+                                      }
+                                    },
+                                  ),
+                                  Visibility(
+                                    child: TextButton(
+                                      child: const Text('Add Path'),
+                                      onPressed: () async {
+                                        if (await _.openDirectory() == 0) {
+                                          _.selected = 0;
+                                        }
+                                      },
+                                    ),
+                                    visible: !ConstList.isOnlyFileAccept(),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                Align(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text('version : ${ConstList.version ?? ''}'),
-                        Visibility(
-                          child: const Text('새로운 버전이 나왔습니다!', style: TextStyle(color: Colors.redAccent)),
-                          visible: _.needUpdate,
+                            )
+                          ],
                         ),
-                      ],
-                    ),
-                    alignment: Alignment.topRight,
+                      ),
+                      Align(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text('version : ${ConstList.version ?? ''}'),
+                            Visibility(
+                              child: const Text('새로운 버전이 나왔습니다!', style: TextStyle(color: Colors.redAccent)),
+                              visible: _.needUpdate,
+                            ),
+                          ],
+                        ),
+                        alignment: Alignment.topRight,
+                      ),
+                    ],
                   ),
-                ],
-              ),
             ),
           ),
           const Expanded(

@@ -313,7 +313,9 @@ class PlatformFileSystem {
       future: _getImage(name),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if(snapshot.hasData == false){
-          return const CircularProgressIndicator();
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         }else if(snapshot.hasError){
           return noImage;
         }else{

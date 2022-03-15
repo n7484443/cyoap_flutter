@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cyoap_flutter/util/platform_specified_util/check_distribute.dart';
 import 'package:cyoap_flutter/view/view_make_platform.dart';
 import 'package:cyoap_flutter/view/view_play.dart';
 import 'package:cyoap_flutter/view/view_start.dart';
@@ -16,6 +17,7 @@ class ConstList{
   static const double appBarSize = 40.0;
   static const double elevation = 6.0;
   static late final PlatformType actualPlatformType;
+  static bool? isDistributed;
 
   static bool isOnlyFileAccept() {
     return actualPlatformType == PlatformType.web;
@@ -34,18 +36,6 @@ class ConstList{
   static String? version;
 
   static Future<void> init() async {
-    try {
-      if (Platform.isAndroid) {
-        ConstList.actualPlatformType = PlatformType.mobile;
-      } else if (Platform.isWindows) {
-        ConstList.actualPlatformType = PlatformType.desktop;
-      } else {
-        ConstList.actualPlatformType = PlatformType.web;
-      }
-    } catch (e) {
-      ConstList.actualPlatformType = PlatformType.web;
-    }
-
     var packageInfo = await PackageInfo.fromPlatform();
     version = packageInfo.version;
   }
@@ -74,15 +64,35 @@ class ConstList{
     "notoSans": GoogleFonts.notoSans(color: Colors.black),
     "나눔고딕": GoogleFonts.nanumGothic(color:Colors.black),
     "나눔손글씨 붓": GoogleFonts.nanumBrushScript(color:Colors.black),
-    "나눔손글씨 펜": GoogleFonts.nanumPenScript(color:Colors.black),
+    "나눔손글씨 펜": GoogleFonts.nanumPenScript(color: Colors.black),
     "이순신체": const TextStyle(fontFamily: 'YiSunShin', color: Colors.black),
     "메이플스토리체": const TextStyle(fontFamily: 'MapleStory', color: Colors.black),
-    "넥슨 Lv2 고딕": const TextStyle(fontFamily: 'NexonLv2Gothic', color: Colors.black),
+    "넥슨 Lv2 고딕": const TextStyle(
+        fontFamily: 'NexonLv2Gothic', color: Colors.black),
     "Neo 둥근모": const TextStyle(fontFamily: 'NeoDGM', color: Colors.black),
   };
 
   static TextStyle getFont(String font) {
     return textFontMap[font] ?? defaultFont;
+  }
+
+  static void preInit() {
+    try {
+      if (Platform.isAndroid) {
+        ConstList.actualPlatformType = PlatformType.mobile;
+      } else if (Platform.isWindows) {
+        ConstList.actualPlatformType = PlatformType.desktop;
+      } else {
+        ConstList.actualPlatformType = PlatformType.web;
+      }
+    } catch (e) {
+      ConstList.actualPlatformType = PlatformType.web;
+      isDistributed = getDistribute().isDistribute();
+      print('web is Distribute mode : $isDistributed');
+    }
+  }
+  static bool checkDistribute(){
+    return isDistributed ?? false;
   }
 }
 enum PlatformType{
@@ -90,17 +100,23 @@ enum PlatformType{
 }
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  ConstList.preInit();
   runApp(
     GetMaterialApp(
       title: 'CYOAP',
       initialRoute: '/',
-      getPages: [
-        GetPage(name: '/', page: () => const ViewStart()),
-        GetPage(name: '/viewPlay', page: () => const ViewPlay()),
-        GetPage(name: '/viewMake', page: () => const ViewMakePlatform()),
-      ],
-      theme: appThemeData,
-      defaultTransition: Transition.fade,
+      getPages: List.generate(ConstList.checkDistribute() ? 2 : 3, (index) {
+        switch (index) {
+          case 0:
+            return GetPage(name: '/', page: () => const ViewStart());
+          case 1:
+            return GetPage(name: '/viewPlay', page: () => const ViewPlay());
+          default:
+            return GetPage(name: '/viewMake', page: () => const ViewMakePlatform());
+        }
+      }),
+    theme: appThemeData,
+    defaultTransition: Transition.fade,
     ),
   );
   ConstList.init();

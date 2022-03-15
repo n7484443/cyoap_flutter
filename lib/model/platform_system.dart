@@ -27,6 +27,7 @@ class PlatformSystem {
     if (bytes == null) return;
 
     var archiveBytes = ZipDecoder().decodeBytes(bytes);
+
     await platformFileSystem.createFromZip(archiveBytes);
   }
 
