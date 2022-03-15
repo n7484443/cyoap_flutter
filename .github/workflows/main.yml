@@ -39,9 +39,12 @@ jobs:
 
       - name: Build web distribute
         run: flutter build web --web-renderer html --release
-      - run: rmdir /s /q ./build/web/canvaskit
-      - run: del /f /q /a ./build/web/.last_build_id
-      - run: del /f /q /a ./build/web/assets/NOTICES
+      - run: cd build/web
+      - run: Remove-Item canvaskit -Recurse | Remove-Item
+      - run: Remove-Item .last_build_id
+      - run: cd assets
+      - run: Remove-Item NOTICES
+      - run: cd ../../../
       - run: 7z a build/web/distribute_${{ steps.get_version.outputs.version-without-v }}.zip ./build/web/*
 
       - name: Release
