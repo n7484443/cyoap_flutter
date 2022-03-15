@@ -39,7 +39,10 @@ jobs:
 
       - name: Build web distribute
         run: flutter build web --web-renderer html --release
-      - run: 7z a build/web/distribute_${{ steps.get_version.outputs.version-without-v }}.zip ./build/web/* -x!.last_build_id -x!canvaskit/* -x!assets/NOTICES
+      - run: rmdir /s /q ./build/web/canvaskit
+      - run: del /f /q /a ./build/web/.last_build_id
+      - run: del /f /q /a ./build/web/assets/NOTICES
+      - run: 7z a build/web/distribute_${{ steps.get_version.outputs.version-without-v }}.zip ./build/web/*
 
       - name: Release
         uses: softprops/action-gh-release@v1

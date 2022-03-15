@@ -76,7 +76,7 @@ class ConstList{
     return textFontMap[font] ?? defaultFont;
   }
 
-  static void preInit() {
+  static Future<void> preInit() async {
     try {
       if (Platform.isAndroid) {
         ConstList.actualPlatformType = PlatformType.mobile;
@@ -87,9 +87,9 @@ class ConstList{
       }
     } catch (e) {
       ConstList.actualPlatformType = PlatformType.web;
-      isDistributed = getDistribute().isDistribute();
-      print('web is Distribute mode : $isDistributed');
+      isDistributed = await getDistribute().isDistribute();
     }
+    return;
   }
   static bool checkDistribute(){
     return isDistributed ?? false;
@@ -100,26 +100,27 @@ enum PlatformType{
 }
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  ConstList.preInit();
-  runApp(
-    GetMaterialApp(
-      title: 'CYOAP',
-      initialRoute: '/',
-      getPages: List.generate(ConstList.checkDistribute() ? 2 : 3, (index) {
-        switch (index) {
-          case 0:
-            return GetPage(name: '/', page: () => const ViewStart());
-          case 1:
-            return GetPage(name: '/viewPlay', page: () => const ViewPlay());
-          default:
-            return GetPage(name: '/viewMake', page: () => const ViewMakePlatform());
-        }
-      }),
-    theme: appThemeData,
-    defaultTransition: Transition.fade,
-    ),
-  );
-  ConstList.init();
+  ConstList.preInit().then((value) {
+    runApp(
+      GetMaterialApp(
+        title: 'CYOAP',
+        initialRoute: '/',
+        getPages: List.generate(ConstList.checkDistribute() ? 2 : 3, (index) {
+          switch (index) {
+            case 0:
+              return GetPage(name: '/', page: () => const ViewStart());
+            case 1:
+              return GetPage(name: '/viewPlay', page: () => const ViewPlay());
+            default:
+              return GetPage(name: '/viewMake', page: () => const ViewMakePlatform());
+          }
+        }),
+        theme: appThemeData,
+        defaultTransition: Transition.fade,
+      ),
+    );
+    ConstList.init();
+  });
 }
 
 final ThemeData appThemeData = ThemeData(

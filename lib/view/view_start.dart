@@ -15,7 +15,9 @@ class ViewStart extends StatelessWidget {
     final vmStart = Get.put(VMStartPlatform());
     vmStart.initFrequentPath();
     if (ConstList.checkDistribute()) {
+      print('web is Distribute mode');
       getDistribute().getImageNodeList().then((value) async {
+        print('load start');
         var distribute = getDistribute();
         var imageList = value.data1;
         var nodeList = value.data2;
@@ -24,11 +26,14 @@ class ViewStart extends StatelessWidget {
         for(var name in imageList){
           imageMap[name] = (await distribute.getFile('images/$name'))!;
         }
+        print('image loaded');
         for(var name in nodeList){
           nodeMap[name] = (await distribute.getFile('nodes/$name'))!;
         }
+        print('node loaded');
         Uint8List imageSource = (await distribute.getFile('imageSource.json'))!;
         Uint8List platformData = (await distribute.getFile('platform.json'))!;
+        print('load end');
 
         PlatformSystem.instance
             .openPlatformList(imageMap, nodeMap, imageSource, platformData)

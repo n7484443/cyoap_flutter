@@ -116,11 +116,11 @@ class PlatformFileSystem {
     }
     for (var name in choiceNodes.keys) {
       var data = choiceNodes[name]!;
-      String dataConverted = utf8.decode(data);
+      var decoded = jsonDecode(utf8.decode(data));
       if (name.contains('lineSetting_')) {
-        lineSettingList.add(LineSetting.fromJson(jsonDecode(dataConverted)));
+        lineSettingList.add(LineSetting.fromJson(decoded));
       } else {
-        nodeList.add(ChoiceNodeBase.fromJson(jsonDecode(dataConverted)));
+        nodeList.add(ChoiceNodeBase.fromJson(decoded));
       }
     }
     Map map = jsonDecode(String.fromCharCodes(imageSource));

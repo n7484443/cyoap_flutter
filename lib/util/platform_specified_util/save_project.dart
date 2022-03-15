@@ -29,13 +29,13 @@ abstract class SaveProject {
     var fileList = List.empty(growable: true);
     var choiceNodes = dataInput['choiceNodes'] as Map<String, String>;
     for (var nodeName in choiceNodes.keys) {
-      map['nodes/$nodeName'] = choiceNodes[nodeName];
+      map['nodes/$nodeName'] = utf8.encode(choiceNodes[nodeName]!) as Uint8List;
       fileList.add(nodeName);
     }
 
     var lineSetting = dataInput['lineSetting'] as Map<String, String>;
     for (var nodeName in lineSetting.keys) {
-      map['nodes/$nodeName'] = lineSetting[nodeName];
+      map['nodes/$nodeName'] = utf8.encode(lineSetting[nodeName]!) as Uint8List;
       fileList.add(nodeName);
     }
     map['images/list.json'] = utf8.encode(jsonEncode(imageList));
