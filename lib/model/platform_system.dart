@@ -52,6 +52,11 @@ class PlatformSystem {
     await platformFileSystem.createFromFolder(path);
   }
 
+  Future<void> openPlatformList(Map<String, Uint8List> images, Map<String, Uint8List> choiceNodes, Uint8List imageSource, Uint8List platform) async {
+    await platformInit();
+    await platformFileSystem.createPlatformList(images, choiceNodes, imageSource, platform);
+  }
+
   Future<void> openPlatformVoid() async {
     await platformInit();
     platformFileSystem.createFromVoid();

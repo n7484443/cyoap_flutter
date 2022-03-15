@@ -1,26 +1,38 @@
+import 'dart:convert';
 import 'dart:html';
 import 'dart:typed_data';
 
 import 'package:js/js.dart';
+
+import '../tuple.dart';
 import 'check_distribute.dart';
 
-class DistributeImp extends Distribute{
+class DistributeImp extends Distribute {
   @override
-  bool isDistribute(){
+  bool isDistribute() {
     return _isDistributed();
   }
 
   @override
-  Future<Uint8List?> getFileDistributed() async {
-    var output = await _readFile('dist/dist.png');
+  Future<Tuple<List<String>, List<String>>> getImageNodeList() async {
+    var imageListData = await _readFile('dist/images/list.json');
+    var nodeListData = await _readFile('dist/nodes/list.json');
+    var imageList =
+        jsonDecode(String.fromCharCodes(imageListData)) as List<String>;
+    var nodeList =
+        jsonDecode(String.fromCharCodes(nodeListData)) as List<String>;
 
-    //역전통 파일임.
-    return output;
+    return Tuple(imageList, nodeList);
+  }
+
+  @override
+  Future<Uint8List?> getFile(String f) async {
+    return await _readFile('dist/$f');
   }
 }
 
 Future<Uint8List> _readFile(String path) async{
-  var request = await HttpRequest.request(path, responseType: 'arraybuffer', mimeType: 'application/zip');
+  var request = await HttpRequest.request(path, responseType: 'arraybuffer');
   var response = request.response as ByteBuffer;
   return response.asUint8List();
 }

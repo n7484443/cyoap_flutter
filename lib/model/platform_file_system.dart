@@ -100,7 +100,45 @@ class PlatformFileSystem {
     platform.init();
   }
 
-  Future<void> createFromZip(Archive archive) async{
+  Future<void> createPlatformList(
+      Map<String, Uint8List> images,
+      Map<String, Uint8List> choiceNodes,
+      Uint8List imageSource,
+      Uint8List platformData) async {
+    openAsFile = true;
+
+    List<ChoiceNodeBase> nodeList = List.empty(growable: true);
+    List<LineSetting> lineSettingList = List.empty(growable: true);
+
+    for (var name in images.keys) {
+      var data = images[name]!;
+      ImageDB.instance.uploadImages(name, data);
+    }
+    for (var name in choiceNodes.keys) {
+      var data = choiceNodes[name]!;
+      String dataConverted = utf8.decode(data);
+      if (name.contains('lineSetting_')) {
+        lineSettingList.add(LineSetting.fromJson(jsonDecode(dataConverted)));
+      } else {
+        nodeList.add(ChoiceNodeBase.fromJson(jsonDecode(dataConverted)));
+      }
+    }
+    Map map = jsonDecode(String.fromCharCodes(imageSource));
+    for (var source in map.keys) {
+      _imageSource[source] = map[source];
+    }
+
+    platform = AbstractPlatform.fromJson(
+        jsonDecode(String.fromCharCodes(platformData)));
+
+    platform.addDataAll(nodeList);
+    for (var lineSetting in lineSettingList) {
+      platform.addLineSettingData(lineSetting);
+    }
+    platform.init();
+  }
+
+  Future<void> createFromZip(Archive archive) async {
     openAsFile = true;
     String? platformJson;
 

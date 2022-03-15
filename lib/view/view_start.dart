@@ -1,8 +1,5 @@
 import 'dart:typed_data';
-
-import 'package:archive/archive.dart';
 import 'package:cyoap_flutter/main.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -18,16 +15,23 @@ class ViewStart extends StatelessWidget {
     final vmStart = Get.put(VMStartPlatform());
     vmStart.initFrequentPath();
     if (ConstList.checkDistribute()) {
-      var data = getDistribute().getFileDistributed();
-      data.then((value) {
-        var achieve = ZipDecoder().decodeBytes(value!.buffer.asUint8List());
-        var file = achieve.files[0];
-        PlatformFile platformFile = PlatformFile(
-            bytes: file.content as Uint8List,
-            size: file.size,
-            name: 'dist.zip');
+      getDistribute().getImageNodeList().then((value) async {
+        var distribute = getDistribute();
+        var imageList = value.data1;
+        var nodeList = value.data2;
+        Map<String, Uint8List> imageMap = {};
+        Map<String, Uint8List> nodeMap = {};
+        for(var name in imageList){
+          imageMap[name] = (await distribute.getFile('images/$name'))!;
+        }
+        for(var name in nodeList){
+          nodeMap[name] = (await distribute.getFile('nodes/$name'))!;
+        }
+        Uint8List imageSource = (await distribute.getFile('imageSource.json'))!;
+        Uint8List platformData = (await distribute.getFile('platform.json'))!;
+
         PlatformSystem.instance
-            .openPlatformZipForWeb(platformFile)
+            .openPlatformList(imageMap, nodeMap, imageSource, platformData)
             .then((output) {
           Get.find<VMStartPlatform>().setEditable(false);
           Get.toNamed('/viewPlay');
