@@ -22,7 +22,7 @@ class JsonProjectParser{
     for(var choice in row){
       var out = await compute(checkImage, choice as Map<String, dynamic>);
       if(out == null)continue;
-      outputImage[out.data2] = out.data1;
+      outputImage[out.data1] = out.data2;
     }
     var parent = File(path).path;
     for(var data in outputImage.keys){
@@ -34,7 +34,7 @@ class JsonProjectParser{
     return AbstractPlatform('', Colors.white, 0, ConstList.version ?? '');
   }
 
-  Future<Tuple<Uint8List, String>?> checkImage(Map<String, dynamic> input) async{
+  Future<Tuple<String, Uint8List>?> checkImage(Map<String, dynamic> input) async{
     if(input.containsKey('image')){
       if(input['image'] == null || (input['image'] as String).isEmpty)return null;
       return await Base64ToImage.convertToImage(input['image'], input['id']);

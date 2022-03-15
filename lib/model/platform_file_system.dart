@@ -6,12 +6,11 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
-import 'package:cyoap_flutter/util/platform_specified_util/save_non_js.dart'
-    if (dart.library.js) 'package:cyoap_flutter/util/platform_specified_util/save_js.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 
 import '../util/json_file_parsing.dart';
+import '../util/platform_specified_util/save_project.dart';
 import '../util/platform_specified_util/webp_converter.dart';
 import '../util/tuple.dart';
 import 'abstract_platform.dart';
@@ -165,7 +164,7 @@ class PlatformFileSystem {
     platform = AbstractPlatform.none();
   }
 
-  Future<Tuple<Uint8List, String>> convertImage(String name, Uint8List data) async{
+  Future<Tuple<String, Uint8List>> convertImage(String name, Uint8List data) async{
     return await getWebpConverterInstance().convert(data, name);
   }
 
@@ -199,9 +198,9 @@ class PlatformFileSystem {
       }
       var image = await ImageDB.instance.getImage(imageName);
       var converted = await convertImage(imageName, image!);
-      var file = File('$path/images/${converted.data2}');
+      var file = File('$path/images/${converted.data1}');
       file.createSync();
-      file.writeAsBytes(converted.data1);
+      file.writeAsBytes(converted.data2);
     }
 
     if(dirNodesBackUp.existsSync()) {
@@ -350,9 +349,9 @@ class PlatformFileSystem {
 
     var converted = await convertImage('exported.png', input);
     if(map['isOnlyFileAccept']) {
-      await downloadCapture(converted.data2, converted.data1);
+      await getSaveProject().downloadCapture(converted.data1, converted.data2);
     }else{
-      await downloadCapture('${map['path']}/${converted.data2}', converted.data1);
+      await getSaveProject().downloadCapture('${map['path']}/${converted.data1}', converted.data2);
     }
   }
 }

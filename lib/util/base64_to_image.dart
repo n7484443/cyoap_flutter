@@ -6,7 +6,7 @@ import 'package:cyoap_flutter/util/tuple.dart';
 
 class Base64ToImage{
 //   data:image/jpeg;base64,  base64어쩌구
-  static Future<Tuple<Uint8List, String>> convertToImage(String input, String name){
+  static Future<Tuple<String, Uint8List>> convertToImage(String input, String name){
     var split = input.split(",");
     var type = split[0];
     var pattern = RegExp(';|/');

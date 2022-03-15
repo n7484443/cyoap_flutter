@@ -5,11 +5,10 @@ import 'package:archive/archive.dart';
 import 'package:archive/archive_io.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/model/platform_file_system.dart';
-import 'package:cyoap_flutter/util/platform_specified_util/save_non_js.dart'
-    if (dart.library.js) 'package:cyoap_flutter/util/platform_specified_util/save_js.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
 
+import '../util/platform_specified_util/save_project.dart';
 import 'abstract_platform.dart';
 
 class PlatformSystem {
@@ -60,13 +59,13 @@ class PlatformSystem {
 
   Future<void> saveFile(Map<String, dynamic> input) async{
     if(input['bool'] as bool){
-      await saveZip('exported.zip', input);
+      await getSaveProject().saveZip('exported.zip', input);
     }else{
-      await saveZip(path!, input);
+      await getSaveProject().saveZip(path!, input);
     }
   }
   Future<void> saveFolder(PlatformFileSystem platformFileSystem) async{
-    await saveRaw(path!, platformFileSystem);
+    await getSaveProject().saveRaw(path!, platformFileSystem);
   }
 
   static String getImageName(int index) {

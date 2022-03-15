@@ -70,7 +70,7 @@ class WebpConverterImpWindows extends WebpConverter {
   final double quality = 90;
 
   @override
-  Future<Tuple<Uint8List, String>> convert(Uint8List input, String name) async {
+  Future<Tuple<String, Uint8List>> convert(Uint8List input, String name) async {
     Image decodeImage;
     bool isLossless = true;
     if(name.endsWith(".png")){
@@ -83,7 +83,7 @@ class WebpConverterImpWindows extends WebpConverter {
       decodeImage = BmpDecoder().decodeImage(input)!;
       isLossless = true;
     }else{
-      return Tuple(input, name);
+      return Tuple(name, input);
     }
     Pointer<Pointer<Uint8>> outputBuff = calloc.allocate<Pointer<Uint8>>(0);
     Pointer<Uint8> inputBuff;
@@ -122,7 +122,7 @@ class WebpConverterImpWindows extends WebpConverter {
     output = outputBuff.value.asTypedList(outputSize);
     calloc.free(inputBuff);
     calloc.free(outputBuff);
-    return Tuple(output, name.replaceAll(RegExp('[.](png|jpg|jpeg|bmp)'), '.webp'));
+    return Tuple(name.replaceAll(RegExp('[.](png|jpg|jpeg|bmp)'), '.webp'), output);
   }
   @override
   bool canConvert() => true;
@@ -130,7 +130,7 @@ class WebpConverterImpWindows extends WebpConverter {
 class WebpConverterImpAndroid extends WebpConverter{
   final int quality = 90;
   @override
-  Future<Tuple<Uint8List, String>> convert(Uint8List input, String name) async {
+  Future<Tuple<String, Uint8List>> convert(Uint8List input, String name) async {
     Image decodeImage;
     if (name.endsWith(".png")) {
       decodeImage = PngDecoder().decodeImage(input)!;
@@ -139,7 +139,7 @@ class WebpConverterImpAndroid extends WebpConverter{
     } else if (name.endsWith(".bmp")) {
       decodeImage = BmpDecoder().decodeImage(input)!;
     } else {
-      return Tuple(input, name);
+      return Tuple(name, input);
     }
 
     var output = await FlutterImageCompress.compressWithList(
@@ -149,7 +149,7 @@ class WebpConverterImpAndroid extends WebpConverter{
       minWidth: decodeImage.width,
       minHeight: decodeImage.height,
     );
-    return Tuple(output, name.replaceAll(RegExp('[.](png|jpg|jpeg|bmp)'), '.webp'));
+    return Tuple(name.replaceAll(RegExp('[.](png|jpg|jpeg|bmp)'), '.webp'), output);
   }
 
   @override

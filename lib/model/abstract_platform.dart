@@ -8,7 +8,7 @@ import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/util/tuple.dart';
 import 'package:flutter/material.dart';
 
-import '../util/platform_specified_util/webp_converter.dart';
+import '../util/platform_specified_util/save_project.dart';
 import '../util/version.dart';
 import 'choiceNode/line_setting.dart';
 import 'grammar/value_type.dart';
@@ -242,29 +242,15 @@ class AbstractPlatform {
     globalSetting.addAll(units);
   }
 
-  Future<Archive> toArchive(
-      List<ChoiceNodeBase> nodeIn, List<LineSetting> lineIn,
-      {Map<String, Uint8List>? mapImage,
-      Map<String, String>? mapSource}) async {
+  Future<Archive> toArchive(Map<String, Uint8List>? mapImage,
+      Map<String, String>? mapSource) async {
     var archive = Archive();
     if (mapImage != null) {
       for (var imageName in mapImage.keys) {
-        var converted = await convertImage(imageName, mapImage[imageName]!);
-        archive.addFile(ArchiveFile('images/${converted.data2}',
-            converted.data1.length, converted.data1));
+        var converted = await getSaveProject().convertImage(imageName, mapImage[imageName]!);
+        archive.addFile(ArchiveFile('images/${converted.data1}',
+            converted.data2.length, converted.data2));
       }
-    }
-
-    for (int i = 0; i < nodeIn.length; i++) {
-      var node = nodeIn[i];
-      var utf = utf8.encode(jsonEncode(node.toJson()));
-      archive.addFile(
-          ArchiveFile('nodes/node_${node.y}_${node.x}.json', utf.length, utf));
-    }
-    for (int i = 0; i < lineIn.length; i++) {
-      var data = utf8.encode(jsonEncode(lineIn[i].toJson()));
-      archive.addFile(ArchiveFile(
-          'nodes/lineSetting_${lineIn[i].y}.json', data.length, data));
     }
 
     var platformJson = utf8.encode(jsonEncode(toJson()));
@@ -285,10 +271,5 @@ class AbstractPlatform {
 
   String convertImageName(String name) {
     return name.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
-  }
-
-  Future<Tuple<Uint8List, String>> convertImage(
-      String name, Uint8List data) async {
-    return await getWebpConverterInstance().convert(data, name);
   }
 }

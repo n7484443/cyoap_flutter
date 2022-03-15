@@ -7,7 +7,7 @@ if(dart.library.html) 'webp_converter_web.dart';
 abstract class WebpConverter{
   static WebpConverter? instance;
 
-  Future<Tuple<Uint8List, String>> convert(Uint8List input, String name) async => throw "doesn't work in this platform";
+  Future<Tuple<String, Uint8List>> convert(Uint8List input, String name) async => throw "doesn't work in this platform";
 
   void init() {}
   bool canConvert() => false;
