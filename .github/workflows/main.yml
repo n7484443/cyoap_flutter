@@ -37,6 +37,10 @@ jobs:
       - run: flutter build apk --release
       - run: Rename-Item "build/app/outputs/flutter-apk/app-release.apk" "cyoap_android_${{ steps.get_version.outputs.version-without-v }}.apk"
 
+      - name: Build web distribute
+        uses: flutter build web --web-renderer html --release
+      - run: 7z a build/web/distribute_${{ steps.get_version.outputs.version-without-v }}.zip ./build/web/* -x!*.last_build_id -x!*. -x!canvaskit/* -x!assets/NOTICES
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
@@ -44,6 +48,11 @@ jobs:
           files: |
             build/windows/cyoap_windows_${{ steps.get_version.outputs.version-without-v }}.zip
             build/app/outputs/flutter-apk/cyoap_android_${{ steps.get_version.outputs.version-without-v }}.apk
+            build/web/distribute_${{ steps.get_version.outputs.version-without-v }}.zip
+            
+
+      - name: Remove web folder
+        uses: rmdir /s /q build
 
       - run: flutter build web --web-renderer canvaskit --release --base-href=/FlutterCyoap/
 
