@@ -26,15 +26,8 @@ class VMEditor extends GetxController{
 
   @override
   void onInit() {
-    if (NodeEditor.instance.target.contentsString.isEmpty) {
-      quillController = QuillController.basic();
-    } else {
-      var document = Document.fromJson(
-          jsonDecode(NodeEditor.instance.target.contentsString));
-      quillController = QuillController(
-          document: document,
-          selection: const TextSelection.collapsed(offset: 0));
-    }
+    quillController = NodeEditor.instance.getVMChoiceNode().quillController;
+
     isCard = NodeEditor.instance.target.isCard;
     isSelectable = NodeEditor.instance.target.isSelectable;
     controllerTitle.text = NodeEditor.instance.target.title;
@@ -58,7 +51,7 @@ class VMEditor extends GetxController{
     NodeEditor.instance.target.title = title.value;
     NodeEditor.instance.target.contentsString =
         jsonEncode(quillController.document.toDelta().toJson());
-    Get.find<VMDraggableNestedMap>().update();
+    NodeEditor.instance.getVMChoiceNode().updateFromEditor();
     isChanged = false;
   }
 

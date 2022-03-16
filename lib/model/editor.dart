@@ -1,3 +1,5 @@
+import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
+
 import 'choiceNode/choice_node.dart';
 
 class NodeEditor{
@@ -7,5 +9,9 @@ class NodeEditor{
 
   void setTarget(ChoiceNodeBase node){
     target = node;
+  }
+  
+  VMChoiceNode getVMChoiceNode(){
+    return VMChoiceNode.getVMChoiceNode(target.x, target.y)!;
   }
 }

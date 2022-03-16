@@ -1,8 +1,9 @@
 import 'package:cyoap_flutter/util/color_util.dart';
 import 'package:cyoap_flutter/view/view_text_outline.dart';
+import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart' as quill;
+import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -20,200 +21,195 @@ class ViewChoiceNode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var controller = Get.put(VMChoiceNode(x: posX, y: posY),
+        tag: VMChoiceNode.getTag(posX, posY));
     var vmDraggableNestedMap = Get.find<VMDraggableNestedMap>();
-    var size = vmDraggableNestedMap.getSize(Tuple(posX, posY));
-    var realSize = vmDraggableNestedMap.getRealSize(Tuple(posX, posY));
-    var node = vmDraggableNestedMap.getNode(posX, posY)!;
+    var scale = vmDraggableNestedMap.getScale();
 
-    var mainNode = GetBuilder<VMDraggableNestedMap>(
-      builder: (_) => Container(
-        padding: const EdgeInsets.all(6),
-        width: realSize.data1 * _.getScale().data1,
-        height: realSize.data2 * _.getScale().data2,
-        color: node.isCard ? null : getPlatform().colorBackground.lighten(),
-        child: Column(
-          children: [
-            Expanded(
-              child: Stack(
+    var editor = Obx(() {
+      return ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: controller.realSize.value.data2 * scale.data2 - 45,
+        ),
+        child: IgnorePointer(
+          child: QuillEditor(
+            controller: controller.quillController,
+            focusNode: FocusNode(),
+            readOnly: true,
+            autoFocus: false,
+            expands: false,
+            padding: const EdgeInsets.only(top: 4),
+            scrollController: ScrollController(),
+            scrollable: false,
+            customStyles: ConstList.getDefaultThemeData(context, scale.data2,
+                fontStyle: ConstList.getFont(getPlatform().mainFont)),
+          ),
+        ),
+      );
+    });
+
+    var sizeDialog = AlertDialog(
+      scrollable: true,
+      alignment: Alignment.center,
+      title: const Text('크기 수정'),
+      content: Obx(
+        () {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('길이'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Visibility(
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 8.0, right: 8.0, top: 8.0),
-                        child: ClipRRect(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(5)),
-                          child: PlatformSystem.getImage(node.imageString),
-                        ),
-                      ),
-                      visible: node.imageString.isNotEmpty,
-                    ),
+                  IconButton(
+                    icon: const Icon(Icons.chevron_left),
+                    onPressed: () {
+                      controller.sizeChange(-1, 0);
+                    },
                   ),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child:Visibility(
-                      child: TextButton(
-                        child: const Text('출처'),
-                        onPressed: () {
-                          var url = getPlatformFileSystem().getSource(node.imageString);
-                          if(url != null && url.isNotEmpty){
-                            launch(url);
-                          }
-                        },
-                      ),
-                      visible: getPlatformFileSystem().hasSource(node.imageString) && getPlatform().isVisibleSource,
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Visibility(
-                      child: TextOutline(node.title,18 * _.getScale().data2, _.getTitleFont()),
-                      visible: node.title.isNotEmpty,
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Visibility(
-                      child: PopupMenuButton<int>(
-                        icon: const Icon(Icons.more_vert),
-                        onSelected: (result) {
-                          if (result == 0) {
-                            vmDraggableNestedMap.sizeSet.data1 = size.data1;
-                            vmDraggableNestedMap.sizeSet.data2 = size.data2;
-                            showDialog(
-                              context: context,
-                              builder: (builder) => GetBuilder<VMDraggableNestedMap>(
-                                builder: (_) => AlertDialog(
-                                  scrollable: true,
-                                  alignment: Alignment.center,
-                                  title: const Text('크기 수정'),
-                                  content: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const Text('길이'),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          IconButton(
-                                            icon:
-                                                const Icon(Icons.chevron_left),
-                                            onPressed: () {
-                                              vmDraggableNestedMap.sizeChange(-1, 0);
-                                            },
-                                          ),
-                                          Text('${vmDraggableNestedMap.sizeSet.data1 == 0 ? 'max': vmDraggableNestedMap.sizeSet.data1}'),
-                                          IconButton(
-                                            icon:
-                                                const Icon(Icons.chevron_right),
-                                            onPressed: () {
-                                              vmDraggableNestedMap.sizeChange(1, 0);
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                      const Text('높이'),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          RotatedBox(
-                                            quarterTurns: 2,
-                                            child: IconButton(
-                                              icon: const Icon(
-                                                Icons.double_arrow,
-                                              ),
-                                              onPressed: () {
-                                                vmDraggableNestedMap.sizeChange(0, -5);
-                                              },
-                                            ),
-                                          ),
-                                          IconButton(
-                                            icon:
-                                                const Icon(Icons.chevron_left),
-                                            onPressed: () {
-                                              vmDraggableNestedMap.sizeChange(0, -1);
-                                            },
-                                          ),
-                                          Text(
-                                              '${vmDraggableNestedMap.sizeSet.data2/10}'),
-                                          IconButton(
-                                            icon:
-                                                const Icon(Icons.chevron_right),
-                                            onPressed: () {
-                                              vmDraggableNestedMap.sizeChange(0, 1);
-                                            },
-                                          ),
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.double_arrow,
-                                            ),
-                                            onPressed: () {
-                                              vmDraggableNestedMap.sizeChange(0, 5);
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      child: const Text('변경'),
-                                      onPressed: () {
-                                        vmDraggableNestedMap.setSize(
-                                            Tuple(posX, posY),
-                                            vmDraggableNestedMap.sizeSet);
-                                        vmDraggableNestedMap.update();
-                                        Get.back();
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                        itemBuilder: (context) {
-                          return [
-                            const PopupMenuItem(
-                              value: 0,
-                              child: Text('크기 수정'),
-                            ),
-                          ];
-                        },
-                      ),
-                      visible: vmDraggableNestedMap.mouseHover ==
-                              Tuple(posX, posY) &&
-                          vmDraggableNestedMap.isEditable(),
-                    ),
+                  Text(
+                      '${controller.size.value.data1 == 0 ? 'max' : controller.size.value.data1}'),
+                  IconButton(
+                    icon: const Icon(Icons.chevron_right),
+                    onPressed: () {
+                      controller.sizeChange(1, 0);
+                    },
                   ),
                 ],
               ),
-            ),
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: realSize.data2 * _.getScale().data2 - 45,
+              const Text('높이'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  RotatedBox(
+                    quarterTurns: 2,
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.double_arrow,
+                      ),
+                      onPressed: () {
+                        controller.sizeChange(0, -5);
+                      },
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.chevron_left),
+                    onPressed: () {
+                      controller.sizeChange(0, -1);
+                    },
+                  ),
+                  Text('${controller.size.value.data2 / 10}'),
+                  IconButton(
+                    icon: const Icon(Icons.chevron_right),
+                    onPressed: () {
+                      controller.sizeChange(0, 1);
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.double_arrow,
+                    ),
+                    onPressed: () {
+                      controller.sizeChange(0, 5);
+                    },
+                  ),
+                ],
               ),
-              child: IgnorePointer(
-                child: quill.QuillEditor(
-                  controller:
-                      vmDraggableNestedMap.getNodeController(posX, posY)!,
-                  focusNode: FocusNode(),
-                  readOnly: true,
-                  autoFocus: false,
-                  expands: false,
-                    padding: const EdgeInsets.only(top: 4),
-                    scrollController: ScrollController(),
-                    scrollable: false,
-                    customStyles: ConstList.getDefaultThemeData(
-                        context, _.getScale().data2,
-                        fontStyle: ConstList.getFont(getPlatform().mainFont)),
+            ],
+          );
+        },
+      ),
+    );
+
+    var image = Expanded(
+      child: Obx(
+        () => Stack(
+          children: [
+            Align(
+              alignment: Alignment.topCenter,
+              child: Visibility(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(5)),
+                    child:
+                        PlatformSystem.getImage(controller.imageString.value),
                   ),
                 ),
+                visible: controller.imageString.value.isNotEmpty,
               ),
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Visibility(
+                child: TextButton(
+                  child: const Text('출처'),
+                  onPressed: () {
+                    var url = getPlatformFileSystem()
+                        .getSource(controller.imageString.value);
+                    if (url != null && url.isNotEmpty) {
+                      launch(url);
+                    }
+                  },
+                ),
+                visible: getPlatformFileSystem()
+                        .hasSource(controller.imageString.value) &&
+                    getPlatform().isVisibleSource,
+              ),
+            ),
+            Align(
+              alignment: Alignment.topCenter,
+              child: Visibility(
+                child: GetBuilder<VMDraggableNestedMap>(
+                    builder: (_) => TextOutline(controller.titleString.value,
+                        18 * scale.data2, _.getTitleFont())),
+                visible: controller.titleString.value.isNotEmpty,
+              ),
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: Visibility(
+                child: PopupMenuButton<int>(
+                  icon: const Icon(Icons.more_vert),
+                  onSelected: (result) {
+                    if (result == 0) {
+                      showDialog(
+                        context: context,
+                        builder: (builder) => sizeDialog,
+                      );
+                    }
+                  },
+                  itemBuilder: (context) {
+                    return [
+                      const PopupMenuItem(
+                        value: 0,
+                        child: Text('크기 수정'),
+                      ),
+                    ];
+                  },
+                ),
+                visible: vmDraggableNestedMap.mouseHover == Tuple(posX, posY) &&
+                    vmDraggableNestedMap.isEditable(),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    var mainNode = Obx(
+      () => Container(
+        padding: const EdgeInsets.all(6),
+        width: controller.realSize.value.data1 * scale.data1,
+        height: controller.realSize.value.data2 * scale.data2,
+        color: controller.node.isCard
+            ? null
+            : getPlatform().colorBackground.lighten(),
+        child: Column(
+          children: [
+            image,
+            editor,
           ],
         ),
       ),
@@ -224,9 +220,7 @@ class ViewChoiceNode extends StatelessWidget {
         builder: (_) => InkWell(
           onTap: () {
             if (ConstList.isMobile()) {
-              if (vmDraggableNestedMap.isEditable()) {
-                vmDraggableNestedMap.setHover(posX, posY);
-              }
+              vmDraggableNestedMap.setHover(posX, posY);
             }
           },
           onHover: (val) {
@@ -237,10 +231,8 @@ class ViewChoiceNode extends StatelessWidget {
             }
           },
           onDoubleTap: () {
-            if (vmDraggableNestedMap.isEditable()) {
-              vmDraggableNestedMap.setEdit(posX, posY);
-              Get.toNamed('/viewEditor', id: 1);
-            }
+            vmDraggableNestedMap.setEdit(posX, posY);
+            Get.toNamed('/viewEditor', id: 1);
           },
           child: mainNode,
         ),

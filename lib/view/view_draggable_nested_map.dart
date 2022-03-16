@@ -1,5 +1,6 @@
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/view_text_outline.dart';
+import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -35,7 +36,7 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
         },
         child: Visibility(
           child: widget,
-          visible: controller.drag != pos,
+          visible: VMDraggableNestedMap.drag != pos,
         ),
         onDragEnd: (DraggableDetails data) {
           controller.dragEnd();
@@ -62,7 +63,7 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
         },
         child: Visibility(
           child: widget,
-          visible: controller.drag != pos,
+          visible: VMDraggableNestedMap.drag != pos,
         ),
         onDragEnd: (DraggableDetails data) {
           controller.dragEnd();
@@ -86,8 +87,8 @@ class NodeDraggableTarget extends GetView<VMDraggableNestedMap> {
 
   @override
   Widget build(BuildContext context) {
-    var nodeBefore = controller.getNode(x - 1, y);
-    var node = controller.getNode(x, y);
+    var nodeBefore = VMChoiceNode.getNode(x - 1, y);
+    var node = VMChoiceNode.getNode(x, y);
 
     bool long = (node != null && node.width == 0) || (nodeBefore != null && node == null && nodeBefore.width == 0);
     bool long2 = y == getPlatform().choiceNodes.length;
@@ -102,7 +103,7 @@ class NodeDraggableTarget extends GetView<VMDraggableNestedMap> {
               color: baseColor,
               width: double.infinity,
               height:
-                  controller.nodeBaseHeight * 2 * controller.getScale().data2,
+                  nodeBaseHeight * 2 * controller.getScale().data2,
             );
           }
           if(long2){
@@ -110,21 +111,21 @@ class NodeDraggableTarget extends GetView<VMDraggableNestedMap> {
               color: baseColor,
               width: double.infinity,
               height:
-              controller.nodeBaseHeight * 10 * controller.getScale().data2,
+              nodeBaseHeight * 10 * controller.getScale().data2,
             );
           }
           return Container(
             color: baseColor,
-            width: controller.nodeBaseWidth / 6 * controller.getScale().data1,
+            width: nodeBaseWidth / 6 * controller.getScale().data1,
             height:
-                controller.nodeBaseHeight * 10 * controller.getScale().data2,
+                nodeBaseHeight * 10 * controller.getScale().data2,
           );
         },
         onAccept: (Tuple<int, int> data) {
-          if (controller.drag == Tuple(-10, -10)) {
+          if (VMDraggableNestedMap.drag == Tuple(-10, -10)) {
             controller.changeData(data, Tuple(x, y));
           } else {
-            if ((x - 2) > (controller.drag!.data1 * 2)) {
+            if ((x - 2) > (VMDraggableNestedMap.drag!.data1 * 2)) {
               controller.changeData(data, Tuple(x - 1, y));
             } else {
               controller.changeData(data, Tuple(x, y));
@@ -132,7 +133,7 @@ class NodeDraggableTarget extends GetView<VMDraggableNestedMap> {
           }
         },
       ),
-      visible: controller.drag != null && controller.drag != Tuple(x - 1, y),
+      visible: VMDraggableNestedMap.drag != null && VMDraggableNestedMap.drag != Tuple(x - 1, y),
       maintainSize: realLong,
       maintainAnimation: realLong,
       maintainState: realLong,

@@ -1,8 +1,6 @@
-import 'dart:convert';
-
+import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
 
 import '../main.dart';
@@ -13,18 +11,14 @@ import '../util/tuple.dart';
 import '../view/view_draggable_nested_map.dart';
 
 class VMDraggableNestedMap extends GetxController {
-  Tuple<int, int>? drag;
+  static Tuple<int, int>? drag;
   Tuple<int, int> mouseHover = Tuple(-10, -10);
-  Tuple<int, int> sizeSet = Tuple(1, 1);
 
   GlobalKey captureKey = GlobalKey();
 
   ScrollController scroller = ScrollController();
 
   bool isChanged = false;
-
-  double nodeBaseWidth = 176;
-  double nodeBaseHeight = 24;
 
   int getLength(){
     return isEditable() ? (getPlatform().choiceNodes.length * 2 + 2) : (getPlatform().choiceNodes.length * 2);
@@ -124,30 +118,24 @@ class VMDraggableNestedMap extends GetxController {
     update();
   }
 
-  Tuple<int, int> getSize(Tuple<int, int> position) {
-    var node = getNode(position.data1, position.data2)!;
-    return Tuple(node.width, node.height);
-  }
-
-  Tuple<double, double> getRealSize(Tuple<int, int> position) {
-    var node = getSize(position);
-    double width;
-    if(node.data1 == 0){
-      if(drag == null){
-        width = double.infinity;
-      }else{
-        width = getMaxWidth();
-      }
-    }else{
-      width = node.data1 * nodeBaseWidth;
-    }
-    var height = node.data2 * nodeBaseHeight;
-    return Tuple(width, height);
-  }
-
   void removeData(Tuple<int, int> data) {
     getPlatform().removeData(data.data1, data.data2);
+    updateVMChoiceNode(data.data1, data.data2);
     update();
+  }
+  void updateVMChoiceNode(int x, int y){
+    var nodes = getPlatform().choiceNodes;
+    if(y >= nodes.length)return;
+    for(var i = x; i < nodes[y].data1.length; i++){
+      if(!Get.isRegistered<VMChoiceNode>(tag: VMChoiceNode.getTag(i, y))){
+        continue;
+      }
+      Get.find<VMChoiceNode>(tag: VMChoiceNode.getTag(i, y)).updateFromNode();
+    }
+  }
+
+  static ChoiceNodeBase createNodeForTemp() {
+    return ChoiceNodeBase.noTitle(1, 10, true, '', '');
   }
 
   void changeData(Tuple<int, int> data, Tuple<int, int> pos) {
@@ -155,28 +143,25 @@ class VMDraggableNestedMap extends GetxController {
       getPlatform().addData(pos.data1, pos.data2, createNodeForTemp());
     } else {
       getPlatform().changeData(data, pos);
+      updateVMChoiceNode(data.data1, data.data2);
     }
+    updateVMChoiceNode(pos.data1, pos.data2);
     update();
   }
 
   void dragStart(Tuple<int, int> pos) {
-    drag = pos;
+    drag = pos.copy();
+    VMChoiceNode.getVMChoiceNode(drag!.data1, drag!.data2)?.hover.value = true;
     update();
   }
 
   void dragEnd() {
+    VMChoiceNode.getVMChoiceNode(drag!.data1, drag!.data2)?.hover.value = false;
     drag = null;
-    update();
   }
 
   double getMaxWidth() {
     return captureKey.currentContext!.width;
-  }
-
-  void setSize(Tuple<int, int> position, Tuple<int, int> size) {
-    var node = getNode(position.data1, position.data2)!;
-    node.width = size.data1;
-    node.height = size.data2;
   }
 
   void dragUpdate(BoxConstraints constrains, DragUpdateDetails details,
@@ -202,66 +187,26 @@ class VMDraggableNestedMap extends GetxController {
     var context = captureKey.currentContext;
     if (context == null) return Tuple(drag == null ? 1 : 0.9, 1);
     var sizeMultiply = ConstList.isSmallDisplay(context) ? 0.75 : 1;
-    return Tuple<double, double>(drag == null ? 1 : 0.9, 1).mul(sizeMultiply);
+    return Tuple<double, double>(drag == null ? 1 : 0.9, 1) * sizeMultiply;
   }
 
   bool isEditable() {
     return getPlatform().isEditable;
   }
 
-  ChoiceNodeBase? getNode(int x, int y) {
-    if (x == -10 && y == -10) {
-      return createNodeForTemp();
-    }else if(y < 0 || y >= getPlatform().choiceNodes.length){
-      return null;
-    }else if(x < 0 || x >= getPlatform().choiceNodes[y].data1.length){
-      return null;
-    }
-    return getPlatform().getChoiceNode(x, y);
-  }
-
-  ChoiceNodeBase createNodeForTemp() {
-    return ChoiceNodeBase.noTitle(1, 10, true, '', '');
-  }
-
-  QuillController? getNodeController(int x, int y) {
-    var node = getNode(x, y);
-    if (node == null || node.contentsString.isEmpty) {
-      return QuillController.basic();
-    } else {
-      var json = jsonDecode(node.contentsString);
-      var document = Document.fromJson(json);
-      return QuillController(
-          document: document,
-          selection: const TextSelection.collapsed(offset: 0));
-    }
-  }
-
   void select(int posX, int posY) {
-    if (getNode(posX, posY)!.isSelectableWithCheck()) {
+    if (VMChoiceNode.getNode(posX, posY)!.isSelectableWithCheck()) {
       getPlatform().setSelect(posX, posY);
       update();
     }
   }
 
-  void sizeChange(int x, int y) {
-    sizeSet.data1 += x;
-    sizeSet.data2 += y;
-    if (sizeSet.data1 < 0) {
-      sizeSet.data1 = 0;
-    }
-    if (sizeSet.data2 < 5) {
-      sizeSet.data2 = 5;
-    }
-    update();
-  }
-
   bool isSelectable(int posX, int posY) {
-    return getNode(posX, posY)?.isSelectableWithCheck() ?? false;
+    return VMChoiceNode.getNode(posX, posY)?.isSelectableWithCheck() ?? false;
   }
 
   bool isSelectablePreCheck(int posX, int posY) {
-    var node = getNode(posX, posY)!;
+    var node = VMChoiceNode.getNode(posX, posY)!;
     if(node.isSelectable){
       return node.isSelectableCheck;
     }
@@ -300,9 +245,5 @@ class VMDraggableNestedMap extends GetxController {
 
   TextStyle getTitleFont() {
     return ConstList.getFont(getPlatform().titleFont);
-  }
-
-  void setDefaultHeight(int y) {
-
   }
 }

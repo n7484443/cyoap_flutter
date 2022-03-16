@@ -162,9 +162,9 @@ class PlatformFileSystem {
             if (fileName.contains('lineSetting_')) {
               lineSettingList
                   .add(LineSetting.fromJson(jsonDecode(dataConverted)));
-            } else {
+            } else if (fileName.contains('node_')) {
               nodeList.add(ChoiceNodeBase.fromJson(jsonDecode(dataConverted)));
-            }
+            } else {}
           } else if (fileName.endsWith('platform.json')) {
             platformJson = dataConverted;
           } else if (fileName.endsWith('imageSource.json')) {
