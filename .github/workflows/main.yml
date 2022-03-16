@@ -51,9 +51,6 @@ jobs:
             build/windows/cyoap_windows_${{ steps.get_version.outputs.version-without-v }}.zip
             build/app/outputs/flutter-apk/cyoap_android_${{ steps.get_version.outputs.version-without-v }}.apk
             build/web/distribute_${{ steps.get_version.outputs.version-without-v }}.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            
 
       - name: Remove web folder
         run: rmdir /s /q build
