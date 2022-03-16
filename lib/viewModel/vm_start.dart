@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import '../main.dart';
 import '../model/check_update.dart';
 import '../model/opening_file_folder.dart';
 import '../model/platform_system.dart';
+import '../util/platform_specified_util/check_distribute.dart';
 
 class VMStartPlatform extends GetxController {
   FrequentlyUsedPath frequentlyUsedPath = FrequentlyUsedPath();
@@ -131,10 +133,37 @@ class VMStartPlatform extends GetxController {
     getPlatform().isEditable = bool;
   }
 
-  void isNeedUpdate(){
+  void isNeedUpdate() {
     CheckUpdate.needUpdateCheck().then((value) {
       needUpdate = value;
       update();
     });
+  }
+
+  void doDistributeMode() async {
+    print('web is Distribute mode');
+    var value = await getDistribute().getImageNodeList();
+    print('load start');
+    var distribute = getDistribute();
+    var imageList = value.data1;
+    var nodeList = value.data2;
+    Map<String, Uint8List> imageMap = {};
+    Map<String, Uint8List> nodeMap = {};
+    for (var name in imageList) {
+      imageMap[name] = (await distribute.getFile('images/$name'))!;
+    }
+    print('image loaded');
+    for (var name in nodeList) {
+      nodeMap[name] = (await distribute.getFile('nodes/$name'))!;
+    }
+    print('node loaded');
+    Uint8List imageSource = (await distribute.getFile('imageSource.json'))!;
+    Uint8List platformData = (await distribute.getFile('platform.json'))!;
+    print('load end');
+
+    await PlatformSystem.instance
+        .openPlatformList(imageMap, nodeMap, imageSource, platformData);
+    Get.find<VMStartPlatform>().setEditable(false);
+    Get.toNamed('/viewPlay');
   }
 }

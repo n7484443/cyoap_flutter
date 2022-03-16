@@ -193,19 +193,18 @@ class ViewChoiceNode extends StatelessWidget {
                 ],
               ),
             ),
-            Visibility(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: realSize.data2 * _.getScale().data2 - 45,
-                ),
-                child: IgnorePointer(
-                  child: quill.QuillEditor(
-                    controller:
-                        vmDraggableNestedMap.getNodeController(posX, posY)!,
-                    focusNode: FocusNode(),
-                    readOnly: true,
-                    autoFocus: false,
-                    expands: false,
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: realSize.data2 * _.getScale().data2 - 45,
+              ),
+              child: IgnorePointer(
+                child: quill.QuillEditor(
+                  controller:
+                      vmDraggableNestedMap.getNodeController(posX, posY)!,
+                  focusNode: FocusNode(),
+                  readOnly: true,
+                  autoFocus: false,
+                  expands: false,
                     padding: const EdgeInsets.only(top: 4),
                     scrollController: ScrollController(),
                     scrollable: false,
@@ -215,8 +214,6 @@ class ViewChoiceNode extends StatelessWidget {
                   ),
                 ),
               ),
-              visible: node.contentsString.isNotEmpty,
-            ),
           ],
         ),
       ),

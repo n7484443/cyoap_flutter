@@ -1,10 +1,6 @@
-import 'dart:typed_data';
 import 'package:cyoap_flutter/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../model/platform_system.dart';
-import '../util/platform_specified_util/check_distribute.dart';
 import '../viewModel/vm_start.dart';
 
 class ViewStart extends StatelessWidget {
@@ -13,35 +9,8 @@ class ViewStart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vmStart = Get.put(VMStartPlatform());
-    vmStart.initFrequentPath();
     if (ConstList.checkDistribute()) {
-      print('web is Distribute mode');
-      getDistribute().getImageNodeList().then((value) async {
-        print('load start');
-        var distribute = getDistribute();
-        var imageList = value.data1;
-        var nodeList = value.data2;
-        Map<String, Uint8List> imageMap = {};
-        Map<String, Uint8List> nodeMap = {};
-        for(var name in imageList){
-          imageMap[name] = (await distribute.getFile('images/$name'))!;
-        }
-        print('image loaded');
-        for(var name in nodeList){
-          nodeMap[name] = (await distribute.getFile('nodes/$name'))!;
-        }
-        print('node loaded');
-        Uint8List imageSource = (await distribute.getFile('imageSource.json'))!;
-        Uint8List platformData = (await distribute.getFile('platform.json'))!;
-        print('load end');
-
-        PlatformSystem.instance
-            .openPlatformList(imageMap, nodeMap, imageSource, platformData)
-            .then((output) {
-          Get.find<VMStartPlatform>().setEditable(false);
-          Get.toNamed('/viewPlay');
-        });
-      });
+      vmStart.doDistributeMode();
       return Scaffold(
         body: Center(
           child: Row(
@@ -54,6 +23,7 @@ class ViewStart extends StatelessWidget {
         ),
       );
     }
+    vmStart.initFrequentPath();
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
