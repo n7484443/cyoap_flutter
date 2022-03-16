@@ -53,7 +53,7 @@ jobs:
             build/web/distribute_${{ steps.get_version.outputs.version-without-v }}.zip
 
       - name: Remove web folder
-        run: Remove-Item ./build/web
+        run: Remove-Item ./build/web -Recurse | Remove-Item
 
       - run: flutter build web --web-renderer canvaskit --release --base-href=/FlutterCyoap/
 
