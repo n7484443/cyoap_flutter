@@ -23,6 +23,7 @@ class VMChoiceNode extends GetxController {
   var imageString = ''.obs;
   var titleString = ''.obs;
   var isDrag = false.obs;
+  var isCardMode = false.obs;
   var status = SelectableStatus.open.obs;
 
   VMChoiceNode({this.x = -10, this.y = -10})
@@ -53,6 +54,7 @@ class VMChoiceNode extends GetxController {
     size.value = Tuple(node.width, node.height);
     titleString.value = node.title;
     imageString.value = node.imageString;
+    isCardMode.value = node.isCard;
     status.value = node.status;
   }
 
@@ -97,6 +99,7 @@ class VMChoiceNode extends GetxController {
   void updateFromEditor(){
     titleString.value = node.title;
     imageString.value = node.imageString;
+    isCardMode.value = node.isCard;
   }
 
   void updateFromNode(){
@@ -120,9 +123,18 @@ class VMChoiceNode extends GetxController {
 
   void select() {
     getPlatform().setSelect(x, y);
+    VMChoiceNode.doAllVMChoiceNode((vm) {
+      vm.status.value = vm.node.status;
+    });
+  }
+
+  static void doAllVMChoiceNode(void Function(VMChoiceNode vm) action){
     for(var nodeY in getPlatform().choiceNodes){
       for(var node in nodeY){
-        getVMChoiceNode(node.x, node.y)?.status.value = node.status;
+        var vm = getVMChoiceNode(node.x, node.y);
+        if(vm != null){
+          action(vm);
+        }
       }
     }
   }

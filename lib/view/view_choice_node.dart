@@ -42,7 +42,7 @@ class ViewChoiceNode extends StatelessWidget {
             scrollController: ScrollController(),
             scrollable: false,
             customStyles: ConstList.getDefaultThemeData(context, scale.data2,
-                fontStyle: ConstList.getFont(getPlatform().mainFont)),
+                fontStyle: ConstList.getFont(vmDraggableNestedMap.mainFont.value)),
           ),
         ),
       );
@@ -160,9 +160,8 @@ class ViewChoiceNode extends StatelessWidget {
           Align(
             alignment: Alignment.topCenter,
             child: Visibility(
-              child: GetBuilder<VMDraggableNestedMap>(
-                  builder: (_) => TextOutline(controller.titleString.value,
-                      18 * scale.data2, _.getTitleFont())),
+              child: TextOutline(controller.titleString.value,
+                      18 * scale.data2,  ConstList.getFont(vmDraggableNestedMap.titleFont.value)),
               visible: controller.titleString.value.isNotEmpty,
             ),
           ),
@@ -236,7 +235,7 @@ class ViewChoiceNode extends StatelessWidget {
 
     return Obx(
       () {
-        if (controller.node.isCard) {
+        if (controller.isCardMode.value) {
           return Opacity(
             opacity: isEditable() || controller.isIgnorePointer()
                 ? 1.0

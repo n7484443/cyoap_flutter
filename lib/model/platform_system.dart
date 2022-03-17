@@ -8,6 +8,7 @@ import 'package:cyoap_flutter/model/platform_file_system.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
 
+import '../main.dart';
 import '../util/platform_specified_util/save_project.dart';
 import 'abstract_platform.dart';
 
@@ -100,4 +101,12 @@ bool isEditable(){
 
 PlatformFileSystem getPlatformFileSystem(){
   return PlatformSystem.instance.platformFileSystem;
+}
+
+TextStyle get titleFont{
+  return ConstList.getFont(getPlatform().titleFont);
+}
+
+TextStyle get mainFont{
+  return ConstList.getFont(getPlatform().mainFont);
 }

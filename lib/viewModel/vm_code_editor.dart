@@ -41,7 +41,6 @@ class VMCodeEditor extends GetxController {
   }
 
   void save() {
-
     NodeEditor.instance.target.conditionClickableString = conditionClickable.value;
     NodeEditor.instance.target.conditionVisibleString = conditionVisible.value;
     NodeEditor.instance.target.executeCodeString = executeCode.value;

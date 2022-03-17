@@ -223,14 +223,14 @@ class ViewGlobalSetting extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 16.0, bottom: 8.0, right: 16.0, left: 16.0),
                   child: Text(
                     '제목은 이렇게 표시됩니다',
-                    style: _.getTitleFont(),
+                    style: titleFont,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0, bottom: 16.0, right: 16.0, left: 16.0),
                   child: Text(
                     '본문은 이렇게 표시됩니다',
-                    style: _.getMainFont(),
+                    style: mainFont,
                   ),
                 ),
               ],

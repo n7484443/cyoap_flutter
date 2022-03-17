@@ -6,8 +6,6 @@ import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../main.dart';
-
 class VMGlobalSetting extends GetxController {
   final TextEditingController controllerGlobal = TextEditingController();
 
@@ -100,6 +98,9 @@ class VMGlobalSetting extends GetxController {
 
   void save() {
     getPlatform().setGlobalSetting(initialValueList);
+    var vmDraggable = Get.find<VMDraggableNestedMap>();
+    vmDraggable.titleFont.value = getPlatform().titleFont;
+    vmDraggable.mainFont.value = getPlatform().mainFont;
     Get.find<VMVariableTable>().update();
     isChanged = false;
   }
@@ -132,14 +133,6 @@ class VMGlobalSetting extends GetxController {
     update();
     Get.find<VMPlatform>().update();
     isChanged = true;
-  }
-
-  TextStyle getTitleFont() {
-    return ConstList.getFont(getPlatform().titleFont);
-  }
-
-  TextStyle getMainFont() {
-    return ConstList.getFont(getPlatform().mainFont);
   }
 
   void updateColor(Color color) {

@@ -150,7 +150,7 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
   Widget build(BuildContext context) {
     var maxSelectText = Visibility(
       child: TextOutline('최대 ${controller.getMaxSelect(y)}개만큼 선택 가능', 18.0,
-          controller.getTitleFont(),
+          titleFont,
           strokeWidth: 5.0),
       visible: controller.getMaxSelect(y) != '무한',
     );

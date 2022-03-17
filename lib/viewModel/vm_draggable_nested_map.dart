@@ -18,6 +18,10 @@ class VMDraggableNestedMap extends GetxController {
   ScrollController scroller = ScrollController();
 
   bool isChanged = false;
+
+  var mainFont = getPlatform().mainFont.obs;
+  var titleFont = getPlatform().titleFont.obs;
+
   static bool isCapture = false;
 
   static bool isVisibleOnlyEdit(){
@@ -221,9 +225,5 @@ class VMDraggableNestedMap extends GetxController {
     var line = getPlatform().getLineSetting(y);
     var max = line == null ? -1 : line.maxSelect;
     return max == -1 ? '무한' : '$max';
-  }
-
-  TextStyle getTitleFont() {
-    return ConstList.getFont(getPlatform().titleFont);
   }
 }
