@@ -2,6 +2,7 @@ import 'package:cyoap_flutter/model/grammar/value_type.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
+import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,6 +13,7 @@ class VMGlobalSetting extends GetxController {
 
   final TextEditingController controllerName = TextEditingController();
   final TextEditingController controllerValue = TextEditingController();
+  final TextEditingController controllerDisplayName = TextEditingController();
 
   bool isChanged = false;
   bool visibleSwitch = true;
@@ -66,20 +68,25 @@ class VMGlobalSetting extends GetxController {
     if (index != -1) {
       deleteInitialValue(index);
     }
-    addInitialValue(controllerName.text,
-        ValueTypeWrapper(getType(controllerValue.text), visibleSwitch, false));
+    addInitialValue(
+        controllerName.text,
+        ValueTypeWrapper(getType(controllerValue.text), visibleSwitch, false,
+            displayName: controllerDisplayName.text));
     controllerName.clear();
     controllerValue.clear();
+    controllerDisplayName.clear();
     isChanged = true;
   }
 
   void loadInitialValue(int index){
     if(index != -1){
       var key = getKey(index);
-      var data = initialValueList[key]?.valueType.data;
+      var wrapper = initialValueList[key]!;
+      var data = wrapper.valueType.data;
 
       controllerName.text = key;
       controllerValue.text = data is String ? '"$data"' : data.toString();
+      controllerDisplayName.text = wrapper.displayName;
     }
   }
 
@@ -93,6 +100,7 @@ class VMGlobalSetting extends GetxController {
 
   void save() {
     getPlatform().setGlobalSetting(initialValueList);
+    Get.find<VMVariableTable>().updateLists();
     isChanged = false;
   }
 

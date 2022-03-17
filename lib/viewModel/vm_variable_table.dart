@@ -32,14 +32,19 @@ class VMVariableTable extends GetxController {
       if (values == null) continue;
       if (values.visible && !values.isFromNode) {
         if (isEditable()) {
-          variableList.add(
-              '$key | ${values.valueType.data.runtimeType}');
+          if (values.displayName.isEmpty) {
+            variableList.add('$key | ${values.valueType.data.runtimeType}');
+          } else {
+            variableList.add(
+                '$key | ${values.valueType.data.runtimeType} | ${values.displayName}');
+          }
         } else {
-          variableList.add(
-              '$key | ${values.valueType.data}');
+          var name = values.displayName.isEmpty ? key : values.displayName;
+          variableList.add('$name | ${values.valueType.data}');
         }
       }
     }
+    print(variableList);
     update();
   }
 

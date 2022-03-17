@@ -48,6 +48,7 @@ class ChoiceNodeBase extends GenerableParser{
     return name.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
   }
 
+  @override
   Map<String, dynamic> toJson() =>
       {
         'x': x,

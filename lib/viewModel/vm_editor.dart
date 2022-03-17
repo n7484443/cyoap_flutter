@@ -52,6 +52,7 @@ class VMEditor extends GetxController{
     NodeEditor.instance.target.contentsString =
         jsonEncode(quillController.document.toDelta().toJson());
     NodeEditor.instance.getVMChoiceNode().updateFromEditor();
+    quillController.updateSelection(const TextSelection.collapsed(offset: 0), ChangeSource.REMOTE);
     isChanged = false;
   }
 

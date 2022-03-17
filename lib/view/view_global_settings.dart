@@ -120,6 +120,19 @@ class ViewGlobalSetting extends StatelessWidget {
               const Spacer(),
               Flexible(
                 flex: 4,
+                child: TextField(
+                  maxLines: 1,
+                  maxLength: 50,
+                  controller: vmGlobalSetting.controllerDisplayName,
+                  decoration: const InputDecoration(
+                    label: Text('변수 표기명'),
+                  ),
+                  textAlign: TextAlign.right,
+                ),
+              ),
+              const Spacer(),
+              Flexible(
+                flex: 4,
                 child: Column(
                   children: [
                     GetBuilder<VMGlobalSetting>(

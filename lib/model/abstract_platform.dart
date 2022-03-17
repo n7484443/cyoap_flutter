@@ -245,6 +245,8 @@ class AbstractPlatform {
   void setGlobalSetting(Map<String, ValueTypeWrapper> units) {
     globalSetting.clear();
     globalSetting.addAll(units);
+    generateRecursiveParser();
+    updateSelectable();
   }
 
   Future<Archive> toArchive(Map<String, Uint8List>? mapImage,

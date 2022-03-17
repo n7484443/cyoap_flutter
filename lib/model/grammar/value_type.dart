@@ -94,21 +94,28 @@ class ValueTypeWrapper{
   ValueType valueType;
   bool visible;
   bool isFromNode;
-  ValueTypeWrapper(this.valueType, this.visible, this.isFromNode);
+  String displayName;
 
-  ValueTypeWrapper.normal(this.valueType) :
-        visible = false,
-        isFromNode = false;
+  ValueTypeWrapper(this.valueType, this.visible, this.isFromNode,
+      {this.displayName = ''});
 
-  ValueTypeWrapper.fromJson(Map<String, dynamic> json) :
-        valueType = ValueType.fromJson(json['valueType']),
+  ValueTypeWrapper.normal(this.valueType)
+      : visible = false,
+        isFromNode = false,
+        displayName = '';
+
+  ValueTypeWrapper.fromJson(Map<String, dynamic> json)
+      : valueType = ValueType.fromJson(json['valueType']),
         visible = json['visible'] == 'true',
-        isFromNode = false;
+        isFromNode = false,
+        displayName = json['displayName'] ?? '';
 
-  Map<String, dynamic> toJson() => {
-    'visible': visible.toString().toLowerCase(),
-    'valueType': valueType.toJson(),
-  };
+  Map<String, dynamic> toJson() =>
+      {
+        'visible': visible.toString().toLowerCase(),
+        'valueType': valueType.toJson(),
+        'displayName': displayName,
+      };
 
   @override
   String toString() {

@@ -12,6 +12,7 @@ class LineSetting extends GenerableParser{
 
   LineSetting(this.y, {this.maxSelect = -1});
 
+  @override
   Map<String, dynamic> toJson() => {
         'y': y,
         'maxSelect': maxSelect,
