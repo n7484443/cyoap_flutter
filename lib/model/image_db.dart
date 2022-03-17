@@ -50,7 +50,6 @@ class ImageDB {
     return store;
   }
 
-
   Future<void> uploadImages(String name, Uint8List data) async{
     _dirImage.add(name);
     if (ConstList.isOnlyFileAccept()) {

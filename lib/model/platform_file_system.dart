@@ -129,7 +129,7 @@ class PlatformFileSystem {
     }
 
     platform = AbstractPlatform.fromJson(
-        jsonDecode(String.fromCharCodes(platformData)));
+        jsonDecode(utf8.decode(platformData)));
 
     platform.addDataAll(nodeList);
     for (var lineSetting in lineSettingList) {

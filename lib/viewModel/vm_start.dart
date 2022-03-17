@@ -147,16 +147,24 @@ class VMStartPlatform extends GetxController {
     var distribute = getDistribute();
     var imageList = value.data1;
     var nodeList = value.data2;
+    List<Future> futureMap = List.empty(growable: true);
     Map<String, Uint8List> imageMap = {};
-    Map<String, Uint8List> nodeMap = {};
     for (var name in imageList) {
-      imageMap[name] = (await distribute.getFile('images/$name'))!;
+      var future = distribute.getFile('images/$name');
+      future.then((value) => imageMap[name] = value!);
+      futureMap.add(future);
     }
-    print('image loaded');
+
+    Map<String, Uint8List> nodeMap = {};
     for (var name in nodeList) {
-      nodeMap[name] = (await distribute.getFile('nodes/$name'))!;
+      var future = distribute.getFile('nodes/$name');
+      future.then((value) => nodeMap[name] = value!);
+      futureMap.add(future);
     }
-    print('node loaded');
+    await Future.wait(futureMap);
+
+    print('image & node loaded');
+
     Uint8List imageSource = (await distribute.getFile('imageSource.json'))!;
     Uint8List platformData = (await distribute.getFile('platform.json'))!;
     print('load end');
