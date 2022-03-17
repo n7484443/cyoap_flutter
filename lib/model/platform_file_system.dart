@@ -245,13 +245,13 @@ class PlatformFileSystem {
       dirNodesBackUp.deleteSync(recursive: true);
     }
 
-    for(var x = 0; x < platform.choiceNodes.length; x++){
-      var tuple = platform.choiceNodes[x];
-      var file = File('$path/nodes_backup/lineSetting_${tuple.data2.y}.json');
+    for(var i = 0; i < platform.choiceNodes.length; i++){
+      var lineSetting = platform.lineSettings[i];
+      var file = File('$path/nodes_backup/lineSetting_${lineSetting.y}.json');
       file.createSync(recursive: true);
-      file.writeAsString(jsonEncode(tuple.data2.toJson()));
+      file.writeAsString(jsonEncode(lineSetting.toJson()));
 
-      for (var node in tuple.data1) {
+      for (var node in platform.choiceNodes[i]) {
         var file = File('$path/nodes_backup/node_${node.y}_${node.x}.json');
         file.createSync(recursive: true);
         file.writeAsString(jsonEncode(node.toJson()));
@@ -262,13 +262,13 @@ class PlatformFileSystem {
       dirNodes.deleteSync(recursive: true);
     }
 
-    for(var x = 0; x < platform.choiceNodes.length; x++){
-      var tuple = platform.choiceNodes[x];
-      var file = File('$path/nodes/lineSetting_${tuple.data2.y}.json');
+    for(var i = 0; i < platform.choiceNodes.length; i++){
+      var lineSetting = platform.lineSettings[i];
+      var file = File('$path/nodes/lineSetting_${lineSetting.y}.json');
       file.createSync(recursive: true);
-      file.writeAsString(jsonEncode(tuple.data2.toJson()));
+      file.writeAsString(jsonEncode(lineSetting.toJson()));
 
-      for (var node in tuple.data1) {
+      for (var node in platform.choiceNodes[i]) {
         var file = File('$path/nodes/node_${node.y}_${node.x}.json');
         file.createSync(recursive: true);
         file.writeAsString(jsonEncode(node.toJson()));

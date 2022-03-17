@@ -22,7 +22,7 @@ class VMVariableTable extends GetxController {
 
     var nodes = getPlatform().choiceNodes;
     for(var t in nodes){
-      for(var node in t.data1){
+      for(var node in t){
         nodeNameList.add(Tuple(node.title, isEditable() ? true : node.select));
       }
     }

@@ -45,7 +45,7 @@ class VMDraggableNestedMap extends GetxController {
                   spacing: 2,
                   alignment: WrapAlignment.center,
                   children: List<Widget>.generate(
-                    xList.data1.length * 2 + 1,
+                    xList.length * 2 + 1,
                     (x) {
                       var i = x ~/ 2;
                       var j = y ~/ 2;
@@ -53,7 +53,7 @@ class VMDraggableNestedMap extends GetxController {
                         if (constrains != null) {
                           return NodeDraggable(i, j, constrains);
                         } else {
-                          return getChoiceWidget(xList.data1[i].isCard, i, j);
+                          return getChoiceWidget(xList[i].isCard, i, j);
                         }
                       } else {
                         return NodeDraggableTarget(i, j);
@@ -94,10 +94,10 @@ class VMDraggableNestedMap extends GetxController {
                 spacing: 2,
                 alignment: WrapAlignment.center,
                 children: List<Widget>.generate(
-                  xList.data1.length,
+                  xList.length,
                   (x) {
                     var j = y ~/ 2;
-                    return getChoiceWidget(xList.data1[x].isCard, x, j);
+                    return getChoiceWidget(xList[x].isCard, x, j);
                   },
                 ),
               ),
@@ -126,7 +126,7 @@ class VMDraggableNestedMap extends GetxController {
   void updateVMChoiceNode(int x, int y){
     var nodes = getPlatform().choiceNodes;
     if(y >= nodes.length)return;
-    for(var i = x; i < nodes[y].data1.length; i++){
+    for(var i = x; i < nodes[y].length; i++){
       if(!Get.isRegistered<VMChoiceNode>(tag: VMChoiceNode.getTag(i, y))){
         continue;
       }

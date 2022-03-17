@@ -71,7 +71,7 @@ class VMChoiceNode extends GetxController {
       return VMDraggableNestedMap.createNodeForTemp();
     } else if (y < 0 || y >= getPlatform().choiceNodes.length) {
       return null;
-    } else if (x < 0 || x >= getPlatform().choiceNodes[y].data1.length) {
+    } else if (x < 0 || x >= getPlatform().choiceNodes[y].length) {
       return null;
     }
     return getPlatform().getChoiceNode(x, y);
