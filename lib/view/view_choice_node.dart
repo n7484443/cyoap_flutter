@@ -189,7 +189,7 @@ class ViewChoiceNode extends StatelessWidget {
                 },
               ),
               visible: vmDraggableNestedMap.mouseHover == Tuple(posX, posY) &&
-                  vmDraggableNestedMap.isEditable(),
+                  isEditable(),
             ),
           ),
         ],
@@ -213,7 +213,7 @@ class ViewChoiceNode extends StatelessWidget {
       ),
     );
     Widget innerWidget;
-    if (vmDraggableNestedMap.isEditable()) {
+    if (isEditable()) {
       innerWidget = GetBuilder<VMDraggableNestedMap>(
         builder: (_) => InkWell(
           onTap: () {
@@ -252,12 +252,15 @@ class ViewChoiceNode extends StatelessWidget {
     if (controller.node.isCard) {
       return GetBuilder<VMDraggableNestedMap>(
         builder: (_) => Opacity(
-          opacity: !_.isEditable() && !_.isSelectablePreCheck(posX, posY) ? 0.5 : 1.0,
+          opacity:
+              !isEditable() && !_.isSelectablePreCheck(posX, posY) ? 0.5 : 1.0,
           child: Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),
               side: BorderSide(
-                color: _.isSelect(posX, posY) ? Colors.lightBlueAccent : Colors.white,
+                color: _.isSelect(posX, posY)
+                    ? Colors.lightBlueAccent
+                    : Colors.white,
                 width: 6,
               ),
             ),
@@ -270,11 +273,14 @@ class ViewChoiceNode extends StatelessWidget {
     } else {
       return GetBuilder<VMDraggableNestedMap>(
         builder: (_) => Opacity(
-          opacity: !_.isEditable() && !_.isSelectablePreCheck(posX, posY) ? 0.5 : 1.0,
+          opacity:
+              !isEditable() && !_.isSelectablePreCheck(posX, posY) ? 0.5 : 1.0,
           child: Container(
             decoration: BoxDecoration(
               border: Border.all(
-                  color: _.isSelect(posX, posY) ? Colors.lightBlueAccent : Colors.white,
+                  color: _.isSelect(posX, posY)
+                      ? Colors.lightBlueAccent
+                      : Colors.white,
                   width: 6),
               color: Colors.white,
             ),

@@ -4,6 +4,7 @@ import 'package:cyoap_flutter/util/platform_specified_util/check_distribute.dart
 import 'package:cyoap_flutter/view/view_make_platform.dart';
 import 'package:cyoap_flutter/view/view_play.dart';
 import 'package:cyoap_flutter/view/view_start.dart';
+import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
@@ -110,9 +111,13 @@ void main() {
             case 0:
               return GetPage(name: '/', page: () => const ViewStart());
             case 1:
-              return GetPage(name: '/viewPlay', page: () => const ViewPlay());
+              return GetPage(name: '/viewPlay', page: () => const ViewPlay(), binding: BindingsBuilder((){
+                Get.put(VMDraggableNestedMap());
+              }));
             default:
-              return GetPage(name: '/viewMake', page: () => const ViewMakePlatform());
+              return GetPage(name: '/viewMake', page: () => const ViewMakePlatform(), binding: BindingsBuilder((){
+                Get.put(VMDraggableNestedMap());
+              }));
           }
         }),
         theme: appThemeData,

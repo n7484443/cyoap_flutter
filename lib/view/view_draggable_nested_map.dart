@@ -204,7 +204,7 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
       visible: controller.getMaxSelect(y) != '무한',
     );
 
-    if (controller.isEditable()) {
+    if (isEditable()) {
       return Stack(
         children: [
           Divider(
@@ -256,8 +256,7 @@ class NestedMap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var controller = Get.put(VMDraggableNestedMap());
-    if (controller.isEditable()) {
+    if (isEditable()) {
       return GetBuilder<VMDraggableNestedMap>(
         builder: (_) => LayoutBuilder(builder: (context, constrains) {
           return SingleChildScrollView(

@@ -156,12 +156,12 @@ class VMDraggableNestedMap extends GetxController {
 
   void dragStart(Tuple<int, int> pos) {
     drag = pos.copy();
-    VMChoiceNode.getVMChoiceNode(drag!.data1, drag!.data2)?.hover.value = true;
+    VMChoiceNode.getVMChoiceNode(drag!.data1, drag!.data2)?.isDrag.value = true;
     update();
   }
 
   void dragEnd() {
-    VMChoiceNode.getVMChoiceNode(drag!.data1, drag!.data2)?.hover.value = false;
+    VMChoiceNode.getVMChoiceNode(drag!.data1, drag!.data2)?.isDrag.value = false;
     drag = null;
   }
 
@@ -193,10 +193,6 @@ class VMDraggableNestedMap extends GetxController {
     if (context == null) return Tuple(drag == null ? 1 : 0.9, 1);
     var sizeMultiply = ConstList.isSmallDisplay(context) ? 0.75 : 1;
     return Tuple<double, double>(drag == null ? 1 : 0.9, 1) * sizeMultiply;
-  }
-
-  bool isEditable() {
-    return getPlatform().isEditable;
   }
 
   void select(int posX, int posY) {

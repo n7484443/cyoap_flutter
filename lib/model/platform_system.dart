@@ -94,6 +94,10 @@ AbstractPlatform getPlatform(){
   return getPlatformFileSystem().platform;
 }
 
+bool isEditable(){
+  return getPlatform().isEditable;
+}
+
 PlatformFileSystem getPlatformFileSystem(){
   return PlatformSystem.instance.platformFileSystem;
 }

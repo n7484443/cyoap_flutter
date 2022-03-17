@@ -22,7 +22,8 @@ class VMChoiceNode extends GetxController {
   var realSize = Tuple<double, double>(0, 0).obs;
   var imageString = ''.obs;
   var titleString = ''.obs;
-  var hover = false.obs;
+  var isDrag = false.obs;
+  var isHover = false.obs;
 
   VMChoiceNode({this.x = -10, this.y = -10})
       : node = getNode(x, y)!;
@@ -41,7 +42,7 @@ class VMChoiceNode extends GetxController {
         val.data2 = data.data2 * nodeBaseHeight;
       });
     });
-    hover.listen((data) {
+    isDrag.listen((data) {
       var vmDraggable = Get.find<VMDraggableNestedMap>();
       if(size.value.data1 == 0){
         realSize.update((val) {
@@ -105,5 +106,17 @@ class VMChoiceNode extends GetxController {
   static VMChoiceNode? getVMChoiceNode(int x, int y){
     if(!Get.isRegistered<VMChoiceNode>(tag: VMChoiceNode.getTag(x, y)))return null;
     return Get.find<VMChoiceNode>(tag: VMChoiceNode.getTag(x, y));
+  }
+
+  bool isSelect() {
+    if (x == -10 && y == -10) return false;
+    return getPlatform().isSelect(x, y);
+  }
+
+  bool isSelectablePreCheck() {
+    if(node.isSelectable){
+      return node.isSelectableCheck;
+    }
+    return true;
   }
 }
