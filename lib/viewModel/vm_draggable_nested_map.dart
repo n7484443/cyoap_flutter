@@ -193,25 +193,6 @@ class VMDraggableNestedMap extends GetxController {
     return Tuple<double, double>(drag == null ? 1 : 0.9, 1) * sizeMultiply;
   }
 
-  void select(int posX, int posY) {
-    if (VMChoiceNode.getNode(posX, posY)!.isSelectableWithCheck()) {
-      getPlatform().setSelect(posX, posY);
-      update();
-    }
-  }
-
-  bool isSelectable(int posX, int posY) {
-    return VMChoiceNode.getNode(posX, posY)?.isSelectableWithCheck() ?? false;
-  }
-
-  bool isSelectablePreCheck(int posX, int posY) {
-    var node = VMChoiceNode.getNode(posX, posY)!;
-    if(node.isSelectable){
-      return node.isSelectableCheck;
-    }
-    return true;
-  }
-
   void addMaxSelect(int y, int max) {
     if ((getPlatform().getLineSetting(y)!.maxSelect + max) >=
         -1) {

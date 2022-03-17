@@ -27,7 +27,6 @@ class LineSetting extends GenerableParser{
         executeRecursive = json['executeRecursive'] == null ? null : getClassFromJson(json['executeRecursive']);
 
   String getClickableString() {
-
     return 'lineSetting_$y < $maxSelect';
   }
 

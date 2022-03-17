@@ -160,7 +160,7 @@ class AbstractPlatform {
   }
 
   bool isSelect(int posX, int posY) {
-    return getChoiceNode(posX, posY)?.select ?? false;
+    return getChoiceNode(posX, posY)?.status.isSelected() ?? false;
   }
 
   void updateSelectable() {
@@ -174,16 +174,20 @@ class AbstractPlatform {
         node.initValueTypeWrapper();
       }
     }
+
     for (int i = 0; i < choiceNodes.length; i++) {
       var lineSetting = lineSettings[i];
       for (var node in choiceNodes[i]) {
-        if (node.select) {
+        if(node.status.isSelected()){
           if (node.executeCodeRecursive != null) {
             for (var codes in node.executeCodeRecursive!) {
               codes.unzip();
             }
           }
-          lineSetting.executeRecursive?.unzip();
+
+          if(node.isSelectable){
+            lineSetting.executeRecursive?.unzip();
+          }
         }
       }
     }
@@ -200,34 +204,29 @@ class AbstractPlatform {
           clickableLineTest = data is bool ? data : true;
         }
       }
-      for (var node in choiceNodes[i]) {
-        if (node.conditionClickableRecursive != null) {
-          if (!node.select) {
-            var data = node.conditionClickableRecursive!.unzip().dataUnzip();
-            bool checkClickable = true;
-            if (data != null) {
-              if (data is bool) {
-                checkClickable = data;
-              } else if (data is ValueTypeWrapper) {
-                checkClickable =
-                data.valueType.data is bool ? data.valueType.data : true;
-              }
-            }
-            checkClickable &= clickableLineTest;
 
-            node.isSelectableCheck = checkClickable;
-            if (node.isSelectableCheck == false) {
-              node.selectNodeWithValue(false);
+      for (var node in choiceNodes[i]) {
+        var selectable = true;
+        if(node.conditionClickableRecursive != null){
+          var data = node.conditionClickableRecursive!.unzip().dataUnzip();
+          if (data != null) {
+            if (data is bool) {
+              selectable = data;
+            } else if (data is ValueTypeWrapper) {
+              selectable = data.valueType.data is bool ? data.valueType.data : true;
             }
           }
-        } else if (!node.select) {
-          node.isSelectableCheck = clickableLineTest;
-          if (node.isSelectableCheck == false) {
-            node.selectNodeWithValue(false);
-          }
-        } else{
-          node.isSelectableCheck = true;
         }
+        if(node.isSelectable){
+          if(node.status != SelectableStatus.selected){
+            selectable &= clickableLineTest;
+            node.status = selectable ? SelectableStatus.open : SelectableStatus.closed;
+          }
+        }else{
+          node.status = SelectableStatus.selected;
+        }
+
+        node.updateSelectValueTypeWrapper();
       }
     }
   }

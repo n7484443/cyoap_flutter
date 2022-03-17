@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
@@ -24,7 +25,7 @@ class VMVariableTable extends GetxController {
         }else if(node.isSelectable){
           nodeList.add(ListTile(
             title: Text(node.title),
-            trailing: node.select ? iconCheckBox : iconCheckBoxBlank,
+            trailing: node.status.isSelected() ? iconCheckBox : iconCheckBoxBlank,
           ));
         }
       }

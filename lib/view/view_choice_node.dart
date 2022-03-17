@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../main.dart';
+import '../model/choiceNode/choice_node.dart';
 import '../model/platform_system.dart';
 
 class ViewChoiceNode extends StatelessWidget {
@@ -212,22 +213,20 @@ class ViewChoiceNode extends StatelessWidget {
     );
     Widget innerWidget;
     if (isEditable()) {
-      innerWidget = GetBuilder<VMDraggableNestedMap>(
-        builder: (_) => InkWell(
-          onDoubleTap: () {
-            vmDraggableNestedMap.setEdit(posX, posY);
-            Get.toNamed('/viewEditor', id: 1);
-          },
-          child: mainNode,
-        ),
+      innerWidget = InkWell(
+        onDoubleTap: () {
+          vmDraggableNestedMap.setEdit(posX, posY);
+          Get.toNamed('/viewEditor', id: 1);
+        },
+        child: mainNode,
       );
     } else {
-      innerWidget = GetBuilder<VMDraggableNestedMap>(
-        builder: (_) => IgnorePointer(
-          ignoring: !vmDraggableNestedMap.isSelectable(posX, posY),
+      innerWidget = Obx(
+        () => IgnorePointer(
+          ignoring: !controller.isIgnorePointer(),
           child: InkWell(
             onTap: () {
-              vmDraggableNestedMap.select(posX, posY);
+              controller.select();
             },
             child: mainNode,
           ),
@@ -235,36 +234,38 @@ class ViewChoiceNode extends StatelessWidget {
       );
     }
 
-    if (controller.node.isCard) {
-      return GetBuilder<VMDraggableNestedMap>(
-        builder: (_) => Opacity(
-          opacity:
-              !isEditable() && !_.isSelectablePreCheck(posX, posY) ? 0.5 : 1.0,
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              side: BorderSide(
-                color: _.isSelect(posX, posY)
-                    ? Colors.lightBlueAccent
-                    : Colors.white,
-                width: 6,
+    return Obx(
+      () {
+        if (controller.node.isCard) {
+          return Opacity(
+            opacity: isEditable() || controller.isIgnorePointer()
+                ? 1.0
+                : 0.5,
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                side: BorderSide(
+                  color: controller.status.value.isSelected() &&
+                          controller.node.isSelectable
+                      ? Colors.lightBlueAccent
+                      : Colors.white,
+                  width: 6,
+                ),
               ),
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              elevation: ConstList.elevation,
+              child: innerWidget,
             ),
-            clipBehavior: Clip.antiAliasWithSaveLayer,
-            elevation: ConstList.elevation,
-            child: innerWidget,
-          ),
-        ),
-      );
-    } else {
-      return GetBuilder<VMDraggableNestedMap>(
-        builder: (_) => Opacity(
+          );
+        }
+        return Opacity(
           opacity:
-              !isEditable() && !_.isSelectablePreCheck(posX, posY) ? 0.5 : 1.0,
+              isEditable() || controller.status.value.isSelected() ? 1.0 : 0.5,
           child: Container(
             decoration: BoxDecoration(
               border: Border.all(
-                  color: _.isSelect(posX, posY)
+                  color: controller.status.value.isSelected() &&
+                          controller.node.isSelectable
                       ? Colors.lightBlueAccent
                       : Colors.white,
                   width: 6),
@@ -272,8 +273,8 @@ class ViewChoiceNode extends StatelessWidget {
             ),
             child: innerWidget,
           ),
-        ),
-      );
-    }
+        );
+      },
+    );
   }
 }

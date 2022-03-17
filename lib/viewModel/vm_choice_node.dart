@@ -23,6 +23,7 @@ class VMChoiceNode extends GetxController {
   var imageString = ''.obs;
   var titleString = ''.obs;
   var isDrag = false.obs;
+  var status = SelectableStatus.open.obs;
 
   VMChoiceNode({this.x = -10, this.y = -10})
       : node = getNode(x, y)!;
@@ -52,6 +53,7 @@ class VMChoiceNode extends GetxController {
     size.value = Tuple(node.width, node.height);
     titleString.value = node.title;
     imageString.value = node.imageString;
+    status.value = node.status;
   }
 
   QuillController initQuillController() {
@@ -112,10 +114,16 @@ class VMChoiceNode extends GetxController {
     return getPlatform().isSelect(x, y);
   }
 
-  bool isSelectablePreCheck() {
-    if(node.isSelectable){
-      return node.isSelectableCheck;
+  bool isIgnorePointer(){
+    return status.value.isPointerInteractive(node.isSelectable);
+  }
+
+  void select() {
+    getPlatform().setSelect(x, y);
+    for(var nodeY in getPlatform().choiceNodes){
+      for(var node in nodeY){
+        getVMChoiceNode(node.x, node.y)?.status.value = node.status;
+      }
     }
-    return true;
   }
 }
