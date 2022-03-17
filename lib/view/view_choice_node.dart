@@ -9,7 +9,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../main.dart';
 import '../model/platform_system.dart';
-import '../util/tuple.dart';
 
 class ViewChoiceNode extends StatelessWidget {
   final int posX;
@@ -188,8 +187,7 @@ class ViewChoiceNode extends StatelessWidget {
                   ];
                 },
               ),
-              visible: vmDraggableNestedMap.mouseHover == Tuple(posX, posY) &&
-                  isEditable(),
+              visible: VMDraggableNestedMap.isVisibleOnlyEdit(),
             ),
           ),
         ],
@@ -216,18 +214,6 @@ class ViewChoiceNode extends StatelessWidget {
     if (isEditable()) {
       innerWidget = GetBuilder<VMDraggableNestedMap>(
         builder: (_) => InkWell(
-          onTap: () {
-            if (ConstList.isMobile()) {
-              vmDraggableNestedMap.setHover(posX, posY);
-            }
-          },
-          onHover: (val) {
-            if (!ConstList.isMobile()) {
-              if (val) {
-                vmDraggableNestedMap.setHover(posX, posY);
-              }
-            }
-          },
           onDoubleTap: () {
             vmDraggableNestedMap.setEdit(posX, posY);
             Get.toNamed('/viewEditor', id: 1);

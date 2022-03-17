@@ -23,7 +23,6 @@ class VMChoiceNode extends GetxController {
   var imageString = ''.obs;
   var titleString = ''.obs;
   var isDrag = false.obs;
-  var isHover = false.obs;
 
   VMChoiceNode({this.x = -10, this.y = -10})
       : node = getNode(x, y)!;

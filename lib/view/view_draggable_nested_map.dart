@@ -134,9 +134,9 @@ class NodeDraggableTarget extends GetView<VMDraggableNestedMap> {
         },
       ),
       visible: controller.isVisibleDragTarget(x, y),
-      maintainSize: realLong && !VMDraggableNestedMap.isCapture,
-      maintainAnimation: realLong && !VMDraggableNestedMap.isCapture,
-      maintainState: realLong && !VMDraggableNestedMap.isCapture,
+      maintainSize: realLong && VMDraggableNestedMap.isVisibleOnlyEdit(),
+      maintainAnimation: realLong && VMDraggableNestedMap.isVisibleOnlyEdit(),
+      maintainState: realLong && VMDraggableNestedMap.isVisibleOnlyEdit(),
     );
   }
 }
@@ -148,55 +148,6 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
 
   @override
   Widget build(BuildContext context) {
-    Future dialog() => Get.defaultDialog(
-      title: '최대 선택지 개수 설정',
-      content: GetBuilder<VMDraggableNestedMap>(
-        builder: (_) => Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              children: [
-                const Text('선택 가능'),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(Icons.chevron_left),
-                  onPressed: () {
-                    _.addMaxSelect(y, -1);
-                  },
-                ),
-                Text(_.getMaxSelect(y)),
-                IconButton(
-                  icon: const Icon(Icons.chevron_right),
-                  onPressed: () {
-                    _.addMaxSelect(y, 1);
-                  },
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                const Text('탭 높이 설정'),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(Icons.chevron_left),
-                  onPressed: () {
-                    _.addMaxSelect(y, -1);
-                  },
-                ),
-                Text(_.getMaxSelect(y)),
-                IconButton(
-                  icon: const Icon(Icons.chevron_right),
-                  onPressed: () {
-                    _.addMaxSelect(y, 1);
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-
     var maxSelectText = Visibility(
       child: TextOutline('최대 ${controller.getMaxSelect(y)}개만큼 선택 가능', 18.0,
           controller.getTitleFont(),
@@ -204,15 +155,63 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
       visible: controller.getMaxSelect(y) != '무한',
     );
 
-    if (isEditable()) {
+    var divider = Divider(
+      thickness: 4,
+      color: getPlatform().colorBackground.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+    );
+
+    if (VMDraggableNestedMap.isVisibleOnlyEdit()) {
+      Future dialog() => Get.defaultDialog(
+        title: '최대 선택지 개수 설정',
+        content: GetBuilder<VMDraggableNestedMap>(
+          builder: (_) => Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  const Text('선택 가능'),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Icons.chevron_left),
+                    onPressed: () {
+                      _.addMaxSelect(y, -1);
+                    },
+                  ),
+                  Text(_.getMaxSelect(y)),
+                  IconButton(
+                    icon: const Icon(Icons.chevron_right),
+                    onPressed: () {
+                      _.addMaxSelect(y, 1);
+                    },
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  const Text('탭 높이 설정'),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Icons.chevron_left),
+                    onPressed: () {
+                      _.addMaxSelect(y, -1);
+                    },
+                  ),
+                  Text(_.getMaxSelect(y)),
+                  IconButton(
+                    icon: const Icon(Icons.chevron_right),
+                    onPressed: () {
+                      _.addMaxSelect(y, 1);
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
       return Stack(
         children: [
-          Divider(
-            thickness: 4,
-            color: getPlatform().colorBackground.computeLuminance() > 0.5
-                ? Colors.black
-                : Colors.white,
-          ),
+          divider,
           maxSelectText,
           Align(
             alignment: Alignment.centerRight,
@@ -239,10 +238,7 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
     } else {
       return Stack(
         children: [
-          Divider(
-            thickness: 4,
-            color: getPlatform().colorBackground.computeLuminance() > 0.5 ? Colors.black : Colors.white,
-          ),
+          divider,
           maxSelectText,
         ],
         alignment: Alignment.center,
