@@ -121,80 +121,78 @@ class ViewChoiceNode extends StatelessWidget {
       ),
     );
 
-    var image = Expanded(
-      child: Obx(
-        () => Stack(
-          children: [
-            Align(
-              alignment: Alignment.topCenter,
-              child: Visibility(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(5)),
-                    child:
-                        PlatformSystem.getImage(controller.imageString.value),
-                  ),
+    var image = Obx(
+      () => Stack(
+        children: [
+          Align(
+            alignment: Alignment.topCenter,
+            child: Visibility(
+              child: Padding(
+                padding:
+                    const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(5)),
+                  child:
+                      PlatformSystem.getImage(controller.imageString.value),
                 ),
-                visible: controller.imageString.value.isNotEmpty,
               ),
+              visible: controller.imageString.value.isNotEmpty,
             ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Visibility(
-                child: TextButton(
-                  child: const Text('출처'),
-                  onPressed: () {
-                    var url = getPlatformFileSystem()
-                        .getSource(controller.imageString.value);
-                    if (url != null && url.isNotEmpty) {
-                      launch(url);
-                    }
-                  },
-                ),
-                visible: getPlatformFileSystem()
-                        .hasSource(controller.imageString.value) &&
-                    getPlatform().isVisibleSource,
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Visibility(
+              child: TextButton(
+                child: const Text('출처'),
+                onPressed: () {
+                  var url = getPlatformFileSystem()
+                      .getSource(controller.imageString.value);
+                  if (url != null && url.isNotEmpty) {
+                    launch(url);
+                  }
+                },
               ),
+              visible: getPlatformFileSystem()
+                      .hasSource(controller.imageString.value) &&
+                  getPlatform().isVisibleSource,
             ),
-            Align(
-              alignment: Alignment.topCenter,
-              child: Visibility(
-                child: GetBuilder<VMDraggableNestedMap>(
-                    builder: (_) => TextOutline(controller.titleString.value,
-                        18 * scale.data2, _.getTitleFont())),
-                visible: controller.titleString.value.isNotEmpty,
+          ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Visibility(
+              child: GetBuilder<VMDraggableNestedMap>(
+                  builder: (_) => TextOutline(controller.titleString.value,
+                      18 * scale.data2, _.getTitleFont())),
+              visible: controller.titleString.value.isNotEmpty,
+            ),
+          ),
+          Align(
+            alignment: Alignment.topRight,
+            child: Visibility(
+              child: PopupMenuButton<int>(
+                icon: const Icon(Icons.more_vert),
+                onSelected: (result) {
+                  if (result == 0) {
+                    showDialog(
+                      context: context,
+                      builder: (builder) => sizeDialog,
+                    );
+                  }
+                },
+                itemBuilder: (context) {
+                  return [
+                    const PopupMenuItem(
+                      value: 0,
+                      child: Text('크기 수정'),
+                    ),
+                  ];
+                },
               ),
+              visible: vmDraggableNestedMap.mouseHover == Tuple(posX, posY) &&
+                  vmDraggableNestedMap.isEditable(),
             ),
-            Align(
-              alignment: Alignment.topRight,
-              child: Visibility(
-                child: PopupMenuButton<int>(
-                  icon: const Icon(Icons.more_vert),
-                  onSelected: (result) {
-                    if (result == 0) {
-                      showDialog(
-                        context: context,
-                        builder: (builder) => sizeDialog,
-                      );
-                    }
-                  },
-                  itemBuilder: (context) {
-                    return [
-                      const PopupMenuItem(
-                        value: 0,
-                        child: Text('크기 수정'),
-                      ),
-                    ];
-                  },
-                ),
-                visible: vmDraggableNestedMap.mouseHover == Tuple(posX, posY) &&
-                    vmDraggableNestedMap.isEditable(),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
 
@@ -208,15 +206,15 @@ class ViewChoiceNode extends StatelessWidget {
             : getPlatform().colorBackground.lighten(),
         child: Column(
           children: [
-            image,
+            Expanded(child: image),
             editor,
           ],
         ),
       ),
     );
-
+    Widget innerWidget;
     if (vmDraggableNestedMap.isEditable()) {
-      return GetBuilder<VMDraggableNestedMap>(
+      innerWidget = GetBuilder<VMDraggableNestedMap>(
         builder: (_) => InkWell(
           onTap: () {
             if (ConstList.isMobile()) {
@@ -238,7 +236,7 @@ class ViewChoiceNode extends StatelessWidget {
         ),
       );
     } else {
-      return GetBuilder<VMDraggableNestedMap>(
+      innerWidget = GetBuilder<VMDraggableNestedMap>(
         builder: (_) => IgnorePointer(
           ignoring: !vmDraggableNestedMap.isSelectable(posX, posY),
           child: InkWell(
@@ -246,6 +244,41 @@ class ViewChoiceNode extends StatelessWidget {
               vmDraggableNestedMap.select(posX, posY);
             },
             child: mainNode,
+          ),
+        ),
+      );
+    }
+
+    if (controller.node.isCard) {
+      return GetBuilder<VMDraggableNestedMap>(
+        builder: (_) => Opacity(
+          opacity: !_.isEditable() && !_.isSelectablePreCheck(posX, posY) ? 0.5 : 1.0,
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              side: BorderSide(
+                color: _.isSelect(posX, posY) ? Colors.lightBlueAccent : Colors.white,
+                width: 6,
+              ),
+            ),
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            elevation: ConstList.elevation,
+            child: innerWidget,
+          ),
+        ),
+      );
+    } else {
+      return GetBuilder<VMDraggableNestedMap>(
+        builder: (_) => Opacity(
+          opacity: !_.isEditable() && !_.isSelectablePreCheck(posX, posY) ? 0.5 : 1.0,
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                  color: _.isSelect(posX, posY) ? Colors.lightBlueAccent : Colors.white,
+                  width: 6),
+              color: Colors.white,
+            ),
+            child: innerWidget,
           ),
         ),
       );

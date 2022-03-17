@@ -1,4 +1,5 @@
 import 'package:cyoap_flutter/model/platform_system.dart';
+import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/view/view_text_outline.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,6 @@ import 'package:get/get.dart';
 import '../main.dart';
 import '../util/tuple.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
-import '../viewModel/vm_platform.dart';
 
 class NodeDraggable extends GetView<VMDraggableNestedMap> {
   final int x;
@@ -17,7 +17,7 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
 
   @override
   Widget build(BuildContext context) {
-    var widget = getChoiceWidget(getPlatform().getChoiceNode(x, y)!.isCard, x, y);
+    var widget = ViewChoiceNode(posX: x, posY: y,);
     var pos = Tuple(x, y);
     if (ConstList.isSmallDisplay(context)) {
       return LongPressDraggable<Tuple<int, int>>(
@@ -267,7 +267,7 @@ class NestedMap extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(color: _.getBackgroundColor()),
                 child: Column(
-                  children: _.updateWidgetList(constrains: constrains),
+                  children: _.widgetList(constrains: constrains),
                 ),
               ),
             ),
@@ -277,7 +277,7 @@ class NestedMap extends StatelessWidget {
     } else {
       return GetBuilder<VMDraggableNestedMap>(
         builder: (_) {
-          var inner = _.updateWidgetList();
+          var inner = _.widgetList();
           return Container(
             decoration: BoxDecoration(color: _.getBackgroundColor()),
             child: ListView.builder(

@@ -1,4 +1,5 @@
 import 'package:cyoap_flutter/util/tuple.dart';
+import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:flutter/material.dart';
@@ -74,8 +75,8 @@ class ViewMake extends StatelessWidget {
               data: Tuple(-10, -10),
               feedback: Transform.scale(
                 scale: 0.9,
-                child: Opacity(
-                  child: getChoiceWidget(true, -10, -10),
+                child: const Opacity(
+                  child: ViewChoiceNode(posX: -10, posY: -10,),
                   opacity: 0.6,
                 ),
               ),

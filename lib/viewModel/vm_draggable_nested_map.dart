@@ -1,5 +1,4 @@
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
-import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,6 +7,7 @@ import '../model/choiceNode/choice_node.dart';
 import '../model/editor.dart';
 import '../model/platform_system.dart';
 import '../util/tuple.dart';
+import '../view/view_choice_node.dart';
 import '../view/view_draggable_nested_map.dart';
 
 class VMDraggableNestedMap extends GetxController {
@@ -29,7 +29,7 @@ class VMDraggableNestedMap extends GetxController {
     return isEditable() ? (getPlatform().choiceNodes.length * 2 + 2) : (getPlatform().choiceNodes.length * 2);
   }
 
-  List<Widget> updateWidgetList({BoxConstraints? constrains}) {
+  List<Widget> widgetList({BoxConstraints? constrains}) {
     var choiceNodeList = getPlatform().choiceNodes;
     var edit = isEditable();
 
@@ -58,7 +58,7 @@ class VMDraggableNestedMap extends GetxController {
                         if (constrains != null) {
                           return NodeDraggable(i, j, constrains);
                         } else {
-                          return getChoiceWidget(xList[i].isCard, i, j);
+                          return ViewChoiceNode(posX: i, posY: j,);
                         }
                       } else {
                         return NodeDraggableTarget(i, j);
@@ -102,7 +102,7 @@ class VMDraggableNestedMap extends GetxController {
                   xList.length,
                   (x) {
                     var j = y ~/ 2;
-                    return getChoiceWidget(xList[x].isCard, x, j);
+                    return ViewChoiceNode(posX: x, posY: j,);
                   },
                 ),
               ),
