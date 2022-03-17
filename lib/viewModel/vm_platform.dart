@@ -43,6 +43,10 @@ class VMPlatform extends GetxController{
     stopwatch.update((val) => val?.reset());
     stopwatch.update((val) => val?.start());
 
+    var timer = Timer.periodic(const Duration(milliseconds: 10), (Timer timer){
+      stopwatch.update((val) {});
+    });
+
     getPlatform().compress();
     getPlatform().generateRecursiveParser();
 
@@ -53,9 +57,6 @@ class VMPlatform extends GetxController{
       output = PlatformSystem.instance.saveFolder(getPlatformFileSystem());
     }
 
-    var timer = Timer.periodic(const Duration(milliseconds: 10), (Timer timer){
-      stopwatch.update((val) {});
-    });
     output.then((value) {
       stopwatch.update((val) => val?.stop());
       timer.cancel();
@@ -68,6 +69,10 @@ class VMPlatform extends GetxController{
   void exportAsImage() async {
     stopwatch.update((val) => val?.reset());
     stopwatch.update((val) => val?.start());
+
+    var timer = Timer.periodic(const Duration(milliseconds: 10), (Timer timer) {
+      stopwatch.update((val) {});
+    });
 
     var vmDraggable = Get.find<VMDraggableNestedMap>();
     var boundary = vmDraggable.captureKey.currentContext?.findRenderObject()
@@ -88,9 +93,6 @@ class VMPlatform extends GetxController{
 
     var output = compute(getPlatformFileSystem().saveCapture, map);
 
-    var timer = Timer.periodic(const Duration(milliseconds: 10), (Timer timer) {
-      stopwatch.update((val) {});
-    });
     output.then((value) {
       stopwatch.update((val) => val?.stop());
       timer.cancel();

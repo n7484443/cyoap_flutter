@@ -92,7 +92,7 @@ class WebpConverterImpWindows extends WebpConverter {
     if(decodeImage.channels == Channels.rgb){
       var inputBuffered = decodeImage.getBytes(format: Format.rgb);
       int size = inputBuffered.length;
-      inputBuff = calloc.allocate<Uint8>(size + 1);
+      inputBuff = calloc.allocate<Uint8>(size);
       for (int i = 0; i < inputBuffered.length; i++) {
         inputBuff[i] = inputBuffered[i];
       }
@@ -106,7 +106,7 @@ class WebpConverterImpWindows extends WebpConverter {
     }else{//rgba
       var inputBuffered = decodeImage.getBytes(format: Format.rgba);
       int size = inputBuffered.length;
-      inputBuff = calloc.allocate<Uint8>(size + 1);
+      inputBuff = calloc.allocate<Uint8>(size);
       for (int i = 0; i < inputBuffered.length; i++) {
         inputBuff[i] = inputBuffered[i];
       }
