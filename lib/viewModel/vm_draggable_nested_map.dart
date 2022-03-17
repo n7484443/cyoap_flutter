@@ -11,7 +11,7 @@ import '../util/tuple.dart';
 import '../view/view_draggable_nested_map.dart';
 
 class VMDraggableNestedMap extends GetxController {
-  static Tuple<int, int>? drag;
+  Tuple<int, int>? drag;
   Tuple<int, int> mouseHover = Tuple(-10, -10);
 
   GlobalKey captureKey = GlobalKey();
@@ -19,6 +19,11 @@ class VMDraggableNestedMap extends GetxController {
   ScrollController scroller = ScrollController();
 
   bool isChanged = false;
+  static bool isCapture = false;
+
+  bool isVisibleDragTarget(int x, int y){
+    return drag != null && drag != Tuple(x - 1, y);
+  }
 
   int getLength(){
     return isEditable() ? (getPlatform().choiceNodes.length * 2 + 2) : (getPlatform().choiceNodes.length * 2);

@@ -36,7 +36,7 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
         },
         child: Visibility(
           child: widget,
-          visible: VMDraggableNestedMap.drag != pos,
+          visible: controller.drag != pos,
         ),
         onDragEnd: (DraggableDetails data) {
           controller.dragEnd();
@@ -63,7 +63,7 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
         },
         child: Visibility(
           child: widget,
-          visible: VMDraggableNestedMap.drag != pos,
+          visible: controller.drag != pos,
         ),
         onDragEnd: (DraggableDetails data) {
           controller.dragEnd();
@@ -90,15 +90,15 @@ class NodeDraggableTarget extends GetView<VMDraggableNestedMap> {
     var nodeBefore = VMChoiceNode.getNode(x - 1, y);
     var node = VMChoiceNode.getNode(x, y);
 
-    bool long = (node != null && node.width == 0) || (nodeBefore != null && node == null && nodeBefore.width == 0);
-    bool long2 = y == getPlatform().choiceNodes.length;
-    bool realLong = long || long2;
+    bool longType1 = (node != null && node.width == 0) || (nodeBefore != null && node == null && nodeBefore.width == 0);
+    bool longType2 = y == getPlatform().choiceNodes.length;
+    bool realLong = longType1 || longType2;
 
     return Visibility(
       child: DragTarget<Tuple<int, int>>(
         builder: (BuildContext context, List<dynamic> accepted,
             List<dynamic> rejected) {
-          if (long) {
+          if (longType1) {
             return Container(
               color: baseColor,
               width: double.infinity,
@@ -106,7 +106,7 @@ class NodeDraggableTarget extends GetView<VMDraggableNestedMap> {
                   nodeBaseHeight * 2 * controller.getScale().data2,
             );
           }
-          if(long2){
+          if(longType2){
             return Container(
               color: baseColor,
               width: double.infinity,
@@ -122,10 +122,10 @@ class NodeDraggableTarget extends GetView<VMDraggableNestedMap> {
           );
         },
         onAccept: (Tuple<int, int> data) {
-          if (VMDraggableNestedMap.drag == Tuple(-10, -10)) {
+          if (controller.drag == Tuple(-10, -10)) {
             controller.changeData(data, Tuple(x, y));
           } else {
-            if ((x - 2) > (VMDraggableNestedMap.drag!.data1 * 2)) {
+            if ((x - 2) > (controller.drag!.data1 * 2)) {
               controller.changeData(data, Tuple(x - 1, y));
             } else {
               controller.changeData(data, Tuple(x, y));
@@ -133,10 +133,10 @@ class NodeDraggableTarget extends GetView<VMDraggableNestedMap> {
           }
         },
       ),
-      visible: VMDraggableNestedMap.drag != null && VMDraggableNestedMap.drag != Tuple(x - 1, y),
-      maintainSize: realLong,
-      maintainAnimation: realLong,
-      maintainState: realLong,
+      visible: controller.isVisibleDragTarget(x, y),
+      maintainSize: realLong && !VMDraggableNestedMap.isCapture,
+      maintainAnimation: realLong && !VMDraggableNestedMap.isCapture,
+      maintainState: realLong && !VMDraggableNestedMap.isCapture,
     );
   }
 }

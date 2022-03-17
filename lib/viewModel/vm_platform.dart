@@ -69,6 +69,8 @@ class VMPlatform extends GetxController{
   void exportAsImage() async {
     stopwatch.update((val) => val?.reset());
     stopwatch.update((val) => val?.start());
+    VMDraggableNestedMap.isCapture = true;
+    Get.find<VMDraggableNestedMap>().update();
 
     var timer = Timer.periodic(const Duration(milliseconds: 10), (Timer timer) {
       stopwatch.update((val) {});
@@ -98,6 +100,7 @@ class VMPlatform extends GetxController{
       timer.cancel();
       Get.back();
     });
+    VMDraggableNestedMap.isCapture = false;
   }
 
   void loadVariable() {
