@@ -13,7 +13,7 @@ class VariableDataBase {
 
   void setValue(String name, ValueTypeWrapper value) {
     varMap[name] = value;
-    viewModel?.updateLists();
+    viewModel?.update();
   }
 
   void deleteValue(String name) {
@@ -39,6 +39,6 @@ class VariableDataBase {
 
   void clear() {
     varMap.clear();
-    viewModel?.updateLists();
+    viewModel?.update();
   }
 }

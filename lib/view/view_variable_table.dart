@@ -53,36 +53,11 @@ class ViewVariable extends StatelessWidget {
               children: [
                 ExpansionTile(
                   title: const Text('변수'),
-                  children: List<Widget>.generate(_.getVariableList().length,
-                      (index) {
-                    return ListTile(
-                        title: Text(
-                      _.getVariableList()[index],
-                      softWrap: true,
-                    ));
-                  }),
+                  children: _.variableList,
                 ),
                 ExpansionTile(
                   title: const Text('노드'),
-                  children: List<Widget>.generate(_.getNodeNameList().length,
-                      (index) {
-                    return ListTile(
-                      title: Row(
-                        children: [
-                          Text(
-                            _.getNodeNameList()[index].data1,
-                            softWrap: true,
-                          ),
-                          Visibility(
-                            child: Icon(_.getNodeNameList()[index].data2
-                                ? Icons.check_box
-                                : Icons.check_box_outline_blank),
-                            visible: !_.isEditable(),
-                          )
-                        ],
-                      ),
-                    );
-                  }),
+                  children: _.nodeList,
                 ),
               ],
             ),

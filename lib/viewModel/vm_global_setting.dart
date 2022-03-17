@@ -100,7 +100,7 @@ class VMGlobalSetting extends GetxController {
 
   void save() {
     getPlatform().setGlobalSetting(initialValueList);
-    Get.find<VMVariableTable>().updateLists();
+    Get.find<VMVariableTable>().update();
     isChanged = false;
   }
 
