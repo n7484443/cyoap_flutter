@@ -175,6 +175,11 @@ class AbstractPlatform {
       lineSetting.initValueTypeWrapper();
       for (var node in choiceNodes[i]) {
         node.initValueTypeWrapper();
+        if (node.status.isNotSelected()) {
+          node.status = node.isSelectable
+              ? SelectableStatus.open
+              : SelectableStatus.selected;
+        }
       }
 
       for (var node in choiceNodes[i]) {
@@ -189,7 +194,7 @@ class AbstractPlatform {
           }
         }
       }
-      /*for (var node in choiceNodes[i]) {
+      for (var node in choiceNodes[i]) {
         var visible = true;
         if (node.conditionVisibleRecursive != null) {
           var data = node.conditionVisibleRecursive!.unzip().dataUnzip();
@@ -197,18 +202,18 @@ class AbstractPlatform {
             if (data is bool) {
               visible = data;
             } else if (data is ValueTypeWrapper) {
-              visible = data.valueType.data is bool ? data.valueType.data : true;
+              visible =
+                  data.valueType.data is bool ? data.valueType.data : true;
             }
           }
         }
-        var needToChange = !visible && node.status != SelectableStatus.hide;
-        if (needToChange) {
-          node.status = SelectableStatus.hide;
-        } else if (!needToChange) {
-          node.status = node.isSelectable ? SelectableStatus.open : SelectableStatus.selected;
+        if (node.status != SelectableStatus.selected) {
+          if (!visible) {
+            node.status = SelectableStatus.hide;
+          }
+          node.updateSelectValueTypeWrapper();
         }
-        node.updateSelectValueTypeWrapper();
-      }*/
+      }
 
       var clickableLine = lineSetting.clickableRecursive?.unzip().dataUnzip();
       bool clickableLineTest = true;
@@ -235,7 +240,8 @@ class AbstractPlatform {
           }
         }
         if (node.isSelectable) {
-          if (node.status != SelectableStatus.selected) {
+          if (node.status != SelectableStatus.selected &&
+              node.status != SelectableStatus.hide) {
             selectable &= clickableLineTest;
             node.status =
                 selectable ? SelectableStatus.open : SelectableStatus.closed;

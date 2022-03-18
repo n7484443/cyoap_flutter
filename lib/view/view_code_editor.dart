@@ -59,7 +59,7 @@ class ViewCodeEditor extends StatelessWidget {
           controller: _vmCodeEditor.controllerVisible,
           textAlign: TextAlign.center,
           decoration:
-              const InputDecoration(hintText: '숨김 조건(비어있을 시 항상 보임)  |  미구현'),
+              const InputDecoration(hintText: '숨김 조건(비어있을 시 항상 보임)'),
         ),
         Expanded(
           child: TextField(
