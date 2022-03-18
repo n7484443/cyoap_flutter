@@ -5,35 +5,36 @@ import 'package:cyoap_flutter/model/grammar/semantic_analyser.dart';
 import 'function_list.dart';
 import 'token.dart';
 
-class Analyser{
+class Analyser {
   static Analyser instance = Analyser();
   LexicalAnalyser lexicalAnalyser = LexicalAnalyser();
   SyntaxAnalyser syntaxAnalyser = SyntaxAnalyser();
   SemanticAnalyser semanticAnalyser = SemanticAnalyser();
   Functions functionList = Functions()..init();
 
-  List<RecursiveUnit> analyse(String codeInput){
+  List<RecursiveUnit> analyse(String codeInput) {
     List<RecursiveUnit> recursiveList = List.empty(growable: true);
     var codes = codeInput.split('\n');
-    for(var code in codes){
-      if(code.isEmpty){
+    for (var code in codes) {
+      if (code.isEmpty) {
         continue;
       }
       var tokens = lexicalAnalyser.analyze(code);
-      if(syntaxAnalyser.checkSyntax(tokens)){
-        var t= semanticAnalyser.compile(tokens);
+      if (syntaxAnalyser.checkSyntax(tokens)) {
+        var t = semanticAnalyser.compile(tokens);
         recursiveList.add(t);
       }
     }
     return recursiveList;
   }
-  static List<RecursiveUnit> analyseCodes(String codeInput){
+
+  static List<RecursiveUnit> analyseCodes(String codeInput) {
     return instance.analyse(codeInput);
   }
 }
 
 class SyntaxAnalyser {
-  bool checkSyntax(List<Token> tokens){
+  bool checkSyntax(List<Token> tokens) {
     return true;
   }
 }

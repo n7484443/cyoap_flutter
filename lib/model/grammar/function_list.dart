@@ -3,11 +3,10 @@ import 'dart:math';
 import 'package:cyoap_flutter/model/grammar/value_type.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 
-
 class Functions {
   Map<String, Function> functionMap = {};
 
-  void init(){
+  void init() {
     functionMap.putIfAbsent('if', () => funcIf);
     functionMap.putIfAbsent('floor', () => funcFloor);
     functionMap.putIfAbsent('round', () => funcRound);
@@ -120,13 +119,15 @@ class Functions {
   }
 
   ValueType funcSet(List<ValueType> input) {
-    if(input[0].data is VariableUnit){
+    if (input[0].data is VariableUnit) {
       var varName = (input[0].data as VariableUnit).varName;
-      if(VariableDataBase.instance.hasValue(varName)){
+      if (VariableDataBase.instance.hasValue(varName)) {
         var config = VariableDataBase.instance.getValueTypeWrapper(varName)!;
-        VariableDataBase.instance.setValue(varName, ValueTypeWrapper(input[1], config.visible, config.isFromNode));
-      }else{
-        VariableDataBase.instance.setValue(varName, ValueTypeWrapper.normal(input[1]));
+        VariableDataBase.instance.setValue(varName,
+            ValueTypeWrapper(input[1], config.visible, config.isFromNode));
+      } else {
+        VariableDataBase.instance
+            .setValue(varName, ValueTypeWrapper.normal(input[1]));
       }
     }
     return input[0];
@@ -179,8 +180,8 @@ class Functions {
   }
 
   ValueType funcAnd(List<ValueType> input) {
-    for(var i in input){
-      if(!(i.data is bool && i.data == true)){
+    for (var i in input) {
+      if (!(i.data is bool && i.data == true)) {
         return ValueType(false);
       }
     }
@@ -188,8 +189,8 @@ class Functions {
   }
 
   ValueType funcOr(List<ValueType> input) {
-    for(var i in input){
-      if(i.data is bool && i.data == true){
+    for (var i in input) {
+      if (i.data is bool && i.data == true) {
         return ValueType(true);
       }
     }

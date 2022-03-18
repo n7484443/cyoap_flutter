@@ -1,5 +1,5 @@
 import 'dart:ffi';
-import 'dart:io' ;
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cyoap_flutter/util/platform_specified_util/webp_converter.dart';
@@ -10,13 +10,14 @@ import 'package:image/image.dart';
 
 class WebpConverterImp extends WebpConverter {
   @override
-  WebpConverter getWebpConverterImp(){
-    if(Platform.isWindows){
+  WebpConverter getWebpConverterImp() {
+    if (Platform.isWindows) {
       return WebpConverterImpWindows();
     }
     return WebpConverterImpAndroid();
   }
 }
+
 class WebpConverterImpWindows extends WebpConverter {
   late final DynamicLibrary nativeWebp;
   late final int Function(Pointer<Uint8> rgb, int width, int height, int stride,
@@ -67,67 +68,72 @@ class WebpConverterImpWindows extends WebpConverter {
         int Function(Pointer<Uint8> rgb, int width, int height, int stride,
             Pointer<Pointer<Uint8>> output)>('WebPEncodeLosslessRGBA');
   }
+
   final double quality = 90;
 
   @override
   Future<Tuple<String, Uint8List>> convert(Uint8List input, String name) async {
     Image decodeImage;
     bool isLossless = true;
-    if(name.endsWith(".png")){
+    if (name.endsWith(".png")) {
       decodeImage = PngDecoder().decodeImage(input)!;
       isLossless = true;
-    }else if(name.endsWith(".jpg") | name.endsWith(".jpeg")){
+    } else if (name.endsWith(".jpg") | name.endsWith(".jpeg")) {
       decodeImage = JpegDecoder().decodeImage(input)!;
       isLossless = false;
-    }else if(name.endsWith(".bmp")){
+    } else if (name.endsWith(".bmp")) {
       decodeImage = BmpDecoder().decodeImage(input)!;
       isLossless = true;
-    }else{
+    } else {
       return Tuple(name, input);
     }
     Pointer<Pointer<Uint8>> outputBuff = calloc.allocate<Pointer<Uint8>>(0);
     Pointer<Uint8> inputBuff;
     Uint8List output;
     int outputSize;
-    if(decodeImage.channels == Channels.rgb){
+    if (decodeImage.channels == Channels.rgb) {
       var inputBuffered = decodeImage.getBytes(format: Format.rgb);
       int size = inputBuffered.length;
       inputBuff = calloc.allocate<Uint8>(size);
       for (int i = 0; i < inputBuffered.length; i++) {
         inputBuff[i] = inputBuffered[i];
       }
-      if(isLossless){
+      if (isLossless) {
         outputSize = webPEncodeLosslessRGB(inputBuff, decodeImage.width,
             decodeImage.height, decodeImage.width * 3, outputBuff);
-      }else{
+      } else {
         outputSize = webPEncodeRGB(inputBuff, decodeImage.width,
             decodeImage.height, decodeImage.width * 3, quality, outputBuff);
       }
-    }else{//rgba
+    } else {
+      //rgba
       var inputBuffered = decodeImage.getBytes(format: Format.rgba);
       int size = inputBuffered.length;
       inputBuff = calloc.allocate<Uint8>(size);
       for (int i = 0; i < inputBuffered.length; i++) {
         inputBuff[i] = inputBuffered[i];
       }
-      if(isLossless){
+      if (isLossless) {
         outputSize = webPEncodeLosslessRGBA(inputBuff, decodeImage.width,
             decodeImage.height, decodeImage.width * 4, outputBuff);
-      }else{
+      } else {
         outputSize = webPEncodeRGBA(inputBuff, decodeImage.width,
             decodeImage.height, decodeImage.width * 4, quality, outputBuff);
       }
     }
-    if(outputSize == 0)throw 'encoding error!';
+    if (outputSize == 0) throw 'encoding error!';
     output = outputBuff.value.asTypedList(outputSize);
     calloc.free(inputBuff);
     calloc.free(outputBuff);
-    return Tuple(name.replaceAll(RegExp('[.](png|jpg|jpeg|bmp)'), '.webp'), output);
+    return Tuple(
+        name.replaceAll(RegExp('[.](png|jpg|jpeg|bmp)'), '.webp'), output);
   }
+
   @override
   bool canConvert() => true;
 }
-class WebpConverterImpAndroid extends WebpConverter{
+
+class WebpConverterImpAndroid extends WebpConverter {
   final int quality = 90;
   @override
   Future<Tuple<String, Uint8List>> convert(Uint8List input, String name) async {
@@ -149,7 +155,8 @@ class WebpConverterImpAndroid extends WebpConverter{
       minWidth: decodeImage.width,
       minHeight: decodeImage.height,
     );
-    return Tuple(name.replaceAll(RegExp('[.](png|jpg|jpeg|bmp)'), '.webp'), output);
+    return Tuple(
+        name.replaceAll(RegExp('[.](png|jpg|jpeg|bmp)'), '.webp'), output);
   }
 
   @override

@@ -12,17 +12,18 @@ import 'package:get/get.dart';
 import '../main.dart';
 import '../model/platform_system.dart';
 
-class VMPlatform extends GetxController{
+class VMPlatform extends GetxController {
   var stopwatch = Stopwatch().obs;
 
-  Future saveAsFile() async{
+  Future saveAsFile() async {
     Map<String, String> choiceNodes = {};
     Map<String, String> lineSetting = {};
-    for(int i = 0; i < getPlatform().choiceNodes.length; i++){
+    for (int i = 0; i < getPlatform().choiceNodes.length; i++) {
       var line = getPlatform().lineSettings[i];
       lineSetting['lineSetting_${line.y}.json'] = jsonEncode(line.toJson());
       for (var node in getPlatform().choiceNodes[i]) {
-        choiceNodes['node_${node.y}_${node.x}.json'] = jsonEncode(node.toJson());
+        choiceNodes['node_${node.y}_${node.x}.json'] =
+            jsonEncode(node.toJson());
       }
     }
 
@@ -41,7 +42,7 @@ class VMPlatform extends GetxController{
     stopwatch.update((val) => val?.reset());
     stopwatch.update((val) => val?.start());
 
-    var timer = Timer.periodic(const Duration(milliseconds: 10), (Timer timer){
+    var timer = Timer.periodic(const Duration(milliseconds: 10), (Timer timer) {
       stopwatch.update((val) {});
     });
 
@@ -82,12 +83,14 @@ class VMPlatform extends GetxController{
     var height = imageOutput.height;
     var maxed = max<int>(width, height) + 1;
 
-    imageOutput = await boundary.toImage(pixelRatio: 16383/maxed);
-    var byteData = (await imageOutput.toByteData(format: ImageByteFormat.png))!.buffer.asUint8List();
+    imageOutput = await boundary.toImage(pixelRatio: 16383 / maxed);
+    var byteData = (await imageOutput.toByteData(format: ImageByteFormat.png))!
+        .buffer
+        .asUint8List();
 
     Map<String, dynamic> map = {
       'uint8list': String.fromCharCodes(byteData),
-      'isOnlyFileAccept' : ConstList.isOnlyFileAccept(),
+      'isOnlyFileAccept': ConstList.isOnlyFileAccept(),
       'path': PlatformSystem.instance.path,
     };
 

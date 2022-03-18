@@ -15,8 +15,7 @@ class ViewChoiceNode extends StatelessWidget {
   final int posX;
   final int posY;
 
-  const ViewChoiceNode(
-      {Key? key, required this.posX, required this.posY})
+  const ViewChoiceNode({Key? key, required this.posX, required this.posY})
       : super(key: key);
 
   @override
@@ -42,7 +41,8 @@ class ViewChoiceNode extends StatelessWidget {
             scrollController: ScrollController(),
             scrollable: false,
             customStyles: ConstList.getDefaultThemeData(context, scale.data2,
-                fontStyle: ConstList.getFont(vmDraggableNestedMap.mainFont.value)),
+                fontStyle:
+                    ConstList.getFont(vmDraggableNestedMap.mainFont.value)),
           ),
         ),
       );
@@ -128,12 +128,10 @@ class ViewChoiceNode extends StatelessWidget {
             alignment: Alignment.topCenter,
             child: Visibility(
               child: Padding(
-                padding:
-                    const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
                 child: ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(5)),
-                  child:
-                      PlatformSystem.getImage(controller.imageString.value),
+                  child: PlatformSystem.getImage(controller.imageString.value),
                 ),
               ),
               visible: controller.imageString.value.isNotEmpty,
@@ -160,8 +158,8 @@ class ViewChoiceNode extends StatelessWidget {
           Align(
             alignment: Alignment.topCenter,
             child: Visibility(
-              child: TextOutline(controller.titleString.value,
-                      18 * scale.data2,  ConstList.getFont(vmDraggableNestedMap.titleFont.value)),
+              child: TextOutline(controller.titleString.value, 18 * scale.data2,
+                  ConstList.getFont(vmDraggableNestedMap.titleFont.value)),
               visible: controller.titleString.value.isNotEmpty,
             ),
           ),
@@ -237,9 +235,7 @@ class ViewChoiceNode extends StatelessWidget {
       () {
         if (controller.isCardMode.value) {
           return Opacity(
-            opacity: isEditable() || controller.isIgnorePointer()
-                ? 1.0
-                : 0.5,
+            opacity: controller.opacity,
             child: Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
@@ -258,8 +254,7 @@ class ViewChoiceNode extends StatelessWidget {
           );
         }
         return Opacity(
-          opacity:
-              isEditable() || controller.status.value.isSelected() ? 1.0 : 0.5,
+          opacity: controller.opacity,
           child: Container(
             decoration: BoxDecoration(
               border: Border.all(

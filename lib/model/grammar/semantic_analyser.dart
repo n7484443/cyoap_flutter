@@ -52,7 +52,8 @@ class SemanticAnalyser {
           var tokenAfter = tokens[0];
           if (tokenAfter.type == AnalyserConst.functionUnspecified) {
             tokens.removeAt(0);
-            var functionParser = RecursiveParser(ValueType(tokenAfter.toData()));
+            var functionParser =
+                RecursiveParser(ValueType(tokenAfter.toData()));
             var v = recursiveCreate(functionParser);
             functionParser.add(newParser);
             functionParser.add(v);
@@ -82,7 +83,7 @@ class SemanticAnalyser {
       List<Token> listCheck = analysedData.sublist(2, comma[0]);
       List<Token> listTrue = analysedData.sublist(comma[0] + 1, comma[1]);
       List<Token> listFalse =
-      analysedData.sublist(comma[1] + 1, analysedData.length - 1);
+          analysedData.sublist(comma[1] + 1, analysedData.length - 1);
 
       return RecursiveParser(ValueType(analysedData[0].toData()))
         ..add(analyseLines(listCheck))
@@ -103,7 +104,7 @@ class SemanticAnalyser {
       return recursiveCreate(parser);
     }
     tokens = analysedData.sublist(equalPos + 1);
-    var parserAns = recursiveCreate( parser);
+    var parserAns = recursiveCreate(parser);
 
     if (analysedData[equalPos - 1].type == AnalyserConst.variableName) {
       var recursive = RecursiveData(

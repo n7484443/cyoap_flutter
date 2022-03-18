@@ -54,10 +54,12 @@ class VMStartPlatform extends GetxController {
     );
     if (result != null) {
       if (ConstList.isOnlyFileAccept()) {
-        isAdded.add(PlatformSystem.instance.openPlatformZipForWeb(result.files.single));
+        isAdded.add(
+            PlatformSystem.instance.openPlatformZipForWeb(result.files.single));
         pathList.add(result.files.single.name);
       } else {
-        pathList = frequentlyUsedPath.addFrequentPath(result.files.single.path!);
+        pathList =
+            frequentlyUsedPath.addFrequentPath(result.files.single.path!);
       }
       update();
       return 0;
@@ -81,20 +83,20 @@ class VMStartPlatform extends GetxController {
       var path = pathList.reversed.elementAt(selected);
       if (ConstList.isOnlyFileAccept()) {
         return true;
-      } else if(path.isNotEmpty){
-        if(path.endsWith('.zip')){
+      } else if (path.isNotEmpty) {
+        if (path.endsWith('.zip')) {
           var file = File(path);
           await PlatformSystem.instance.openPlatformZip(file);
-        }else if(path.endsWith('.json')){
+        } else if (path.endsWith('.json')) {
           var file = File(path);
           await PlatformSystem.instance.openPlatformJson(file);
-        }else{
+        } else {
           await PlatformSystem.instance.openPlatformFolder(path);
         }
         return true;
       }
-    }else{
-      if(ConstList.isOnlyFileAccept()){
+    } else {
+      if (ConstList.isOnlyFileAccept()) {
         await PlatformSystem.instance.openPlatformVoid();
         return true;
       }
@@ -114,7 +116,7 @@ class VMStartPlatform extends GetxController {
     update();
   }
 
-  void removeFrequentPath(int index){
+  void removeFrequentPath(int index) {
     frequentlyUsedPath.removeFrequentPath(index).then((value) {
       pathList = value;
       update();

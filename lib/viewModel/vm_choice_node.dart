@@ -26,8 +26,7 @@ class VMChoiceNode extends GetxController {
   var isCardMode = false.obs;
   var status = SelectableStatus.open.obs;
 
-  VMChoiceNode({this.x = -10, this.y = -10})
-      : node = getNode(x, y)!;
+  VMChoiceNode({this.x = -10, this.y = -10}) : node = getNode(x, y)!;
 
   @override
   void onInit() {
@@ -45,7 +44,7 @@ class VMChoiceNode extends GetxController {
     });
     isDrag.listen((data) {
       var vmDraggable = Get.find<VMDraggableNestedMap>();
-      if(size.value.data1 == 0){
+      if (size.value.data1 == 0) {
         realSize.update((val) {
           val!.data1 = data ? vmDraggable.getMaxWidth() : double.infinity;
         });
@@ -96,19 +95,21 @@ class VMChoiceNode extends GetxController {
     });
   }
 
-  void updateFromEditor(){
+  void updateFromEditor() {
     titleString.value = node.title;
     imageString.value = node.imageString;
     isCardMode.value = node.isCard;
   }
 
-  void updateFromNode(){
+  void updateFromNode() {
     node = getNode(x, y)!;
     onInit();
   }
 
-  static VMChoiceNode? getVMChoiceNode(int x, int y){
-    if(!Get.isRegistered<VMChoiceNode>(tag: VMChoiceNode.getTag(x, y)))return null;
+  static VMChoiceNode? getVMChoiceNode(int x, int y) {
+    if (!Get.isRegistered<VMChoiceNode>(tag: VMChoiceNode.getTag(x, y))) {
+      return null;
+    }
     return Get.find<VMChoiceNode>(tag: VMChoiceNode.getTag(x, y));
   }
 
@@ -117,7 +118,7 @@ class VMChoiceNode extends GetxController {
     return getPlatform().isSelect(x, y);
   }
 
-  bool isIgnorePointer(){
+  bool isIgnorePointer() {
     return status.value.isPointerInteractive(node.isSelectable);
   }
 
@@ -128,14 +129,33 @@ class VMChoiceNode extends GetxController {
     });
   }
 
-  static void doAllVMChoiceNode(void Function(VMChoiceNode vm) action){
-    for(var nodeY in getPlatform().choiceNodes){
-      for(var node in nodeY){
-        var vm = getVMChoiceNode(node.x, node.y);
-        if(vm != null){
-          action(vm);
-        }
+  double get opacity{
+    if(isEditable())return 1;
+
+    if(node.isSelectable){
+      print(node.status);
+      if(isIgnorePointer()) {
+        return 1;
+      }else if(status.value == SelectableStatus.hide) {
+        return 0;
+      }else {
+        return 0.5;
+      }
+    }else{
+      if(status.value == SelectableStatus.selected) {
+        return 1;
+      }else{
+        return 0;
       }
     }
+  }
+
+  static void doAllVMChoiceNode(void Function(VMChoiceNode vm) action) {
+    getPlatform().doAllChoiceNode((node) {
+      var vm = getVMChoiceNode(node.x, node.y);
+      if (vm != null) {
+        action(vm);
+      }
+    });
   }
 }

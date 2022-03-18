@@ -23,7 +23,7 @@ class ViewGlobalSetting extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            if(vmGlobalSetting.isChanged){
+            if (vmGlobalSetting.isChanged) {
               showDialog(
                 context: context,
                 builder: (_) => AlertDialog(
@@ -49,7 +49,7 @@ class ViewGlobalSetting extends StatelessWidget {
                   ],
                 ),
               );
-            }else{
+            } else {
               Get.back(id: 1);
             }
           },
@@ -57,7 +57,7 @@ class ViewGlobalSetting extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
-            onPressed: (){
+            onPressed: () {
               Get.toNamed('/viewFontSource', id: 1);
             },
           ),
@@ -220,14 +220,16 @@ class ViewGlobalSetting extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 16.0, bottom: 8.0, right: 16.0, left: 16.0),
+                  padding: const EdgeInsets.only(
+                      top: 16.0, bottom: 8.0, right: 16.0, left: 16.0),
                   child: Text(
                     '제목은 이렇게 표시됩니다',
                     style: titleFont,
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 8.0, bottom: 16.0, right: 16.0, left: 16.0),
+                  padding: const EdgeInsets.only(
+                      top: 8.0, bottom: 16.0, right: 16.0, left: 16.0),
                   child: Text(
                     '본문은 이렇게 표시됩니다',
                     style: mainFont,

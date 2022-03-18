@@ -4,8 +4,8 @@ import 'analyser.dart';
 class ValueType {
   dynamic data;
 
-  ValueType(this.data){
-    if(data is ValueType){
+  ValueType(this.data) {
+    if (data is ValueType) {
       throw Error();
     }
   }
@@ -16,8 +16,8 @@ class ValueType {
     data = a.data;
   }
 
-  dynamic dataUnzip(){
-    if(data == null)return null;
+  dynamic dataUnzip() {
+    if (data == null) return null;
     if (data != ValueTypeData.none) {
       if (data is VariableUnit) {
         return VariableDataBase.instance.getValueTypeWrapper(data.varName);
@@ -58,8 +58,7 @@ class ValueType {
     }
   }
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'data': data is VariableUnit
             ? (data as VariableUnit).toJson()
             : (data is Function
@@ -82,15 +81,16 @@ class VariableUnit {
   VariableUnit.fromJson(Map<String, dynamic> json) : varName = json['varName'];
 
   Map<String, dynamic> toJson() => {
-    'varName': varName,
-  };
+        'varName': varName,
+      };
 }
 
-enum ValueTypeData{
-  none, comma,
+enum ValueTypeData {
+  none,
+  comma,
 }
 
-class ValueTypeWrapper{
+class ValueTypeWrapper {
   ValueType valueType;
   bool visible;
   bool isFromNode;
@@ -110,8 +110,7 @@ class ValueTypeWrapper{
         isFromNode = false,
         displayName = json['displayName'] ?? '';
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'visible': visible.toString().toLowerCase(),
         'valueType': valueType.toJson(),
         'displayName': displayName,

@@ -20,7 +20,9 @@ extension SelectableStatusExtension on SelectableStatus {
   }
 
   bool isPointerInteractive(bool isSelectable) {
-    if(isSelectable)return this == SelectableStatus.selected || this == SelectableStatus.open;
+    if (isSelectable) {
+      return this == SelectableStatus.selected || this == SelectableStatus.open;
+    }
     return false;
   }
 
@@ -78,13 +80,12 @@ class ChoiceNodeBase extends GenerableParser {
     }
   } //랜덤 문자로 제목 중복 방지
 
-  String convertToWebp(String name){
+  String convertToWebp(String name) {
     return name.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
   }
 
   @override
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'x': x,
         'y': y,
         'width': width,

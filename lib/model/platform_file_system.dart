@@ -70,7 +70,7 @@ class PlatformFileSystem {
       var data = await imageSourceJson.readAsString();
       if (data.isNotEmpty) {
         var map = jsonDecode(data) as Map;
-        for(var source in map.keys){
+        for (var source in map.keys) {
           _imageSource[source] = map[source];
         }
       }
@@ -85,10 +85,10 @@ class PlatformFileSystem {
       for (FileSystemEntity f in dirList) {
         if (f is File) {
           var value = await f.readAsString();
-          if(f.path.contains('lineSetting_')){
+          if (f.path.contains('lineSetting_')) {
             var lineSetting = LineSetting.fromJson(jsonDecode(value));
             platform.addLineSettingData(lineSetting);
-          }else{
+          } else {
             var node = ChoiceNodeBase.fromJson(jsonDecode(value));
             nodeList.add(node);
           }
@@ -128,8 +128,7 @@ class PlatformFileSystem {
       _imageSource[source] = map[source];
     }
 
-    platform = AbstractPlatform.fromJson(
-        jsonDecode(utf8.decode(platformData)));
+    platform = AbstractPlatform.fromJson(jsonDecode(utf8.decode(platformData)));
 
     platform.addDataAll(nodeList);
     for (var lineSetting in lineSettingList) {
@@ -169,7 +168,7 @@ class PlatformFileSystem {
             platformJson = dataConverted;
           } else if (fileName.endsWith('imageSource.json')) {
             Map map = jsonDecode(dataConverted);
-            for(var source in map.keys){
+            for (var source in map.keys) {
               _imageSource[source] = map[source];
             }
           }
@@ -191,7 +190,7 @@ class PlatformFileSystem {
     archive.clear();
   }
 
-  Future<void> createFromJson(String input, String path) async{
+  Future<void> createFromJson(String input, String path) async {
     var jsonParser = JsonProjectParser(path);
     platform = await jsonParser.getPlatform(input);
     platform.init();
@@ -202,11 +201,12 @@ class PlatformFileSystem {
     platform = AbstractPlatform.none();
   }
 
-  Future<Tuple<String, Uint8List>> convertImage(String name, Uint8List data) async{
+  Future<Tuple<String, Uint8List>> convertImage(
+      String name, Uint8List data) async {
     return await getWebpConverterInstance().convert(data, name);
   }
 
-  String convertImageName(String name){
+  String convertImageName(String name) {
     return name.replaceAll(RegExp('[.](png|jpg|jpeg|rawRgba)'), '.webp');
   }
 
@@ -223,14 +223,14 @@ class PlatformFileSystem {
         var name = basename(existImage.path);
         if (!await ImageDB.instance.hasImage(name)) {
           await existImage.delete();
-        }else{
+        } else {
           skipImage.add(name);
         }
       }
-    }else{
+    } else {
       dirImages.create();
     }
-    for(var imageName in ImageDB.instance.imageList) {
+    for (var imageName in ImageDB.instance.imageList) {
       if (skipImage.contains(imageName)) {
         continue;
       }
@@ -241,11 +241,11 @@ class PlatformFileSystem {
       file.writeAsBytes(converted.data2);
     }
 
-    if(dirNodesBackUp.existsSync()) {
+    if (dirNodesBackUp.existsSync()) {
       dirNodesBackUp.deleteSync(recursive: true);
     }
 
-    for(var i = 0; i < platform.choiceNodes.length; i++){
+    for (var i = 0; i < platform.choiceNodes.length; i++) {
       var lineSetting = platform.lineSettings[i];
       var file = File('$path/nodes_backup/lineSetting_${lineSetting.y}.json');
       file.createSync(recursive: true);
@@ -258,11 +258,11 @@ class PlatformFileSystem {
       }
     }
 
-    if(dirNodes.existsSync()) {
+    if (dirNodes.existsSync()) {
       dirNodes.deleteSync(recursive: true);
     }
 
-    for(var i = 0; i < platform.choiceNodes.length; i++){
+    for (var i = 0; i < platform.choiceNodes.length; i++) {
       var lineSetting = platform.lineSettings[i];
       var file = File('$path/nodes/lineSetting_${lineSetting.y}.json');
       file.createSync(recursive: true);
@@ -275,7 +275,6 @@ class PlatformFileSystem {
       }
     }
 
-
     if (platformJson.existsSync()) {
       platformJson.deleteSync(recursive: true);
     }
@@ -287,7 +286,7 @@ class PlatformFileSystem {
     }
     imageSourceJson.create();
     var map = {};
-    for(var name in _imageSource.keys){
+    for (var name in _imageSource.keys) {
       map[convertImageName(name)] = _imageSource[name];
     }
     imageSourceJson.writeAsString(jsonEncode(map));
@@ -328,7 +327,7 @@ class PlatformFileSystem {
       return tmp.data2;
     } else if (await ImageDB.instance.hasImage(name)) {
       image = await ImageDB.instance.getImage(name);
-      if(image != null) {
+      if (image != null) {
         var output = Image.memory(
           image,
           filterQuality: FilterQuality.medium,
@@ -345,24 +344,24 @@ class PlatformFileSystem {
     return noImage;
   }
 
-  FutureBuilder getImage(String name){
+  FutureBuilder getImage(String name) {
     return FutureBuilder(
       future: _getImage(name),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if(snapshot.hasData == false){
+        if (snapshot.hasData == false) {
           return const Center(
             child: CircularProgressIndicator(),
           );
-        }else if(snapshot.hasError){
+        } else if (snapshot.hasError) {
           return noImage;
-        }else{
+        } else {
           return snapshot.data as Image;
         }
       },
     );
   }
 
-  String getImageName(int index){
+  String getImageName(int index) {
     return ImageDB.instance.imageList[index];
   }
 
@@ -382,14 +381,15 @@ class PlatformFileSystem {
     return _imageSource[image]?.isNotEmpty ?? false;
   }
 
-  Future<void> saveCapture(Map<String, dynamic> map) async{
+  Future<void> saveCapture(Map<String, dynamic> map) async {
     var input = Uint8List.fromList(map['uint8list'].codeUnits);
 
     var converted = await convertImage('exported.png', input);
-    if(map['isOnlyFileAccept']) {
+    if (map['isOnlyFileAccept']) {
       await getSaveProject().downloadCapture(converted.data1, converted.data2);
-    }else{
-      await getSaveProject().downloadCapture('${map['path']}/${converted.data1}', converted.data2);
+    } else {
+      await getSaveProject().downloadCapture(
+          '${map['path']}/${converted.data1}', converted.data2);
     }
   }
 }

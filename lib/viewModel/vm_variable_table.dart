@@ -7,34 +7,33 @@ import 'package:get/get.dart';
 
 class VMVariableTable extends GetxController {
   @override
-  void onInit(){
+  void onInit() {
     VariableDataBase.instance.viewModel = this;
     super.onInit();
   }
-  List<Widget> get nodeList{
+
+  List<Widget> get nodeList {
     var nodeList = List<Widget>.empty(growable: true);
-    var nodes = getPlatform().choiceNodes;
     var iconCheckBox = const Icon(Icons.check_box);
     var iconCheckBoxBlank = const Icon(Icons.check_box_outline_blank);
-    for(var t in nodes){
-      for(var node in t){
-        if(isEditable()){
-          nodeList.add(ListTile(
-            title: Text(node.title),
-          ));
-        }else if(node.isSelectable){
-          nodeList.add(ListTile(
-            title: Text(node.title),
-            trailing: node.status.isSelected() ? iconCheckBox : iconCheckBoxBlank,
-          ));
-        }
+    getPlatform().doAllChoiceNode((node) {
+      if (isEditable()) {
+        nodeList.add(ListTile(
+          title: Text(node.title),
+        ));
+      } else if (node.isSelectable) {
+        nodeList.add(ListTile(
+          title: Text(node.title),
+          trailing: node.status.isSelected() ? iconCheckBox : iconCheckBoxBlank,
+        ));
       }
-    }
+    });
     return nodeList;
   }
-  List<Widget> get variableList{
+
+  List<Widget> get variableList {
     var variableList = List<Widget>.empty(growable: true);
-    for(var key in VariableDataBase.instance.varMap.keys) {
+    for (var key in VariableDataBase.instance.varMap.keys) {
       var values = VariableDataBase.instance.varMap[key];
       if (values == null) continue;
       if (values.visible && !values.isFromNode) {

@@ -1,4 +1,3 @@
-
 import 'package:cyoap_flutter/model/editor.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,7 +15,8 @@ class VMCodeEditor extends GetxController {
 
   @override
   void onInit() {
-    controllerClickable.text = NodeEditor.instance.target.conditionClickableString;
+    controllerClickable.text =
+        NodeEditor.instance.target.conditionClickableString;
     controllerVisible.text = NodeEditor.instance.target.conditionVisibleString;
     controllerExecute.text = NodeEditor.instance.target.executeCodeString;
     conditionClickable.value = controllerClickable.text;
@@ -41,7 +41,8 @@ class VMCodeEditor extends GetxController {
   }
 
   void save() {
-    NodeEditor.instance.target.conditionClickableString = conditionClickable.value;
+    NodeEditor.instance.target.conditionClickableString =
+        conditionClickable.value;
     NodeEditor.instance.target.conditionVisibleString = conditionVisible.value;
     NodeEditor.instance.target.executeCodeString = executeCode.value;
 

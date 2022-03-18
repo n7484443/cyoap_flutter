@@ -17,7 +17,7 @@ class PlatformSystem {
   PlatformFileSystem platformFileSystem = PlatformFileSystem();
   String? path;
 
-  Future<void> platformInit() async{
+  Future<void> platformInit() async {
     await ImageDB.instance.init();
   }
 
@@ -53,9 +53,14 @@ class PlatformSystem {
     await platformFileSystem.createFromFolder(path);
   }
 
-  Future<void> openPlatformList(Map<String, Uint8List> images, Map<String, Uint8List> choiceNodes, Uint8List imageSource, Uint8List platform) async {
+  Future<void> openPlatformList(
+      Map<String, Uint8List> images,
+      Map<String, Uint8List> choiceNodes,
+      Uint8List imageSource,
+      Uint8List platform) async {
     await platformInit();
-    await platformFileSystem.createPlatformList(images, choiceNodes, imageSource, platform);
+    await platformFileSystem.createPlatformList(
+        images, choiceNodes, imageSource, platform);
   }
 
   Future<void> openPlatformVoid() async {
@@ -63,14 +68,15 @@ class PlatformSystem {
     platformFileSystem.createFromVoid();
   }
 
-  Future<void> saveFile(Map<String, dynamic> input) async{
-    if(input['bool'] as bool){
+  Future<void> saveFile(Map<String, dynamic> input) async {
+    if (input['bool'] as bool) {
       await getSaveProject().saveZip('exported.zip', input);
-    }else{
+    } else {
       await getSaveProject().saveZip(path!, input);
     }
   }
-  Future<void> saveFolder(PlatformFileSystem platformFileSystem) async{
+
+  Future<void> saveFolder(PlatformFileSystem platformFileSystem) async {
     await getSaveProject().saveRaw(path!, platformFileSystem);
   }
 
@@ -78,11 +84,11 @@ class PlatformSystem {
     return instance.platformFileSystem.getImageName(index);
   }
 
-  static FutureBuilder getImage(String image){
+  static FutureBuilder getImage(String image) {
     return instance.platformFileSystem.getImage(image);
   }
 
-  static void addImage(String name, Uint8List data){
+  static void addImage(String name, Uint8List data) {
     ImageDB.instance.uploadImages(name, data);
   }
 
@@ -91,22 +97,22 @@ class PlatformSystem {
   }
 }
 
-AbstractPlatform getPlatform(){
+AbstractPlatform getPlatform() {
   return getPlatformFileSystem().platform;
 }
 
-bool isEditable(){
+bool isEditable() {
   return getPlatform().isEditable;
 }
 
-PlatformFileSystem getPlatformFileSystem(){
+PlatformFileSystem getPlatformFileSystem() {
   return PlatformSystem.instance.platformFileSystem;
 }
 
-TextStyle get titleFont{
+TextStyle get titleFont {
   return ConstList.getFont(getPlatform().titleFont);
 }
 
-TextStyle get mainFont{
+TextStyle get mainFont {
   return ConstList.getFont(getPlatform().mainFont);
 }

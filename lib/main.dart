@@ -14,7 +14,7 @@ import 'package:tuple/tuple.dart';
 
 //flutter build web --base-href=/FlutterCyoapWeb/
 
-class ConstList{
+class ConstList {
   static const double appBarSize = 40.0;
   static const double elevation = 6.0;
   static late final PlatformType actualPlatformType;
@@ -63,13 +63,13 @@ class ConstList{
   static Map<String, TextStyle> textFontMap = {
     "jua": GoogleFonts.jua(color: Colors.black),
     "notoSans": GoogleFonts.notoSans(color: Colors.black),
-    "나눔고딕": GoogleFonts.nanumGothic(color:Colors.black),
-    "나눔손글씨 붓": GoogleFonts.nanumBrushScript(color:Colors.black),
+    "나눔고딕": GoogleFonts.nanumGothic(color: Colors.black),
+    "나눔손글씨 붓": GoogleFonts.nanumBrushScript(color: Colors.black),
     "나눔손글씨 펜": GoogleFonts.nanumPenScript(color: Colors.black),
     "이순신체": const TextStyle(fontFamily: 'YiSunShin', color: Colors.black),
     "메이플스토리체": const TextStyle(fontFamily: 'MapleStory', color: Colors.black),
-    "넥슨 Lv2 고딕": const TextStyle(
-        fontFamily: 'NexonLv2Gothic', color: Colors.black),
+    "넥슨 Lv2 고딕":
+        const TextStyle(fontFamily: 'NexonLv2Gothic', color: Colors.black),
     "Neo 둥근모": const TextStyle(fontFamily: 'NeoDGM', color: Colors.black),
   };
 
@@ -92,12 +92,16 @@ class ConstList{
     }
     return;
   }
-  static bool checkDistribute(){
+
+  static bool checkDistribute() {
     return isDistributed ?? false;
   }
 }
-enum PlatformType{
-  desktop, mobile, web,
+
+enum PlatformType {
+  desktop,
+  mobile,
+  web,
 }
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -111,13 +115,19 @@ void main() {
             case 0:
               return GetPage(name: '/', page: () => const ViewStart());
             case 1:
-              return GetPage(name: '/viewPlay', page: () => const ViewPlay(), binding: BindingsBuilder((){
-                Get.put(VMDraggableNestedMap());
-              }));
+              return GetPage(
+                  name: '/viewPlay',
+                  page: () => const ViewPlay(),
+                  binding: BindingsBuilder(() {
+                    Get.put(VMDraggableNestedMap());
+                  }));
             default:
-              return GetPage(name: '/viewMake', page: () => const ViewMakePlatform(), binding: BindingsBuilder((){
-                Get.put(VMDraggableNestedMap());
-              }));
+              return GetPage(
+                  name: '/viewMake',
+                  page: () => const ViewMakePlatform(),
+                  binding: BindingsBuilder(() {
+                    Get.put(VMDraggableNestedMap());
+                  }));
           }
         }),
         theme: appThemeData,
@@ -132,13 +142,9 @@ final ThemeData appThemeData = ThemeData(
   primaryColor: Colors.black,
   textTheme: GoogleFonts.notoSansTextTheme(),
   scaffoldBackgroundColor: Colors.white,
-  iconTheme: const IconThemeData(
-      color: Colors.black
-  ),
+  iconTheme: const IconThemeData(color: Colors.black),
   appBarTheme: const AppBarTheme(
-    iconTheme: IconThemeData(
-        color: Colors.black
-    ),
+    iconTheme: IconThemeData(color: Colors.black),
     color: Colors.white,
     elevation: ConstList.elevation,
   ),

@@ -58,7 +58,8 @@ class ViewCodeEditor extends StatelessWidget {
         TextField(
           controller: _vmCodeEditor.controllerVisible,
           textAlign: TextAlign.center,
-          decoration: const InputDecoration(hintText: '숨김 조건(비어있을 시 항상 보임)  |  미구현'),
+          decoration:
+              const InputDecoration(hintText: '숨김 조건(비어있을 시 항상 보임)  |  미구현'),
         ),
         Expanded(
           child: TextField(
@@ -93,7 +94,7 @@ class ViewCodeEditor extends StatelessWidget {
         ),
         body: inputText,
       ),
-      onWillPop: (){
+      onWillPop: () {
         return showDialog(
           context: context,
           builder: (_) => showDialogFunction,

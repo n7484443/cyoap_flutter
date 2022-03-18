@@ -14,7 +14,7 @@ class ImageDB {
 
   Future<Map<String, String>> get imageMap async {
     Map<String, String> output = {};
-    for(var key in _dirImage){
+    for (var key in _dirImage) {
       output[key] = await ImageDB.instance.getImageAsString(key) ?? "";
     }
     return output;
@@ -24,6 +24,7 @@ class ImageDB {
     return imageMap.map(
         (key, value) => MapEntry(key, Uint8List.fromList(value.codeUnits)));
   }
+
   String databaseName = "cyoap_image.db";
   String objectStore = "image";
   late Database database;
@@ -31,7 +32,8 @@ class ImageDB {
   Future<void> init() async {
     if (ConstList.isOnlyFileAccept()) {
       var idbFactory = getIdbFactory()!;
-      database = await idbFactory.open(databaseName, version: 1, onUpgradeNeeded: (VersionChangeEvent event){
+      database = await idbFactory.open(databaseName, version: 1,
+          onUpgradeNeeded: (VersionChangeEvent event) {
         database = event.database;
         database.createObjectStore(objectStore, autoIncrement: true);
       });
@@ -50,7 +52,7 @@ class ImageDB {
     return store;
   }
 
-  Future<void> uploadImages(String name, Uint8List data) async{
+  Future<void> uploadImages(String name, Uint8List data) async {
     _dirImage.add(name);
     if (ConstList.isOnlyFileAccept()) {
       await notesWritableTxn.put(data, name);

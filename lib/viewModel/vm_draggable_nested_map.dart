@@ -24,16 +24,18 @@ class VMDraggableNestedMap extends GetxController {
 
   static bool isCapture = false;
 
-  static bool isVisibleOnlyEdit(){
+  static bool isVisibleOnlyEdit() {
     return !isCapture && isEditable();
   }
 
-  bool isVisibleDragTarget(int x, int y){
+  bool isVisibleDragTarget(int x, int y) {
     return drag != null && drag != Tuple(x - 1, y);
   }
 
-  int getLength(){
-    return isEditable() ? (getPlatform().choiceNodes.length * 2 + 2) : (getPlatform().choiceNodes.length * 2);
+  int getLength() {
+    return isEditable()
+        ? (getPlatform().choiceNodes.length * 2 + 2)
+        : (getPlatform().choiceNodes.length * 2);
   }
 
   List<Widget> widgetList({BoxConstraints? constrains}) {
@@ -42,8 +44,7 @@ class VMDraggableNestedMap extends GetxController {
 
     List<Widget> widgetList;
     if (edit) {
-      widgetList = List<Widget>.generate(
-          getLength(), (y) {
+      widgetList = List<Widget>.generate(getLength(), (y) {
         if (y < choiceNodeList.length * 2) {
           if (y.isOdd) {
             var xList = choiceNodeList[y ~/ 2];
@@ -65,7 +66,10 @@ class VMDraggableNestedMap extends GetxController {
                         if (constrains != null) {
                           return NodeDraggable(i, j, constrains);
                         } else {
-                          return ViewChoiceNode(posX: i, posY: j,);
+                          return ViewChoiceNode(
+                            posX: i,
+                            posY: j,
+                          );
                         }
                       } else {
                         return NodeDraggableTarget(i, j);
@@ -84,7 +88,7 @@ class VMDraggableNestedMap extends GetxController {
           } else {
             return GetBuilder<VMDraggableNestedMap>(
               builder: (_) => Visibility(
-                child: NodeDivider(y ~/ 2 ),
+                child: NodeDivider(y ~/ 2),
                 visible: drag != null,
               ),
             );
@@ -92,8 +96,7 @@ class VMDraggableNestedMap extends GetxController {
         }
       });
     } else {
-      widgetList = List<Widget>.generate(
-          getLength(), (y) {
+      widgetList = List<Widget>.generate(getLength(), (y) {
         if (y.isOdd) {
           var xList = choiceNodeList[y ~/ 2];
           return Padding(
@@ -109,7 +112,10 @@ class VMDraggableNestedMap extends GetxController {
                   xList.length,
                   (x) {
                     var j = y ~/ 2;
-                    return ViewChoiceNode(posX: x, posY: j,);
+                    return ViewChoiceNode(
+                      posX: x,
+                      posY: j,
+                    );
                   },
                 ),
               ),
@@ -130,11 +136,12 @@ class VMDraggableNestedMap extends GetxController {
     updateVMChoiceNode(data.data1, data.data2);
     update();
   }
-  void updateVMChoiceNode(int x, int y){
+
+  void updateVMChoiceNode(int x, int y) {
     var nodes = getPlatform().choiceNodes;
-    if(y >= nodes.length)return;
-    for(var i = x; i < nodes[y].length; i++){
-      if(!Get.isRegistered<VMChoiceNode>(tag: VMChoiceNode.getTag(i, y))){
+    if (y >= nodes.length) return;
+    for (var i = x; i < nodes[y].length; i++) {
+      if (!Get.isRegistered<VMChoiceNode>(tag: VMChoiceNode.getTag(i, y))) {
         continue;
       }
       Get.find<VMChoiceNode>(tag: VMChoiceNode.getTag(i, y)).updateFromNode();
@@ -163,7 +170,8 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   void dragEnd() {
-    VMChoiceNode.getVMChoiceNode(drag!.data1, drag!.data2)?.isDrag.value = false;
+    VMChoiceNode.getVMChoiceNode(drag!.data1, drag!.data2)?.isDrag.value =
+        false;
     drag = null;
   }
 
@@ -198,8 +206,7 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   void addMaxSelect(int y, int max) {
-    if ((getPlatform().getLineSetting(y)!.maxSelect + max) >=
-        -1) {
+    if ((getPlatform().getLineSetting(y)!.maxSelect + max) >= -1) {
       getPlatform().getLineSetting(y)?.maxSelect += max;
     }
     update();

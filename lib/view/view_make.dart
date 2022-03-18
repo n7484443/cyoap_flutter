@@ -47,12 +47,12 @@ class ViewMake extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            if(Get.find<VMDraggableNestedMap>().isChanged){
+            if (Get.find<VMDraggableNestedMap>().isChanged) {
               showDialog(
                 context: context,
                 builder: (_) => dialog,
               );
-            }else{
+            } else {
               Get.back();
             }
           },
@@ -68,15 +68,17 @@ class ViewMake extends StatelessWidget {
               onAccept: (Tuple<int, int> data) {
                 Get.find<VMDraggableNestedMap>().removeData(data);
               },
-              onMove: (DragTargetDetails<Tuple<int, int>> details){
-              },
+              onMove: (DragTargetDetails<Tuple<int, int>> details) {},
             ),
             Draggable<Tuple<int, int>>(
               data: Tuple(-10, -10),
               feedback: Transform.scale(
                 scale: 0.9,
                 child: const Opacity(
-                  child: ViewChoiceNode(posX: -10, posY: -10,),
+                  child: ViewChoiceNode(
+                    posX: -10,
+                    posY: -10,
+                  ),
                   opacity: 0.6,
                 ),
               ),
@@ -122,7 +124,7 @@ class ViewMake extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(MdiIcons.zipBox),
-            onPressed: ()  {
+            onPressed: () {
               Get.defaultDialog(
                 barrierDismissible: false,
                 title: '압축중...',
@@ -141,8 +143,8 @@ class ViewMake extends StatelessWidget {
                 ),
               );
               Get.find<VMPlatform>().save(true);
-              },
-            ),
+            },
+          ),
           Visibility(
             child: IconButton(
               icon: const Icon(Icons.save),
@@ -187,5 +189,3 @@ class ViewMake extends StatelessWidget {
     );
   }
 }
-
-

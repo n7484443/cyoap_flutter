@@ -35,88 +35,90 @@ class ViewStart extends StatelessWidget {
               builder: (_) => Stack(
                 children: [
                   Container(
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(color: Colors.lightBlue),
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(color: Colors.lightBlue),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          flex: 12,
+                          child: ListView.separated(
+                            itemCount: _.pathList.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: ElevatedButton(
+                                  onPressed: () => _.selectFrequentPath(index),
+                                  style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.resolveWith(
+                                            (states) {
+                                      return _.getColor(index);
+                                    }),
+                                  ),
+                                  child: Text(
+                                      _.pathList.reversed.elementAt(index)),
+                                ),
+                                trailing: IconButton(
+                                  icon: const Icon(Icons.delete),
+                                  onPressed: () {
+                                    _.removeFrequentPath(index);
+                                  },
+                                ),
+                              );
+                            },
+                            separatorBuilder:
+                                (BuildContext context, int index) {
+                              return const Divider();
+                            },
                           ),
                         ),
-                        child: Column(
-                          children: [
-                            Expanded(
-                              flex: 12,
-                              child: ListView.separated(
-                                itemCount: _.pathList.length,
-                                itemBuilder: (context, index) {
-                                  return ListTile(
-                                    title: ElevatedButton(
-                                      onPressed: () => _.selectFrequentPath(index),
-                                      style: ButtonStyle(
-                                        backgroundColor:
-                                        MaterialStateProperty.resolveWith(
-                                                (states) {
-                                              return _.getColor(index);
-                                            }),
-                                      ),
-                                      child: Text(
-                                          _.pathList.reversed.elementAt(index)),
-                                    ),
-                                    trailing: IconButton(
-                                      icon: const Icon(Icons.delete),
-                                      onPressed: () {
-                                        _.removeFrequentPath(index);
-                                      },
-                                    ),
-                                  );
-                                },
-                                separatorBuilder: (BuildContext context, int index) {
-                                  return const Divider();
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              TextButton(
+                                child: const Text('Add File'),
+                                onPressed: () async {
+                                  if (await _.openFile() == 0) {
+                                    _.selected = 0;
+                                  }
                                 },
                               ),
-                            ),
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  TextButton(
-                                    child: const Text('Add File'),
-                                    onPressed: () async {
-                                      if (await _.openFile() == 0) {
-                                        _.selected = 0;
-                                      }
-                                    },
-                                  ),
-                                  Visibility(
-                                    child: TextButton(
-                                      child: const Text('Add Path'),
-                                      onPressed: () async {
-                                        if (await _.openDirectory() == 0) {
-                                          _.selected = 0;
-                                        }
-                                      },
-                                    ),
-                                    visible: !ConstList.isOnlyFileAccept(),
-                                  ),
-                                ],
+                              Visibility(
+                                child: TextButton(
+                                  child: const Text('Add Path'),
+                                  onPressed: () async {
+                                    if (await _.openDirectory() == 0) {
+                                      _.selected = 0;
+                                    }
+                                  },
+                                ),
+                                visible: !ConstList.isOnlyFileAccept(),
                               ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Align(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text('version : ${ConstList.version ?? ''}'),
-                            Visibility(
-                              child: const Text('새로운 버전이 나왔습니다!', style: TextStyle(color: Colors.redAccent)),
-                              visible: _.needUpdate,
-                            ),
-                          ],
-                        ),
-                        alignment: Alignment.topRight,
-                      ),
-                    ],
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
+                  Align(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text('version : ${ConstList.version ?? ''}'),
+                        Visibility(
+                          child: const Text('새로운 버전이 나왔습니다!',
+                              style: TextStyle(color: Colors.redAccent)),
+                          visible: _.needUpdate,
+                        ),
+                      ],
+                    ),
+                    alignment: Alignment.topRight,
+                  ),
+                ],
+              ),
             ),
           ),
           const Expanded(
@@ -139,7 +141,7 @@ class SelectMode extends StatelessWidget {
         Expanded(
           child: InkWell(
             onTap: () {
-              Get.find<VMStartPlatform>().setDirectory().then((value){
+              Get.find<VMStartPlatform>().setDirectory().then((value) {
                 Get.find<VMStartPlatform>().setEditable(false);
                 Get.toNamed('/viewPlay');
               });
@@ -160,7 +162,7 @@ class SelectMode extends StatelessWidget {
         Expanded(
           child: InkWell(
             onTap: () {
-              Get.find<VMStartPlatform>().setDirectory().then((value){
+              Get.find<VMStartPlatform>().setDirectory().then((value) {
                 Get.find<VMStartPlatform>().setEditable(true);
                 Get.toNamed('/viewMake');
               });

@@ -20,7 +20,6 @@ class VariableDataBase {
     varMap.remove(name);
   }
 
-
   bool hasValue(String name) {
     return varMap.containsKey(name);
   }
@@ -28,6 +27,7 @@ class VariableDataBase {
   ValueTypeWrapper? getValueTypeWrapper(String name) {
     return varMap[name];
   }
+
   ValueType? getValueType(String name) {
     return varMap[name]?.valueType;
   }

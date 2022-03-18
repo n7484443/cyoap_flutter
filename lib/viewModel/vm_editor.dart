@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
 
-class VMEditor extends GetxController{
+class VMEditor extends GetxController {
   final TextEditingController controllerTitle = TextEditingController();
   final TextEditingController controllerSource = TextEditingController();
   late final QuillController quillController;
@@ -52,11 +52,12 @@ class VMEditor extends GetxController{
     NodeEditor.instance.target.contentsString =
         jsonEncode(quillController.document.toDelta().toJson());
     NodeEditor.instance.getVMChoiceNode().updateFromEditor();
-    quillController.updateSelection(const TextSelection.collapsed(offset: 0), ChangeSource.REMOTE);
+    quillController.updateSelection(
+        const TextSelection.collapsed(offset: 0), ChangeSource.REMOTE);
     isChanged = false;
   }
 
-  FutureBuilder getImage(int i){
+  FutureBuilder getImage(int i) {
     return PlatformSystem.getImage(PlatformSystem.getImageName(i));
   }
 

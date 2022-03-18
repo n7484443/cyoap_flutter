@@ -35,8 +35,8 @@ class ViewSource extends StatelessWidget {
                     TextField(
                       textAlign: TextAlign.center,
                       decoration: InputDecoration(
-                        hintText:
-                            getPlatformFileSystem().getSource(name) ?? '출처를 여기에 적어주세요!',
+                        hintText: getPlatformFileSystem().getSource(name) ??
+                            '출처를 여기에 적어주세요!',
                         alignLabelWithHint: true,
                       ),
                       controller: controller.getTextEditor(name),
@@ -58,7 +58,7 @@ class ViewSource extends StatelessWidget {
           child: AppBar(
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
-              onPressed: (){
+              onPressed: () {
                 Get.back(id: 1);
               },
             ),

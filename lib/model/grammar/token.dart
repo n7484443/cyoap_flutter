@@ -19,8 +19,8 @@ class Token {
     return '$type : $data';
   }
 
-  dynamic toData(){
-    switch(type){
+  dynamic toData() {
+    switch (type) {
       case AnalyserConst.ints:
         return int.tryParse(data);
       case AnalyserConst.doubles:

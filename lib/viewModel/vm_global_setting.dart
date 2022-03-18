@@ -26,14 +26,14 @@ class VMGlobalSetting extends GetxController {
     super.onInit();
   }
 
-  ValueType getType(String input){
-    if(input.startsWith("\"") && input.endsWith("\"")){
+  ValueType getType(String input) {
+    if (input.startsWith("\"") && input.endsWith("\"")) {
       return ValueType(input.replaceAll("\"", ""));
-    }else if(int.tryParse(input) != null){
+    } else if (int.tryParse(input) != null) {
       return ValueType(int.parse(input));
-    }else if(double.tryParse(input) != null){
+    } else if (double.tryParse(input) != null) {
       return ValueType(double.parse(input));
-    }else{
+    } else {
       return ValueType(input.toLowerCase().trim() == 'true');
     }
   }
@@ -56,13 +56,13 @@ class VMGlobalSetting extends GetxController {
     isChanged = true;
   }
 
-  void deleteInitialValue(int index){
+  void deleteInitialValue(int index) {
     initialValueList.remove(getKey(index));
     update();
     isChanged = true;
   }
 
-  void editInitialValue(int index){
+  void editInitialValue(int index) {
     if (index != -1) {
       deleteInitialValue(index);
     }
@@ -76,8 +76,8 @@ class VMGlobalSetting extends GetxController {
     isChanged = true;
   }
 
-  void loadInitialValue(int index){
-    if(index != -1){
+  void loadInitialValue(int index) {
+    if (index != -1) {
       var key = getKey(index);
       var wrapper = initialValueList[key]!;
       var data = wrapper.valueType.data;

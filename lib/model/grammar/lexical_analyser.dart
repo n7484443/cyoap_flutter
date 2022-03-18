@@ -18,7 +18,7 @@ class LexicalAnalyser {
       var size = func.length - 1;
       switch (c) {
         case '-':
-          if(i + 1 < str.length && str[i + 1] != '='){
+          if (i + 1 < str.length && str[i + 1] != '=') {
             if (func[size].type != AnalyserConst.doubles &&
                 func[size].type != AnalyserConst.ints) {
               func.add(Token(AnalyserConst.ints, '0'));

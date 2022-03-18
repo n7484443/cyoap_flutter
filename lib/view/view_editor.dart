@@ -50,12 +50,12 @@ class ViewEditor extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            if(controller.isChanged){
+            if (controller.isChanged) {
               showDialog(
                 context: context,
                 builder: (_) => alert,
               );
-            }else{
+            } else {
               Get.back(id: 1);
             }
           },
@@ -149,7 +149,7 @@ class ViewEditor extends StatelessWidget {
           ],
         ),
       ),
-      onWillPop: (){
+      onWillPop: () {
         return showDialog(
           context: context,
           builder: (_) => alert,
@@ -198,7 +198,7 @@ class ViewEditorTyping extends StatelessWidget {
                   IconButton(
                       onPressed: () async {
                         var name = await controller.addImage();
-                        if(name != ''){
+                        if (name != '') {
                           await showDialog(
                             builder: (_) => AlertDialog(
                               title: const Text('출처'),
@@ -478,7 +478,11 @@ class _ColorButtonExtensionState extends State<ColorButtonExtension> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ColorPicker(
-              pickersEnabled: {ColorPickerType.both: true, ColorPickerType.primary: false, ColorPickerType.accent: false},
+              pickersEnabled: {
+                ColorPickerType.both: true,
+                ColorPickerType.primary: false,
+                ColorPickerType.accent: false
+              },
               color: const Color(0x00000000),
               onColorChanged: (color) {
                 newColor = color;

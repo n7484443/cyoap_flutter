@@ -3,24 +3,21 @@ import 'package:cyoap_flutter/model/variable_db.dart';
 import 'analyser.dart';
 import 'value_type.dart';
 
-abstract class RecursiveUnit{
+abstract class RecursiveUnit {
   List<RecursiveUnit> childNode = List.empty(growable: true);
 
   ValueType value;
 
   // 함수 or 값
-  RecursiveUnit() :
-        value = ValueType(ValueTypeData.none);
+  RecursiveUnit() : value = ValueType(ValueTypeData.none);
 
   RecursiveUnit.fromValue(this.value);
-
 
   RecursiveUnit.fromJson(Map<String, dynamic> json)
       : childNode = json['childNode'],
         value = ValueType.fromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'childNode': childNode,
         'value': value,
       };
@@ -64,13 +61,12 @@ class RecursiveParser extends RecursiveUnit {
         'value': value,
       };
 
-  RecursiveParser.fromJson(Map<String, dynamic> json){
+  RecursiveParser.fromJson(Map<String, dynamic> json) {
     super.value = ValueType.fromJson(json['value']);
     super.childNode = json.containsKey('childNode')
         ? (json['childNode'] as List).map((e) => getClassFromJson(e)).toList()
         : List.empty(growable: true);
   }
-
 
   @override
   ValueType unzip() {
@@ -95,13 +91,12 @@ class RecursiveData extends RecursiveUnit {
 
   @override
   RecursiveData.fromJson(Map<String, dynamic> json)
-      : dontReplace = json['dontReplace']{
+      : dontReplace = json['dontReplace'] {
     super.value = ValueType.fromJson(json['value']);
   }
 
   @override
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'class': 'RecursiveData',
         'childNode': childNode,
         'value': value,
@@ -116,7 +111,8 @@ class RecursiveData extends RecursiveUnit {
           !dontReplace) {
         return ValueType(VariableDataBase.instance
             .getValueTypeWrapper(variable.varName)
-            ?.valueType.data);
+            ?.valueType
+            .data);
       } else {
         return value;
       }
