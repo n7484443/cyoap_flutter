@@ -33,14 +33,14 @@ const RESOURCES = {
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
-"index.html": "e932add8376a3c0ba82d40b783ca0562",
-"/": "e932add8376a3c0ba82d40b783ca0562",
+"index.html": "d5ef6bc4bd91452d9e195bd5c67966e6",
+"/": "d5ef6bc4bd91452d9e195bd5c67966e6",
 "jszip.js": "2592ae2a2ccbc9a6aebc558f975f3208",
-"main.dart.js": "58228e60b2e0dab09432f0524f5ea9e9",
+"main.dart.js": "d4279a51626729775bb32917bde33180",
 "manifest.json": "ebc04e4594e86d4e5763ccf0df7285b3",
 "request_multiple.js": "1692b83bd5d160f90040cc78f6537ec6",
 "save_web.js": "51e33fe0b2e4ac62a2a708370d281956",
-"version.json": "c5b99ca79e61be568a8528b494cb3601",
+"version.json": "08cb965247c5559b70c8deeece56d97d",
 "worker.js": "8a212ffa5bbfc25b4cce1596f858007e"
 };
 
