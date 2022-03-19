@@ -37,8 +37,9 @@ class JsonProjectParser {
   Future<Tuple<String, Uint8List>?> checkImage(
       Map<String, dynamic> input) async {
     if (input.containsKey('image')) {
-      if (input['image'] == null || (input['image'] as String).isEmpty)
+      if (input['image'] == null || (input['image'] as String).isEmpty) {
         return null;
+      }
       return await Base64ToImage.convertToImage(input['image'], input['id']);
     }
     return null;

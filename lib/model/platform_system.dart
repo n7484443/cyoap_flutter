@@ -17,12 +17,7 @@ class PlatformSystem {
   PlatformFileSystem platformFileSystem = PlatformFileSystem();
   String? path;
 
-  Future<void> platformInit() async {
-    await ImageDB.instance.init();
-  }
-
   Future<void> openPlatformZipForWeb(PlatformFile file) async {
-    await platformInit();
     var bytes = file.bytes;
     if (bytes == null) return;
 
@@ -32,7 +27,6 @@ class PlatformSystem {
   }
 
   Future<void> openPlatformZip(File file) async {
-    await platformInit();
     var bytes = await file.readAsBytes();
     path = file.parent.path;
 
@@ -41,30 +35,24 @@ class PlatformSystem {
   }
 
   Future<void> openPlatformJson(File file) async {
-    await platformInit();
     path = file.parent.path;
 
     await platformFileSystem.createFromJson(file.readAsStringSync(), path!);
   }
 
   Future<void> openPlatformFolder(String path) async {
-    await platformInit();
     this.path = path;
     await platformFileSystem.createFromFolder(path);
   }
 
-  Future<void> openPlatformList(
-      Map<String, Uint8List> images,
-      Map<String, String> choiceNodes,
+  Future<void> openPlatformList(Map<String, String> choiceNodes,
       String imageSource,
       String platform) async {
-    await platformInit();
     await platformFileSystem.createPlatformList(
-        images, choiceNodes, imageSource, platform);
+        choiceNodes, imageSource, platform);
   }
 
   Future<void> openPlatformVoid() async {
-    await platformInit();
     platformFileSystem.createFromVoid();
   }
 

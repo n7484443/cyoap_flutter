@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +6,7 @@ import 'package:get/get.dart';
 
 import '../main.dart';
 import '../model/check_update.dart';
+import '../model/image_db.dart';
 import '../model/opening_file_folder.dart';
 import '../model/platform_system.dart';
 import '../util/platform_specified_util/check_distribute.dart';
@@ -149,14 +149,11 @@ class VMStartPlatform extends GetxController {
     var distribute = getDistribute();
     var imageList = value.data1;
     var nodeList = value.data2;
-    List<Future> futureMap = List.empty(growable: true);
-    Map<String, Uint8List> imageMap = {};
     for (var name in imageList) {
-      var future = distribute.getFile('images/$name');
-      future.then((value) => imageMap[name] = value);
-      futureMap.add(future);
+      ImageDB.instance.uploadImagesFuture(name, distribute.getFile('images/$name'));
     }
 
+    List<Future> futureMap = List.empty(growable: true);
     Map<String, String> nodeMap = {};
     for (var name in nodeList) {
       var future = distribute.getFileWithJson('nodes/$name');
@@ -165,14 +162,14 @@ class VMStartPlatform extends GetxController {
     }
     await Future.wait(futureMap);
 
-    print('image & node loaded');
+    print('node loaded');
 
     String imageSource = await distribute.getFileWithJson('imageSource.json');
     String platformData = await distribute.getFileWithJson('platform.json');
     print('load end');
 
     await PlatformSystem.instance
-        .openPlatformList(imageMap, nodeMap, imageSource, platformData);
+        .openPlatformList(nodeMap, imageSource, platformData);
     Get.find<VMStartPlatform>().setEditable(false);
     Get.toNamed('/viewPlay');
   }

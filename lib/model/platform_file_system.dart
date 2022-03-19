@@ -101,7 +101,6 @@ class PlatformFileSystem {
   }
 
   Future<void> createPlatformList(
-      Map<String, Uint8List> images,
       Map<String, String> choiceNodes,
       String imageSource,
       String platformData) async {
@@ -110,10 +109,6 @@ class PlatformFileSystem {
     List<ChoiceNodeBase> nodeList = List.empty(growable: true);
     List<LineSetting> lineSettingList = List.empty(growable: true);
 
-    for (var name in images.keys) {
-      var data = images[name]!;
-      ImageDB.instance.uploadImages(name, data);
-    }
     for (var name in choiceNodes.keys) {
       var data = choiceNodes[name]!;
       var decoded = jsonDecode(data);
