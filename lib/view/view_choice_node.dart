@@ -208,6 +208,7 @@ class ViewChoiceNode extends StatelessWidget {
         ),
       ),
     );
+
     Widget innerWidget;
     if (isEditable()) {
       innerWidget = InkWell(
@@ -234,16 +235,16 @@ class ViewChoiceNode extends StatelessWidget {
     return Obx(
       () {
         if (controller.isCardMode.value) {
+          var isSelectedCheck = controller.status.value.isSelected() &&
+              controller.node.isSelectable;
           return Opacity(
             opacity: controller.opacity,
             child: Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
                 side: BorderSide(
-                  color: controller.status.value.isSelected() &&
-                          controller.node.isSelectable
-                      ? Colors.lightBlueAccent
-                      : Colors.white,
+                  color:
+                      isSelectedCheck ? Colors.lightBlueAccent : Colors.white,
                   width: 6,
                 ),
               ),
@@ -255,18 +256,7 @@ class ViewChoiceNode extends StatelessWidget {
         }
         return Opacity(
           opacity: controller.opacity,
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                  color: controller.status.value.isSelected() &&
-                          controller.node.isSelectable
-                      ? Colors.lightBlueAccent
-                      : Colors.white,
-                  width: 6),
-              color: Colors.white,
-            ),
-            child: innerWidget,
-          ),
+          child: innerWidget,
         );
       },
     );
