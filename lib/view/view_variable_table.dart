@@ -37,7 +37,6 @@ class ViewVariable extends StatelessWidget {
           ListTile(
             leading: const Text('버전'),
             title: Text(ConstList.version),
-            onTap: () => Get.toNamed("/viewSource", id: 1),
           ),
           ListTile(
             leading: const Text('출처 보기'),

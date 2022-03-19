@@ -158,8 +158,11 @@ class ViewChoiceNode extends StatelessWidget {
           Align(
             alignment: Alignment.topCenter,
             child: Visibility(
-              child: TextOutline(controller.titleString.value, 18 * scale.data2,
-                  ConstList.getFont(vmDraggableNestedMap.titleFont.value)),
+              child: TextOutline(
+                controller.titleString.value,
+                20 * scale.data2,
+                ConstList.getFont(vmDraggableNestedMap.titleFont.value),
+              ),
               visible: controller.titleString.value.isNotEmpty,
             ),
           ),

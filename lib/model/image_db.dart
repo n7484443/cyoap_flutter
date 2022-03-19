@@ -9,7 +9,7 @@ class ImageDB {
 
   final List<String> _dirImage = List.empty(growable: true);
   final Map<String, Uint8List> _dirImageUint8Map = {};
-  final Map<String, bool> _loadImage = {};
+  final Set<String> _loadImage = {};
 
   List<String> get imageList => _dirImage;
 
@@ -57,9 +57,14 @@ class ImageDB {
   }
 
   Future<void> uploadImages(String name, Uint8List data) async {
+    if (!_loadImage.contains(name)) {
+      return;
+    }
+
     await init();
     _dirImage.add(name);
-    _loadImage[name] = true;
+    _loadImage.add(name);
+
     if (ConstList.isOnlyFileAccept()) {
       await notesWritableTxn.put(data, name);
     } else {
@@ -68,23 +73,26 @@ class ImageDB {
   }
 
   Future<void> uploadImagesFuture(String name, Future<Uint8List> data) async {
+    if (!_loadImage.contains(name)) {
+      return;
+    }
+
     await init();
     _dirImage.add(name);
-    _loadImage[name] = false;
+    _loadImage.add(name);
+
     data.then((value) async {
       if (ConstList.isOnlyFileAccept()) {
         await notesWritableTxn.put(value, name);
       } else {
         _dirImageUint8Map[name] = value;
       }
-      _loadImage[name] = true;
     });
   }
 
   Future<Uint8List?> getImage(String name) async {
     await init();
-    var loaded = _loadImage[name];
-    if (loaded == null) {
+    if (!_loadImage.contains(name)) {
       return null;
     }
     if (ConstList.isOnlyFileAccept()) {
