@@ -42,6 +42,9 @@ jobs:
       - run: Remove-Item ./build/web/canvaskit -Recurse | Remove-Item
       - run: Remove-Item ./build/web/.last_build_id
       - run: Remove-Item ./build/web/assets/NOTICES
+      - run: Remove-Item ./build/web/assets/packages/flutter_inappwebview -Recurse | Remove-Item
+      - run: Remove-Item ./build/web/assets/packages/youtube_player_flutter -Recurse | Remove-Item
+
       - run: 7z a build/web/distribute_${{ steps.get_version.outputs.version-without-v }}.zip ./build/web/*
 
       - name: Release
