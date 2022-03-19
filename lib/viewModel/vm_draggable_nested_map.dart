@@ -174,6 +174,7 @@ class VMDraggableNestedMap extends GetxController {
       VMChoiceNode.getVMChoiceNode(drag!.data1, drag!.data2)?.isDrag.value =
       false;
       drag = null;
+      update();
     }
   }
 
