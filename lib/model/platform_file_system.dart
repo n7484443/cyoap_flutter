@@ -14,7 +14,6 @@ import '../util/platform_specified_util/save_project.dart';
 import '../util/platform_specified_util/webp_converter.dart';
 import '../util/tuple.dart';
 import 'abstract_platform.dart';
-import 'choiceNode/choice_node.dart';
 import 'choiceNode/line_setting.dart';
 
 class PlatformFileSystem {
@@ -77,7 +76,6 @@ class PlatformFileSystem {
     }
 
     var existNodes = await dirNodes.exists();
-    List<ChoiceNodeBase> nodeList = List.empty(growable: true);
     List<LineSetting> lineSettingList = List.empty(growable: true);
     if (!existNodes) {
       dirNodes.create();
@@ -88,14 +86,12 @@ class PlatformFileSystem {
           var value = await f.readAsString();
           if (f.path.contains('lineSetting_')) {
             lineSettingList.add(LineSetting.fromJson(jsonDecode(value)));
-          } else if (f.path.contains('node_')){
-            nodeList.add(ChoiceNodeBase.fromJson(jsonDecode(value)));
           }
         }
       }
     }
 
-    platform.addDataAll(nodeList, lineSettingList);
+    platform.addDataAll(lineSettingList);
     platform.init();
   }
 
@@ -105,7 +101,6 @@ class PlatformFileSystem {
       String platformData) async {
     openAsFile = true;
 
-    List<ChoiceNodeBase> nodeList = List.empty(growable: true);
     List<LineSetting> lineSettingList = List.empty(growable: true);
 
     for (var name in choiceNodes.keys) {
@@ -113,8 +108,6 @@ class PlatformFileSystem {
       var decoded = jsonDecode(data);
       if (name.contains('lineSetting_')) {
         lineSettingList.add(LineSetting.fromJson(decoded));
-      } else  if (name.contains('node_')){
-        nodeList.add(ChoiceNodeBase.fromJson(decoded));
       }
     }
     Map map = jsonDecode(imageSource);
@@ -124,7 +117,7 @@ class PlatformFileSystem {
 
     platform = AbstractPlatform.fromJson(jsonDecode(platformData));
 
-    platform.addDataAll(nodeList, lineSettingList);
+    platform.addDataAll(lineSettingList);
     platform.init();
   }
 
@@ -132,7 +125,6 @@ class PlatformFileSystem {
     openAsFile = true;
     String? platformJson;
 
-    List<ChoiceNodeBase> nodeList = List.empty(growable: true);
     List<LineSetting> lineSettingList = List.empty(growable: true);
     for (var file in archive) {
       Uint8List data = file.content as Uint8List;
@@ -152,9 +144,7 @@ class PlatformFileSystem {
             if (fileName.contains('lineSetting_')) {
               lineSettingList
                   .add(LineSetting.fromJson(jsonDecode(dataConverted)));
-            } else if (fileName.contains('node_')) {
-              nodeList.add(ChoiceNodeBase.fromJson(jsonDecode(dataConverted)));
-            } else {}
+            }
           } else if (fileName.endsWith('platform.json')) {
             platformJson = dataConverted;
           } else if (fileName.endsWith('imageSource.json')) {
@@ -172,7 +162,7 @@ class PlatformFileSystem {
       platform = AbstractPlatform.none();
     }
 
-    platform.addDataAll(nodeList, lineSettingList);
+    platform.addDataAll(lineSettingList);
     platform.init();
 
     archive.clear();

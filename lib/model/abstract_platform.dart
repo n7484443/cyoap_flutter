@@ -89,29 +89,15 @@ class AbstractPlatform {
   }
 
   void addData(int x, int y, ChoiceNodeBase node) {
-    while (lineSettings.length <= node.y) {
+    while (lineSettings.length <= y) {
       lineSettings.add(LineSetting(lineSettings.length));
     }
     lineSettings[y].addData(x, node);
   }
 
-  void addDataAll(List<ChoiceNodeBase> nodeList, List<LineSetting> lineList) {
+  void addDataAll(List<LineSetting> lineList) {
     for (var lineSetting in lineList) {
       addLineSettingData(lineSetting);
-    }
-
-    List<List<ChoiceNodeBase>> nodeListAdditional = List.empty(growable: true);
-    for (var node in nodeList) {
-      while (nodeListAdditional.length <= node.y) {
-        nodeListAdditional.add(List.empty(growable: true));
-      }
-      nodeListAdditional[node.y].add(node);
-    }
-    for (var nodeY in nodeListAdditional) {
-      nodeY.sort((a, b) => a.x.compareTo(b.x));
-      for (var node in nodeY) {
-        addData(node.x, node.y, node);
-      }
     }
   }
 
