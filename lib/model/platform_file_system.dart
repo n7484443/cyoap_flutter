@@ -102,9 +102,9 @@ class PlatformFileSystem {
 
   Future<void> createPlatformList(
       Map<String, Uint8List> images,
-      Map<String, Uint8List> choiceNodes,
-      Uint8List imageSource,
-      Uint8List platformData) async {
+      Map<String, String> choiceNodes,
+      String imageSource,
+      String platformData) async {
     openAsFile = true;
 
     List<ChoiceNodeBase> nodeList = List.empty(growable: true);
@@ -116,19 +116,19 @@ class PlatformFileSystem {
     }
     for (var name in choiceNodes.keys) {
       var data = choiceNodes[name]!;
-      var decoded = jsonDecode(utf8.decode(data));
+      var decoded = jsonDecode(data);
       if (name.contains('lineSetting_')) {
         lineSettingList.add(LineSetting.fromJson(decoded));
       } else {
         nodeList.add(ChoiceNodeBase.fromJson(decoded));
       }
     }
-    Map map = jsonDecode(String.fromCharCodes(imageSource));
+    Map map = jsonDecode(imageSource);
     for (var source in map.keys) {
       _imageSource[source] = map[source];
     }
 
-    platform = AbstractPlatform.fromJson(jsonDecode(utf8.decode(platformData)));
+    platform = AbstractPlatform.fromJson(jsonDecode(platformData));
 
     platform.addDataAll(nodeList);
     for (var lineSetting in lineSettingList) {

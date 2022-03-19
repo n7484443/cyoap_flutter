@@ -170,9 +170,11 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   void dragEnd() {
-    VMChoiceNode.getVMChoiceNode(drag!.data1, drag!.data2)?.isDrag.value =
-        false;
-    drag = null;
+    if(drag != null){
+      VMChoiceNode.getVMChoiceNode(drag!.data1, drag!.data2)?.isDrag.value =
+      false;
+      drag = null;
+    }
   }
 
   double getMaxWidth() {

@@ -16,33 +16,37 @@ class DistributeImp extends Distribute {
 
   @override
   Future<Tuple<List<String>, List<String>>> getImageNodeList() async {
-    var imageListData = await getFile('images/list.json');
-    var nodeListData = await getFile('nodes/list.json');
-    var imageList = (jsonDecode(String.fromCharCodes(imageListData!)) as List)
-        .map((e) => e.toString())
-        .toList();
-    var nodeList = (jsonDecode(String.fromCharCodes(nodeListData!)) as List)
-        .map((e) => e.toString())
-        .toList();
+    var imageListData = await getFileWithJson('images/list.json');
+    var nodeListData = await getFileWithJson('nodes/list.json');
+    var imageList =
+        (jsonDecode(imageListData) as List).map((e) => e.toString()).toList();
+    var nodeList =
+        (jsonDecode(nodeListData) as List).map((e) => e.toString()).toList();
 
     return Tuple(imageList, nodeList);
   }
 
   @override
-  Future<Uint8List?> getFile(String f) async {
+  Future<Uint8List> getFile(String f) async {
     return await _readFileAsUint8('dist/$f');
+  }
+
+  @override
+  Future<String> getFileWithJson(String f) async {
+    return await _readFileAsString('dist/$f');
   }
 
   Future<Uint8List> _readFileAsUint8(String path) async {
     await JsIsolatedWorker().importScripts(['request_multiple.js']);
-    if (path.endsWith(".json")) {
-      var output = await JsIsolatedWorker()
-          .run(functionName: '_readFileFromAjaxWithJson', arguments: path);
-      return Uint8List.fromList(utf8.encode(output as String));
-    } else {
-      var output = await JsIsolatedWorker()
-          .run(functionName: '_readFileFromAjax', arguments: path);
-      return (output as ByteBuffer).asUint8List();
-    }
+    var output = await JsIsolatedWorker()
+        .run(functionName: '_readFileFromAjax', arguments: path);
+    return (output as ByteBuffer).asUint8List();
+  }
+
+  Future<String> _readFileAsString(String path) async {
+    await JsIsolatedWorker().importScripts(['request_multiple.js']);
+    String output = await JsIsolatedWorker()
+        .run(functionName: '_readFileFromAjaxWithJson', arguments: path);
+    return output;
   }
 }

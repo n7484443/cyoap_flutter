@@ -133,7 +133,6 @@ class VMChoiceNode extends GetxController {
     if(isEditable())return 1;
 
     if(node.isSelectable){
-      print(node.status);
       if(isIgnorePointer()) {
         return 1;
       }else if(status.value == SelectableStatus.hide) {
