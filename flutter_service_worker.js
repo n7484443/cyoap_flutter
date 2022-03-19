@@ -33,14 +33,14 @@ const RESOURCES = {
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
-"index.html": "d5ef6bc4bd91452d9e195bd5c67966e6",
-"/": "d5ef6bc4bd91452d9e195bd5c67966e6",
+"index.html": "878cb80f7d43dc48cb1ca7e9c5a51da5",
+"/": "878cb80f7d43dc48cb1ca7e9c5a51da5",
 "jszip.js": "2592ae2a2ccbc9a6aebc558f975f3208",
-"main.dart.js": "d4279a51626729775bb32917bde33180",
+"main.dart.js": "b9cfc8a4f3247681e0308510d4ae6d8f",
 "manifest.json": "ebc04e4594e86d4e5763ccf0df7285b3",
 "request_multiple.js": "1692b83bd5d160f90040cc78f6537ec6",
 "save_web.js": "51e33fe0b2e4ac62a2a708370d281956",
-"version.json": "08cb965247c5559b70c8deeece56d97d",
+"version.json": "490ebe0124a1d8af8b0789d49e96addb",
 "worker.js": "8a212ffa5bbfc25b4cce1596f858007e"
 };
 
