@@ -83,6 +83,10 @@ class LineSetting extends GenerableParser {
       clickableRecursive = null;
       executeRecursive = null;
     }
+
+    for (var node in children) {
+      node.generateParser();
+    }
   }
 
   @override
@@ -92,6 +96,10 @@ class LineSetting extends GenerableParser {
           'lineSetting_$y', ValueTypeWrapper(ValueType(0), false, false));
     } else {
       VariableDataBase.instance.deleteValue('lineSetting_$y');
+    }
+
+    for (var node in children) {
+      node.initValueTypeWrapper();
     }
   }
 }

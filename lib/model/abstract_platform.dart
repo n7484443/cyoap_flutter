@@ -151,17 +151,8 @@ class AbstractPlatform {
     VariableDataBase.instance.clear();
 
     VariableDataBase.instance.varMap.addAll(globalSetting);
-    for (int i = 0; i < lineSettings.length; i++) {
-      var lineSetting = lineSettings[i];
+    for (var lineSetting in lineSettings) {
       lineSetting.initValueTypeWrapper();
-      for (var node in lineSetting.children) {
-        node.initValueTypeWrapper();
-        if (node.status.isNotSelected()) {
-          node.status = node.isSelectable
-              ? SelectableStatus.open
-              : SelectableStatus.selected;
-        }
-      }
 
       for (var node in lineSetting.children) {
         if (node.status.isSelected()) {
@@ -237,12 +228,8 @@ class AbstractPlatform {
   }
 
   void generateRecursiveParser() {
-    for (int i = 0; i < lineSettings.length; i++) {
-      var lineSetting = lineSettings[i];
+    for(var lineSetting in lineSettings){
       lineSetting.generateParser();
-      for (var node in lineSetting.children) {
-        node.generateParser();
-      }
     }
   }
 

@@ -170,5 +170,8 @@ class ChoiceNodeBase extends GenerableParser {
   void initValueTypeWrapper() {
     VariableDataBase.instance.setValue(title.replaceAll(" ", ""),
         ValueTypeWrapper(ValueType(status.isSelected()), false, true));
+    if (status.isNotSelected()) {
+      status = isSelectable ? SelectableStatus.open : SelectableStatus.selected;
+    }
   }
 }
