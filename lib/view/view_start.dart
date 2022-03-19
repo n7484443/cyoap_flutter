@@ -107,7 +107,7 @@ class ViewStart extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text('version : ${ConstList.version ?? ''}'),
+                        Text('version : ${ConstList.version}'),
                         Visibility(
                           child: const Text('새로운 버전이 나왔습니다!',
                               style: TextStyle(color: Colors.redAccent)),

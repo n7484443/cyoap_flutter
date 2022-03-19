@@ -55,7 +55,7 @@ class AbstractPlatform {
       : stringImageName = '',
         colorBackground = Colors.white,
         flag = 0,
-        version = ConstList.version ?? '',
+        version = ConstList.version,
         titleFont = "notoSans",
         mainFont = "notoSans";
 

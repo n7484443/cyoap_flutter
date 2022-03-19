@@ -31,7 +31,7 @@ class JsonProjectParser {
       await f.writeAsBytes(outputImage[data]!);
     }
 
-    return AbstractPlatform('', Colors.white, 0, ConstList.version ?? '');
+    return AbstractPlatform('', Colors.white, 0, ConstList.version);
   }
 
   Future<Tuple<String, Uint8List>?> checkImage(

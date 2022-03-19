@@ -16,8 +16,8 @@ class CheckUpdate {
           '마지막 업데이트 버전 : ${lastRelease.tagName} | 현제 버전 : v${ConstList.version}');
     }
     if (lastRelease.tagName == null) return false;
-    if (ConstList.version == null) return false;
-    if (versionCheck(lastRelease.tagName!, ConstList.version!) > 0) {
+    if (ConstList.version == '') return false;
+    if (versionCheck(lastRelease.tagName!, ConstList.version) > 0) {
       return true;
     }
     return false;

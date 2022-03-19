@@ -20,11 +20,6 @@ class ImageDB {
     return output;
   }
 
-  static Map<String, Uint8List> fromImageMap(Map<String, String> imageMap) {
-    return imageMap.map(
-        (key, value) => MapEntry(key, Uint8List.fromList(value.codeUnits)));
-  }
-
   String databaseName = "cyoap_image.db";
   String objectStore = "image";
   late Database database;

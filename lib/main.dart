@@ -34,11 +34,13 @@ class ConstList {
     return false;
   }
 
-  static String? version;
+  static String? versionInner;
+
+  static String get version => versionInner ?? '';
 
   static Future<void> init() async {
     var packageInfo = await PackageInfo.fromPlatform();
-    version = packageInfo.version;
+    versionInner = packageInfo.version;
   }
 
   static DefaultStyles getDefaultThemeData(BuildContext context, double scale,

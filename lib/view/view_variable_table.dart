@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -31,14 +32,23 @@ class ViewVariable extends StatelessWidget {
         ],
       );
     } else {
-      widget = ListTile(
-        leading: const Text('출처 보기'),
-        trailing: GetBuilder<VMVariableTable>(
-          builder: (_) => Switch(
-            value: _.getSourceVisible(),
-            onChanged: (value) => _.setSourceVisible(value),
+      widget = Column(
+        children: [
+          ListTile(
+            leading: const Text('버전'),
+            title: Text(ConstList.version),
+            onTap: () => Get.toNamed("/viewSource", id: 1),
           ),
-        ),
+          ListTile(
+            leading: const Text('출처 보기'),
+            trailing: GetBuilder<VMVariableTable>(
+              builder: (_) => Switch(
+                value: _.getSourceVisible(),
+                onChanged: (value) => _.setSourceVisible(value),
+              ),
+            ),
+          ),
+        ],
       );
     }
 
