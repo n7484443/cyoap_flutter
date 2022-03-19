@@ -27,7 +27,8 @@ class PlatformFileSystem {
   bool openAsFile = false;
 
   PlatformFileSystem();
-
+  /*TODO - node_0_0 형태를 lineSetting_0, lineSetting_1 형태로 저장.
+     추가적으로 page 시스템 개발*/
   Future<void> createFromFolder(String path) async {
     openAsFile = false;
     var dirImages = Directory(path + '/images');
@@ -45,8 +46,7 @@ class PlatformFileSystem {
         var type = isImageFile(name);
         if (f is File && type != -1) {
           if (type == 1) {
-            var bytes = await f.readAsBytes();
-            ImageDB.instance.uploadImages(name, bytes);
+            ImageDB.instance.uploadImagesFuture(name, f.readAsBytes());
           } else {
             //지원 아직 x
           }
@@ -78,6 +78,7 @@ class PlatformFileSystem {
 
     var existNodes = await dirNodes.exists();
     List<ChoiceNodeBase> nodeList = List.empty(growable: true);
+    List<LineSetting> lineSettingList = List.empty(growable: true);
     if (!existNodes) {
       dirNodes.create();
     } else {
@@ -86,17 +87,15 @@ class PlatformFileSystem {
         if (f is File) {
           var value = await f.readAsString();
           if (f.path.contains('lineSetting_')) {
-            var lineSetting = LineSetting.fromJson(jsonDecode(value));
-            platform.addLineSettingData(lineSetting);
-          } else {
-            var node = ChoiceNodeBase.fromJson(jsonDecode(value));
-            nodeList.add(node);
+            lineSettingList.add(LineSetting.fromJson(jsonDecode(value)));
+          } else if (f.path.contains('node_')){
+            nodeList.add(ChoiceNodeBase.fromJson(jsonDecode(value)));
           }
         }
       }
     }
 
-    platform.addDataAll(nodeList);
+    platform.addDataAll(nodeList, lineSettingList);
     platform.init();
   }
 
@@ -114,7 +113,7 @@ class PlatformFileSystem {
       var decoded = jsonDecode(data);
       if (name.contains('lineSetting_')) {
         lineSettingList.add(LineSetting.fromJson(decoded));
-      } else {
+      } else  if (name.contains('node_')){
         nodeList.add(ChoiceNodeBase.fromJson(decoded));
       }
     }
@@ -125,10 +124,7 @@ class PlatformFileSystem {
 
     platform = AbstractPlatform.fromJson(jsonDecode(platformData));
 
-    platform.addDataAll(nodeList);
-    for (var lineSetting in lineSettingList) {
-      platform.addLineSettingData(lineSetting);
-    }
+    platform.addDataAll(nodeList, lineSettingList);
     platform.init();
   }
 
@@ -176,10 +172,7 @@ class PlatformFileSystem {
       platform = AbstractPlatform.none();
     }
 
-    platform.addDataAll(nodeList);
-    for (var lineSetting in lineSettingList) {
-      platform.addLineSettingData(lineSetting);
-    }
+    platform.addDataAll(nodeList, lineSettingList);
     platform.init();
 
     archive.clear();
@@ -240,34 +233,20 @@ class PlatformFileSystem {
       dirNodesBackUp.deleteSync(recursive: true);
     }
 
-    for (var i = 0; i < platform.choiceNodes.length; i++) {
-      var lineSetting = platform.lineSettings[i];
-      var file = File('$path/nodes_backup/lineSetting_${lineSetting.y}.json');
+    for (var line in platform.lineSettings) {
+      var file = File('$path/nodes_backup/lineSetting_${line.y}.json');
       file.createSync(recursive: true);
-      file.writeAsString(jsonEncode(lineSetting.toJson()));
-
-      for (var node in platform.choiceNodes[i]) {
-        var file = File('$path/nodes_backup/node_${node.y}_${node.x}.json');
-        file.createSync(recursive: true);
-        file.writeAsString(jsonEncode(node.toJson()));
-      }
+      file.writeAsString(jsonEncode(line.toJson()));
     }
 
     if (dirNodes.existsSync()) {
       dirNodes.deleteSync(recursive: true);
     }
 
-    for (var i = 0; i < platform.choiceNodes.length; i++) {
-      var lineSetting = platform.lineSettings[i];
-      var file = File('$path/nodes/lineSetting_${lineSetting.y}.json');
+    for (var line in platform.lineSettings) {
+      var file = File('$path/nodes/lineSetting_${line.y}.json');
       file.createSync(recursive: true);
-      file.writeAsString(jsonEncode(lineSetting.toJson()));
-
-      for (var node in platform.choiceNodes[i]) {
-        var file = File('$path/nodes/node_${node.y}_${node.x}.json');
-        file.createSync(recursive: true);
-        file.writeAsString(jsonEncode(node.toJson()));
-      }
+      file.writeAsString(jsonEncode(line.toJson()));
     }
 
     if (platformJson.existsSync()) {

@@ -2,6 +2,7 @@ import '../grammar/analyser.dart';
 import '../grammar/recursive_parser.dart';
 import '../grammar/value_type.dart';
 import '../variable_db.dart';
+import 'choice_node.dart';
 import 'generable_parser.dart';
 
 class LineSetting extends GenerableParser {
@@ -9,8 +10,10 @@ class LineSetting extends GenerableParser {
   int maxSelect;
   RecursiveUnit? clickableRecursive;
   RecursiveUnit? executeRecursive;
+  List<ChoiceNodeBase> children;
 
-  LineSetting(this.y, {this.maxSelect = -1});
+  LineSetting(this.y, {this.maxSelect = -1})
+      : children = List.empty(growable: true);
 
   @override
   Map<String, dynamic> toJson() => {
@@ -18,6 +21,7 @@ class LineSetting extends GenerableParser {
         'maxSelect': maxSelect,
         'clickableRecursive': clickableRecursive,
         'executeRecursive': executeRecursive,
+        'children': children,
       };
 
   LineSetting.fromJson(Map<String, dynamic> json)
@@ -28,7 +32,26 @@ class LineSetting extends GenerableParser {
             : getClassFromJson(json['clickableRecursive']),
         executeRecursive = json['executeRecursive'] == null
             ? null
-            : getClassFromJson(json['executeRecursive']);
+            : getClassFromJson(json['executeRecursive']),
+        children = json.containsKey('children')
+            ? (json['children'] as List).map((e) => ChoiceNodeBase.fromJson(e)).toList()
+            : List.empty(growable: true);
+
+
+  void addData(int x, ChoiceNodeBase node) {
+    node.x = x;
+    node.y = y;
+    if (x > children.length) {
+      children.add(node);
+    } else {
+      children.insert(x, node);
+    }
+  }
+
+  ChoiceNodeBase? getData(int x){
+    if(children.length <= x) return null;
+    return children[x];
+  }
 
   String getClickableString() {
     return 'lineSetting_$y < $maxSelect';

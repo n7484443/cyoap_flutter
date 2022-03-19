@@ -27,11 +27,6 @@ abstract class SaveProject {
     }
 
     var fileList = List.empty(growable: true);
-    var choiceNodes = dataInput['choiceNodes'] as Map<String, String>;
-    for (var nodeName in choiceNodes.keys) {
-      map['nodes/$nodeName'] = utf8.encode(choiceNodes[nodeName]!) as Uint8List;
-      fileList.add(nodeName);
-    }
 
     var lineSetting = dataInput['lineSetting'] as Map<String, String>;
     for (var nodeName in lineSetting.keys) {

@@ -59,6 +59,7 @@ class ImageDB {
   Future<void> uploadImages(String name, Uint8List data) async {
     await init();
     _dirImage.add(name);
+    _loadImage[name] = true;
     if (ConstList.isOnlyFileAccept()) {
       await notesWritableTxn.put(data, name);
     } else {

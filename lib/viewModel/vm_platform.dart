@@ -18,10 +18,10 @@ class VMPlatform extends GetxController {
   Future saveAsFile() async {
     Map<String, String> choiceNodes = {};
     Map<String, String> lineSetting = {};
-    for (int i = 0; i < getPlatform().choiceNodes.length; i++) {
+    for (int i = 0; i < getPlatform().lineSettings.length; i++) {
       var line = getPlatform().lineSettings[i];
       lineSetting['lineSetting_${line.y}.json'] = jsonEncode(line.toJson());
-      for (var node in getPlatform().choiceNodes[i]) {
+      for (var node in getPlatform().lineSettings[i].children) {
         choiceNodes['node_${node.y}_${node.x}.json'] =
             jsonEncode(node.toJson());
       }

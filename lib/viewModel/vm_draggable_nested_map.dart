@@ -34,12 +34,12 @@ class VMDraggableNestedMap extends GetxController {
 
   int getLength() {
     return isEditable()
-        ? (getPlatform().choiceNodes.length * 2 + 2)
-        : (getPlatform().choiceNodes.length * 2);
+        ? (getPlatform().lineSettings.length * 2 + 2)
+        : (getPlatform().lineSettings.length * 2);
   }
 
   List<Widget> widgetList({BoxConstraints? constrains}) {
-    var choiceNodeList = getPlatform().choiceNodes;
+    var choiceNodeList = getPlatform().lineSettings;
     var edit = isEditable();
 
     List<Widget> widgetList;
@@ -58,7 +58,7 @@ class VMDraggableNestedMap extends GetxController {
                   spacing: 2,
                   alignment: WrapAlignment.center,
                   children: List<Widget>.generate(
-                    xList.length * 2 + 1,
+                    xList.children.length * 2 + 1,
                     (x) {
                       var i = x ~/ 2;
                       var j = y ~/ 2;
@@ -109,7 +109,7 @@ class VMDraggableNestedMap extends GetxController {
                 spacing: 2,
                 alignment: WrapAlignment.center,
                 children: List<Widget>.generate(
-                  xList.length,
+                  xList.children.length,
                   (x) {
                     var j = y ~/ 2;
                     return ViewChoiceNode(
@@ -138,9 +138,9 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   void updateVMChoiceNode(int x, int y) {
-    var nodes = getPlatform().choiceNodes;
-    if (y >= nodes.length) return;
-    for (var i = x; i < nodes[y].length; i++) {
+    var lineSetting = getPlatform().lineSettings;
+    if (y >= lineSetting.length) return;
+    for (var i = x; i < lineSetting[y].children.length; i++) {
       if (!Get.isRegistered<VMChoiceNode>(tag: VMChoiceNode.getTag(i, y))) {
         continue;
       }

@@ -87,7 +87,7 @@ class NodeDraggableTarget extends GetView<VMDraggableNestedMap> {
 
     bool longType1 = (node != null && node.width == 0) ||
         (nodeBefore != null && node == null && nodeBefore.width == 0);
-    bool longType2 = y == getPlatform().choiceNodes.length;
+    bool longType2 = y == getPlatform().lineSettings.length;
     bool realLong = longType1 || longType2;
 
     return Visibility(

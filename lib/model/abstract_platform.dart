@@ -18,7 +18,6 @@ class AbstractPlatform {
   String stringImageName;
   Color colorBackground;
   int flag;
-  List<List<ChoiceNodeBase>> choiceNodes = List.empty(growable: true);
   List<LineSetting> lineSettings = List.empty(growable: true);
   Map<String, ValueTypeWrapper> globalSetting = {};
   String version;
@@ -83,28 +82,24 @@ class AbstractPlatform {
       };
 
   void addLineSettingData(LineSetting lineSetting) {
-    while (choiceNodes.length <= lineSetting.y) {
-      choiceNodes.add(List.empty(growable: true));
-      lineSettings.add(LineSetting(choiceNodes.length));
+    while (lineSettings.length <= lineSetting.y) {
+      lineSettings.add(LineSetting(lineSettings.length));
     }
     lineSettings[lineSetting.y] = lineSetting;
   }
 
   void addData(int x, int y, ChoiceNodeBase node) {
-    node.x = x;
-    node.y = y;
-    while (choiceNodes.length <= node.y) {
-      lineSettings.add(LineSetting(choiceNodes.length));
-      choiceNodes.add(List.empty(growable: true));
+    while (lineSettings.length <= node.y) {
+      lineSettings.add(LineSetting(lineSettings.length));
     }
-    if (x > choiceNodes[y].length) {
-      choiceNodes[y].add(node);
-    } else {
-      choiceNodes[y].insert(x, node);
-    }
+    lineSettings[y].addData(x, node);
   }
 
-  void addDataAll(List<ChoiceNodeBase> nodeList) {
+  void addDataAll(List<ChoiceNodeBase> nodeList, List<LineSetting> lineList) {
+    for (var lineSetting in lineList) {
+      addLineSettingData(lineSetting);
+    }
+
     List<List<ChoiceNodeBase>> nodeListAdditional = List.empty(growable: true);
     for (var node in nodeList) {
       while (nodeListAdditional.length <= node.y) {
@@ -121,14 +116,14 @@ class AbstractPlatform {
   }
 
   void removeData(int x, int y) {
-    choiceNodes[y].removeAt(x);
+    lineSettings[y].children.removeAt(x);
     checkDataCollect();
   }
 
   ChoiceNodeBase? getChoiceNode(int posX, int posY) {
-    if (choiceNodes.length <= posY) return null;
-    if (choiceNodes[posY].length <= posX) return null;
-    return choiceNodes[posY][posX];
+    if (lineSettings.length <= posY) return null;
+    if (lineSettings[posY].children.length <= posX) return null;
+    return lineSettings[posY].children[posX];
   }
 
   LineSetting? getLineSetting(int y) {
@@ -144,15 +139,15 @@ class AbstractPlatform {
   }
 
   void compress() {
-    choiceNodes.removeWhere((item) => item.isEmpty);
+    lineSettings.removeWhere((item) => item.children.isEmpty);
     checkDataCollect();
   }
 
   void checkDataCollect() {
-    for (int y = 0; y < choiceNodes.length; y++) {
-      for (int x = 0; x < choiceNodes[y].length; x++) {
-        choiceNodes[y][x].x = x;
-        choiceNodes[y][x].y = y;
+    for (var line in lineSettings) {
+      for (int x = 0; x < line.children.length; x++) {
+        line.children[x].x = x;
+        line.children[x].y = line.y;
       }
     }
   }
@@ -170,10 +165,10 @@ class AbstractPlatform {
     VariableDataBase.instance.clear();
 
     VariableDataBase.instance.varMap.addAll(globalSetting);
-    for (int i = 0; i < choiceNodes.length; i++) {
+    for (int i = 0; i < lineSettings.length; i++) {
       var lineSetting = lineSettings[i];
       lineSetting.initValueTypeWrapper();
-      for (var node in choiceNodes[i]) {
+      for (var node in lineSetting.children) {
         node.initValueTypeWrapper();
         if (node.status.isNotSelected()) {
           node.status = node.isSelectable
@@ -182,7 +177,7 @@ class AbstractPlatform {
         }
       }
 
-      for (var node in choiceNodes[i]) {
+      for (var node in lineSetting.children) {
         if (node.status.isSelected()) {
           if (node.executeCodeRecursive != null) {
             for (var codes in node.executeCodeRecursive!) {
@@ -194,7 +189,7 @@ class AbstractPlatform {
           }
         }
       }
-      for (var node in choiceNodes[i]) {
+      for (var node in lineSetting.children) {
         var visible = true;
         if (node.conditionVisibleRecursive != null) {
           var data = node.conditionVisibleRecursive!.unzip().dataUnzip();
@@ -226,7 +221,7 @@ class AbstractPlatform {
         }
       }
 
-      for (var node in choiceNodes[i]) {
+      for (var node in lineSetting.children) {
         var selectable = true;
         if (node.conditionClickableRecursive != null) {
           var data = node.conditionClickableRecursive!.unzip().dataUnzip();
@@ -256,10 +251,10 @@ class AbstractPlatform {
   }
 
   void generateRecursiveParser() {
-    for (int i = 0; i < choiceNodes.length; i++) {
+    for (int i = 0; i < lineSettings.length; i++) {
       var lineSetting = lineSettings[i];
       lineSetting.generateParser();
-      for (var node in choiceNodes[i]) {
+      for (var node in lineSetting.children) {
         node.generateParser();
       }
     }
@@ -305,8 +300,8 @@ class AbstractPlatform {
   }
 
   void doAllChoiceNode(void Function(ChoiceNodeBase node) action) {
-    for (var nodeY in choiceNodes) {
-      for (var node in nodeY) {
+    for (var lineSetting in lineSettings) {
+      for (var node in lineSetting.children) {
         action(node);
       }
     }
