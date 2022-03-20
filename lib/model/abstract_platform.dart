@@ -82,10 +82,10 @@ class AbstractPlatform {
       };
 
   void addLineSettingData(LineSetting lineSetting) {
-    while (lineSettings.length <= lineSetting.y) {
+    while (lineSettings.length <= lineSetting.currentPos) {
       lineSettings.add(LineSetting(lineSettings.length));
     }
-    lineSettings[lineSetting.y] = lineSetting;
+    lineSettings[lineSetting.currentPos] = lineSetting;
   }
 
   void addData(int x, int y, ChoiceNodeBase node) {

@@ -223,7 +223,7 @@ class PlatformFileSystem {
     }
 
     for (var line in platform.lineSettings) {
-      var file = File('$path/nodes_backup/lineSetting_${line.y}.json');
+      var file = File('$path/nodes_backup/lineSetting_${line.currentPos}.json');
       file.createSync(recursive: true);
       file.writeAsString(jsonEncode(line.toJson()));
     }
@@ -233,7 +233,7 @@ class PlatformFileSystem {
     }
 
     for (var line in platform.lineSettings) {
-      var file = File('$path/nodes/lineSetting_${line.y}.json');
+      var file = File('$path/nodes/lineSetting_${line.currentPos}.json');
       file.createSync(recursive: true);
       file.writeAsString(jsonEncode(line.toJson()));
     }

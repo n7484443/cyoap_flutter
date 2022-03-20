@@ -79,8 +79,16 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
     }
   } //랜덤 문자로 제목 중복 방지
 
-  String convertToWebp(String name) {
-    return name.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
+  ChoiceNodeBase.fromJson(Map<String, dynamic> json)
+      : x = json['x'],
+        width = json['width'],
+        height = json['height'],
+        isCard = json['isCard'],
+        isSelectable = json['isSelectable'],
+        title = json['title'],
+        contentsString = json['contentsString'],
+        imageString = json['imageString'] {
+    recursiveStatus = RecursiveStatus.fromJson(json);
   }
 
   @override
@@ -97,18 +105,6 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
     };
     map.addAll(recursiveStatus.toJson());
     return map;
-  }
-
-  ChoiceNodeBase.fromJson(Map<String, dynamic> json)
-      : x = json['x'],
-        width = json['width'],
-        height = json['height'],
-        isCard = json['isCard'],
-        isSelectable = json['isSelectable'],
-        title = json['title'],
-        contentsString = json['contentsString'],
-        imageString = json['imageString'] {
-    recursiveStatus = RecursiveStatus.fromJson(json);
   }
 
   void selectNode() {
@@ -133,5 +129,9 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
     if (status.isNotSelected()) {
       status = isSelectable ? SelectableStatus.open : SelectableStatus.selected;
     }
+  }
+
+  String convertToWebp(String name) {
+    return name.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
   }
 }

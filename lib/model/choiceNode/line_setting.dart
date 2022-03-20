@@ -6,9 +6,9 @@ import 'choice_node.dart';
 import 'generable_parser.dart';
 
 class LineSetting extends GenerableParserAndPosition {
-  int y;
+  int _y;
   @override
-  int get currentPos => y;
+  int get currentPos => _y;
 
   int maxSelect;
   RecursiveUnit? clickableRecursive;
@@ -17,12 +17,12 @@ class LineSetting extends GenerableParserAndPosition {
   String conditionVisibleString = '';
   List<ChoiceNodeBase> children;
 
-  LineSetting(this.y, {this.maxSelect = -1})
+  LineSetting(this._y, {this.maxSelect = -1})
       : children = List.empty(growable: true);
 
   @override
   Map<String, dynamic> toJson() => {
-        'y': y,
+        'y': _y,
         'maxSelect': maxSelect,
         'clickableRecursive': clickableRecursive,
         'executeRecursive': executeRecursive,
@@ -30,7 +30,7 @@ class LineSetting extends GenerableParserAndPosition {
       };
 
   LineSetting.fromJson(Map<String, dynamic> json)
-      : y = json['y'],
+      : _y = json['y'],
         maxSelect = json['maxSelect'] ?? -1,
         clickableRecursive = json['clickableRecursive'] == null
             ? null
@@ -63,11 +63,11 @@ class LineSetting extends GenerableParserAndPosition {
   }
 
   String getClickableString() {
-    return 'lineSetting_$y < $maxSelect';
+    return 'lineSetting_$_y < $maxSelect';
   }
 
   String getExecuteString() {
-    return 'lineSetting_$y += 1';
+    return 'lineSetting_$_y += 1';
   }
 
   bool isNeedToCheck() {
@@ -102,9 +102,9 @@ class LineSetting extends GenerableParserAndPosition {
   void initValueTypeWrapper() {
     if (isNeedToCheck()) {
       VariableDataBase.instance.setValue(
-          'lineSetting_$y', ValueTypeWrapper(ValueType(0), false, false));
+          'lineSetting_$_y', ValueTypeWrapper(ValueType(0), false, false));
     } else {
-      VariableDataBase.instance.deleteValue('lineSetting_$y');
+      VariableDataBase.instance.deleteValue('lineSetting_$_y');
     }
 
     for (var node in children) {

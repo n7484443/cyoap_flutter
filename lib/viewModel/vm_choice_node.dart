@@ -161,7 +161,7 @@ class VMChoiceNode extends GetxController {
 
   static void doAllVMChoiceNode(void Function(VMChoiceNode vm) action) {
     getPlatform().doAllChoiceNode((node) {
-      var vm = getVMChoiceNode(node.x, node.currentPos);
+      var vm = getVMChoiceNode(node.currentPos, node.parent!.currentPos);
       if (vm != null) {
         action(vm);
       }
