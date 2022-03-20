@@ -72,7 +72,7 @@ class VMDraggableNestedMap extends GetxController {
                           );
                         }
                       } else {
-                        return NodeDraggableTarget(i, j);
+                        return NodeDragTarget(i, j);
                       }
                     },
                   ),
@@ -84,7 +84,7 @@ class VMDraggableNestedMap extends GetxController {
           }
         } else {
           if (y.isOdd) {
-            return NodeDraggableTarget(0, choiceNodeList.length);
+            return NodeDragTarget(0, choiceNodeList.length);
           } else {
             return GetBuilder<VMDraggableNestedMap>(
               builder: (_) => Visibility(

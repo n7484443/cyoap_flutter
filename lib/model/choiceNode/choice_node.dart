@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/model/choiceNode/recursive_status.dart';
 import 'package:cyoap_flutter/model/grammar/recursive_parser.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:english_words/english_words.dart';
@@ -61,6 +62,7 @@ class ChoiceNodeBase extends GenerableParser {
   String executeCodeString = '';
   bool isSelectable = true;
   SelectableStatus status = SelectableStatus.open;
+  RecursiveStatus recursiveStatus = RecursiveStatus();
 
   ChoiceNodeBase(this.x, this.y, this.width, this.height, this.isCard,
       this.title, this.contentsString, this.imageString);

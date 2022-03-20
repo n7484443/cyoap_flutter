@@ -10,6 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../main.dart';
 import '../model/choiceNode/choice_node.dart';
 import '../model/platform_system.dart';
+import '../util/tuple.dart';
 
 class ViewChoiceNode extends StatelessWidget {
   final int posX;
@@ -219,7 +220,28 @@ class ViewChoiceNode extends StatelessWidget {
           vmDraggableNestedMap.setEdit(posX, posY);
           Get.toNamed('/viewEditor', id: 1);
         },
-        child: mainNode,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            mainNode,
+            Visibility(
+              child: DragTarget(
+                builder: (BuildContext context, List<Object?> candidateData,
+                        List<dynamic> rejectedData) =>
+                    Container(
+                  color: Colors.blueAccent.withOpacity(0.3),
+                  width: controller.realSize.value.data1 * scale.data1 * 0.6,
+                  height: controller.realSize.value.data2 * scale.data2 * 0.6,
+                ),
+                onAccept: (Tuple<int, int> data) {
+                  //TODO
+                },
+              ),
+              visible: vmDraggableNestedMap.drag != Tuple(posX, posY) &&
+                  vmDraggableNestedMap.drag != null,
+            ),
+          ],
+        ),
       );
     } else {
       innerWidget = Obx(

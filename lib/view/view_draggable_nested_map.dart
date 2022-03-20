@@ -12,6 +12,7 @@ import '../viewModel/vm_draggable_nested_map.dart';
 class NodeDraggable extends GetView<VMDraggableNestedMap> {
   final int x;
   final int y;
+  final Color baseColor = Colors.black26;
   final BoxConstraints constrains;
   const NodeDraggable(this.x, this.y, this.constrains, {Key? key})
       : super(key: key);
@@ -73,12 +74,12 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
   }
 }
 
-class NodeDraggableTarget extends GetView<VMDraggableNestedMap> {
+class NodeDragTarget extends GetView<VMDraggableNestedMap> {
   final int x;
   final int y;
   final Color baseColor = Colors.black26;
 
-  const NodeDraggableTarget(this.x, this.y, {Key? key}) : super(key: key);
+  const NodeDragTarget(this.x, this.y, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -181,7 +182,7 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
                       ),
                     ],
                   ),
-                  Row(
+                  /*Row(
                     children: [
                       const Text('탭 높이 설정'),
                       const Spacer(),
@@ -199,7 +200,7 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
                         },
                       ),
                     ],
-                  ),
+                  ),*/
                 ],
               ),
             ),
