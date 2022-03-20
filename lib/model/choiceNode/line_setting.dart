@@ -12,6 +12,7 @@ class LineSetting extends GenerableParserAndPosition {
 
   @override
   int get currentPos => _y;
+  set currentPos(int y) => _y = y;
 
   int maxSelect;
   List<ChoiceNodeBase> children;
@@ -26,9 +27,11 @@ class LineSetting extends GenerableParserAndPosition {
     Map<String, dynamic> map = {
       'y': _y,
       'maxSelect': maxSelect,
-      'clickableRecursive': recursiveStatus.conditionClickableRecursive,
       'children': children,
+      //Todo remove after some version
+      'clickableRecursive': recursiveStatus.conditionClickableRecursive,
     };
+    //Todo remove after some version
     if(recursiveStatus.executeCodeRecursive != null){
       map['executeRecursive'] = recursiveStatus.executeCodeRecursive![0];
     }
