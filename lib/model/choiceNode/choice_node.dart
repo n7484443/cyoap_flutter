@@ -64,7 +64,6 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
   String executeCodeString = '';
   bool isSelectable = true;
   SelectableStatus status = SelectableStatus.open;
-  RecursiveStatus recursiveStatus = RecursiveStatus();
   List<ChoiceNodeBase> children = List.empty(growable: true);
 
   ChoiceNodeBase(this.x, this.width, this.height, this.isCard,

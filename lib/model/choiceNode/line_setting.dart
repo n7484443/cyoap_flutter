@@ -1,5 +1,3 @@
-import 'package:cyoap_flutter/model/choiceNode/recursive_status.dart';
-
 import '../grammar/analyser.dart';
 import '../grammar/recursive_parser.dart';
 import '../grammar/value_type.dart';
@@ -18,7 +16,6 @@ class LineSetting extends GenerableParserAndPosition {
   RecursiveUnit? executeRecursive;
   String conditionVisibleString = '';
   List<ChoiceNodeBase> children;
-  RecursiveStatus recursiveStatus = RecursiveStatus();
 
   LineSetting(this.y, {this.maxSelect = -1})
       : children = List.empty(growable: true);
