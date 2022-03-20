@@ -1,3 +1,4 @@
+import '../grammar/analyser.dart';
 import '../grammar/recursive_parser.dart';
 
 class RecursiveStatus{
@@ -13,7 +14,7 @@ class RecursiveStatus{
     'conditionClickableRecursive': conditionClickableRecursive,
     'conditionVisibleRecursive': conditionVisibleRecursive,
     'executeCodeRecursive': executeCodeRecursive,
-    'conditionClickableString': conditionClickableString,
+        'conditionClickableString': conditionClickableString,
     'conditionVisibleString': conditionVisibleString,
     'executeCodeString': executeCodeString,
   };
@@ -40,10 +41,29 @@ class RecursiveStatus{
     if (json['executeCodeRecursive'] == null) {
       executeCodeRecursive = null;
     } else {
-      executeCodeRecursive =
-          List.generate((json['executeCodeRecursive'] as List).length, (index) {
-            return getClassFromJson((json['executeCodeRecursive'] as List)[index]);
-          });
+      executeCodeRecursive = List.generate(
+        (json['executeCodeRecursive'] as List).length,
+        (index) {
+          return getClassFromJson(
+              (json['executeCodeRecursive'] as List)[index]);
+        },
+      );
     }
+  }
+
+  void generateParser() {
+    var conditionClickableRecursiveParsed =
+        Analyser.analyseCodes(conditionClickableString);
+    var conditionVisibleRecursiveParsed =
+        Analyser.analyseCodes(conditionVisibleString);
+    var executeCodeRecursiveParsed = Analyser.analyseCodes(executeCodeString);
+
+    conditionClickableRecursive = conditionClickableRecursiveParsed.isNotEmpty
+        ? conditionClickableRecursiveParsed[0]
+        : null;
+    conditionVisibleRecursive = conditionVisibleRecursiveParsed.isNotEmpty
+        ? conditionVisibleRecursiveParsed[0]
+        : null;
+    executeCodeRecursive = executeCodeRecursiveParsed;
   }
 }

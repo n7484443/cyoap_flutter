@@ -20,7 +20,7 @@ class VMPlatform extends GetxController {
     Map<String, String> lineSetting = {};
     for (int i = 0; i < getPlatform().lineSettings.length; i++) {
       var line = getPlatform().lineSettings[i];
-      lineSetting['lineSetting_${line.y}.json'] = jsonEncode(line.toJson());
+      lineSetting['lineSetting_${line.currentPos}.json'] = jsonEncode(line.toJson());
     }
 
     var input = {

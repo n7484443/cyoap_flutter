@@ -82,10 +82,10 @@ class AbstractPlatform {
       };
 
   void addLineSettingData(LineSetting lineSetting) {
-    while (lineSettings.length <= lineSetting.y) {
+    while (lineSettings.length <= lineSetting.currentPos) {
       lineSettings.add(LineSetting(lineSettings.length));
     }
-    lineSettings[lineSetting.y] = lineSetting;
+    lineSettings[lineSetting.currentPos] = lineSetting;
   }
 
   void addData(int x, int y, ChoiceNodeBase node) {
@@ -155,29 +155,14 @@ class AbstractPlatform {
 
       for (var node in lineSetting.children) {
         if (node.status.isSelected()) {
-          if (node.executeCodeRecursive != null) {
-            for (var codes in node.executeCodeRecursive!) {
-              codes.unzip();
-            }
-          }
+          node.execute();
           if (node.isSelectable) {
-            lineSetting.executeRecursive?.unzip();
+            lineSetting.execute();
           }
         }
       }
       for (var node in lineSetting.children) {
-        var visible = true;
-        if (node.conditionVisibleRecursive != null) {
-          var data = node.conditionVisibleRecursive!.unzip().dataUnzip();
-          if (data != null) {
-            if (data is bool) {
-              visible = data;
-            } else if (data is ValueTypeWrapper) {
-              visible =
-                  data.valueType.data is bool ? data.valueType.data : true;
-            }
-          }
-        }
+        var visible = node.isVisible();
         if (node.status != SelectableStatus.selected) {
           if (!visible) {
             node.status = SelectableStatus.hide;
@@ -186,30 +171,10 @@ class AbstractPlatform {
         }
       }
 
-      var clickableLine = lineSetting.clickableRecursive?.unzip().dataUnzip();
-      bool clickableLineTest = true;
-      if (clickableLine != null) {
-        if (clickableLine is bool) {
-          clickableLineTest = clickableLine;
-        } else if (clickableLine is ValueTypeWrapper) {
-          var data = clickableLine.valueType.data;
-          clickableLineTest = data is bool ? data : true;
-        }
-      }
+      bool clickableLineTest = lineSetting.isClickable();
 
       for (var node in lineSetting.children) {
-        var selectable = true;
-        if (node.conditionClickableRecursive != null) {
-          var data = node.conditionClickableRecursive!.unzip().dataUnzip();
-          if (data != null) {
-            if (data is bool) {
-              selectable = data;
-            } else if (data is ValueTypeWrapper) {
-              selectable =
-                  data.valueType.data is bool ? data.valueType.data : true;
-            }
-          }
-        }
+        var selectable = node.isClickable();
         if (node.isSelectable) {
           if (node.status != SelectableStatus.selected &&
               node.status != SelectableStatus.hide) {

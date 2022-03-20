@@ -16,9 +16,9 @@ class VMCodeEditor extends GetxController {
   @override
   void onInit() {
     controllerClickable.text =
-        NodeEditor.instance.target.conditionClickableString;
-    controllerVisible.text = NodeEditor.instance.target.conditionVisibleString;
-    controllerExecute.text = NodeEditor.instance.target.executeCodeString;
+        NodeEditor.instance.target.recursiveStatus.conditionClickableString;
+    controllerVisible.text = NodeEditor.instance.target.recursiveStatus.conditionVisibleString;
+    controllerExecute.text = NodeEditor.instance.target.recursiveStatus.executeCodeString;
     conditionClickable.value = controllerClickable.text;
     conditionVisible.value = controllerVisible.text;
     executeCode.value = controllerExecute.text;
@@ -41,10 +41,10 @@ class VMCodeEditor extends GetxController {
   }
 
   void save() {
-    NodeEditor.instance.target.conditionClickableString =
+    NodeEditor.instance.target.recursiveStatus.conditionClickableString =
         conditionClickable.value;
-    NodeEditor.instance.target.conditionVisibleString = conditionVisible.value;
-    NodeEditor.instance.target.executeCodeString = executeCode.value;
+    NodeEditor.instance.target.recursiveStatus.conditionVisibleString = conditionVisible.value;
+    NodeEditor.instance.target.recursiveStatus.executeCodeString = executeCode.value;
 
     isChanged = false;
   }
