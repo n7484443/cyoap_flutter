@@ -5,48 +5,13 @@ import 'package:english_words/english_words.dart';
 import '../grammar/value_type.dart';
 import 'generable_parser.dart';
 
-enum SelectableStatus {
-  //isSelectable가 false 인 경우에는 selected와 hide 두가지로 사용
-  selected, //선택된 상태
-  hide, //숨긴 상태
-  open, //선택 가능한 상태
-  closed, //약간 흐릿하면서 선택 불가능한 상태
-}
-
-extension SelectableStatusExtension on SelectableStatus {
-  bool isSelected() {
-    return this == SelectableStatus.selected;
-  }
-
-  bool isPointerInteractive(bool isSelectable) {
-    if (isSelectable) {
-      return this == SelectableStatus.selected || this == SelectableStatus.open;
-    }
-    return false;
-  }
-
-  bool isNotSelected() {
-    return !isSelected();
-  }
-
-  SelectableStatus reverseSelected(bool isSelectable) {
-    if (isSelectable) {
-      return this == SelectableStatus.selected
-          ? SelectableStatus.open
-          : SelectableStatus.selected;
-    } else {
-      return this == SelectableStatus.selected
-          ? SelectableStatus.hide
-          : SelectableStatus.selected;
-    }
-  }
-}
-
 class ChoiceNodeBase extends GenerableParserAndPosition {
   //grid 단위로 설정
   int x;
   @override
   int get currentPos => x;
+  @override
+  set currentPos(int pos) => x = pos;
 
   int width; //-1 = 무한대
   int height; //0 == 1/2

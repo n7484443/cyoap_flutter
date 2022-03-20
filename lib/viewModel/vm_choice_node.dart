@@ -2,11 +2,12 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
 
 import '../model/choiceNode/choice_node.dart';
+import '../model/choiceNode/generable_parser.dart';
 import '../model/platform_system.dart';
 import '../util/tuple.dart';
 

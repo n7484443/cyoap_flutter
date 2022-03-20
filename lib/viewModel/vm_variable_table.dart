@@ -1,4 +1,4 @@
-import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
+import 'package:cyoap_flutter/model/choiceNode/generable_parser.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';

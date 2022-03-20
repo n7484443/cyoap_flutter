@@ -12,7 +12,8 @@ class LineSetting extends GenerableParserAndPosition {
 
   @override
   int get currentPos => _y;
-  set currentPos(int y) => _y = y;
+  @override
+  set currentPos(int pos) => _y = pos;
 
   int maxSelect;
   List<ChoiceNodeBase> children;

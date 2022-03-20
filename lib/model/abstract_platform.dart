@@ -10,7 +10,8 @@ import 'package:flutter/material.dart';
 
 import '../util/platform_specified_util/save_project.dart';
 import '../util/version.dart';
-import 'choiceNode/line_setting.dart';
+import 'choiceNode/choice_line.dart';
+import 'choiceNode/generable_parser.dart';
 import 'grammar/value_type.dart';
 
 class AbstractPlatform {

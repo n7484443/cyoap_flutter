@@ -14,7 +14,7 @@ import '../util/platform_specified_util/save_project.dart';
 import '../util/platform_specified_util/webp_converter.dart';
 import '../util/tuple.dart';
 import 'abstract_platform.dart';
-import 'choiceNode/line_setting.dart';
+import 'choiceNode/choice_line.dart';
 
 class PlatformFileSystem {
   late AbstractPlatform platform;
