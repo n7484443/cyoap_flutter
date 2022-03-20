@@ -141,10 +141,10 @@ class VMDraggableNestedMap extends GetxController {
     var lineSetting = getPlatform().lineSettings;
     if (y >= lineSetting.length) return;
     for (var i = x; i < lineSetting[y].children.length; i++) {
-      if (!Get.isRegistered<VMChoiceNode>(tag: VMChoiceNode.getTag(i, y))) {
+      if (!Get.isRegistered<VMChoiceNode>(tag: VMChoiceNode.getTagFromXY(i, y))) {
         continue;
       }
-      Get.find<VMChoiceNode>(tag: VMChoiceNode.getTag(i, y)).updateFromNode();
+      Get.find<VMChoiceNode>(tag: VMChoiceNode.getTagFromXY(i, y)).updateFromNode();
     }
   }
 

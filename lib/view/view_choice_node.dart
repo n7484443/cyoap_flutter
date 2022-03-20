@@ -23,7 +23,7 @@ class ViewChoiceNode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var controller = Get.put(VMChoiceNode(x: posX, y: posY),
-        tag: VMChoiceNode.getTag(posX, posY));
+        tag: VMChoiceNode.getTagFromXY(posX, posY));
     var vmDraggableNestedMap = Get.find<VMDraggableNestedMap>();
     var scale = vmDraggableNestedMap.getScale();
 

@@ -90,8 +90,11 @@ class VMChoiceNode extends GetxController {
     }
   }
 
-  static String getTag(int x, int y, {int children = -1}) {
-    return '$x:$y:$children';
+  static String getTag(ChoiceNodeBase node) {
+    return node.tag;
+  }
+  static String getTagFromXY(int x, int y) {
+    return getNode(x, y)!.tag;
   }
 
   void sizeChange(int x, int y) {
@@ -117,10 +120,10 @@ class VMChoiceNode extends GetxController {
   }
 
   static VMChoiceNode? getVMChoiceNode(int x, int y) {
-    if (!Get.isRegistered<VMChoiceNode>(tag: VMChoiceNode.getTag(x, y))) {
+    if (!Get.isRegistered<VMChoiceNode>(tag: VMChoiceNode.getTagFromXY(x, y))) {
       return null;
     }
-    return Get.find<VMChoiceNode>(tag: VMChoiceNode.getTag(x, y));
+    return Get.find<VMChoiceNode>(tag: VMChoiceNode.getTagFromXY(x, y));
   }
 
   bool isSelect() {

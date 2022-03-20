@@ -50,4 +50,5 @@ abstract class GenerableParserAndPosition {
     }
     return true;
   }
+  String get tag => parent == null ? "$currentPos" : "${parent?.tag}:$currentPos";
 }
