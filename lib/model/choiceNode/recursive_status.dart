@@ -13,7 +13,7 @@ class RecursiveStatus{
     'conditionClickableRecursive': conditionClickableRecursive,
     'conditionVisibleRecursive': conditionVisibleRecursive,
     'executeCodeRecursive': executeCodeRecursive,
-    'conditionClickableString': conditionClickableString,
+        'conditionClickableString': conditionClickableString,
     'conditionVisibleString': conditionVisibleString,
     'executeCodeString': executeCodeString,
   };
@@ -40,10 +40,13 @@ class RecursiveStatus{
     if (json['executeCodeRecursive'] == null) {
       executeCodeRecursive = null;
     } else {
-      executeCodeRecursive =
-          List.generate((json['executeCodeRecursive'] as List).length, (index) {
-            return getClassFromJson((json['executeCodeRecursive'] as List)[index]);
-          });
+      executeCodeRecursive = List.generate(
+        (json['executeCodeRecursive'] as List).length,
+        (index) {
+          return getClassFromJson(
+              (json['executeCodeRecursive'] as List)[index]);
+        },
+      );
     }
   }
 }
