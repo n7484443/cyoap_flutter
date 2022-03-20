@@ -40,7 +40,11 @@ class LineSetting extends GenerableParserAndPosition {
             : getClassFromJson(json['executeRecursive']),
         children = json.containsKey('children')
             ? (json['children'] as List).map((e) => ChoiceNodeBase.fromJson(e)).toList()
-            : List.empty(growable: true);
+            : List.empty(growable: true){
+    for (var element in children) {
+      element.parent = this;
+    }
+  }
 
 
   void addData(int x, ChoiceNodeBase node) {

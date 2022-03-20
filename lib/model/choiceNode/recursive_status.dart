@@ -1,3 +1,4 @@
+import '../grammar/analyser.dart';
 import '../grammar/recursive_parser.dart';
 
 class RecursiveStatus{
@@ -48,5 +49,21 @@ class RecursiveStatus{
         },
       );
     }
+  }
+
+  void generateParser() {
+    var conditionClickableRecursiveParsed =
+        Analyser.analyseCodes(conditionClickableString);
+    var conditionVisibleRecursiveParsed =
+        Analyser.analyseCodes(conditionVisibleString);
+    var executeCodeRecursiveParsed = Analyser.analyseCodes(executeCodeString);
+
+    conditionClickableRecursive = conditionClickableRecursiveParsed.isNotEmpty
+        ? conditionClickableRecursiveParsed[0]
+        : null;
+    conditionVisibleRecursive = conditionVisibleRecursiveParsed.isNotEmpty
+        ? conditionVisibleRecursiveParsed[0]
+        : null;
+    executeCodeRecursive = executeCodeRecursiveParsed;
   }
 }
