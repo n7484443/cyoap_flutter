@@ -157,7 +157,7 @@ class AbstractPlatform {
         if (node.status.isSelected()) {
           node.execute();
           if (node.isSelectable) {
-            lineSetting.executeRecursive?.unzip();
+            lineSetting.execute();
           }
         }
       }
@@ -171,16 +171,7 @@ class AbstractPlatform {
         }
       }
 
-      var clickableLine = lineSetting.clickableRecursive?.unzip().dataUnzip();
-      bool clickableLineTest = true;
-      if (clickableLine != null) {
-        if (clickableLine is bool) {
-          clickableLineTest = clickableLine;
-        } else if (clickableLine is ValueTypeWrapper) {
-          var data = clickableLine.valueType.data;
-          clickableLineTest = data is bool ? data : true;
-        }
-      }
+      bool clickableLineTest = lineSetting.isClickable();
 
       for (var node in lineSetting.children) {
         var selectable = node.isClickable();
