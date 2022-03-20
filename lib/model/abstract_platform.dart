@@ -133,7 +133,6 @@ class AbstractPlatform {
     for (var line in lineSettings) {
       for (int x = 0; x < line.children.length; x++) {
         line.children[x].x = x;
-        line.children[x].y = line.y;
       }
     }
   }

@@ -12,6 +12,6 @@ class NodeEditor {
   }
 
   VMChoiceNode getVMChoiceNode() {
-    return VMChoiceNode.getVMChoiceNode(target.x, target.y)!;
+    return VMChoiceNode.getVMChoiceNode(target.x, target.parent!.currentPos)!;
   }
 }

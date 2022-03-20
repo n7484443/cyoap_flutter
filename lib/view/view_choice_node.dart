@@ -15,8 +15,9 @@ import '../util/tuple.dart';
 class ViewChoiceNode extends StatelessWidget {
   final int posX;
   final int posY;
+  final int children;
 
-  const ViewChoiceNode({Key? key, required this.posX, required this.posY})
+  const ViewChoiceNode({Key? key, required this.posX, required this.posY, this.children = -1})
       : super(key: key);
 
   @override

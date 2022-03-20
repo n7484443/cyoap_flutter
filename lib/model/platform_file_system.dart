@@ -26,8 +26,7 @@ class PlatformFileSystem {
   bool openAsFile = false;
 
   PlatformFileSystem();
-  /*TODO - node_0_0 형태를 lineSetting_0, lineSetting_1 형태로 저장.
-     추가적으로 page 시스템 개발*/
+  /*TODO - page 시스템 개발*/
   Future<void> createFromFolder(String path) async {
     openAsFile = false;
     var dirImages = Directory(path + '/images');

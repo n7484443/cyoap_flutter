@@ -69,7 +69,7 @@ class VMChoiceNode extends GetxController {
     }
   }
 
-  static ChoiceNodeBase? getNode(int x, int y) {
+  static ChoiceNodeBase? getNode(int x, int y, {int children = -1}) {
     if (x == -10 && y == -10) {
       return VMDraggableNestedMap.createNodeForTemp();
     } else if (y < 0 || y >= getPlatform().lineSettings.length) {
@@ -77,11 +77,21 @@ class VMChoiceNode extends GetxController {
     } else if (x < 0 || x >= getPlatform().lineSettings[y].children.length) {
       return null;
     }
-    return getPlatform().getChoiceNode(x, y);
+
+    var node = getPlatform().getChoiceNode(x, y);
+    if(node == null){
+      return null;
+    }
+    if(children == -1){
+      return node;
+    }else{
+      if(node.children.length >= children)return null;
+      return node.children[children];
+    }
   }
 
-  static String getTag(int x, int y) {
-    return '$x:$y';
+  static String getTag(int x, int y, {int children = -1}) {
+    return '$x:$y:$children';
   }
 
   void sizeChange(int x, int y) {
@@ -151,7 +161,7 @@ class VMChoiceNode extends GetxController {
 
   static void doAllVMChoiceNode(void Function(VMChoiceNode vm) action) {
     getPlatform().doAllChoiceNode((node) {
-      var vm = getVMChoiceNode(node.x, node.y);
+      var vm = getVMChoiceNode(node.x, node.currentPos);
       if (vm != null) {
         action(vm);
       }

@@ -57,7 +57,7 @@ class ImageDB {
   }
 
   Future<void> uploadImages(String name, Uint8List data) async {
-    if (!_loadImage.contains(name)) {
+    if (_loadImage.contains(name)) {
       return;
     }
 
@@ -73,7 +73,7 @@ class ImageDB {
   }
 
   Future<void> uploadImagesFuture(String name, Future<Uint8List> data) async {
-    if (!_loadImage.contains(name)) {
+    if (_loadImage.contains(name)) {
       return;
     }
 
@@ -92,9 +92,6 @@ class ImageDB {
 
   Future<Uint8List?> getImage(String name) async {
     await init();
-    if (!_loadImage.contains(name)) {
-      return null;
-    }
     if (ConstList.isOnlyFileAccept()) {
       return await notesReadableTxn.getObject(name) as Uint8List;
     } else {

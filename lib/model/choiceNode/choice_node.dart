@@ -44,10 +44,12 @@ extension SelectableStatusExtension on SelectableStatus {
   }
 }
 
-class ChoiceNodeBase extends GenerableParser {
+class ChoiceNodeBase extends GenerableParserAndPosition {
   //grid 단위로 설정
   int x;
-  int y;
+  @override
+  int get currentPos => x;
+
   int width; //-1 = 무한대
   int height; //0 == 1/2
   bool isCard;
@@ -63,19 +65,18 @@ class ChoiceNodeBase extends GenerableParser {
   bool isSelectable = true;
   SelectableStatus status = SelectableStatus.open;
   RecursiveStatus recursiveStatus = RecursiveStatus();
+  List<ChoiceNodeBase> children = List.empty(growable: true);
 
-  ChoiceNodeBase(this.x, this.y, this.width, this.height, this.isCard,
+  ChoiceNodeBase(this.x, this.width, this.height, this.isCard,
       this.title, this.contentsString, this.imageString);
 
   ChoiceNodeBase.origin(this.width, this.height, this.isCard, this.title,
       this.contentsString, this.imageString)
-      : x = 0,
-        y = 0;
+      : x = 0;
 
   ChoiceNodeBase.noTitle(this.width, this.height, this.isCard,
       this.contentsString, this.imageString)
       : x = 0,
-        y = 0,
         title = '' {
     for (int i = 0; i < 2; i++) {
       title += WordPair.random().asPascalCase;
@@ -89,7 +90,6 @@ class ChoiceNodeBase extends GenerableParser {
   @override
   Map<String, dynamic> toJson() => {
         'x': x,
-        'y': y,
         'width': width,
         'height': height,
         'isCard': isCard,
@@ -107,7 +107,6 @@ class ChoiceNodeBase extends GenerableParser {
 
   ChoiceNodeBase.fromJson(Map<String, dynamic> json)
       : x = json['x'],
-        y = json['y'],
         width = json['width'],
         height = json['height'],
         isCard = json['isCard'],

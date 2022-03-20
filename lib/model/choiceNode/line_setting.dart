@@ -7,8 +7,11 @@ import '../variable_db.dart';
 import 'choice_node.dart';
 import 'generable_parser.dart';
 
-class LineSetting extends GenerableParser {
+class LineSetting extends GenerableParserAndPosition {
   int y;
+  @override
+  int get currentPos => y;
+
   int maxSelect;
   RecursiveUnit? clickableRecursive;
   RecursiveUnit? conditionVisibleRecursive;
@@ -45,7 +48,7 @@ class LineSetting extends GenerableParser {
 
   void addData(int x, ChoiceNodeBase node) {
     node.x = x;
-    node.y = y;
+    node.parent = this;
     if (x > children.length) {
       children.add(node);
     } else {
