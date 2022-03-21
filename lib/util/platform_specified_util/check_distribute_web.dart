@@ -8,13 +8,6 @@ import 'check_distribute.dart';
 
 class DistributeImp extends Distribute {
   @override
-  Future<bool> isDistribute() async {
-    var data = await _readFileAsUint8('check_distributed.json');
-    var decoded = jsonDecode(String.fromCharCodes(data));
-    return decoded['is_distribute'];
-  }
-
-  @override
   Future<Tuple<List<String>, List<String>>> getImageNodeList() async {
     var imageListData = await getFileWithJson('images/list.json');
     var nodeListData = await getFileWithJson('nodes/list.json');

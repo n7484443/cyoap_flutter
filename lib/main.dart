@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cyoap_flutter/util/platform_specified_util/check_distribute.dart';
 import 'package:cyoap_flutter/view/view_make_platform.dart';
 import 'package:cyoap_flutter/view/view_play.dart';
 import 'package:cyoap_flutter/view/view_start.dart';
@@ -15,10 +14,10 @@ import 'package:tuple/tuple.dart';
 //flutter build web --base-href=/FlutterCyoapWeb/
 
 class ConstList {
+  static const bool isDistributed = bool.fromEnvironment("isDistributed", defaultValue: false);
   static const double appBarSize = 40.0;
   static const double elevation = 6.0;
   static late final PlatformType actualPlatformType;
-  static bool? isDistributed;
 
   static bool isOnlyFileAccept() {
     return actualPlatformType == PlatformType.web;
@@ -90,13 +89,8 @@ class ConstList {
       }
     } catch (e) {
       ConstList.actualPlatformType = PlatformType.web;
-      isDistributed = await getDistribute().isDistribute();
     }
     return;
-  }
-
-  static bool checkDistribute() {
-    return isDistributed ?? false;
   }
 }
 
@@ -112,7 +106,7 @@ void main() {
       GetMaterialApp(
         title: 'CYOAP',
         initialRoute: '/',
-        getPages: List.generate(ConstList.checkDistribute() ? 2 : 3, (index) {
+        getPages: List.generate(ConstList.isDistributed ? 2 : 3, (index) {
           switch (index) {
             case 0:
               return GetPage(name: '/', page: () => const ViewStart());

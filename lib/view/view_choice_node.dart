@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/model/choiceNode/generable_parser.dart';
 import 'package:cyoap_flutter/util/color_util.dart';
 import 'package:cyoap_flutter/view/view_text_outline.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
@@ -8,7 +9,6 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../main.dart';
-import '../model/choiceNode/choice_node.dart';
 import '../model/platform_system.dart';
 import '../util/tuple.dart';
 

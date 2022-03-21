@@ -38,7 +38,7 @@ jobs:
       - run: Rename-Item "build/app/outputs/flutter-apk/app-release.apk" "cyoap_android_${{ steps.get_version.outputs.version-without-v }}.apk"
 
       - name: Build web distribute
-        run: flutter build web --web-renderer html --release
+        run: flutter build web --web-renderer html --release --dart-define="isDistributed"=true
       - run: Remove-Item ./build/web/canvaskit -Recurse | Remove-Item
       - run: Remove-Item ./build/web/.last_build_id
       - run: Remove-Item ./build/web/assets/NOTICES

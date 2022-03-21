@@ -9,7 +9,6 @@ class ChoicePage extends GenerableParserAndPosition{
 
   @override
   void generateParser() {
-    // TODO: implement generateParser
   }
 
   @override

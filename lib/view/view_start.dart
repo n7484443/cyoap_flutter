@@ -9,7 +9,7 @@ class ViewStart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vmStart = Get.put(VMStartPlatform());
-    if (ConstList.checkDistribute()) {
+    if (ConstList.isDistributed) {
       vmStart.doDistributeMode();
       return Scaffold(
         body: Center(
