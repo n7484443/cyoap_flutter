@@ -16,9 +16,18 @@ class ViewPlay extends StatelessWidget {
       return Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(ConstList.appBarSize),
-          child: AppBar(),
+          child: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Get.back();
+              },
+            ),
+          ),
         ),
-        drawer: const ViewVariable(),
+        drawer: const Drawer(
+          child: ViewVariable(),
+        ),
         body: const NestedMap(),
       );
     } else {
