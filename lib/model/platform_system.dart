@@ -87,11 +87,11 @@ class PlatformSystem {
 }
 
 AbstractPlatform getPlatform() {
-  if(getPlatformFileSystem().platform == null){
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      Get.offAndToNamed('/',);
+  if(getPlatformFileSystem().platform == null) {
+    getPlatformFileSystem().platform = AbstractPlatform.none();
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      Get.toNamed('/')?.then((value) => platformSpecified.reload());
     });
-    throw 'platform not found';
   }
   return getPlatformFileSystem().platform!;
 }

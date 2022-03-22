@@ -12,6 +12,7 @@ abstract class PlatformSpecified{
   late SaveProject saveProject;
   void init(){}
   void preInit(){}
+  void reload(){}
 }
 PlatformSpecified get platformSpecified => PlatformSpecified.instance;
 
