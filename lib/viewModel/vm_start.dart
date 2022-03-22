@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,7 +11,6 @@ import '../model/check_update.dart';
 import '../model/image_db.dart';
 import '../model/opening_file_folder.dart';
 import '../model/platform_system.dart';
-import '../util/platform_specified_util/check_distribute.dart';
 
 class VMStartPlatform extends GetxController {
   FrequentlyUsedPath frequentlyUsedPath = FrequentlyUsedPath();
@@ -22,6 +23,9 @@ class VMStartPlatform extends GetxController {
   @override
   void onInit() {
     isNeedUpdate();
+    if (ConstList.isDistributed) {
+      doDistributeMode();
+    }
     super.onInit();
   }
 
@@ -142,16 +146,25 @@ class VMStartPlatform extends GetxController {
     });
   }
 
+  var load = ''.obs;
+  var stopwatch = Stopwatch().obs;
   void doDistributeMode() async {
+    stopwatch.value.start();
+    var timer = Timer.periodic(const Duration(milliseconds: 10), (Timer timer) {
+      stopwatch.update((val) {});
+    });
+
     print('web is Distribute mode');
-    var value = await getDistribute().getImageNodeList();
+    var distribute = PlatformSpecified.instance.distribute;
+    var value = await distribute.getImageNodeList();
     print('load start');
-    var distribute = getDistribute();
+    load.value = '[ 로드 시작 ]';
     var imageList = value.data1;
     var nodeList = value.data2;
     for (var name in imageList) {
       ImageDB.instance.uploadImagesFuture(name, distribute.getFile('images/$name'));
     }
+    load.value = '[ 이미지 로드 완료 ]';
 
     List<Future> futureMap = List.empty(growable: true);
     Map<String, String> nodeMap = {};
@@ -162,11 +175,15 @@ class VMStartPlatform extends GetxController {
     }
     await Future.wait(futureMap);
 
+    load.value = '[ 선택지 로드 완료 ]';
     print('node loaded');
 
     String imageSource = await distribute.getFileWithJson('imageSource.json');
     String platformData = await distribute.getFileWithJson('platform.json');
+    load.value = '[ 로드 완료 ]';
     print('load end');
+    stopwatch.value.stop();
+    timer.cancel();
 
     await PlatformSystem.instance
         .openPlatformList(nodeMap, imageSource, platformData);

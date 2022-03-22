@@ -9,7 +9,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
 
 import '../main.dart';
-import '../util/platform_specified_util/save_project.dart';
+import '../util/platform_specified_util/platform_specified.dart';
 import 'abstract_platform.dart';
 
 class PlatformSystem {
@@ -58,14 +58,14 @@ class PlatformSystem {
 
   Future<void> saveFile(Map<String, dynamic> input) async {
     if (input['bool'] as bool) {
-      await getSaveProject().saveZip('exported.zip', input);
+      await platformSpecified.saveProject.saveZip('exported.zip', input);
     } else {
-      await getSaveProject().saveZip(path!, input);
+      await platformSpecified.saveProject.saveZip(path!, input);
     }
   }
 
   Future<void> saveFolder(PlatformFileSystem platformFileSystem) async {
-    await getSaveProject().saveRaw(path!, platformFileSystem);
+    await platformSpecified.saveProject.saveRaw(path!, platformFileSystem);
   }
 
   static String getImageName(int index) {

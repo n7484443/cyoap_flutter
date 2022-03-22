@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
 import 'package:isolated_worker/js_isolated_worker.dart';
 
 import '../tuple.dart';
-import 'check_distribute.dart';
 
 class DistributeImp extends Distribute {
   @override

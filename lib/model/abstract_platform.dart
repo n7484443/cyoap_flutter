@@ -8,7 +8,7 @@ import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/util/tuple.dart';
 import 'package:flutter/material.dart';
 
-import '../util/platform_specified_util/save_project.dart';
+import '../util/platform_specified_util/platform_specified.dart';
 import '../util/version.dart';
 import 'choiceNode/choice_line.dart';
 import 'choiceNode/generable_parser.dart';
@@ -210,7 +210,7 @@ class AbstractPlatform {
     var archive = Archive();
     if (mapImage != null) {
       for (var imageName in mapImage.keys) {
-        var converted = await getSaveProject()
+        var converted = await platformSpecified.saveProject
             .convertImage(imageName, mapImage[imageName]!);
         archive.addFile(ArchiveFile('images/${converted.data1}',
             converted.data2.length, converted.data2));

@@ -3,7 +3,30 @@ import 'dart:typed_data';
 
 import '../../model/platform_file_system.dart';
 import '../tuple.dart';
-import 'save_project_vm.dart' if (dart.library.html) 'save_project_web.dart';
+import 'platform_specified_vm.dart'
+if (dart.library.html) 'platform_specified_web.dart';
+
+abstract class PlatformSpecified{
+  static final PlatformSpecified instance = PlatformSpecifiedImp();
+  late Distribute distribute;
+  late SaveProject saveProject;
+  void init(){}
+  void preInit(){}
+}
+PlatformSpecified get platformSpecified => PlatformSpecified.instance;
+
+abstract class Distribute {
+  Future<Tuple<List<String>, List<String>>> getImageNodeList() async {
+    throw UnimplementedError();
+  }
+
+  Future<Uint8List> getFile(String f) async {
+    throw UnimplementedError();
+  }
+  Future<String> getFileWithJson(String f) async {
+    throw UnimplementedError();
+  }
+}
 
 abstract class SaveProject {
   Future<Tuple<String, Uint8List>> convertImage(
@@ -51,4 +74,11 @@ abstract class SaveProject {
       String name, PlatformFileSystem platformFileSystem) async {}
 }
 
-SaveProjectImp getSaveProject() => SaveProjectImp();
+abstract class WebpConverter {
+  Future<Tuple<String, Uint8List>> convert(
+      Uint8List input, String name) async =>
+      throw "doesn't work in this platform";
+
+  void init() {}
+  bool canConvert() => false;
+}

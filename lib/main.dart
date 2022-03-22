@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
 import 'package:cyoap_flutter/view/view_make_platform.dart';
 import 'package:cyoap_flutter/view/view_play.dart';
 import 'package:cyoap_flutter/view/view_start.dart';
@@ -38,6 +39,7 @@ class ConstList {
   static String get version => versionInner ?? '';
 
   static Future<void> init() async {
+    PlatformSpecified.instance.init();
     var packageInfo = await PackageInfo.fromPlatform();
     versionInner = packageInfo.version;
   }
@@ -90,6 +92,7 @@ class ConstList {
     } catch (e) {
       ConstList.actualPlatformType = PlatformType.web;
     }
+    PlatformSpecified.instance.preInit();
     return;
   }
 }

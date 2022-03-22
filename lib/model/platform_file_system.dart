@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 
 import '../util/json_file_parsing.dart';
-import '../util/platform_specified_util/save_project.dart';
+import '../util/platform_specified_util/platform_specified.dart';
 import '../util/platform_specified_util/webp_converter.dart';
 import '../util/tuple.dart';
 import 'abstract_platform.dart';
@@ -349,9 +349,9 @@ class PlatformFileSystem {
 
     var converted = await convertImage('exported.png', input);
     if (map['isOnlyFileAccept']) {
-      await getSaveProject().downloadCapture(converted.data1, converted.data2);
+      await platformSpecified.saveProject.downloadCapture(converted.data1, converted.data2);
     } else {
-      await getSaveProject().downloadCapture(
+      await platformSpecified.saveProject.downloadCapture(
           '${map['path']}/${converted.data1}', converted.data2);
     }
   }
