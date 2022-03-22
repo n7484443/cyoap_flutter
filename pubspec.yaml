@@ -77,9 +77,9 @@ flutter:
   fonts:
     - family: YiSunShin
       fonts:
-        - asset: asset/fonts/YiSunShin/YiSunShinRegular.ttf
+        - asset: asset/fonts/YiSunShin/YiSunShinRegular.otf
           weight: 400
-        - asset: asset/fonts/YiSunShin/YiSunShinBold.ttf
+        - asset: asset/fonts/YiSunShin/YiSunShinBold.otf
           weight: 700
     - family: MapleStory
       fonts:
