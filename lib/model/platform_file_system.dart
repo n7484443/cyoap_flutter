@@ -17,7 +17,7 @@ import 'abstract_platform.dart';
 import 'choiceNode/choice_line.dart';
 
 class PlatformFileSystem {
-  late AbstractPlatform platform;
+  AbstractPlatform? platform;
 
   final Map<String, String> _imageSource = {};
   Map<String, String> get imageSource => _imageSource;
@@ -90,8 +90,8 @@ class PlatformFileSystem {
       }
     }
 
-    platform.addDataAll(lineSettingList);
-    platform.init();
+    platform!.addDataAll(lineSettingList);
+    platform!.init();
   }
 
   Future<void> createPlatformList(
@@ -116,8 +116,8 @@ class PlatformFileSystem {
 
     platform = AbstractPlatform.fromJson(jsonDecode(platformData));
 
-    platform.addDataAll(lineSettingList);
-    platform.init();
+    platform!.addDataAll(lineSettingList);
+    platform!.init();
   }
 
   Future<void> createFromZip(Archive archive) async {
@@ -161,8 +161,8 @@ class PlatformFileSystem {
       platform = AbstractPlatform.none();
     }
 
-    platform.addDataAll(lineSettingList);
-    platform.init();
+    platform!.addDataAll(lineSettingList);
+    platform!.init();
 
     archive.clear();
   }
@@ -170,7 +170,7 @@ class PlatformFileSystem {
   Future<void> createFromJson(String input, String path) async {
     var jsonParser = JsonProjectParser(path);
     platform = await jsonParser.getPlatform(input);
-    platform.init();
+    platform!.init();
   }
 
   void createFromVoid() {
@@ -222,7 +222,7 @@ class PlatformFileSystem {
       dirNodesBackUp.deleteSync(recursive: true);
     }
 
-    for (var line in platform.lineSettings) {
+    for (var line in platform!.lineSettings) {
       var file = File('$path/nodes_backup/lineSetting_${line.currentPos}.json');
       file.createSync(recursive: true);
       file.writeAsString(jsonEncode(line.toJson()));
@@ -232,7 +232,7 @@ class PlatformFileSystem {
       dirNodes.deleteSync(recursive: true);
     }
 
-    for (var line in platform.lineSettings) {
+    for (var line in platform!.lineSettings) {
       var file = File('$path/nodes/lineSetting_${line.currentPos}.json');
       file.createSync(recursive: true);
       file.writeAsString(jsonEncode(line.toJson()));
@@ -242,7 +242,7 @@ class PlatformFileSystem {
       platformJson.deleteSync(recursive: true);
     }
     platformJson.create();
-    platformJson.writeAsString(jsonEncode(platform.toJson()));
+    platformJson.writeAsString(jsonEncode(platform!.toJson()));
 
     if (imageSourceJson.existsSync()) {
       imageSourceJson.deleteSync(recursive: true);

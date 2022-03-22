@@ -7,6 +7,7 @@ import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/model/platform_file_system.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 
 import '../main.dart';
 import '../util/platform_specified_util/platform_specified.dart';
@@ -86,7 +87,13 @@ class PlatformSystem {
 }
 
 AbstractPlatform getPlatform() {
-  return getPlatformFileSystem().platform;
+  if(getPlatformFileSystem().platform == null){
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      Get.offAndToNamed('/',);
+    });
+    throw 'platform not found';
+  }
+  return getPlatformFileSystem().platform!;
 }
 
 bool isEditable() {
