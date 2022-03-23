@@ -11,18 +11,18 @@ class ViewPlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var vmPlatform = Get.put(VMPlatform());
-    return Obx(
-      () {
-        if (ConstList.isDistributed && !vmPlatform.loaded.value) {
+    return GetBuilder<VMPlatform>(
+      init: VMPlatform(),
+      builder: (_){
+        if (ConstList.isDistributed && !_.loaded) {
           return Scaffold(
             body: Center(
               child: Column(
                 children: [
                   const CircularProgressIndicator(),
                   const Text('로딩중입니다. 잠시만 기다려주세요.'),
-                  Text(vmPlatform.loadString.value),
-                  Text(vmPlatform.stopwatch.value.elapsed.toString()),
+                  Text(_.loadString),
+                  Text(_.stopwatchLoad.elapsed.toString()),
                 ],
               ),
             ),
@@ -57,8 +57,7 @@ class ViewPlay extends StatelessWidget {
                 Flexible(
                   child: Scaffold(
                     appBar: PreferredSize(
-                      preferredSize:
-                          const Size.fromHeight(ConstList.appBarSize),
+                      preferredSize: const Size.fromHeight(ConstList.appBarSize),
                       child: AppBar(),
                     ),
                     body: const NestedMap(),

@@ -41,7 +41,6 @@ class VMDraggableNestedMap extends GetxController {
   List<Widget> widgetList({BoxConstraints? constrains}) {
     var choiceNodeList = getPlatform().lineSettings;
     var edit = isEditable();
-
     List<Widget> widgetList;
     if (edit) {
       widgetList = List<Widget>.generate(getLength(), (y) {

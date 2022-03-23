@@ -21,12 +21,12 @@ class DistributeImp extends Distribute {
 
   @override
   Future<Uint8List> getFile(String f) async {
-    return await _readFileAsUint8('dist/$f');
+    return await _readFileAsUint8('/dist/$f');
   }
 
   @override
   Future<String> getFileWithJson(String f) async {
-    return await _readFileAsString('dist/$f');
+    return await _readFileAsString('/dist/$f');
   }
 
   Future<Uint8List> _readFileAsUint8(String path) async {

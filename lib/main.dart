@@ -15,7 +15,8 @@ import 'package:tuple/tuple.dart';
 //flutter build web --base-href=/FlutterCyoapWeb/
 
 class ConstList {
-  static const bool isDistributed = bool.fromEnvironment("isDistributed", defaultValue: false);
+  static const bool isDistributed =
+      true; //bool.fromEnvironment("isDistributed", defaultValue: false);
   static const double appBarSize = 40.0;
   static const double elevation = 6.0;
   static late final PlatformType actualPlatformType;
@@ -112,12 +113,13 @@ void main() {
         getPages: List.generate(ConstList.isDistributed ? 1 : 3, (index) {
           switch (index) {
             case 0:
-              return GetPage(name: '/', page: () {
-                if(ConstList.isDistributed){
-                  return const ViewPlay();
-                }
-                return const ViewStart();
-              });
+              return GetPage(
+                name: '/',
+                page: () => ConstList.isDistributed ? const ViewPlay() : const ViewStart(),
+                binding: ConstList.isDistributed ? BindingsBuilder(() {
+                  Get.put(VMDraggableNestedMap());
+                }) : null,
+              );
             case 1:
               return GetPage(
                   name: '/viewPlay',

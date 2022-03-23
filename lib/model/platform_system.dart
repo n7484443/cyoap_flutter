@@ -48,8 +48,7 @@ class PlatformSystem {
   Future<void> openPlatformList(Map<String, String> choiceNodes,
       String imageSource,
       String platform) async {
-    await platformFileSystem.createPlatformList(
-        choiceNodes, imageSource, platform);
+    await platformFileSystem.createPlatformList(choiceNodes, imageSource, platform);
   }
 
   Future<void> openPlatformVoid() async {
