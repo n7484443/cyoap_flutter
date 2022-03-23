@@ -1,6 +1,7 @@
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:qlevar_router/qlevar_router.dart';
 
 import '../main.dart';
 import '../model/image_db.dart';
@@ -62,7 +63,7 @@ class ViewSource extends StatelessWidget {
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
-                Get.back(id: 1);
+                QR.back();
               },
             ),
           ),

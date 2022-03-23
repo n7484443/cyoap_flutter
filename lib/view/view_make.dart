@@ -8,6 +8,7 @@ import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:qlevar_router/qlevar_router.dart';
 
 import '../main.dart';
 import '../model/platform_system.dart';
@@ -20,26 +21,26 @@ class ViewMake extends StatelessWidget {
   Widget build(BuildContext context) {
     final vmPlatform = Get.put(VMPlatform());
 
-    var dialog = AlertDialog(
-      title: const Text('뒤로가기'),
-      content: const Text('저장되지 않은 내용이 있습니다. 저장하시겠습니까?'),
-      actions: [
-        ElevatedButton(
-          onPressed: () {
-            Get.back();
-            Get.back();
-          },
-          child: const Text('아니오'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            vmPlatform.save(ConstList.isOnlyFileAccept());
-            Get.back();
-            Get.back();
-          },
-          child: const Text('예'),
-        ),
-      ],
+    var dialog = QDialog(
+      widget: (pop) => AlertDialog(
+        title: const Text('뒤로가기'),
+        content: const Text('저장되지 않은 내용이 있습니다. 저장하시겠습니까?'),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              pop(true);
+            },
+            child: const Text('아니오'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              vmPlatform.save(ConstList.isOnlyFileAccept());
+              pop(true);
+            },
+            child: const Text('예'),
+          ),
+        ],
+      )
     );
     var appbarWidget = PreferredSize(
       preferredSize: const Size.fromHeight(ConstList.appBarSize),
@@ -48,12 +49,10 @@ class ViewMake extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             if (Get.find<VMDraggableNestedMap>().isChanged) {
-              showDialog(
-                context: context,
-                builder: (_) => dialog,
-              );
-            } else {
-              Get.back();
+              dialog.show().then((value) =>
+                  QR.back());
+            }else{
+              QR.back();
             }
           },
         ),
@@ -176,11 +175,9 @@ class ViewMake extends StatelessWidget {
     );
 
     return WillPopScope(
-      onWillPop: () {
-        return showDialog(
-          context: context,
-          builder: (_) => dialog,
-        ) as Future<bool>;
+      onWillPop: () async{
+        dialog.show().then((value) => QR.back());
+        return false;
       },
       child: Scaffold(
         appBar: appbarWidget,

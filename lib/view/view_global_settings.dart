@@ -4,8 +4,8 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:qlevar_router/qlevar_router.dart';
 
 import '../main.dart';
 import '../model/platform_system.dart';
@@ -24,33 +24,30 @@ class ViewGlobalSetting extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             if (vmGlobalSetting.isChanged) {
-              showDialog(
-                context: context,
-                builder: (_) => AlertDialog(
+              QDialog(
+                widget: (pop) => AlertDialog(
                   title: const Text('뒤로가기'),
                   content: const Text('저장되지 않은 내용이 있습니다. 저장하시겠습니까?'),
                   actions: [
                     ElevatedButton(
                       onPressed: () {
                         vmGlobalSetting.isChanged = false;
-                        Get.back();
-                        Get.back(id: 1);
+                        pop(true);
                       },
                       child: const Text('아니오'),
                     ),
                     ElevatedButton(
                       onPressed: () {
                         vmGlobalSetting.save();
-                        Get.back();
-                        Get.back(id: 1);
+                        pop(true);
                       },
                       child: const Text('예'),
                     ),
                   ],
                 ),
-              );
-            } else {
-              Get.back(id: 1);
+              ).show().then((value) => QR.back());
+            }else{
+              QR.back();
             }
           },
         ),
@@ -58,7 +55,7 @@ class ViewGlobalSetting extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              Get.toNamed('/viewFontSource', id: 1);
+              QR.to('/viewMakePlatform/viewFontSource');
             },
           ),
           IconButton(
@@ -72,88 +69,93 @@ class ViewGlobalSetting extends StatelessWidget {
     );
 
     editDialog(int index) {
-      Get.defaultDialog(
-        title: "데이터 변경",
-        radius: 10,
-        cancel: TextButton(
-          child: const Text('취소'),
-          onPressed: () {
-            Get.back();
-          },
-        ),
-        confirm: TextButton(
-          child: const Text('저장'),
-          onPressed: () {
-            vmGlobalSetting.editInitialValue(index);
-            Get.back();
-          },
-        ),
-        content: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Flexible(
-                flex: 4,
-                child: TextField(
-                  maxLines: 1,
-                  maxLength: 50,
-                  controller: vmGlobalSetting.controllerName,
-                  decoration: const InputDecoration(
-                    label: Text('변수명'),
-                  ),
-                  textAlign: TextAlign.right,
-                ),
-              ),
-              const Spacer(),
-              Flexible(
-                flex: 4,
-                child: TextField(
-                  maxLines: 1,
-                  maxLength: 50,
-                  controller: vmGlobalSetting.controllerValue,
-                  decoration: const InputDecoration(
-                    label: Text('변수 초기값'),
-                  ),
-                  textAlign: TextAlign.right,
-                ),
-              ),
-              const Spacer(),
-              Flexible(
-                flex: 4,
-                child: TextField(
-                  maxLines: 1,
-                  maxLength: 50,
-                  controller: vmGlobalSetting.controllerDisplayName,
-                  decoration: const InputDecoration(
-                    label: Text('변수 표기명'),
-                  ),
-                  textAlign: TextAlign.right,
-                ),
-              ),
-              const Spacer(),
-              Flexible(
-                flex: 4,
-                child: Column(
-                  children: [
-                    GetBuilder<VMGlobalSetting>(
-                      builder: (_) => Switch(
-                        value: vmGlobalSetting.isVisible(index),
-                        onChanged: (bool value) {
-                          vmGlobalSetting.setVisible(index, value);
-                        },
-                      ),
+      QDialog(
+        widget: (pop) => AlertDialog(
+          title: const Text("데이터 변경"),
+          actions:[
+            TextButton(
+              child: const Text('취소'),
+              onPressed: () {
+                QR.back();
+                pop(true);
+              },
+            ),
+            TextButton(
+              child: const Text('저장'),
+              onPressed: () {
+                vmGlobalSetting.editInitialValue(index);
+                QR.back();
+                pop(true);
+              },
+            ),
+          ],
+          content: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Flexible(
+                  flex: 4,
+                  child: TextField(
+                    maxLines: 1,
+                    maxLength: 50,
+                    controller: vmGlobalSetting.controllerName,
+                    decoration: const InputDecoration(
+                      label: Text('변수명'),
                     ),
-                    const Text(
-                      '플레이시 표시',
-                      style: TextStyle(fontSize: 14),
-                    )
-                  ],
+                    textAlign: TextAlign.right,
+                  ),
                 ),
-              )
-            ],
+                const Spacer(),
+                Flexible(
+                  flex: 4,
+                  child: TextField(
+                    maxLines: 1,
+                    maxLength: 50,
+                    controller: vmGlobalSetting.controllerValue,
+                    decoration: const InputDecoration(
+                      label: Text('변수 초기값'),
+                    ),
+                    textAlign: TextAlign.right,
+                  ),
+                ),
+                const Spacer(),
+                Flexible(
+                  flex: 4,
+                  child: TextField(
+                    maxLines: 1,
+                    maxLength: 50,
+                    controller: vmGlobalSetting.controllerDisplayName,
+                    decoration: const InputDecoration(
+                      label: Text('변수 표기명'),
+                    ),
+                    textAlign: TextAlign.right,
+                  ),
+                ),
+                const Spacer(),
+                Flexible(
+                  flex: 4,
+                  child: Column(
+                    children: [
+                      GetBuilder<VMGlobalSetting>(
+                        builder: (_) => Switch(
+                          value: vmGlobalSetting.isVisible(index),
+                          onChanged: (bool value) {
+                            vmGlobalSetting.setVisible(index, value);
+                          },
+                        ),
+                      ),
+                      const Text(
+                        '플레이시 표시',
+                        style: TextStyle(fontSize: 14),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
-        ),
-      );
+        )
+      ).show();
     }
 
     var initialValueList = GetBuilder<VMGlobalSetting>(

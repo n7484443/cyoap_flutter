@@ -65,7 +65,6 @@ class VMPlatform extends GetxController {
     output.then((value) {
       stopwatch.update((val) => val?.stop());
       timer.cancel();
-      Get.back();
     });
 
     Get.find<VMDraggableNestedMap>().isChanged = false;

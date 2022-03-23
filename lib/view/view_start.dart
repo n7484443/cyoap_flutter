@@ -1,6 +1,7 @@
 import 'package:cyoap_flutter/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:qlevar_router/qlevar_router.dart';
 import '../viewModel/vm_start.dart';
 
 class ViewStart extends StatelessWidget {
@@ -129,7 +130,7 @@ class SelectMode extends StatelessWidget {
             onTap: () {
               Get.find<VMStartPlatform>().setDirectory().then((value) {
                 Get.find<VMStartPlatform>().setEditable(false);
-                Get.toNamed('/viewPlay');
+                QR.to('/viewPlay');
               });
             },
             child: const Center(
@@ -150,7 +151,7 @@ class SelectMode extends StatelessWidget {
             onTap: () {
               Get.find<VMStartPlatform>().setDirectory().then((value) {
                 Get.find<VMStartPlatform>().setEditable(true);
-                Get.toNamed('/viewMake');
+                QR.to('/viewMakePlatform/viewMake');
               });
             },
             child: const Center(

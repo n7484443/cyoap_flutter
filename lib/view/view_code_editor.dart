@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:qlevar_router/qlevar_router.dart';
 
 import '../main.dart';
 import '../viewModel/vm_code_editor.dart';
@@ -11,39 +12,36 @@ class ViewCodeEditor extends StatelessWidget {
   Widget build(BuildContext context) {
     final VMCodeEditor _vmCodeEditor = Get.put(VMCodeEditor());
 
-    var showDialogFunction = AlertDialog(
-      title: const Text('뒤로가기'),
-      content: const Text('저장되지 않은 내용이 있습니다. 저장하시겠습니까?'),
-      actions: [
-        ElevatedButton(
-          onPressed: () {
-            _vmCodeEditor.isChanged = false;
-            Get.back();
-            Get.back(id: 1);
-          },
-          child: const Text('아니오'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            _vmCodeEditor.save();
-            Get.back();
-            Get.back(id: 1);
-          },
-          child: const Text('예'),
-        ),
-      ],
+    var showDialogFunction = QDialog(
+      widget: (pop) => AlertDialog(
+        title: const Text('뒤로가기'),
+        content: const Text('저장되지 않은 내용이 있습니다. 저장하시겠습니까?'),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              _vmCodeEditor.isChanged = false;
+              pop(true);
+            },
+            child: const Text('아니오'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              _vmCodeEditor.save();
+              pop(true);
+            },
+            child: const Text('예'),
+          ),
+        ],
+      )
     );
 
     var leadingWidget = IconButton(
       icon: const Icon(Icons.arrow_back),
       onPressed: () {
         if (_vmCodeEditor.isChanged) {
-          showDialog(
-            context: context,
-            builder: (_) => showDialogFunction,
-          );
+          showDialogFunction.show().then((value) => QR.back());
         } else {
-          Get.back(id: 1);
+          QR.back();
         }
       },
     );
@@ -94,11 +92,9 @@ class ViewCodeEditor extends StatelessWidget {
         ),
         body: inputText,
       ),
-      onWillPop: () {
-        return showDialog(
-          context: context,
-          builder: (_) => showDialogFunction,
-        ) as Future<bool>;
+      onWillPop: () async{
+        showDialogFunction.show().then((value) => QR.back());
+        return false;
       },
     );
   }
