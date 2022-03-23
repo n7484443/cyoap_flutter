@@ -9,7 +9,6 @@ import 'package:flutter_quill/src/translations/toolbar.i18n.dart';
 import 'package:flutter_quill/src/utils/color.dart' as quill_color;
 import 'package:get/get.dart';
 import 'package:image_cropping/image_cropping.dart';
-import 'package:qlevar_router/qlevar_router.dart';
 
 import '../main.dart';
 import '../viewModel/vm_editor.dart';
@@ -21,14 +20,15 @@ class ViewEditor extends StatelessWidget {
   Widget build(BuildContext context) {
     final VMEditor controller = Get.put(VMEditor());
 
-    var alert = QDialog(widget: (pop) => AlertDialog(
+    var alert = AlertDialog(
       title: const Text('뒤로가기'),
       content: const Text('저장되지 않은 내용이 있습니다. 저장하시겠습니까?'),
       actions: [
         ElevatedButton(
           onPressed: () {
             controller.isChanged = false;
-            pop(true);
+            Get.back();
+            Get.back(id: 1);
           },
           child: const Text('아니오'),
         ),
@@ -36,12 +36,13 @@ class ViewEditor extends StatelessWidget {
           onPressed: () {
             controller.isChanged = false;
             controller.save();
-            pop(true);
+            Get.back();
+            Get.back(id: 1);
           },
           child: const Text('예'),
         ),
       ],
-    ));
+    );
 
     var appbarWidget = PreferredSize(
       preferredSize: const Size.fromHeight(ConstList.appBarSize),
@@ -50,9 +51,12 @@ class ViewEditor extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             if (controller.isChanged) {
-              alert.show().then((value) => QR.back());
+              showDialog(
+                context: context,
+                builder: (_) => alert,
+              );
             } else {
-              QR.back();
+              Get.back(id: 1);
             }
           },
         ),
@@ -105,7 +109,7 @@ class ViewEditor extends StatelessWidget {
             child: OutlinedButton(
               child: const Text('코드 수정'),
               onPressed: () {
-                QR.to('/viewMakePlatform/viewCodeEditor');
+                Get.toNamed('/viewCodeEditor', id: 1);
               },
             ),
           ),
@@ -145,9 +149,11 @@ class ViewEditor extends StatelessWidget {
           ],
         ),
       ),
-      onWillPop: () async{
-        alert.show().then((value) => QR.back());
-        return false;
+      onWillPop: () {
+        return showDialog(
+          context: context,
+          builder: (_) => alert,
+        ) as Future<bool>;
       },
     );
   }
@@ -193,8 +199,8 @@ class ViewEditorTyping extends StatelessWidget {
                       onPressed: () async {
                         var name = await controller.addImage();
                         if (name != '') {
-                          await QDialog(
-                            widget: (pop) => AlertDialog(
+                          await showDialog(
+                            builder: (_) => AlertDialog(
                               title: const Text('출처'),
                               content: TextField(
                                 controller: controller.controllerSource,
@@ -207,7 +213,7 @@ class ViewEditorTyping extends StatelessWidget {
                                 TextButton(
                                   onPressed: () {
                                     controller.addImageSource(name);
-                                    pop(true);
+                                    Get.back();
                                   },
                                   child: const Text('자르기'),
                                 ),
@@ -216,13 +222,14 @@ class ViewEditorTyping extends StatelessWidget {
                                     controller.addImageSource(name);
                                     controller.addImageCrop(
                                         name, controller.imageLast!);
-                                    pop(true);
+                                    Get.back();
                                   },
                                   child: const Text('저장하기'),
                                 ),
                               ],
                             ),
-                          ).show();
+                            context: context,
+                          );
                           if (controller.imageLast != null) {
                             ImageCropping.cropImage(
                               context: Get.nestedKey(1)!.currentContext!,
@@ -462,8 +469,9 @@ class _ColorButtonExtensionState extends State<ColorButtonExtension> {
 
   void _showColorPicker() {
     Color newColor = const Color(0x00000000);
-    QDialog(
-      widget: (pop) => AlertDialog(
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
         title: Text('Select Color'.i18n),
         backgroundColor: Theme.of(context).canvasColor,
         content: Column(
@@ -487,18 +495,18 @@ class _ColorButtonExtensionState extends State<ColorButtonExtension> {
           IconButton(
             icon: const Icon(Icons.close),
             onPressed: () {
-              pop(true);
+              Get.back();
             },
           ),
           IconButton(
             icon: const Icon(Icons.check),
             onPressed: () {
               _changeColor(context, newColor);
-              pop(true);
+              Get.back();
             },
           ),
         ],
       ),
-    ).show();
+    );
   }
 }

@@ -1,27 +1,22 @@
 import 'dart:io';
 
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
-import 'package:cyoap_flutter/view/view_code_editor.dart';
-import 'package:cyoap_flutter/view/view_editor.dart';
-import 'package:cyoap_flutter/view/view_font_source.dart';
-import 'package:cyoap_flutter/view/view_global_settings.dart';
-import 'package:cyoap_flutter/view/view_make.dart';
 import 'package:cyoap_flutter/view/view_make_platform.dart';
 import 'package:cyoap_flutter/view/view_play.dart';
-import 'package:cyoap_flutter/view/view_source.dart';
 import 'package:cyoap_flutter/view/view_start.dart';
+import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:qlevar_router/qlevar_router.dart';
 import 'package:tuple/tuple.dart';
 
 //flutter build web --base-href=/FlutterCyoapWeb/
 
 class ConstList {
   static const bool isDistributed =
-      bool.fromEnvironment("isDistributed", defaultValue: false);
+      true; //bool.fromEnvironment("isDistributed", defaultValue: false);
   static const double appBarSize = 40.0;
   static const double elevation = 6.0;
   static late final PlatformType actualPlatformType;
@@ -108,49 +103,41 @@ enum PlatformType {
   mobile,
   web,
 }
-
-class Routes {
-  static final routes = List.generate(ConstList.isDistributed ? 1 : 3, (index) {
-    switch (index) {
-      case 0:
-        return QRoute(
-            path: '/',
-            builder: () =>
-                ConstList.isDistributed ? const ViewPlay() : const ViewStart());
-      case 1:
-        return QRoute(path: '/viewPlay', builder: () => const ViewPlay());
-      default:
-        return QRoute.withChild(
-            path: '/viewMakePlatform',
-            builderChild: (r) => ViewMakePlatform(r),
-            initRoute: '/viewMake',
-            children: [
-              QRoute(path: '/viewMake', builder: () => const ViewMake()),
-              QRoute(path: '/viewEditor', builder: () => const ViewEditor()),
-              QRoute(
-                  path: '/viewCodeEditor',
-                  builder: () => const ViewCodeEditor()),
-              QRoute(
-                  path: '/viewGlobalSetting',
-                  builder: () => const ViewGlobalSetting()),
-              QRoute(path: '/viewSource', builder: () => const ViewSource()),
-              QRoute(
-                  path: '/viewFontSource',
-                  builder: () => const ViewFontSource()),
-            ]);
-    }
-  });
-}
-
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   ConstList.preInit().then((value) {
     runApp(
-      MaterialApp.router(
+      GetMaterialApp(
         title: 'CYOAP',
-        routeInformationParser: const QRouteInformationParser(),
-        routerDelegate: QRouterDelegate(Routes.routes),
+        initialRoute: '/',
+        getPages: List.generate(ConstList.isDistributed ? 1 : 3, (index) {
+          switch (index) {
+            case 0:
+              return GetPage(
+                name: '/',
+                page: () => ConstList.isDistributed ? const ViewPlay() : const ViewStart(),
+                binding: ConstList.isDistributed ? BindingsBuilder(() {
+                  Get.put(VMDraggableNestedMap());
+                }) : null,
+              );
+            case 1:
+              return GetPage(
+                  name: '/viewPlay',
+                  page: () => const ViewPlay(),
+                  binding: BindingsBuilder(() {
+                    Get.put(VMDraggableNestedMap());
+                  }));
+            default:
+              return GetPage(
+                  name: '/viewMake',
+                  page: () => const ViewMakePlatform(),
+                  binding: BindingsBuilder(() {
+                    Get.put(VMDraggableNestedMap());
+                  }));
+          }
+        }),
         theme: appThemeData,
+        defaultTransition: Transition.fade,
       ),
     );
     ConstList.init();

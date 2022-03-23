@@ -6,7 +6,6 @@ import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:get/get.dart';
-import 'package:qlevar_router/qlevar_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../main.dart';
@@ -220,7 +219,7 @@ class ViewChoiceNode extends StatelessWidget {
       innerWidget = InkWell(
         onDoubleTap: () {
           vmDraggableNestedMap.setEdit(posX, posY);
-          QR.to('/viewMakePlatform/viewEditor');
+          Get.toNamed('/viewEditor', id: 1);
         },
         child: Stack(
           alignment: Alignment.center,

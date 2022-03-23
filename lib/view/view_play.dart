@@ -2,7 +2,6 @@ import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
 import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:qlevar_router/qlevar_router.dart';
 
 import '../main.dart';
 import '../viewModel/vm_platform.dart';
@@ -37,7 +36,7 @@ class ViewPlay extends StatelessWidget {
                 leading: IconButton(
                   icon: const Icon(Icons.arrow_back),
                   onPressed: () {
-                    QR.back();
+                    Get.back();
                   },
                 ),
               ),

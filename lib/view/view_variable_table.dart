@@ -3,8 +3,8 @@ import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
-import 'package:qlevar_router/qlevar_router.dart';
 
 class ViewVariable extends StatelessWidget {
   const ViewVariable({Key? key}) : super(key: key);
@@ -20,11 +20,11 @@ class ViewVariable extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.settings),
             title: const Text('출처 설정'),
-            onTap: () => QR.to('/viewMakePlatform/viewSource'),
+            onTap: () => Get.toNamed("/viewSource", id: 1),
           ),
           ListTile(
             onTap: () {
-              QR.to('/viewMakePlatform/viewGlobalSetting');
+              Get.toNamed('/viewGlobalSetting', id: 1);
             },
             leading: const Icon(Icons.settings),
             title: const Text('전역 설정'),
