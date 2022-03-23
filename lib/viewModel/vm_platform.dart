@@ -11,8 +11,17 @@ import 'package:get/get.dart';
 
 import '../main.dart';
 import '../model/platform_system.dart';
+import '../util/platform_specified_util/platform_specified.dart';
 
 class VMPlatform extends GetxController {
+  @override
+  void onInit() {
+    if (ConstList.isDistributed) {
+      doDistributeMode();
+    }
+    super.onInit();
+  }
+
   var stopwatch = Stopwatch().obs;
 
   Future saveAsFile() async {
@@ -20,7 +29,8 @@ class VMPlatform extends GetxController {
     Map<String, String> lineSetting = {};
     for (int i = 0; i < getPlatform().lineSettings.length; i++) {
       var line = getPlatform().lineSettings[i];
-      lineSetting['lineSetting_${line.currentPos}.json'] = jsonEncode(line.toJson());
+      lineSetting['lineSetting_${line.currentPos}.json'] =
+          jsonEncode(line.toJson());
     }
 
     var input = {
@@ -73,7 +83,7 @@ class VMPlatform extends GetxController {
 
     var vmDraggable = Get.find<VMDraggableNestedMap>();
     var boundary = vmDraggable.captureKey.currentContext?.findRenderObject()
-        as RenderRepaintBoundary;
+    as RenderRepaintBoundary;
     var imageOutput = await boundary.toImage(pixelRatio: 1);
     var width = imageOutput.width;
     var height = imageOutput.height;
@@ -103,5 +113,52 @@ class VMPlatform extends GetxController {
   void loadVariable() {
     getPlatform().generateRecursiveParser();
     getPlatform().updateSelectable();
+  }
+
+  var loadString = ''.obs;
+  var loaded = false.obs;
+
+  Future<void> doDistributeMode() async {
+    stopwatch.value.start();
+    var timer = Timer.periodic(const Duration(milliseconds: 10), (Timer timer) {
+      stopwatch.update((val) {});
+    });
+
+    print('web is Distribute mode');
+    var distribute = PlatformSpecified.instance.distribute;
+    var value = await distribute.getImageNodeList();
+    print('load start');
+    loadString.value = '[ 로드 시작 ]';
+    var imageList = value.data1;
+    var nodeList = value.data2;
+    for (var name in imageList) {
+      ImageDB.instance
+          .uploadImagesFuture(name, distribute.getFile('images/$name'));
+    }
+    loadString.value = '[ 이미지 로드 완료 ]';
+
+    List<Future> futureMap = List.empty(growable: true);
+    Map<String, String> nodeMap = {};
+    for (var name in nodeList) {
+      var future = distribute.getFileWithJson('nodes/$name');
+      future.then((value) => nodeMap[name] = value);
+      futureMap.add(future);
+    }
+    await Future.wait(futureMap);
+
+    loadString.value = '[ 선택지 로드 완료 ]';
+    print('node loaded');
+
+    String imageSource = await distribute.getFileWithJson('imageSource.json');
+    String platformData = await distribute.getFileWithJson('platform.json');
+    loadString.value = '[ 로드 완료 ]';
+    print('load end');
+    stopwatch.value.stop();
+    timer.cancel();
+
+    await PlatformSystem.instance
+        .openPlatformList(nodeMap, imageSource, platformData);
+    getPlatform().isEditable = false;
+    loaded.value = true;
   }
 }

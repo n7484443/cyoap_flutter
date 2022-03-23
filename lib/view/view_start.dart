@@ -9,20 +9,6 @@ class ViewStart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vmStart = Get.put(VMStartPlatform());
-    if (ConstList.isDistributed) {
-      return Scaffold(
-        body: Center(
-          child: Column(
-            children: [
-              const CircularProgressIndicator(),
-              const Text('로딩중입니다. 잠시만 기다려주세요.'),
-              Obx(() => Text(vmStart.load.value)),
-              Obx(() => Text(vmStart.stopwatch.value.elapsed.toString())),
-            ],
-          ),
-        ),
-      );
-    }
     vmStart.initFrequentPath();
     return Scaffold(
       body: Column(

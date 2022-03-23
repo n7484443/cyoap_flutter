@@ -36,3 +36,16 @@
 ## 알수 없는 개발자라는 오류가 떠요!
 * 제가 유료로 해야 하는 디지털 인증을 안해서 그렇습니다.
 * windows 의 경우 추가정보->실행, android의 경우 무시하고 실행 하시면 됩니다.
+
+## 배포 방법
+index.html 의
+```
+<script src="save_web.js" type="application/javascript"></script>
+<script src="jszip.js" type="application/javascript"></script>
+```
+이 두줄을 삭제.
+flutter_service_worker.js 의
+```
+Notice 검색 후 그 글자를 포함한 줄 삭제
+```
+후 dist 폴더를 생성하고, 거기에 압축을 풀면 됩니다.

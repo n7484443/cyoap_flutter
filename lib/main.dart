@@ -109,10 +109,15 @@ void main() {
       GetMaterialApp(
         title: 'CYOAP',
         initialRoute: '/',
-        getPages: List.generate(ConstList.isDistributed ? 2 : 3, (index) {
+        getPages: List.generate(ConstList.isDistributed ? 1 : 3, (index) {
           switch (index) {
             case 0:
-              return GetPage(name: '/', page: () => const ViewStart());
+              return GetPage(name: '/', page: () {
+                if(ConstList.isDistributed){
+                  return const ViewPlay();
+                }
+                return const ViewStart();
+              });
             case 1:
               return GetPage(
                   name: '/viewPlay',
