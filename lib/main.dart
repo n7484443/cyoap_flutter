@@ -4,7 +4,6 @@ import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.da
 import 'package:cyoap_flutter/view/view_make_platform.dart';
 import 'package:cyoap_flutter/view/view_play.dart';
 import 'package:cyoap_flutter/view/view_start.dart';
-import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
@@ -15,8 +14,7 @@ import 'package:tuple/tuple.dart';
 //flutter build web --base-href=/FlutterCyoapWeb/
 
 class ConstList {
-  static const bool isDistributed =
-      true; //bool.fromEnvironment("isDistributed", defaultValue: false);
+  static const bool isDistributed = bool.fromEnvironment("isDistributed", defaultValue: false);
   static const double appBarSize = 40.0;
   static const double elevation = 6.0;
   static late final PlatformType actualPlatformType;
@@ -116,24 +114,17 @@ void main() {
               return GetPage(
                 name: '/',
                 page: () => ConstList.isDistributed ? const ViewPlay() : const ViewStart(),
-                binding: ConstList.isDistributed ? BindingsBuilder(() {
-                  Get.put(VMDraggableNestedMap());
-                }) : null,
               );
             case 1:
               return GetPage(
-                  name: '/viewPlay',
-                  page: () => const ViewPlay(),
-                  binding: BindingsBuilder(() {
-                    Get.put(VMDraggableNestedMap());
-                  }));
+                name: '/viewPlay',
+                page: () => const ViewPlay(),
+              );
             default:
               return GetPage(
-                  name: '/viewMake',
-                  page: () => const ViewMakePlatform(),
-                  binding: BindingsBuilder(() {
-                    Get.put(VMDraggableNestedMap());
-                  }));
+                name: '/viewMake',
+                page: () => const ViewMakePlatform(),
+              );
           }
         }),
         theme: appThemeData,
