@@ -20,7 +20,7 @@ class ConstList {
   static late final PlatformType actualPlatformType;
 
   static bool isOnlyFileAccept() {
-    return actualPlatformType == PlatformType.web;
+    return isDistributed || actualPlatformType == PlatformType.web;
   }
 
   static bool isMobile() {
@@ -80,16 +80,20 @@ class ConstList {
   }
 
   static Future<void> preInit() async {
-    try {
-      if (Platform.isAndroid) {
-        ConstList.actualPlatformType = PlatformType.mobile;
-      } else if (Platform.isWindows) {
-        ConstList.actualPlatformType = PlatformType.desktop;
-      } else {
+    if(isDistributed){
+      ConstList.actualPlatformType = PlatformType.web;
+    }else{
+      try {
+        if (Platform.isAndroid) {
+          ConstList.actualPlatformType = PlatformType.mobile;
+        } else if (Platform.isWindows) {
+          ConstList.actualPlatformType = PlatformType.desktop;
+        } else {
+          ConstList.actualPlatformType = PlatformType.web;
+        }
+      } catch (e) {
         ConstList.actualPlatformType = PlatformType.web;
       }
-    } catch (e) {
-      ConstList.actualPlatformType = PlatformType.web;
     }
     PlatformSpecified.instance.preInit();
     return;

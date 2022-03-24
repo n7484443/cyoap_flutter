@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:archive/archive.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
+import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/util/tuple.dart';
 import 'package:flutter/material.dart';
@@ -26,13 +27,11 @@ class AbstractPlatform {
   String titleFont;
   String mainFont;
 
-  bool isEditable = true;
-
   bool isVisibleSource = false;
 
   void init() {
     checkDataCollect();
-    if (isEditable) {
+    if (getPlatformFileSystem().isEditable) {
       generateRecursiveParser();
     }
     updateSelectable();

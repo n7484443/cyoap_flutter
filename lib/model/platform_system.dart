@@ -92,7 +92,7 @@ AbstractPlatform getPlatform() {
 }
 
 bool isEditable() {
-  return getPlatform().isEditable;
+  return getPlatformFileSystem().isEditable;
 }
 
 PlatformFileSystem getPlatformFileSystem() {

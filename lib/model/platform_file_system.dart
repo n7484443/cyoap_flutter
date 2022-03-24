@@ -9,6 +9,7 @@ import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 
+import '../main.dart';
 import '../util/json_file_parsing.dart';
 import '../util/platform_specified_util/platform_specified.dart';
 import '../util/platform_specified_util/webp_converter.dart';
@@ -24,6 +25,9 @@ class PlatformFileSystem {
 
   Image noImage = Image.asset('asset/images/noImage.png');
   bool openAsFile = false;
+  bool _isEditable = true;
+  bool get isEditable => ConstList.isDistributed ? false : _isEditable;
+  set isEditable(bool input) => _isEditable = input;
 
   PlatformFileSystem();
   /*TODO - page 시스템 개발*/

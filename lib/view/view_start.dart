@@ -117,7 +117,7 @@ class ViewStart extends StatelessWidget {
   }
 }
 
-class SelectMode extends StatelessWidget {
+class SelectMode extends GetView<VMStartPlatform> {
   const SelectMode({Key? key}) : super(key: key);
 
   @override
@@ -127,8 +127,8 @@ class SelectMode extends StatelessWidget {
         Expanded(
           child: InkWell(
             onTap: () {
-              Get.find<VMStartPlatform>().setDirectory().then((value) {
-                Get.find<VMStartPlatform>().setEditable(false);
+              controller.setDirectory().then((value) {
+                controller.setEditable(false);
                 Get.toNamed('/viewPlay');
               });
             },
@@ -148,8 +148,8 @@ class SelectMode extends StatelessWidget {
         Expanded(
           child: InkWell(
             onTap: () {
-              Get.find<VMStartPlatform>().setDirectory().then((value) {
-                Get.find<VMStartPlatform>().setEditable(true);
+              controller.setDirectory().then((value) {
+                controller.setEditable(true);
                 Get.toNamed('/viewMake');
               });
             },

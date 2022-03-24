@@ -166,7 +166,7 @@ class VMPlatform extends GetxController {
 
     await PlatformSystem.instance
         .openPlatformList(nodeMap, imageSource, platformData);
-    getPlatform().isEditable = false;
+    getPlatformFileSystem().isEditable = false;
     loaded = true;
     update();
   }
