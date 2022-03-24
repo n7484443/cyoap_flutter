@@ -347,7 +347,12 @@ class PlatformFileSystem {
   Future<void> saveCapture(Map<String, dynamic> map) async {
     var input = Uint8List.fromList(map['uint8list'].codeUnits);
 
-    var converted = await convertImage('exported.png', input);
+    Tuple<String, Uint8List> converted;
+    if(map['isWebp'] as bool){
+      converted = await convertImage('exported.png', input);
+    }else{
+      converted = Tuple('exported.png', input);
+    }
     if (map['isOnlyFileAccept']) {
       await platformSpecified.saveProject.downloadCapture(converted.data1, converted.data2);
     } else {

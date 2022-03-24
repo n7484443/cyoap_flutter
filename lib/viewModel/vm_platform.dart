@@ -88,8 +88,14 @@ class VMPlatform extends GetxController {
     var width = imageOutput.width;
     var height = imageOutput.height;
     var maxed = max<int>(width, height) + 1;
+    var ratio = 16383 / maxed;
+    var isWebp = true;
+    if(ratio < 1.2){
+      ratio = 1.2;
+      isWebp = false;
+    }
 
-    imageOutput = await boundary.toImage(pixelRatio: 16383 / maxed);
+    imageOutput = await boundary.toImage(pixelRatio: ratio);
     var byteData = (await imageOutput.toByteData(format: ImageByteFormat.png))!
         .buffer
         .asUint8List();
@@ -98,6 +104,7 @@ class VMPlatform extends GetxController {
       'uint8list': String.fromCharCodes(byteData),
       'isOnlyFileAccept': ConstList.isOnlyFileAccept(),
       'path': PlatformSystem.instance.path,
+      'isWebp': isWebp,
     };
 
     var output = compute(getPlatformFileSystem().saveCapture, map);
