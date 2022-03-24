@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
-import 'package:cyoap_flutter/view/view_make_platform.dart';
-import 'package:cyoap_flutter/view/view_play.dart';
-import 'package:cyoap_flutter/view/view_start.dart';
+import 'package:cyoap_flutter/view/view_make_platform.dart' deferred as v_make;
+import 'package:cyoap_flutter/view/view_play.dart' deferred as v_play;
+import 'package:cyoap_flutter/view/view_start.dart' deferred as v_start;
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
@@ -103,36 +103,48 @@ enum PlatformType {
 }
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  ConstList.preInit().then((value) {
+
+  ConstList.preInit().then((value) async {
+    await v_play.loadLibrary();
+    if(ConstList.isDistributed){
+      await v_start.loadLibrary();
+      await v_make.loadLibrary();
+    }
     runApp(
       GetMaterialApp(
         title: 'CYOAP',
         initialRoute: '/',
-        getPages: List.generate(ConstList.isDistributed ? 1 : 3, (index) {
-          switch (index) {
-            case 0:
-              return GetPage(
-                name: '/',
-                page: () => ConstList.isDistributed ? const ViewPlay() : const ViewStart(),
-              );
-            case 1:
-              return GetPage(
-                name: '/viewPlay',
-                page: () => const ViewPlay(),
-              );
-            default:
-              return GetPage(
-                name: '/viewMake',
-                page: () => const ViewMakePlatform(),
-              );
+        getPages: List.generate(ConstList.isDistributed ? 1 : 3, (index)  {
+          if(ConstList.isDistributed){
+            return GetPage(
+              name: '/',
+              page: () => v_play.ViewPlay(),
+            );
+          }else{
+            switch (index) {
+              case 0:
+                return GetPage(
+                  name: '/',
+                  page: () => v_start.ViewStart(),
+                );
+              case 1:
+                return GetPage(
+                  name: '/viewPlay',
+                  page: () => v_play.ViewPlay(),
+                );
+              default:
+                return GetPage(
+                  name: '/viewMake',
+                  page: () => v_make.ViewMakePlatform(),
+                );
+            }
           }
         }),
         theme: appThemeData,
         defaultTransition: Transition.fade,
       ),
     );
-    ConstList.init();
-  });
+  }).then((value) => ConstList.init());
 }
 
 final ThemeData appThemeData = ThemeData(
