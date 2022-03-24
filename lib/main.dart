@@ -106,7 +106,7 @@ void main() {
 
   ConstList.preInit().then((value) async {
     await v_play.loadLibrary();
-    if(ConstList.isDistributed){
+    if(!ConstList.isDistributed){
       await v_start.loadLibrary();
       await v_make.loadLibrary();
     }
