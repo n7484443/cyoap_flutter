@@ -7,12 +7,6 @@ import 'generable_parser.dart';
 
 class ChoiceNodeBase extends GenerableParserAndPosition {
   //grid 단위로 설정
-  int x;
-  @override
-  int get currentPos => x;
-  @override
-  set currentPos(int pos) => x = pos;
-
   int width; //-1 = 무한대
   int height; //0 == 1/2
   bool isCard;
@@ -23,21 +17,20 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
   bool get isSelectableCheck => isSelectable;
   bool isSelectable = true;
 
-  ChoiceNodeBase(this.x, this.width, this.height, this.isCard,
+  ChoiceNodeBase(this.width, this.height, this.isCard,
       this.title, this.contentsString, this.imageString){
     recursiveStatus = RecursiveStatus();
   }
 
   ChoiceNodeBase.origin(this.width, this.height, this.isCard, this.title,
       this.contentsString, this.imageString)
-      : x = 0{
+      {
     recursiveStatus = RecursiveStatus();
   }
 
   ChoiceNodeBase.noTitle(this.width, this.height, this.isCard,
       this.contentsString, this.imageString)
-      : x = 0,
-        title = '' {
+      : title = '' {
     recursiveStatus = RecursiveStatus();
     for (int i = 0; i < 2; i++) {
       title += WordPair.random().asPascalCase;
@@ -45,30 +38,29 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
   } //랜덤 문자로 제목 중복 방지
 
   ChoiceNodeBase.fromJson(Map<String, dynamic> json)
-      : x = json['x'],
-        width = json['width'],
+      : width = json['width'],
         height = json['height'],
         isCard = json['isCard'],
         isSelectable = json['isSelectable'],
         title = json['title'],
         contentsString = json['contentsString'],
-        imageString = json['imageString'] {
+        imageString = json['imageString'] ?? json['image'] {
+    currentPos = json['x'] ?? json['currentPos'];
     recursiveStatus = RecursiveStatus.fromJson(json);
   }
 
   @override
   Map<String, dynamic> toJson() {
-    Map<String, dynamic> map = {
-      'x': x,
+    Map<String, dynamic> map = super.toJson();
+    map.addAll({
       'width': width,
       'height': height,
       'isCard': isCard,
       'isSelectable': isSelectable,
       'title': title,
       'contentsString': contentsString,
-      'imageString': convertToWebp(imageString),
-    };
-    map.addAll(recursiveStatus.toJson());
+      'image': convertToWebp(imageString),
+    });
     return map;
   }
 

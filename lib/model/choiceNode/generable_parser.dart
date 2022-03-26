@@ -44,18 +44,26 @@ abstract class GenerableParserAndPosition {
 
   void initValueTypeWrapper();
 
-  Map<String, dynamic> toJson();
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> map = {
+      'pos': currentPos,
+      'children': children,
+    };
+
+    map.addAll(recursiveStatus.toJson());
+    return map;
+  }
 
   SelectableStatus status = SelectableStatus.open;
 
-  int get currentPos;
-  set currentPos(int pos);
+  int currentPos = 0;
 
   List<GenerableParserAndPosition> children = List.empty(growable: true);
 
   GenerableParserAndPosition? parent;
   late RecursiveStatus recursiveStatus;
-  bool get isSelectableCheck;
+
+  bool get isSelectableCheck => true;
 
   void execute() {
     if (recursiveStatus.executeCodeRecursive != null) {
@@ -93,15 +101,26 @@ abstract class GenerableParserAndPosition {
     }
     return true;
   }
-  String get tag => parent == null ? "$currentPos" : "${parent?.tag}:$currentPos";
 
-  void addChildren(GenerableParserAndPosition childNode){
+  String get tag =>
+      parent == null ? "$currentPos" : "${parent?.tag}:$currentPos";
+
+  List<int> pos(List<int>? posList) {
+    posList ??= List.empty(growable: true);
+    if(parent != null){
+      posList.addAll(parent!.pos(posList));
+    }
+    posList.add(currentPos);
+    return posList;
+  }
+
+  void addChildren(GenerableParserAndPosition childNode) {
     childNode.parent = this;
     childNode.currentPos = children.length;
     children.add(childNode);
   }
 
-  void removeChildren(GenerableParserAndPosition childNode){
+  void removeChildren(GenerableParserAndPosition childNode) {
     childNode.parent = null;
     children.removeAt(childNode.currentPos);
     childNode.currentPos = 0;

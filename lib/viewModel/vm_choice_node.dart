@@ -30,7 +30,7 @@ class VMChoiceNode extends GetxController {
 
   VMChoiceNode({this.x = nonPositioned, this.y = nonPositioned}) : node = getNode(x, y)!;
   VMChoiceNode.fromNode(this.node)
-      : x = node.x,
+      : x = node.currentPos,
         y = node.parent!.currentPos;
 
   @override

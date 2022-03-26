@@ -8,39 +8,31 @@ import 'choice_node.dart';
 import 'generable_parser.dart';
 
 class LineSetting extends GenerableParserAndPosition {
-  int _y;
-
-  @override
-  int get currentPos => _y;
-  @override
-  set currentPos(int pos) => _y = pos;
-
   int maxSelect;
 
-  LineSetting(this._y, {this.maxSelect = -1}) {
+  LineSetting(int currentPos, {this.maxSelect = -1}) {
+    super.currentPos = currentPos;
     recursiveStatus = RecursiveStatus();
   }
 
   @override
   Map<String, dynamic> toJson() {
-    Map<String, dynamic> map = {
-      'y': _y,
+    Map<String, dynamic> map = super.toJson();
+    map.addAll({
       'maxSelect': maxSelect,
-      'children': children,
       //Todo remove after some version
       'clickableRecursive': recursiveStatus.conditionClickableRecursive,
-    };
+    });
     //Todo remove after some version
-    if(recursiveStatus.executeCodeRecursive != null){
+    if (recursiveStatus.executeCodeRecursive != null) {
       map['executeRecursive'] = recursiveStatus.executeCodeRecursive![0];
     }
-    map.addAll(recursiveStatus.toJson());
     return map;
   }
 
   LineSetting.fromJson(Map<String, dynamic> json)
-      : _y = json['y'],
-        maxSelect = json['maxSelect'] ?? -1 {
+      : maxSelect = json['maxSelect'] ?? -1 {
+    super.currentPos = json['y'] ?? json['pos'];
     if (json.containsKey('children')) {
       children.addAll((json['children'] as List)
           .map((e) => ChoiceNodeBase.fromJson(e))
@@ -65,7 +57,7 @@ class LineSetting extends GenerableParserAndPosition {
   }
 
   void addData(int x, ChoiceNodeBase node) {
-    node.x = x;
+    node.currentPos = x;
     node.parent = this;
     if (x > children.length) {
       children.add(node);
@@ -80,11 +72,11 @@ class LineSetting extends GenerableParserAndPosition {
   }
 
   String getClickableString() {
-    return 'lineSetting_$_y < $maxSelect';
+    return 'lineSetting_$currentPos < $maxSelect';
   }
 
   String getExecuteString() {
-    return 'lineSetting_$_y += 1';
+    return 'lineSetting_$currentPos += 1';
   }
 
   bool isNeedToCheck() {
@@ -118,17 +110,14 @@ class LineSetting extends GenerableParserAndPosition {
   @override
   void initValueTypeWrapper() {
     if (isNeedToCheck()) {
-      VariableDataBase.instance.setValue(
-          'lineSetting_$_y', ValueTypeWrapper(ValueType(0), false, false));
+      VariableDataBase.instance.setValue('lineSetting_$currentPos',
+          ValueTypeWrapper(ValueType(0), false, false));
     } else {
-      VariableDataBase.instance.deleteValue('lineSetting_$_y');
+      VariableDataBase.instance.deleteValue('lineSetting_$currentPos');
     }
 
     for (var node in children) {
       node.initValueTypeWrapper();
     }
   }
-
-  @override
-  bool get isSelectableCheck => true;
 }
