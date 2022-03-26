@@ -1,7 +1,3 @@
-import 'dart:convert';
-import 'dart:typed_data';
-
-import 'package:archive/archive.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
@@ -9,7 +5,6 @@ import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/util/tuple.dart';
 import 'package:flutter/material.dart';
 
-import '../util/platform_specified_util/platform_specified.dart';
 import '../util/version.dart';
 import 'choiceNode/choice_line.dart';
 import 'choiceNode/generable_parser.dart';
@@ -204,43 +199,19 @@ class AbstractPlatform {
     updateSelectable();
   }
 
-  Future<Archive> toArchive(
-      Map<String, Uint8List>? mapImage, Map<String, String>? mapSource) async {
-    var archive = Archive();
-    if (mapImage != null) {
-      for (var imageName in mapImage.keys) {
-        var converted = await saveProject!
-            .convertImage(imageName, mapImage[imageName]!);
-        archive.addFile(ArchiveFile('images/${converted.data1}',
-            converted.data2.length, converted.data2));
-      }
-    }
-
-    var platformJson = utf8.encode(jsonEncode(toJson()));
-    archive.addFile(
-        ArchiveFile('platform.json', platformJson.length, platformJson));
-
-    if (mapSource != null) {
-      var map = {};
-      for (var name in mapSource.keys) {
-        map[convertImageName(name)] = mapSource[name];
-      }
-      var imageSource = utf8.encode(jsonEncode(map));
-      archive.addFile(
-          ArchiveFile('imageSource.json', imageSource.length, imageSource));
-    }
-    return archive;
-  }
-
-  String convertImageName(String name) {
-    return name.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
-  }
-
   void doAllChoiceNode(void Function(ChoiceNodeBase node) action) {
     for (var lineSetting in lineSettings) {
       for (var node in lineSetting.children) {
-        action(node as ChoiceNodeBase);
+        doAllChoiceNodeInner(node as ChoiceNodeBase, action);
       }
+    }
+  }
+
+  void doAllChoiceNodeInner(
+      ChoiceNodeBase nodeParent, void Function(ChoiceNodeBase node) action) {
+    for (var node in nodeParent.children) {
+      action(node as ChoiceNodeBase);
+      doAllChoiceNodeInner(node, action);
     }
   }
 }
