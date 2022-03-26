@@ -44,8 +44,12 @@ index.html 의
 <script src="jszip.js" type="application/javascript"></script>
 ```
 이 두줄을 삭제.
+
 flutter_service_worker.js 의
 ```
 Notice 검색 후 그 글자를 포함한 줄 삭제
+jszip.js 검색 후 그 글자를 포함한 줄 삭제
+request_multiple.js 검색 후 그 글자를 포함한 줄 삭제
+canvaskit 검색 후 그 글자를 포함한 줄 삭제
 ```
 후 dist 폴더를 생성하고, 거기에 압축을 풀면 됩니다.

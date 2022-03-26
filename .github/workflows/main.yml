@@ -49,6 +49,14 @@ jobs:
       - run: Remove-Item ./build/web/assets/packages/youtube_player_flutter -Recurse | Remove-Item
       - run: Copy ./web_distribute_only/worker.js ./build/web
 
+      - run: get-content ./build/web/index.html | select-string -pattern '.*(save_web.js|jszip.js).*' -notmatch | Out-File ./build/web/index_replaced.html
+      - run: Remove-Item ./build/web/index.html
+      - run: Rename-Item ./build/web/index_replaced.html index.html
+
+      - run: get-content ./build/web/flutter_service_worker.js | select-string -pattern '.*(Notice|save_web.js|jszip.js|canvaskit).*' -notmatch | Out-File ./build/web/flutter_service_worker_replaced.js
+      - run: Remove-Item ./build/web/flutter_service_worker.js
+      - run: Rename-Item ./build/web/flutter_service_worker_replaced.js flutter_service_worker.js
+
       - run: 7z a build/web/distribute_${{ steps.get_version.outputs.version-without-v }}.zip ./build/web/*
 
       - name: Release

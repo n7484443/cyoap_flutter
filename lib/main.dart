@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
+import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart' deferred as platform_specified;
 import 'package:cyoap_flutter/view/view_make_platform.dart' deferred as v_make;
 import 'package:cyoap_flutter/view/view_play.dart' deferred as v_play;
 import 'package:cyoap_flutter/view/view_start.dart' deferred as v_start;
@@ -38,7 +38,7 @@ class ConstList {
   static String get version => versionInner ?? '';
 
   static Future<void> init() async {
-    PlatformSpecified.instance.init();
+    platform_specified.PlatformSpecified.instance.init();
     var packageInfo = await PackageInfo.fromPlatform();
     versionInner = packageInfo.version;
   }
@@ -95,7 +95,8 @@ class ConstList {
         ConstList.actualPlatformType = PlatformType.web;
       }
     }
-    PlatformSpecified.instance.preInit();
+    await platform_specified.loadLibrary();
+    platform_specified.PlatformSpecified.instance.preInit();
     return;
   }
 }
