@@ -133,7 +133,7 @@ class VMPlatform extends GetxController {
     });
 
     print('web is Distribute mode');
-    var distribute = PlatformSpecified.instance.distribute;
+    var distribute = platformSpecified.distribute;
     var value = await distribute.getImageNodeList();
     print('load start');
     loadString = '[ 로드 시작 ]';
