@@ -209,7 +209,7 @@ class AbstractPlatform {
     var archive = Archive();
     if (mapImage != null) {
       for (var imageName in mapImage.keys) {
-        var converted = await saveProject
+        var converted = await saveProject!
             .convertImage(imageName, mapImage[imageName]!);
         archive.addFile(ArchiveFile('images/${converted.data1}',
             converted.data2.length, converted.data2));

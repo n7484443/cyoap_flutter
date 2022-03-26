@@ -55,16 +55,8 @@ class PlatformSystem {
     platformFileSystem.createFromVoid();
   }
 
-  Future<void> saveFile(Map<String, dynamic> input) async {
-    if (input['bool'] as bool) {
-      await saveProject.saveZip('exported.zip', input);
-    } else {
-      await saveProject.saveZip(path!, input);
-    }
-  }
-
   Future<void> saveFolder(PlatformFileSystem platformFileSystem) async {
-    await saveProject.saveRaw(path!, platformFileSystem);
+    await saveProject!.saveRaw(path!, platformFileSystem);
   }
 
   static String getImageName(int index) {

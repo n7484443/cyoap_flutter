@@ -36,14 +36,18 @@ class VMPlatform extends GetxController {
     }
 
     var input = {
-      'bool': ConstList.isOnlyFileAccept(),
       'imageMap': await ImageDB.instance.imageMap,
       'imageSource': getPlatformFileSystem().imageSource,
       'platform': jsonEncode(getPlatform().toJson()),
       'choiceNodes': choiceNodes,
       'lineSetting': lineSetting,
     };
-    return compute(PlatformSystem.instance.saveFile, input);
+
+    if (ConstList.isOnlyFileAccept()) {
+      return await saveProject!.saveZip('exported.zip', input);
+    } else {
+      return await saveProject!.saveZip(PlatformSystem.instance.path!, input);
+    }
   }
 
   void save(bool toFile) async {
@@ -106,9 +110,9 @@ class VMPlatform extends GetxController {
       Future<Tuple<String, Uint8List>> output = compute(getPlatformFileSystem().saveCapture, byteData);
       output.then((value) {
         if (ConstList.isOnlyFileAccept()) {
-          saveProject.downloadCapture(value.data1, value.data2);
+          saveProject!.downloadCapture(value.data1, value.data2);
         } else {
-          saveProject.downloadCapture('${PlatformSystem.instance.path}/${value.data1}', value.data2);
+          saveProject!.downloadCapture('${PlatformSystem.instance.path}/${value.data1}', value.data2);
         }
 
         stopwatch.update((val) => val?.stop());
@@ -117,9 +121,9 @@ class VMPlatform extends GetxController {
       });
     }else{
       if (ConstList.isOnlyFileAccept()) {
-        saveProject.downloadCapture('exported.png', byteData);
+        saveProject!.downloadCapture('exported.png', byteData);
       } else {
-        saveProject.downloadCapture('${PlatformSystem.instance.path}/exported.png', byteData);
+        saveProject!.downloadCapture('${PlatformSystem.instance.path}/exported.png', byteData);
       }
 
       stopwatch.update((val) => val?.stop());
@@ -145,21 +149,21 @@ class VMPlatform extends GetxController {
     });
 
     print('web is Distribute mode');
-    var value = await distribute.getImageNodeList();
+    var value = await distribute!.getImageNodeList();
     print('load start');
     loadString = '[ 로드 시작 ]';
     var imageList = value.data1;
     var nodeList = value.data2;
     for (var name in imageList) {
       ImageDB.instance
-          .uploadImagesFuture(name, distribute.getFile('images/$name'));
+          .uploadImagesFuture(name, distribute!.getFile('images/$name'));
     }
     loadString = '[ 이미지 로드 완료 ]';
 
     List<Future> futureMap = List.empty(growable: true);
     Map<String, String> nodeMap = {};
     for (var name in nodeList) {
-      var future = distribute.getFileWithJson('nodes/$name');
+      var future = distribute!.getFileWithJson('nodes/$name');
       future.then((value) => nodeMap[name] = value);
       futureMap.add(future);
     }
@@ -168,8 +172,8 @@ class VMPlatform extends GetxController {
     loadString = '[ 선택지 로드 완료 ]';
     print('node loaded');
 
-    String imageSource = await distribute.getFileWithJson('imageSource.json');
-    String platformData = await distribute.getFileWithJson('platform.json');
+    String imageSource = await distribute!.getFileWithJson('imageSource.json');
+    String platformData = await distribute!.getFileWithJson('platform.json');
     loadString = '[ 로드 완료 ]';
     print('load end');
     stopwatchLoad.stop();

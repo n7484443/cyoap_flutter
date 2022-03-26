@@ -5,6 +5,7 @@ import 'package:archive/archive.dart';
 import 'package:cyoap_flutter/model/platform_file_system.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/webp_converter.dart';
+import 'package:flutter/foundation.dart';
 
 import '../tuple.dart';
 
@@ -15,8 +16,7 @@ class SaveProjectImp extends SaveProject {
     return await getWebpConverterInstance().convert(data, name);
   }
 
-  @override
-  Future<void> saveZip(String name, Map<String, dynamic> dataInput) async {
+  Future<Uint8List> mapToArchive(Map<String, dynamic> dataInput) async{
     var map = await getMap(dataInput);
 
     var archive = Archive();
@@ -25,8 +25,13 @@ class SaveProjectImp extends SaveProject {
       archive.addFile(ArchiveFile(name, data.length, data));
     }
 
-    var encodedZip =
-        ZipEncoder().encode(archive, level: Deflate.BEST_SPEED) as Uint8List;
+    return ZipEncoder().encode(archive, level: Deflate.BEST_SPEED) as Uint8List;
+  }
+
+  @override
+  Future<void> saveZip(String name, Map<String, dynamic> dataInput) async {
+    var uint8data = await compute(mapToArchive, dataInput);
+
     var file = File('$name/extract.zip');
     int i = 0;
     while (file.existsSync()) {
@@ -34,9 +39,7 @@ class SaveProjectImp extends SaveProject {
       i++;
     }
     await file.create();
-    await file.writeAsBytes(encodedZip);
-
-    archive.clear();
+    await file.writeAsBytes(uint8data);
   }
 
   @override
