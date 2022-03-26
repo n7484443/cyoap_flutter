@@ -102,24 +102,30 @@ class VMPlatform extends GetxController {
         .buffer
         .asUint8List();
 
-    Map<String, dynamic> map = {
-      'uint8list': String.fromCharCodes(byteData),
-      'isWebp': isWebp,
-    };
+    if(isWebp){
+      Future<Tuple<String, Uint8List>> output = compute(getPlatformFileSystem().saveCapture, byteData);
+      output.then((value) {
+        if (ConstList.isOnlyFileAccept()) {
+          saveProject.downloadCapture(value.data1, value.data2);
+        } else {
+          saveProject.downloadCapture('${PlatformSystem.instance.path}/${value.data1}', value.data2);
+        }
 
-    Future<Tuple<String, Uint8List>> output = compute(getPlatformFileSystem().saveCapture, map);
-
-    output.then((value) {
+        stopwatch.update((val) => val?.stop());
+        timer.cancel();
+        Get.back();
+      });
+    }else{
       if (ConstList.isOnlyFileAccept()) {
-        saveProject.downloadCapture(value.data1, value.data2);
+        saveProject.downloadCapture('exported.png', byteData);
       } else {
-        saveProject.downloadCapture('${PlatformSystem.instance.path}/${value.data1}', value.data2);
+        saveProject.downloadCapture('${PlatformSystem.instance.path}/exported.png', byteData);
       }
 
       stopwatch.update((val) => val?.stop());
       timer.cancel();
       Get.back();
-    });
+    }
     VMDraggableNestedMap.isCapture = false;
   }
 

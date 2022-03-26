@@ -181,11 +181,6 @@ class PlatformFileSystem {
     platform = AbstractPlatform.none();
   }
 
-  Future<Tuple<String, Uint8List>> convertImage(
-      String name, Uint8List data) async {
-    return await getWebpConverterInstance().convert(data, name);
-  }
-
   String convertImageName(String name) {
     return name.replaceAll(RegExp('[.](png|jpg|jpeg|rawRgba)'), '.webp');
   }
@@ -215,7 +210,7 @@ class PlatformFileSystem {
         continue;
       }
       var image = await ImageDB.instance.getImage(imageName);
-      var converted = await convertImage(imageName, image!);
+      var converted = await getWebpConverterInstance().convert(image!, imageName);
       var file = File('$path/images/${converted.data1}');
       file.createSync();
       file.writeAsBytes(converted.data2);
@@ -347,15 +342,7 @@ class PlatformFileSystem {
     return _imageSource[image]?.isNotEmpty ?? false;
   }
 
-  Future<Tuple<String, Uint8List>> saveCapture(Map<String, dynamic> map) async {
-    var input = Uint8List.fromList(map['uint8list'].codeUnits);
-
-    Tuple<String, Uint8List> converted;
-    if(map['isWebp'] as bool){
-      converted = await convertImage('exported.png', input);
-    }else{
-      converted = Tuple('exported.png', input);
-    }
-    return converted;
+  Future<Tuple<String, Uint8List>> saveCapture(Uint8List input) async {
+    return await getWebpConverterInstance().convert(input, 'exported.png');
   }
 }
