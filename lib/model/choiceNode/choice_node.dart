@@ -19,9 +19,9 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
   String title;
   String contentsString;
   String imageString;
+  @override
+  bool get isSelectableCheck => isSelectable;
   bool isSelectable = true;
-  SelectableStatus status = SelectableStatus.open;
-  List<ChoiceNodeBase> children = List.empty(growable: true);
 
   ChoiceNodeBase(this.x, this.width, this.height, this.isCard,
       this.title, this.contentsString, this.imageString){

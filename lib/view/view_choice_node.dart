@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/choiceNode/generable_parser.dart';
 import 'package:cyoap_flutter/util/color_util.dart';
 import 'package:cyoap_flutter/view/view_text_outline.dart';
@@ -13,19 +14,31 @@ import '../model/platform_system.dart';
 import '../util/tuple.dart';
 
 class ViewChoiceNode extends StatelessWidget {
-  final int posX;
-  final int posY;
-  final int children;
+  final ChoiceNodeBase? node;
 
-  const ViewChoiceNode({Key? key, required this.posX, required this.posY, this.children = -1})
-      : super(key: key);
+  ViewChoiceNode(int posX, int posY, {Key? key})
+      : node = posX == nonPositioned && posY == nonPositioned
+            ? null
+            : getPlatform().getChoiceNode(posX, posY)!,
+        super(key: key);
+
+  const ViewChoiceNode.fromNode(this.node, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var controller = Get.put(VMChoiceNode(x: posX, y: posY),
-        tag: VMChoiceNode.getTagFromXY(posX, posY));
     var vmDraggableNestedMap = Get.find<VMDraggableNestedMap>();
     var scale = vmDraggableNestedMap.getScale();
+    if (node == null) {
+      return Card(
+        child: SizedBox(
+          width: nodeBaseWidth * scale.data1,
+          height: nodeBaseHeight * 10 * scale.data2,
+        ),
+      );
+    }
+    var controller = Get.put(
+        VMChoiceNode.fromNode(node!),
+        tag: VMChoiceNode.getTag(node!));
 
     var editor = Obx(() {
       return ConstrainedBox(
@@ -44,7 +57,7 @@ class ViewChoiceNode extends StatelessWidget {
             scrollable: false,
             customStyles: ConstList.getDefaultThemeData(context, scale.data2,
                 fontStyle:
-                    ConstList.getFont(vmDraggableNestedMap.mainFont.value)),
+                ConstList.getFont(vmDraggableNestedMap.mainFont.value)),
           ),
         ),
       );
@@ -55,7 +68,7 @@ class ViewChoiceNode extends StatelessWidget {
       alignment: Alignment.center,
       title: const Text('크기 수정'),
       content: Obx(
-        () {
+            () {
           return Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -124,7 +137,7 @@ class ViewChoiceNode extends StatelessWidget {
     );
 
     var image = Obx(
-      () => Stack(
+          () => Stack(
         children: [
           Align(
             alignment: Alignment.topCenter,
@@ -197,6 +210,11 @@ class ViewChoiceNode extends StatelessWidget {
       ),
     );
 
+    var childList = List<Widget>.empty(growable: true);
+    for (var nodeChild in node!.children) {
+      childList.add(ViewChoiceNode.fromNode(nodeChild as ChoiceNodeBase));
+    }
+
     var mainNode = Obx(
       () => Container(
         padding: const EdgeInsets.all(6),
@@ -206,19 +224,31 @@ class ViewChoiceNode extends StatelessWidget {
             ? null
             : getPlatform().colorBackground.lighten(),
         child: Column(
-          children: [
-            Expanded(child: image),
-            editor,
-          ],
+          children: List.generate(
+            childList.length + 2,
+            (index) {
+              switch (index) {
+                case 0:
+                  return Expanded(child: image);
+                case 1:
+                  return editor;
+                default:
+                  return Expanded(
+                    child: childList[index - 2],
+                  );
+              }
+            },
+          ),
         ),
-      ),
+          ),
     );
 
     Widget innerWidget;
     if (isEditable()) {
       innerWidget = InkWell(
         onDoubleTap: () {
-          vmDraggableNestedMap.setEdit(posX, posY);
+          vmDraggableNestedMap.setEdit(
+              node!.currentPos, node!.parent!.currentPos);
           Get.toNamed('/viewEditor', id: 1);
         },
         child: Stack(
@@ -228,17 +258,26 @@ class ViewChoiceNode extends StatelessWidget {
             Visibility(
               child: DragTarget(
                 builder: (BuildContext context, List<Object?> candidateData,
-                        List<dynamic> rejectedData) =>
+                    List<dynamic> rejectedData) =>
                     Container(
-                  color: Colors.blueAccent.withOpacity(0.3),
-                  width: controller.realSize.value.data1 * scale.data1 * 0.6,
-                  height: controller.realSize.value.data2 * scale.data2 * 0.6,
-                ),
+                      color: Colors.blueAccent.withOpacity(0.3),
+                      width: controller.realSize.value.data1 * scale.data1 * 0.6,
+                      height: controller.realSize.value.data2 * scale.data2 * 0.6,
+                    ),
                 onAccept: (Tuple<int, int> data) {
+                  if (data == Tuple(nonPositioned, nonPositioned)) {
+                    node!.addChildren(VMDraggableNestedMap.createNodeForTemp());
+                  } else {
+                    var childNode =
+                        getPlatform().getChoiceNode(data.data1, data.data2)!;
+                    node!.addChildren(childNode);
+                    node!.parent!.removeChildren(node!);
+                  }
                   //TODO
                 },
               ),
-              visible: vmDraggableNestedMap.drag != Tuple(posX, posY) &&
+              visible: vmDraggableNestedMap.drag !=
+                      Tuple(node!.currentPos, node!.parent!.currentPos) &&
                   vmDraggableNestedMap.drag != null,
             ),
           ],
@@ -246,7 +285,7 @@ class ViewChoiceNode extends StatelessWidget {
       );
     } else {
       innerWidget = Obx(
-        () => IgnorePointer(
+            () => IgnorePointer(
           ignoring: !controller.isIgnorePointer(),
           child: InkWell(
             onTap: () {
@@ -259,7 +298,7 @@ class ViewChoiceNode extends StatelessWidget {
     }
 
     return Obx(
-      () {
+          () {
         if (controller.isCardMode.value) {
           var isSelectedCheck = controller.status.value.isSelected() &&
               controller.node.isSelectable;

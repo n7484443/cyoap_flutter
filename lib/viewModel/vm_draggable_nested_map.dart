@@ -65,10 +65,7 @@ class VMDraggableNestedMap extends GetxController {
                         if (constrains != null) {
                           return NodeDraggable(i, j, constrains);
                         } else {
-                          return ViewChoiceNode(
-                            posX: i,
-                            posY: j,
-                          );
+                          return ViewChoiceNode(i, j);
                         }
                       } else {
                         return NodeDragTarget(i, j);
@@ -111,10 +108,7 @@ class VMDraggableNestedMap extends GetxController {
                   xList.children.length,
                   (x) {
                     var j = y ~/ 2;
-                    return ViewChoiceNode(
-                      posX: x,
-                      posY: j,
-                    );
+                    return ViewChoiceNode(x, j);
                   },
                 ),
               ),
@@ -152,7 +146,7 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   void changeData(Tuple<int, int> data, Tuple<int, int> pos) {
-    if (data == Tuple(-10, -10)) {
+    if (data == Tuple(nonPositioned, nonPositioned)) {
       getPlatform().addData(pos.data1, pos.data2, createNodeForTemp());
     } else {
       getPlatform().changeData(data, pos);
@@ -216,7 +210,7 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   bool isSelect(int posX, int posY) {
-    if (posX == -10 && posY == -10) return false;
+    if (posX == nonPositioned && posY == nonPositioned) return false;
     return getPlatform().isSelect(posX, posY);
   }
 

@@ -11,6 +11,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 import '../main.dart';
 import '../model/platform_system.dart';
+import '../viewModel/vm_choice_node.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
 
 class ViewMake extends StatelessWidget {
@@ -71,19 +72,16 @@ class ViewMake extends StatelessWidget {
               onMove: (DragTargetDetails<Tuple<int, int>> details) {},
             ),
             Draggable<Tuple<int, int>>(
-              data: Tuple(-10, -10),
+              data: Tuple(nonPositioned, nonPositioned),
               feedback: Transform.scale(
                 scale: 0.9,
-                child: const Opacity(
-                  child: ViewChoiceNode(
-                    posX: -10,
-                    posY: -10,
-                  ),
+                child: Opacity(
+                  child: ViewChoiceNode(nonPositioned, nonPositioned),
                   opacity: 0.6,
                 ),
               ),
               onDragStarted: () {
-                Get.find<VMDraggableNestedMap>().dragStart(Tuple(-10, -10));
+                Get.find<VMDraggableNestedMap>().dragStart(Tuple(nonPositioned, nonPositioned));
               },
               onDragEnd: (DraggableDetails data) {
                 Get.find<VMDraggableNestedMap>().dragEnd();

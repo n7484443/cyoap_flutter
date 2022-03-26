@@ -19,10 +19,7 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
 
   @override
   Widget build(BuildContext context) {
-    var widget = ViewChoiceNode(
-      posX: x,
-      posY: y,
-    );
+    var widget = ViewChoiceNode(x, y);
     var pos = Tuple(x, y);
     if (ConstList.isSmallDisplay(context)) {
       return LongPressDraggable<Tuple<int, int>>(
@@ -116,7 +113,7 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
           );
         },
         onAccept: (Tuple<int, int> data) {
-          if (controller.drag == Tuple(-10, -10)) {
+          if (controller.drag == Tuple(nonPositioned, nonPositioned)) {
             controller.changeData(data, Tuple(x, y));
           } else {
             if ((x - 2) > (controller.drag!.data1 * 2)) {

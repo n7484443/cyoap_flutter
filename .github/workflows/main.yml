@@ -37,8 +37,38 @@ jobs:
       - run: flutter build apk --release
       - run: Rename-Item "build/app/outputs/flutter-apk/app-release.apk" "cyoap_android_${{ steps.get_version.outputs.version-without-v }}.apk"
 
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            build/windows/cyoap_windows_${{ steps.get_version.outputs.version-without-v }}.zip
+            build/app/outputs/flutter-apk/cyoap_android_${{ steps.get_version.outputs.version-without-v }}.apk
+
+  build_webs:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+          cache-key: flutter
+          cache-path: ${{ runner.tool_cache }}/flutter
+
+      - run: flutter build web --web-renderer canvaskit --release --base-href=/FlutterCyoap/
+
+      - name: Deploy Web
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web
+
+      - name: Remove web folder
+        run: Remove-Item ./build/web -Recurse | Remove-Item
+
       - name: Build web distribute
         run: flutter build web --web-renderer html --release --dart-define="isDistributed"=true
+
       - run: Remove-Item ./build/web/canvaskit -Recurse | Remove-Item
       - run: Remove-Item ./build/web/.last_build_id
       - run: Remove-Item ./build/web/assets/NOTICES
@@ -57,23 +87,14 @@ jobs:
       - run: Remove-Item ./build/web/flutter_service_worker.js
       - run: Rename-Item ./build/web/flutter_service_worker_replaced.js flutter_service_worker.js
 
+      - name: Get latest release version number
+        id: get_version
+        uses: battila7/get-version-action@v2
+
       - run: 7z a build/web/distribute_${{ steps.get_version.outputs.version-without-v }}.zip ./build/web/*
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            build/windows/cyoap_windows_${{ steps.get_version.outputs.version-without-v }}.zip
-            build/app/outputs/flutter-apk/cyoap_android_${{ steps.get_version.outputs.version-without-v }}.apk
             build/web/distribute_${{ steps.get_version.outputs.version-without-v }}.zip
-
-      - name: Remove web folder
-        run: Remove-Item ./build/web -Recurse | Remove-Item
-
-      - run: flutter build web --web-renderer canvaskit --release --base-href=/FlutterCyoap/
-
-      - name: Deploy Web
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/web

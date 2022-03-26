@@ -46,11 +46,16 @@ abstract class GenerableParserAndPosition {
 
   Map<String, dynamic> toJson();
 
+  SelectableStatus status = SelectableStatus.open;
+
   int get currentPos;
   set currentPos(int pos);
 
+  List<GenerableParserAndPosition> children = List.empty(growable: true);
+
   GenerableParserAndPosition? parent;
   late RecursiveStatus recursiveStatus;
+  bool get isSelectableCheck;
 
   void execute() {
     if (recursiveStatus.executeCodeRecursive != null) {
@@ -89,4 +94,16 @@ abstract class GenerableParserAndPosition {
     return true;
   }
   String get tag => parent == null ? "$currentPos" : "${parent?.tag}:$currentPos";
+
+  void addChildren(GenerableParserAndPosition childNode){
+    childNode.parent = this;
+    childNode.currentPos = children.length;
+    children.add(childNode);
+  }
+
+  void removeChildren(GenerableParserAndPosition childNode){
+    childNode.parent = null;
+    children.removeAt(childNode.currentPos);
+    childNode.currentPos = 0;
+  }
 }

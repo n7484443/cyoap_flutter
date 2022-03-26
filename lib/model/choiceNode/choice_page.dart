@@ -25,4 +25,6 @@ class ChoicePage extends GenerableParserAndPosition{
   @override
   set currentPos(int pos) => _page = pos;
 
+  @override
+  bool get isSelectableCheck => true;
 }

@@ -7,15 +7,14 @@ import 'package:idb_shim/idb_browser.dart';
 class ImageDB {
   static final ImageDB instance = ImageDB();
 
-  final List<String> _dirImage = List.empty(growable: true);
+  final Map<String, bool> _dirImage = {};
   final Map<String, Uint8List> _dirImageUint8Map = {};
-  final Set<String> _loadImage = {};
 
-  List<String> get imageList => _dirImage;
+  List<String> get imageList => _dirImage.keys.toList();
 
   Future<Map<String, String>> get imageMap async {
     Map<String, String> output = {};
-    for (var key in _dirImage) {
+    for (var key in _dirImage.keys) {
       output[key] = await instance.getImageAsString(key) ?? "";
     }
     return output;
@@ -57,13 +56,12 @@ class ImageDB {
   }
 
   Future<void> uploadImages(String name, Uint8List data) async {
-    if (_loadImage.contains(name)) {
+    if (_dirImage[name] != null) {
       return;
     }
 
     await init();
-    _dirImage.add(name);
-    _loadImage.add(name);
+    _dirImage[name] = true;
 
     if (ConstList.isOnlyFileAccept()) {
       await notesWritableTxn.put(data, name);
@@ -73,13 +71,12 @@ class ImageDB {
   }
 
   Future<void> uploadImagesFuture(String name, Future<Uint8List> data) async {
-    if (_loadImage.contains(name)) {
+    if (_dirImage[name] != null) {
       return;
     }
 
     await init();
-    _dirImage.add(name);
-    _loadImage.add(name);
+    _dirImage[name] = true;
 
     data.then((value) async {
       if (ConstList.isOnlyFileAccept()) {

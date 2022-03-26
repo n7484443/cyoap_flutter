@@ -59,13 +59,10 @@ class PlatformSystem {
     await saveProject!.saveRaw(path!, platformFileSystem);
   }
 
-  static String getImageName(int index) {
-    return instance.platformFileSystem.getImageName(index);
-  }
+  static String getImageName(int index) =>
+    instance.platformFileSystem.getImageName(index);
 
-  static FutureBuilder getImage(String image) {
-    return instance.platformFileSystem.getImage(image);
-  }
+  static FutureBuilder getImage(String image) => instance.platformFileSystem.getImage(image);
 
   static void addImage(String name, Uint8List data) {
     ImageDB.instance.uploadImages(name, data);

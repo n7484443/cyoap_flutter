@@ -13,6 +13,7 @@ import '../util/tuple.dart';
 
 const double nodeBaseWidth = 176;
 const double nodeBaseHeight = 24;
+const int nonPositioned = -10;
 
 class VMChoiceNode extends GetxController {
   late QuillController quillController;
@@ -27,7 +28,10 @@ class VMChoiceNode extends GetxController {
   var isCardMode = false.obs;
   var status = SelectableStatus.open.obs;
 
-  VMChoiceNode({this.x = -10, this.y = -10}) : node = getNode(x, y)!;
+  VMChoiceNode({this.x = nonPositioned, this.y = nonPositioned}) : node = getNode(x, y)!;
+  VMChoiceNode.fromNode(this.node)
+      : x = node.x,
+        y = node.parent!.currentPos;
 
   @override
   void onInit() {
@@ -71,7 +75,7 @@ class VMChoiceNode extends GetxController {
   }
 
   static ChoiceNodeBase? getNode(int x, int y, {int children = -1}) {
-    if (x == -10 && y == -10) {
+    if (x == nonPositioned && y == nonPositioned) {
       return VMDraggableNestedMap.createNodeForTemp();
     } else if (y < 0 || y >= getPlatform().lineSettings.length) {
       return null;
@@ -87,7 +91,7 @@ class VMChoiceNode extends GetxController {
       return node;
     }else{
       if(node.children.length >= children)return null;
-      return node.children[children];
+      return node.children[children] as ChoiceNodeBase?;
     }
   }
 
@@ -128,7 +132,7 @@ class VMChoiceNode extends GetxController {
   }
 
   bool isSelect() {
-    if (x == -10 && y == -10) return false;
+    if (x == nonPositioned && y == nonPositioned) return false;
     return getPlatform().isSelect(x, y);
   }
 

@@ -109,7 +109,7 @@ class AbstractPlatform {
   ChoiceNodeBase? getChoiceNode(int posX, int posY) {
     if (lineSettings.length <= posY) return null;
     if (lineSettings[posY].children.length <= posX) return null;
-    return lineSettings[posY].children[posX];
+    return lineSettings[posY].children[posX] as ChoiceNodeBase?;
   }
 
   LineSetting? getLineSetting(int y) {
@@ -132,7 +132,7 @@ class AbstractPlatform {
   void checkDataCollect() {
     for (var line in lineSettings) {
       for (int x = 0; x < line.children.length; x++) {
-        line.children[x].x = x;
+        line.children[x].currentPos = x;
       }
     }
   }
@@ -156,7 +156,7 @@ class AbstractPlatform {
       for (var node in lineSetting.children) {
         if (node.status.isSelected()) {
           node.execute();
-          if (node.isSelectable) {
+          if (node.isSelectableCheck) {
             lineSetting.execute();
           }
         }
@@ -167,7 +167,7 @@ class AbstractPlatform {
           if (!visible) {
             node.status = SelectableStatus.hide;
           }
-          node.updateSelectValueTypeWrapper();
+          (node as ChoiceNodeBase).updateSelectValueTypeWrapper();
         }
       }
 
@@ -175,7 +175,7 @@ class AbstractPlatform {
 
       for (var node in lineSetting.children) {
         var selectable = node.isClickable();
-        if (node.isSelectable) {
+        if (node.isSelectableCheck) {
           if (node.status != SelectableStatus.selected &&
               node.status != SelectableStatus.hide) {
             selectable &= clickableLineTest;
@@ -186,7 +186,7 @@ class AbstractPlatform {
           node.status = SelectableStatus.selected;
         }
 
-        node.updateSelectValueTypeWrapper();
+        (node as ChoiceNodeBase).updateSelectValueTypeWrapper();
       }
     }
   }
@@ -239,7 +239,7 @@ class AbstractPlatform {
   void doAllChoiceNode(void Function(ChoiceNodeBase node) action) {
     for (var lineSetting in lineSettings) {
       for (var node in lineSetting.children) {
-        action(node);
+        action(node as ChoiceNodeBase);
       }
     }
   }

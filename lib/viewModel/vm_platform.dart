@@ -27,7 +27,6 @@ class VMPlatform extends GetxController {
   var stopwatch = Stopwatch().obs;
 
   Future saveAsFile() async {
-    Map<String, String> choiceNodes = {};
     Map<String, String> lineSetting = {};
     for (int i = 0; i < getPlatform().lineSettings.length; i++) {
       var line = getPlatform().lineSettings[i];
@@ -39,7 +38,6 @@ class VMPlatform extends GetxController {
       'imageMap': await ImageDB.instance.imageMap,
       'imageSource': getPlatformFileSystem().imageSource,
       'platform': jsonEncode(getPlatform().toJson()),
-      'choiceNodes': choiceNodes,
       'lineSetting': lineSetting,
     };
 

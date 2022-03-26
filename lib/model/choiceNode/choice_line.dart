@@ -16,10 +16,8 @@ class LineSetting extends GenerableParserAndPosition {
   set currentPos(int pos) => _y = pos;
 
   int maxSelect;
-  List<ChoiceNodeBase> children;
 
-  LineSetting(this._y, {this.maxSelect = -1})
-      : children = List.empty(growable: true) {
+  LineSetting(this._y, {this.maxSelect = -1}) {
     recursiveStatus = RecursiveStatus();
   }
 
@@ -42,12 +40,12 @@ class LineSetting extends GenerableParserAndPosition {
 
   LineSetting.fromJson(Map<String, dynamic> json)
       : _y = json['y'],
-        maxSelect = json['maxSelect'] ?? -1,
-        children = json.containsKey('children')
-            ? (json['children'] as List)
-                .map((e) => ChoiceNodeBase.fromJson(e))
-                .toList()
-            : List.empty(growable: true) {
+        maxSelect = json['maxSelect'] ?? -1 {
+    if (json.containsKey('children')) {
+      children.addAll((json['children'] as List)
+          .map((e) => ChoiceNodeBase.fromJson(e))
+          .toList());
+    }
     //recursiveStatus = RecursiveStatus.fromJson(json);
     recursiveStatus = RecursiveStatus();
     recursiveStatus.conditionClickableRecursive =
@@ -57,7 +55,7 @@ class LineSetting extends GenerableParserAndPosition {
     var executeRecursive = json['executeRecursive'] == null
         ? null
         : getClassFromJson(json['executeRecursive']);
-    if(executeRecursive != null){
+    if (executeRecursive != null) {
       recursiveStatus.executeCodeRecursive = [executeRecursive];
     }
 
@@ -78,7 +76,7 @@ class LineSetting extends GenerableParserAndPosition {
 
   ChoiceNodeBase? getData(int x){
     if(children.length <= x) return null;
-    return children[x];
+    return children[x] as ChoiceNodeBase?;
   }
 
   String getClickableString() {
@@ -130,4 +128,7 @@ class LineSetting extends GenerableParserAndPosition {
       node.initValueTypeWrapper();
     }
   }
+
+  @override
+  bool get isSelectableCheck => true;
 }
