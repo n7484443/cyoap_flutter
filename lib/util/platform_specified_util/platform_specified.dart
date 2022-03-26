@@ -8,13 +8,14 @@ if (dart.library.html) 'platform_specified_web.dart';
 
 abstract class PlatformSpecified{
   static final PlatformSpecified instance = PlatformSpecifiedImp();
-  late Distribute distribute;
-  late SaveProject saveProject;
+  static late final Distribute distribute;
+  static late final SaveProject saveProject;
   void init(){}
   void preInit(){}
   void reload(){}
 }
-PlatformSpecified get platformSpecified => PlatformSpecified.instance;
+Distribute get distribute => PlatformSpecified.distribute;
+SaveProject get saveProject => PlatformSpecified.saveProject;
 
 abstract class Distribute {
   Future<Tuple<List<String>, List<String>>> getImageNodeList() async {

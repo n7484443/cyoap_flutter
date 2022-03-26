@@ -11,7 +11,6 @@ import 'package:path/path.dart';
 
 import '../main.dart';
 import '../util/json_file_parsing.dart';
-import '../util/platform_specified_util/platform_specified.dart';
 import '../util/platform_specified_util/webp_converter.dart';
 import '../util/tuple.dart';
 import 'abstract_platform.dart';
@@ -348,7 +347,7 @@ class PlatformFileSystem {
     return _imageSource[image]?.isNotEmpty ?? false;
   }
 
-  Future<void> saveCapture(Map<String, dynamic> map) async {
+  Future<Tuple<String, Uint8List>> saveCapture(Map<String, dynamic> map) async {
     var input = Uint8List.fromList(map['uint8list'].codeUnits);
 
     Tuple<String, Uint8List> converted;
@@ -357,11 +356,6 @@ class PlatformFileSystem {
     }else{
       converted = Tuple('exported.png', input);
     }
-    if (map['isOnlyFileAccept']) {
-      await platformSpecified.saveProject.downloadCapture(converted.data1, converted.data2);
-    } else {
-      await platformSpecified.saveProject.downloadCapture(
-          '${map['path']}/${converted.data1}', converted.data2);
-    }
+    return converted;
   }
 }

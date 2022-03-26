@@ -5,7 +5,7 @@ import 'package:cyoap_flutter/util/platform_specified_util/save_project_vm.dart'
 class PlatformSpecifiedImp extends PlatformSpecified{
   @override
   void init(){
-    distribute = DistributeImp();
-    saveProject = SaveProjectImp();
+    PlatformSpecified.distribute = DistributeImp();
+    PlatformSpecified.saveProject = SaveProjectImp();
   }
 }

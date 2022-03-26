@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:cyoap_flutter/model/image_db.dart';
@@ -12,6 +13,7 @@ import 'package:get/get.dart';
 import '../main.dart';
 import '../model/platform_system.dart';
 import '../util/platform_specified_util/platform_specified.dart';
+import '../util/tuple.dart';
 
 class VMPlatform extends GetxController {
   @override
@@ -102,14 +104,18 @@ class VMPlatform extends GetxController {
 
     Map<String, dynamic> map = {
       'uint8list': String.fromCharCodes(byteData),
-      'isOnlyFileAccept': ConstList.isOnlyFileAccept(),
-      'path': PlatformSystem.instance.path,
       'isWebp': isWebp,
     };
 
-    var output = compute(getPlatformFileSystem().saveCapture, map);
+    Future<Tuple<String, Uint8List>> output = compute(getPlatformFileSystem().saveCapture, map);
 
     output.then((value) {
+      if (ConstList.isOnlyFileAccept()) {
+        saveProject.downloadCapture(value.data1, value.data2);
+      } else {
+        saveProject.downloadCapture('${PlatformSystem.instance.path}/${value.data1}', value.data2);
+      }
+
       stopwatch.update((val) => val?.stop());
       timer.cancel();
       Get.back();
@@ -133,7 +139,6 @@ class VMPlatform extends GetxController {
     });
 
     print('web is Distribute mode');
-    var distribute = platformSpecified.distribute;
     var value = await distribute.getImageNodeList();
     print('load start');
     loadString = '[ 로드 시작 ]';

@@ -8,8 +8,8 @@ import 'package:url_strategy/url_strategy.dart';
 class PlatformSpecifiedImp extends PlatformSpecified{
   @override
   void init(){
-    distribute = DistributeImp();
-    saveProject = SaveProjectImp();
+    PlatformSpecified.distribute = DistributeImp();
+    PlatformSpecified.saveProject = SaveProjectImp();
   }
   @override
   void preInit(){
