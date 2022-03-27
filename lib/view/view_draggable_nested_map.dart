@@ -2,11 +2,11 @@ import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/view/view_text_outline.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../main.dart';
-import '../util/tuple.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
 
 class NodeDraggable extends GetView<VMDraggableNestedMap> {
@@ -20,9 +20,9 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
   @override
   Widget build(BuildContext context) {
     var widget = ViewChoiceNode(x, y);
-    var pos = Tuple(x, y);
+    var pos = widget.node!.pos(null);
     if (ConstList.isSmallDisplay(context)) {
-      return LongPressDraggable<Tuple<int, int>>(
+      return LongPressDraggable<List<int>>(
         onDragUpdate: (details) =>
             controller.dragUpdate(constrains, details, context),
         data: pos,
@@ -35,7 +35,7 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
         },
         child: Visibility(
           child: widget,
-          visible: controller.drag != pos,
+          visible: !listEquals(controller.drag, pos),
         ),
         onDragEnd: (DraggableDetails data) {
           controller.dragEnd();
@@ -45,7 +45,7 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
         },
       );
     } else {
-      return Draggable<Tuple<int, int>>(
+      return Draggable<List<int>>(
         onDragUpdate: (details) =>
             controller.dragUpdate(constrains, details, context),
         data: pos,
@@ -58,7 +58,7 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
         },
         child: Visibility(
           child: widget,
-          visible: controller.drag != pos,
+          visible: !listEquals(controller.drag, pos),
         ),
         onDragEnd: (DraggableDetails data) {
           controller.dragEnd();
@@ -89,7 +89,7 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
     bool realLong = longType1 || longType2;
 
     return Visibility(
-      child: DragTarget<Tuple<int, int>>(
+      child: DragTarget<List<int>>(
         builder: (BuildContext context, List<dynamic> accepted,
             List<dynamic> rejected) {
           if (longType1) {
@@ -112,14 +112,14 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
             height: nodeBaseHeight * 10 * controller.getScale().data2,
           );
         },
-        onAccept: (Tuple<int, int> data) {
-          if (controller.drag == Tuple(nonPositioned, nonPositioned)) {
-            controller.changeData(data, Tuple(x, y));
+        onAccept: (List<int> data) {
+          if (controller.drag != null && controller.drag![controller.drag!.length - 1] == nonPositioned) {
+            controller.changeData(data, [y, x]);
           } else {
-            if ((x - 2) > (controller.drag!.data1 * 2)) {
-              controller.changeData(data, Tuple(x - 1, y));
+            if ((x - 2) > (controller.drag![1] * 2)) {
+              controller.changeData(data, [y, x - 1]);
             } else {
-              controller.changeData(data, Tuple(x, y));
+              controller.changeData(data,[y, x]);
             }
           }
         },

@@ -247,8 +247,7 @@ class ViewChoiceNode extends StatelessWidget {
     if (isEditable()) {
       innerWidget = InkWell(
         onDoubleTap: () {
-          vmDraggableNestedMap.setEdit(
-              node!.currentPos, node!.parent!.currentPos);
+          vmDraggableNestedMap.setEdit(node!);
           Get.toNamed('/viewEditor', id: 1);
         },
         child: Stack(
@@ -276,9 +275,8 @@ class ViewChoiceNode extends StatelessWidget {
                   //TODO
                 },
               ),
-              visible: vmDraggableNestedMap.drag !=
-                      Tuple(node!.currentPos, node!.parent!.currentPos) &&
-                  vmDraggableNestedMap.drag != null,
+              visible: vmDraggableNestedMap.drag != null &&
+                  vmDraggableNestedMap.drag != node?.pos(null),
             ),
           ],
         ),

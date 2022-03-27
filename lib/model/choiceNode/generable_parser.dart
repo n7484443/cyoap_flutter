@@ -106,7 +106,11 @@ abstract class GenerableParserAndPosition {
       parent == null ? "$currentPos" : "${parent?.tag}:$currentPos";
 
   List<int> pos(List<int>? posList) {
-    posList ??= List.empty(growable: true);
+    if(posList == null){
+      posList = List.empty(growable: true);
+    }else{
+      posList = List.from(posList);
+    }
     if(parent != null){
       posList.addAll(parent!.pos(posList));
     }

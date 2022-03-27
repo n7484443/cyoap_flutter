@@ -1,4 +1,3 @@
-import 'package:cyoap_flutter/util/tuple.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
@@ -61,18 +60,18 @@ class ViewMake extends StatelessWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            DragTarget<Tuple<int, int>>(
+            DragTarget<List<int>>(
               builder: (BuildContext context, List<dynamic> accepted,
                   List<dynamic> rejected) {
                 return const Icon(Icons.delete);
               },
-              onAccept: (Tuple<int, int> data) {
+              onAccept: (List<int> data) {
                 Get.find<VMDraggableNestedMap>().removeData(data);
               },
-              onMove: (DragTargetDetails<Tuple<int, int>> details) {},
+              onMove: (DragTargetDetails<List<int>> details) {},
             ),
-            Draggable<Tuple<int, int>>(
-              data: Tuple(nonPositioned, nonPositioned),
+            Draggable<List<int>>(
+              data: [nonPositioned, nonPositioned],
               feedback: Transform.scale(
                 scale: 0.9,
                 child: Opacity(
@@ -81,7 +80,7 @@ class ViewMake extends StatelessWidget {
                 ),
               ),
               onDragStarted: () {
-                Get.find<VMDraggableNestedMap>().dragStart(Tuple(nonPositioned, nonPositioned));
+                Get.find<VMDraggableNestedMap>().dragStart([nonPositioned, nonPositioned]);
               },
               onDragEnd: (DraggableDetails data) {
                 Get.find<VMDraggableNestedMap>().dragEnd();

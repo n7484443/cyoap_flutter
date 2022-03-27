@@ -11,7 +11,7 @@ import '../view/view_choice_node.dart';
 import '../view/view_draggable_nested_map.dart';
 
 class VMDraggableNestedMap extends GetxController {
-  Tuple<int, int>? drag;
+  List<int>? drag;
 
   GlobalKey captureKey = GlobalKey();
 
@@ -29,7 +29,8 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   bool isVisibleDragTarget(int x, int y) {
-    return drag != null && drag != Tuple(x - 1, y);
+    if(drag == null)return false;
+    return drag![drag!.length - 1] != x - 1 || drag![drag!.length - 2] != y;
   }
 
   int getLength() {
@@ -124,20 +125,17 @@ class VMDraggableNestedMap extends GetxController {
     return widgetList;
   }
 
-  void removeData(Tuple<int, int> data) {
-    getPlatform().removeData(data.data1, data.data2);
-    updateVMChoiceNode(data.data1, data.data2);
+  void removeData(List<int> data) {
+    getPlatform().removeData(data[0], data[1]);
+    updateVMChoiceNode(data[0], data[1]);
     update();
   }
 
   void updateVMChoiceNode(int x, int y) {
     var lineSetting = getPlatform().lineSettings;
     if (y >= lineSetting.length) return;
-    for (var i = x; i < lineSetting[y].children.length; i++) {
-      if (!Get.isRegistered<VMChoiceNode>(tag: VMChoiceNode.getTagFromXY(i, y))) {
-        continue;
-      }
-      Get.find<VMChoiceNode>(tag: VMChoiceNode.getTagFromXY(i, y)).updateFromNode();
+    for (var node in lineSetting[y].children) {
+      VMChoiceNode.getVMChoiceNodeFromTag(node.tag)?.updateFromNode();
     }
   }
 
@@ -145,26 +143,26 @@ class VMDraggableNestedMap extends GetxController {
     return ChoiceNodeBase.noTitle(1, 10, true, '', '');
   }
 
-  void changeData(Tuple<int, int> data, Tuple<int, int> pos) {
-    if (data == Tuple(nonPositioned, nonPositioned)) {
-      getPlatform().addData(pos.data1, pos.data2, createNodeForTemp());
+  void changeData(List<int> data, List<int> pos) {
+    if (data[data.length - 1] == nonPositioned) {
+      getPlatform().addDataFromList(pos, createNodeForTemp());
     } else {
-      getPlatform().changeData(data, pos);
-      updateVMChoiceNode(data.data1, data.data2);
+      getPlatform().changeDataFromList(data, pos);
+      updateVMChoiceNode(data[1], data[0]);
     }
-    updateVMChoiceNode(pos.data1, pos.data2);
+    updateVMChoiceNode(pos[1], pos[0]);
     update();
   }
 
-  void dragStart(Tuple<int, int> pos) {
-    drag = pos.copy();
-    VMChoiceNode.getVMChoiceNode(drag!.data1, drag!.data2)?.isDrag.value = true;
+  void dragStart(List<int> pos) {
+    drag = List.from(pos);
+    VMChoiceNode.getVMChoiceNodeFromList(drag!)?.isDrag.value = true;
     update();
   }
 
   void dragEnd() {
     if(drag != null){
-      VMChoiceNode.getVMChoiceNode(drag!.data1, drag!.data2)?.isDrag.value =
+      VMChoiceNode.getVMChoiceNodeFromList(drag!)?.isDrag.value =
       false;
       drag = null;
       update();
@@ -214,12 +212,7 @@ class VMDraggableNestedMap extends GetxController {
     return getPlatform().isSelect(posX, posY);
   }
 
-  void setEdit(int posX, int posY) {
-    var node = getPlatform().getChoiceNode(posX, posY);
-
-    if (node == null) {
-      return;
-    }
+  void setEdit(ChoiceNodeBase node) {
     ChoiceNodeBase nodeNonnull = node;
     NodeEditor.instance.setTarget(nodeNonnull);
   }

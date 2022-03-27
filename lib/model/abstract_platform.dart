@@ -90,6 +90,13 @@ class AbstractPlatform {
     lineSettings[y].addData(x, node);
   }
 
+  void addDataFromList(List<int> pos, ChoiceNodeBase node) {
+    while (lineSettings.length <= pos[0]) {
+      lineSettings.add(LineSetting(lineSettings.length));
+    }
+    lineSettings[pos[0]].addData(pos[1], node);
+  }
+
   void addDataAll(List<LineSetting> lineList) {
     for (var lineSetting in lineList) {
       addLineSettingData(lineSetting);
@@ -106,6 +113,11 @@ class AbstractPlatform {
     if (lineSettings[posY].children.length <= posX) return null;
     return lineSettings[posY].children[posX] as ChoiceNodeBase?;
   }
+  ChoiceNodeBase? getChoiceNodeFromList(List<int> pos) {
+    if (lineSettings.length <= pos[0]) return null;
+    if (lineSettings[pos[0]].children.length <= pos[1]) return null;
+    return lineSettings[pos[0]].children[pos[1]] as ChoiceNodeBase?;
+  }
 
   LineSetting? getLineSetting(int y) {
     if (lineSettings.length <= y) return null;
@@ -116,6 +128,13 @@ class AbstractPlatform {
     var node = getChoiceNode(start.data1, start.data2)!;
     removeData(start.data1, start.data2);
     addData(pos.data1, pos.data2, node);
+    checkDataCollect();
+  }
+
+  void changeDataFromList(List<int> start, List<int> pos) {
+    var node = getChoiceNodeFromList(start)!;
+    removeData(start[1], start[0]);
+    addData(pos[1], pos[0], node);
     checkDataCollect();
   }
 

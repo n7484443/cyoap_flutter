@@ -131,6 +131,21 @@ class VMChoiceNode extends GetxController {
     return Get.find<VMChoiceNode>(tag: VMChoiceNode.getTagFromXY(x, y));
   }
 
+  static VMChoiceNode? getVMChoiceNodeFromTag(String tag) {
+    if (!Get.isRegistered<VMChoiceNode>(tag: tag)) {
+      return null;
+    }
+    return Get.find<VMChoiceNode>(tag: tag);
+  }
+
+  static VMChoiceNode? getVMChoiceNodeFromList(List<int> tag) {
+    var tagOut = tag[0].toString();
+    for(int i = 1; i < tag.length; i++){
+      tagOut += ':${tag[i]}';
+    }
+    return getVMChoiceNodeFromTag(tagOut);
+  }
+
   bool isSelect() {
     if (x == nonPositioned && y == nonPositioned) return false;
     return getPlatform().isSelect(x, y);
