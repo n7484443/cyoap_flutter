@@ -126,8 +126,8 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   void removeData(List<int> data) {
-    getPlatform().removeData(data[0], data[1]);
-    updateVMChoiceNode(data[0], data[1]);
+    getPlatform().removeData(data[1], data[0]);
+    updateVMChoiceNode(data[1], data[0]);
     update();
   }
 

@@ -10,14 +10,22 @@ class ChoicePage extends GenerableParserAndPosition{
   }
 
   @override
-  void generateParser() {}
+  void generateParser() {
+
+  }
 
   @override
-  void initValueTypeWrapper() {}
+  void initValueTypeWrapper() {
+
+  }
 
   @override
   Map<String, dynamic> toJson() {
-    throw UnimplementedError();
+    Map<String, dynamic> map = super.toJson();
+    map.addAll({
+      'lineSettings': lineSettings,
+    });
+    return map;
   }
 
   @override

@@ -225,13 +225,40 @@ class ViewChoiceNode extends StatelessWidget {
             : getPlatform().colorBackground.lighten(),
         child: Column(
           children: List.generate(
-            childList.length + 2,
+            childList.length + 3,
             (index) {
               switch (index) {
                 case 0:
                   return Expanded(child: image);
                 case 1:
                   return editor;
+                case 2:
+                  return Visibility(
+                    child: Expanded(
+                      child: DragTarget(
+                        builder: (BuildContext context, List<Object?> candidateData,
+                            List<dynamic> rejectedData) =>
+                            Container(
+                              color: Colors.blueAccent.withOpacity(0.3),
+                              width: controller.realSize.value.data1 * scale.data1 * 0.6,
+                              height: controller.realSize.value.data2 * scale.data2 * 0.6,
+                            ),
+                        onAccept: (Tuple<int, int> data) {
+                          if (data == Tuple(nonPositioned, nonPositioned)) {
+                            node!.addChildren(VMDraggableNestedMap.createNodeForTemp());
+                          } else {
+                            var childNode =
+                            getPlatform().getChoiceNode(data.data1, data.data2)!;
+                            node!.addChildren(childNode);
+                            node!.parent!.removeChildren(node!);
+                          }
+                          //TODO
+                        },
+                      ),
+                    ),
+                    visible: vmDraggableNestedMap.drag != null &&
+                        vmDraggableNestedMap.drag != node?.pos(null),
+                  );
                 default:
                   return Expanded(
                     child: childList[index - 2],
@@ -250,36 +277,7 @@ class ViewChoiceNode extends StatelessWidget {
           vmDraggableNestedMap.setEdit(node!);
           Get.toNamed('/viewEditor', id: 1);
         },
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            mainNode,
-            Visibility(
-              child: DragTarget(
-                builder: (BuildContext context, List<Object?> candidateData,
-                    List<dynamic> rejectedData) =>
-                    Container(
-                      color: Colors.blueAccent.withOpacity(0.3),
-                      width: controller.realSize.value.data1 * scale.data1 * 0.6,
-                      height: controller.realSize.value.data2 * scale.data2 * 0.6,
-                    ),
-                onAccept: (Tuple<int, int> data) {
-                  if (data == Tuple(nonPositioned, nonPositioned)) {
-                    node!.addChildren(VMDraggableNestedMap.createNodeForTemp());
-                  } else {
-                    var childNode =
-                        getPlatform().getChoiceNode(data.data1, data.data2)!;
-                    node!.addChildren(childNode);
-                    node!.parent!.removeChildren(node!);
-                  }
-                  //TODO
-                },
-              ),
-              visible: vmDraggableNestedMap.drag != null &&
-                  vmDraggableNestedMap.drag != node?.pos(null),
-            ),
-          ],
-        ),
+        child: mainNode,
       );
     } else {
       innerWidget = Obx(

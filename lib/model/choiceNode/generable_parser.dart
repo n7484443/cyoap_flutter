@@ -103,7 +103,7 @@ abstract class GenerableParserAndPosition {
   }
 
   String get tag =>
-      parent == null ? "$currentPos" : "${parent?.tag}:$currentPos";
+      parent == null ? "$currentPos" : "${parent!.tag}:$currentPos";
 
   List<int> pos(List<int>? posList) {
     if(posList == null){
