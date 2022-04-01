@@ -304,19 +304,19 @@ class ViewChoiceNode extends StatelessWidget {
                 side: BorderSide(
                   color:
                       isSelectedCheck ? Colors.lightBlueAccent : Colors.white,
-                  width: 6,
+                      width: 6,
+                    ),
+                  ),
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  elevation: ConstList.elevation,
+                  child: innerWidget,
                 ),
-              ),
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              elevation: ConstList.elevation,
+              );
+            }
+            return Opacity(
+              opacity: controller.opacity,
               child: innerWidget,
-            ),
-          );
-        }
-        return Opacity(
-          opacity: controller.opacity,
-          child: innerWidget,
-        );
+            );
       },
     );
   }

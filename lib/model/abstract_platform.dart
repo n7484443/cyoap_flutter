@@ -224,9 +224,11 @@ class AbstractPlatform {
 
   void doAllChoiceNodeInner(
       ChoiceNodeBase nodeParent, void Function(ChoiceNodeBase node) action) {
-    for (var node in nodeParent.children) {
-      action(node as ChoiceNodeBase);
-      doAllChoiceNodeInner(node, action);
+    action(nodeParent);
+    if(nodeParent.children.isNotEmpty){
+      for (var node in nodeParent.children) {
+        doAllChoiceNodeInner(node as ChoiceNodeBase, action);
+      }
     }
   }
 }
