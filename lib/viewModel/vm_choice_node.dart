@@ -18,8 +18,7 @@ const int nonPositioned = -10;
 class VMChoiceNode extends GetxController {
   late QuillController quillController;
   ChoiceNodeBase node;
-  int x;
-  int y;
+  List<int> pos;
   var size = Tuple<int, int>(0, 0).obs;
   var realSize = Tuple<double, double>(0, 0).obs;
   var imageString = ''.obs;
@@ -28,10 +27,11 @@ class VMChoiceNode extends GetxController {
   var isCardMode = false.obs;
   var status = SelectableStatus.open.obs;
 
-  VMChoiceNode({this.x = nonPositioned, this.y = nonPositioned}) : node = getNode(x, y)!;
-  VMChoiceNode.fromNode(this.node)
-      : x = node.currentPos,
-        y = node.parent!.currentPos;
+  VMChoiceNode({int x = nonPositioned, int y = nonPositioned})
+      : pos = [y, x],
+        node = getNode([y, x])!;
+
+  VMChoiceNode.fromNode(this.node) : pos = node.pos();
 
   @override
   void onInit() {
@@ -74,38 +74,25 @@ class VMChoiceNode extends GetxController {
     }
   }
 
-  static ChoiceNodeBase? getNode(int x, int y, {int children = -1}) {
-    if (x == nonPositioned && y == nonPositioned) {
+  static ChoiceNodeBase? getNode(List<int> pos) {
+    if (pos[pos.length - 1] == nonPositioned) {
       return VMDraggableNestedMap.createNodeForTemp();
-    } else if (y < 0 || y >= getPlatform().lineSettings.length) {
-      return null;
-    } else if (x < 0 || x >= getPlatform().lineSettings[y].children.length) {
-      return null;
     }
-
-    var node = getPlatform().getChoiceNode([y, x]);
-    if(node == null){
-      return null;
-    }
-    if(children == -1){
-      return node;
-    }else{
-      if(node.children.length >= children)return null;
-      return node.children[children] as ChoiceNodeBase?;
-    }
+    return getPlatform().getChoiceNode(pos);
   }
 
   static String getTag(ChoiceNodeBase node) {
     return node.tag;
   }
+
   static String getTagFromXY(int x, int y) {
-    return getNode(x, y)!.tag;
+    return getNode([y, x])!.tag;
   }
 
-  void sizeChange(int x, int y) {
+  void sizeChange(int width, int height) {
     size.update((val) {
-      val!.data1 += x;
-      val.data2 += y;
+      val!.data1 += width;
+      val.data2 += height;
       val.data1 = max(val.data1, 0);
       val.data2 = max(val.data2, 0);
       node.width = val.data1;
@@ -120,7 +107,7 @@ class VMChoiceNode extends GetxController {
   }
 
   void updateFromNode() {
-    node = getNode(x, y)!;
+    node = getNode(pos)!;
     onInit();
   }
 
@@ -147,8 +134,8 @@ class VMChoiceNode extends GetxController {
   }
 
   bool isSelect() {
-    if (x == nonPositioned && y == nonPositioned) return false;
-    return getPlatform().isSelect(x, y);
+    if (pos[pos.length - 1] == nonPositioned) return false;
+    return getPlatform().isSelect(node.pos());
   }
 
   bool isIgnorePointer() {
@@ -156,7 +143,7 @@ class VMChoiceNode extends GetxController {
   }
 
   void select() {
-    getPlatform().setSelect(x, y);
+    getPlatform().setSelect(node.pos());
     VMChoiceNode.doAllVMChoiceNode((vm) {
       vm.status.value = vm.node.status;
     });

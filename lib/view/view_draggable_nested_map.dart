@@ -80,8 +80,8 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
 
   @override
   Widget build(BuildContext context) {
-    var nodeBefore = VMChoiceNode.getNode(x - 1, y);
-    var node = VMChoiceNode.getNode(x, y);
+    var nodeBefore = VMChoiceNode.getNode([y, x - 1]);
+    var node = VMChoiceNode.getNode([y, x]);
 
     bool longType1 = (node != null && node.width == 0) ||
         (nodeBefore != null && node == null && nodeBefore.width == 0);
@@ -113,14 +113,16 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
           );
         },
         onAccept: (List<int> data) {
-          if (controller.drag != null && controller.drag![controller.drag!.length - 1] == nonPositioned) {
+          var drag = controller.drag!;
+          if (drag[drag.length - 1] == nonPositioned) {
             controller.changeData(data, [y, x]);
           } else {
-            if ((x - 2) > (controller.drag![1] * 2)) {
+            if(y == drag[0] && (x - 1) > (drag[1] * 2)){
               controller.changeData(data, [y, x - 1]);
-            } else {
-              controller.changeData(data,[y, x]);
+            }else{
+              controller.changeData(data, [y, x]);
             }
+
           }
         },
       ),

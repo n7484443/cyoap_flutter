@@ -207,11 +207,6 @@ class VMDraggableNestedMap extends GetxController {
     isChanged = true;
   }
 
-  bool isSelect(int posX, int posY) {
-    if (posX == nonPositioned && posY == nonPositioned) return false;
-    return getPlatform().isSelect(posX, posY);
-  }
-
   void setEdit(ChoiceNodeBase node) {
     ChoiceNodeBase nodeNonnull = node;
     NodeEditor.instance.setTarget(nodeNonnull);

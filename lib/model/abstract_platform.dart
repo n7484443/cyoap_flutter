@@ -102,9 +102,12 @@ class AbstractPlatform {
   }
 
   ChoiceNodeBase? getChoiceNode(List<int> pos) {
+    if(pos[0] >= lineSettings.length) return null;
     GenerableParserAndPosition child = lineSettings[pos[0]];
     for(var i = 1; i < pos.length; i++){
       if(child.children.length <= pos[i]) {
+        return null;
+      }else if(pos[i] < 0){
         return null;
       }
       child = child.children[pos[i]];
@@ -144,13 +147,13 @@ class AbstractPlatform {
     }
   }
 
-  void setSelect(int posX, int posY) {
-    getChoiceNode([posY, posX])?.selectNode();
+  void setSelect(List<int> pos) {
+    getChoiceNode(pos)?.selectNode();
     updateSelectable();
   }
 
-  bool isSelect(int posX, int posY) {
-    return getChoiceNode([posY, posX])?.status.isSelected() ?? false;
+  bool isSelect(List<int> pos) {
+    return getChoiceNode(pos)?.status.isSelected() ?? false;
   }
 
   void updateSelectable() {
