@@ -2,7 +2,6 @@ import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
-import 'package:cyoap_flutter/util/tuple.dart';
 import 'package:flutter/material.dart';
 
 import '../util/version.dart';
@@ -83,14 +82,7 @@ class AbstractPlatform {
     lineSettings[lineSetting.currentPos] = lineSetting;
   }
 
-  void addData(int x, int y, ChoiceNodeBase node) {
-    while (lineSettings.length <= y) {
-      lineSettings.add(LineSetting(lineSettings.length));
-    }
-    lineSettings[y].addData(x, node);
-  }
-
-  void addDataFromList(List<int> pos, ChoiceNodeBase node) {
+  void addData(List<int> pos, ChoiceNodeBase node) {
     while (lineSettings.length <= pos[0]) {
       lineSettings.add(LineSetting(lineSettings.length));
     }
@@ -103,8 +95,9 @@ class AbstractPlatform {
     }
   }
 
-  void removeData(int x, int y) {
-    lineSettings[y].children.removeAt(x);
+  void removeData(List<int> pos) {
+    var node = getChoiceNode(pos);
+    node?.parent?.removeChildren(node);
     checkDataCollect();
   }
 
@@ -124,17 +117,17 @@ class AbstractPlatform {
     return lineSettings[y];
   }
 
-  void changeData(Tuple<int, int> start, Tuple<int, int> pos) {
-    var node = getChoiceNode([start.data2, start.data1])!;
-    removeData(start.data1, start.data2);
-    addData(pos.data1, pos.data2, node);
+  void changeData(List<int> start, List<int> pos) {
+    var node = getChoiceNode(start)!;
+    removeData(start);
+    addData(pos, node);
     checkDataCollect();
   }
 
   void changeDataFromList(List<int> start, List<int> pos) {
     var node = getChoiceNode(start)!;
-    removeData(start[1], start[0]);
-    addData(pos[1], pos[0], node);
+    removeData(start);
+    addData(pos, node);
     checkDataCollect();
   }
 
