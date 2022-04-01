@@ -27,7 +27,7 @@ class Token {
         return double.tryParse(data);
       case AnalyserConst.bools:
         return data == 'true';
-      case AnalyserConst.strs:
+      case AnalyserConst.strings:
         return data;
       case AnalyserConst.functionUnspecified:
       case AnalyserConst.function:

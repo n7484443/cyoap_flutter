@@ -3,7 +3,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FrequentlyUsedPath {
-  List<String> pathList = [];
+  List<String> pathList = List.empty(growable: true);
 
   Future<bool> getStatuses() async {
     var deviceInfoPlugin = DeviceInfoPlugin();

@@ -12,7 +12,7 @@ import '../model/platform_system.dart';
 
 class VMStartPlatform extends GetxController {
   FrequentlyUsedPath frequentlyUsedPath = FrequentlyUsedPath();
-  List<String> pathList = [];
+  List<String> pathList = List.empty(growable: true);
   int selected = -1;
   List<Future<void>> isAdded = List.empty(growable: true);
 
@@ -20,7 +20,10 @@ class VMStartPlatform extends GetxController {
 
   @override
   void onInit() {
-    isNeedUpdate();
+    CheckUpdate.needUpdateCheck().then((value) {
+      needUpdate = value;
+      update();
+    });
     super.onInit();
   }
 
@@ -132,12 +135,5 @@ class VMStartPlatform extends GetxController {
 
   void setEditable(bool bool) {
     getPlatformFileSystem().isEditable = bool;
-  }
-
-  void isNeedUpdate() {
-    CheckUpdate.needUpdateCheck().then((value) {
-      needUpdate = value;
-      update();
-    });
   }
 }

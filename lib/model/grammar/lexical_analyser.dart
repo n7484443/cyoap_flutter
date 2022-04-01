@@ -73,10 +73,10 @@ class LexicalAnalyser {
           break;
         default:
           if (boolForStringInput) {
-            if (func[size].type == AnalyserConst.strs) {
+            if (func[size].type == AnalyserConst.strings) {
               func[size] = func[size].addUnitData(c);
             } else {
-              func.add(Token(AnalyserConst.strs, c.toString()));
+              func.add(Token(AnalyserConst.strings, c.toString()));
             }
           } else {
             var isDigit = isStringDouble(c);
@@ -87,7 +87,7 @@ class LexicalAnalyser {
             } else if (c == '.') {
               func[size] = Token(AnalyserConst.doubles, func[size].data + c);
               if (!isStringDouble(func[size].data)) {
-                print("error! float has more than two point(.) \n");
+                throw "error! float has more than two point(.)";
               }
             } else if (isDigit) {
               switch (func[size].type) {
@@ -131,7 +131,7 @@ class LexicalAnalyser {
         return double;
       case AnalyserConst.bools:
         return bool;
-      case AnalyserConst.strs:
+      case AnalyserConst.strings:
         return "string";
       case AnalyserConst.function:
         return Function;

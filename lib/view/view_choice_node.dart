@@ -11,7 +11,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../main.dart';
 import '../model/platform_system.dart';
-import '../util/tuple.dart';
 
 class ViewChoiceNode extends StatelessWidget {
   final ChoiceNodeBase? node;
@@ -243,14 +242,13 @@ class ViewChoiceNode extends StatelessWidget {
                               width: controller.realSize.value.data1 * scale.data1 * 0.6,
                               height: controller.realSize.value.data2 * scale.data2 * 0.6,
                             ),
-                        onAccept: (Tuple<int, int> data) {
-                          if (data == Tuple(nonPositioned, nonPositioned)) {
+                        onAccept: (List<int> data) {
+                          if (data[data.length - 1] == nonPositioned) {
                             node!.addChildren(VMDraggableNestedMap.createNodeForTemp());
                           } else {
-                            var childNode =
-                            getPlatform().getChoiceNode(data.data1, data.data2)!;
-                            node!.addChildren(childNode);
+                            var childNode = getPlatform().getChoiceNode(data[1], data[0])!;
                             node!.parent!.removeChildren(node!);
+                            node!.addChildren(childNode);
                           }
                           //TODO
                         },
@@ -261,7 +259,7 @@ class ViewChoiceNode extends StatelessWidget {
                   );
                 default:
                   return Expanded(
-                    child: childList[index - 2],
+                    child: childList[index - 3],
                   );
               }
             },

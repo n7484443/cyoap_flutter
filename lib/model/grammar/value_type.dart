@@ -11,6 +11,7 @@ class ValueType {
   }
 
   ValueType.none() : data = ValueTypeData.none;
+  ValueType.comma() : data = ValueTypeData.comma;
 
   void set(ValueType a) {
     data = a.data;

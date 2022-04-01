@@ -91,4 +91,14 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
   String convertToWebp(String name) {
     return name.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
   }
+
+  ChoiceNodeBase? getParentLast(ChoiceNodeBase input){
+    ChoiceNodeBase parent = input;
+    while(true){
+      if(parent.parent == null)break;
+      if(parent.parent is! ChoiceNodeBase)break;
+      parent = parent.parent as ChoiceNodeBase;
+    }
+    return parent;
+  }
 }
