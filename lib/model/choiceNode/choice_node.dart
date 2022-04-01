@@ -1,6 +1,7 @@
+import 'dart:math';
+
 import 'package:cyoap_flutter/model/choiceNode/recursive_status.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
-import 'package:english_words/english_words.dart';
 
 import '../grammar/value_type.dart';
 import 'generable_parser.dart';
@@ -32,9 +33,7 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
       this.contentsString, this.imageString)
       : title = '' {
     recursiveStatus = RecursiveStatus();
-    for (int i = 0; i < 2; i++) {
-      title += WordPair.random().asPascalCase;
-    }
+    title = Random().nextInt(9999).toString();
   } //랜덤 문자로 제목 중복 방지
 
   ChoiceNodeBase.fromJson(Map<String, dynamic> json)

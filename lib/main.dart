@@ -4,14 +4,13 @@ import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.da
 import 'package:cyoap_flutter/view/view_make_platform.dart' deferred as v_make;
 import 'package:cyoap_flutter/view/view_play.dart' deferred as v_play;
 import 'package:cyoap_flutter/view/view_start.dart' deferred as v_start;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:tuple/tuple.dart';
-
-//flutter build web --base-href=/FlutterCyoapWeb/
 
 class ConstList {
   static const bool isDistributed = bool.fromEnvironment("isDistributed", defaultValue: false);
@@ -83,16 +82,12 @@ class ConstList {
     if(isDistributed){
       ConstList.actualPlatformType = PlatformType.web;
     }else{
-      try {
-        if (Platform.isAndroid) {
-          ConstList.actualPlatformType = PlatformType.mobile;
-        } else if (Platform.isWindows) {
-          ConstList.actualPlatformType = PlatformType.desktop;
-        } else {
-          ConstList.actualPlatformType = PlatformType.web;
-        }
-      } catch (e) {
+      if(kIsWeb){
         ConstList.actualPlatformType = PlatformType.web;
+      } else if (Platform.isAndroid) {
+        ConstList.actualPlatformType = PlatformType.mobile;
+      } else if (Platform.isWindows) {
+        ConstList.actualPlatformType = PlatformType.desktop;
       }
     }
     await platform_specified.loadLibrary();
