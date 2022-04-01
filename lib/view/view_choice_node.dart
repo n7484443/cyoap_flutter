@@ -18,7 +18,7 @@ class ViewChoiceNode extends StatelessWidget {
   ViewChoiceNode(int posX, int posY, {Key? key})
       : node = posX == nonPositioned && posY == nonPositioned
             ? null
-            : getPlatform().getChoiceNode(posX, posY)!,
+            : getPlatform().getChoiceNode([posY, posX])!,
         super(key: key);
 
   const ViewChoiceNode.fromNode(this.node, {Key? key}) : super(key: key);
@@ -246,7 +246,7 @@ class ViewChoiceNode extends StatelessWidget {
                           if (data[data.length - 1] == nonPositioned) {
                             node!.addChildren(VMDraggableNestedMap.createNodeForTemp());
                           } else {
-                            var childNode = getPlatform().getChoiceNode(data[1], data[0])!;
+                            var childNode = getPlatform().getChoiceNode(data)!;
                             node!.parent!.removeChildren(node!);
                             node!.addChildren(childNode);
                           }
@@ -255,7 +255,7 @@ class ViewChoiceNode extends StatelessWidget {
                       ),
                     ),
                     visible: vmDraggableNestedMap.drag != null &&
-                        vmDraggableNestedMap.drag != node?.pos(null),
+                        vmDraggableNestedMap.drag != node?.pos(),
                   );
                 default:
                   return Expanded(

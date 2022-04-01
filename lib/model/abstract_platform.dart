@@ -108,15 +108,15 @@ class AbstractPlatform {
     checkDataCollect();
   }
 
-  ChoiceNodeBase? getChoiceNode(int posX, int posY) {
-    if (lineSettings.length <= posY) return null;
-    if (lineSettings[posY].children.length <= posX) return null;
-    return lineSettings[posY].children[posX] as ChoiceNodeBase?;
-  }
-  ChoiceNodeBase? getChoiceNodeFromList(List<int> pos) {
-    if (lineSettings.length <= pos[0]) return null;
-    if (lineSettings[pos[0]].children.length <= pos[1]) return null;
-    return lineSettings[pos[0]].children[pos[1]] as ChoiceNodeBase?;
+  ChoiceNodeBase? getChoiceNode(List<int> pos) {
+    GenerableParserAndPosition child = lineSettings[pos[0]];
+    for(var i = 1; i < pos.length; i++){
+      if(child.children.length <= pos[i]) {
+        return null;
+      }
+      child = child.children[pos[i]];
+    }
+    return child as ChoiceNodeBase?;
   }
 
   LineSetting? getLineSetting(int y) {
@@ -125,14 +125,14 @@ class AbstractPlatform {
   }
 
   void changeData(Tuple<int, int> start, Tuple<int, int> pos) {
-    var node = getChoiceNode(start.data1, start.data2)!;
+    var node = getChoiceNode([start.data2, start.data1])!;
     removeData(start.data1, start.data2);
     addData(pos.data1, pos.data2, node);
     checkDataCollect();
   }
 
   void changeDataFromList(List<int> start, List<int> pos) {
-    var node = getChoiceNodeFromList(start)!;
+    var node = getChoiceNode(start)!;
     removeData(start[1], start[0]);
     addData(pos[1], pos[0], node);
     checkDataCollect();
@@ -152,12 +152,12 @@ class AbstractPlatform {
   }
 
   void setSelect(int posX, int posY) {
-    getChoiceNode(posX, posY)?.selectNode();
+    getChoiceNode([posY, posX])?.selectNode();
     updateSelectable();
   }
 
   bool isSelect(int posX, int posY) {
-    return getChoiceNode(posX, posY)?.status.isSelected() ?? false;
+    return getChoiceNode([posY, posX])?.status.isSelected() ?? false;
   }
 
   void updateSelectable() {

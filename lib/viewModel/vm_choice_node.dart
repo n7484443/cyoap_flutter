@@ -83,7 +83,7 @@ class VMChoiceNode extends GetxController {
       return null;
     }
 
-    var node = getPlatform().getChoiceNode(x, y);
+    var node = getPlatform().getChoiceNode([y, x]);
     if(node == null){
       return null;
     }
