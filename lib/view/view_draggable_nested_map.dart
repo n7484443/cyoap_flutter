@@ -117,12 +117,11 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
           if (drag[drag.length - 1] == nonPositioned) {
             controller.changeData(data, [y, x]);
           } else {
-            if(y == drag[0] && (x - 1) > (drag[1] * 2)){
+            if(y == drag[0] && (x - 1) >= (drag[1] * 2)){
               controller.changeData(data, [y, x - 1]);
             }else{
               controller.changeData(data, [y, x]);
             }
-
           }
         },
       ),

@@ -41,7 +41,7 @@ dependencies:
   image_cropping:
     git: https://github.com/n7484443/image_cropping.git
     #^0.0.11
-  flutter_quill: ^4.1.0
+  flutter_quill: ^4.1.1
   package_info_plus: 1.3.0
   github: ^9.1.0
   flex_color_picker: ^2.3.1

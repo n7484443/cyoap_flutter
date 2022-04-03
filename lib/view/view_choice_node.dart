@@ -209,11 +209,6 @@ class ViewChoiceNode extends StatelessWidget {
       ),
     );
 
-    var childList = List<Widget>.empty(growable: true);
-    for (var nodeChild in node!.children) {
-      childList.add(ViewChoiceNode.fromNode(nodeChild as ChoiceNodeBase));
-    }
-
     var mainNode = Obx(
       () => Container(
         padding: const EdgeInsets.all(6),
@@ -224,7 +219,7 @@ class ViewChoiceNode extends StatelessWidget {
             : getPlatform().colorBackground.lighten(),
         child: Column(
           children: List.generate(
-            childList.length + 3,
+            node!.children.isEmpty ? 3 : 4,
             (index) {
               switch (index) {
                 case 0:
@@ -247,7 +242,7 @@ class ViewChoiceNode extends StatelessWidget {
                             node!.addChildren(VMDraggableNestedMap.createNodeForTemp());
                           } else {
                             var childNode = getPlatform().getChoiceNode(data)!;
-                            node!.parent!.removeChildren(node!);
+                            childNode.parent!.removeChildren(childNode);
                             node!.addChildren(childNode);
                           }
                           //TODO
@@ -259,7 +254,12 @@ class ViewChoiceNode extends StatelessWidget {
                   );
                 default:
                   return Expanded(
-                    child: childList[index - 3],
+                    child: Wrap(
+                      children: node!.children
+                          .map((e) =>
+                              ViewChoiceNode.fromNode(e as ChoiceNodeBase))
+                          .toList(),
+                    ),
                   );
               }
             },
