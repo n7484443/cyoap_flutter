@@ -127,11 +127,16 @@ class VMDraggableNestedMap extends GetxController {
 
   void removeData(List<int> data) {
     getPlatform().removeData(data);
-    updateVMChoiceNode(data[1], data[0]);
+    updateVMChoiceNode(data);
     update();
   }
 
-  void updateVMChoiceNode(int x, int y) {
+  void updateVMChoiceNode(List<int> tag) {
+    var node = VMChoiceNode.getNode(tag);
+    if(node == null)return;
+    var parentNode = node.getParentLast();
+    var y = parentNode!.parent!.currentPos;
+
     var lineSetting = getPlatform().lineSettings;
     if (y >= lineSetting.length) return;
     for (var node in lineSetting[y].children) {
@@ -148,9 +153,9 @@ class VMDraggableNestedMap extends GetxController {
       getPlatform().addData(pos, createNodeForTemp());
     } else {
       getPlatform().changeDataFromList(data, pos);
-      updateVMChoiceNode(data[1], data[0]);
+      updateVMChoiceNode(data);
     }
-    updateVMChoiceNode(pos[1], pos[0]);
+    updateVMChoiceNode(pos);
     update();
   }
 

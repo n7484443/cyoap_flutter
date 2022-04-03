@@ -126,7 +126,12 @@ abstract class GenerableParserAndPosition {
 
   void removeChildren(GenerableParserAndPosition childNode) {
     childNode.parent = null;
-    children.removeAt(childNode.currentPos);
+    if(children.length > childNode.currentPos){
+      children.removeAt(childNode.currentPos);
+    }
     childNode.currentPos = 0;
+    for(int i = 0; i < children.length; i++){
+      children[i].currentPos = i;
+    }
   }
 }

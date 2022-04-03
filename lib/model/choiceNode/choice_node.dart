@@ -91,8 +91,8 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
     return name.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
   }
 
-  ChoiceNodeBase? getParentLast(ChoiceNodeBase input){
-    ChoiceNodeBase parent = input;
+  ChoiceNodeBase? getParentLast(){
+    ChoiceNodeBase parent = this;
     while(true){
       if(parent.parent == null)break;
       if(parent.parent is! ChoiceNodeBase)break;

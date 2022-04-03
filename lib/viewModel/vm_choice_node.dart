@@ -107,7 +107,12 @@ class VMChoiceNode extends GetxController {
   }
 
   void updateFromNode() {
-    node = getNode(pos)!;
+    var n = getNode(pos);
+    if(n == null){
+      Get.delete<VMChoiceNode>(tag: getTagFromList(pos));
+      return;
+    }
+    node = n;
     onInit();
   }
 
@@ -125,12 +130,16 @@ class VMChoiceNode extends GetxController {
     return Get.find<VMChoiceNode>(tag: tag);
   }
 
-  static VMChoiceNode? getVMChoiceNodeFromList(List<int> tag) {
+  static String getTagFromList(List<int> tag) {
     var tagOut = tag[0].toString();
     for(int i = 1; i < tag.length; i++){
       tagOut += ':${tag[i]}';
     }
-    return getVMChoiceNodeFromTag(tagOut);
+    return tagOut;
+  }
+
+  static VMChoiceNode? getVMChoiceNodeFromList(List<int> tag) {
+    return getVMChoiceNodeFromTag(getTagFromList(tag));
   }
 
   bool isSelect() {

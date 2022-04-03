@@ -242,8 +242,11 @@ class ViewChoiceNode extends StatelessWidget {
                             node!.addChildren(VMDraggableNestedMap.createNodeForTemp());
                           } else {
                             var childNode = getPlatform().getChoiceNode(data)!;
+                            var parentLastPos = childNode.getParentLast()!.pos();
                             childNode.parent!.removeChildren(childNode);
                             node!.addChildren(childNode);
+                            vmDraggableNestedMap.updateVMChoiceNode(parentLastPos);
+                            vmDraggableNestedMap.update();
                           }
                           //TODO
                         },
