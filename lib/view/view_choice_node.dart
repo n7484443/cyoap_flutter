@@ -35,9 +35,7 @@ class ViewChoiceNode extends StatelessWidget {
         ),
       );
     }
-    var controller = Get.put(
-        VMChoiceNode.fromNode(node!),
-        tag: VMChoiceNode.getTag(node!));
+    var controller = Get.put(VMChoiceNode.fromNode(node!), tag: node!.tag);
 
     var editor = Obx(() {
       return ConstrainedBox(

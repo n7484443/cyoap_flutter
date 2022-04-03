@@ -44,8 +44,13 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
         title = json['title'],
         contentsString = json['contentsString'],
         imageString = json['imageString'] ?? json['image'] {
-    currentPos = json['x'] ?? json['currentPos'];
+    currentPos = json['x'] ?? json['pos'];
     recursiveStatus = RecursiveStatus.fromJson(json);
+    if (json.containsKey('children')) {
+      children.addAll((json['children'] as List)
+          .map((e) => ChoiceNodeBase.fromJson(e)..parent = this)
+          .toList());
+    }
   }
 
   @override

@@ -18,7 +18,7 @@ const int nonPositioned = -10;
 class VMChoiceNode extends GetxController {
   late QuillController quillController;
   ChoiceNodeBase node;
-  List<int> pos;
+  final List<int> pos;
   var size = Tuple<int, int>(0, 0).obs;
   var realSize = Tuple<double, double>(0, 0).obs;
   var imageString = ''.obs;
@@ -81,10 +81,6 @@ class VMChoiceNode extends GetxController {
     return getPlatform().getChoiceNode(pos);
   }
 
-  static String getTag(ChoiceNodeBase node) {
-    return node.tag;
-  }
-
   static String getTagFromXY(int x, int y) {
     return getNode([y, x])!.tag;
   }
@@ -107,12 +103,7 @@ class VMChoiceNode extends GetxController {
   }
 
   void updateFromNode() {
-    var n = getNode(pos);
-    if(n == null){
-      Get.delete<VMChoiceNode>(tag: getTagFromList(pos));
-      return;
-    }
-    node = n;
+    node = getNode(pos)!;
     onInit();
   }
 
