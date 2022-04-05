@@ -1,4 +1,5 @@
 import 'package:cyoap_flutter/model/grammar/value_type.dart';
+import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/viewModel/vm_global_setting.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
@@ -136,17 +137,12 @@ class ViewGlobalSetting extends StatelessWidget {
                 child: Column(
                   children: [
                     GetBuilder<VMGlobalSetting>(
-                      builder: (_) => Switch(
-                        value: vmGlobalSetting.isVisible(index),
-                        onChanged: (bool value) {
-                          vmGlobalSetting.setVisible(index, value);
-                        },
+                      builder: (_) => ViewSwitchLabel(
+                        () => vmGlobalSetting.setVisible(index, !vmGlobalSetting.isVisible(index)),
+                        vmGlobalSetting.isVisible(index),
+                        label: '플레이시 표시',
                       ),
                     ),
-                    const Text(
-                      '플레이시 표시',
-                      style: TextStyle(fontSize: 14),
-                    )
                   ],
                 ),
               )

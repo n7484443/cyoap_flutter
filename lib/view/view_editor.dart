@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:cyoap_flutter/model/platform_system.dart';
+import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
@@ -71,37 +72,20 @@ class ViewEditor extends StatelessWidget {
       ),
     );
 
-    var editingNodeValues = GetBuilder<VMEditor>(
-      builder: (_) => Column(
+    var editingNodeValues = Obx(
+      () => Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Row(
-            children: [
-              const Text(
-                '카드 모드',
-                style: TextStyle(color: Colors.black),
-              ),
-              Switch(
-                onChanged: (bool value) {
-                  controller.setCard(value);
-                },
-                value: controller.isCard,
-              ),
-            ],
+          ViewSwitchLabel(
+            () => controller.isCard.value = !controller.isCard.value,
+            controller.isCard.value,
+            label: '카드 모드',
           ),
-          Row(
-            children: [
-              const Text(
-                '선택 가능',
-                style: TextStyle(color: Colors.black),
-              ),
-              Switch(
-                onChanged: (bool value) {
-                  controller.setSelectable(value);
-                },
-                value: controller.isSelectable,
-              ),
-            ],
+          ViewSwitchLabel(
+            () =>
+                controller.isSelectable.value = !controller.isSelectable.value,
+            controller.isSelectable.value,
+            label: '선택 가능',
           ),
           const Spacer(),
           Padding(

@@ -1,0 +1,32 @@
+import 'package:flutter/material.dart';
+
+class ViewSwitchLabel extends StatelessWidget {
+  final void Function() updateState;
+  final bool state;
+  final String label;
+  final double labelSize;
+
+  const ViewSwitchLabel(this.updateState, this.state,
+      {this.label = '', this.labelSize = 14.0, Key? key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => updateState(),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: TextStyle(color: Colors.black, fontSize: labelSize),
+          ),
+          Switch(
+            onChanged: (bool value) => updateState(),
+            value: state,
+          ),
+        ],
+      ),
+    );
+  }
+}

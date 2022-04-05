@@ -1,6 +1,6 @@
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
-import 'package:cyoap_flutter/view/view_text_outline.dart';
+import 'package:cyoap_flutter/view/util/view_text_outline.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +12,6 @@ import '../viewModel/vm_draggable_nested_map.dart';
 class NodeDraggable extends GetView<VMDraggableNestedMap> {
   final int x;
   final int y;
-  final Color baseColor = Colors.black26;
   final BoxConstraints constrains;
   const NodeDraggable(this.x, this.y, this.constrains, {Key? key})
       : super(key: key);
@@ -150,8 +149,8 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
     var divider = Divider(
       thickness: 4,
       color: getPlatform().colorBackground.computeLuminance() > 0.5
-          ? Colors.black
-          : Colors.white,
+          ? Colors.black45
+          : Colors.white30,
     );
 
     if (VMDraggableNestedMap.isVisibleOnlyEdit()) {

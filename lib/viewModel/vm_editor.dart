@@ -19,8 +19,8 @@ class VMEditor extends GetxController {
   var title = ''.obs;
   var contents = ''.obs;
   var index = -1;
-  var isCard = false;
-  var isSelectable = true;
+  var isCard = false.obs;
+  var isSelectable = true.obs;
 
   bool isChanged = false;
 
@@ -28,8 +28,17 @@ class VMEditor extends GetxController {
   void onInit() {
     quillController = NodeEditor.instance.getVMChoiceNode().quillController;
 
-    isCard = NodeEditor.instance.target.isCard;
-    isSelectable = NodeEditor.instance.target.isSelectable;
+    isCard.listen((value) {
+      isChanged = true;
+      NodeEditor.instance.target.isCard = value;
+    });
+    isSelectable.listen((value) {
+      isChanged = true;
+      NodeEditor.instance.target.isSelectable = value;
+    });
+
+    isCard.value = NodeEditor.instance.target.isCard;
+    isSelectable.value = NodeEditor.instance.target.isSelectable;
     controllerTitle.text = NodeEditor.instance.target.title;
     title.value = controllerTitle.text;
 
@@ -70,20 +79,6 @@ class VMEditor extends GetxController {
 
   int getImageLength() {
     return ImageDB.instance.imageList.length;
-  }
-
-  void setCard(bool value) {
-    isCard = value;
-    NodeEditor.instance.target.isCard = value;
-    isChanged = true;
-    update();
-  }
-
-  void setSelectable(bool value) {
-    isSelectable = value;
-    NodeEditor.instance.target.isSelectable = value;
-    isChanged = true;
-    update();
   }
 
   Uint8List? imageLast;

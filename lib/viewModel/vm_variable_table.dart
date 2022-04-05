@@ -62,8 +62,8 @@ class VMVariableTable extends GetxController {
     return variableList;
   }
 
-  void setSourceVisible(bool value) {
-    getPlatform().isVisibleSource = value;
+  void setSourceVisible() {
+    getPlatform().isVisibleSource = !getPlatform().isVisibleSource;
     Get.find<VMDraggableNestedMap>().update();
     update();
   }

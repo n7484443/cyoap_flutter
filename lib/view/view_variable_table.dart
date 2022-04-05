@@ -1,4 +1,5 @@
 import 'package:cyoap_flutter/main.dart';
+import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -37,11 +38,11 @@ class ViewVariable extends StatelessWidget {
             title: Text(ConstList.version),
           ),
           ListTile(
-            leading: const Text('출처 보기'),
-            trailing: GetBuilder<VMVariableTable>(
-              builder: (_) => Switch(
-                value: _.getSourceVisible(),
-                onChanged: (value) => _.setSourceVisible(value),
+            title: GetBuilder<VMVariableTable>(
+              builder: (_) => ViewSwitchLabel(
+                _.setSourceVisible,
+                _.getSourceVisible(),
+                label: '출처 보기',
               ),
             ),
           ),
