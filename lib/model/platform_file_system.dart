@@ -181,8 +181,9 @@ class PlatformFileSystem {
     platform = AbstractPlatform.none();
   }
 
+  final regReplace = RegExp(r'[.](png|jpg|jpeg|rawRgba)');
   String convertImageName(String name) {
-    return name.replaceAll(RegExp('[.](png|jpg|jpeg|rawRgba)'), '.webp');
+    return name.replaceAll(regReplace, '.webp');
   }
 
   Future<void> saveToFolder(String path) async {
@@ -253,25 +254,15 @@ class PlatformFileSystem {
     imageSourceJson.writeAsString(jsonEncode(map));
   }
 
+
+  final regCheckImage = RegExp(r'[.](webp|png|jpg|jpeg|bmp|gif)$');
   //1 = 일반 이미지, 0 = 웹 이미지, -1 = 이미지 아님.
   int isImageFile(String path) {
     var name = basename(path).toLowerCase();
     if (name.startsWith('http')) {
       return 0;
     }
-    if (name.endsWith('.webp')) {
-      return 1;
-    }
-    if (name.endsWith('.png')) {
-      return 1;
-    }
-    if (name.endsWith('.jpg')) {
-      return 1;
-    }
-    if (name.endsWith('.bmp')) {
-      return 1;
-    }
-    if (name.endsWith('.gif')) {
+    if (regCheckImage.hasMatch(name)) {
       return 1;
     }
     return -1;
