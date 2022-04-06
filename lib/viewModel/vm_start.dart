@@ -16,13 +16,12 @@ class VMStartPlatform extends GetxController {
   int selected = -1;
   List<Future<void>> isAdded = List.empty(growable: true);
 
-  bool needUpdate = false;
+  var needUpdate = false.obs;
 
   @override
   void onInit() {
     CheckUpdate.needUpdateCheck().then((value) {
-      needUpdate = value;
-      update();
+      needUpdate.value = value;
     });
     super.onInit();
   }
@@ -56,8 +55,7 @@ class VMStartPlatform extends GetxController {
     );
     if (result != null) {
       if (ConstList.isOnlyFileAccept()) {
-        isAdded.add(
-            PlatformSystem.instance.openPlatformZipForWeb(result.files.single));
+        isAdded.add(PlatformSystem.instance.openPlatformZipForWeb(result.files.single));
         pathList.add(result.files.single.name);
       } else {
         pathList =

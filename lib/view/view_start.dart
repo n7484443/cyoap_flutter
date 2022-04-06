@@ -1,6 +1,7 @@
 import 'package:cyoap_flutter/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../viewModel/vm_start.dart';
 
 class ViewStart extends StatelessWidget {
@@ -17,20 +18,20 @@ class ViewStart extends StatelessWidget {
         children: [
           Expanded(
             flex: 9,
-            child: GetBuilder<VMStartPlatform>(
-              builder: (_) => Stack(
-                children: [
-                  Container(
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: Colors.lightBlue),
-                      ),
+            child: Stack(
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: Colors.lightBlue),
                     ),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          flex: 12,
-                          child: ListView.separated(
+                  ),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        flex: 12,
+                        child: GetBuilder<VMStartPlatform>(
+                          builder: (_) => ListView.separated(
                             itemCount: _.pathList.length,
                             itemBuilder: (context, index) {
                               return ListTile(
@@ -60,28 +61,29 @@ class ViewStart extends StatelessWidget {
                             },
                           ),
                         ),
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              TextButton(
-                                child: const Text('Add File'),
+                      ),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            TextButton(
+                              child: const Text('파일 추가'),
+                              onPressed: () async {
+                                if (await vmStart.openFile() == 0) {
+                                  vmStart.selected = 0;
+                                }
+                              },
+                            ),
+                            Visibility(
+                              child: TextButton(
+                                child: const Text('폴더 추가'),
                                 onPressed: () async {
-                                  if (await _.openFile() == 0) {
-                                    _.selected = 0;
+                                  if (await vmStart.openDirectory() == 0) {
+                                    vmStart.selected = 0;
                                   }
                                 },
                               ),
-                              Visibility(
-                                child: TextButton(
-                                  child: const Text('Add Path'),
-                                  onPressed: () async {
-                                    if (await _.openDirectory() == 0) {
-                                      _.selected = 0;
-                                    }
-                                  },
-                                ),
-                                visible: !ConstList.isOnlyFileAccept(),
+                              visible: !ConstList.isOnlyFileAccept(),
                               ),
                             ],
                           ),
@@ -93,19 +95,20 @@ class ViewStart extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text('version : ${ConstList.version}'),
-                        Visibility(
+                      Text('version : ${ConstList.version}'),
+                      Obx(
+                        () => Visibility(
                           child: const Text('새로운 버전이 나왔습니다!',
                               style: TextStyle(color: Colors.redAccent)),
-                          visible: _.needUpdate,
+                          visible: vmStart.needUpdate.value,
                         ),
-                      ],
+                      ),
+                    ],
                     ),
                     alignment: Alignment.topRight,
                   ),
                 ],
               ),
-            ),
           ),
           const Expanded(
             flex: 2,
