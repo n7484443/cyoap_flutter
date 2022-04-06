@@ -67,13 +67,10 @@ class ConstList {
     "나눔고딕": GoogleFonts.nanumGothic(color: Colors.black),
     "나눔손글씨 붓": GoogleFonts.nanumBrushScript(color: Colors.black),
     "나눔손글씨 펜": GoogleFonts.nanumPenScript(color: Colors.black),
-    "이순신체": const TextStyle(fontFamily: 'YiSunShin', color: Colors.black),
     "메이플스토리체": const TextStyle(fontFamily: 'MapleStory', color: Colors.black),
     "넥슨 Lv2 고딕": const TextStyle(fontFamily: 'NexonLv2Gothic', color: Colors.black),
     "Neo 둥근모": const TextStyle(fontFamily: 'NeoDGM', color: Colors.black),
   };
-  static void textFontMapInit(){
-  }
 
   static TextStyle getFont(String font) {
     if(ConstList.isDistributed){

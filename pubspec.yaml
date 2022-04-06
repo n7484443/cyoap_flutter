@@ -72,33 +72,23 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
   assets:
-    - asset/images/
+    - images/
   fonts:
-    - family: YiSunShin
-      fonts:
-        - asset: asset/fonts/YiSunShin/YiSunShinRegular.otf
-          weight: 400
-        - asset: asset/fonts/YiSunShin/YiSunShinBold.otf
-          weight: 700
     - family: MapleStory
       fonts:
-        - asset: asset/fonts/MapleStory/MaplestoryLight.otf
+        - asset: fonts/MapleStory/MaplestoryLight.otf
           weight: 300
-        - asset: asset/fonts/MapleStory/MaplestoryBold.otf
+        - asset: fonts/MapleStory/MaplestoryBold.otf
           weight: 700
     - family: NexonLv2Gothic
       fonts:
-        - asset: asset/fonts/NexonLv2Gothic/NexonLv2GothicLight.otf
-          weight: 300
-        - asset: asset/fonts/NexonLv2Gothic/NexonLv2Gothic.otf
+        - asset: fonts/NexonLv2Gothic/NexonLv2Gothic.otf
           weight: 400
-        - asset: asset/fonts/NexonLv2Gothic/NexonLv2GothicMedium.otf
-          weight: 500
-        - asset: asset/fonts/NexonLv2Gothic/NexonLv2GothicBold.otf
+        - asset: fonts/NexonLv2Gothic/NexonLv2GothicBold.otf
           weight: 700
     - family: NeoDGM
       fonts:
-      - asset: asset/fonts/NeoDGM/NeoDGM.ttf
+      - asset: fonts/NeoDGM/NeoDGM.ttf
         weight: 400
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
