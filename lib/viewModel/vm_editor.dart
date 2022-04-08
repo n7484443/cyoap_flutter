@@ -40,7 +40,7 @@ class VMEditor extends GetxController {
 
     isRandom.listen((value) {
       isChanged = true;
-      NodeEditor().target.maxRandom = value ? 100 : -1;
+      NodeEditor().target.maxRandom = value ? 2 : -1;
     });
 
     controllerTitle.text = title.value;

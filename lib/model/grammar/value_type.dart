@@ -94,21 +94,18 @@ enum ValueTypeData {
 class ValueTypeWrapper {
   ValueType valueType;
   bool visible;
-  bool isFromNode;
   String displayName;
 
-  ValueTypeWrapper(this.valueType, this.visible, this.isFromNode,
+  ValueTypeWrapper(this.valueType, this.visible,
       {this.displayName = ''});
 
   ValueTypeWrapper.normal(this.valueType)
       : visible = false,
-        isFromNode = false,
         displayName = '';
 
   ValueTypeWrapper.fromJson(Map<String, dynamic> json)
       : valueType = ValueType.fromJson(json['valueType']),
         visible = json['visible'] == 'true',
-        isFromNode = false,
         displayName = json['displayName'] ?? '';
 
   Map<String, dynamic> toJson() => {

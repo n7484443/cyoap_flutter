@@ -26,6 +26,7 @@ class ViewChoiceNode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //TODO 어떤 플랫폼이건 가로 길이 최대를 6으로 정해서 비율 동일하게 만들기
     var vmDraggableNestedMap = Get.find<VMDraggableNestedMap>();
     var scale = vmDraggableNestedMap.getScale();
     if (node == null) {
@@ -212,15 +213,21 @@ class ViewChoiceNode extends StatelessWidget {
             () => IgnorePointer(
           ignoring: !controller.isIgnorePointer(),
           child: InkWell(
-            onTap: () {
+            onTap: () async {
               controller.select();
-              if(controller.isRandom.value && controller.isSelect()){
-                controller.startRandom();
-                showDialog(
-                  context: context,
-                  builder: (builder) => RandomDialog(node),
-                );
+              if (controller.isRandom.value) {
+                if (controller.isSelect()) {
+                  controller.startRandom();
+                  await showDialog(
+                    context: context,
+                    builder: (builder) => RandomDialog(node),
+                    barrierDismissible: false,
+                  );
+                } else {
+                  node!.random = -1;
+                }
               }
+              VMChoiceNode.updateStatusAll();
             },
             child: mainNode,
           ),
@@ -341,19 +348,29 @@ class RandomDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var controller = VMChoiceNode.getVMChoiceNodeFromNode(node!)!;
-    return AlertDialog(
-      scrollable: true,
-      title: const Text('랜덤'),
-      content: Obx(() => AnimatedFlipCounter(
-          value: controller.randomValue.value,
-          duration: const Duration(milliseconds: 500),
-          textStyle: const TextStyle(
-            fontSize: 40,
-            color: Colors.blue,
-            fontWeight: FontWeight.bold,
-          )
-        ),
-      ),
+    return Obx(
+      () => AlertDialog(
+          scrollable: true,
+          title: const Text('랜덤'),
+          content: AnimatedFlipCounter(
+              value: controller.randomValue.value,
+              duration: const Duration(milliseconds: 500),
+              textStyle: const TextStyle(
+                fontSize: 40,
+                color: Colors.blue,
+                fontWeight: FontWeight.bold,
+              )),
+          actions: [
+            Opacity(
+              opacity: controller.randomProcess.value ? 0 : 1,
+              child: TextButton(
+                onPressed: () {
+                  Get.back();
+                },
+                child: const Text('확인'),
+              ),
+            )
+          ]),
     );
   }
 }

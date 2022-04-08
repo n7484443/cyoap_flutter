@@ -133,7 +133,7 @@ class VMPlatform extends GetxController {
 
   void loadVariable() {
     getPlatform().generateRecursiveParser();
-    getPlatform().updateSelectable();
+    getPlatform().updateStatusAll();
   }
 
   var loadString = '';

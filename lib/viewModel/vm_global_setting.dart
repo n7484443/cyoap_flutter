@@ -68,7 +68,7 @@ class VMGlobalSetting extends GetxController {
     }
     addInitialValue(
         controllerName.text,
-        ValueTypeWrapper(getType(controllerValue.text), visibleSwitch, false,
+        ValueTypeWrapper(getType(controllerValue.text), visibleSwitch,
             displayName: controllerDisplayName.text));
     controllerName.clear();
     controllerValue.clear();

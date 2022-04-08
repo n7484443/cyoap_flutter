@@ -12,6 +12,7 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
   int height; //0 == 1/2
   bool isCard;
   int maxRandom = -1;
+  int random = -1;
   String title;
   String contentsString;
   String imageString;
@@ -75,12 +76,6 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
 
   void selectNode() {
     status = status.reverseSelected(isSelectable);
-    updateSelectValueTypeWrapper();
-  }
-
-  void updateSelectValueTypeWrapper() {
-    VariableDataBase().setValue('${title.trim()}:select',
-        ValueTypeWrapper(ValueType(status.isSelected()), false, true));
   }
 
   @override
@@ -90,8 +85,10 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
 
   @override
   void initValueTypeWrapper() {
-    VariableDataBase().setValue(title.replaceAll(" ", ""),
-        ValueTypeWrapper(ValueType(status.isSelected()), false, true));
+    VariableDataBase().setValue(title.trim(),
+        ValueTypeWrapper(ValueType(status.isSelected()), false));
+    VariableDataBase().setValue('${title.trim()}:random',
+        ValueTypeWrapper(ValueType(random), false));
     if (status.isNotSelected()) {
       status = isSelectable ? SelectableStatus.open : SelectableStatus.selected;
     }

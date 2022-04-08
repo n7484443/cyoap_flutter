@@ -26,9 +26,11 @@ class VMChoiceNode extends GetxController {
   var titleString = ''.obs;
   var isDrag = false.obs;
   var isCardMode = false.obs;
-  var isRandom = false.obs;
   var status = SelectableStatus.open.obs;
+
+  var isRandom = false.obs;
   var randomValue = (-1).obs;
+  var randomProcess = false.obs;
 
   VMChoiceNode({int x = nonPositioned, int y = nonPositioned})
       : pos = [y, x],
@@ -156,6 +158,10 @@ class VMChoiceNode extends GetxController {
 
   void select() {
     getPlatform().setSelect(node.pos());
+  }
+
+  static void updateStatusAll(){
+    getPlatform().updateStatusAll();
     VMChoiceNode.doAllVMChoiceNode((vm) {
       vm.status.value = vm.node.status;
     });
@@ -182,6 +188,7 @@ class VMChoiceNode extends GetxController {
   }
 
   void startRandom() {
+    randomProcess.value = true;
     randomValue.value = node.maxRandom * 10;
     var timer = Timer.periodic(const Duration(milliseconds: 500), (Timer timer) {
       randomValue.value = randomValue.value ~/ 2;
@@ -189,6 +196,8 @@ class VMChoiceNode extends GetxController {
     Timer(const Duration(milliseconds: 2000), () {
       timer.cancel();
       randomValue.value = Random().nextInt(node.maxRandom);
+      node.random = randomValue.value;
+      randomProcess.value = false;
     });
   }
 

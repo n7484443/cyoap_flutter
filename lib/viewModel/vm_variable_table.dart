@@ -21,6 +21,8 @@ class VMVariableTable extends GetxController {
         nodeList.add(ListTile(
           title: Text(node.title),
         ));
+      } else if (!node.isVisible()){
+        return;
       } else if (node.isSelectable) {
         nodeList.add(ListTile(
           title: Text(node.title),
@@ -36,7 +38,7 @@ class VMVariableTable extends GetxController {
     for (var key in VariableDataBase().varMap.keys) {
       var values = VariableDataBase().varMap[key];
       if (values == null) continue;
-      if (values.visible && !values.isFromNode) {
+      if (values.visible) {
         if (isEditable()) {
           if (values.displayName.isEmpty) {
             variableList.add(ListTile(

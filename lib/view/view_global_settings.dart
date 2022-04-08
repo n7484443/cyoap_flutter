@@ -199,7 +199,7 @@ class ViewGlobalSetting extends StatelessWidget {
                 child: const Text('초기값 추가'),
                 onPressed: () {
                   vmGlobalSetting.addInitialValue(
-                      'point', ValueTypeWrapper(ValueType(0), true, false));
+                      'point', ValueTypeWrapper(ValueType(0), true));
                 },
               ),
             )

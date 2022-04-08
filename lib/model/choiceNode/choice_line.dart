@@ -111,7 +111,7 @@ class LineSetting extends GenerableParserAndPosition {
   void initValueTypeWrapper() {
     if (isNeedToCheck()) {
       VariableDataBase().setValue('lineSetting_$currentPos',
-          ValueTypeWrapper(ValueType(0), false, false));
+          ValueTypeWrapper(ValueType(0), false));
     } else {
       VariableDataBase().deleteValue('lineSetting_$currentPos');
     }

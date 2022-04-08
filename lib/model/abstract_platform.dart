@@ -28,7 +28,7 @@ class AbstractPlatform {
     if (getPlatformFileSystem().isEditable) {
       generateRecursiveParser();
     }
-    updateSelectable();
+    updateStatusAll();
   }
 
   bool versionCheckWithPlatform(String versionProgram) {
@@ -149,17 +149,16 @@ class AbstractPlatform {
 
   void setSelect(List<int> pos) {
     getChoiceNode(pos)?.selectNode();
-    updateSelectable();
   }
 
   bool isSelect(List<int> pos) {
     return getChoiceNode(pos)?.status.isSelected() ?? false;
   }
 
-  void updateSelectable() {
+  void updateStatusAll() {
     VariableDataBase().clear();
-
     VariableDataBase().varMap.addAll(globalSetting);
+
     for (var lineSetting in lineSettings) {
       lineSetting.initValueTypeWrapper();
 
@@ -177,7 +176,6 @@ class AbstractPlatform {
           if (!visible) {
             node.status = SelectableStatus.hide;
           }
-          (node as ChoiceNodeBase).updateSelectValueTypeWrapper();
         }
       }
 
@@ -195,8 +193,6 @@ class AbstractPlatform {
         } else {
           node.status = SelectableStatus.selected;
         }
-
-        (node as ChoiceNodeBase).updateSelectValueTypeWrapper();
       }
     }
   }
@@ -211,7 +207,7 @@ class AbstractPlatform {
     globalSetting.clear();
     globalSetting.addAll(units);
     generateRecursiveParser();
-    updateSelectable();
+    updateStatusAll();
   }
 
   void doAllChoiceNode(void Function(ChoiceNodeBase node) action) {

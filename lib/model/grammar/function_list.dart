@@ -124,7 +124,7 @@ class Functions {
       if (VariableDataBase().hasValue(varName)) {
         var config = VariableDataBase().getValueTypeWrapper(varName)!;
         VariableDataBase().setValue(varName,
-            ValueTypeWrapper(input[1], config.visible, config.isFromNode));
+            ValueTypeWrapper(input[1], config.visible));
       } else {
         VariableDataBase()
             .setValue(varName, ValueTypeWrapper.normal(input[1]));
