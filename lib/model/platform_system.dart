@@ -62,7 +62,7 @@ class PlatformSystem {
   }
 
   Future<void> saveFolder(PlatformFileSystem platformFileSystem) async {
-    await saveProject!.saveRaw(path!, platformFileSystem);
+    await PlatformSpecified().saveProject!.saveRaw(path!, platformFileSystem);
   }
 
   static String getImageName(int index) =>

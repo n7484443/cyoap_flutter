@@ -77,7 +77,7 @@
     <div class="loader"></div>
   </div>
   <script>
-    var serviceWorkerVersion = '0.0.2';
+    var serviceWorkerVersion = '3';
     var scriptLoaded = false;
 
     function loadMainDartJs() {
@@ -86,7 +86,7 @@
       }
       scriptLoaded = true;
       var scriptTag = document.createElement('script');
-      scriptTag.src = 'main.dart.js?ver=' + serviceWorkerVersion;
+      scriptTag.src = 'main.dart.js?v=' + serviceWorkerVersion;
       scriptTag.type = 'application/javascript';
       document.body.append(scriptTag);
     }

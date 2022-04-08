@@ -13,11 +13,7 @@ function _compressToZip(nameDataMap){
     for(const key in obj){
         if(key.startsWith("images")){
             let data = obj[key];
-            let output = [];
-            for(let i = 0; i < data.length; i++){
-                output[i] = data.charCodeAt(i);
-            }
-            zip.file(key, output);
+            zip.file(key, data);
         }else{
             zip.file(key, obj[key]);
         }

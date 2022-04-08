@@ -16,8 +16,6 @@ abstract class PlatformSpecified{
   void init(){}
   void preInit(){}
 }
-Distribute? get distribute => PlatformSpecified().distribute;
-SaveProject? get saveProject => PlatformSpecified().saveProject;
 
 abstract class Distribute {
   Future<Tuple<List<String>, List<String>>> getImageNodeList() async {

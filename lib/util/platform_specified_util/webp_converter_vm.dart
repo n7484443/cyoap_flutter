@@ -9,8 +9,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image/image.dart';
 
 class WebpConverterImp extends WebpConverter {
-  @override
-  WebpConverter getWebpConverterImp() {
+  factory WebpConverterImp(){
     if (Platform.isWindows) {
       return WebpConverterImpWindows();
     }
@@ -18,7 +17,7 @@ class WebpConverterImp extends WebpConverter {
   }
 }
 
-class WebpConverterImpWindows extends WebpConverter {
+class WebpConverterImpWindows implements WebpConverterImp {
   late final DynamicLibrary nativeWebp;
   late final int Function(Pointer<Uint8> rgb, int width, int height, int stride,
       double qualityFactor, Pointer<Pointer<Uint8>> output) webPEncodeRGB;
@@ -133,7 +132,7 @@ class WebpConverterImpWindows extends WebpConverter {
   bool canConvert() => true;
 }
 
-class WebpConverterImpAndroid extends WebpConverter {
+class WebpConverterImpAndroid implements WebpConverterImp {
   final int quality = 90;
   @override
   Future<Tuple<String, Uint8List>> convert(Uint8List input, String name) async {

@@ -5,7 +5,7 @@ import 'webp_converter_vm.dart'
     if (dart.library.html) 'webp_converter_web.dart';
 
 abstract class WebpConverter {
-  static WebpConverter? instance;
+  static WebpConverter? instance = WebpConverterImp()..init();
 
   Future<Tuple<String, Uint8List>> convert(
           Uint8List input, String name) async =>
@@ -14,14 +14,9 @@ abstract class WebpConverter {
   void init() {}
   bool canConvert() => false;
 
-  WebpConverter? getWebpConverterImp() => null;
+  static WebpConverter? getWebpConverterImp() => null;
 }
 
 WebpConverter getWebpConverterInstance() {
-  if (WebpConverter.instance == null) {
-    WebpConverter.instance = WebpConverterImp();
-    WebpConverter.instance = WebpConverter.instance!.getWebpConverterImp();
-    WebpConverter.instance!.init();
-  }
   return WebpConverter.instance!;
 }
