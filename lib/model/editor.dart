@@ -3,7 +3,12 @@ import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'choiceNode/choice_node.dart';
 
 class NodeEditor {
-  static final NodeEditor instance = NodeEditor();
+  static final NodeEditor _instance = NodeEditor._init();
+
+  factory NodeEditor(){
+    return _instance;
+  }
+  NodeEditor._init();
 
   late ChoiceNodeBase target;
 

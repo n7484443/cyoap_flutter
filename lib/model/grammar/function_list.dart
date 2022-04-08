@@ -121,12 +121,12 @@ class Functions {
   ValueType funcSet(List<ValueType> input) {
     if (input[0].data is VariableUnit) {
       var varName = (input[0].data as VariableUnit).varName;
-      if (VariableDataBase.instance.hasValue(varName)) {
-        var config = VariableDataBase.instance.getValueTypeWrapper(varName)!;
-        VariableDataBase.instance.setValue(varName,
+      if (VariableDataBase().hasValue(varName)) {
+        var config = VariableDataBase().getValueTypeWrapper(varName)!;
+        VariableDataBase().setValue(varName,
             ValueTypeWrapper(input[1], config.visible, config.isFromNode));
       } else {
-        VariableDataBase.instance
+        VariableDataBase()
             .setValue(varName, ValueTypeWrapper.normal(input[1]));
       }
     }

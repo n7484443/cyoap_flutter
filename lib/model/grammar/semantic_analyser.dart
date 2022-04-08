@@ -110,7 +110,7 @@ class SemanticAnalyser {
       var recursive = RecursiveData(
           ValueType(VariableUnit(analysedData[equalPos - 1].data)))
         ..dontReplace = true;
-      return RecursiveParser(ValueType(Analyser.instance.functionList.funcSet))
+      return RecursiveParser(ValueType(Analyser().functionList.funcSet))
         ..add(recursive)
         ..add(parserAns);
     }

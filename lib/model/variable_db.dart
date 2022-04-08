@@ -3,13 +3,13 @@ import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
 import 'grammar/value_type.dart';
 
 class VariableDataBase {
-  static final VariableDataBase instance = VariableDataBase();
+  static final VariableDataBase _instance = VariableDataBase._init();
+  factory VariableDataBase(){
+    return _instance;
+  }
+  VariableDataBase._init();
   var varMap = HashMap<String, ValueTypeWrapper>();
   VMVariableTable? viewModel;
-
-  static VariableDataBase getInstance() {
-    return instance;
-  }
 
   void setValue(String name, ValueTypeWrapper value) {
     varMap[name] = value;

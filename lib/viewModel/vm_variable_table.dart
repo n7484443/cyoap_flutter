@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 class VMVariableTable extends GetxController {
   @override
   void onInit() {
-    VariableDataBase.instance.viewModel = this;
+    VariableDataBase().viewModel = this;
     super.onInit();
   }
 
@@ -33,8 +33,8 @@ class VMVariableTable extends GetxController {
 
   List<Widget> get variableList {
     var variableList = List<Widget>.empty(growable: true);
-    for (var key in VariableDataBase.instance.varMap.keys) {
-      var values = VariableDataBase.instance.varMap[key];
+    for (var key in VariableDataBase().varMap.keys) {
+      var values = VariableDataBase().varMap[key];
       if (values == null) continue;
       if (values.visible && !values.isFromNode) {
         if (isEditable()) {

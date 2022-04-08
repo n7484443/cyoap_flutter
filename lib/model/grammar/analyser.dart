@@ -6,11 +6,19 @@ import 'function_list.dart';
 import 'token.dart';
 
 class Analyser {
-  static Analyser instance = Analyser();
+  Analyser._init() {
+    functionList.init();
+  }
+  static final Analyser _instance = Analyser._init();
+
+  factory Analyser(){
+    return _instance;
+  }
+
   LexicalAnalyser lexicalAnalyser = LexicalAnalyser();
   SyntaxAnalyser syntaxAnalyser = SyntaxAnalyser();
   SemanticAnalyser semanticAnalyser = SemanticAnalyser();
-  Functions functionList = Functions()..init();
+  Functions functionList = Functions();
 
   List<RecursiveUnit> analyse(String codeInput) {
     List<RecursiveUnit> recursiveList = List.empty(growable: true);
@@ -33,7 +41,7 @@ class Analyser {
   }
 
   static List<RecursiveUnit> analyseCodes(String codeInput) {
-    return instance.analyse(codeInput);
+    return _instance.analyse(codeInput);
   }
 }
 

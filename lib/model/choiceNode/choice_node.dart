@@ -74,7 +74,7 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
   }
 
   void updateSelectValueTypeWrapper() {
-    VariableDataBase.instance.setValue('${title.trim()}:select',
+    VariableDataBase().setValue('${title.trim()}:select',
         ValueTypeWrapper(ValueType(status.isSelected()), false, true));
   }
 
@@ -85,7 +85,7 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
 
   @override
   void initValueTypeWrapper() {
-    VariableDataBase.instance.setValue(title.replaceAll(" ", ""),
+    VariableDataBase().setValue(title.replaceAll(" ", ""),
         ValueTypeWrapper(ValueType(status.isSelected()), false, true));
     if (status.isNotSelected()) {
       status = isSelectable ? SelectableStatus.open : SelectableStatus.selected;

@@ -55,7 +55,7 @@ class VMStartPlatform extends GetxController {
     );
     if (result != null) {
       if (ConstList.isOnlyFileAccept()) {
-        isAdded.add(PlatformSystem.instance.openPlatformZipForWeb(result.files.single));
+        isAdded.add(PlatformSystem().openPlatformZipForWeb(result.files.single));
         pathList.add(result.files.single.name);
       } else {
         pathList =
@@ -86,18 +86,18 @@ class VMStartPlatform extends GetxController {
       } else if (path.isNotEmpty) {
         if (path.endsWith('.zip')) {
           var file = File(path);
-          await PlatformSystem.instance.openPlatformZip(file);
+          await PlatformSystem().openPlatformZip(file);
         } else if (path.endsWith('.json')) {
           var file = File(path);
-          await PlatformSystem.instance.openPlatformJson(file);
+          await PlatformSystem().openPlatformJson(file);
         } else {
-          await PlatformSystem.instance.openPlatformFolder(path);
+          await PlatformSystem().openPlatformFolder(path);
         }
         return true;
       }
     } else {
       if (ConstList.isOnlyFileAccept()) {
-        await PlatformSystem.instance.openPlatformVoid();
+        await PlatformSystem().openPlatformVoid();
         return true;
       }
     }

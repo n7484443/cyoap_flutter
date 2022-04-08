@@ -5,7 +5,13 @@ import 'package:idb_shim/idb.dart';
 import 'package:idb_shim/idb_browser.dart';
 
 class ImageDB {
-  static final ImageDB instance = ImageDB();
+  static final ImageDB _instance = ImageDB._init();
+
+  factory ImageDB(){
+    return _instance;
+  }
+
+  ImageDB._init();
 
   final Map<String, Uint8List?> _dirImageUint8Map = {};
 
@@ -14,7 +20,7 @@ class ImageDB {
   Future<Map<String, String>> get imageMap async {
     Map<String, String> output = {};
     for (var key in _dirImageUint8Map.keys) {
-      output[key] = await instance.getImageAsString(key) ?? "";
+      output[key] = await getImageAsString(key) ?? "";
     }
     return output;
   }

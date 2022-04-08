@@ -26,20 +26,20 @@ class VMEditor extends GetxController {
 
   @override
   void onInit() {
-    quillController = NodeEditor.instance.getVMChoiceNode().quillController;
+    quillController = NodeEditor().getVMChoiceNode().quillController;
 
     isCard.listen((value) {
       isChanged = true;
-      NodeEditor.instance.target.isCard = value;
+      NodeEditor().target.isCard = value;
     });
     isSelectable.listen((value) {
       isChanged = true;
-      NodeEditor.instance.target.isSelectable = value;
+      NodeEditor().target.isSelectable = value;
     });
 
-    isCard.value = NodeEditor.instance.target.isCard;
-    isSelectable.value = NodeEditor.instance.target.isSelectable;
-    controllerTitle.text = NodeEditor.instance.target.title;
+    isCard.value = NodeEditor().target.isCard;
+    isSelectable.value = NodeEditor().target.isSelectable;
+    controllerTitle.text = NodeEditor().target.title;
     title.value = controllerTitle.text;
 
     contents.value = quillController.document.toPlainText();
@@ -57,10 +57,10 @@ class VMEditor extends GetxController {
   }
 
   void save() {
-    NodeEditor.instance.target.title = title.value;
-    NodeEditor.instance.target.contentsString =
+    NodeEditor().target.title = title.value;
+    NodeEditor().target.contentsString =
         jsonEncode(quillController.document.toDelta().toJson());
-    NodeEditor.instance.getVMChoiceNode().updateFromEditor();
+    NodeEditor().getVMChoiceNode().updateFromEditor();
     quillController.updateSelection(
         const TextSelection.collapsed(offset: 0), ChangeSource.REMOTE);
     isChanged = false;
@@ -72,13 +72,13 @@ class VMEditor extends GetxController {
 
   void setImage(int index) {
     this.index = index;
-    NodeEditor.instance.target.imageString = PlatformSystem.getImageName(index);
+    NodeEditor().target.imageString = PlatformSystem.getImageName(index);
     isChanged = true;
     update();
   }
 
   int getImageLength() {
-    return ImageDB.instance.imageList.length;
+    return ImageDB().imageList.length;
   }
 
   Uint8List? imageLast;
@@ -99,7 +99,7 @@ class VMEditor extends GetxController {
 
   Future<void> addImageCrop(String name, Uint8List data) async {
     PlatformSystem.addImage(name, data);
-    NodeEditor.instance.target.imageString = name;
+    NodeEditor().target.imageString = name;
     index = PlatformSystem.getImageIndex(name);
     Get.find<VMDraggableNestedMap>().isChanged = true;
     imageLast = null;

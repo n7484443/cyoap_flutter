@@ -47,7 +47,7 @@ class PlatformFileSystem {
         var type = isImageFile(name);
         if (f is File && type != -1) {
           if (type == 1) {
-            ImageDB.instance.uploadImagesFuture(name, f.readAsBytes());
+            ImageDB().uploadImagesFuture(name, f.readAsBytes());
           } else {
             //지원 아직 x
           }
@@ -136,7 +136,7 @@ class PlatformFileSystem {
         if (fileName.startsWith('images')) {
           int type = isImageFile(fileName);
           if (type == 1) {
-            ImageDB.instance.uploadImages(fileName.split("/")[1], data);
+            ImageDB().uploadImages(fileName.split("/")[1], data);
           } else {
             //아직 지원 x
           }
@@ -197,7 +197,7 @@ class PlatformFileSystem {
     if (dirImages.existsSync()) {
       for (var existImage in await dirImages.list().toList()) {
         var name = basename(existImage.path);
-        if (!await ImageDB.instance.hasImage(name)) {
+        if (!await ImageDB().hasImage(name)) {
           await existImage.delete();
         } else {
           skipImage.add(name);
@@ -206,11 +206,11 @@ class PlatformFileSystem {
     } else {
       dirImages.create();
     }
-    for (var imageName in ImageDB.instance.imageList) {
+    for (var imageName in ImageDB().imageList) {
       if (skipImage.contains(imageName)) {
         continue;
       }
-      var image = await ImageDB.instance.getImage(imageName);
+      var image = await ImageDB().getImage(imageName);
       var converted = await getWebpConverterInstance().convert(image!, imageName);
       var file = File('$path/images/${converted.data1}');
       file.createSync();
@@ -277,8 +277,8 @@ class PlatformFileSystem {
       temp.remove(tmp);
       temp.add(tmp);
       return tmp.data2;
-    } else if (await ImageDB.instance.hasImage(name)) {
-      image = await ImageDB.instance.getImage(name);
+    } else if (await ImageDB().hasImage(name)) {
+      image = await ImageDB().getImage(name);
       if (image != null) {
         var output = Image.memory(
           image,
@@ -314,11 +314,11 @@ class PlatformFileSystem {
   }
 
   String getImageName(int index) {
-    return ImageDB.instance.imageList[index];
+    return ImageDB().imageList[index];
   }
 
   int getImageIndex(String name) {
-    return ImageDB.instance.imageList.indexOf(name);
+    return ImageDB().imageList.indexOf(name);
   }
 
   void addSource(String image, String source) {

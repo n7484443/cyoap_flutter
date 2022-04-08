@@ -3,7 +3,7 @@ import 'package:cyoap_flutter/model/grammar/analyser.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  var ins = VariableDataBase.getInstance();
+  var ins = VariableDataBase();
   String strTest = """
                 numberTest0 = -5.5
                 numberTest1 = 3

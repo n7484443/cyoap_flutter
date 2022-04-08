@@ -35,7 +35,7 @@ class VMPlatform extends GetxController {
     }
 
     var input = {
-      'imageMap': await ImageDB.instance.imageMap,
+      'imageMap': await ImageDB().imageMap,
       'imageSource': getPlatformFileSystem().imageSource,
       'platform': jsonEncode(getPlatform().toJson()),
       'lineSetting': lineSetting,
@@ -44,7 +44,7 @@ class VMPlatform extends GetxController {
     if (ConstList.isOnlyFileAccept()) {
       return await saveProject!.saveZip('exported.zip', input);
     } else {
-      return await saveProject!.saveZip(PlatformSystem.instance.path!, input);
+      return await saveProject!.saveZip(PlatformSystem().path!, input);
     }
   }
 
@@ -63,7 +63,7 @@ class VMPlatform extends GetxController {
     if (toFile) {
       output = saveAsFile();
     } else {
-      output = PlatformSystem.instance.saveFolder(getPlatformFileSystem());
+      output = PlatformSystem().saveFolder(getPlatformFileSystem());
     }
 
     output.then((value) {
@@ -110,7 +110,7 @@ class VMPlatform extends GetxController {
         if (ConstList.isOnlyFileAccept()) {
           saveProject!.downloadCapture(value.data1, value.data2);
         } else {
-          saveProject!.downloadCapture('${PlatformSystem.instance.path}/${value.data1}', value.data2);
+          saveProject!.downloadCapture('${PlatformSystem().path}/${value.data1}', value.data2);
         }
 
         stopwatch.update((val) => val?.stop());
@@ -121,7 +121,7 @@ class VMPlatform extends GetxController {
       if (ConstList.isOnlyFileAccept()) {
         saveProject!.downloadCapture('exported.png', byteData);
       } else {
-        saveProject!.downloadCapture('${PlatformSystem.instance.path}/exported.png', byteData);
+        saveProject!.downloadCapture('${PlatformSystem().path}/exported.png', byteData);
       }
 
       stopwatch.update((val) => val?.stop());
@@ -153,7 +153,7 @@ class VMPlatform extends GetxController {
     var imageList = value.data1;
     var nodeList = value.data2;
     for (var name in imageList) {
-      ImageDB.instance
+      ImageDB()
           .uploadImagesFuture(name, distribute!.getFile('images/$name'));
     }
     loadString = '[ 이미지 로드 완료 ]';
@@ -177,7 +177,7 @@ class VMPlatform extends GetxController {
     stopwatchLoad.stop();
     timer.cancel();
 
-    await PlatformSystem.instance
+    await PlatformSystem()
         .openPlatformList(nodeMap, imageSource, platformData);
     getPlatformFileSystem().isEditable = false;
     loaded = true;

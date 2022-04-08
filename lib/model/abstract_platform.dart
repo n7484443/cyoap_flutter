@@ -157,9 +157,9 @@ class AbstractPlatform {
   }
 
   void updateSelectable() {
-    VariableDataBase.instance.clear();
+    VariableDataBase().clear();
 
-    VariableDataBase.instance.varMap.addAll(globalSetting);
+    VariableDataBase().varMap.addAll(globalSetting);
     for (var lineSetting in lineSettings) {
       lineSetting.initValueTypeWrapper();
 

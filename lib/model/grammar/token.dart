@@ -31,7 +31,7 @@ class Token {
         return data;
       case AnalyserConst.functionUnspecified:
       case AnalyserConst.function:
-        return Analyser.instance.functionList.getFunction(data);
+        return Analyser().functionList.getFunction(data);
       default:
         return;
     }

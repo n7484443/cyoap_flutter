@@ -165,7 +165,7 @@ class ViewMake extends StatelessWidget {
                 Get.find<VMPlatform>().save(false);
               },
             ),
-            visible: !PlatformSystem.instance.platformFileSystem.openAsFile,
+            visible: !PlatformSystem().platformFileSystem.openAsFile,
           )
         ],
       ),

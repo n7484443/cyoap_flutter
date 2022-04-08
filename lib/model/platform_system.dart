@@ -13,7 +13,13 @@ import '../util/platform_specified_util/platform_specified.dart';
 import 'abstract_platform.dart';
 
 class PlatformSystem {
-  static PlatformSystem instance = PlatformSystem();
+  factory PlatformSystem(){
+    return _instance;
+  }
+
+  PlatformSystem._init();
+
+  static final PlatformSystem _instance = PlatformSystem._init();
   PlatformFileSystem platformFileSystem = PlatformFileSystem();
   String? path;
 
@@ -60,16 +66,16 @@ class PlatformSystem {
   }
 
   static String getImageName(int index) =>
-    instance.platformFileSystem.getImageName(index);
+    PlatformSystem().platformFileSystem.getImageName(index);
 
-  static FutureBuilder getImage(String image) => instance.platformFileSystem.getImage(image);
+  static FutureBuilder getImage(String image) => PlatformSystem().platformFileSystem.getImage(image);
 
   static void addImage(String name, Uint8List data) {
-    ImageDB.instance.uploadImages(name, data);
+    ImageDB().uploadImages(name, data);
   }
 
   static int getImageIndex(String name) {
-    return instance.platformFileSystem.getImageIndex(name);
+    return PlatformSystem().platformFileSystem.getImageIndex(name);
   }
 }
 
@@ -85,7 +91,7 @@ bool isEditable() {
 }
 
 PlatformFileSystem getPlatformFileSystem() {
-  return PlatformSystem.instance.platformFileSystem;
+  return PlatformSystem().platformFileSystem;
 }
 
 TextStyle get titleFont {

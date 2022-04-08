@@ -51,7 +51,7 @@ class ViewSource extends StatelessWidget {
           ),
         );
       },
-      itemCount: ImageDB.instance.imageList.length,
+      itemCount: ImageDB().imageList.length,
     );
 
     return WillPopScope(
