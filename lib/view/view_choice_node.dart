@@ -26,7 +26,7 @@ class ViewChoiceNode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO 어떤 플랫폼이건 가로 길이 최대를 6으로 정해서 비율 동일하게 만들기
+    //TODO 어떤 플랫폼이건 가로 길이 최대를 12로 정해서 비율 동일하게 만들기
     var vmDraggableNestedMap = Get.find<VMDraggableNestedMap>();
     var scale = vmDraggableNestedMap.getScale();
     if (node == null) {

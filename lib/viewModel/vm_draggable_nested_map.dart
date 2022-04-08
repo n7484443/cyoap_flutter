@@ -116,7 +116,7 @@ class VMDraggableNestedMap extends GetxController {
             ),
           );
         } else {
-          return NodeDivider(y ~/ 2 + 1);
+          return NodeDivider(y ~/ 2);
         }
       });
     }
