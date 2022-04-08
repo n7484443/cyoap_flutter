@@ -1,3 +1,4 @@
+import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/choiceNode/generable_parser.dart';
 import 'package:cyoap_flutter/util/color_util.dart';
@@ -60,79 +61,6 @@ class ViewChoiceNode extends StatelessWidget {
       );
     });
 
-    var sizeDialog = AlertDialog(
-      scrollable: true,
-      alignment: Alignment.center,
-      title: const Text('크기 수정'),
-      content: Obx(
-            () {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('길이'),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.chevron_left),
-                    onPressed: () {
-                      controller.sizeChange(-1, 0);
-                    },
-                  ),
-                  Text(
-                      '${controller.size.value.data1 == 0 ? 'max' : controller.size.value.data1}'),
-                  IconButton(
-                    icon: const Icon(Icons.chevron_right),
-                    onPressed: () {
-                      controller.sizeChange(1, 0);
-                    },
-                  ),
-                ],
-              ),
-              const Text('높이'),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  RotatedBox(
-                    quarterTurns: 2,
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.double_arrow,
-                      ),
-                      onPressed: () {
-                        controller.sizeChange(0, -5);
-                      },
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.chevron_left),
-                    onPressed: () {
-                      controller.sizeChange(0, -1);
-                    },
-                  ),
-                  Text('${controller.size.value.data2 / 10}'),
-                  IconButton(
-                    icon: const Icon(Icons.chevron_right),
-                    onPressed: () {
-                      controller.sizeChange(0, 1);
-                    },
-                  ),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.double_arrow,
-                    ),
-                    onPressed: () {
-                      controller.sizeChange(0, 5);
-                    },
-                  ),
-                ],
-              ),
-            ],
-          );
-        },
-      ),
-    );
-
     var image = Obx(
           () => Stack(
         children: [
@@ -187,7 +115,7 @@ class ViewChoiceNode extends StatelessWidget {
                   if (result == 0) {
                     showDialog(
                       context: context,
-                      builder: (builder) => sizeDialog,
+                      builder: (builder) => SizeDialog(node),
                     );
                   }
                 },
@@ -208,7 +136,7 @@ class ViewChoiceNode extends StatelessWidget {
     );
 
     var mainNode = Obx(
-      () => Container(
+          () => Container(
         padding: const EdgeInsets.all(6),
         width: controller.realSize.value.data1 * scale.data1,
         height: controller.realSize.value.data2 * scale.data2,
@@ -228,34 +156,35 @@ class ViewChoiceNode extends StatelessWidget {
                   return Visibility(
                     child: Expanded(
                       child: DragTarget(
-                        builder: (BuildContext context, List<Object?> candidateData,
-                            List<dynamic> rejectedData) =>
-                            Container(
-                              color: Colors.blueAccent.withOpacity(0.3),
-                              width: controller.realSize.value.data1 * scale.data1 * 0.6,
-                              height: controller.realSize.value.data2 * scale.data2 * 0.6,
-                            ),
-                        onAccept: (List<int> data) {
-                          if (data[data.length - 1] == nonPositioned) {
-                            node!.addChildren(VMDraggableNestedMap.createNodeForTemp());
-                          } else {
-                            var childNode = getPlatform().getChoiceNode(data)!;
-                            var parentLastPos = childNode.getParentLast()!.pos();
-                            childNode.parent!.removeChildren(childNode);
-                            node!.addChildren(childNode);
-                            vmDraggableNestedMap.updateVMChoiceNode(parentLastPos);
-                            vmDraggableNestedMap.update();
-                          }
-                          //TODO
-                        },
-                      ),
-                    ),
-                    visible: vmDraggableNestedMap.drag != null &&
-                        vmDraggableNestedMap.drag != node?.pos(),
-                  );
-                default:
-                  return Expanded(
-                    child: Wrap(
+                        builder: (BuildContext context,
+                                List<Object?> candidateData,
+                                List<dynamic> rejectedData) =>
+                                Container(
+                                  color: Colors.blueAccent.withOpacity(0.3),
+                                  width: controller.realSize.value.data1 * scale.data1 * 0.6,
+                                  height: controller.realSize.value.data2 * scale.data2 * 0.6,
+                                ),
+                            onAccept: (List<int> data) {
+                              if (data[data.length - 1] == nonPositioned) {
+                                node!.addChildren(VMDraggableNestedMap.createNodeForTemp());
+                              } else {
+                                var childNode = getPlatform().getChoiceNode(data)!;
+                                var parentLastPos = childNode.getParentLast()!.pos();
+                                childNode.parent!.removeChildren(childNode);
+                                node!.addChildren(childNode);
+                                vmDraggableNestedMap.updateVMChoiceNode(parentLastPos);
+                                vmDraggableNestedMap.update();
+                              }
+                              //TODO
+                            },
+                          ),
+                        ),
+                        visible: vmDraggableNestedMap.drag != null &&
+                            vmDraggableNestedMap.drag != node?.pos(),
+                      );
+                    default:
+                      return Expanded(
+                        child: Wrap(
                       children: node!.children
                           .map((e) =>
                               ViewChoiceNode.fromNode(e as ChoiceNodeBase))
@@ -266,7 +195,7 @@ class ViewChoiceNode extends StatelessWidget {
             },
           ),
         ),
-          ),
+      ),
     );
 
     Widget innerWidget;
@@ -285,6 +214,13 @@ class ViewChoiceNode extends StatelessWidget {
           child: InkWell(
             onTap: () {
               controller.select();
+              if(controller.isRandom.value && controller.isSelect()){
+                controller.startRandom();
+                showDialog(
+                  context: context,
+                  builder: (builder) => RandomDialog(node),
+                );
+              }
             },
             child: mainNode,
           ),
@@ -294,31 +230,130 @@ class ViewChoiceNode extends StatelessWidget {
 
     return Obx(
           () {
-        if (controller.isCardMode.value) {
-          var isSelectedCheck = controller.status.value.isSelected() &&
-              controller.node.isSelectable;
-          return Opacity(
-            opacity: controller.opacity,
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                side: BorderSide(
-                  color:
-                      isSelectedCheck ? Colors.lightBlueAccent : Colors.white,
-                      width: 6,
-                    ),
-                  ),
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  elevation: ConstList.elevation,
-                  child: innerWidget,
-                ),
-              );
-            }
-            return Opacity(
-              opacity: controller.opacity,
-              child: innerWidget,
-            );
+        var isSelectedCheck = controller.status.value.isSelected() &&
+            controller.node.isSelectable;
+        return Opacity(
+          opacity: controller.opacity,
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              side: BorderSide(
+                color: isSelectedCheck ? Colors.lightBlueAccent : Colors.white,
+                width: 6,
+              ),
+            ),
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            elevation: controller.isCardMode.value ? ConstList.elevation : 0,
+            child: innerWidget,
+          ),
+        );
       },
+    );
+  }
+}
+
+class SizeDialog extends StatelessWidget {
+  final ChoiceNodeBase? node;
+
+  const SizeDialog(this.node, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var controller = VMChoiceNode.getVMChoiceNodeFromNode(node!)!;
+    return AlertDialog(
+      scrollable: true,
+      alignment: Alignment.center,
+      title: const Text('크기 수정'),
+      content: Obx(
+        () => Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text('길이'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.chevron_left),
+                  onPressed: () {
+                    controller.sizeChange(-1, 0);
+                  },
+                ),
+                Text(
+                    '${controller.size.value.data1 == 0 ? 'max' : controller.size.value.data1}'),
+                IconButton(
+                  icon: const Icon(Icons.chevron_right),
+                  onPressed: () {
+                    controller.sizeChange(1, 0);
+                  },
+                ),
+              ],
+            ),
+            const Text('높이'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                RotatedBox(
+                  quarterTurns: 2,
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.double_arrow,
+                    ),
+                    onPressed: () {
+                      controller.sizeChange(0, -5);
+                    },
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.chevron_left),
+                  onPressed: () {
+                    controller.sizeChange(0, -1);
+                  },
+                ),
+                Text('${controller.size.value.data2 / 10}'),
+                IconButton(
+                  icon: const Icon(Icons.chevron_right),
+                  onPressed: () {
+                    controller.sizeChange(0, 1);
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.double_arrow,
+                  ),
+                  onPressed: () {
+                    controller.sizeChange(0, 5);
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class RandomDialog extends StatelessWidget {
+  final ChoiceNodeBase? node;
+
+  const RandomDialog(this.node, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var controller = VMChoiceNode.getVMChoiceNodeFromNode(node!)!;
+    return AlertDialog(
+      scrollable: true,
+      title: const Text('랜덤'),
+      content: Obx(() => AnimatedFlipCounter(
+          value: controller.randomValue.value,
+          duration: const Duration(seconds: 1),
+          textStyle: const TextStyle(
+            fontSize: 40,
+            color: Colors.blue,
+            fontWeight: FontWeight.bold,
+          )
+        ),
+      ),
     );
   }
 }

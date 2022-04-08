@@ -16,32 +16,34 @@ class VMEditor extends GetxController {
   late final QuillController quillController;
   final FocusNode focusBody = FocusNode();
 
-  var title = ''.obs;
+  var title = NodeEditor().target.title.obs;
   var contents = ''.obs;
   var index = -1;
-  var isCard = false.obs;
-  var isSelectable = true.obs;
+  var isCard = NodeEditor().target.isCard.obs;
+  var isSelectable = NodeEditor().target.isSelectable.obs;
+  var isRandom = NodeEditor().target.isRandom.obs;
 
   bool isChanged = false;
 
   @override
   void onInit() {
     quillController = NodeEditor().getVMChoiceNode().quillController;
-
     isCard.listen((value) {
       isChanged = true;
       NodeEditor().target.isCard = value;
     });
+
     isSelectable.listen((value) {
       isChanged = true;
       NodeEditor().target.isSelectable = value;
     });
 
-    isCard.value = NodeEditor().target.isCard;
-    isSelectable.value = NodeEditor().target.isSelectable;
-    controllerTitle.text = NodeEditor().target.title;
-    title.value = controllerTitle.text;
+    isRandom.listen((value) {
+      isChanged = true;
+      NodeEditor().target.maxRandom = value ? 100 : -1;
+    });
 
+    controllerTitle.text = title.value;
     contents.value = quillController.document.toPlainText();
 
     controllerTitle.addListener(() {

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -25,7 +26,9 @@ class VMChoiceNode extends GetxController {
   var titleString = ''.obs;
   var isDrag = false.obs;
   var isCardMode = false.obs;
+  var isRandom = false.obs;
   var status = SelectableStatus.open.obs;
+  var randomValue = (-1).obs;
 
   VMChoiceNode({int x = nonPositioned, int y = nonPositioned})
       : pos = [y, x],
@@ -59,6 +62,8 @@ class VMChoiceNode extends GetxController {
     titleString.value = node.title;
     imageString.value = node.imageString;
     isCardMode.value = node.isCard;
+    isRandom.value = node.isRandom;
+    randomValue.value = -1;
     status.value = node.status;
   }
 
@@ -124,16 +129,20 @@ class VMChoiceNode extends GetxController {
     return Get.find<VMChoiceNode>(tag: tag);
   }
 
+  static VMChoiceNode? getVMChoiceNodeFromList(List<int> tag) {
+    return getVMChoiceNodeFromTag(getTagFromList(tag));
+  }
+
+  static VMChoiceNode? getVMChoiceNodeFromNode(ChoiceNodeBase node) {
+    return getVMChoiceNodeFromTag(node.tag);
+  }
+
   static String getTagFromList(List<int> tag) {
     var tagOut = tag[0].toString();
-    for(int i = 1; i < tag.length; i++){
+    for (int i = 1; i < tag.length; i++) {
       tagOut += ':${tag[i]}';
     }
     return tagOut;
-  }
-
-  static VMChoiceNode? getVMChoiceNodeFromList(List<int> tag) {
-    return getVMChoiceNodeFromTag(getTagFromList(tag));
   }
 
   bool isSelect() {
@@ -153,23 +162,34 @@ class VMChoiceNode extends GetxController {
   }
 
   double get opacity{
-    if(isEditable())return 1;
+    if (isEditable()) return 1;
 
-    if(node.isSelectable){
-      if(isIgnorePointer()) {
+    if (node.isSelectable) {
+      if (isIgnorePointer()) {
         return 1;
-      }else if(status.value == SelectableStatus.hide) {
+      } else if (status.value == SelectableStatus.hide) {
         return 0;
-      }else {
+      } else {
         return 0.5;
       }
-    }else{
-      if(status.value == SelectableStatus.selected) {
+    } else {
+      if (status.value == SelectableStatus.selected) {
         return 1;
-      }else{
+      } else {
         return 0;
       }
     }
+  }
+
+  void startRandom() {
+    randomValue.value = 99999;
+    var timer = Timer.periodic(const Duration(milliseconds: 500), (Timer timer) {
+      randomValue.value = Random().nextInt(99999);
+    });
+    Timer(const Duration(milliseconds: 2000), () {
+      timer.cancel();
+      randomValue.value = Random().nextInt(node.maxRandom);
+    });
   }
 
   static void doAllVMChoiceNode(void Function(VMChoiceNode vm) action) {

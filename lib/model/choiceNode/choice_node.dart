@@ -11,12 +11,15 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
   int width; //-1 = 무한대
   int height; //0 == 1/2
   bool isCard;
+  int maxRandom = -1;
   String title;
   String contentsString;
   String imageString;
   @override
   bool get isSelectableCheck => isSelectable;
   bool isSelectable = true;
+
+  bool get isRandom => maxRandom > 0;
 
   ChoiceNodeBase(this.width, this.height, this.isCard,
       this.title, this.contentsString, this.imageString){
@@ -37,11 +40,12 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
   } //랜덤 문자로 제목 중복 방지
 
   ChoiceNodeBase.fromJson(Map<String, dynamic> json)
-      : width = json['width'],
-        height = json['height'],
-        isCard = json['isCard'],
+      : width = json['width'] ?? 1,
+        height = json['height'] ?? 10,
+        isCard = json['isCard'] ?? true,
+        maxRandom = json['maxRandom'] ?? -1,
         isSelectable = json['isSelectable'],
-        title = json['title'],
+        title = json['title'] ?? '',
         contentsString = json['contentsString'],
         imageString = json['imageString'] ?? json['image'] {
     currentPos = json['x'] ?? json['pos'];
@@ -61,6 +65,7 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
       'height': height,
       'isCard': isCard,
       'isSelectable': isSelectable,
+      'maxRandom': maxRandom,
       'title': title,
       'contentsString': contentsString,
       'image': convertToWebp(imageString),

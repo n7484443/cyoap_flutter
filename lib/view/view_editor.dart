@@ -87,6 +87,11 @@ class ViewEditor extends StatelessWidget {
             controller.isSelectable.value,
             label: '선택 가능',
           ),
+          ViewSwitchLabel(
+                () => controller.isRandom.value = !controller.isRandom.value,
+            controller.isRandom.value,
+            label: '랜덤 기능',
+          ),
           const Spacer(),
           Padding(
             padding: const EdgeInsets.only(bottom: 10.0),
