@@ -39,6 +39,12 @@ class VMDraggableNestedMap extends GetxController {
         : (getPlatform().lineSettings.length * 2);
   }
 
+  @override
+  void update([List<Object>? ids, bool condition = true]) {
+    super.update();
+    isChanged = true;
+  }
+
   List<Widget> widgetList({BoxConstraints? constrains}) {
     var choiceNodeList = getPlatform().lineSettings;
     var edit = isEditable();
@@ -120,8 +126,6 @@ class VMDraggableNestedMap extends GetxController {
         }
       });
     }
-
-    isChanged = true;
     return widgetList;
   }
 

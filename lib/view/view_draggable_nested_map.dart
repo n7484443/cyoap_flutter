@@ -132,6 +132,61 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
   }
 }
 
+class NodeDividerDialog extends StatelessWidget {
+  final int y;
+  const NodeDividerDialog(this.y, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<VMDraggableNestedMap>(
+      builder: (_) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              const Text('선택 가능'),
+              const Spacer(),
+              IconButton(
+                icon: const Icon(Icons.chevron_left),
+                onPressed: () {
+                  _.addMaxSelect(y, -1);
+                },
+              ),
+              Text(_.getMaxSelect(y)),
+              IconButton(
+                icon: const Icon(Icons.chevron_right),
+                onPressed: () {
+                  _.addMaxSelect(y, 1);
+                },
+              ),
+            ],
+          ),
+          /*Row(
+                    children: [
+                      const Text('탭 높이 설정'),
+                      const Spacer(),
+                      IconButton(
+                        icon: const Icon(Icons.chevron_left),
+                        onPressed: () {
+                          _.addMaxSelect(y, -1);
+                        },
+                      ),
+                      Text(_.getMaxSelect(y)),
+                      IconButton(
+                        icon: const Icon(Icons.chevron_right),
+                        onPressed: () {
+                          _.addMaxSelect(y, 1);
+                        },
+                      ),
+                    ],
+                  ),*/
+        ],
+      ),
+    );
+  }
+}
+
+
 class NodeDivider extends GetView<VMDraggableNestedMap> {
   final int y;
 
@@ -156,51 +211,7 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
     if (VMDraggableNestedMap.isVisibleOnlyEdit()) {
       Future dialog() => Get.defaultDialog(
             title: '최대 선택지 개수 설정',
-            content: GetBuilder<VMDraggableNestedMap>(
-              builder: (_) => Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: [
-                      const Text('선택 가능'),
-                      const Spacer(),
-                      IconButton(
-                        icon: const Icon(Icons.chevron_left),
-                        onPressed: () {
-                          _.addMaxSelect(y, -1);
-                        },
-                      ),
-                      Text(_.getMaxSelect(y)),
-                      IconButton(
-                        icon: const Icon(Icons.chevron_right),
-                        onPressed: () {
-                          _.addMaxSelect(y, 1);
-                        },
-                      ),
-                    ],
-                  ),
-                  /*Row(
-                    children: [
-                      const Text('탭 높이 설정'),
-                      const Spacer(),
-                      IconButton(
-                        icon: const Icon(Icons.chevron_left),
-                        onPressed: () {
-                          _.addMaxSelect(y, -1);
-                        },
-                      ),
-                      Text(_.getMaxSelect(y)),
-                      IconButton(
-                        icon: const Icon(Icons.chevron_right),
-                        onPressed: () {
-                          _.addMaxSelect(y, 1);
-                        },
-                      ),
-                    ],
-                  ),*/
-                ],
-              ),
-            ),
+            content: NodeDividerDialog(y),
           );
       return Stack(
         children: [
