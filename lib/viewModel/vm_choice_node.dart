@@ -182,9 +182,9 @@ class VMChoiceNode extends GetxController {
   }
 
   void startRandom() {
-    randomValue.value = 99999;
+    randomValue.value = node.maxRandom * 10;
     var timer = Timer.periodic(const Duration(milliseconds: 500), (Timer timer) {
-      randomValue.value = Random().nextInt(99999);
+      randomValue.value = randomValue.value ~/ 2;
     });
     Timer(const Duration(milliseconds: 2000), () {
       timer.cancel();

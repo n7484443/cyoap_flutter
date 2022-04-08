@@ -346,7 +346,7 @@ class RandomDialog extends StatelessWidget {
       title: const Text('랜덤'),
       content: Obx(() => AnimatedFlipCounter(
           value: controller.randomValue.value,
-          duration: const Duration(seconds: 1),
+          duration: const Duration(milliseconds: 500),
           textStyle: const TextStyle(
             fontSize: 40,
             color: Colors.blue,
