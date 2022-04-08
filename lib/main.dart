@@ -37,7 +37,7 @@ class ConstList {
   static String get version => versionInner ?? '';
 
   static Future<void> init() async {
-    platform_specified.PlatformSpecified.instance.init();
+    platform_specified.PlatformSpecified().init();
     var packageInfo = await PackageInfo.fromPlatform();
     versionInner = packageInfo.version;
   }
@@ -92,7 +92,7 @@ class ConstList {
       }
     }
     await platform_specified.loadLibrary();
-    platform_specified.PlatformSpecified.instance.preInit();
+    platform_specified.PlatformSpecified().preInit();
     return;
   }
 }

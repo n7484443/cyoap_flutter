@@ -7,15 +7,17 @@ import 'platform_specified_vm.dart'
 if (dart.library.html) 'platform_specified_web.dart';
 
 abstract class PlatformSpecified{
-  static final PlatformSpecified instance = PlatformSpecifiedImp();
+  static final PlatformSpecified _instance = PlatformSpecifiedImp();
+  factory PlatformSpecified(){
+    return _instance;
+  }
   late final Distribute? distribute;
   late final SaveProject? saveProject;
   void init(){}
   void preInit(){}
-  void reload(){}
 }
-Distribute? get distribute => PlatformSpecified.instance.distribute;
-SaveProject? get saveProject => PlatformSpecified.instance.saveProject;
+Distribute? get distribute => PlatformSpecified().distribute;
+SaveProject? get saveProject => PlatformSpecified().saveProject;
 
 abstract class Distribute {
   Future<Tuple<List<String>, List<String>>> getImageNodeList() async {
