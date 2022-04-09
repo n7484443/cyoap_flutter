@@ -3,9 +3,9 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
-import 'package:cyoap_flutter/util/tuple.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:tuple/tuple.dart';
 
 import '../main.dart';
 import '../model/abstract_platform.dart';
@@ -22,7 +22,7 @@ class JsonProjectParser {
     for (var choice in row) {
       var out = await compute(checkImage, choice as Map<String, dynamic>);
       if (out == null) continue;
-      outputImage[out.data1] = out.data2;
+      outputImage[out.item1] = out.item2;
     }
     var parent = File(path).path;
     for (var data in outputImage.keys) {
@@ -34,7 +34,7 @@ class JsonProjectParser {
     return AbstractPlatform('', Colors.white, 0, ConstList.version);
   }
 
-  Future<Tuple<String, Uint8List>?> checkImage(
+  Future<Tuple2<String, Uint8List>?> checkImage(
       Map<String, dynamic> input) async {
     if (input.containsKey('image')) {
       if (input['image'] == null || (input['image'] as String).isEmpty) {

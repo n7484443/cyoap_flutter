@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:tuple/tuple.dart';
+
 import '../../model/platform_file_system.dart';
-import '../tuple.dart';
 import 'platform_specified_vm.dart'
 if (dart.library.html) 'platform_specified_web.dart';
 
@@ -18,7 +19,7 @@ abstract class PlatformSpecified{
 }
 
 abstract class Distribute {
-  Future<Tuple<List<String>, List<String>>> getImageNodeList() async {
+  Future<Tuple2<List<String>, List<String>>> getImageNodeList() async {
     throw UnimplementedError();
   }
 
@@ -31,9 +32,9 @@ abstract class Distribute {
 }
 
 abstract class SaveProject {
-  Future<Tuple<String, Uint8List>> convertImage(
+  Future<Tuple2<String, Uint8List>> convertImage(
       String name, Uint8List data) async {
-    return Tuple(name, data);
+    return Tuple2(name, data);
   }
 
   Future<Map<String, dynamic>> getMap(Map<String, dynamic> dataInput) async {
@@ -47,8 +48,8 @@ abstract class SaveProject {
     for (var name in image.keys) {
       var data = Uint8List.fromList(image[name]!.codeUnits);
       var output = await convertImage(name, data);
-      map['images/${output.data1}'] = output.data2;
-      imageList.add(output.data1);
+      map['images/${output.item1}'] = output.item2;
+      imageList.add(output.item1);
     }
 
     var fileList = List.empty(growable: true);
@@ -77,7 +78,7 @@ abstract class SaveProject {
 }
 
 abstract class WebpConverter {
-  Future<Tuple<String, Uint8List>> convert(
+  Future<Tuple2<String, Uint8List>> convert(
       Uint8List input, String name) async =>
       throw "doesn't work in this platform";
 

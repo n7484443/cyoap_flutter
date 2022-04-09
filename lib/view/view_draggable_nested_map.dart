@@ -95,20 +95,20 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
             return Container(
               color: baseColor,
               width: double.infinity,
-              height: nodeBaseHeight * 2 * controller.getScale().data2,
+              height: nodeBaseHeight * 2,
             );
           }
           if (longType2) {
             return Container(
               color: baseColor,
               width: double.infinity,
-              height: nodeBaseHeight * 10 * controller.getScale().data2,
+              height: nodeBaseHeight * 10,
             );
           }
           return Container(
             color: baseColor,
-            width: nodeBaseWidth / 6 * controller.getScale().data1,
-            height: nodeBaseHeight * 10 * controller.getScale().data2,
+            width: nodeBaseWidth / 6 * controller.getScale(),
+            height: nodeBaseHeight * 10,
           );
         },
         onAccept: (List<int> drag) {

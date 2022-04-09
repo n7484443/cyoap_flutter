@@ -6,7 +6,6 @@ import '../main.dart';
 import '../model/choiceNode/choice_node.dart';
 import '../model/editor.dart';
 import '../model/platform_system.dart';
-import '../util/tuple.dart';
 import '../view/view_choice_node.dart';
 import '../view/view_draggable_nested_map.dart';
 
@@ -201,11 +200,11 @@ class VMDraggableNestedMap extends GetxController {
     return getPlatform().colorBackground;
   }
 
-  Tuple<double, double> getScale() {
+  double getScale() {
     var context = captureKey.currentContext;
-    if (context == null) return Tuple(drag == null ? 1 : 0.9, 1);
+    if (context == null) return drag == null ? 1 : 0.9;
     var sizeMultiply = ConstList.isSmallDisplay(context) ? 0.75 : 1;
-    return Tuple<double, double>(drag == null ? 1 : 0.9, 1) * sizeMultiply;
+    return drag == null ? 1 : 0.9 * sizeMultiply;
   }
 
   void addMaxSelect(int y, int max) {

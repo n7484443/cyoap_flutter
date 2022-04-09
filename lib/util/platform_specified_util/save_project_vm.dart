@@ -6,12 +6,11 @@ import 'package:cyoap_flutter/model/platform_file_system.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/webp_converter.dart';
 import 'package:flutter/foundation.dart';
-
-import '../tuple.dart';
+import 'package:tuple/tuple.dart';
 
 class SaveProjectImp extends SaveProject {
   @override
-  Future<Tuple<String, Uint8List>> convertImage(
+  Future<Tuple2<String, Uint8List>> convertImage(
       String name, Uint8List data) async {
     return await getWebpConverterInstance().convert(data, name);
   }

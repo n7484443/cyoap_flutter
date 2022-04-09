@@ -9,11 +9,11 @@ import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
+import 'package:tuple/tuple.dart';
 
 import '../main.dart';
 import '../model/platform_system.dart';
 import '../util/platform_specified_util/platform_specified.dart';
-import '../util/tuple.dart';
 
 class VMPlatform extends GetxController {
   @override
@@ -105,12 +105,12 @@ class VMPlatform extends GetxController {
         .asUint8List();
 
     if(isWebp){
-      Future<Tuple<String, Uint8List>> output = compute(getPlatformFileSystem().saveCapture, byteData);
+      Future<Tuple2<String, Uint8List>> output = compute(getPlatformFileSystem().saveCapture, byteData);
       output.then((value) {
         if (ConstList.isOnlyFileAccept()) {
-          PlatformSpecified().saveProject!.downloadCapture(value.data1, value.data2);
+          PlatformSpecified().saveProject!.downloadCapture(value.item1, value.item2);
         } else {
-          PlatformSpecified().saveProject!.downloadCapture('${PlatformSystem().path}/${value.data1}', value.data2);
+          PlatformSpecified().saveProject!.downloadCapture('${PlatformSystem().path}/${value.item1}', value.item2);
         }
 
         stopwatch.update((val) => val?.stop());
@@ -150,8 +150,8 @@ class VMPlatform extends GetxController {
     var value = await PlatformSpecified().distribute!.getImageNodeList();
     print('load start');
     loadString = '[ 로드 시작 ]';
-    var imageList = value.data1;
-    var nodeList = value.data2;
+    var imageList = value.item1;
+    var nodeList = value.item2;
     for (var name in imageList) {
       ImageDB()
           .uploadImagesFuture(name, PlatformSpecified().distribute!.getFile('images/$name'));

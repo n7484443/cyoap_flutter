@@ -8,11 +8,11 @@ import 'package:archive/archive.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
+import 'package:tuple/tuple.dart';
 
 import '../main.dart';
 import '../util/json_file_parsing.dart';
 import '../util/platform_specified_util/webp_converter.dart';
-import '../util/tuple.dart';
 import 'abstract_platform.dart';
 import 'choiceNode/choice_line.dart';
 
@@ -212,9 +212,9 @@ class PlatformFileSystem {
       }
       var image = await ImageDB().getImage(imageName);
       var converted = await getWebpConverterInstance().convert(image!, imageName);
-      var file = File('$path/images/${converted.data1}');
+      var file = File('$path/images/${converted.item1}');
       file.createSync();
-      file.writeAsBytes(converted.data2);
+      file.writeAsBytes(converted.item2);
     }
 
     if (dirNodesBackUp.existsSync()) {
@@ -268,15 +268,15 @@ class PlatformFileSystem {
     return -1;
   }
 
-  Queue<Tuple<String, Image>> temp = Queue();
+  Queue<Tuple2<String, Image>> temp = Queue();
 
   Future<Image> _getImage(String name) async {
     Uint8List? image;
-    if (temp.any((element) => element.data1 == name)) {
-      var tmp = temp.firstWhere((element) => element.data1 == name);
+    if (temp.any((element) => element.item1 == name)) {
+      var tmp = temp.firstWhere((element) => element.item1 == name);
       temp.remove(tmp);
       temp.add(tmp);
-      return tmp.data2;
+      return tmp.item2;
     } else if (await ImageDB().hasImage(name)) {
       image = await ImageDB().getImage(name);
       if (image != null) {
@@ -285,7 +285,7 @@ class PlatformFileSystem {
           filterQuality: FilterQuality.medium,
           isAntiAlias: true,
         );
-        temp.add(Tuple(name, output));
+        temp.add(Tuple2(name, output));
         while (temp.length > 30) {
           temp.removeFirst();
         }
@@ -333,7 +333,7 @@ class PlatformFileSystem {
     return _imageSource[image]?.isNotEmpty ?? false;
   }
 
-  Future<Tuple<String, Uint8List>> saveCapture(Uint8List input) async {
+  Future<Tuple2<String, Uint8List>> saveCapture(Uint8List input) async {
     return await getWebpConverterInstance().convert(input, 'exported.png');
   }
 }

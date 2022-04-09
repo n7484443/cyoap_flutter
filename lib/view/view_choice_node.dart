@@ -30,6 +30,14 @@ class ViewChoiceNode extends StatelessWidget {
     //TODO 세로 길이 자동으로 조절되기
     var vmDraggableNestedMap = Get.find<VMDraggableNestedMap>();
     var scale = vmDraggableNestedMap.getScale();
+    if (node == null) {
+      return Card(
+        child: SizedBox(
+          width: nodeBaseWidth * scale,
+          height: nodeBaseHeight * 10,
+        ),
+      );
+    }
     var controller = Get.put(VMChoiceNode.fromNode(node!), tag: node!.tag);
 
     var editor = Obx(() {
@@ -43,7 +51,7 @@ class ViewChoiceNode extends StatelessWidget {
           padding: const EdgeInsets.only(top: 4),
           scrollController: ScrollController(),
           scrollable: false,
-          customStyles: ConstList.getDefaultThemeData(context, scale.data2,
+          customStyles: ConstList.getDefaultThemeData(context, scale,
               fontStyle:
               ConstList.getFont(vmDraggableNestedMap.mainFont.value)),
         ),
@@ -89,7 +97,7 @@ class ViewChoiceNode extends StatelessWidget {
             child: Visibility(
               child: TextOutline(
                 controller.titleString.value,
-                20 * scale.data2,
+                20 * scale,
                 ConstList.getFont(vmDraggableNestedMap.titleFont.value),
               ),
               visible: controller.titleString.value.isNotEmpty,
@@ -127,7 +135,7 @@ class ViewChoiceNode extends StatelessWidget {
     var mainNode = Obx(
           () => Container(
         padding: const EdgeInsets.all(6),
-        width: controller.realSize.value * scale.data1,
+        width: controller.realSize.value * scale,
         color: controller.node.isCard
             ? null
             : getPlatform().colorBackground.lighten(),
@@ -149,7 +157,7 @@ class ViewChoiceNode extends StatelessWidget {
                                 List<dynamic> rejectedData) =>
                                 Container(
                                   color: Colors.blueAccent.withOpacity(0.3),
-                                  width: controller.realSize.value * scale.data1 * 0.6,
+                                  width: controller.realSize.value * scale * 0.6,
                                   height: 20,
                                 ),
                             onAccept: (List<int> data) {
