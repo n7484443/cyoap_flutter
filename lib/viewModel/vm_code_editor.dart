@@ -1,4 +1,5 @@
 import 'package:cyoap_flutter/model/editor.dart';
+import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -47,5 +48,6 @@ class VMCodeEditor extends GetxController {
     NodeEditor().target.recursiveStatus.executeCodeString = executeCode.value;
 
     isChanged = false;
+    Get.find<VMDraggableNestedMap>().isChanged = true;
   }
 }

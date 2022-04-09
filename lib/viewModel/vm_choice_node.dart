@@ -97,7 +97,7 @@ class VMChoiceNode extends GetxController {
       val!.data1 += width;
       val.data2 += height;
       val.data1 = max(val.data1, 0);
-      val.data2 = max(val.data2, 0);
+      val.data2 = max(val.data2, 5);
       node.width = val.data1;
       node.height = val.data2;
     });

@@ -32,14 +32,17 @@ class ConstList {
     return false;
   }
 
-  static String? versionInner;
+  static late final String? _version;
+  static late final int? _versionBuild;
 
-  static String get version => versionInner ?? '';
+  static String get version => _version ?? '';
+  static int get versionBuild => _versionBuild ?? 0;
 
   static Future<void> init() async {
     platform_specified.PlatformSpecified().init();
     var packageInfo = await PackageInfo.fromPlatform();
-    versionInner = packageInfo.version;
+    _version = packageInfo.version;
+    _versionBuild = int.parse(packageInfo.buildNumber);
   }
 
   static DefaultStyles getDefaultThemeData(BuildContext context, double scale,

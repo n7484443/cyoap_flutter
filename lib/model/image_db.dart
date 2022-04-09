@@ -25,8 +25,8 @@ class ImageDB {
     return output;
   }
 
-  String databaseName = "cyoap_image.db";
-  String objectStore = "image";
+  static const String databaseName = "cyoap_image.db";
+  static const String objectStore = "image";
   late Database database;
 
   bool _init = false;
@@ -37,7 +37,7 @@ class ImageDB {
         var idbFactory = getIdbFactory()!;
         database = await idbFactory.open(
           databaseName,
-          version: 1,
+          version: ConstList.versionBuild,
           onUpgradeNeeded: (VersionChangeEvent event) {
             database = event.database;
             database.createObjectStore(objectStore, autoIncrement: true);

@@ -66,6 +66,7 @@ class VMEditor extends GetxController {
     quillController.updateSelection(
         const TextSelection.collapsed(offset: 0), ChangeSource.REMOTE);
     isChanged = false;
+    Get.find<VMDraggableNestedMap>().isChanged = true;
   }
 
   FutureBuilder getImage(int i) {
