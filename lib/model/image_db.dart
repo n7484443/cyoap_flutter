@@ -11,7 +11,25 @@ class ImageDB {
     return _instance;
   }
 
-  ImageDB._init();
+  ImageDB._init() {
+    if (ConstList.isOnlyFileAccept()) {
+      var idbFactory = getIdbFactory()!;
+      idbFactory.open(
+        databaseName,
+        version: ConstList.versionBuild,
+        onUpgradeNeeded: (VersionChangeEvent event) {
+          var database = event.database;
+
+          if(database.objectStoreNames.contains(objectStore)){
+            database.deleteObjectStore(objectStore);
+          }
+          database.createObjectStore(objectStore, autoIncrement: true);
+        },
+      ).then((value) {
+        database = value;
+      });
+    }
+  }
 
   final Map<String, Uint8List?> _dirImageUint8Map = {};
 
@@ -29,29 +47,6 @@ class ImageDB {
   static const String objectStore = "image";
   late Database database;
 
-  bool _init = false;
-
-  Future<void> init() async {
-    if (!_init) {
-      if (ConstList.isOnlyFileAccept()) {
-        var idbFactory = getIdbFactory()!;
-        database = await idbFactory.open(
-          databaseName,
-          version: ConstList.versionBuild,
-          onUpgradeNeeded: (VersionChangeEvent event) {
-            var database = event.database;
-
-            if(database.objectStoreNames.contains(objectStore)){
-              database.deleteObjectStore(objectStore);
-            }
-            database.createObjectStore(objectStore, autoIncrement: true);
-          },
-        );
-      }
-      _init = true;
-    }
-  }
-
   ObjectStore get notesWritableTxn {
     var txn = database.transaction(objectStore, idbModeReadWrite);
     var store = txn.objectStore(objectStore);
@@ -68,10 +63,7 @@ class ImageDB {
     if (_dirImageUint8Map.containsKey(name)) {
       return;
     }
-
-    await init();
     _dirImageUint8Map[name] = null;
-
     if (ConstList.isOnlyFileAccept()) {
       await notesWritableTxn.put(data, name);
     } else {
@@ -83,10 +75,7 @@ class ImageDB {
     if (_dirImageUint8Map.containsKey(name)) {
       return;
     }
-
-    await init();
     _dirImageUint8Map[name] = null;
-
     data.then((value) async {
       if (ConstList.isOnlyFileAccept()) {
         await notesWritableTxn.put(value, name);
@@ -97,7 +86,6 @@ class ImageDB {
   }
 
   Future<Uint8List?> getImage(String name) async {
-    await init();
     if (ConstList.isOnlyFileAccept()) {
       return await notesReadableTxn.getObject(name) as Uint8List;
     } else {
@@ -106,7 +94,6 @@ class ImageDB {
   }
 
   Future<String?> getImageAsString(String name) async {
-    await init();
     if (ConstList.isOnlyFileAccept()) {
       var value = await notesReadableTxn.getObject(name) as Uint8List;
       return String.fromCharCodes(value);
@@ -116,7 +103,6 @@ class ImageDB {
   }
 
   Future<bool> hasImage(String name) async {
-    await init();
     if (ConstList.isOnlyFileAccept()) {
       var value = await notesReadableTxn.getObject(name);
       return value != null;

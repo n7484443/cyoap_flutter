@@ -55,7 +55,17 @@ jobs:
           cache-key: flutter
           cache-path: ${{ runner.tool_cache }}/flutter
 
+      - name: Get latest release version number
+        id: get_version
+        uses: battila7/get-version-action@v2
+
       - run: flutter build web --web-renderer canvaskit --release --base-href=/FlutterCyoap/
+
+      - name: modify version of index.html
+        run: |
+          (get-content ./build/web/index.html) -replace 'service_version', '${{ steps.get_version.outputs.version-without-v }}' | Out-File ./build/web/index_replaced.html
+          Remove-Item ./build/web/index.html
+          Rename-Item ./build/web/index_replaced.html index.html
 
       - name: Deploy Web
         uses: peaceiris/actions-gh-pages@v3
@@ -80,9 +90,16 @@ jobs:
           Remove-Item ./build/web/assets/packages/flutter_inappwebview -Recurse | Remove-Item
           Remove-Item ./build/web/assets/packages/youtube_player_flutter -Recurse | Remove-Item
           Copy ./web_distribute_only/worker.js ./build/web
+
       - name: modify index.html
         run: |
           get-content ./build/web/index.html | select-string -pattern '.*(save_web.js|jszip.js).*' -notmatch | Out-File ./build/web/index_replaced.html
+          Remove-Item ./build/web/index.html
+          Rename-Item ./build/web/index_replaced.html index.html
+
+      - name: modify version of index.html
+        run: |
+          (get-content ./build/web/index.html) -replace 'service_version', '${{ steps.get_version.outputs.version-without-v }}' | Out-File ./build/web/index_replaced.html
           Remove-Item ./build/web/index.html
           Rename-Item ./build/web/index_replaced.html index.html
 
@@ -91,10 +108,6 @@ jobs:
           get-content ./build/web/flutter_service_worker.js | select-string -pattern '.*(Notice|save_web.js|jszip.js|canvaskit).*' -notmatch | Out-File ./build/web/flutter_service_worker_replaced.js
           Remove-Item ./build/web/flutter_service_worker.js
           Rename-Item ./build/web/flutter_service_worker_replaced.js flutter_service_worker.js
-
-      - name: Get latest release version number
-        id: get_version
-        uses: battila7/get-version-action@v2
 
       - run: 7z a build/web/distribute_${{ steps.get_version.outputs.version-without-v }}.zip ./build/web/*
 

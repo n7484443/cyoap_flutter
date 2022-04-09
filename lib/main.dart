@@ -32,8 +32,8 @@ class ConstList {
     return false;
   }
 
-  static late final String? _version;
-  static late final int? _versionBuild;
+  static String? _version;
+  static int? _versionBuild;
 
   static String get version => _version ?? '';
   static int get versionBuild => _versionBuild ?? 0;
