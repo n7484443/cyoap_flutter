@@ -39,7 +39,7 @@ class ImageDB {
           databaseName,
           version: ConstList.versionBuild,
           onUpgradeNeeded: (VersionChangeEvent event) {
-            database = event.database;
+            var database = event.database;
             database.createObjectStore(objectStore, autoIncrement: true);
           },
         );
