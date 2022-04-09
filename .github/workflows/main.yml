@@ -69,23 +69,28 @@ jobs:
       - name: Build web distribute
         run: flutter build web --web-renderer html --release --dart-define="isDistributed"=true
 
-      - run: Remove-Item ./build/web/canvaskit -Recurse | Remove-Item
-      - run: Remove-Item ./build/web/.last_build_id
-      - run: Remove-Item ./build/web/assets/NOTICES
-      - run: Remove-Item ./build/web/save_web.js
-      - run: Remove-Item ./build/web/jszip.js
-      - run: Remove-Item ./build/web/worker.js
-      - run: Remove-Item ./build/web/assets/packages/flutter_inappwebview -Recurse | Remove-Item
-      - run: Remove-Item ./build/web/assets/packages/youtube_player_flutter -Recurse | Remove-Item
-      - run: Copy ./web_distribute_only/worker.js ./build/web
+      - name: remove useless files
+        run: |
+          Remove-Item ./build/web/canvaskit -Recurse | Remove-Item
+          Remove-Item ./build/web/.last_build_id
+          Remove-Item ./build/web/assets/NOTICES
+          Remove-Item ./build/web/save_web.js
+          Remove-Item ./build/web/jszip.js
+          Remove-Item ./build/web/worker.js
+          Remove-Item ./build/web/assets/packages/flutter_inappwebview -Recurse | Remove-Item
+          Remove-Item ./build/web/assets/packages/youtube_player_flutter -Recurse | Remove-Item
+          Copy ./web_distribute_only/worker.js ./build/web
+      - name: modify index.html
+        run: |
+          get-content ./build/web/index.html | select-string -pattern '.*(save_web.js|jszip.js).*' -notmatch | Out-File ./build/web/index_replaced.html
+          Remove-Item ./build/web/index.html
+          Rename-Item ./build/web/index_replaced.html index.html
 
-      - run: get-content ./build/web/index.html | select-string -pattern '.*(save_web.js|jszip.js).*' -notmatch | Out-File ./build/web/index_replaced.html
-      - run: Remove-Item ./build/web/index.html
-      - run: Rename-Item ./build/web/index_replaced.html index.html
-
-      - run: get-content ./build/web/flutter_service_worker.js | select-string -pattern '.*(Notice|save_web.js|jszip.js|canvaskit).*' -notmatch | Out-File ./build/web/flutter_service_worker_replaced.js
-      - run: Remove-Item ./build/web/flutter_service_worker.js
-      - run: Rename-Item ./build/web/flutter_service_worker_replaced.js flutter_service_worker.js
+      - name: modify flutter_service_worker.js
+        run: |
+          get-content ./build/web/flutter_service_worker.js | select-string -pattern '.*(Notice|save_web.js|jszip.js|canvaskit).*' -notmatch | Out-File ./build/web/flutter_service_worker_replaced.js
+          Remove-Item ./build/web/flutter_service_worker.js
+          Rename-Item ./build/web/flutter_service_worker_replaced.js flutter_service_worker.js
 
       - name: Get latest release version number
         id: get_version
