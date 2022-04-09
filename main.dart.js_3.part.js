@@ -418,7 +418,7 @@ this.c=f},
 aeL:function aeL(d){this.a=d
 this.b=$
 this.c=!1},
-aeM:function aeM(d){this.a=d},
+aeM:function aeM(){},
 Tr:function Tr(d,e,f,g,h){var _=this
 _.a=null
 _.b=d
@@ -5044,7 +5044,7 @@ case 4:s=A.bcd()
 t=$.aQJ.aS()
 if(t==null)t=0
 w=6
-return B.m(s.wn(0,"cyoap_image.db",new A.aeM(u),t),$async$fa)
+return B.m(s.wn(0,"cyoap_image.db",new A.aeM(),t),$async$fa)
 case 6:u.b=e
 case 5:u.c=!0
 case 3:return B.q(null,v)}})
@@ -11830,9 +11830,7 @@ A.akW.prototype={
 $1(d){return d.nM()},
 $S:z+22}
 A.aeM.prototype={
-$1(d){var w=d.gVJ(d)
-this.a.b=w
-B.a(w,"database").Vy(0,"image",!0)},
+$1(d){d.gVJ(d).Vy(0,"image",!0)},
 $S:z+23}
 A.ajx.prototype={
 $1(d){return d.a===this.a},
@@ -13821,4 +13819,4 @@ w($,"bj0","aZx",()=>A.b8A())
 w($,"biY","aZv",()=>A.b7Q())
 w($,"bj_","aZw",()=>B.b([$.aZx(),$.aZv()],B.W("x<qn<y,h>>")))
 w($,"biv","aZi",()=>96)})()}
-$__dart_deferred_initializers__["1DAIqzxkUOubKG79ShtiaMP7hcY="] = $__dart_deferred_initializers__.current
+$__dart_deferred_initializers__["pvpW4CaqXXolo2dDDqUowGdm4DQ="] = $__dart_deferred_initializers__.current
