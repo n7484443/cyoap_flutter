@@ -40,6 +40,10 @@ class ImageDB {
           version: ConstList.versionBuild,
           onUpgradeNeeded: (VersionChangeEvent event) {
             var database = event.database;
+
+            if(database.objectStoreNames.contains(objectStore)){
+              database.deleteObjectStore(objectStore);
+            }
             database.createObjectStore(objectStore, autoIncrement: true);
           },
         );
