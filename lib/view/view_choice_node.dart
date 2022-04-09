@@ -168,6 +168,7 @@ class ViewChoiceNode extends StatelessWidget {
                             onAccept: (List<int> data) {
                               if (data[data.length - 1] == nonPositioned) {
                                 node!.addChildren(VMDraggableNestedMap.createNodeForTemp());
+                                vmDraggableNestedMap.updateVMChoiceNode(node!.pos());
                               } else {
                                 var childNode = getPlatform().getChoiceNode(data)!;
                                 var parentLastPos = childNode.getParentLast()!.pos();
@@ -176,6 +177,7 @@ class ViewChoiceNode extends StatelessWidget {
                                 vmDraggableNestedMap.updateVMChoiceNode(parentLastPos);
                                 vmDraggableNestedMap.update();
                               }
+                              getPlatform().checkDataCollect();
                               //TODO
                             },
                           ),
@@ -184,14 +186,17 @@ class ViewChoiceNode extends StatelessWidget {
                             vmDraggableNestedMap.drag != node?.pos(),
                       );
                     default:
-                      return Expanded(
+                      return ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxHeight: controller.realSize.value.data2 * scale.data2 - 45 - 20,
+                          ),
                         child: Wrap(
-                      children: node!.children
-                          .map((e) =>
+                          children: node!.children
+                              .map((e) =>
                               ViewChoiceNode.fromNode(e as ChoiceNodeBase))
-                          .toList(),
-                    ),
-                  );
+                              .toList(),
+                        ),
+                      );
               }
             },
           ),

@@ -87,12 +87,14 @@ class AbstractPlatform {
       lineSettings.add(LineSetting(lineSettings.length));
     }
     lineSettings[pos[0]].addData(pos[1], node);
+    checkDataCollect();
   }
 
   void addDataAll(List<LineSetting> lineList) {
     for (var lineSetting in lineList) {
       addLineSettingData(lineSetting);
     }
+    checkDataCollect();
   }
 
   void removeData(List<int> pos) {
@@ -121,13 +123,6 @@ class AbstractPlatform {
   }
 
   void changeData(List<int> start, List<int> pos) {
-    var node = getChoiceNode(start)!;
-    removeData(start);
-    addData(pos, node);
-    checkDataCollect();
-  }
-
-  void changeDataFromList(List<int> start, List<int> pos) {
     var node = getChoiceNode(start)!;
     removeData(start);
     addData(pos, node);

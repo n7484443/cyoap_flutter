@@ -111,15 +111,14 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
             height: nodeBaseHeight * 10 * controller.getScale().data2,
           );
         },
-        onAccept: (List<int> data) {
-          var drag = controller.drag!;
+        onAccept: (List<int> drag) {
           if (drag[drag.length - 1] == nonPositioned) {
-            controller.changeData(data, [y, x]);
+            controller.changeData(drag, [y, x]);
           } else {
             if(y == drag[0] && (x - 1) >= (drag[1] * 2)){
-              controller.changeData(data, [y, x - 1]);
+              controller.changeData(drag, [y, x - 1]);
             }else{
-              controller.changeData(data, [y, x]);
+              controller.changeData(drag, [y, x]);
             }
           }
         },
@@ -161,25 +160,6 @@ class NodeDividerDialog extends StatelessWidget {
               ),
             ],
           ),
-          /*Row(
-                    children: [
-                      const Text('탭 높이 설정'),
-                      const Spacer(),
-                      IconButton(
-                        icon: const Icon(Icons.chevron_left),
-                        onPressed: () {
-                          _.addMaxSelect(y, -1);
-                        },
-                      ),
-                      Text(_.getMaxSelect(y)),
-                      IconButton(
-                        icon: const Icon(Icons.chevron_right),
-                        onPressed: () {
-                          _.addMaxSelect(y, 1);
-                        },
-                      ),
-                    ],
-                  ),*/
         ],
       ),
     );

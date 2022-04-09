@@ -156,7 +156,7 @@ class VMDraggableNestedMap extends GetxController {
     if (data[data.length - 1] == nonPositioned) {
       getPlatform().addData(pos, createNodeForTemp());
     } else {
-      getPlatform().changeDataFromList(data, pos);
+      getPlatform().changeData(data, pos);
       updateVMChoiceNode(data);
     }
     updateVMChoiceNode(pos);
