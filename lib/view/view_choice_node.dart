@@ -27,37 +27,25 @@ class ViewChoiceNode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //TODO 어떤 플랫폼이건 가로 길이 최대를 12로 정해서 비율 동일하게 만들기
+    //TODO 세로 길이 자동으로 조절되기
     var vmDraggableNestedMap = Get.find<VMDraggableNestedMap>();
     var scale = vmDraggableNestedMap.getScale();
-    if (node == null) {
-      return Card(
-        child: SizedBox(
-          width: nodeBaseWidth * scale.data1,
-          height: nodeBaseHeight * 10 * scale.data2,
-        ),
-      );
-    }
     var controller = Get.put(VMChoiceNode.fromNode(node!), tag: node!.tag);
 
     var editor = Obx(() {
-      return ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: controller.realSize.value.data2 * scale.data2 - 45,
-        ),
-        child: IgnorePointer(
-          child: QuillEditor(
-            controller: controller.quillController,
-            focusNode: FocusNode(),
-            readOnly: true,
-            autoFocus: false,
-            expands: false,
-            padding: const EdgeInsets.only(top: 4),
-            scrollController: ScrollController(),
-            scrollable: false,
-            customStyles: ConstList.getDefaultThemeData(context, scale.data2,
-                fontStyle:
-                ConstList.getFont(vmDraggableNestedMap.mainFont.value)),
-          ),
+      return IgnorePointer(
+        child: QuillEditor(
+          controller: controller.quillController,
+          focusNode: FocusNode(),
+          readOnly: true,
+          autoFocus: false,
+          expands: false,
+          padding: const EdgeInsets.only(top: 4),
+          scrollController: ScrollController(),
+          scrollable: false,
+          customStyles: ConstList.getDefaultThemeData(context, scale.data2,
+              fontStyle:
+              ConstList.getFont(vmDraggableNestedMap.mainFont.value)),
         ),
       );
     });
@@ -139,31 +127,30 @@ class ViewChoiceNode extends StatelessWidget {
     var mainNode = Obx(
           () => Container(
         padding: const EdgeInsets.all(6),
-        width: controller.realSize.value.data1 * scale.data1,
-        height: controller.realSize.value.data2 * scale.data2,
+        width: controller.realSize.value * scale.data1,
         color: controller.node.isCard
             ? null
             : getPlatform().colorBackground.lighten(),
-        child: Column(
-          children: List.generate(
-            node!.children.isEmpty ? 3 : 4,
-            (index) {
-              switch (index) {
-                case 0:
-                  return Expanded(child: image);
-                case 1:
-                  return editor;
-                case 2:
-                  return Visibility(
-                    child: Expanded(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: List.generate(
+              node!.children.isEmpty ? 3 : 4,
+              (index) {
+                switch (index) {
+                  case 0:
+                    return image;
+                  case 1:
+                    return editor;
+                  case 2:
+                    return Visibility(
                       child: DragTarget(
                         builder: (BuildContext context,
                                 List<Object?> candidateData,
                                 List<dynamic> rejectedData) =>
                                 Container(
                                   color: Colors.blueAccent.withOpacity(0.3),
-                                  width: controller.realSize.value.data1 * scale.data1 * 0.6,
-                                  height: controller.realSize.value.data2 * scale.data2 * 0.6,
+                                  width: controller.realSize.value * scale.data1 * 0.6,
+                                  height: 20,
                                 ),
                             onAccept: (List<int> data) {
                               if (data[data.length - 1] == nonPositioned) {
@@ -181,26 +168,20 @@ class ViewChoiceNode extends StatelessWidget {
                               //TODO
                             },
                           ),
-                        ),
-                        visible: vmDraggableNestedMap.drag != null &&
-                            vmDraggableNestedMap.drag != node?.pos(),
-                      );
-                    default:
-                      return ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxHeight: controller.realSize.value.data2 * scale.data2 - 45 - 20,
-                          ),
-                        child: Wrap(
+                          visible: vmDraggableNestedMap.drag != null &&
+                              vmDraggableNestedMap.drag != node?.pos(),
+                        );
+                      default:
+                        return Wrap(
                           children: node!.children
                               .map((e) =>
                               ViewChoiceNode.fromNode(e as ChoiceNodeBase))
                               .toList(),
-                        ),
-                      );
-              }
-            },
+                        );
+                }
+              },
+            ),
           ),
-        ),
       ),
     );
 
@@ -287,53 +268,15 @@ class SizeDialog extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.chevron_left),
                   onPressed: () {
-                    controller.sizeChange(-1, 0);
+                    controller.sizeChange(-1);
                   },
                 ),
                 Text(
-                    '${controller.size.value.data1 == 0 ? 'max' : controller.size.value.data1}'),
+                    '${controller.size.value == 0 ? 'max' : controller.size.value}'),
                 IconButton(
                   icon: const Icon(Icons.chevron_right),
                   onPressed: () {
-                    controller.sizeChange(1, 0);
-                  },
-                ),
-              ],
-            ),
-            const Text('높이'),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                RotatedBox(
-                  quarterTurns: 2,
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.double_arrow,
-                    ),
-                    onPressed: () {
-                      controller.sizeChange(0, -5);
-                    },
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.chevron_left),
-                  onPressed: () {
-                    controller.sizeChange(0, -1);
-                  },
-                ),
-                Text('${controller.size.value.data2 / 10}'),
-                IconButton(
-                  icon: const Icon(Icons.chevron_right),
-                  onPressed: () {
-                    controller.sizeChange(0, 1);
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.double_arrow,
-                  ),
-                  onPressed: () {
-                    controller.sizeChange(0, 5);
+                    controller.sizeChange(1);
                   },
                 ),
               ],

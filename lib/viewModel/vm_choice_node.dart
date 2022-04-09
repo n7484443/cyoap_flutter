@@ -10,7 +10,6 @@ import 'package:get/get.dart';
 import '../model/choiceNode/choice_node.dart';
 import '../model/choiceNode/generable_parser.dart';
 import '../model/platform_system.dart';
-import '../util/tuple.dart';
 
 const double nodeBaseWidth = 176;
 const double nodeBaseHeight = 24;
@@ -20,8 +19,8 @@ class VMChoiceNode extends GetxController {
   late QuillController quillController;
   ChoiceNodeBase node;
   final List<int> pos;
-  var size = Tuple<int, int>(0, 0).obs;
-  var realSize = Tuple<double, double>(0, 0).obs;
+  var size = 0.obs;
+  var realSize = (0.0).obs;
   var imageString = ''.obs;
   var titleString = ''.obs;
   var isDrag = false.obs;
@@ -43,24 +42,19 @@ class VMChoiceNode extends GetxController {
     super.onInit();
     quillController = initQuillController();
     size.listen((data) {
-      realSize.update((val) {
-        if (data.data1 == 0) {
-          val!.data1 = double.infinity;
-        } else {
-          val!.data1 = data.data1 * nodeBaseWidth;
-        }
-        val.data2 = data.data2 * nodeBaseHeight;
-      });
+      if (data == 0) {
+        realSize.value = double.infinity;
+      } else {
+        realSize.value = data * nodeBaseWidth;
+      }
     });
     isDrag.listen((data) {
       var vmDraggable = Get.find<VMDraggableNestedMap>();
-      if (size.value.data1 == 0) {
-        realSize.update((val) {
-          val!.data1 = data ? vmDraggable.getMaxWidth() : double.infinity;
-        });
+      if (size.value == 0) {
+        realSize.value = data ? vmDraggable.getMaxWidth() : double.infinity;
       }
     });
-    size.value = Tuple(node.width, node.height);
+    size.value = node.width;
     titleString.value = node.title;
     imageString.value = node.imageString;
     isCardMode.value = node.isCard;
@@ -92,15 +86,10 @@ class VMChoiceNode extends GetxController {
     return getNode([y, x])!.tag;
   }
 
-  void sizeChange(int width, int height) {
-    size.update((val) {
-      val!.data1 += width;
-      val.data2 += height;
-      val.data1 = max(val.data1, 0);
-      val.data2 = max(val.data2, 5);
-      node.width = val.data1;
-      node.height = val.data2;
-    });
+  void sizeChange(int width) {
+    size.value += width;
+    size.value = max(size.value, 0);
+    node.width = size.value;
   }
 
   void updateFromEditor() {

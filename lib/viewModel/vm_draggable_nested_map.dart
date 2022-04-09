@@ -149,7 +149,7 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   static ChoiceNodeBase createNodeForTemp() {
-    return ChoiceNodeBase.noTitle(1, 10, true, '', '');
+    return ChoiceNodeBase.noTitle(1, true, '', '');
   }
 
   void changeData(List<int> data, List<int> pos) {

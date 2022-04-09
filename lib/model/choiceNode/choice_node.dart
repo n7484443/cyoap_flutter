@@ -9,7 +9,6 @@ import 'generable_parser.dart';
 class ChoiceNodeBase extends GenerableParserAndPosition {
   //grid 단위로 설정
   int width; //-1 = 무한대
-  int height; //0 == 1/2
   bool isCard;
   int maxRandom = -1;
   int random = -1;
@@ -22,18 +21,18 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
 
   bool get isRandom => maxRandom > 0;
 
-  ChoiceNodeBase(this.width, this.height, this.isCard,
+  ChoiceNodeBase(this.width, this.isCard,
       this.title, this.contentsString, this.imageString){
     recursiveStatus = RecursiveStatus();
   }
 
-  ChoiceNodeBase.origin(this.width, this.height, this.isCard, this.title,
+  ChoiceNodeBase.origin(this.width, this.isCard, this.title,
       this.contentsString, this.imageString)
       {
     recursiveStatus = RecursiveStatus();
   }
 
-  ChoiceNodeBase.noTitle(this.width, this.height, this.isCard,
+  ChoiceNodeBase.noTitle(this.width, this.isCard,
       this.contentsString, this.imageString)
       : title = '' {
     recursiveStatus = RecursiveStatus();
@@ -42,7 +41,6 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
 
   ChoiceNodeBase.fromJson(Map<String, dynamic> json)
       : width = json['width'] ?? 1,
-        height = json['height'] ?? 10,
         isCard = json['isCard'] ?? true,
         maxRandom = json['maxRandom'] ?? -1,
         isSelectable = json['isSelectable'],
@@ -63,7 +61,6 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
     Map<String, dynamic> map = super.toJson();
     map.addAll({
       'width': width,
-      'height': height,
       'isCard': isCard,
       'isSelectable': isSelectable,
       'maxRandom': maxRandom,

@@ -26,6 +26,10 @@ class ConstList {
     return actualPlatformType == PlatformType.mobile;
   }
 
+  static bool isDesktop() {
+    return actualPlatformType == PlatformType.desktop;
+  }
+
   static bool isSmallDisplay(BuildContext context) {
     if (isMobile()) return true;
     if (MediaQuery.of(context).size.width < 1000) return true;
@@ -42,7 +46,9 @@ class ConstList {
     platform_specified.PlatformSpecified().init();
     var packageInfo = await PackageInfo.fromPlatform();
     _version = packageInfo.version;
-    _versionBuild = int.parse(packageInfo.buildNumber);
+    if(!isDesktop()){
+      _versionBuild = int.parse(packageInfo.buildNumber);
+    }
   }
 
   static DefaultStyles getDefaultThemeData(BuildContext context, double scale,
