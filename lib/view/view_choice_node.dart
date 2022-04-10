@@ -88,91 +88,93 @@ class ViewChoiceNode extends StatelessWidget {
       maintainState: true,
     );
 
-    var image = Column(
+    var mainBox = Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (controller.imageString.value.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-            child: ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(5)),
-              child: PlatformSystem.getImage(controller.imageString.value),
-            ),
-          ),
+        Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            if (controller.imageString.value.isNotEmpty)
+              ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(5)),
+                child: PlatformSystem.getImage(controller.imageString.value),
+              ),
+            if (controller.titleString.value.isNotEmpty)
+              TextOutline(
+                controller.titleString.value,
+                20 * scale,
+                ConstList.getFont(vmDraggableNestedMap.titleFont.value),
+              ),
+          ],
+        ),
         editor,
         if (isEditable()) dragTarget,
         if (node!.children.isNotEmpty)
           ViewWrapCustom(
             node!.children,
-                (child) => ViewChoiceNode.fromNode(child),
+            (child) => ViewChoiceNode.fromNode(child),
             maxSize: node!.width,
           )
       ],
     );
 
-    var mainNode = Stack(alignment : Alignment.center,children: [
-      Container(
-        padding: const EdgeInsets.all(6),
-        color: controller.node.isCard
-            ? null
-            : getPlatform().colorBackground.lighten(),
-        child: image,
-      ),
-      Positioned(
-        top: 0,
-        child: Visibility(
-          child: TextOutline(
-            controller.titleString.value,
-            20 * scale,
-            ConstList.getFont(vmDraggableNestedMap.titleFont.value),
-          ),
-          visible: controller.titleString.value.isNotEmpty,
+    var mainNode = Stack(
+      alignment: Alignment.topCenter,
+      children: [
+        ColoredBox(
+          color: controller.node.isCard
+              ? Colors.white
+              : getPlatform().colorBackground.lighten(),
+          child: mainBox,
         ),
-      ),
-      Positioned(
-        top: 0,
-        left: 0,
-        child: Visibility(
-          child: TextButton(
-            child: const Text('출처'),
-            onPressed: () {
-              var url = getPlatformFileSystem()
-                  .getSource(controller.imageString.value);
-              if (url != null && url.isNotEmpty) {
-                launch(url);
-              }
-            },
+        if (VMDraggableNestedMap.isVisibleOnlyEdit()) ...[
+          Positioned(
+            top: 0,
+            right: 0,
+            child: PopupMenuButton<int>(
+              icon: const Icon(Icons.more_vert),
+              onSelected: (result) {
+                if (result == 0) {
+                  showDialog(
+                    context: context,
+                    builder: (builder) => SizeDialog(node),
+                  );
+                }
+              },
+              itemBuilder: (context) {
+                return [
+                  const PopupMenuItem(
+                    value: 0,
+                    child: Text('크기 수정'),
+                  ),
+                ];
+              },
+            ),
+          )
+        ] else if (getPlatformFileSystem()
+                .hasSource(controller.imageString.value) &&
+            getPlatform().isVisibleSource) ...[
+          Positioned(
+            bottom: 0,
+            left: 0,
+            child: TextButton(
+              child: const Text(
+                '출처',
+                style:
+                    TextStyle(color: Colors.blue, fontWeight: FontWeight.w800),
+              ),
+              onPressed: () {
+                var url = getPlatformFileSystem()
+                    .getSource(controller.imageString.value);
+                if (url != null && url.isNotEmpty) {
+                  launch(url);
+                }
+              },
+            ),
           ),
-          visible: getPlatformFileSystem()
-              .hasSource(controller.imageString.value) &&
-              getPlatform().isVisibleSource,
-        ),
-      ),
-      if (VMDraggableNestedMap.isVisibleOnlyEdit())
-        Positioned(
-          top: 0,
-          right: 0,
-          child: PopupMenuButton<int>(
-            icon: const Icon(Icons.more_vert),
-            onSelected: (result) {
-              if (result == 0) {
-                showDialog(
-                  context: context,
-                  builder: (builder) => SizeDialog(node),
-                );
-              }
-            },
-            itemBuilder: (context) {
-              return [
-                const PopupMenuItem(
-                  value: 0,
-                  child: Text('크기 수정'),
-                ),
-              ];
-            },
-          ),
-        ),
-    ]);
+        ],
+      ],
+    );
 
     Widget innerWidget;
     if (isEditable()) {
@@ -217,16 +219,30 @@ class ViewChoiceNode extends StatelessWidget {
         return Opacity(
           opacity: controller.opacity,
           child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              side: BorderSide(
-                color: isSelectedCheck ? Colors.lightBlueAccent : Colors.white,
-                width: 6,
-              ),
-            ),
+            shape: controller.isCardMode.value
+                ? RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    side: BorderSide(
+                      color: isSelectedCheck
+                          ? Colors.lightBlueAccent
+                          : Colors.white,
+                      width: 6,
+                    ),
+                  )
+                : Border.fromBorderSide(
+                    BorderSide(
+                      color: isSelectedCheck
+                          ? Colors.lightBlueAccent
+                          : Colors.white,
+                      width: 6,
+                    ),
+                  ),
             clipBehavior: Clip.antiAliasWithSaveLayer,
             elevation: controller.isCardMode.value ? ConstList.elevation : 0,
-            child: innerWidget,
+            child: Padding(
+              padding: const EdgeInsets.all(6.0),
+              child: innerWidget,
+            ),
           ),
         );
       },
