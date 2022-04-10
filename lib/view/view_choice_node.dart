@@ -26,8 +26,6 @@ class ViewChoiceNode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO 어떤 플랫폼이건 가로 길이 최대를 12로 정해서 비율 동일하게 만들기
-    //TODO 세로 길이 자동으로 조절되기
     var vmDraggableNestedMap = Get.find<VMDraggableNestedMap>();
     var scale = vmDraggableNestedMap.getScale();
     if (node == null) {
@@ -132,65 +130,61 @@ class ViewChoiceNode extends StatelessWidget {
       ),
     );
 
-    var mainNode = Obx(
-          () => Container(
-        padding: const EdgeInsets.all(6),
-        width: controller.realSize.value * scale,
-        color: controller.node.isCard
-            ? null
-            : getPlatform().colorBackground.lighten(),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: List.generate(
-              node!.children.isEmpty ? 3 : 4,
-              (index) {
-                switch (index) {
-                  case 0:
-                    return image;
-                  case 1:
-                    return editor;
-                  case 2:
-                    return Visibility(
-                      child: DragTarget(
-                        builder: (BuildContext context,
-                                List<Object?> candidateData,
-                                List<dynamic> rejectedData) =>
-                                Container(
-                                  color: Colors.blueAccent.withOpacity(0.3),
-                                  width: controller.realSize.value * scale * 0.6,
-                                  height: 20,
-                                ),
-                            onAccept: (List<int> data) {
-                              if (data[data.length - 1] == nonPositioned) {
-                                node!.addChildren(VMDraggableNestedMap.createNodeForTemp());
-                                vmDraggableNestedMap.updateVMChoiceNode(node!.pos());
-                              } else {
-                                var childNode = getPlatform().getChoiceNode(data)!;
-                                var parentLastPos = childNode.getParentLast()!.pos();
-                                childNode.parent!.removeChildren(childNode);
-                                node!.addChildren(childNode);
-                                vmDraggableNestedMap.updateVMChoiceNode(parentLastPos);
-                                vmDraggableNestedMap.update();
-                              }
-                              getPlatform().checkDataCollect();
-                              //TODO
-                            },
-                          ),
-                          visible: vmDraggableNestedMap.drag != null &&
-                              vmDraggableNestedMap.drag != node?.pos(),
-                        );
-                      default:
-                        return Wrap(
-                          children: node!.children
-                              .map((e) =>
-                              ViewChoiceNode.fromNode(e as ChoiceNodeBase))
-                              .toList(),
-                        );
-                }
-              },
+    var dragTarget = Visibility(
+      child: DragTarget(
+        builder: (BuildContext context, List<Object?> candidateData,
+                List<dynamic> rejectedData) =>
+            Container(
+          color: Colors.blueAccent.withOpacity(0.3),
+          height: 20,
+        ),
+        onAccept: (List<int> data) {
+          if (data[data.length - 1] == nonPositioned) {
+            node!.addChildren(VMDraggableNestedMap.createNodeForTemp());
+            vmDraggableNestedMap.updateVMChoiceNode(node!.pos());
+          } else {
+            var childNode = getPlatform().getChoiceNode(data)!;
+            var parentLastPos = childNode.getParentLast()!.pos();
+            childNode.parent!.removeChildren(childNode);
+            node!.addChildren(childNode);
+            vmDraggableNestedMap.updateVMChoiceNode(parentLastPos);
+            vmDraggableNestedMap.update();
+          }
+          getPlatform().checkDataCollect();
+          //TODO
+        },
+      ),
+      visible: vmDraggableNestedMap.drag != null &&
+          vmDraggableNestedMap.drag != node?.pos(),
+    );
+
+    var mainNode = Container(
+      padding: const EdgeInsets.all(6),
+      color: controller.node.isCard
+          ? null
+          : getPlatform().colorBackground.lighten(),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: List.generate(
+          node!.children.isEmpty ? 3 : 4,
+          (index) {
+            switch (index) {
+              case 0:
+                return image;
+              case 1:
+                return editor;
+              case 2:
+                return dragTarget;
+              default:
+                return Wrap(
+                  children: node!.children
+                      .map((e) => ViewChoiceNode.fromNode(e as ChoiceNodeBase))
+                      .toList(),
+                );
+            }
+          },
             ),
           ),
-      ),
     );
 
     Widget innerWidget;

@@ -20,7 +20,6 @@ class VMChoiceNode extends GetxController {
   ChoiceNodeBase node;
   final List<int> pos;
   var size = 0.obs;
-  var realSize = (0.0).obs;
   var imageString = ''.obs;
   var titleString = ''.obs;
   var isDrag = false.obs;
@@ -41,20 +40,10 @@ class VMChoiceNode extends GetxController {
   void onInit() {
     super.onInit();
     quillController = initQuillController();
-    size.listen((data) {
-      if (data == 0) {
-        realSize.value = double.infinity;
-      } else {
-        realSize.value = data * nodeBaseWidth;
-      }
-    });
-    isDrag.listen((data) {
-      var vmDraggable = Get.find<VMDraggableNestedMap>();
-      if (size.value == 0) {
-        realSize.value = data ? vmDraggable.getMaxWidth() : double.infinity;
-      }
-    });
     size.value = node.width;
+    size.listen((p0) {
+      Get.find<VMDraggableNestedMap>().update();
+    });
     titleString.value = node.title;
     imageString.value = node.imageString;
     isCardMode.value = node.isCard;
@@ -88,7 +77,7 @@ class VMChoiceNode extends GetxController {
 
   void sizeChange(int width) {
     size.value += width;
-    size.value = max(size.value, 0);
+    size.value = size.value.clamp(0, 12);
     node.width = size.value;
   }
 

@@ -44,6 +44,8 @@ class VMDraggableNestedMap extends GetxController {
     isChanged = true;
   }
 
+  final int maxSize = 12;
+
   List<Widget> widgetList({BoxConstraints? constrains}) {
     var choiceNodeList = getPlatform().lineSettings;
     var edit = isEditable();
@@ -58,28 +60,60 @@ class VMDraggableNestedMap extends GetxController {
                 top: 12,
                 bottom: 12,
               ),
-              child: GetBuilder<VMDraggableNestedMap>(
-                builder: (_) => Wrap(
+              child: GetBuilder<VMDraggableNestedMap>(builder: (_) {
+                var j = y ~/ 2;
+                List<List<Widget>> widget = List.filled(
+                    1, List<Widget>.empty(growable: true),
+                    growable: true);
+                int inner = 0;
+                for (int i = 0; i < xList.children.length; i++) {
+                  var child = xList.children[i] as ChoiceNodeBase;
+                  var size = child.width == 0 ? maxSize : child.width;
+                  if (inner + size > maxSize) {
+                    widget.last.add(Flexible(
+                        flex: maxSize - inner, child: const SizedBox.shrink()));
+                    widget.add(List<Widget>.empty(growable: true));
+                    inner = size;
+                  } else {
+                    inner += size;
+                  }
+                  Widget innerWidget;
+                  if (constrains != null) {
+                    innerWidget = NodeDraggable(i, j, constrains);
+                  } else {
+                    innerWidget = ViewChoiceNode(i, j);
+                  }
+                  widget.last
+                      .add(Flexible(flex: size, child: innerWidget));
+                }
+                if (inner != maxSize) {
+                  widget.last.add(Flexible(
+                      flex: maxSize - inner, child: const SizedBox.shrink()));
+                }
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: widget.map((e) => Row(children: e)).toList(),
+                );
+                return Wrap(
                   spacing: 2,
                   alignment: WrapAlignment.center,
                   children: List<Widget>.generate(
                     xList.children.length * 2 + 1,
                     (x) {
                       var i = x ~/ 2;
-                      var j = y ~/ 2;
                       if (x.isOdd) {
                         if (constrains != null) {
                           return NodeDraggable(i, j, constrains);
                         } else {
-                          return ViewChoiceNode(i, j);
+                          return Expanded(child: ViewChoiceNode(i, j));
                         }
                       } else {
                         return NodeDragTarget(i, j);
                       }
                     },
                   ),
-                ),
-              ),
+                );
+              }),
             );
           } else {
             return NodeDivider(y ~/ 2);
@@ -107,17 +141,35 @@ class VMDraggableNestedMap extends GetxController {
               bottom: 12,
             ),
             child: GetBuilder<VMDraggableNestedMap>(
-              builder: (_) => Wrap(
-                spacing: 2,
-                alignment: WrapAlignment.center,
-                children: List<Widget>.generate(
-                  xList.children.length,
-                  (x) {
-                    var j = y ~/ 2;
-                    return ViewChoiceNode(x, j);
-                  },
-                ),
-              ),
+              builder: (_){
+                var j = y ~/ 2;
+                List<List<Widget>> widget = List.filled(
+                    1, List<Widget>.empty(growable: true),
+                    growable: true);
+                int inner = 0;
+                for (int i = 0; i < xList.children.length; i++) {
+                  var child = xList.children[i] as ChoiceNodeBase;
+                  var size = child.width == 0 ? maxSize : child.width;
+                  if (inner + size > maxSize) {
+                    widget.last.add(Flexible(
+                        flex: maxSize - inner, child: const SizedBox.shrink()));
+                    widget.add(List<Widget>.empty(growable: true));
+                    inner = size;
+                  } else {
+                    inner += size;
+                  }
+                  widget.last
+                      .add(Flexible(flex: size, child: ViewChoiceNode(i, j)));
+                }
+                if (inner != maxSize) {
+                  widget.last.add(Flexible(
+                      flex: maxSize - inner, child: const SizedBox.shrink()));
+                }
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: widget.map((e) => Row(children: e)).toList(),
+                );
+              },
             ),
           );
         } else {

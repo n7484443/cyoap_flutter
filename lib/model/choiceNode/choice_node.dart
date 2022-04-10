@@ -8,7 +8,7 @@ import 'generable_parser.dart';
 
 class ChoiceNodeBase extends GenerableParserAndPosition {
   //grid 단위로 설정
-  int width; //-1 = 무한대
+  int width; //0 = 무한대
   bool isCard;
   int maxRandom = -1;
   int random = -1;
