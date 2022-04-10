@@ -9,6 +9,8 @@ import '../model/platform_system.dart';
 import '../view/view_choice_node.dart';
 import '../view/view_draggable_nested_map.dart';
 
+const int maxWidthSize = 12;
+
 class VMDraggableNestedMap extends GetxController {
   List<int>? drag;
 
@@ -44,7 +46,6 @@ class VMDraggableNestedMap extends GetxController {
     isChanged = true;
   }
 
-  final int maxSize = 12;
 
   List<Widget> widgetList({BoxConstraints? constrains}) {
     var choiceNodeList = getPlatform().lineSettings;
@@ -65,13 +66,14 @@ class VMDraggableNestedMap extends GetxController {
                 List<List<Widget>> widget = List.filled(
                     1, List<Widget>.empty(growable: true),
                     growable: true);
+
                 int inner = 0;
                 for (int i = 0; i < xList.children.length; i++) {
                   var child = xList.children[i] as ChoiceNodeBase;
-                  var size = child.width == 0 ? maxSize : child.width;
-                  if (inner + size > maxSize) {
+                  var size = child.width == 0 ? maxWidthSize : child.width;
+                  if (inner + size > maxWidthSize) {
                     widget.last.add(Flexible(
-                        flex: maxSize - inner, child: const SizedBox.shrink()));
+                        flex: maxWidthSize - inner, child: const SizedBox.shrink()));
                     widget.add(List<Widget>.empty(growable: true));
                     inner = size;
                   } else {
@@ -86,13 +88,22 @@ class VMDraggableNestedMap extends GetxController {
                   widget.last
                       .add(Flexible(flex: size, child: innerWidget));
                 }
-                if (inner != maxSize) {
+                if (inner != maxWidthSize) {
                   widget.last.add(Flexible(
-                      flex: maxSize - inner, child: const SizedBox.shrink()));
+                      flex: maxWidthSize - inner, child: const SizedBox.shrink()));
                 }
                 return Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: widget.map((e) => Row(children: e)).toList(),
+                  children: widget
+                      .map(
+                        (e) => IntrinsicHeight(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: e,
+                          ),
+                        ),
+                      )
+                      .toList(),
                 );
                 return Wrap(
                   spacing: 2,
@@ -149,10 +160,10 @@ class VMDraggableNestedMap extends GetxController {
                 int inner = 0;
                 for (int i = 0; i < xList.children.length; i++) {
                   var child = xList.children[i] as ChoiceNodeBase;
-                  var size = child.width == 0 ? maxSize : child.width;
-                  if (inner + size > maxSize) {
+                  var size = child.width == 0 ? maxWidthSize : child.width;
+                  if (inner + size > maxWidthSize) {
                     widget.last.add(Flexible(
-                        flex: maxSize - inner, child: const SizedBox.shrink()));
+                        flex: maxWidthSize - inner, child: const SizedBox.shrink()));
                     widget.add(List<Widget>.empty(growable: true));
                     inner = size;
                   } else {
@@ -161,9 +172,9 @@ class VMDraggableNestedMap extends GetxController {
                   widget.last
                       .add(Flexible(flex: size, child: ViewChoiceNode(i, j)));
                 }
-                if (inner != maxSize) {
+                if (inner != maxWidthSize) {
                   widget.last.add(Flexible(
-                      flex: maxSize - inner, child: const SizedBox.shrink()));
+                      flex: maxWidthSize - inner, child: const SizedBox.shrink()));
                 }
                 return Column(
                   mainAxisSize: MainAxisSize.min,

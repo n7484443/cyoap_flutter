@@ -77,8 +77,15 @@ class VMChoiceNode extends GetxController {
 
   void sizeChange(int width) {
     size.value += width;
-    size.value = size.value.clamp(0, 12);
+    if(node.parent is ChoiceNodeBase){
+      size.value = size.value.clamp(0, (node.parent as ChoiceNodeBase).width);
+    }else{
+      size.value = size.value.clamp(0, 12);
+    }
     node.width = size.value;
+    for(var child in node.children){
+      getVMChoiceNodeFromTag(child.tag)!.sizeChange(0);
+    }
   }
 
   void updateFromEditor() {

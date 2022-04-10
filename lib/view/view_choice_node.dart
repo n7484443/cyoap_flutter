@@ -156,7 +156,46 @@ class ViewChoiceNode extends StatelessWidget {
       ),
       visible: vmDraggableNestedMap.drag != null &&
           vmDraggableNestedMap.drag != node?.pos(),
+      maintainSize: true,
+      maintainAnimation: true,
+      maintainState: true,
     );
+
+    Widget? childColumn;
+    if(node!.children.isNotEmpty){
+      List<List<Widget>> widget = List.filled(
+          1, List<Widget>.empty(growable: true),
+          growable: true);
+
+      int inner = 0;
+      for (int i = 0; i < node!.children.length; i++) {
+        var child = node!.children[i] as ChoiceNodeBase;
+        var size = child.width == 0 ? node!.width : child.width;
+        if (inner + size > node!.width) {
+          widget.last.add(Flexible(
+              flex: node!.width - inner, child: const SizedBox.shrink()));
+          widget.add(List<Widget>.empty(growable: true));
+          inner = size;
+        } else {
+          inner += size;
+        }
+        widget.last
+            .add(Flexible(flex: size, child: ViewChoiceNode.fromNode(child)));
+      }
+      if (inner != node!.width) {
+        widget.last.add(Flexible(
+            flex: node!.width - inner, child: const SizedBox.shrink()));
+      }
+      childColumn = Column(
+        children: widget
+            .map(
+              (e) => Row(
+              children: e,
+          ),
+        ).toList(),
+      );
+    }
+
 
     var mainNode = Container(
       padding: const EdgeInsets.all(6),
@@ -165,6 +204,7 @@ class ViewChoiceNode extends StatelessWidget {
           : getPlatform().colorBackground.lighten(),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: List.generate(
           node!.children.isEmpty ? 3 : 4,
           (index) {
@@ -176,10 +216,8 @@ class ViewChoiceNode extends StatelessWidget {
               case 2:
                 return dragTarget;
               default:
-                return Wrap(
-                  children: node!.children
-                      .map((e) => ViewChoiceNode.fromNode(e as ChoiceNodeBase))
-                      .toList(),
+                return Expanded(
+                    child: childColumn!,
                 );
             }
           },
