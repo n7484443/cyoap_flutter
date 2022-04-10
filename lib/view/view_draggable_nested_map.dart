@@ -1,6 +1,6 @@
 import 'package:cyoap_flutter/model/platform_system.dart';
-import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/view/util/view_text_outline.dart';
+import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -25,16 +25,16 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
         onDragUpdate: (details) =>
             controller.dragUpdate(constrains, details, context),
         data: pos,
-        feedback: Transform.scale(
-          scale: 0.9,
-          child: Opacity(opacity: 0.6, child: widget),
+        feedback: SizedBox(
+            width: 150,
+            child: widget
         ),
         onDragStarted: () {
           controller.dragStart(pos);
         },
-        child: Visibility(
+        child: Opacity(
           child: widget,
-          visible: !listEquals(controller.drag, pos),
+          opacity: listEquals(controller.drag, pos) ? 0.2 : 1.0,
         ),
         onDragEnd: (DraggableDetails data) {
           controller.dragEnd();
@@ -48,16 +48,16 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
         onDragUpdate: (details) =>
             controller.dragUpdate(constrains, details, context),
         data: pos,
-        feedback: Transform.scale(
-          scale: 0.9,
-          child: Opacity(opacity: 0.6, child: widget),
+        feedback: SizedBox(
+          width: 150,
+          child: widget
         ),
         onDragStarted: () {
           controller.dragStart(pos);
         },
-        child: Visibility(
+        child: Opacity(
           child: widget,
-          visible: !listEquals(controller.drag, pos),
+          opacity: listEquals(controller.drag, pos) ? 0.2 : 1.0,
         ),
         onDragEnd: (DraggableDetails data) {
           controller.dragEnd();
@@ -74,59 +74,35 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
   final int x;
   final int y;
   final Color baseColor = Colors.black26;
+  final bool isHorizontal;
 
-  const NodeDragTarget(this.x, this.y, {Key? key}) : super(key: key);
+  const NodeDragTarget(this.x, this.y, {this.isHorizontal = false, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var nodeBefore = VMChoiceNode.getNode([y, x - 1]);
-    var node = VMChoiceNode.getNode([y, x]);
-
-    bool longType1 = (node != null && node.width == 0) ||
-        (nodeBefore != null && node == null && nodeBefore.width == 0);
-    bool longType2 = y == getPlatform().lineSettings.length;
-    bool realLong = longType1 || longType2;
-
     return Visibility(
       child: DragTarget<List<int>>(
         builder: (BuildContext context, List<dynamic> accepted,
             List<dynamic> rejected) {
-          if (longType1) {
-            return Container(
-              color: baseColor,
-              width: double.infinity,
-              height: nodeBaseHeight * 2,
-            );
-          }
-          if (longType2) {
-            return Container(
-              color: baseColor,
-              width: double.infinity,
-              height: nodeBaseHeight * 10,
-            );
-          }
           return Container(
             color: baseColor,
-            width: nodeBaseWidth / 6 * controller.getScale(),
-            height: nodeBaseHeight * 10,
+            width: nodeBaseWidth,
+            height: nodeBaseHeight,
           );
         },
         onAccept: (List<int> drag) {
           if (drag[drag.length - 1] == nonPositioned) {
             controller.changeData(drag, [y, x]);
           } else {
-            if(y == drag[0] && (x - 1) >= (drag[1] * 2)){
+            if (y == drag[0] && (x - 1) >= (drag[1] * 2)) {
               controller.changeData(drag, [y, x - 1]);
-            }else{
+            } else {
               controller.changeData(drag, [y, x]);
             }
           }
         },
       ),
-      visible: controller.isVisibleDragTarget(x, y),
-      maintainSize: realLong && VMDraggableNestedMap.isVisibleOnlyEdit(),
-      maintainAnimation: realLong && VMDraggableNestedMap.isVisibleOnlyEdit(),
-      maintainState: realLong && VMDraggableNestedMap.isVisibleOnlyEdit(),
+      visible: controller.drag != null,
     );
   }
 }

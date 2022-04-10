@@ -11,8 +11,8 @@ import '../model/choiceNode/choice_node.dart';
 import '../model/choiceNode/generable_parser.dart';
 import '../model/platform_system.dart';
 
-const double nodeBaseWidth = 176;
-const double nodeBaseHeight = 24;
+const double nodeBaseWidth = 100;
+const double nodeBaseHeight = 200;
 const int nonPositioned = -10;
 
 class VMChoiceNode extends GetxController {

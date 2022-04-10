@@ -33,7 +33,7 @@ class ViewChoiceNode extends StatelessWidget {
       return Card(
         child: SizedBox(
           width: nodeBaseWidth * scale,
-          height: nodeBaseHeight * 10,
+          height: nodeBaseHeight * scale,
         ),
       );
     }
@@ -57,37 +57,6 @@ class ViewChoiceNode extends StatelessWidget {
       );
     });
 
-    var dragTarget = Visibility(
-      child: DragTarget(
-        builder: (BuildContext context, List<Object?> candidateData,
-                List<dynamic> rejectedData) =>
-            Container(
-          color: Colors.blueAccent.withOpacity(0.3),
-          height: 20,
-        ),
-        onAccept: (List<int> data) {
-          if (data[data.length - 1] == nonPositioned) {
-            node!.addChildren(VMDraggableNestedMap.createNodeForTemp());
-            vmDraggableNestedMap.updateVMChoiceNode(node!.pos());
-          } else {
-            var childNode = getPlatform().getChoiceNode(data)!;
-            var parentLastPos = childNode.getParentLast()!.pos();
-            childNode.parent!.removeChildren(childNode);
-            node!.addChildren(childNode);
-            vmDraggableNestedMap.updateVMChoiceNode(parentLastPos);
-            vmDraggableNestedMap.update();
-          }
-          getPlatform().checkDataCollect();
-          //TODO
-        },
-      ),
-      visible: vmDraggableNestedMap.drag != null &&
-          vmDraggableNestedMap.drag != node?.pos(),
-      maintainSize: true,
-      maintainAnimation: true,
-      maintainState: true,
-    );
-
     var mainBox = Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -108,7 +77,7 @@ class ViewChoiceNode extends StatelessWidget {
           ],
         ),
         editor,
-        if (isEditable()) dragTarget,
+        if (isEditable()) ChoiceNodeSubDragTarget(node!),
         if (node!.children.isNotEmpty)
           ViewWrapCustom(
             node!.children,
@@ -327,3 +296,42 @@ class RandomDialog extends StatelessWidget {
     );
   }
 }
+class ChoiceNodeSubDragTarget extends StatelessWidget {
+  final ChoiceNodeBase node;
+  const ChoiceNodeSubDragTarget(this.node, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var vmDraggableNestedMap = Get.find<VMDraggableNestedMap>();
+    return Visibility(
+      child: DragTarget(
+        builder: (BuildContext context, List<Object?> candidateData,
+            List<dynamic> rejectedData) =>
+            Container(
+              color: Colors.blueAccent.withOpacity(0.3),
+              height: 20,
+            ),
+        onAccept: (List<int> data) {
+          if (data[data.length - 1] == nonPositioned) {
+            node.addChildren(VMDraggableNestedMap.createNodeForTemp());
+            vmDraggableNestedMap.updateVMChoiceNode(node.pos());
+          } else {
+            var childNode = getPlatform().getChoiceNode(data)!;
+            var parentLastPos = childNode.getParentLast()!.pos();
+            childNode.parent!.removeChildren(childNode);
+            node.addChildren(childNode);
+            vmDraggableNestedMap.updateVMChoiceNode(parentLastPos);
+            vmDraggableNestedMap.update();
+          }
+          getPlatform().checkDataCollect();
+        },
+      ),
+      visible: vmDraggableNestedMap.drag != null &&
+          vmDraggableNestedMap.drag != node.pos(),
+      maintainSize: true,
+      maintainAnimation: true,
+      maintainState: true,
+    );
+  }
+}
+

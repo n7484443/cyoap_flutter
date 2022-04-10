@@ -47,7 +47,6 @@ class VMDraggableNestedMap extends GetxController {
     isChanged = true;
   }
 
-
   List<Widget> widgetList({BoxConstraints? constrains}) {
     var choiceNodeList = getPlatform().lineSettings;
     var edit = isEditable();
@@ -64,25 +63,12 @@ class VMDraggableNestedMap extends GetxController {
               ),
               child: GetBuilder<VMDraggableNestedMap>(builder: (_) {
                 var j = y ~/ 2;
-                return ViewWrapCustom(xList.children, (child) => constrains != null ? NodeDraggable(child.currentPos, j, constrains) : ViewChoiceNode(child.currentPos, j));
-                return Wrap(
-                  spacing: 2,
-                  alignment: WrapAlignment.center,
-                  children: List<Widget>.generate(
-                    xList.children.length * 2 + 1,
-                    (x) {
-                      var i = x ~/ 2;
-                      if (x.isOdd) {
-                        if (constrains != null) {
-                          return NodeDraggable(i, j, constrains);
-                        } else {
-                          return Expanded(child: ViewChoiceNode(i, j));
-                        }
-                      } else {
-                        return NodeDragTarget(i, j);
-                      }
-                    },
-                  ),
+                return ViewWrapCustom(
+                  xList.children,
+                  (child) => constrains != null
+                      ? NodeDraggable(child.currentPos, j, constrains)
+                      : ViewChoiceNode(child.currentPos, j),
+                  builderDraggable: (i) => NodeDragTarget(i, j),
                 );
               }),
             );
@@ -146,7 +132,7 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   static ChoiceNodeBase createNodeForTemp() {
-    return ChoiceNodeBase.noTitle(1, true, '', '');
+    return ChoiceNodeBase.noTitle(3, true, '', '');
   }
 
   void changeData(List<int> data, List<int> pos) {
@@ -200,9 +186,9 @@ class VMDraggableNestedMap extends GetxController {
 
   double getScale() {
     var context = captureKey.currentContext;
-    if (context == null) return drag == null ? 1 : 0.9;
-    var sizeMultiply = ConstList.isSmallDisplay(context) ? 0.75 : 1;
-    return drag == null ? 1 : 0.9 * sizeMultiply;
+    if (context == null) return 1;
+    var sizeMultiply = ConstList.isSmallDisplay(context) ? 0.75 : 1.0;
+    return sizeMultiply;
   }
 
   void addMaxSelect(int y, int max) {
