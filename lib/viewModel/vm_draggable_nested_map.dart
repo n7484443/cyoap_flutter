@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -63,48 +64,7 @@ class VMDraggableNestedMap extends GetxController {
               ),
               child: GetBuilder<VMDraggableNestedMap>(builder: (_) {
                 var j = y ~/ 2;
-                List<List<Widget>> widget = List.filled(
-                    1, List<Widget>.empty(growable: true),
-                    growable: true);
-
-                int inner = 0;
-                for (int i = 0; i < xList.children.length; i++) {
-                  var child = xList.children[i] as ChoiceNodeBase;
-                  var size = child.width == 0 ? maxWidthSize : child.width;
-                  if (inner + size > maxWidthSize) {
-                    widget.last.add(Flexible(
-                        flex: maxWidthSize - inner, child: const SizedBox.shrink()));
-                    widget.add(List<Widget>.empty(growable: true));
-                    inner = size;
-                  } else {
-                    inner += size;
-                  }
-                  Widget innerWidget;
-                  if (constrains != null) {
-                    innerWidget = NodeDraggable(i, j, constrains);
-                  } else {
-                    innerWidget = ViewChoiceNode(i, j);
-                  }
-                  widget.last
-                      .add(Flexible(flex: size, child: innerWidget));
-                }
-                if (inner != maxWidthSize) {
-                  widget.last.add(Flexible(
-                      flex: maxWidthSize - inner, child: const SizedBox.shrink()));
-                }
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: widget
-                      .map(
-                        (e) => IntrinsicHeight(
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: e,
-                          ),
-                        ),
-                      )
-                      .toList(),
-                );
+                return ViewWrapCustom(xList.children, (child) => constrains != null ? NodeDraggable(child.currentPos, j, constrains) : ViewChoiceNode(child.currentPos, j));
                 return Wrap(
                   spacing: 2,
                   alignment: WrapAlignment.center,
@@ -154,32 +114,7 @@ class VMDraggableNestedMap extends GetxController {
             child: GetBuilder<VMDraggableNestedMap>(
               builder: (_){
                 var j = y ~/ 2;
-                List<List<Widget>> widget = List.filled(
-                    1, List<Widget>.empty(growable: true),
-                    growable: true);
-                int inner = 0;
-                for (int i = 0; i < xList.children.length; i++) {
-                  var child = xList.children[i] as ChoiceNodeBase;
-                  var size = child.width == 0 ? maxWidthSize : child.width;
-                  if (inner + size > maxWidthSize) {
-                    widget.last.add(Flexible(
-                        flex: maxWidthSize - inner, child: const SizedBox.shrink()));
-                    widget.add(List<Widget>.empty(growable: true));
-                    inner = size;
-                  } else {
-                    inner += size;
-                  }
-                  widget.last
-                      .add(Flexible(flex: size, child: ViewChoiceNode(i, j)));
-                }
-                if (inner != maxWidthSize) {
-                  widget.last.add(Flexible(
-                      flex: maxWidthSize - inner, child: const SizedBox.shrink()));
-                }
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: widget.map((e) => Row(children: e)).toList(),
-                );
+                return ViewWrapCustom(xList.children, (child) => ViewChoiceNode(child.currentPos, j));
               },
             ),
           );

@@ -3,6 +3,7 @@ import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/choiceNode/generable_parser.dart';
 import 'package:cyoap_flutter/util/color_util.dart';
 import 'package:cyoap_flutter/view/util/view_text_outline.dart';
+import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
@@ -56,80 +57,6 @@ class ViewChoiceNode extends StatelessWidget {
       );
     });
 
-    var image = Obx(
-          () => Stack(
-        children: [
-          Align(
-            alignment: Alignment.topCenter,
-            child: Visibility(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(5)),
-                  child: PlatformSystem.getImage(controller.imageString.value),
-                ),
-              ),
-              visible: controller.imageString.value.isNotEmpty,
-            ),
-          ),
-          Align(
-            alignment: Alignment.topLeft,
-            child: Visibility(
-              child: TextButton(
-                child: const Text('출처'),
-                onPressed: () {
-                  var url = getPlatformFileSystem()
-                      .getSource(controller.imageString.value);
-                  if (url != null && url.isNotEmpty) {
-                    launch(url);
-                  }
-                },
-              ),
-              visible: getPlatformFileSystem()
-                      .hasSource(controller.imageString.value) &&
-                  getPlatform().isVisibleSource,
-            ),
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Visibility(
-              child: TextOutline(
-                controller.titleString.value,
-                20 * scale,
-                ConstList.getFont(vmDraggableNestedMap.titleFont.value),
-              ),
-              visible: controller.titleString.value.isNotEmpty,
-            ),
-          ),
-          Align(
-            alignment: Alignment.topRight,
-            child: Visibility(
-              child: PopupMenuButton<int>(
-                icon: const Icon(Icons.more_vert),
-                onSelected: (result) {
-                  if (result == 0) {
-                    showDialog(
-                      context: context,
-                      builder: (builder) => SizeDialog(node),
-                    );
-                  }
-                },
-                itemBuilder: (context) {
-                  return [
-                    const PopupMenuItem(
-                      value: 0,
-                      child: Text('크기 수정'),
-                    ),
-                  ];
-                },
-              ),
-              visible: VMDraggableNestedMap.isVisibleOnlyEdit(),
-            ),
-          ),
-        ],
-      ),
-    );
-
     var dragTarget = Visibility(
       child: DragTarget(
         builder: (BuildContext context, List<Object?> candidateData,
@@ -161,69 +88,91 @@ class ViewChoiceNode extends StatelessWidget {
       maintainState: true,
     );
 
-    Widget? childColumn;
-    if(node!.children.isNotEmpty){
-      List<List<Widget>> widget = List.filled(
-          1, List<Widget>.empty(growable: true),
-          growable: true);
-
-      int inner = 0;
-      for (int i = 0; i < node!.children.length; i++) {
-        var child = node!.children[i] as ChoiceNodeBase;
-        var size = child.width == 0 ? node!.width : child.width;
-        if (inner + size > node!.width) {
-          widget.last.add(Flexible(
-              flex: node!.width - inner, child: const SizedBox.shrink()));
-          widget.add(List<Widget>.empty(growable: true));
-          inner = size;
-        } else {
-          inner += size;
-        }
-        widget.last
-            .add(Flexible(flex: size, child: ViewChoiceNode.fromNode(child)));
-      }
-      if (inner != node!.width) {
-        widget.last.add(Flexible(
-            flex: node!.width - inner, child: const SizedBox.shrink()));
-      }
-      childColumn = Column(
-        children: widget
-            .map(
-              (e) => Row(
-              children: e,
-          ),
-        ).toList(),
-      );
-    }
-
-
-    var mainNode = Container(
-      padding: const EdgeInsets.all(6),
-      color: controller.node.isCard
-          ? null
-          : getPlatform().colorBackground.lighten(),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: List.generate(
-          node!.children.isEmpty ? 3 : 4,
-          (index) {
-            switch (index) {
-              case 0:
-                return image;
-              case 1:
-                return editor;
-              case 2:
-                return dragTarget;
-              default:
-                return Expanded(
-                    child: childColumn!,
-                );
-            }
-          },
+    var image = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (controller.imageString.value.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(5)),
+              child: PlatformSystem.getImage(controller.imageString.value),
             ),
           ),
+        editor,
+        if (isEditable()) dragTarget,
+        if (node!.children.isNotEmpty)
+          ViewWrapCustom(
+            node!.children,
+                (child) => ViewChoiceNode.fromNode(child),
+            maxSize: node!.width,
+          )
+      ],
     );
+
+    var mainNode = Stack(alignment : Alignment.center,children: [
+      Container(
+        padding: const EdgeInsets.all(6),
+        color: controller.node.isCard
+            ? null
+            : getPlatform().colorBackground.lighten(),
+        child: image,
+      ),
+      Positioned(
+        top: 0,
+        child: Visibility(
+          child: TextOutline(
+            controller.titleString.value,
+            20 * scale,
+            ConstList.getFont(vmDraggableNestedMap.titleFont.value),
+          ),
+          visible: controller.titleString.value.isNotEmpty,
+        ),
+      ),
+      Positioned(
+        top: 0,
+        left: 0,
+        child: Visibility(
+          child: TextButton(
+            child: const Text('출처'),
+            onPressed: () {
+              var url = getPlatformFileSystem()
+                  .getSource(controller.imageString.value);
+              if (url != null && url.isNotEmpty) {
+                launch(url);
+              }
+            },
+          ),
+          visible: getPlatformFileSystem()
+              .hasSource(controller.imageString.value) &&
+              getPlatform().isVisibleSource,
+        ),
+      ),
+      if (VMDraggableNestedMap.isVisibleOnlyEdit())
+        Positioned(
+          top: 0,
+          right: 0,
+          child: PopupMenuButton<int>(
+            icon: const Icon(Icons.more_vert),
+            onSelected: (result) {
+              if (result == 0) {
+                showDialog(
+                  context: context,
+                  builder: (builder) => SizeDialog(node),
+                );
+              }
+            },
+            itemBuilder: (context) {
+              return [
+                const PopupMenuItem(
+                  value: 0,
+                  child: Text('크기 수정'),
+                ),
+              ];
+            },
+          ),
+        ),
+    ]);
 
     Widget innerWidget;
     if (isEditable()) {

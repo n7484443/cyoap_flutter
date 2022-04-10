@@ -284,6 +284,7 @@ class PlatformFileSystem {
           image,
           filterQuality: FilterQuality.medium,
           isAntiAlias: true,
+          fit: BoxFit.contain,
         );
         temp.add(Tuple2(name, output));
         while (temp.length > 30) {
