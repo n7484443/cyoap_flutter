@@ -25,9 +25,9 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
         onDragUpdate: (details) =>
             controller.dragUpdate(constrains, details, context),
         data: pos,
-        feedback: SizedBox(
-            width: 150,
-            child: widget
+        feedback: Opacity(
+          opacity: 0.5,
+          child: SizedBox(width: 150, child: widget),
         ),
         onDragStarted: () {
           controller.dragStart(pos);
@@ -48,9 +48,9 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
         onDragUpdate: (details) =>
             controller.dragUpdate(constrains, details, context),
         data: pos,
-        feedback: SizedBox(
-          width: 150,
-          child: widget
+        feedback: Opacity(
+          opacity: 0.5,
+          child: SizedBox(width: 150, child: widget),
         ),
         onDragStarted: () {
           controller.dragStart(pos);
@@ -93,12 +93,10 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
         onAccept: (List<int> drag) {
           if (drag[drag.length - 1] == nonPositioned) {
             controller.changeData(drag, [y, x]);
+          } else if (y == drag[0] && (x - 1) >= drag[1]) {
+            controller.changeData(drag, [y, x - 1]);
           } else {
-            if (y == drag[0] && (x - 1) >= (drag[1] * 2)) {
-              controller.changeData(drag, [y, x - 1]);
-            } else {
-              controller.changeData(drag, [y, x]);
-            }
+            controller.changeData(drag, [y, x]);
           }
         },
       ),

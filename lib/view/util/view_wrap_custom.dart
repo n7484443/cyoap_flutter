@@ -70,6 +70,10 @@ class ViewWrapCustom extends StatelessWidget {
       var child = children[i] as ChoiceNodeBase;
       size = child.width == 0 ? maxSize : child.width;
       if(size == maxSize){
+        if(inner != 0){
+          addBuildDraggable(i);
+          setEmptyFlexible(inner);
+        }
         widget.add(List<Widget>.empty(growable: true));
         addBuildDraggable(i, horizontal: true);
         widget.add(List<Widget>.empty(growable: true));
