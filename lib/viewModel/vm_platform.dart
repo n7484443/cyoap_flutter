@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui';
@@ -26,27 +25,6 @@ class VMPlatform extends GetxController {
 
   var stopwatch = Stopwatch().obs;
 
-  Future saveAsFile() async {
-    Map<String, String> lineSetting = {};
-    for (int i = 0; i < getPlatform().lineSettings.length; i++) {
-      var line = getPlatform().lineSettings[i];
-      lineSetting['lineSetting_${line.currentPos}.json'] =
-          jsonEncode(line.toJson());
-    }
-
-    var input = {
-      'imageMap': await ImageDB().imageMap,
-      'imageSource': getPlatformFileSystem().imageSource,
-      'platform': jsonEncode(getPlatform().toJson()),
-      'lineSetting': lineSetting,
-    };
-
-    if (ConstList.isOnlyFileAccept()) {
-      return await PlatformSpecified().saveProject!.saveZip('exported.zip', input);
-    } else {
-      return await PlatformSpecified().saveProject!.saveZip(PlatformSystem().path!, input);
-    }
-  }
 
   void save(bool toFile) async {
     stopwatch.update((val) => val?.reset());
@@ -61,9 +39,9 @@ class VMPlatform extends GetxController {
 
     Future output;
     if (toFile) {
-      output = saveAsFile();
+      output = getPlatformFileSystem().saveAsFile();
     } else {
-      output = PlatformSystem().saveFolder(getPlatformFileSystem());
+      output = getPlatformFileSystem().saveAsFolder();
     }
 
     output.then((value) {

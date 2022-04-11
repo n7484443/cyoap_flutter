@@ -1,9 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
-
 import 'package:tuple/tuple.dart';
-
-import '../../model/platform_file_system.dart';
 import 'platform_specified_vm.dart'
 if (dart.library.html) 'platform_specified_web.dart';
 
@@ -35,6 +32,10 @@ abstract class SaveProject {
   Future<Tuple2<String, Uint8List>> convertImage(
       String name, Uint8List data) async {
     return Tuple2(name, data);
+  }
+
+  String convertImageName(String name){
+    return name;
   }
 
   Future<Map<String, dynamic>> getMap(Map<String, dynamic> dataInput) async {
@@ -74,7 +75,7 @@ abstract class SaveProject {
   }
 
   Future<void> saveRaw(
-      String name, PlatformFileSystem platformFileSystem) async {}
+      String path, Map<String, dynamic> dataInput) async {}
 }
 
 abstract class WebpConverter {

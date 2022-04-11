@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:cyoap_flutter/model/platform_file_system.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
 import 'package:isolated_worker/js_isolated_worker.dart';
 import 'package:js/js.dart';
@@ -21,10 +20,6 @@ class SaveProjectImp extends SaveProject {
   Future<void> downloadCapture(String name, Uint8List data) async {
     _exportRaw(name, data);
   }
-
-  @override
-  Future<void> saveRaw(
-      String name, PlatformFileSystem platformFileSystem) async {}
 }
 
 @JS()

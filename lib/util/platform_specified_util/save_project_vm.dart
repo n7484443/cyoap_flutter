@@ -2,13 +2,16 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
-import 'package:cyoap_flutter/model/platform_file_system.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/webp_converter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tuple/tuple.dart';
 
 class SaveProjectImp extends SaveProject {
+  @override
+  String convertImageName(String name) {
+    return name.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
+  }
   @override
   Future<Tuple2<String, Uint8List>> convertImage(
       String name, Uint8List data) async {
@@ -42,6 +45,21 @@ class SaveProjectImp extends SaveProject {
   }
 
   @override
+  Future<void> saveRaw(
+      String path, Map<String, dynamic> dataInput) async {
+    var map = await getMap(dataInput);
+    for(var name in map.keys){
+      var data = map[name]!;
+      File f = File('$path/$name');
+      if(await f.exists()){
+        await f.delete();
+      }
+      await f.create(recursive: true);
+      await f.writeAsBytes(data);
+    }
+  }
+
+  @override
   Future<void> downloadCapture(String name, Uint8List data) async {
     var file = File(name);
     if (await file.exists()) {
@@ -49,11 +67,5 @@ class SaveProjectImp extends SaveProject {
     }
     await file.create();
     await file.writeAsBytes(data);
-  }
-
-  @override
-  Future<void> saveRaw(
-      String name, PlatformFileSystem platformFileSystem) async {
-    await platformFileSystem.saveToFolder(name);
   }
 }

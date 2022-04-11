@@ -6,12 +6,14 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
+import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:tuple/tuple.dart';
 
 import '../main.dart';
 import '../util/json_file_parsing.dart';
+import '../util/platform_specified_util/platform_specified.dart';
 import '../util/platform_specified_util/webp_converter.dart';
 import 'abstract_platform.dart';
 import 'choiceNode/choice_line.dart';
@@ -186,74 +188,32 @@ class PlatformFileSystem {
     return name.replaceAll(regReplace, '.webp');
   }
 
-  Future<void> saveToFolder(String path) async {
-    var dirImages = Directory(path + '/images');
-    var dirNodes = Directory(path + '/nodes');
-    var dirNodesBackUp = Directory(path + '/nodes_backup');
-    var platformJson = File(path + '/platform.json');
-    var imageSourceJson = File(path + '/imageSource.json');
-
-    List<String> skipImage = List.empty(growable: true);
-    if (dirImages.existsSync()) {
-      for (var existImage in await dirImages.list().toList()) {
-        var name = basename(existImage.path);
-        if (!await ImageDB().hasImage(name)) {
-          await existImage.delete();
-        } else {
-          skipImage.add(name);
-        }
-      }
-    } else {
-      dirImages.create();
-    }
-    for (var imageName in ImageDB().imageList) {
-      if (skipImage.contains(imageName)) {
-        continue;
-      }
-      var image = await ImageDB().getImage(imageName);
-      var converted = await getWebpConverterInstance().convert(image!, imageName);
-      var file = File('$path/images/${converted.item1}');
-      file.createSync();
-      file.writeAsBytes(converted.item2);
+  Future<Map<String, dynamic>> get saveDataMap async {
+    Map<String, String> lineSetting = {};
+    for (int i = 0; i < getPlatform().lineSettings.length; i++) {
+      var line = getPlatform().lineSettings[i];
+      lineSetting['lineSetting_${line.currentPos}.json'] =
+          jsonEncode(line.toJson());
     }
 
-    if (dirNodesBackUp.existsSync()) {
-      dirNodesBackUp.deleteSync(recursive: true);
-    }
-
-    for (var line in platform!.lineSettings) {
-      var file = File('$path/nodes_backup/lineSetting_${line.currentPos}.json');
-      file.createSync(recursive: true);
-      file.writeAsString(jsonEncode(line.toJson()));
-    }
-
-    if (dirNodes.existsSync()) {
-      dirNodes.deleteSync(recursive: true);
-    }
-
-    for (var line in platform!.lineSettings) {
-      var file = File('$path/nodes/lineSetting_${line.currentPos}.json');
-      file.createSync(recursive: true);
-      file.writeAsString(jsonEncode(line.toJson()));
-    }
-
-    if (platformJson.existsSync()) {
-      platformJson.deleteSync(recursive: true);
-    }
-    platformJson.create();
-    platformJson.writeAsString(jsonEncode(platform!.toJson()));
-
-    if (imageSourceJson.existsSync()) {
-      imageSourceJson.deleteSync(recursive: true);
-    }
-    imageSourceJson.create();
-    var map = {};
-    for (var name in _imageSource.keys) {
-      map[convertImageName(name)] = _imageSource[name];
-    }
-    imageSourceJson.writeAsString(jsonEncode(map));
+    var input = {
+      'imageMap': await ImageDB().imageMap,
+      'imageSource': getPlatformFileSystem().imageSource,
+      'platform': jsonEncode(getPlatform().toJson()),
+      'lineSetting': lineSetting,
+    };
+    return input;
   }
 
+  Future<void> saveAsFile() async {
+    await PlatformSpecified().saveProject!.saveZip(
+        ConstList.isOnlyFileAccept() ? 'exported.zip' : PlatformSystem().path!,
+        await saveDataMap);
+  }
+
+  Future<void> saveAsFolder() async {
+    await PlatformSpecified().saveProject!.saveRaw(PlatformSystem().path!, await saveDataMap);
+  }
 
   final regCheckImage = RegExp(r'[.](webp|png|jpg|jpeg|bmp|gif)$');
   //1 = 일반 이미지, 0 = 웹 이미지, -1 = 이미지 아님.
