@@ -23,10 +23,10 @@ abstract class Distribute {
     throw UnimplementedError();
   }
 
-  Future<Uint8List> getFile(String f) async {
+  Future<Uint8List> getFileAsUint8(String f) async {
     throw UnimplementedError();
   }
-  Future<String> getFileWithJson(String f) async {
+  Future<String> getFileAsJson(String f) async {
     throw UnimplementedError();
   }
 }

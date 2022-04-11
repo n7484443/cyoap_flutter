@@ -2,14 +2,14 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
-import 'package:isolated_worker/js_isolated_worker.dart';
+import 'package:http/http.dart' as http;
 import 'package:tuple/tuple.dart';
 
 class DistributeImp extends Distribute {
   @override
   Future<Tuple2<List<String>, List<String>>> getImageNodeList() async {
-    var imageListData = await getFileWithJson('images/list.json');
-    var nodeListData = await getFileWithJson('nodes/list.json');
+    var imageListData = await getFileAsJson('images/list.json');
+    var nodeListData = await getFileAsJson('nodes/list.json');
     var imageList =
         (jsonDecode(imageListData) as List).map((e) => e.toString()).toList();
     var nodeList =
@@ -19,26 +19,14 @@ class DistributeImp extends Distribute {
   }
 
   @override
-  Future<Uint8List> getFile(String f) async {
-    return await _readFileAsUint8('/dist/$f');
+  Future<Uint8List> getFileAsUint8(String f) async {
+    var src = '/dist/$f';
+    http.Response response = await http.get(Uri.parse(src));
+    return response.bodyBytes;
   }
 
   @override
-  Future<String> getFileWithJson(String f) async {
-    return await _readFileAsString('/dist/$f');
-  }
-
-  Future<Uint8List> _readFileAsUint8(String path) async {
-    await JsIsolatedWorker().importScripts(['request_multiple.js']);
-    var output = await JsIsolatedWorker()
-        .run(functionName: '_readFileFromAjax', arguments: path);
-    return (output as ByteBuffer).asUint8List();
-  }
-
-  Future<String> _readFileAsString(String path) async {
-    await JsIsolatedWorker().importScripts(['request_multiple.js']);
-    String output = await JsIsolatedWorker()
-        .run(functionName: '_readFileFromAjaxWithJson', arguments: path);
-    return output;
+  Future<String> getFileAsJson(String f) async {
+    return utf8.decode(await getFileAsUint8(f));
   }
 }

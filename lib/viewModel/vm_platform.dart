@@ -147,31 +147,32 @@ class VMPlatform extends GetxController {
     });
 
     print('web is Distribute mode');
+
     var value = await PlatformSpecified().distribute!.getImageNodeList();
     print('load start');
     loadString = '[ 로드 시작 ]';
     var imageList = value.item1;
     var nodeList = value.item2;
+    loadString = '[ 이미지 로드중 ]';
     for (var name in imageList) {
       ImageDB()
-          .uploadImagesFuture(name, PlatformSpecified().distribute!.getFile('images/$name'));
+          .uploadImagesFuture(name, PlatformSpecified().distribute!.getFileAsUint8('images/$name'));
     }
-    loadString = '[ 이미지 로드 완료 ]';
-
+    loadString = '[ 선택지 로드중 ]';
     List<Future> futureMap = List.empty(growable: true);
     Map<String, String> nodeMap = {};
     for (var name in nodeList) {
-      var future = PlatformSpecified().distribute!.getFileWithJson('nodes/$name');
+      var future = PlatformSpecified().distribute!.getFileAsJson('nodes/$name');
       future.then((value) => nodeMap[name] = value);
       futureMap.add(future);
     }
     await Future.wait(futureMap);
 
-    loadString = '[ 선택지 로드 완료 ]';
+    loadString = '[ 구조 생성중 ]';
     print('node loaded');
 
-    String imageSource = await PlatformSpecified().distribute!.getFileWithJson('imageSource.json');
-    String platformData = await PlatformSpecified().distribute!.getFileWithJson('platform.json');
+    String imageSource = await PlatformSpecified().distribute!.getFileAsJson('imageSource.json');
+    String platformData = await PlatformSpecified().distribute!.getFileAsJson('platform.json');
     loadString = '[ 로드 완료 ]';
     print('load end');
     stopwatchLoad.stop();
