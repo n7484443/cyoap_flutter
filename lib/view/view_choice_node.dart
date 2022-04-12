@@ -64,9 +64,14 @@ class ViewChoiceNode extends StatelessWidget {
           alignment: Alignment.topCenter,
           children: [
             if (controller.imageString.value.isNotEmpty)
-              ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(5)),
-                child: PlatformSystem.getImage(controller.imageString.value),
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height / 3,
+                ),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(5)),
+                  child: PlatformSystem.getImage(controller.imageString.value),
+                ),
               ),
             if (controller.titleString.value.isNotEmpty)
               TextOutline(
