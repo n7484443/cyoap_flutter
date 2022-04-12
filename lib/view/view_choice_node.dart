@@ -154,7 +154,7 @@ class ViewChoiceNode extends StatelessWidget {
               },
             ),
           )
-        ] else if (getPlatformFileSystem()
+        ] else if (getPlatformFileSystem
                 .hasSource(controller.imageString.value) &&
             getPlatform().isVisibleSource) ...[
           Positioned(
@@ -167,32 +167,30 @@ class ViewChoiceNode extends StatelessWidget {
                     TextStyle(color: Colors.blue, fontWeight: FontWeight.w800),
               ),
                 onPressed: () {
-                  var url = getPlatformFileSystem()
+                  var url = getPlatformFileSystem
                       .getSource(controller.imageString.value);
-                  if (url != null && url.isNotEmpty) {
-                    launch(url);
-                  }
-                },
-              ),
+                if (url != null && url.isNotEmpty) {
+                  launch(url);
+                }
+              },
             ),
-          ],
+          ),
+        ],
       ],
     );
 
-    Widget innerWidget;
-    if (isEditable) {
-      innerWidget = mainNode;
-    } else {
+    Widget innerWidget = mainNode;
+    if (!isEditable) {
       innerWidget = Obx(
-            () => IgnorePointer(
-              ignoring: !controller.isIgnorePointer(),
+        () => IgnorePointer(
+          ignoring: !controller.isIgnorePointer(),
           child: mainNode,
         ),
       );
     }
 
     return Obx(
-          () {
+      () {
         var isSelectedCheck = controller.status.value.isSelected() &&
             controller.node.isSelectable;
         return Opacity(

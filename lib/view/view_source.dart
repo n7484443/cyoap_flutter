@@ -14,7 +14,7 @@ class ViewSource extends StatelessWidget {
     var controller = Get.put(VMSource());
     var widget = ListView.builder(
       itemBuilder: (BuildContext context, int index) {
-        var name = getPlatformFileSystem().getImageName(index);
+        var name = getPlatformFileSystem.getImageName(index);
         return Card(
           elevation: ConstList.elevation,
           child: Row(
@@ -23,7 +23,7 @@ class ViewSource extends StatelessWidget {
                 flex: 1,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: getPlatformFileSystem().getImage(name),
+                  child: getPlatformFileSystem.getImage(name),
                 ),
               ),
               Flexible(
@@ -37,7 +37,7 @@ class ViewSource extends StatelessWidget {
                       TextField(
                         textAlign: TextAlign.center,
                         decoration: InputDecoration(
-                          hintText: getPlatformFileSystem().getSource(name) ??
+                          hintText: getPlatformFileSystem.getSource(name) ??
                               '출처를 여기에 적어주세요!',
                           alignLabelWithHint: true,
                         ),

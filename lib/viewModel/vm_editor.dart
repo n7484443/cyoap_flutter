@@ -112,6 +112,6 @@ class VMEditor extends GetxController {
   }
 
   void addImageSource(String name) {
-    getPlatformFileSystem().addSource(name, controllerSource.text);
+    getPlatformFileSystem.addSource(name, controllerSource.text);
   }
 }

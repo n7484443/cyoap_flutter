@@ -25,7 +25,7 @@ class AbstractPlatform {
 
   void init() {
     checkDataCollect();
-    if (getPlatformFileSystem().isEditable) {
+    if (getPlatformFileSystem.isEditable) {
       generateRecursiveParser();
     }
     updateStatusAll();

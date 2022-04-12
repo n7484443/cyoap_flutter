@@ -120,5 +120,5 @@ class VMStartPlatform extends GetxController {
     pathList.addAll(frequentlyUsedPath.pathList);
   }
 
-  set editable(bool b) => getPlatformFileSystem().isEditable = b;
+  set editable(bool b) => getPlatformFileSystem.isEditable = b;
 }

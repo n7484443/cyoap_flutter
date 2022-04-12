@@ -75,22 +75,14 @@ class PlatformSystem {
 }
 
 AbstractPlatform getPlatform() {
-  if(getPlatformFileSystem().platform == null) {
-    getPlatformFileSystem().platform = AbstractPlatform.none();
-  }
-  return getPlatformFileSystem().platform!;
+  getPlatformFileSystem.platform ??= AbstractPlatform.none();
+  return getPlatformFileSystem.platform!;
 }
 
-bool get isEditable => getPlatformFileSystem().isEditable;
+bool get isEditable => getPlatformFileSystem.isEditable;
 
-PlatformFileSystem getPlatformFileSystem() {
-  return PlatformSystem().platformFileSystem;
-}
+PlatformFileSystem get getPlatformFileSystem => PlatformSystem().platformFileSystem;
 
-TextStyle get titleFont {
-  return ConstList.getFont(getPlatform().titleFont);
-}
+TextStyle get titleFont => ConstList.getFont(getPlatform().titleFont);
 
-TextStyle get mainFont {
-  return ConstList.getFont(getPlatform().mainFont);
-}
+TextStyle get mainFont => ConstList.getFont(getPlatform().mainFont);

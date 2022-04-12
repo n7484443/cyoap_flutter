@@ -38,9 +38,9 @@ class VMPlatform extends GetxController {
 
     Future output;
     if (toFile) {
-      output = getPlatformFileSystem().saveAsFile();
+      output = getPlatformFileSystem.saveAsFile();
     } else {
-      output = getPlatformFileSystem().saveAsFolder();
+      output = getPlatformFileSystem.saveAsFolder();
     }
 
     output.then((value) {
@@ -83,7 +83,7 @@ class VMPlatform extends GetxController {
           .asUint8List();
 
       if(isWebp){
-      Future<Tuple2<String, Uint8List>> output = compute(getPlatformFileSystem().saveCapture, byteData);
+      Future<Tuple2<String, Uint8List>> output = compute(getPlatformFileSystem.saveCapture, byteData);
       output.then((value) {
       if (ConstList.isOnlyFileAccept()) {
       PlatformSpecified().saveProject!.downloadCapture(value.item1, value.item2);
@@ -158,7 +158,7 @@ class VMPlatform extends GetxController {
     timer.cancel();
 
     await PlatformSystem().openPlatformList(nodeMap, imageSource, platformData);
-    getPlatformFileSystem().isEditable = false;
+    getPlatformFileSystem.isEditable = false;
     loaded = true;
     update();
   }

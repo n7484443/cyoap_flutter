@@ -198,7 +198,7 @@ class PlatformFileSystem {
 
     var input = {
       'imageMap': await ImageDB().imageMap,
-      'imageSource': getPlatformFileSystem().imageSource,
+      'imageSource': getPlatformFileSystem.imageSource,
       'platform': jsonEncode(getPlatform().toJson()),
       'lineSetting': lineSetting,
     };

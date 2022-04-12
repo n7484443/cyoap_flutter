@@ -7,7 +7,7 @@ class VMSource extends GetxController {
   TextEditingController getTextEditor(String name) {
     var textEditingController = TextEditingController();
     textEditingController.addListener(() {
-      getPlatformFileSystem().addSource(name, textEditingController.text);
+      getPlatformFileSystem.addSource(name, textEditingController.text);
     });
     return textEditingController;
   }
