@@ -1,5 +1,6 @@
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/util/view_text_outline.dart';
+import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:flutter/foundation.dart';
@@ -27,7 +28,9 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
         data: pos,
         feedback: Opacity(
           opacity: 0.5,
-          child: SizedBox(width: 150, child: widget),
+          child: SizedBox(
+              width: controller.getMaxWidth() / (defaultMaxSize + 3) * (widget.node!.width == 0 ? defaultMaxSize : widget.node!.width),
+              child: widget),
         ),
         onDragStarted: () {
           controller.dragStart(pos);
@@ -50,7 +53,9 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
         data: pos,
         feedback: Opacity(
           opacity: 0.5,
-          child: SizedBox(width: 150, child: widget),
+          child: SizedBox(
+              width: controller.getMaxWidth() / (defaultMaxSize + 3) * (widget.node!.width == 0 ? defaultMaxSize : widget.node!.width),
+              child: widget),
         ),
         onDragStarted: () {
           controller.dragStart(pos);
@@ -86,7 +91,6 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
             List<dynamic> rejected) {
           return Container(
             color: baseColor,
-            width: nodeBaseWidth,
             height: nodeBaseHeight,
           );
         },

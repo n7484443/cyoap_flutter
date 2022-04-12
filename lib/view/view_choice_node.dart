@@ -32,7 +32,7 @@ class ViewChoiceNode extends StatelessWidget {
     if (node == null) {
       return Card(
         child: SizedBox(
-          width: nodeBaseWidth * scale,
+          width: vmDraggableNestedMap.getMaxWidth() / defaultMaxSize * 3 * scale,
           height: nodeBaseHeight * scale,
         ),
       );
@@ -100,6 +100,36 @@ class ViewChoiceNode extends StatelessWidget {
               : getPlatform().colorBackground.lighten(),
           child: mainBox,
         ),
+        Positioned.fill(
+          child: Material(
+            color: Colors.transparent,
+            child: isEditable
+                ? InkWell(
+                    onDoubleTap: () {
+                      vmDraggableNestedMap.setEdit(node!);
+                      Get.toNamed('/viewEditor', id: 1);
+                    },
+                  )
+                : InkWell(
+                    onTap: () async {
+                      controller.select();
+                      if (controller.isRandom.value) {
+                        if (controller.isSelect()) {
+                          controller.startRandom();
+                          await showDialog(
+                            context: context,
+                            builder: (builder) => RandomDialog(node),
+                            barrierDismissible: false,
+                          );
+                        } else {
+                          node!.random = -1;
+                        }
+                      }
+                      VMChoiceNode.updateStatusAll();
+                    },
+                  ),
+          ),
+        ),
         if (vmDraggableNestedMap.isVisibleOnlyEdit()) ...[
           Positioned(
             top: 0,
@@ -131,56 +161,32 @@ class ViewChoiceNode extends StatelessWidget {
             bottom: 0,
             left: 0,
             child: TextButton(
-              child: const Text(
-                '출처',
+                child: const Text(
+                  '출처',
                 style:
                     TextStyle(color: Colors.blue, fontWeight: FontWeight.w800),
               ),
-              onPressed: () {
-                var url = getPlatformFileSystem()
-                    .getSource(controller.imageString.value);
-                if (url != null && url.isNotEmpty) {
-                  launch(url);
-                }
-              },
+                onPressed: () {
+                  var url = getPlatformFileSystem()
+                      .getSource(controller.imageString.value);
+                  if (url != null && url.isNotEmpty) {
+                    launch(url);
+                  }
+                },
+              ),
             ),
-          ),
-        ],
+          ],
       ],
     );
 
     Widget innerWidget;
     if (isEditable) {
-      innerWidget = InkWell(
-        onDoubleTap: () {
-          vmDraggableNestedMap.setEdit(node!);
-          Get.toNamed('/viewEditor', id: 1);
-        },
-        child: mainNode,
-      );
+      innerWidget = mainNode;
     } else {
       innerWidget = Obx(
             () => IgnorePointer(
-          ignoring: !controller.isIgnorePointer(),
-          child: InkWell(
-            onTap: () async {
-              controller.select();
-              if (controller.isRandom.value) {
-                if (controller.isSelect()) {
-                  controller.startRandom();
-                  await showDialog(
-                    context: context,
-                    builder: (builder) => RandomDialog(node),
-                    barrierDismissible: false,
-                  );
-                } else {
-                  node!.random = -1;
-                }
-              }
-              VMChoiceNode.updateStatusAll();
-            },
-            child: mainNode,
-          ),
+              ignoring: !controller.isIgnorePointer(),
+          child: mainNode,
         ),
       );
     }

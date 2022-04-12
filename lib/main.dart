@@ -37,18 +37,13 @@ class ConstList {
   }
 
   static String? _version;
-  static int? _versionBuild;
 
   static String get version => _version ?? '';
-  static int get versionBuild => _versionBuild ?? 0;
 
   static Future<void> init() async {
     platform_specified.PlatformSpecified().init();
     var packageInfo = await PackageInfo.fromPlatform();
     _version = packageInfo.version;
-    if(!isDesktop()){
-      _versionBuild = int.parse(packageInfo.buildNumber);
-    }
   }
 
   static DefaultStyles getDefaultThemeData(BuildContext context, double scale,

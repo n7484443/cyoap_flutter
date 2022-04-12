@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import '../../model/choiceNode/choice_node.dart';
 import '../../model/choiceNode/generable_parser.dart';
 
+const int defaultMaxSize = 12;
+
 class ViewWrapCustom extends StatelessWidget {
   final List<GenerableParserAndPosition> children = List.empty(growable: true);
   final Widget Function(ChoiceNodeBase) builder;
@@ -14,7 +16,7 @@ class ViewWrapCustom extends StatelessWidget {
 
   ViewWrapCustom(List<GenerableParserAndPosition> children, this.builder,
       {this.setSizeSame = true,
-      this.maxSize = 12,
+      this.maxSize = defaultMaxSize,
       this.builderDraggable,
       this.setCenter = false,
       Key? key})
