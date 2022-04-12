@@ -11,7 +11,7 @@ class Analyser {
   }
   static final Analyser _instance = Analyser._init();
 
-  factory Analyser(){
+  factory Analyser() {
     return _instance;
   }
 
@@ -24,7 +24,7 @@ class Analyser {
     List<RecursiveUnit> recursiveList = List.empty(growable: true);
     var codes = codeInput.split('\n');
     for (var code in codes) {
-      try{
+      try {
         if (code.isEmpty) {
           continue;
         }
@@ -33,7 +33,7 @@ class Analyser {
           var t = semanticAnalyser.compile(tokens);
           recursiveList.add(t);
         }
-      }catch(e){
+      } catch (e) {
         print('something wrong in $code');
       }
     }

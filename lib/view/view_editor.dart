@@ -88,7 +88,7 @@ class ViewEditor extends StatelessWidget {
             label: '선택 가능',
           ),
           ViewSwitchLabel(
-                () => controller.isRandom.value = !controller.isRandom.value,
+            () => controller.isRandom.value = !controller.isRandom.value,
             controller.isRandom.value,
             label: '랜덤 기능',
           ),

@@ -21,7 +21,7 @@ class VMVariableTable extends GetxController {
         nodeList.add(ListTile(
           title: Text(node.title),
         ));
-      } else if (!node.isVisible()){
+      } else if (!node.isVisible()) {
         return;
       } else if (node.isSelectable) {
         nodeList.add(ListTile(

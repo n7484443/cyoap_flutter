@@ -7,23 +7,23 @@ import 'package:idb_shim/idb_browser.dart';
 class ImageDB {
   static final ImageDB _instance = ImageDB._init();
 
-  factory ImageDB(){
+  factory ImageDB() {
     return _instance;
   }
   ImageDB._init();
 
-  Future<void> init() async{
+  Future<void> init() async {
     database ??= await getIdbFactory()!.open(
-        databaseName,
-        version: 1,
-        onUpgradeNeeded: (VersionChangeEvent event) {
-          var database = event.database;
-          if(database.objectStoreNames.contains(objectStore)){
-            database.deleteObjectStore(objectStore);
-          }
-          database.createObjectStore(objectStore, autoIncrement: true);
-        },
-      );
+      databaseName,
+      version: 1,
+      onUpgradeNeeded: (VersionChangeEvent event) {
+        var database = event.database;
+        if (database.objectStoreNames.contains(objectStore)) {
+          database.deleteObjectStore(objectStore);
+        }
+        database.createObjectStore(objectStore, autoIncrement: true);
+      },
+    );
   }
 
   final Map<String, Uint8List?> _dirImageUint8Map = {};
@@ -109,7 +109,6 @@ class ImageDB {
     }
     return _dirImageUint8Map.containsKey(name);
   }
-
 
   String getImageName(int index) {
     return ImageDB().imageList[index];

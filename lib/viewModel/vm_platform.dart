@@ -65,46 +65,54 @@ class VMPlatform extends GetxController {
 
     Timer(const Duration(seconds: 1), () async {
       var boundary = vmDraggable.captureKey.currentContext?.findRenderObject()
-      as RenderRepaintBoundary;
+          as RenderRepaintBoundary;
       var imageOutput = await boundary.toImage(pixelRatio: 1);
       var width = imageOutput.width;
       var height = imageOutput.height;
       var maxed = max<int>(width, height) + 1;
       var ratio = 16383 / maxed;
       var isWebp = true;
-      if(ratio < 1.2){
+      if (ratio < 1.2) {
         ratio = 1.2;
         isWebp = false;
       }
 
       imageOutput = await boundary.toImage(pixelRatio: ratio);
-      var byteData = (await imageOutput.toByteData(format: ImageByteFormat.png))!
-          .buffer
-          .asUint8List();
+      var byteData =
+          (await imageOutput.toByteData(format: ImageByteFormat.png))!
+              .buffer
+              .asUint8List();
 
-      if(isWebp){
-      Future<Tuple2<String, Uint8List>> output = compute(getPlatformFileSystem.saveCapture, byteData);
-      output.then((value) {
-      if (ConstList.isOnlyFileAccept()) {
-      PlatformSpecified().saveProject!.downloadCapture(value.item1, value.item2);
+      if (isWebp) {
+        Future<Tuple2<String, Uint8List>> output =
+            compute(getPlatformFileSystem.saveCapture, byteData);
+        output.then((value) {
+          if (ConstList.isOnlyFileAccept()) {
+            PlatformSpecified()
+                .saveProject!
+                .downloadCapture(value.item1, value.item2);
+          } else {
+            PlatformSpecified().saveProject!.downloadCapture(
+                '${PlatformSystem().path}/${value.item1}', value.item2);
+          }
+
+          stopwatch.update((val) => val?.stop());
+          timer.cancel();
+          Get.back();
+        });
       } else {
-      PlatformSpecified().saveProject!.downloadCapture('${PlatformSystem().path}/${value.item1}', value.item2);
-      }
+        if (ConstList.isOnlyFileAccept()) {
+          PlatformSpecified()
+              .saveProject!
+              .downloadCapture('exported.png', byteData);
+        } else {
+          PlatformSpecified().saveProject!.downloadCapture(
+              '${PlatformSystem().path}/exported.png', byteData);
+        }
 
-      stopwatch.update((val) => val?.stop());
-      timer.cancel();
-      Get.back();
-      });
-      }else{
-      if (ConstList.isOnlyFileAccept()) {
-      PlatformSpecified().saveProject!.downloadCapture('exported.png', byteData);
-      } else {
-      PlatformSpecified().saveProject!.downloadCapture('${PlatformSystem().path}/exported.png', byteData);
-      }
-
-      stopwatch.update((val) => val?.stop());
-      timer.cancel();
-      Get.back();
+        stopwatch.update((val) => val?.stop());
+        timer.cancel();
+        Get.back();
       }
       vmDraggable.isCapture = false;
     });
@@ -134,8 +142,8 @@ class VMPlatform extends GetxController {
     var nodeList = value.item2;
     loadString = '[ 이미지 로드중 ]';
     for (var name in imageList) {
-      ImageDB()
-          .uploadImagesFuture(name, PlatformSpecified().distribute!.getFileAsUint8('images/$name'));
+      ImageDB().uploadImagesFuture(
+          name, PlatformSpecified().distribute!.getFileAsUint8('images/$name'));
     }
     loadString = '[ 선택지 로드중 ]';
     List<Future> futureMap = List.empty(growable: true);
@@ -150,8 +158,10 @@ class VMPlatform extends GetxController {
     loadString = '[ 구조 생성중 ]';
     print('node loaded');
 
-    String imageSource = await PlatformSpecified().distribute!.getFileAsJson('imageSource.json');
-    String platformData = await PlatformSpecified().distribute!.getFileAsJson('platform.json');
+    String imageSource =
+        await PlatformSpecified().distribute!.getFileAsJson('imageSource.json');
+    String platformData =
+        await PlatformSpecified().distribute!.getFileAsJson('platform.json');
     loadString = '[ 로드 완료 ]';
     print('load end');
     stopwatchLoad.stop();

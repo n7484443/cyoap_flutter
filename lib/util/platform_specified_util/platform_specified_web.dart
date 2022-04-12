@@ -4,21 +4,23 @@ import 'package:cyoap_flutter/util/platform_specified_util/check_distribute_web.
 import 'package:cyoap_flutter/util/platform_specified_util/save_project_web.dart';
 import 'package:url_strategy/url_strategy.dart';
 
-class PlatformSpecifiedImp implements PlatformSpecified{
+class PlatformSpecifiedImp implements PlatformSpecified {
   @override
-  void init(){
-    if(ConstList.isDistributed){
+  void init() {
+    if (ConstList.isDistributed) {
       PlatformSpecified().distribute = DistributeImp();
       PlatformSpecified().saveProject = null;
-    }else{
+    } else {
       PlatformSpecified().distribute = null;
       PlatformSpecified().saveProject = SaveProjectImp();
     }
   }
+
   @override
-  void preInit(){
+  void preInit() {
     setPathUrlStrategy();
   }
+
   @override
   Distribute? distribute;
 

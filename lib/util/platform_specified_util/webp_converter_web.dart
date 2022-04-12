@@ -6,7 +6,8 @@ import 'package:tuple/tuple.dart';
 
 class WebpConverterImp extends WebpConverter {
   @override
-  Future<Tuple2<String, Uint8List>> convert(Uint8List input, String name) async {
+  Future<Tuple2<String, Uint8List>> convert(
+      Uint8List input, String name) async {
     if (name.endsWith(".bmp")) {
       var image = BmpDecoder().decodeImage(input);
       var output = Uint8List.fromList(PngEncoder().encodeImage(image!));

@@ -1,7 +1,7 @@
 import '../grammar/analyser.dart';
 import '../grammar/recursive_parser.dart';
 
-class RecursiveStatus{
+class RecursiveStatus {
   RecursiveUnit? conditionClickableRecursive;
   RecursiveUnit? conditionVisibleRecursive;
   List<RecursiveUnit>? executeCodeRecursive;
@@ -11,18 +11,18 @@ class RecursiveStatus{
   String executeCodeString = '';
 
   Map<String, dynamic> toJson() => {
-    'conditionClickableRecursive': conditionClickableRecursive,
-    'conditionVisibleRecursive': conditionVisibleRecursive,
-    'executeCodeRecursive': executeCodeRecursive,
+        'conditionClickableRecursive': conditionClickableRecursive,
+        'conditionVisibleRecursive': conditionVisibleRecursive,
+        'executeCodeRecursive': executeCodeRecursive,
         'conditionClickableString': conditionClickableString,
-    'conditionVisibleString': conditionVisibleString,
-    'executeCodeString': executeCodeString,
-  };
+        'conditionVisibleString': conditionVisibleString,
+        'executeCodeString': executeCodeString,
+      };
 
   RecursiveStatus();
 
-  RecursiveStatus.fromJson(Map<String, dynamic> json):
-        conditionClickableString = json['conditionClickableString'],
+  RecursiveStatus.fromJson(Map<String, dynamic> json)
+      : conditionClickableString = json['conditionClickableString'],
         conditionVisibleString = json['conditionVisibleString'],
         executeCodeString = json['executeCodeString'] {
     if (json['conditionClickableRecursive'] == null) {

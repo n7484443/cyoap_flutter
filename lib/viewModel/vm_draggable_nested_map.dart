@@ -31,7 +31,7 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   bool isVisibleDragTarget(int x, int y) {
-    if(drag == null)return false;
+    if (drag == null) return false;
     return drag![drag!.length - 1] != x - 1 || drag![drag!.length - 2] != y;
   }
 
@@ -65,7 +65,9 @@ class VMDraggableNestedMap extends GetxController {
                   (child) => _.isVisibleOnlyEdit()
                       ? NodeDraggable(child.currentPos, j, constrains!)
                       : ViewChoiceNode(child.currentPos, j),
-                  builderDraggable: _.isVisibleOnlyEdit() ? (i) => NodeDragTarget(i, j) : null,
+                  builderDraggable: _.isVisibleOnlyEdit()
+                      ? (i) => NodeDragTarget(i, j)
+                      : null,
                 );
               }),
             );
@@ -95,9 +97,10 @@ class VMDraggableNestedMap extends GetxController {
               bottom: 12,
             ),
             child: GetBuilder<VMDraggableNestedMap>(
-              builder: (_){
+              builder: (_) {
                 var j = y ~/ 2;
-                return ViewWrapCustom(xList.children, (child) => ViewChoiceNode(child.currentPos, j));
+                return ViewWrapCustom(xList.children,
+                    (child) => ViewChoiceNode(child.currentPos, j));
               },
             ),
           );
@@ -117,7 +120,7 @@ class VMDraggableNestedMap extends GetxController {
 
   void updateVMChoiceNode(List<int> tag) {
     var node = VMChoiceNode.getNode(tag);
-    if(node == null)return;
+    if (node == null) return;
     var parentNode = node.getParentLast();
     var y = parentNode!.parent!.currentPos;
 
@@ -150,17 +153,14 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   void dragEnd() {
-    if(drag != null){
-      VMChoiceNode.getVMChoiceNodeFromList(drag!)?.isDrag.value =
-      false;
+    if (drag != null) {
+      VMChoiceNode.getVMChoiceNodeFromList(drag!)?.isDrag.value = false;
       drag = null;
       update();
     }
   }
 
-  double getMaxWidth() {
-    return captureKey.currentContext!.width;
-  }
+  double get maxWidth => captureKey.currentContext!.width;
 
   void dragUpdate(BoxConstraints constrains, DragUpdateDetails details,
       BuildContext context) {
@@ -177,11 +177,9 @@ class VMDraggableNestedMap extends GetxController {
     }
   }
 
-  Color getBackgroundColor() {
-    return getPlatform().colorBackground;
-  }
+  Color get backgroundColor => getPlatform().colorBackground;
 
-  double getScale() {
+  double get scale {
     var context = captureKey.currentContext;
     if (context == null) return 1;
     var sizeMultiply = ConstList.isSmallDisplay(context) ? 0.75 : 1.0;
@@ -197,8 +195,7 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   void setEdit(ChoiceNodeBase node) {
-    ChoiceNodeBase nodeNonnull = node;
-    NodeEditor().setTarget(nodeNonnull);
+    NodeEditor().setTarget(node);
   }
 
   String getMaxSelect(int y) {

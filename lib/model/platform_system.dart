@@ -10,7 +10,7 @@ import '../main.dart';
 import 'abstract_platform.dart';
 
 class PlatformSystem {
-  factory PlatformSystem(){
+  factory PlatformSystem() {
     return _instance;
   }
 
@@ -49,16 +49,17 @@ class PlatformSystem {
   }
 
   Future<void> openPlatformList(Map<String, String> choiceNodes,
-      String imageSource,
-      String platform) async {
-    await platformFileSystem.createPlatformList(choiceNodes, imageSource, platform);
+      String imageSource, String platform) async {
+    await platformFileSystem.createPlatformList(
+        choiceNodes, imageSource, platform);
   }
 
   Future<void> openPlatformVoid() async {
     platformFileSystem.createFromVoid();
   }
 
-  static FutureBuilder getImage(String image) => PlatformSystem().platformFileSystem.getImage(image);
+  static FutureBuilder getImage(String image) =>
+      PlatformSystem().platformFileSystem.getImage(image);
 }
 
 AbstractPlatform getPlatform() {
@@ -68,7 +69,8 @@ AbstractPlatform getPlatform() {
 
 bool get isEditable => getPlatformFileSystem.isEditable;
 
-PlatformFileSystem get getPlatformFileSystem => PlatformSystem().platformFileSystem;
+PlatformFileSystem get getPlatformFileSystem =>
+    PlatformSystem().platformFileSystem;
 
 TextStyle get titleFont => ConstList.getFont(getPlatform().titleFont);
 

@@ -4,7 +4,7 @@ import 'grammar/value_type.dart';
 
 class VariableDataBase {
   static final VariableDataBase _instance = VariableDataBase._init();
-  factory VariableDataBase(){
+  factory VariableDataBase() {
     return _instance;
   }
   VariableDataBase._init();

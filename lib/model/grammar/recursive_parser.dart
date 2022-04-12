@@ -71,8 +71,7 @@ class RecursiveParser extends RecursiveUnit {
   @override
   ValueType unzip() {
     if (value.data == null) return ValueType.none();
-    if (childNode.length == 3 &&
-        value.data == Analyser().functionList.funcIf) {
+    if (childNode.length == 3 && value.data == Analyser().functionList.funcIf) {
       if (childNode[0].unzip().data) {
         return childNode[1].unzip();
       } else {
@@ -107,8 +106,7 @@ class RecursiveData extends RecursiveUnit {
   ValueType unzip() {
     if (value.data is VariableUnit) {
       var variable = value.data as VariableUnit;
-      if (VariableDataBase().hasValue(variable.varName) &&
-          !dontReplace) {
+      if (VariableDataBase().hasValue(variable.varName) && !dontReplace) {
         return ValueType(VariableDataBase()
             .getValueTypeWrapper(variable.varName)
             ?.valueType

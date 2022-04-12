@@ -1,6 +1,7 @@
 import 'dart:io';
 
-import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart' deferred as platform_specified;
+import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart'
+    deferred as platform_specified;
 import 'package:cyoap_flutter/view/view_make_platform.dart' deferred as v_make;
 import 'package:cyoap_flutter/view/view_play.dart' deferred as v_play;
 import 'package:cyoap_flutter/view/view_start.dart' deferred as v_start;
@@ -13,7 +14,8 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:tuple/tuple.dart';
 
 class ConstList {
-  static const bool isDistributed = bool.fromEnvironment("isDistributed", defaultValue: false);
+  static const bool isDistributed =
+      bool.fromEnvironment("isDistributed", defaultValue: false);
   static const double appBarSize = 40.0;
   static const double elevation = 6.0;
   static late final PlatformType actualPlatformType;
@@ -102,10 +104,10 @@ class ConstList {
   }
 
   static Future<void> preInit() async {
-    if(isDistributed){
+    if (isDistributed) {
       ConstList.actualPlatformType = PlatformType.web;
-    }else{
-      if(kIsWeb){
+    } else {
+      if (kIsWeb) {
         ConstList.actualPlatformType = PlatformType.web;
       } else if (Platform.isAndroid) {
         ConstList.actualPlatformType = PlatformType.mobile;
@@ -129,7 +131,7 @@ void main() {
 
   ConstList.preInit().then((value) async {
     await v_play.loadLibrary();
-    if(!ConstList.isDistributed){
+    if (!ConstList.isDistributed) {
       await v_start.loadLibrary();
       await v_make.loadLibrary();
     }
@@ -137,13 +139,13 @@ void main() {
       GetMaterialApp(
         title: 'CYOAP',
         initialRoute: '/',
-        getPages: List.generate(ConstList.isDistributed ? 1 : 3, (index)  {
-          if(ConstList.isDistributed){
+        getPages: List.generate(ConstList.isDistributed ? 1 : 3, (index) {
+          if (ConstList.isDistributed) {
             return GetPage(
               name: '/',
               page: () => v_play.ViewPlay(),
             );
-          }else{
+          } else {
             switch (index) {
               case 0:
                 return GetPage(

@@ -138,7 +138,8 @@ class ViewGlobalSetting extends StatelessWidget {
                   children: [
                     GetBuilder<VMGlobalSetting>(
                       builder: (_) => ViewSwitchLabel(
-                        () => vmGlobalSetting.setVisible(index, !vmGlobalSetting.isVisible(index)),
+                        () => vmGlobalSetting.setVisible(
+                            index, !vmGlobalSetting.isVisible(index)),
                         vmGlobalSetting.isVisible(index),
                         label: '플레이시 표시',
                       ),

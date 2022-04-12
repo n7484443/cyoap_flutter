@@ -61,7 +61,8 @@ class VMStartPlatform extends GetxController {
     );
     if (result != null) {
       if (ConstList.isOnlyFileAccept()) {
-        isAdded.add(PlatformSystem().openPlatformZipForWeb(result.files.single));
+        isAdded
+            .add(PlatformSystem().openPlatformZipForWeb(result.files.single));
         pathList.add(result.files.single.name);
       } else {
         frequentlyUsedPath.addFrequentPath(result.files.single.path!);
@@ -106,10 +107,10 @@ class VMStartPlatform extends GetxController {
     return false;
   }
 
-  set select(int index){
-    if(index == selected.value){
+  set select(int index) {
+    if (index == selected.value) {
       selected.value = -1;
-    }else{
+    } else {
       selected.value = index;
     }
   }

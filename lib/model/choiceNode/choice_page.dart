@@ -2,7 +2,7 @@ import 'choice_line.dart';
 import 'generable_parser.dart';
 
 // TODO: page 시스템 구현
-class ChoicePage extends GenerableParserAndPosition{
+class ChoicePage extends GenerableParserAndPosition {
   List<LineSetting> lineSettings = List.empty(growable: true);
 
   ChoicePage(int page) {
@@ -10,14 +10,10 @@ class ChoicePage extends GenerableParserAndPosition{
   }
 
   @override
-  void generateParser() {
-
-  }
+  void generateParser() {}
 
   @override
-  void initValueTypeWrapper() {
-
-  }
+  void initValueTypeWrapper() {}
 
   @override
   Map<String, dynamic> toJson() {

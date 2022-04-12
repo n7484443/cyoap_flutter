@@ -104,12 +104,12 @@ class AbstractPlatform {
   }
 
   ChoiceNodeBase? getChoiceNode(List<int> pos) {
-    if(pos[0] >= lineSettings.length) return null;
+    if (pos[0] >= lineSettings.length) return null;
     GenerableParserAndPosition child = lineSettings[pos[0]];
-    for(var i = 1; i < pos.length; i++){
-      if(child.children.length <= pos[i]) {
+    for (var i = 1; i < pos.length; i++) {
+      if (child.children.length <= pos[i]) {
         return null;
-      }else if(pos[i] < 0){
+      } else if (pos[i] < 0) {
         return null;
       }
       child = child.children[pos[i]];
@@ -193,7 +193,7 @@ class AbstractPlatform {
   }
 
   void generateRecursiveParser() {
-    for(var lineSetting in lineSettings){
+    for (var lineSetting in lineSettings) {
       lineSetting.generateParser();
     }
   }
@@ -216,7 +216,7 @@ class AbstractPlatform {
   void doAllChoiceNodeInner(
       ChoiceNodeBase nodeParent, void Function(ChoiceNodeBase node) action) {
     action(nodeParent);
-    if(nodeParent.children.isNotEmpty){
+    if (nodeParent.children.isNotEmpty) {
       for (var node in nodeParent.children) {
         doAllChoiceNodeInner(node as ChoiceNodeBase, action);
       }

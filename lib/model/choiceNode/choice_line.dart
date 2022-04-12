@@ -66,8 +66,8 @@ class LineSetting extends GenerableParserAndPosition {
     }
   }
 
-  ChoiceNodeBase? getData(int x){
-    if(children.length <= x) return null;
+  ChoiceNodeBase? getData(int x) {
+    if (children.length <= x) return null;
     return children[x] as ChoiceNodeBase?;
   }
 
@@ -91,12 +91,14 @@ class LineSetting extends GenerableParserAndPosition {
       var executeCodeRecursiveParsed =
           Analyser.analyseCodes(getExecuteString());
 
-      recursiveStatus.conditionClickableRecursive = conditionClickableRecursiveParsed.isNotEmpty
-          ? conditionClickableRecursiveParsed[0]
-          : null;
-      recursiveStatus.executeCodeRecursive = executeCodeRecursiveParsed.isNotEmpty
-          ? executeCodeRecursiveParsed
-          : null;
+      recursiveStatus.conditionClickableRecursive =
+          conditionClickableRecursiveParsed.isNotEmpty
+              ? conditionClickableRecursiveParsed[0]
+              : null;
+      recursiveStatus.executeCodeRecursive =
+          executeCodeRecursiveParsed.isNotEmpty
+              ? executeCodeRecursiveParsed
+              : null;
     } else {
       recursiveStatus.conditionClickableRecursive = null;
       recursiveStatus.executeCodeRecursive = null;
@@ -110,8 +112,8 @@ class LineSetting extends GenerableParserAndPosition {
   @override
   void initValueTypeWrapper() {
     if (isNeedToCheck()) {
-      VariableDataBase().setValue('lineSetting_$currentPos',
-          ValueTypeWrapper(ValueType(0), false));
+      VariableDataBase().setValue(
+          'lineSetting_$currentPos', ValueTypeWrapper(ValueType(0), false));
     } else {
       VariableDataBase().deleteValue('lineSetting_$currentPos');
     }

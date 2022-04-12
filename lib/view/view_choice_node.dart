@@ -28,12 +28,12 @@ class ViewChoiceNode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var vmDraggableNestedMap = Get.find<VMDraggableNestedMap>();
-    var scale = vmDraggableNestedMap.getScale();
     if (node == null) {
       return Card(
         child: SizedBox(
-          width: vmDraggableNestedMap.getMaxWidth() / defaultMaxSize * 3 * scale,
-          height: nodeBaseHeight * scale,
+          width:
+              vmDraggableNestedMap.maxWidth / defaultMaxSize * 3 * vmDraggableNestedMap.scale,
+          height: nodeBaseHeight * vmDraggableNestedMap.scale,
         ),
       );
     }
@@ -50,9 +50,9 @@ class ViewChoiceNode extends StatelessWidget {
           padding: const EdgeInsets.only(top: 4),
           scrollController: ScrollController(),
           scrollable: false,
-          customStyles: ConstList.getDefaultThemeData(context, scale,
+          customStyles: ConstList.getDefaultThemeData(context, vmDraggableNestedMap.scale,
               fontStyle:
-              ConstList.getFont(vmDraggableNestedMap.mainFont.value)),
+                  ConstList.getFont(vmDraggableNestedMap.mainFont.value)),
         ),
       );
     });
@@ -75,13 +75,14 @@ class ViewChoiceNode extends StatelessWidget {
             if (controller.titleString.value.isNotEmpty)
               TextOutline(
                 controller.titleString.value,
-                20 * scale,
+                20 * vmDraggableNestedMap.scale,
                 ConstList.getFont(vmDraggableNestedMap.titleFont.value),
               ),
           ],
         ),
         editor,
-        if (vmDraggableNestedMap.isVisibleOnlyEdit()) ChoiceNodeSubDragTarget(node!),
+        if (vmDraggableNestedMap.isVisibleOnlyEdit())
+          ChoiceNodeSubDragTarget(node!),
         if (node!.children.isNotEmpty)
           ViewWrapCustom(
             node!.children,
@@ -161,14 +162,14 @@ class ViewChoiceNode extends StatelessWidget {
             bottom: 0,
             left: 0,
             child: TextButton(
-                child: const Text(
-                  '출처',
+              child: const Text(
+                '출처',
                 style:
                     TextStyle(color: Colors.blue, fontWeight: FontWeight.w800),
               ),
-                onPressed: () {
-                  var url = getPlatformFileSystem
-                      .getSource(controller.imageString.value);
+              onPressed: () {
+                var url = getPlatformFileSystem
+                    .getSource(controller.imageString.value);
                 if (url != null && url.isNotEmpty) {
                   launch(url);
                 }
@@ -304,6 +305,7 @@ class RandomDialog extends StatelessWidget {
     );
   }
 }
+
 class ChoiceNodeSubDragTarget extends StatelessWidget {
   final ChoiceNodeBase node;
   const ChoiceNodeSubDragTarget(this.node, {Key? key}) : super(key: key);
@@ -314,11 +316,11 @@ class ChoiceNodeSubDragTarget extends StatelessWidget {
     return Visibility(
       child: DragTarget(
         builder: (BuildContext context, List<Object?> candidateData,
-            List<dynamic> rejectedData) =>
+                List<dynamic> rejectedData) =>
             Container(
-              color: Colors.blueAccent.withOpacity(0.3),
-              height: 20,
-            ),
+          color: Colors.blueAccent.withOpacity(0.3),
+          height: 20,
+        ),
         onAccept: (List<int> data) {
           if (data[data.length - 1] == nonPositioned) {
             node.addChildren(VMDraggableNestedMap.createNodeForTemp());
@@ -342,4 +344,3 @@ class ChoiceNodeSubDragTarget extends StatelessWidget {
     );
   }
 }
-

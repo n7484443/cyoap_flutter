@@ -9,7 +9,7 @@ import 'package:image/image.dart';
 import 'package:tuple/tuple.dart';
 
 class WebpConverterImp extends WebpConverter {
-  factory WebpConverterImp(){
+  factory WebpConverterImp() {
     if (Platform.isWindows) {
       return WebpConverterImpWindows();
     }
@@ -71,7 +71,8 @@ class WebpConverterImpWindows implements WebpConverterImp {
   final double quality = 90;
 
   @override
-  Future<Tuple2<String, Uint8List>> convert(Uint8List input, String name) async {
+  Future<Tuple2<String, Uint8List>> convert(
+      Uint8List input, String name) async {
     Image decodeImage;
     bool isLossless = true;
     if (name.endsWith(".png")) {
@@ -135,7 +136,8 @@ class WebpConverterImpWindows implements WebpConverterImp {
 class WebpConverterImpAndroid implements WebpConverterImp {
   final int quality = 90;
   @override
-  Future<Tuple2<String, Uint8List>> convert(Uint8List input, String name) async {
+  Future<Tuple2<String, Uint8List>> convert(
+      Uint8List input, String name) async {
     Image decodeImage;
     if (name.endsWith(".png")) {
       decodeImage = PngDecoder().decodeImage(input)!;

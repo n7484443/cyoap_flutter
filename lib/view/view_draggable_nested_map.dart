@@ -29,7 +29,11 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
         feedback: Opacity(
           opacity: 0.5,
           child: SizedBox(
-              width: controller.getMaxWidth() / (defaultMaxSize + 3) * (widget.node!.width == 0 ? defaultMaxSize : widget.node!.width),
+              width: controller.maxWidth /
+                  (defaultMaxSize + 3) *
+                  (widget.node!.width == 0
+                      ? defaultMaxSize
+                      : widget.node!.width),
               child: widget),
         ),
         onDragStarted: () {
@@ -54,7 +58,11 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
         feedback: Opacity(
           opacity: 0.5,
           child: SizedBox(
-              width: controller.getMaxWidth() / (defaultMaxSize + 3) * (widget.node!.width == 0 ? defaultMaxSize : widget.node!.width),
+              width: controller.maxWidth /
+                  (defaultMaxSize + 3) *
+                  (widget.node!.width == 0
+                      ? defaultMaxSize
+                      : widget.node!.width),
               child: widget),
         ),
         onDragStarted: () {
@@ -81,7 +89,8 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
   final Color baseColor = Colors.black26;
   final bool isHorizontal;
 
-  const NodeDragTarget(this.x, this.y, {this.isHorizontal = false, Key? key}) : super(key: key);
+  const NodeDragTarget(this.x, this.y, {this.isHorizontal = false, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +152,6 @@ class NodeDividerDialog extends StatelessWidget {
     );
   }
 }
-
 
 class NodeDivider extends GetView<VMDraggableNestedMap> {
   final int y;
@@ -223,7 +231,7 @@ class NestedMap extends StatelessWidget {
             child: RepaintBoundary(
               key: _.captureKey,
               child: Container(
-                decoration: BoxDecoration(color: _.getBackgroundColor()),
+                decoration: BoxDecoration(color: _.backgroundColor),
                 child: Column(
                   children: _.widgetList(constrains: constrains),
                 ),
@@ -237,7 +245,7 @@ class NestedMap extends StatelessWidget {
         builder: (_) {
           var inner = _.widgetList();
           return Container(
-            decoration: BoxDecoration(color: _.getBackgroundColor()),
+            decoration: BoxDecoration(color: _.backgroundColor),
             child: ListView.builder(
               controller: _.scroller,
               itemCount: _.getLength(),

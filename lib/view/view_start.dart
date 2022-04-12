@@ -88,17 +88,18 @@ class ViewStart extends StatelessWidget {
                                 },
                               ),
                               visible: !ConstList.isOnlyFileAccept(),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
                   ),
-                  Align(
-                    child: Obx(() => Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
+                ),
+                Align(
+                  child: Obx(
+                    () => Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
                         Text('version : ${vmStart.version.value}'),
                         Obx(
                           () => Visibility(
@@ -108,12 +109,12 @@ class ViewStart extends StatelessWidget {
                           ),
                         ),
                       ],
-                      ),
                     ),
-                    alignment: Alignment.topRight,
                   ),
-                ],
-              ),
+                  alignment: Alignment.topRight,
+                ),
+              ],
+            ),
           ),
           const Expanded(
             flex: 2,

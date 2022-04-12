@@ -96,8 +96,7 @@ class ValueTypeWrapper {
   bool visible;
   String displayName;
 
-  ValueTypeWrapper(this.valueType, this.visible,
-      {this.displayName = ''});
+  ValueTypeWrapper(this.valueType, this.visible, {this.displayName = ''});
 
   ValueTypeWrapper.normal(this.valueType)
       : visible = false,

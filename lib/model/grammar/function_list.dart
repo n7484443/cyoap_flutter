@@ -123,11 +123,10 @@ class Functions {
       var varName = (input[0].data as VariableUnit).varName;
       if (VariableDataBase().hasValue(varName)) {
         var config = VariableDataBase().getValueTypeWrapper(varName)!;
-        VariableDataBase().setValue(varName,
-            ValueTypeWrapper(input[1], config.visible));
-      } else {
         VariableDataBase()
-            .setValue(varName, ValueTypeWrapper.normal(input[1]));
+            .setValue(varName, ValueTypeWrapper(input[1], config.visible));
+      } else {
+        VariableDataBase().setValue(varName, ValueTypeWrapper.normal(input[1]));
       }
     }
     return input[0];

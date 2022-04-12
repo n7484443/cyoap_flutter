@@ -79,7 +79,8 @@ class ViewMake extends StatelessWidget {
                 ),
               ),
               onDragStarted: () {
-                Get.find<VMDraggableNestedMap>().dragStart([nonPositioned, nonPositioned]);
+                Get.find<VMDraggableNestedMap>()
+                    .dragStart([nonPositioned, nonPositioned]);
               },
               onDragEnd: (DraggableDetails data) {
                 Get.find<VMDraggableNestedMap>().dragEnd();

@@ -13,7 +13,7 @@ class ViewPlay extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<VMPlatform>(
       init: VMPlatform(),
-      builder: (_){
+      builder: (_) {
         if (ConstList.isDistributed && !_.loaded) {
           return Scaffold(
             body: Center(
@@ -57,7 +57,8 @@ class ViewPlay extends StatelessWidget {
                 Flexible(
                   child: Scaffold(
                     appBar: PreferredSize(
-                      preferredSize: const Size.fromHeight(ConstList.appBarSize),
+                      preferredSize:
+                          const Size.fromHeight(ConstList.appBarSize),
                       child: AppBar(),
                     ),
                     body: const NestedMap(),

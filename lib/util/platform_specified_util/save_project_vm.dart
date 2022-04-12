@@ -12,13 +12,14 @@ class SaveProjectImp extends SaveProject {
   String convertImageName(String name) {
     return name.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
   }
+
   @override
   Future<Tuple2<String, Uint8List>> convertImage(
       String name, Uint8List data) async {
     return await getWebpConverterInstance().convert(data, name);
   }
 
-  Future<Uint8List> mapToArchive(Map<String, dynamic> dataInput) async{
+  Future<Uint8List> mapToArchive(Map<String, dynamic> dataInput) async {
     var map = await getMap(dataInput);
 
     var archive = Archive();
@@ -45,13 +46,12 @@ class SaveProjectImp extends SaveProject {
   }
 
   @override
-  Future<void> saveRaw(
-      String path, Map<String, dynamic> dataInput) async {
+  Future<void> saveRaw(String path, Map<String, dynamic> dataInput) async {
     var map = await getMap(dataInput);
-    for(var name in map.keys){
+    for (var name in map.keys) {
       var data = map[name]!;
       File f = File('$path/$name');
-      if(await f.exists()){
+      if (await f.exists()) {
         await f.delete();
       }
       await f.create(recursive: true);

@@ -106,13 +106,13 @@ abstract class GenerableParserAndPosition {
       parent == null ? "$currentPos" : "${parent!.tag}:$currentPos";
 
   List<int> pos({List<int>? posList}) {
-    if(posList == null){
+    if (posList == null) {
       posList = List.empty(growable: true);
-    }else{
+    } else {
       posList = List.from(posList);
     }
-    if(parent != null){
-      posList.addAll(parent!.pos(posList : posList));
+    if (parent != null) {
+      posList.addAll(parent!.pos(posList: posList));
     }
     posList.add(currentPos);
     return posList;
@@ -126,11 +126,11 @@ abstract class GenerableParserAndPosition {
 
   void removeChildren(GenerableParserAndPosition childNode) {
     childNode.parent = null;
-    if(children.length > childNode.currentPos){
+    if (children.length > childNode.currentPos) {
       children.removeAt(childNode.currentPos);
     }
     childNode.currentPos = 0;
-    for(int i = 0; i < children.length; i++){
+    for (int i = 0; i < children.length; i++) {
       children[i].currentPos = i;
     }
   }

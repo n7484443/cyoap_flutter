@@ -99,10 +99,8 @@ class PlatformFileSystem {
     platform!.init();
   }
 
-  Future<void> createPlatformList(
-      Map<String, String> choiceNodes,
-      String imageSource,
-      String platformData) async {
+  Future<void> createPlatformList(Map<String, String> choiceNodes,
+      String imageSource, String platformData) async {
     openAsFile = true;
 
     List<LineSetting> lineSettingList = List.empty(growable: true);
@@ -212,7 +210,9 @@ class PlatformFileSystem {
   }
 
   Future<void> saveAsFolder() async {
-    await PlatformSpecified().saveProject!.saveRaw(PlatformSystem().path!, await saveDataMap);
+    await PlatformSpecified()
+        .saveProject!
+        .saveRaw(PlatformSystem().path!, await saveDataMap);
   }
 
   final regCheckImage = RegExp(r'[.](webp|png|jpg|jpeg|bmp|gif)$');

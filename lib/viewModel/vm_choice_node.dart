@@ -76,13 +76,13 @@ class VMChoiceNode extends GetxController {
 
   void sizeChange(int width) {
     size.value += width;
-    if(node.parent is ChoiceNodeBase){
+    if (node.parent is ChoiceNodeBase) {
       size.value = size.value.clamp(0, (node.parent as ChoiceNodeBase).width);
-    }else{
+    } else {
       size.value = size.value.clamp(0, 12);
     }
     node.width = size.value;
-    for(var child in node.children){
+    for (var child in node.children) {
       getVMChoiceNodeFromTag(child.tag)!.sizeChange(0);
     }
   }
@@ -96,7 +96,7 @@ class VMChoiceNode extends GetxController {
   void updateFromNode() {
     node = getNode(pos)!;
     onInit();
-    for(var child in node.children){
+    for (var child in node.children) {
       getVMChoiceNodeFromList(child.pos())?.updateFromNode();
     }
   }
@@ -144,14 +144,14 @@ class VMChoiceNode extends GetxController {
     getPlatform().setSelect(node.pos());
   }
 
-  static void updateStatusAll(){
+  static void updateStatusAll() {
     getPlatform().updateStatusAll();
     VMChoiceNode.doAllVMChoiceNode((vm) {
       vm.status.value = vm.node.status;
     });
   }
 
-  double get opacity{
+  double get opacity {
     if (isEditable) return 1;
 
     if (node.isSelectable) {
@@ -174,7 +174,8 @@ class VMChoiceNode extends GetxController {
   void startRandom() {
     randomProcess.value = true;
     randomValue.value = node.maxRandom * 10;
-    var timer = Timer.periodic(const Duration(milliseconds: 500), (Timer timer) {
+    var timer =
+        Timer.periodic(const Duration(milliseconds: 500), (Timer timer) {
       randomValue.value = randomValue.value ~/ 2;
     });
     Timer(const Duration(milliseconds: 2000), () {

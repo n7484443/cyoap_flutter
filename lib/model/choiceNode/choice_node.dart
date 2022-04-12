@@ -22,22 +22,21 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
 
   bool get isRandom => maxRandom > 0;
 
-  ChoiceNodeBase(this.width, this.isCard,
-      this.title, this.contentsString, this.imageString){
+  ChoiceNodeBase(this.width, this.isCard, this.title, this.contentsString,
+      this.imageString) {
     recursiveStatus = RecursiveStatus();
   }
 
   ChoiceNodeBase.origin(this.width, this.isCard, this.title,
-      this.contentsString, this.imageString)
-      {
+      this.contentsString, this.imageString) {
     recursiveStatus = RecursiveStatus();
   }
 
-  ChoiceNodeBase.noTitle(this.width, this.isCard,
-      this.contentsString, this.imageString)
+  ChoiceNodeBase.noTitle(
+      this.width, this.isCard, this.contentsString, this.imageString)
       : title = '' {
     recursiveStatus = RecursiveStatus();
-    title = Random().nextInt(9999).toString();
+    title = "선택지 " + Random().nextInt(99).toString();
   } //랜덤 문자로 제목 중복 방지
 
   ChoiceNodeBase.fromJson(Map<String, dynamic> json)
@@ -83,10 +82,10 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
 
   @override
   void initValueTypeWrapper() {
-    VariableDataBase().setValue(title.trim(),
-        ValueTypeWrapper(ValueType(status.isSelected()), false));
-    VariableDataBase().setValue('${title.trim()}:random',
-        ValueTypeWrapper(ValueType(random), false));
+    VariableDataBase().setValue(
+        title.trim(), ValueTypeWrapper(ValueType(status.isSelected()), false));
+    VariableDataBase().setValue(
+        '${title.trim()}:random', ValueTypeWrapper(ValueType(random), false));
     if (status.isNotSelected()) {
       status = isSelectable ? SelectableStatus.open : SelectableStatus.selected;
     }
@@ -96,11 +95,11 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
     return PlatformSpecified().saveProject!.convertImageName(name);
   }
 
-  ChoiceNodeBase? getParentLast(){
+  ChoiceNodeBase? getParentLast() {
     ChoiceNodeBase parent = this;
-    while(true){
-      if(parent.parent == null)break;
-      if(parent.parent is! ChoiceNodeBase)break;
+    while (true) {
+      if (parent.parent == null) break;
+      if (parent.parent is! ChoiceNodeBase) break;
       parent = parent.parent as ChoiceNodeBase;
     }
     return parent;

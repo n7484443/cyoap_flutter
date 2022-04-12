@@ -2,17 +2,17 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:tuple/tuple.dart';
 import 'platform_specified_vm.dart'
-if (dart.library.html) 'platform_specified_web.dart';
+    if (dart.library.html) 'platform_specified_web.dart';
 
-abstract class PlatformSpecified{
+abstract class PlatformSpecified {
   static final PlatformSpecified _instance = PlatformSpecifiedImp();
-  factory PlatformSpecified(){
+  factory PlatformSpecified() {
     return _instance;
   }
   late final Distribute? distribute;
   late final SaveProject? saveProject;
-  void init(){}
-  void preInit(){}
+  void init() {}
+  void preInit() {}
 }
 
 abstract class Distribute {
@@ -23,6 +23,7 @@ abstract class Distribute {
   Future<Uint8List> getFileAsUint8(String f) async {
     throw UnimplementedError();
   }
+
   Future<String> getFileAsJson(String f) async {
     throw UnimplementedError();
   }
@@ -34,7 +35,7 @@ abstract class SaveProject {
     return Tuple2(name, data);
   }
 
-  String convertImageName(String name){
+  String convertImageName(String name) {
     return name;
   }
 
@@ -74,13 +75,12 @@ abstract class SaveProject {
     throw UnimplementedError();
   }
 
-  Future<void> saveRaw(
-      String path, Map<String, dynamic> dataInput) async {}
+  Future<void> saveRaw(String path, Map<String, dynamic> dataInput) async {}
 }
 
 abstract class WebpConverter {
   Future<Tuple2<String, Uint8List>> convert(
-      Uint8List input, String name) async =>
+          Uint8List input, String name) async =>
       throw "doesn't work in this platform";
 
   void init() {}
