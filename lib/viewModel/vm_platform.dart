@@ -157,8 +157,7 @@ class VMPlatform extends GetxController {
     stopwatchLoad.stop();
     timer.cancel();
 
-    await PlatformSystem()
-        .openPlatformList(nodeMap, imageSource, platformData);
+    await PlatformSystem().openPlatformList(nodeMap, imageSource, platformData);
     getPlatformFileSystem().isEditable = false;
     loaded = true;
     update();

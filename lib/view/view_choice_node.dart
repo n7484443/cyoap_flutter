@@ -150,7 +150,7 @@ class ViewChoiceNode extends StatelessWidget {
     );
 
     Widget innerWidget;
-    if (isEditable()) {
+    if (isEditable) {
       innerWidget = InkWell(
         onDoubleTap: () {
           vmDraggableNestedMap.setEdit(node!);

@@ -13,7 +13,7 @@ class ViewVariable extends StatelessWidget {
   Widget build(BuildContext context) {
     Get.put(VMVariableTable());
     Widget widget;
-    if (isEditable()) {
+    if (isEditable) {
       widget = Column(
         children: [
           ListTile(

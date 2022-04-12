@@ -17,7 +17,7 @@ class VMVariableTable extends GetxController {
     var iconCheckBox = const Icon(Icons.check_box);
     var iconCheckBoxBlank = const Icon(Icons.check_box_outline_blank);
     getPlatform().doAllChoiceNode((node) {
-      if (isEditable()) {
+      if (isEditable) {
         nodeList.add(ListTile(
           title: Text(node.title),
         ));
@@ -39,7 +39,7 @@ class VMVariableTable extends GetxController {
       var values = VariableDataBase().varMap[key];
       if (values == null) continue;
       if (values.visible) {
-        if (isEditable()) {
+        if (isEditable) {
           if (values.displayName.isEmpty) {
             variableList.add(ListTile(
               title: Text(key),

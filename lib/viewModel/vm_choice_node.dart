@@ -153,7 +153,7 @@ class VMChoiceNode extends GetxController {
   }
 
   double get opacity{
-    if (isEditable()) return 1;
+    if (isEditable) return 1;
 
     if (node.isSelectable) {
       if (isIgnorePointer()) {

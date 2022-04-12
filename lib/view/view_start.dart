@@ -29,21 +29,31 @@ class ViewStart extends StatelessWidget {
                     children: [
                       Expanded(
                         flex: 12,
-                        child: Obx(() => ListView.separated(
+                        child: Obx(
+                          () => ListView.builder(
                             itemCount: vmStart.pathList.length,
+                            shrinkWrap: true,
                             itemBuilder: (context, index) {
                               return ListTile(
-                                title: ElevatedButton(
-                                  onPressed: () => vmStart.select = index,
-                                  style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.resolveWith(
-                                            (states) {
-                                      return vmStart.getColor(index);
-                                    }),
-                                  ),
-                                  child: Text(
-                                      vmStart.pathList[vmStart.pathList.length - 1 - index]),
+                                title: Obx(
+                                  () {
+                                    int i = vmStart.pathList.length - 1 - index;
+                                    var text = Text(vmStart.pathList[i]);
+                                    if (vmStart.selected.value == index) {
+                                      return ElevatedButton(
+                                        onPressed: () => vmStart.select = index,
+                                        style: ElevatedButton.styleFrom(
+                                            primary: Colors.blue),
+                                        child: text,
+                                      );
+                                    }
+                                    return OutlinedButton(
+                                      onPressed: () => vmStart.select = index,
+                                      style: TextButton.styleFrom(
+                                          primary: Colors.black54),
+                                      child: text,
+                                    );
+                                  },
                                 ),
                                 trailing: IconButton(
                                   icon: const Icon(Icons.delete),
@@ -52,10 +62,6 @@ class ViewStart extends StatelessWidget {
                                   },
                                 ),
                               );
-                            },
-                            separatorBuilder:
-                                (BuildContext context, int index) {
-                              return const Divider();
                             },
                           ),
                         ),
@@ -129,7 +135,7 @@ class SelectMode extends GetView<VMStartPlatform> {
         Expanded(
           child: InkWell(
             onTap: () {
-              controller.setDirectory().then((value) {
+              controller.openProject().then((value) {
                 controller.editable = false;
                 Get.toNamed('/viewPlay');
               });
@@ -150,8 +156,8 @@ class SelectMode extends GetView<VMStartPlatform> {
         Expanded(
           child: InkWell(
             onTap: () {
-              controller.setDirectory().then((value) {
-                controller.editable = false;
+              controller.openProject().then((value) {
+                controller.editable = true;
                 Get.toNamed('/viewMake');
               });
             },

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../main.dart';
@@ -12,7 +11,7 @@ import '../model/platform_system.dart';
 
 class VMStartPlatform extends GetxController {
   FrequentlyUsedPath frequentlyUsedPath = FrequentlyUsedPath();
-  var pathList = List.empty(growable: true).obs;
+  var pathList = <String>[].obs;
   var selected = (-1).obs;
   List<Future<void>> isAdded = List.empty(growable: true);
 
@@ -25,8 +24,10 @@ class VMStartPlatform extends GetxController {
       needUpdate.value = value;
       version.value = ConstList.version;
     });
-    frequentlyUsedPath.frequentPathFromData
-        .then((value) => pathList.value = value);
+    frequentlyUsedPath.frequentPathFromData.then((value) {
+      pathList.clear();
+      pathList.addAll(value);
+    });
     super.onInit();
   }
 
@@ -40,7 +41,8 @@ class VMStartPlatform extends GetxController {
     String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
     if (selectedDirectory != null) {
       frequentlyUsedPath.addFrequentPath(selectedDirectory);
-      pathList.value = frequentlyUsedPath.pathList;
+      pathList.clear();
+      pathList.addAll(frequentlyUsedPath.pathList);
       return 0;
     }
     return -1;
@@ -63,14 +65,15 @@ class VMStartPlatform extends GetxController {
         pathList.add(result.files.single.name);
       } else {
         frequentlyUsedPath.addFrequentPath(result.files.single.path!);
-        pathList.value = frequentlyUsedPath.pathList;
+        pathList.clear();
+        pathList.addAll(frequentlyUsedPath.pathList);
       }
       return 0;
     }
     return -1;
   }
 
-  Future<bool> setDirectory() async {
+  Future<bool> openProject() async {
     if (selected.value >= 0) {
       if (ConstList.isMobile()) {
         if (!await frequentlyUsedPath.getStatuses()) {
@@ -81,7 +84,7 @@ class VMStartPlatform extends GetxController {
       await Future.wait(isAdded);
 
       isAdded.clear();
-      var path = pathList.reversed.elementAt(selected.value);
+      var path = pathList[pathList.length - 1 - selected.value];
       if (ConstList.isOnlyFileAccept()) {
         return true;
       } else if (path.isNotEmpty) {
@@ -103,15 +106,18 @@ class VMStartPlatform extends GetxController {
     return false;
   }
 
-  set select(int index) => selected.value = index;
+  set select(int index){
+    if(index == selected.value){
+      selected.value = -1;
+    }else{
+      selected.value = index;
+    }
+  }
 
   void removeFrequentPath(int index) async {
     await frequentlyUsedPath.removeFrequentPath(index);
-    pathList.value = frequentlyUsedPath.pathList;
-  }
-
-  Color getColor(int index) {
-    return selected.value == index ? Colors.blue : Colors.black54;
+    pathList.clear();
+    pathList.addAll(frequentlyUsedPath.pathList);
   }
 
   set editable(bool b) => getPlatformFileSystem().isEditable = b;

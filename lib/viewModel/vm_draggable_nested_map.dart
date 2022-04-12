@@ -27,7 +27,7 @@ class VMDraggableNestedMap extends GetxController {
   bool isCapture = false;
 
   bool isVisibleOnlyEdit() {
-    return !isCapture && isEditable();
+    return !isCapture && isEditable;
   }
 
   bool isVisibleDragTarget(int x, int y) {
@@ -36,9 +36,7 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   int getLength() {
-    return isEditable()
-        ? (getPlatform().lineSettings.length * 2 + 2)
-        : (getPlatform().lineSettings.length * 2);
+    return getPlatform().lineSettings.length * 2 + (isEditable ? 2 : 0);
   }
 
   @override
@@ -49,9 +47,8 @@ class VMDraggableNestedMap extends GetxController {
 
   List<Widget> widgetList({BoxConstraints? constrains}) {
     var choiceNodeList = getPlatform().lineSettings;
-    var edit = isEditable();
     List<Widget> widgetList;
-    if (edit) {
+    if (isEditable) {
       widgetList = List<Widget>.generate(getLength(), (y) {
         if (y < choiceNodeList.length * 2) {
           if (y.isOdd) {
