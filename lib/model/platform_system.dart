@@ -1,9 +1,7 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:archive/archive_io.dart';
-import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/model/platform_file_system.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
@@ -60,18 +58,7 @@ class PlatformSystem {
     platformFileSystem.createFromVoid();
   }
 
-  static String getImageName(int index) =>
-    PlatformSystem().platformFileSystem.getImageName(index);
-
   static FutureBuilder getImage(String image) => PlatformSystem().platformFileSystem.getImage(image);
-
-  static void addImage(String name, Uint8List data) {
-    ImageDB().uploadImages(name, data);
-  }
-
-  static int getImageIndex(String name) {
-    return PlatformSystem().platformFileSystem.getImageIndex(name);
-  }
 }
 
 AbstractPlatform getPlatform() {

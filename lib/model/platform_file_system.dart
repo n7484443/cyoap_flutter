@@ -278,14 +278,6 @@ class PlatformFileSystem {
     );
   }
 
-  String getImageName(int index) {
-    return ImageDB().imageList[index];
-  }
-
-  int getImageIndex(String name) {
-    return ImageDB().imageList.indexOf(name);
-  }
-
   void addSource(String image, String source) {
     _imageSource[image] = source;
   }

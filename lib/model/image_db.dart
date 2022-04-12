@@ -109,4 +109,13 @@ class ImageDB {
     }
     return _dirImageUint8Map.containsKey(name);
   }
+
+
+  String getImageName(int index) {
+    return ImageDB().imageList[index];
+  }
+
+  int getImageIndex(String name) {
+    return ImageDB().imageList.indexOf(name);
+  }
 }

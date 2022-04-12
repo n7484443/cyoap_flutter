@@ -14,7 +14,7 @@ class ViewSource extends StatelessWidget {
     var controller = Get.put(VMSource());
     var widget = ListView.builder(
       itemBuilder: (BuildContext context, int index) {
-        var name = getPlatformFileSystem.getImageName(index);
+        var name = ImageDB().getImageName(index);
         return Card(
           elevation: ConstList.elevation,
           child: Row(

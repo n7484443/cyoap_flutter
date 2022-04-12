@@ -70,12 +70,12 @@ class VMEditor extends GetxController {
   }
 
   FutureBuilder getImage(int i) {
-    return PlatformSystem.getImage(PlatformSystem.getImageName(i));
+    return PlatformSystem.getImage(ImageDB().getImageName(i));
   }
 
   void setImage(int index) {
     this.index = index;
-    NodeEditor().target.imageString = PlatformSystem.getImageName(index);
+    NodeEditor().target.imageString = ImageDB().getImageName(index);
     isChanged = true;
     update();
   }
@@ -101,9 +101,9 @@ class VMEditor extends GetxController {
   }
 
   Future<void> addImageCrop(String name, Uint8List data) async {
-    PlatformSystem.addImage(name, data);
+    ImageDB().uploadImages(name, data);
     NodeEditor().target.imageString = name;
-    index = PlatformSystem.getImageIndex(name);
+    index = ImageDB().getImageIndex(name);
     Get.find<VMDraggableNestedMap>().isChanged = true;
     imageLast = null;
 
