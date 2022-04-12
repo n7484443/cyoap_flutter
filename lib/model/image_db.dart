@@ -15,7 +15,7 @@ class ImageDB {
   Future<void> init() async {
     database ??= await getIdbFactory()!.open(
       databaseName,
-      version: 1,
+      version: 100,
       onUpgradeNeeded: (VersionChangeEvent event) {
         var database = event.database;
         if (database.objectStoreNames.contains(objectStore)) {
