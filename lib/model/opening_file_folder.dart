@@ -23,9 +23,10 @@ class FrequentlyUsedPath {
     }
   }
 
-  Future<List<String>> getFrequentPathFromData() async {
+  Future<List<String>> get frequentPathFromData async {
     var prefs = await SharedPreferences.getInstance();
-    return prefs.getStringList('cyoap_frequent_path') ?? [];
+    pathList = prefs.getStringList('cyoap_frequent_path') ?? [];
+    return pathList;
   }
 
   Future<bool> setFrequentPathFromData(List<String> list) async {
@@ -33,7 +34,7 @@ class FrequentlyUsedPath {
     return prefs.setStringList('cyoap_frequent_path', list);
   }
 
-  List<String> addFrequentPath(String path) {
+  Future<void> addFrequentPath(String path) async {
     if (pathList.contains(path)) {
       pathList.remove(path);
     }
@@ -42,14 +43,12 @@ class FrequentlyUsedPath {
     while (pathList.length > 10) {
       pathList.removeLast();
     }
-    setFrequentPathFromData(pathList.toList());
-    return pathList;
+    await setFrequentPathFromData(pathList.toList());
   }
 
-  Future<List<String>> removeFrequentPath(int index) async {
-    pathList = await getFrequentPathFromData();
+  Future<void> removeFrequentPath(int index) async {
+    pathList = await frequentPathFromData;
     pathList.removeAt(pathList.length - 1 - index);
-    setFrequentPathFromData(pathList.toList());
-    return pathList;
+    await setFrequentPathFromData(pathList.toList());
   }
 }

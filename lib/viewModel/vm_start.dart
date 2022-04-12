@@ -12,8 +12,8 @@ import '../model/platform_system.dart';
 
 class VMStartPlatform extends GetxController {
   FrequentlyUsedPath frequentlyUsedPath = FrequentlyUsedPath();
-  List<String> pathList = List.empty(growable: true);
-  int selected = -1;
+  var pathList = List.empty(growable: true).obs;
+  var selected = (-1).obs;
   List<Future<void>> isAdded = List.empty(growable: true);
 
   var needUpdate = false.obs;
@@ -25,10 +25,12 @@ class VMStartPlatform extends GetxController {
       needUpdate.value = value;
       version.value = ConstList.version;
     });
+    frequentlyUsedPath.frequentPathFromData
+        .then((value) => pathList.value = value);
     super.onInit();
   }
 
-  Future<num> openDirectory() async {
+  Future<int> addDirectory() async {
     if (ConstList.isMobile()) {
       var status = await frequentlyUsedPath.getStatuses();
       if (!status) {
@@ -37,14 +39,14 @@ class VMStartPlatform extends GetxController {
     }
     String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
     if (selectedDirectory != null) {
-      pathList = frequentlyUsedPath.addFrequentPath(selectedDirectory);
-      update();
+      frequentlyUsedPath.addFrequentPath(selectedDirectory);
+      pathList.value = frequentlyUsedPath.pathList;
       return 0;
     }
     return -1;
   }
 
-  Future<num> openFile() async {
+  Future<int> addFile() async {
     if (ConstList.isMobile()) {
       var status = await frequentlyUsedPath.getStatuses();
       if (!status) {
@@ -60,29 +62,26 @@ class VMStartPlatform extends GetxController {
         isAdded.add(PlatformSystem().openPlatformZipForWeb(result.files.single));
         pathList.add(result.files.single.name);
       } else {
-        pathList =
-            frequentlyUsedPath.addFrequentPath(result.files.single.path!);
+        frequentlyUsedPath.addFrequentPath(result.files.single.path!);
+        pathList.value = frequentlyUsedPath.pathList;
       }
-      update();
       return 0;
     }
     return -1;
   }
 
   Future<bool> setDirectory() async {
-    if (selected >= 0) {
+    if (selected.value >= 0) {
       if (ConstList.isMobile()) {
-        frequentlyUsedPath.getStatuses().then((value) {
-          if (!value) {
-            return false;
-          }
-        });
+        if (!await frequentlyUsedPath.getStatuses()) {
+          return false;
+        }
       }
 
       await Future.wait(isAdded);
 
       isAdded.clear();
-      var path = pathList.reversed.elementAt(selected);
+      var path = pathList.reversed.elementAt(selected.value);
       if (ConstList.isOnlyFileAccept()) {
         return true;
       } else if (path.isNotEmpty) {
@@ -97,43 +96,23 @@ class VMStartPlatform extends GetxController {
         }
         return true;
       }
-    } else {
-      if (ConstList.isOnlyFileAccept()) {
-        await PlatformSystem().openPlatformVoid();
-        return true;
-      }
+    } else if (ConstList.isOnlyFileAccept()) {
+      await PlatformSystem().openPlatformVoid();
+      return true;
     }
     return false;
   }
 
-  void initFrequentPath() {
-    frequentlyUsedPath.getFrequentPathFromData().then((value) {
-      pathList = value;
-      update();
-    });
-  }
+  set select(int index) => selected.value = index;
 
-  void selectFrequentPath(int index) {
-    selected = index;
-    update();
-  }
-
-  void removeFrequentPath(int index) {
-    frequentlyUsedPath.removeFrequentPath(index).then((value) {
-      pathList = value;
-      update();
-    });
+  void removeFrequentPath(int index) async {
+    await frequentlyUsedPath.removeFrequentPath(index);
+    pathList.value = frequentlyUsedPath.pathList;
   }
 
   Color getColor(int index) {
-    if (selected == index) {
-      return Colors.blue;
-    } else {
-      return Colors.black54;
-    }
+    return selected.value == index ? Colors.blue : Colors.black54;
   }
 
-  void setEditable(bool bool) {
-    getPlatformFileSystem().isEditable = bool;
-  }
+  set editable(bool b) => getPlatformFileSystem().isEditable = b;
 }

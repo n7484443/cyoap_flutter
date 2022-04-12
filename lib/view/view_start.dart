@@ -10,7 +10,6 @@ class ViewStart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vmStart = Get.put(VMStartPlatform());
-    vmStart.initFrequentPath();
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -30,27 +29,26 @@ class ViewStart extends StatelessWidget {
                     children: [
                       Expanded(
                         flex: 12,
-                        child: GetBuilder<VMStartPlatform>(
-                          builder: (_) => ListView.separated(
-                            itemCount: _.pathList.length,
+                        child: Obx(() => ListView.separated(
+                            itemCount: vmStart.pathList.length,
                             itemBuilder: (context, index) {
                               return ListTile(
                                 title: ElevatedButton(
-                                  onPressed: () => _.selectFrequentPath(index),
+                                  onPressed: () => vmStart.select = index,
                                   style: ButtonStyle(
                                     backgroundColor:
                                         MaterialStateProperty.resolveWith(
                                             (states) {
-                                      return _.getColor(index);
+                                      return vmStart.getColor(index);
                                     }),
                                   ),
                                   child: Text(
-                                      _.pathList.reversed.elementAt(index)),
+                                      vmStart.pathList[vmStart.pathList.length - 1 - index]),
                                 ),
                                 trailing: IconButton(
                                   icon: const Icon(Icons.delete),
                                   onPressed: () {
-                                    _.removeFrequentPath(index);
+                                    vmStart.removeFrequentPath(index);
                                   },
                                 ),
                               );
@@ -69,8 +67,8 @@ class ViewStart extends StatelessWidget {
                             TextButton(
                               child: const Text('파일 추가'),
                               onPressed: () async {
-                                if (await vmStart.openFile() == 0) {
-                                  vmStart.selected = 0;
+                                if (await vmStart.addFile() == 0) {
+                                  vmStart.selected.value = 0;
                                 }
                               },
                             ),
@@ -78,8 +76,8 @@ class ViewStart extends StatelessWidget {
                               child: TextButton(
                                 child: const Text('폴더 추가'),
                                 onPressed: () async {
-                                  if (await vmStart.openDirectory() == 0) {
-                                    vmStart.selected = 0;
+                                  if (await vmStart.addDirectory() == 0) {
+                                    vmStart.selected.value = 0;
                                   }
                                 },
                               ),
@@ -132,7 +130,7 @@ class SelectMode extends GetView<VMStartPlatform> {
           child: InkWell(
             onTap: () {
               controller.setDirectory().then((value) {
-                controller.setEditable(false);
+                controller.editable = false;
                 Get.toNamed('/viewPlay');
               });
             },
@@ -153,7 +151,7 @@ class SelectMode extends GetView<VMStartPlatform> {
           child: InkWell(
             onTap: () {
               controller.setDirectory().then((value) {
-                controller.setEditable(true);
+                controller.editable = false;
                 Get.toNamed('/viewMake');
               });
             },
