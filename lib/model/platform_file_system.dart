@@ -262,8 +262,12 @@ class PlatformFileSystem {
       future: _getImage(name),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData == false) {
-          return const Center(
-            child: CircularProgressIndicator(),
+          return const SizedBox(
+            width: 50,
+            height: 50,
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
           );
         } else if (snapshot.hasError) {
           return noImage;

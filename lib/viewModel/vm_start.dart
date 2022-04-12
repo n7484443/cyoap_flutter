@@ -11,12 +11,12 @@ import '../model/platform_system.dart';
 
 class VMStartPlatform extends GetxController {
   FrequentlyUsedPath frequentlyUsedPath = FrequentlyUsedPath();
-  var pathList = <String>[].obs;
-  var selected = (-1).obs;
   List<Future<void>> isAdded = List.empty(growable: true);
 
   var needUpdate = false.obs;
   var version = ''.obs;
+  var pathList = <String>[].obs;
+  var selected = (-1).obs;
 
   @override
   void onInit() {
