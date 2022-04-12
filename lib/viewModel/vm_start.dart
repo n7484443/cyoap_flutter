@@ -17,11 +17,13 @@ class VMStartPlatform extends GetxController {
   List<Future<void>> isAdded = List.empty(growable: true);
 
   var needUpdate = false.obs;
+  var version = ''.obs;
 
   @override
   void onInit() {
     CheckUpdate.needUpdateCheck().then((value) {
       needUpdate.value = value;
+      version.value = ConstList.version;
     });
     super.onInit();
   }

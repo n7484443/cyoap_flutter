@@ -12,7 +12,7 @@ class FrequentlyUsedPath {
     if (await Permission.storage.isDenied) {
       await Permission.storage.request();
     }
-    if (androidInfo.version.sdkInt! >= 11) {
+    if (androidInfo.version.sdkInt! >= 30) {
       if (await Permission.manageExternalStorage.isDenied) {
         await Permission.manageExternalStorage.request();
       }

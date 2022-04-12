@@ -92,18 +92,19 @@ class ViewStart extends StatelessWidget {
                     ),
                   ),
                   Align(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                      Text('version : ${ConstList.version}'),
-                      Obx(
-                        () => Visibility(
-                          child: const Text('새로운 버전이 나왔습니다!',
-                              style: TextStyle(color: Colors.redAccent)),
-                          visible: vmStart.needUpdate.value,
+                    child: Obx(() => Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                        Text('version : ${vmStart.version.value}'),
+                        Obx(
+                          () => Visibility(
+                            child: const Text('새로운 버전이 나왔습니다!',
+                                style: TextStyle(color: Colors.redAccent)),
+                            visible: vmStart.needUpdate.value,
+                          ),
                         ),
+                      ],
                       ),
-                    ],
                     ),
                     alignment: Alignment.topRight,
                   ),
