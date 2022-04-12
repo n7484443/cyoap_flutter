@@ -242,7 +242,7 @@ class PlatformFileSystem {
       if (image != null) {
         var output = Image.memory(
           image,
-          filterQuality: FilterQuality.medium,
+          filterQuality: ConstList.isDesktop() ? FilterQuality.high : FilterQuality.medium,
           isAntiAlias: true,
           fit: BoxFit.scaleDown,
         );
@@ -262,12 +262,8 @@ class PlatformFileSystem {
       future: _getImage(name),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData == false) {
-          return const SizedBox(
-            width: 50,
-            height: 50,
-            child: Center(
-              child: CircularProgressIndicator(),
-            ),
+          return const Center(
+            child: CircularProgressIndicator(),
           );
         } else if (snapshot.hasError) {
           return noImage;
