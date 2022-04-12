@@ -58,7 +58,6 @@ class ViewChoiceNode extends StatelessWidget {
     });
 
     var mainBox = Column(
-      mainAxisSize: MainAxisSize.min,
       children: [
         Stack(
           alignment: Alignment.topCenter,
@@ -82,7 +81,7 @@ class ViewChoiceNode extends StatelessWidget {
           ],
         ),
         editor,
-        if (isEditable()) ChoiceNodeSubDragTarget(node!),
+        if (vmDraggableNestedMap.isVisibleOnlyEdit()) ChoiceNodeSubDragTarget(node!),
         if (node!.children.isNotEmpty)
           ViewWrapCustom(
             node!.children,
@@ -101,7 +100,7 @@ class ViewChoiceNode extends StatelessWidget {
               : getPlatform().colorBackground.lighten(),
           child: mainBox,
         ),
-        if (VMDraggableNestedMap.isVisibleOnlyEdit()) ...[
+        if (vmDraggableNestedMap.isVisibleOnlyEdit()) ...[
           Positioned(
             top: 0,
             right: 0,

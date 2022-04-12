@@ -162,7 +162,7 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
           : Colors.white30,
     );
 
-    if (VMDraggableNestedMap.isVisibleOnlyEdit()) {
+    if (controller.isVisibleOnlyEdit()) {
       Future dialog() => Get.defaultDialog(
             title: '최대 선택지 개수 설정',
             content: NodeDividerDialog(y),

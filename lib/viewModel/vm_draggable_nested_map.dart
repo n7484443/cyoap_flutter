@@ -24,9 +24,9 @@ class VMDraggableNestedMap extends GetxController {
   var mainFont = getPlatform().mainFont.obs;
   var titleFont = getPlatform().titleFont.obs;
 
-  static bool isCapture = false;
+  bool isCapture = false;
 
-  static bool isVisibleOnlyEdit() {
+  bool isVisibleOnlyEdit() {
     return !isCapture && isEditable();
   }
 
@@ -65,10 +65,10 @@ class VMDraggableNestedMap extends GetxController {
                 var j = y ~/ 2;
                 return ViewWrapCustom(
                   xList.children,
-                  (child) => constrains != null
-                      ? NodeDraggable(child.currentPos, j, constrains)
+                  (child) => _.isVisibleOnlyEdit()
+                      ? NodeDraggable(child.currentPos, j, constrains!)
                       : ViewChoiceNode(child.currentPos, j),
-                  builderDraggable: (i) => NodeDragTarget(i, j),
+                  builderDraggable: _.isVisibleOnlyEdit() ? (i) => NodeDragTarget(i, j) : null,
                 );
               }),
             );

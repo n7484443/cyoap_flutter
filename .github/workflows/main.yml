@@ -4,7 +4,7 @@ on:
     tags:
       - "v*.*.*"
 jobs:
-  build_windows:
+  build_android:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
@@ -19,14 +19,9 @@ jobs:
           distribution: 'zulu'
           java-version: '11'
 
-      - run: flutter config --enable-windows-desktop
-      - run: flutter build windows --release
-
       - name: Get latest release version number
         id: get_version
         uses: battila7/get-version-action@v2
-
-      - run: 7z a build/windows/cyoap_windows_${{ steps.get_version.outputs.version-without-v }}.zip ./build/windows/runner/Release/*
 
       - name: base64-to-file
         uses: timheuer/base64-to-file@v1.1
@@ -41,8 +36,31 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            build/windows/cyoap_windows_${{ steps.get_version.outputs.version-without-v }}.zip
             build/app/outputs/flutter-apk/cyoap_android_${{ steps.get_version.outputs.version-without-v }}.apk
+  build_windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+          cache-key: flutter
+          cache-path: ${{ runner.tool_cache }}/flutter
+
+      - run: flutter build windows --release
+
+      - name: Get latest release version number
+        id: get_version
+        uses: battila7/get-version-action@v2
+
+      - run: 7z a build/windows/cyoap_windows_${{ steps.get_version.outputs.version-without-v }}.zip ./build/windows/runner/Release/*
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            build/windows/cyoap_windows_${{ steps.get_version.outputs.version-without-v }}.zip
 
   build_webs:
     runs-on: windows-latest
