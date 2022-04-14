@@ -2,12 +2,12 @@ import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/util/view_text_outline.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
-import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../main.dart';
+import '../viewModel/vm_choice_node.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
 
 class NodeDraggable extends GetView<VMDraggableNestedMap> {
@@ -98,11 +98,9 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
       child: DragTarget<List<int>>(
         builder: (BuildContext context, List<dynamic> accepted,
             List<dynamic> rejected) {
-          return ColoredBox(
+          return Container(
             color: baseColor,
-            child: isHorizontal ? const SizedBox(
-              height: 100,
-            ) : null,
+            height: isHorizontal ? 200 : null,
           );
         },
         onAccept: (List<int> drag) {
