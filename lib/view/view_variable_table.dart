@@ -41,7 +41,7 @@ class ViewVariable extends StatelessWidget {
             title: GetBuilder<VMVariableTable>(
               builder: (_) => ViewSwitchLabel(
                 _.setSourceVisible,
-                _.getSourceVisible(),
+                _.sourceVisible,
                 label: '출처 보기',
               ),
             ),

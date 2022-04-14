@@ -10,7 +10,6 @@ import 'choiceNode/generable_parser.dart';
 import 'grammar/value_type.dart';
 
 class AbstractPlatform {
-  double scale = 1.0;
   String stringImageName;
   Color colorBackground;
   int flag;

@@ -70,5 +70,5 @@ class VMVariableTable extends GetxController {
     update();
   }
 
-  bool getSourceVisible() => getPlatform.isVisibleSource;
+  bool get sourceVisible => getPlatform.isVisibleSource;
 }

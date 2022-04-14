@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:github/github.dart';
 
 import '../main.dart';
-import '../util/version.dart';
+import 'version.dart';
 
 class CheckUpdate {
   static Future<bool> needUpdateCheck() async {

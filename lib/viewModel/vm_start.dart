@@ -5,7 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
 
 import '../main.dart';
-import '../model/check_update.dart';
+import '../util/check_update.dart';
 import '../model/opening_file_folder.dart';
 import '../model/platform_system.dart';
 
