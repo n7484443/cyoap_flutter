@@ -92,6 +92,22 @@ class ViewEditor extends StatelessWidget {
             controller.isRandom.value,
             label: '랜덤 기능',
           ),
+          Visibility(
+            child: SizedBox(
+              width: 80,
+              child: TextField(
+                textAlign: TextAlign.end,
+                maxLength: 3,
+                minLines: 1,
+                maxLines: 1,
+                controller: controller.controllerRandom,
+                decoration: const InputDecoration(
+                  label: Text('랜덤 범위'),
+                ),
+              ),
+            ),
+            visible: controller.isRandom.value,
+          ),
           const Spacer(),
           Padding(
             padding: const EdgeInsets.only(bottom: 10.0),

@@ -76,7 +76,17 @@ class VMDraggableNestedMap extends GetxController {
           }
         } else {
           if (y.isOdd) {
-            return NodeDragTarget(0, choiceNodeList.length);
+            return Row(
+              children: [
+                Expanded(
+                  child: NodeDragTarget(
+                    0,
+                    choiceNodeList.length,
+                    isHorizontal: true,
+                  ),
+                )
+              ],
+            );
           } else {
             return GetBuilder<VMDraggableNestedMap>(
               builder: (_) => Visibility(

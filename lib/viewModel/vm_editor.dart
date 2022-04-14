@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 class VMEditor extends GetxController {
   final TextEditingController controllerTitle = TextEditingController();
   final TextEditingController controllerSource = TextEditingController();
+  final TextEditingController controllerRandom = TextEditingController();
   late final QuillController quillController;
   final FocusNode focusBody = FocusNode();
 

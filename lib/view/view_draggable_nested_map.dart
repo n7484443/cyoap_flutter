@@ -98,9 +98,11 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
       child: DragTarget<List<int>>(
         builder: (BuildContext context, List<dynamic> accepted,
             List<dynamic> rejected) {
-          return Container(
+          return ColoredBox(
             color: baseColor,
-            height: nodeBaseHeight,
+            child: isHorizontal ? const SizedBox(
+              height: 100,
+            ) : null,
           );
         },
         onAccept: (List<int> drag) {
