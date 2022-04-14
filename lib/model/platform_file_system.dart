@@ -29,6 +29,7 @@ class PlatformFileSystem {
   bool _isEditable = true;
   bool get isEditable => ConstList.isDistributed ? false : _isEditable;
   set isEditable(bool input) => _isEditable = input;
+  String? path;
 
   PlatformFileSystem();
   /*TODO - page 시스템 개발*/
@@ -170,8 +171,8 @@ class PlatformFileSystem {
     archive.clear();
   }
 
-  Future<void> createFromJson(String input, String path) async {
-    var jsonParser = JsonProjectParser(path);
+  Future<void> createFromJson(String input) async {
+    var jsonParser = JsonProjectParser(path!);
     platform = await jsonParser.getPlatform(input);
     platform!.init();
   }
@@ -205,14 +206,14 @@ class PlatformFileSystem {
 
   Future<void> saveAsFile() async {
     await PlatformSpecified().saveProject!.saveZip(
-        ConstList.isOnlyFileAccept() ? 'exported.zip' : PlatformSystem().path!,
+        ConstList.isOnlyFileAccept() ? 'exported.zip' : path!,
         await saveDataMap);
   }
 
   Future<void> saveAsFolder() async {
     await PlatformSpecified()
         .saveProject!
-        .saveRaw(PlatformSystem().path!, await saveDataMap);
+        .saveRaw(path!, await saveDataMap);
   }
 
   final regCheckImage = RegExp(r'[.](webp|png|jpg|jpeg|bmp|gif)$');

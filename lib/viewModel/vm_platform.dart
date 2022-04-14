@@ -93,7 +93,7 @@ class VMPlatform extends GetxController {
                 .downloadCapture(value.item1, value.item2);
           } else {
             PlatformSpecified().saveProject!.downloadCapture(
-                '${PlatformSystem().path}/${value.item1}', value.item2);
+                '${getPlatformFileSystem.path}/${value.item1}', value.item2);
           }
 
           stopwatch.update((val) => val?.stop());
@@ -107,7 +107,7 @@ class VMPlatform extends GetxController {
               .downloadCapture('exported.png', byteData);
         } else {
           PlatformSpecified().saveProject!.downloadCapture(
-              '${PlatformSystem().path}/exported.png', byteData);
+              '${getPlatformFileSystem.path}/exported.png', byteData);
         }
 
         stopwatch.update((val) => val?.stop());

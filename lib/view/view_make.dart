@@ -93,7 +93,7 @@ class ViewMake extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.play_arrow),
             onPressed: () {
-              Get.find<VMPlatform>().loadVariable();
+              vmPlatform.loadVariable();
             },
           ),
           IconButton(
@@ -108,15 +108,12 @@ class ViewMake extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const CircularProgressIndicator(),
-                    Obx(() => Text(Get.find<VMPlatform>()
-                        .stopwatch
-                        .value
-                        .elapsed
-                        .toString())),
+                    Obx(() =>
+                        Text(vmPlatform.stopwatch.value.elapsed.toString())),
                   ],
                 ),
               );
-              Get.find<VMPlatform>().exportAsImage();
+              vmPlatform.exportAsImage();
             },
           ),
           IconButton(
@@ -131,15 +128,12 @@ class ViewMake extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const CircularProgressIndicator(),
-                    Obx(() => Text(Get.find<VMPlatform>()
-                        .stopwatch
-                        .value
-                        .elapsed
-                        .toString())),
+                    Obx(() =>
+                        Text(vmPlatform.stopwatch.value.elapsed.toString())),
                   ],
                 ),
               );
-              Get.find<VMPlatform>().save(true);
+              vmPlatform.save(true);
             },
           ),
           Visibility(
@@ -155,18 +149,15 @@ class ViewMake extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const CircularProgressIndicator(),
-                      Obx(() => Text(Get.find<VMPlatform>()
-                          .stopwatch
-                          .value
-                          .elapsed
-                          .toString())),
+                      Obx(() =>
+                          Text(vmPlatform.stopwatch.value.elapsed.toString())),
                     ],
                   ),
                 );
-                Get.find<VMPlatform>().save(false);
+                vmPlatform.save(false);
               },
             ),
-            visible: !PlatformSystem().platformFileSystem.openAsFile,
+            visible: !getPlatformFileSystem.openAsFile,
           )
         ],
       ),

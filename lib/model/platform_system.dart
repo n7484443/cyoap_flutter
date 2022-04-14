@@ -17,8 +17,7 @@ class PlatformSystem {
   PlatformSystem._init();
 
   static final PlatformSystem _instance = PlatformSystem._init();
-  PlatformFileSystem platformFileSystem = PlatformFileSystem();
-  String? path;
+  static final PlatformFileSystem platformFileSystem = PlatformFileSystem();
 
   Future<void> openPlatformZipForWeb(PlatformFile file) async {
     var bytes = file.bytes;
@@ -31,20 +30,20 @@ class PlatformSystem {
 
   Future<void> openPlatformZip(File file) async {
     var bytes = await file.readAsBytes();
-    path = file.parent.path;
+    platformFileSystem.path = file.parent.path;
 
     var archiveBytes = ZipDecoder().decodeBytes(bytes);
     await platformFileSystem.createFromZip(archiveBytes);
   }
 
   Future<void> openPlatformJson(File file) async {
-    path = file.parent.path;
+    platformFileSystem.path = file.parent.path;
 
-    await platformFileSystem.createFromJson(file.readAsStringSync(), path!);
+    await platformFileSystem.createFromJson(file.readAsStringSync());
   }
 
   Future<void> openPlatformFolder(String path) async {
-    this.path = path;
+    platformFileSystem.path = path;
     await platformFileSystem.createFromFolder(path);
   }
 
@@ -59,7 +58,7 @@ class PlatformSystem {
   }
 
   static FutureBuilder getImage(String image) =>
-      PlatformSystem().platformFileSystem.getImage(image);
+      PlatformSystem.platformFileSystem.getImage(image);
 }
 
 AbstractPlatform getPlatform() {
@@ -70,7 +69,7 @@ AbstractPlatform getPlatform() {
 bool get isEditable => getPlatformFileSystem.isEditable;
 
 PlatformFileSystem get getPlatformFileSystem =>
-    PlatformSystem().platformFileSystem;
+    PlatformSystem.platformFileSystem;
 
 TextStyle get titleFont => ConstList.getFont(getPlatform().titleFont);
 
