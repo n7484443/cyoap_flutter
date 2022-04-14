@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:cyoap_flutter/model/editor.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
+import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ class VMEditor extends GetxController {
 
   @override
   void onInit() {
-    quillController = NodeEditor().getVMChoiceNode().quillController;
+    quillController = NodeEditor().getVMChoiceNode()!.quillController;
     isCard.listen((value) {
       isChanged = true;
       NodeEditor().target.isCard = value;
@@ -41,8 +42,14 @@ class VMEditor extends GetxController {
 
     isRandom.listen((value) {
       isChanged = true;
-      NodeEditor().target.maxRandom = value ? 2 : -1;
+      NodeEditor().target.maxRandom = value ? 2 : 0;
     });
+
+    controllerRandom.addListener(() {
+      isChanged = true;
+      NodeEditor().target.maxRandom = int.parse(controllerRandom.text);
+    });
+    controllerRandom.text = NodeEditor().target.maxRandom.toString();
 
     controllerTitle.text = title.value;
     contents.value = quillController.document.toPlainText();
@@ -63,11 +70,12 @@ class VMEditor extends GetxController {
     NodeEditor().target.title = title.value;
     NodeEditor().target.contentsString =
         jsonEncode(quillController.document.toDelta().toJson());
-    NodeEditor().getVMChoiceNode().updateFromEditor();
+    VMChoiceNode.getVMChoiceNodeFromNode(NodeEditor().target.getParentLast()!)?.updateFromEditor();
+    Get.find<VMDraggableNestedMap>().update();
+    Get.find<VMDraggableNestedMap>().isChanged = true;
     quillController.updateSelection(
         const TextSelection.collapsed(offset: 0), ChangeSource.REMOTE);
     isChanged = false;
-    Get.find<VMDraggableNestedMap>().isChanged = true;
   }
 
   FutureBuilder getImage(int i) {

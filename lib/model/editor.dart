@@ -12,13 +12,16 @@ class NodeEditor {
   }
   NodeEditor._init();
 
-  late ChoiceNodeBase target;
+  ChoiceNodeBase? _target;
+
+  ChoiceNodeBase get target => _target!;
 
   void setTarget(ChoiceNodeBase node) {
-    target = node;
+    _target = node;
   }
 
-  VMChoiceNode getVMChoiceNode() {
-    return VMChoiceNode.getVMChoiceNodeFromTag(target.tag)!;
+  VMChoiceNode? getVMChoiceNode() {
+    if(_target == null)return null;
+    return VMChoiceNode.getVMChoiceNodeFromTag(_target!.tag);
   }
 }

@@ -11,7 +11,7 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
   //grid 단위로 설정
   int width; //0 = 무한대
   bool isCard;
-  int maxRandom = -1;
+  int maxRandom = 0;
   int random = -1;
   String title;
   String contentsString;
@@ -40,9 +40,9 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
   } //랜덤 문자로 제목 중복 방지
 
   ChoiceNodeBase.fromJson(Map<String, dynamic> json)
-      : width = json['width'] ?? 1,
+      : width = json['width'] ?? 2,
         isCard = json['isCard'] ?? true,
-        maxRandom = json['maxRandom'] ?? -1,
+        maxRandom = json['maxRandom'] ?? 0,
         isSelectable = json['isSelectable'],
         title = json['title'] ?? '',
         contentsString = json['contentsString'],

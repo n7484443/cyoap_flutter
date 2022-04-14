@@ -116,6 +116,9 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
         },
       ),
       visible: controller.drag != null,
+      maintainSize: true,
+      maintainAnimation: true,
+      maintainState: true,
     );
   }
 }

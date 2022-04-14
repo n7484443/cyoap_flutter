@@ -100,6 +100,7 @@ class ViewEditor extends StatelessWidget {
                 maxLength: 3,
                 minLines: 1,
                 maxLines: 1,
+                keyboardType: TextInputType.number,
                 controller: controller.controllerRandom,
                 decoration: const InputDecoration(
                   label: Text('랜덤 범위'),

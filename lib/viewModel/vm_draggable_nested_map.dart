@@ -60,6 +60,19 @@ class VMDraggableNestedMap extends GetxController {
               ),
               child: GetBuilder<VMDraggableNestedMap>(builder: (_) {
                 var j = y ~/ 2;
+                if(xList.children.isEmpty){
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: NodeDragTarget(
+                          0,
+                          j,
+                          isHorizontal: true,
+                        ),
+                      )
+                    ],
+                  );
+                }
                 return ViewWrapCustom(
                   xList.children,
                   (child) => _.isVisibleOnlyEdit()
