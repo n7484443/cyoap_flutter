@@ -50,9 +50,9 @@ class VMDraggableNestedMap extends GetxController {
     List<Widget> widgetList;
     if (isEditable) {
       widgetList = List<Widget>.generate(getLength(), (y) {
+        var j = y ~/ 2;
         if (y < choiceNodeList.length * 2) {
           if (y.isOdd) {
-            var j = y ~/ 2;
             var xList = choiceNodeList[j].children;
             return Padding(
               padding: const EdgeInsets.only(
@@ -85,7 +85,7 @@ class VMDraggableNestedMap extends GetxController {
               }),
             );
           } else {
-            return NodeDivider(y ~/ 2);
+            return NodeDivider(j);
           }
         } else if (y.isOdd){
           return Row(
@@ -102,7 +102,7 @@ class VMDraggableNestedMap extends GetxController {
         }else {
           return GetBuilder<VMDraggableNestedMap>(
             builder: (_) => Visibility(
-              child: NodeDivider(y ~/ 2),
+              child: NodeDivider(j),
               visible: drag != null,
             ),
           );
@@ -110,8 +110,8 @@ class VMDraggableNestedMap extends GetxController {
       });
     } else {
       widgetList = List<Widget>.generate(getLength(), (y) {
+        var j = y ~/ 2;
         if (y.isOdd) {
-          var j = y ~/ 2;
           var xList = choiceNodeList[j].children;
           return Padding(
             padding: const EdgeInsets.only(
@@ -126,7 +126,7 @@ class VMDraggableNestedMap extends GetxController {
             ),
           );
         } else {
-          return NodeDivider(y ~/ 2);
+          return NodeDivider(j);
         }
       });
     }
