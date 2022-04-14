@@ -20,7 +20,7 @@ class ViewChoiceNode extends StatelessWidget {
   ViewChoiceNode(int posX, int posY, {Key? key})
       : node = posX == nonPositioned && posY == nonPositioned
             ? null
-            : getPlatform().getChoiceNode([posY, posX])!,
+            : getPlatform.getChoiceNode([posY, posX])!,
         super(key: key);
 
   const ViewChoiceNode.fromNode(this.node, {Key? key}) : super(key: key);
@@ -98,7 +98,7 @@ class ViewChoiceNode extends StatelessWidget {
         ColoredBox(
           color: controller.node.isCard
               ? Colors.white
-              : getPlatform().colorBackground.lighten(),
+              : getPlatform.colorBackground.lighten(),
           child: mainBox,
         ),
         Positioned.fill(
@@ -157,7 +157,7 @@ class ViewChoiceNode extends StatelessWidget {
           )
         ] else if (getPlatformFileSystem
                 .hasSource(controller.imageString.value) &&
-            getPlatform().isVisibleSource) ...[
+            getPlatform.isVisibleSource) ...[
           Positioned(
             bottom: 0,
             left: 0,
@@ -326,14 +326,14 @@ class ChoiceNodeSubDragTarget extends StatelessWidget {
             node.addChildren(VMDraggableNestedMap.createNodeForTemp());
             vmDraggableNestedMap.updateVMChoiceNode(node.pos());
           } else {
-            var childNode = getPlatform().getChoiceNode(data)!;
+            var childNode = getPlatform.getChoiceNode(data)!;
             var parentLastPos = childNode.getParentLast()!.pos();
             childNode.parent!.removeChildren(childNode);
             node.addChildren(childNode);
             vmDraggableNestedMap.updateVMChoiceNode(parentLastPos);
             vmDraggableNestedMap.update();
           }
-          getPlatform().checkDataCollect();
+          getPlatform.checkDataCollect();
         },
       ),
       visible: vmDraggableNestedMap.drag != null &&

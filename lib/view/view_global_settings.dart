@@ -248,7 +248,7 @@ class ViewGlobalSetting extends StatelessWidget {
                   onChanged: (String? t) {
                     if (t != null) _.setTitleFont(t);
                   },
-                  value: getPlatform().titleFont,
+                  value: getPlatform.titleFont,
                 ),
               ),
             ),
@@ -266,7 +266,7 @@ class ViewGlobalSetting extends StatelessWidget {
                   onChanged: (String? t) {
                     if (t != null) _.setMainFont(t);
                   },
-                  value: getPlatform().mainFont,
+                  value: getPlatform.mainFont,
                 ),
               ),
             ),
@@ -317,7 +317,7 @@ class ViewGlobalSetting extends StatelessWidget {
                       controller: ScrollController(),
                       children: [
                         ColorPicker(
-                          color: getPlatform().colorBackground,
+                          color: getPlatform.colorBackground,
                           heading: const Text('배경색 설정'),
                           subheading: const Text('색조 설정'),
                           onColorChanged: (Color value) {

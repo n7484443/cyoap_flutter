@@ -67,7 +67,7 @@ class VMChoiceNode extends GetxController {
     if (pos[pos.length - 1] == nonPositioned) {
       return VMDraggableNestedMap.createNodeForTemp();
     }
-    return getPlatform().getChoiceNode(pos);
+    return getPlatform.getChoiceNode(pos);
   }
 
   static String getTagFromXY(int x, int y) {
@@ -133,7 +133,7 @@ class VMChoiceNode extends GetxController {
 
   bool isSelect() {
     if (pos[pos.length - 1] == nonPositioned) return false;
-    return getPlatform().isSelect(node.pos());
+    return getPlatform.isSelect(node.pos());
   }
 
   bool isIgnorePointer() {
@@ -141,11 +141,11 @@ class VMChoiceNode extends GetxController {
   }
 
   void select() {
-    getPlatform().setSelect(node.pos());
+    getPlatform.setSelect(node.pos());
   }
 
   static void updateStatusAll() {
-    getPlatform().updateStatusAll();
+    getPlatform.updateStatusAll();
     VMChoiceNode.doAllVMChoiceNode((vm) {
       vm.status.value = vm.node.status;
     });
@@ -187,7 +187,7 @@ class VMChoiceNode extends GetxController {
   }
 
   static void doAllVMChoiceNode(void Function(VMChoiceNode vm) action) {
-    getPlatform().doAllChoiceNode((node) {
+    getPlatform.doAllChoiceNode((node) {
       var vm = getVMChoiceNodeFromList(node.pos());
       if (vm != null) {
         action(vm);

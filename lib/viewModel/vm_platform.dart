@@ -33,8 +33,8 @@ class VMPlatform extends GetxController {
       stopwatch.update((val) {});
     });
 
-    getPlatform().compress();
-    getPlatform().generateRecursiveParser();
+    getPlatform.compress();
+    getPlatform.generateRecursiveParser();
 
     Future output;
     if (toFile) {
@@ -119,8 +119,8 @@ class VMPlatform extends GetxController {
   }
 
   void loadVariable() {
-    getPlatform().generateRecursiveParser();
-    getPlatform().updateStatusAll();
+    getPlatform.generateRecursiveParser();
+    getPlatform.updateStatusAll();
   }
 
   var loadString = '';

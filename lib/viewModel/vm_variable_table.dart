@@ -16,7 +16,7 @@ class VMVariableTable extends GetxController {
     var nodeList = List<Widget>.empty(growable: true);
     var iconCheckBox = const Icon(Icons.check_box);
     var iconCheckBoxBlank = const Icon(Icons.check_box_outline_blank);
-    getPlatform().doAllChoiceNode((node) {
+    getPlatform.doAllChoiceNode((node) {
       if (isEditable) {
         nodeList.add(ListTile(
           title: Text(node.title),
@@ -65,10 +65,10 @@ class VMVariableTable extends GetxController {
   }
 
   void setSourceVisible() {
-    getPlatform().isVisibleSource = !getPlatform().isVisibleSource;
+    getPlatform.isVisibleSource = !getPlatform.isVisibleSource;
     Get.find<VMDraggableNestedMap>().update();
     update();
   }
 
-  bool getSourceVisible() => getPlatform().isVisibleSource;
+  bool getSourceVisible() => getPlatform.isVisibleSource;
 }

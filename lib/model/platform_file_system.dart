@@ -189,8 +189,8 @@ class PlatformFileSystem {
 
   Future<Map<String, dynamic>> get saveDataMap async {
     Map<String, String> lineSetting = {};
-    for (int i = 0; i < getPlatform().lineSettings.length; i++) {
-      var line = getPlatform().lineSettings[i];
+    for (int i = 0; i < getPlatform.lineSettings.length; i++) {
+      var line = getPlatform.lineSettings[i];
       lineSetting['lineSetting_${line.currentPos}.json'] =
           jsonEncode(line.toJson());
     }
@@ -198,7 +198,7 @@ class PlatformFileSystem {
     var input = {
       'imageMap': await ImageDB().imageMap,
       'imageSource': getPlatformFileSystem.imageSource,
-      'platform': jsonEncode(getPlatform().toJson()),
+      'platform': jsonEncode(getPlatform.toJson()),
       'lineSetting': lineSetting,
     };
     return input;

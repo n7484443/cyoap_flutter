@@ -21,8 +21,8 @@ class VMDraggableNestedMap extends GetxController {
 
   bool isChanged = false;
 
-  var mainFont = getPlatform().mainFont.obs;
-  var titleFont = getPlatform().titleFont.obs;
+  var mainFont = getPlatform.mainFont.obs;
+  var titleFont = getPlatform.titleFont.obs;
 
   bool isCapture = false;
 
@@ -36,7 +36,7 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   int getLength() {
-    return getPlatform().lineSettings.length * 2 + (isEditable ? 2 : 0);
+    return getPlatform.lineSettings.length * 2 + (isEditable ? 2 : 0);
   }
 
   @override
@@ -46,7 +46,7 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   List<Widget> widgetList({BoxConstraints? constrains}) {
-    var choiceNodeList = getPlatform().lineSettings;
+    var choiceNodeList = getPlatform.lineSettings;
     List<Widget> widgetList;
     if (isEditable) {
       widgetList = List<Widget>.generate(getLength(), (y) {
@@ -134,7 +134,7 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   void removeData(List<int> data) {
-    getPlatform().removeData(data);
+    getPlatform.removeData(data);
     updateVMChoiceNode(data);
     update();
   }
@@ -145,7 +145,7 @@ class VMDraggableNestedMap extends GetxController {
     var parentNode = node.getParentLast();
     var y = parentNode!.parent!.currentPos;
 
-    var lineSetting = getPlatform().lineSettings;
+    var lineSetting = getPlatform.lineSettings;
     if (y >= lineSetting.length) return;
     for (var node in lineSetting[y].children) {
       VMChoiceNode.getVMChoiceNodeFromTag(node.tag)?.updateFromNode();
@@ -158,9 +158,9 @@ class VMDraggableNestedMap extends GetxController {
 
   void changeData(List<int> data, List<int> pos) {
     if (data[data.length - 1] == nonPositioned) {
-      getPlatform().addData(pos, createNodeForTemp());
+      getPlatform.addData(pos, createNodeForTemp());
     } else {
-      getPlatform().changeData(data, pos);
+      getPlatform.changeData(data, pos);
       updateVMChoiceNode(data);
     }
     updateVMChoiceNode(pos);
@@ -198,7 +198,7 @@ class VMDraggableNestedMap extends GetxController {
     }
   }
 
-  Color get backgroundColor => getPlatform().colorBackground;
+  Color get backgroundColor => getPlatform.colorBackground;
 
   double get scale {
     var context = captureKey.currentContext;
@@ -208,8 +208,8 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   void addMaxSelect(int y, int max) {
-    if ((getPlatform().getLineSetting(y)!.maxSelect + max) >= -1) {
-      getPlatform().getLineSetting(y)?.maxSelect += max;
+    if ((getPlatform.getLineSetting(y)!.maxSelect + max) >= -1) {
+      getPlatform.getLineSetting(y)?.maxSelect += max;
     }
     update();
     isChanged = true;
@@ -220,7 +220,7 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   String getMaxSelect(int y) {
-    var line = getPlatform().getLineSetting(y);
+    var line = getPlatform.getLineSetting(y);
     var max = line == null ? -1 : line.maxSelect;
     return max == -1 ? '무한' : '$max';
   }

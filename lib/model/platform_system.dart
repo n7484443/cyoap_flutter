@@ -61,7 +61,7 @@ class PlatformSystem {
       PlatformSystem.platformFileSystem.getImage(image);
 }
 
-AbstractPlatform getPlatform() {
+AbstractPlatform get getPlatform {
   getPlatformFileSystem.platform ??= AbstractPlatform.none();
   return getPlatformFileSystem.platform!;
 }
@@ -71,6 +71,6 @@ bool get isEditable => getPlatformFileSystem.isEditable;
 PlatformFileSystem get getPlatformFileSystem =>
     PlatformSystem.platformFileSystem;
 
-TextStyle get titleFont => ConstList.getFont(getPlatform().titleFont);
+TextStyle get titleFont => ConstList.getFont(getPlatform.titleFont);
 
-TextStyle get mainFont => ConstList.getFont(getPlatform().mainFont);
+TextStyle get mainFont => ConstList.getFont(getPlatform.mainFont);
