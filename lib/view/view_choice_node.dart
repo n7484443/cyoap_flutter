@@ -94,7 +94,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
       ],
     );
 
-    var baseColor = nodeController.node.isCard ? Colors.white : baseNodeColor;
+    var baseColor = node!.isCard ? Colors.white : baseNodeColor;
     var mainNode = Ink(
       color: baseColor,
       child: InkWell(
