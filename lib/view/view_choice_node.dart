@@ -14,7 +14,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../main.dart';
 import '../model/platform_system.dart';
 
-class ViewChoiceNode extends StatelessWidget {
+class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
   final ChoiceNodeBase? node;
 
   ViewChoiceNode(int posX, int posY, {Key? key})
@@ -27,22 +27,20 @@ class ViewChoiceNode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var vmDraggableNestedMap = Get.find<VMDraggableNestedMap>();
     if (node == null) {
       return Card(
         child: SizedBox(
-          width:
-              vmDraggableNestedMap.maxWidth / defaultMaxSize * 3 * vmDraggableNestedMap.scale,
-          height: nodeBaseHeight * vmDraggableNestedMap.scale,
+          width: controller.maxWidth / defaultMaxSize * 3 * controller.scale,
+          height: nodeBaseHeight * controller.scale,
         ),
       );
     }
-    var controller = Get.put(VMChoiceNode.fromNode(node!), tag: node!.tag);
+    var nodeController = Get.put(VMChoiceNode.fromNode(node!), tag: node!.tag);
 
     var editor = Obx(() {
       return IgnorePointer(
         child: QuillEditor(
-          controller: controller.quillController,
+          controller: nodeController.quillController,
           focusNode: FocusNode(),
           readOnly: true,
           autoFocus: false,
@@ -50,9 +48,8 @@ class ViewChoiceNode extends StatelessWidget {
           padding: const EdgeInsets.only(top: 4),
           scrollController: ScrollController(),
           scrollable: false,
-          customStyles: ConstList.getDefaultThemeData(context, vmDraggableNestedMap.scale,
-              fontStyle:
-                  ConstList.getFont(vmDraggableNestedMap.mainFont.value)),
+          customStyles: ConstList.getDefaultThemeData(context, controller.scale,
+              fontStyle: ConstList.getFont(controller.mainFont.value)),
         ),
       );
     });
@@ -62,27 +59,27 @@ class ViewChoiceNode extends StatelessWidget {
         Stack(
           alignment: Alignment.topCenter,
           children: [
-            if (controller.imageString.value.isNotEmpty)
+            if (nodeController.imageString.value.isNotEmpty)
               ConstrainedBox(
                 constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height / 3,
+                  maxHeight: MediaQuery.of(context).size.height / 3.5,
                 ),
                 child: ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(5)),
-                  child: PlatformSystem.getImage(controller.imageString.value),
+                  child:
+                      PlatformSystem.getImage(nodeController.imageString.value),
                 ),
               ),
-            if (controller.titleString.value.isNotEmpty)
+            if (nodeController.titleString.value.isNotEmpty)
               TextOutline(
-                controller.titleString.value,
-                20 * vmDraggableNestedMap.scale,
-                ConstList.getFont(vmDraggableNestedMap.titleFont.value),
+                nodeController.titleString.value,
+                20 * controller.scale,
+                ConstList.getFont(controller.titleFont.value),
               ),
           ],
         ),
         editor,
-        if (vmDraggableNestedMap.isVisibleOnlyEdit())
-          ChoiceNodeSubDragTarget(node!),
+        if (controller.isVisibleOnlyEdit()) ChoiceNodeSubDragTarget(node!),
         if (node!.children.isNotEmpty)
           ViewWrapCustom(
             node!.children,
@@ -95,43 +92,38 @@ class ViewChoiceNode extends StatelessWidget {
     var mainNode = Stack(
       alignment: Alignment.topCenter,
       children: [
-        ColoredBox(
-          color: controller.node.isCard
+        Ink(
+          color: nodeController.node.isCard
               ? Colors.white
               : getPlatform.colorBackground.lighten(),
-          child: mainBox,
+          child: InkWell(
+              onDoubleTap: () {
+                if (isEditable) {
+                  controller.setEdit(node!);
+                  Get.toNamed('/viewEditor', id: 1);
+                }
+              },
+              onTap: () async {
+                if (!isEditable) {
+                  nodeController.select();
+                  if (nodeController.isRandom.value) {
+                    if (nodeController.isSelect()) {
+                      nodeController.startRandom();
+                      await showDialog(
+                        context: context,
+                        builder: (builder) => RandomDialog(node),
+                        barrierDismissible: false,
+                      );
+                    } else {
+                      node!.random = -1;
+                    }
+                  }
+                  VMChoiceNode.updateStatusAll();
+                }
+              },
+              child: mainBox),
         ),
-        Positioned.fill(
-          child: Material(
-            color: Colors.transparent,
-            child: isEditable
-                ? InkWell(
-                    onDoubleTap: () {
-                      vmDraggableNestedMap.setEdit(node!);
-                      Get.toNamed('/viewEditor', id: 1);
-                    },
-                  )
-                : InkWell(
-                    onTap: () async {
-                      controller.select();
-                      if (controller.isRandom.value) {
-                        if (controller.isSelect()) {
-                          controller.startRandom();
-                          await showDialog(
-                            context: context,
-                            builder: (builder) => RandomDialog(node),
-                            barrierDismissible: false,
-                          );
-                        } else {
-                          node!.random = -1;
-                        }
-                      }
-                      VMChoiceNode.updateStatusAll();
-                    },
-                  ),
-          ),
-        ),
-        if (vmDraggableNestedMap.isVisibleOnlyEdit()) ...[
+        if (controller.isVisibleOnlyEdit()) ...[
           Positioned(
             top: 0,
             right: 0,
@@ -156,7 +148,7 @@ class ViewChoiceNode extends StatelessWidget {
             ),
           )
         ] else if (getPlatformFileSystem
-                .hasSource(controller.imageString.value) &&
+                .hasSource(nodeController.imageString.value) &&
             getPlatform.isVisibleSource) ...[
           Positioned(
             bottom: 0,
@@ -169,7 +161,7 @@ class ViewChoiceNode extends StatelessWidget {
               ),
               onPressed: () {
                 var url = getPlatformFileSystem
-                    .getSource(controller.imageString.value);
+                    .getSource(nodeController.imageString.value);
                 if (url != null && url.isNotEmpty) {
                   launch(url);
                 }
@@ -180,24 +172,14 @@ class ViewChoiceNode extends StatelessWidget {
       ],
     );
 
-    Widget innerWidget = mainNode;
-    if (!isEditable) {
-      innerWidget = Obx(
-        () => IgnorePointer(
-          ignoring: !controller.isIgnorePointer(),
-          child: mainNode,
-        ),
-      );
-    }
-
     return Obx(
       () {
-        var isSelectedCheck = controller.status.value.isSelected() &&
-            controller.node.isSelectable;
+        var isSelectedCheck = nodeController.status.value.isSelected() &&
+            nodeController.node.isSelectable;
         return Opacity(
-          opacity: controller.opacity,
+          opacity: nodeController.opacity,
           child: Card(
-            shape: controller.isCardMode.value
+            shape: nodeController.isCardMode.value
                 ? RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     side: BorderSide(
@@ -216,10 +198,16 @@ class ViewChoiceNode extends StatelessWidget {
                     ),
                   ),
             clipBehavior: Clip.antiAliasWithSaveLayer,
-            elevation: controller.isCardMode.value ? ConstList.elevation : 0,
+            elevation:
+                nodeController.isCardMode.value ? ConstList.elevation : 0,
             child: Padding(
               padding: const EdgeInsets.all(6.0),
-              child: innerWidget,
+              child: isEditable
+                  ? mainNode
+                  : IgnorePointer(
+                      ignoring: !nodeController.isIgnorePointer(),
+                      child: mainNode,
+                    ),
             ),
           ),
         );
@@ -306,13 +294,13 @@ class RandomDialog extends StatelessWidget {
   }
 }
 
-class ChoiceNodeSubDragTarget extends StatelessWidget {
+class ChoiceNodeSubDragTarget extends GetView<VMDraggableNestedMap> {
   final ChoiceNodeBase node;
+
   const ChoiceNodeSubDragTarget(this.node, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var vmDraggableNestedMap = Get.find<VMDraggableNestedMap>();
     return Visibility(
       child: DragTarget(
         builder: (BuildContext context, List<Object?> candidateData,
@@ -324,20 +312,19 @@ class ChoiceNodeSubDragTarget extends StatelessWidget {
         onAccept: (List<int> data) {
           if (data[data.length - 1] == nonPositioned) {
             node.addChildren(VMDraggableNestedMap.createNodeForTemp());
-            vmDraggableNestedMap.updateVMChoiceNode(node.pos());
+            controller.updateVMChoiceNode(node.pos());
           } else {
             var childNode = getPlatform.getChoiceNode(data)!;
             var parentLastPos = childNode.getParentLast()!.pos();
             childNode.parent!.removeChildren(childNode);
             node.addChildren(childNode);
-            vmDraggableNestedMap.updateVMChoiceNode(parentLastPos);
-            vmDraggableNestedMap.update();
+            controller.updateVMChoiceNode(parentLastPos);
+            controller.update();
           }
           getPlatform.checkDataCollect();
         },
       ),
-      visible: vmDraggableNestedMap.drag != null &&
-          vmDraggableNestedMap.drag != node.pos(),
+      visible: controller.drag != null && controller.drag != node.pos(),
       maintainSize: true,
       maintainAnimation: true,
       maintainState: true,
