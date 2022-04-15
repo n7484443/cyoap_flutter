@@ -1,7 +1,6 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/choiceNode/generable_parser.dart';
-import 'package:cyoap_flutter/util/color_util.dart';
 import 'package:cyoap_flutter/view/util/view_text_outline.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
@@ -12,7 +11,9 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../main.dart';
+import '../model/abstract_platform.dart';
 import '../model/platform_system.dart';
+import '../viewModel/vm_variable_table.dart';
 
 class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
   final ChoiceNodeBase? node;
@@ -55,6 +56,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
     });
 
     var mainBox = Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Stack(
           alignment: Alignment.topCenter,
@@ -64,10 +66,13 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                 constraints: BoxConstraints(
                   maxHeight: MediaQuery.of(context).size.height / 3.5,
                 ),
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(5)),
-                  child:
-                      PlatformSystem.getImage(nodeController.imageString.value),
+                child: Padding(
+                  padding: const EdgeInsets.all(1.0),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(5)),
+                    child: PlatformSystem.getImage(
+                        nodeController.imageString.value),
+                  ),
                 ),
               ),
             if (nodeController.titleString.value.isNotEmpty)
@@ -89,87 +94,87 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
       ],
     );
 
-    var mainNode = Stack(
-      alignment: Alignment.topCenter,
-      children: [
-        Ink(
-          color: nodeController.node.isCard
-              ? Colors.white
-              : getPlatform.colorBackground.lighten(),
-          child: InkWell(
-              onDoubleTap: () {
-                if (isEditable) {
-                  controller.setEdit(node!);
-                  Get.toNamed('/viewEditor', id: 1);
-                }
-              },
-              onTap: () async {
-                if (!isEditable) {
-                  nodeController.select();
-                  if (nodeController.isRandom.value) {
-                    if (nodeController.isSelect()) {
-                      nodeController.startRandom();
-                      await showDialog(
-                        context: context,
-                        builder: (builder) => RandomDialog(node),
-                        barrierDismissible: false,
-                      );
-                    } else {
-                      node!.random = -1;
-                    }
+    var baseColor = nodeController.node.isCard ? Colors.white : baseNodeColor;
+    var mainNode = Ink(
+      color: baseColor,
+      child: InkWell(
+        onDoubleTap: isEditable
+            ? () {
+                controller.setEdit(node!);
+                Get.toNamed('/viewEditor', id: 1);
+              }
+            : null,
+        onTap: !isEditable
+            ? () async {
+                nodeController.select();
+                if (nodeController.isRandom.value) {
+                  if (nodeController.isSelect()) {
+                    nodeController.startRandom();
+                    await showDialog(
+                      context: context,
+                      builder: (builder) => RandomDialog(node),
+                      barrierDismissible: false,
+                    );
+                  } else {
+                    node!.random = -1;
                   }
-                  VMChoiceNode.updateStatusAll();
                 }
-              },
-              child: mainBox),
-        ),
-        if (controller.isVisibleOnlyEdit()) ...[
-          Positioned(
-            top: 0,
-            right: 0,
-            child: PopupMenuButton<int>(
-              icon: const Icon(Icons.more_vert),
-              onSelected: (result) {
-                if (result == 0) {
-                  showDialog(
-                    context: context,
-                    builder: (builder) => SizeDialog(node),
-                  );
-                }
-              },
-              itemBuilder: (context) {
-                return [
-                  const PopupMenuItem(
-                    value: 0,
-                    child: Text('크기 수정'),
+                VMChoiceNode.updateStatusAll();
+              }
+            : null,
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            mainBox,
+            if (controller.isVisibleOnlyEdit()) ...[
+              Positioned(
+                top: 0,
+                right: 0,
+                child: PopupMenuButton<int>(
+                  icon: const Icon(Icons.more_vert),
+                  onSelected: (result) {
+                    if (result == 0) {
+                      showDialog(
+                        context: context,
+                        builder: (builder) => SizeDialog(node),
+                      );
+                    }
+                  },
+                  itemBuilder: (context) {
+                    return [
+                      const PopupMenuItem(
+                        value: 0,
+                        child: Text('크기 수정'),
+                      ),
+                    ];
+                  },
+                ),
+              )
+            ] else if (getPlatformFileSystem
+                    .hasSource(nodeController.imageString.value) &&
+                Get.find<VMVariableTable>().isVisibleSource) ...[
+              Positioned(
+                bottom: 0,
+                left: 0,
+                child: TextButton(
+                  child: const Text(
+                    '출처',
+                    style: TextStyle(
+                        color: Colors.blue, fontWeight: FontWeight.w800),
                   ),
-                ];
-              },
-            ),
-          )
-        ] else if (getPlatformFileSystem
-                .hasSource(nodeController.imageString.value) &&
-            getPlatform.isVisibleSource) ...[
-          Positioned(
-            bottom: 0,
-            left: 0,
-            child: TextButton(
-              child: const Text(
-                '출처',
-                style:
-                    TextStyle(color: Colors.blue, fontWeight: FontWeight.w800),
+                  onPressed: () {
+                    var url = getPlatformFileSystem
+                        .getSource(nodeController.imageString.value);
+                    if (url != null && url.isNotEmpty) {
+                      launch(url);
+                    }
+                  },
+                ),
               ),
-              onPressed: () {
-                var url = getPlatformFileSystem
-                    .getSource(nodeController.imageString.value);
-                if (url != null && url.isNotEmpty) {
-                  launch(url);
-                }
-              },
-            ),
-          ),
-        ],
-      ],
+            ],
+          ],
+        ),
+      ),
     );
 
     return Obx(
@@ -179,25 +184,24 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
         return Opacity(
           opacity: nodeController.opacity,
           child: Card(
-            shape: nodeController.isCardMode.value
-                ? RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    side: BorderSide(
-                      color: isSelectedCheck
-                          ? Colors.lightBlueAccent
-                          : Colors.white,
-                      width: 6,
-                    ),
-                  )
-                : Border.fromBorderSide(
-                    BorderSide(
-                      color: isSelectedCheck
-                          ? Colors.lightBlueAccent
-                          : Colors.white,
-                      width: 6,
-                    ),
-                  ),
-            clipBehavior: Clip.antiAliasWithSaveLayer,
+            shape: isSelectedCheck
+                ? nodeController.isCardMode.value
+                    ? RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        side: const BorderSide(
+                          color: Colors.lightBlueAccent,
+                          width: 6,
+                        ),
+                      )
+                    : const Border.fromBorderSide(
+                        BorderSide(
+                          color: Colors.lightBlueAccent,
+                          width: 6,
+                        ),
+                      )
+                : null,
+            color: baseColor,
+            clipBehavior: Clip.antiAlias,
             elevation:
                 nodeController.isCardMode.value ? ConstList.elevation : 0,
             child: Padding(

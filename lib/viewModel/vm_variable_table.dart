@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class VMVariableTable extends GetxController {
+  bool isVisibleSource = false;
+
   @override
   void onInit() {
     VariableDataBase().viewModel = this;
@@ -65,10 +67,10 @@ class VMVariableTable extends GetxController {
   }
 
   void setSourceVisible() {
-    getPlatform.isVisibleSource = !getPlatform.isVisibleSource;
+    isVisibleSource = !isVisibleSource;
     Get.find<VMDraggableNestedMap>().update();
     update();
   }
 
-  bool get sourceVisible => getPlatform.isVisibleSource;
+  bool get sourceVisible => isVisibleSource;
 }

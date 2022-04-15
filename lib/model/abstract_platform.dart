@@ -2,6 +2,7 @@ import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
+import 'package:cyoap_flutter/util/color_util.dart';
 import 'package:flutter/material.dart';
 
 import '../util/version.dart';
@@ -19,8 +20,6 @@ class AbstractPlatform {
 
   String titleFont;
   String mainFont;
-
-  bool isVisibleSource = false;
 
   void init() {
     checkDataCollect();
@@ -222,3 +221,7 @@ class AbstractPlatform {
     }
   }
 }
+
+TextStyle get titleFont => ConstList.getFont(getPlatform.titleFont);
+TextStyle get mainFont => ConstList.getFont(getPlatform.mainFont);
+Color get baseNodeColor => getPlatform.colorBackground.lighten();

@@ -6,7 +6,6 @@ import 'package:cyoap_flutter/model/platform_file_system.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
 
-import '../main.dart';
 import 'abstract_platform.dart';
 
 class PlatformSystem {
@@ -70,7 +69,3 @@ bool get isEditable => getPlatformFileSystem.isEditable;
 
 PlatformFileSystem get getPlatformFileSystem =>
     PlatformSystem.platformFileSystem;
-
-TextStyle get titleFont => ConstList.getFont(getPlatform.titleFont);
-
-TextStyle get mainFont => ConstList.getFont(getPlatform.mainFont);

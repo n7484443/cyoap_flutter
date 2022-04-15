@@ -9,6 +9,7 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 import '../main.dart';
+import '../model/abstract_platform.dart';
 import '../model/platform_system.dart';
 
 class ViewGlobalSetting extends StatelessWidget {

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../main.dart';
+import '../model/abstract_platform.dart';
 import '../viewModel/vm_choice_node.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
 
