@@ -70,9 +70,6 @@ class VMChoiceNode extends GetxController {
     return getPlatform.getChoiceNode(pos);
   }
 
-  static String getTagFromXY(int x, int y) {
-    return getNode([y, x])!.tag;
-  }
 
   void sizeChange(int width) {
     size.value += width;
@@ -101,13 +98,6 @@ class VMChoiceNode extends GetxController {
     }
   }
 
-  static VMChoiceNode? getVMChoiceNode(int x, int y) {
-    if (!Get.isRegistered<VMChoiceNode>(tag: VMChoiceNode.getTagFromXY(x, y))) {
-      return null;
-    }
-    return Get.find<VMChoiceNode>(tag: VMChoiceNode.getTagFromXY(x, y));
-  }
-
   static VMChoiceNode? getVMChoiceNodeFromTag(String tag) {
     if (!Get.isRegistered<VMChoiceNode>(tag: tag)) {
       return null;
@@ -131,14 +121,12 @@ class VMChoiceNode extends GetxController {
     return tagOut;
   }
 
-  bool isSelect() {
+  bool get isSelect {
     if (pos[pos.length - 1] == nonPositioned) return false;
     return getPlatform.isSelect(node.pos());
   }
 
-  bool isIgnorePointer() {
-    return status.value.isPointerInteractive(node.isSelectable);
-  }
+  bool get isIgnorePointer => status.value.isPointerInteractive(node.isSelectable);
 
   void select() {
     getPlatform.setSelect(node.pos());
@@ -155,7 +143,7 @@ class VMChoiceNode extends GetxController {
     if (isEditable) return 1;
 
     if (node.isSelectable) {
-      if (isIgnorePointer()) {
+      if (isIgnorePointer) {
         return 1;
       } else if (status.value == SelectableStatus.hide) {
         return 0;

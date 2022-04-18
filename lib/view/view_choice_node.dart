@@ -108,7 +108,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
             ? () async {
                 nodeController.select();
                 if (nodeController.isRandom.value) {
-                  if (nodeController.isSelect()) {
+                  if (nodeController.isSelect) {
                     nodeController.startRandom();
                     await showDialog(
                       context: context,
@@ -209,7 +209,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
               child: isEditable
                   ? mainNode
                   : IgnorePointer(
-                      ignoring: !nodeController.isIgnorePointer(),
+                      ignoring: !nodeController.isIgnorePointer,
                       child: mainNode,
                     ),
             ),
