@@ -5,7 +5,7 @@ class LexicalAnalyser {
   // 같은 값이 반환시->다음값으로
   // null 일때->함수 입력 끝
   bool boolForStringInput = false;
-  RegExp pattern = RegExp(r'[^\s"]+|"[^"]*"');
+  final RegExp pattern = RegExp(r'[^\s"]+|"[^"]*"');
 
   /*
     어휘분석기. 토큰으로 변환한다.

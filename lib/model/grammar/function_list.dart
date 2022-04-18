@@ -4,29 +4,29 @@ import 'package:cyoap_flutter/model/grammar/value_type.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 
 class Functions {
-  Map<String, Function> functionMap = {};
+  Map<String, ValueType Function(List<ValueType> input)> functionMap = {};
 
   void init() {
-    functionMap.putIfAbsent('if', () => funcIf);
-    functionMap.putIfAbsent('floor', () => funcFloor);
-    functionMap.putIfAbsent('round', () => funcRound);
-    functionMap.putIfAbsent('ceil', () => funcCeil);
-    functionMap.putIfAbsent('+', () => funcPlus);
-    functionMap.putIfAbsent('-', () => funcMinus);
-    functionMap.putIfAbsent('*', () => funcMulti);
-    functionMap.putIfAbsent('/', () => funcDiv);
-    functionMap.putIfAbsent('=', () => funcSet);
-    functionMap.putIfAbsent('==', () => funcEqual);
-    functionMap.putIfAbsent('!=', () => funcNotEqual);
-    functionMap.putIfAbsent('>', () => funcBigger);
-    functionMap.putIfAbsent('<', () => funcSmaller);
-    functionMap.putIfAbsent('>=', () => funcBiggerEqual);
-    functionMap.putIfAbsent('<=', () => funcSmallerEqual);
-    functionMap.putIfAbsent('and', () => funcAnd);
-    functionMap.putIfAbsent('or', () => funcOr);
-    functionMap.putIfAbsent('not', () => funcNot);
-    functionMap.putIfAbsent('random', () => funcRandom);
-    functionMap.putIfAbsent('none', () => funcNone);
+    functionMap['if'] = funcIf;
+    functionMap['floor'] = funcFloor;
+    functionMap['round'] = funcRound;
+    functionMap['ceil'] = funcCeil;
+    functionMap['+'] = funcPlus;
+    functionMap['-'] = funcMinus;
+    functionMap['*'] = funcMulti;
+    functionMap['/'] = funcDiv;
+    functionMap['='] = funcSet;
+    functionMap['=='] = funcEqual;
+    functionMap['!='] = funcNotEqual;
+    functionMap['>'] = funcBigger;
+    functionMap['<'] = funcSmaller;
+    functionMap['>='] = funcBiggerEqual;
+    functionMap['<='] = funcSmallerEqual;
+    functionMap['and'] = funcAnd;
+    functionMap['or'] = funcOr;
+    functionMap['not'] = funcNot;
+    functionMap['random'] = funcRandom;
+    functionMap['none'] = funcNone;
   }
 
   Function getFunction(String name) {
