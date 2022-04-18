@@ -37,7 +37,6 @@ class PlatformSystem {
 
   Future<void> openPlatformJson(File file) async {
     platformFileSystem.path = file.parent.path;
-
     await platformFileSystem.createFromJson(file.readAsStringSync());
   }
 
@@ -67,5 +66,4 @@ AbstractPlatform get getPlatform {
 
 bool get isEditable => getPlatformFileSystem.isEditable;
 
-PlatformFileSystem get getPlatformFileSystem =>
-    PlatformSystem.platformFileSystem;
+PlatformFileSystem get getPlatformFileSystem => PlatformSystem.platformFileSystem;

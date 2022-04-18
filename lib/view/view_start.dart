@@ -11,116 +11,118 @@ class ViewStart extends StatelessWidget {
   Widget build(BuildContext context) {
     final vmStart = Get.put(VMStartPlatform());
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            flex: 9,
-            child: Stack(
-              children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(color: Colors.lightBlue),
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              flex: 9,
+              child: Stack(
+                children: [
+                  Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(color: Colors.lightBlue),
+                      ),
                     ),
-                  ),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        flex: 12,
-                        child: Obx(
-                          () => ListView.builder(
-                            itemCount: vmStart.pathList.length,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                title: Obx(
-                                  () {
-                                    int i = vmStart.pathList.length - 1 - index;
-                                    var text = Text(vmStart.pathList[i]);
-                                    if (vmStart.selected.value == index) {
-                                      return ElevatedButton(
+                    child: Column(
+                      children: [
+                        Expanded(
+                          flex: 12,
+                          child: Obx(
+                            () => ListView.builder(
+                              itemCount: vmStart.pathList.length,
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  title: Obx(
+                                    () {
+                                      int i = vmStart.pathList.length - 1 - index;
+                                      var text = Text(vmStart.pathList[i]);
+                                      if (vmStart.selected.value == index) {
+                                        return ElevatedButton(
+                                          onPressed: () => vmStart.select = index,
+                                          style: ElevatedButton.styleFrom(
+                                              primary: Colors.blue),
+                                          child: text,
+                                        );
+                                      }
+                                      return OutlinedButton(
                                         onPressed: () => vmStart.select = index,
-                                        style: ElevatedButton.styleFrom(
-                                            primary: Colors.blue),
+                                        style: TextButton.styleFrom(
+                                            primary: Colors.black54),
                                         child: text,
                                       );
-                                    }
-                                    return OutlinedButton(
-                                      onPressed: () => vmStart.select = index,
-                                      style: TextButton.styleFrom(
-                                          primary: Colors.black54),
-                                      child: text,
-                                    );
-                                  },
-                                ),
-                                trailing: IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () {
-                                    vmStart.removeFrequentPath(index);
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            TextButton(
-                              child: const Text('파일 추가'),
-                              onPressed: () async {
-                                if (await vmStart.addFile() == 0) {
-                                  vmStart.selected.value = 0;
-                                }
+                                    },
+                                  ),
+                                  trailing: IconButton(
+                                    icon: const Icon(Icons.delete),
+                                    onPressed: () {
+                                      vmStart.removeFrequentPath(index);
+                                    },
+                                  ),
+                                );
                               },
                             ),
-                            Visibility(
-                              child: TextButton(
-                                child: const Text('폴더 추가'),
+                          ),
+                        ),
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              TextButton(
+                                child: const Text('파일 추가'),
                                 onPressed: () async {
-                                  if (await vmStart.addDirectory() == 0) {
+                                  if (await vmStart.addFile() == 0) {
                                     vmStart.selected.value = 0;
                                   }
                                 },
                               ),
-                              visible: !ConstList.isOnlyFileAccept(),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Align(
-                  child: Obx(
-                    () => Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text('version : ${vmStart.version.value}'),
-                        Obx(
-                          () => Visibility(
-                            child: const Text('새로운 버전이 나왔습니다!',
-                                style: TextStyle(color: Colors.redAccent)),
-                            visible: vmStart.needUpdate.value,
+                              Visibility(
+                                child: TextButton(
+                                  child: const Text('폴더 추가'),
+                                  onPressed: () async {
+                                    if (await vmStart.addDirectory() == 0) {
+                                      vmStart.selected.value = 0;
+                                    }
+                                  },
+                                ),
+                                visible: !ConstList.isOnlyFileAccept(),
+                              ),
+                            ],
                           ),
-                        ),
+                        )
                       ],
                     ),
                   ),
-                  alignment: Alignment.topRight,
-                ),
-              ],
+                  Align(
+                    child: Obx(
+                      () => Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text('version : ${vmStart.version.value}'),
+                          Obx(
+                            () => Visibility(
+                              child: const Text('새로운 버전이 나왔습니다!',
+                                  style: TextStyle(color: Colors.redAccent)),
+                              visible: vmStart.needUpdate.value,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    alignment: Alignment.topRight,
+                  ),
+                ],
+              ),
             ),
-          ),
-          const Expanded(
-            flex: 2,
-            child: SelectMode(),
-          ),
-        ],
+            const Expanded(
+              flex: 2,
+              child: SelectMode(),
+            ),
+          ],
+        ),
       ),
     );
   }
