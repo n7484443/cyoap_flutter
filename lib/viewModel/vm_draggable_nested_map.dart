@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../main.dart';
 import '../model/choiceNode/choice_node.dart';
 import '../model/editor.dart';
+import '../model/image_db.dart';
 import '../model/platform_system.dart';
 import '../view/view_choice_node.dart';
 import '../view/view_draggable_nested_map.dart';
@@ -25,6 +26,11 @@ class VMDraggableNestedMap extends GetxController {
   var titleFont = getPlatform.titleFont.obs;
 
   bool isCapture = false;
+  @override
+  void onClose() {
+    ImageDB().clearImageCache();
+    super.onClose();
+  }
 
   bool isVisibleOnlyEdit() {
     return !isCapture && isEditable;

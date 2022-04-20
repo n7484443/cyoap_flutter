@@ -117,4 +117,8 @@ class ImageDB {
   int getImageIndex(String name) {
     return ImageDB().imageList.indexOf(name);
   }
+
+  void clearImageCache(){
+    _dirImageUint8Map.clear();
+  }
 }
