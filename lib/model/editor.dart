@@ -16,9 +16,7 @@ class NodeEditor {
 
   ChoiceNodeBase get target => _target!;
 
-  void setTarget(ChoiceNodeBase node) {
-    _target = node;
-  }
+  set target(ChoiceNodeBase node) => _target = node;
 
   VMChoiceNode? getVMChoiceNode() {
     if(_target == null)return null;

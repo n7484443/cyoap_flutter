@@ -215,9 +215,7 @@ class VMDraggableNestedMap extends GetxController {
     isChanged = true;
   }
 
-  void setEdit(ChoiceNodeBase node) {
-    NodeEditor().setTarget(node);
-  }
+  set editNode(ChoiceNodeBase node) => NodeEditor().target = node;
 
   String getMaxSelect(int y) {
     var line = getPlatform.getLineSetting(y);

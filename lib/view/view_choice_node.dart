@@ -100,7 +100,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
       child: InkWell(
         onDoubleTap: isEditable
             ? () {
-                controller.setEdit(node!);
+                controller.editNode = node!;
                 Get.toNamed('/viewEditor', id: 1);
               }
             : null,
