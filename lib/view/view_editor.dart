@@ -74,12 +74,17 @@ class ViewEditor extends StatelessWidget {
 
     var editingNodeValues = Obx(
       () => Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           ViewSwitchLabel(
             () => controller.isCard.value = !controller.isCard.value,
             controller.isCard.value,
             label: '카드 모드',
+          ),
+          ViewSwitchLabel(
+                () => controller.isRound.value = !controller.isRound.value,
+            controller.isRound.value,
+            label: '외곽선 둥글게',
           ),
           ViewSwitchLabel(
             () =>

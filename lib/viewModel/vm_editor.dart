@@ -22,6 +22,7 @@ class VMEditor extends GetxController {
   var contents = ''.obs;
   var index = -1;
   var isCard = NodeEditor().target.isCard.obs;
+  var isRound = NodeEditor().target.isRound.obs;
   var isSelectable = NodeEditor().target.isSelectable.obs;
   var isRandom = NodeEditor().target.isRandom.obs;
 
@@ -33,6 +34,11 @@ class VMEditor extends GetxController {
     isCard.listen((value) {
       isChanged = true;
       NodeEditor().target.isCard = value;
+    });
+
+    isRound.listen((value) {
+      isChanged = true;
+      NodeEditor().target.isRound = value;
     });
 
     isSelectable.listen((value) {

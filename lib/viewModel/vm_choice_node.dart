@@ -22,7 +22,8 @@ class VMChoiceNode extends GetxController {
   var imageString = ''.obs;
   var titleString = ''.obs;
   var isDrag = false.obs;
-  var isCardMode = false.obs;
+  var isCard = false.obs;
+  var isRound = true.obs;
   var status = SelectableStatus.open.obs;
 
   var isRandom = false.obs;
@@ -45,7 +46,8 @@ class VMChoiceNode extends GetxController {
     });
     titleString.value = node.title;
     imageString.value = node.imageString;
-    isCardMode.value = node.isCard;
+    isCard.value = node.isCard;
+    isRound.value = node.isRound;
     isRandom.value = node.isRandom;
     randomValue.value = -1;
     status.value = node.status;
@@ -87,7 +89,8 @@ class VMChoiceNode extends GetxController {
   void updateFromEditor() {
     titleString.value = node.title;
     imageString.value = node.imageString;
-    isCardMode.value = node.isCard;
+    isCard.value = node.isCard;
+    isRound.value = node.isRound;
   }
 
   void updateFromNode() {

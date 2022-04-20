@@ -4,7 +4,7 @@ class AnalyserConst {
   static const int bools = 3; // 그외
   static const int strings = 4; // string, ""로 표시
 
-  static const int equal = -1;
+  static const int equal = 0;
 
   static const int variableName = 10; // 변수명
 

@@ -184,26 +184,27 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
         return Opacity(
           opacity: nodeController.opacity,
           child: Card(
-            shape: isSelectedCheck
-                ? nodeController.isCardMode.value
-                    ? RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        side: const BorderSide(
-                          color: Colors.lightBlueAccent,
-                          width: 6,
-                        ),
-                      )
-                    : const Border.fromBorderSide(
-                        BorderSide(
-                          color: Colors.lightBlueAccent,
-                          width: 6,
-                        ),
-                      )
-                : null,
+            shape: nodeController.isRound.value
+                ? RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    side: BorderSide(
+                      color: isSelectedCheck
+                          ? Colors.lightBlueAccent
+                          : Colors.transparent,
+                      width: 6,
+                    ),
+                  )
+                : Border.fromBorderSide(
+                    BorderSide(
+                      color: isSelectedCheck
+                          ? Colors.lightBlueAccent
+                          : Colors.transparent,
+                      width: 6,
+                    ),
+                  ),
             color: baseColor,
             clipBehavior: Clip.antiAlias,
-            elevation:
-                nodeController.isCardMode.value ? ConstList.elevation : 0,
+            elevation: nodeController.isCard.value ? ConstList.elevation : 0,
             child: Padding(
               padding: const EdgeInsets.all(6.0),
               child: isEditable
