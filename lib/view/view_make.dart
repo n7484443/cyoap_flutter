@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
@@ -19,27 +20,6 @@ class ViewMake extends StatelessWidget {
   Widget build(BuildContext context) {
     final vmPlatform = Get.put(VMPlatform());
 
-    var dialog = AlertDialog(
-      title: const Text('뒤로가기'),
-      content: const Text('저장되지 않은 내용이 있습니다. 저장하시겠습니까?'),
-      actions: [
-        ElevatedButton(
-          onPressed: () {
-            Get.back();
-            Get.back();
-          },
-          child: const Text('아니오'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            vmPlatform.save(ConstList.isOnlyFileAccept());
-            Get.back();
-            Get.back();
-          },
-          child: const Text('예'),
-        ),
-      ],
-    );
     var appbarWidget = PreferredSize(
       preferredSize: const Size.fromHeight(ConstList.appBarSize),
       child: AppBar(
@@ -49,7 +29,10 @@ class ViewMake extends StatelessWidget {
             if (Get.find<VMDraggableNestedMap>().isChanged) {
               showDialog(
                 context: context,
-                builder: (_) => dialog,
+                builder: (_) => ViewBackDialog(
+                      () => vmPlatform.save(ConstList.isOnlyFileAccept()),
+                      () => Get.back(),
+                ),
               );
             } else {
               Get.back();
@@ -167,7 +150,11 @@ class ViewMake extends StatelessWidget {
       onWillPop: () {
         return showDialog(
           context: context,
-          builder: (_) => dialog,
+          builder: (_) =>
+              ViewBackDialog(
+                () => vmPlatform.save(ConstList.isOnlyFileAccept()),
+                () => Get.back(),
+          ),
         ) as Future<bool>;
       },
       child: Scaffold(

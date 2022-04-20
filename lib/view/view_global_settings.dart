@@ -1,4 +1,5 @@
 import 'package:cyoap_flutter/model/grammar/value_type.dart';
+import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/viewModel/vm_global_setting.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
@@ -28,27 +29,10 @@ class ViewGlobalSetting extends StatelessWidget {
             if (vmGlobalSetting.isChanged) {
               showDialog(
                 context: context,
-                builder: (_) => AlertDialog(
-                  title: const Text('뒤로가기'),
-                  content: const Text('저장되지 않은 내용이 있습니다. 저장하시겠습니까?'),
-                  actions: [
-                    ElevatedButton(
-                      onPressed: () {
-                        vmGlobalSetting.isChanged = false;
-                        Get.back();
-                        Get.back(id: 1);
-                      },
-                      child: const Text('아니오'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        vmGlobalSetting.save();
-                        Get.back();
-                        Get.back(id: 1);
-                      },
-                      child: const Text('예'),
-                    ),
-                  ],
+                builder: (_) => ViewBackDialog(
+                  () => vmGlobalSetting.save(),
+                  () => Get.back(id: 1),
+                  cancelFunction: () => vmGlobalSetting.isChanged = false,
                 ),
               );
             } else {

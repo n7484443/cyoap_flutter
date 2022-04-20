@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:cyoap_flutter/model/platform_system.dart';
+import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
@@ -21,30 +22,6 @@ class ViewEditor extends StatelessWidget {
   Widget build(BuildContext context) {
     final VMEditor controller = Get.put(VMEditor());
 
-    var alert = AlertDialog(
-      title: const Text('뒤로가기'),
-      content: const Text('저장되지 않은 내용이 있습니다. 저장하시겠습니까?'),
-      actions: [
-        ElevatedButton(
-          onPressed: () {
-            controller.isChanged = false;
-            Get.back();
-            Get.back(id: 1);
-          },
-          child: const Text('아니오'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            controller.isChanged = false;
-            controller.save();
-            Get.back();
-            Get.back(id: 1);
-          },
-          child: const Text('예'),
-        ),
-      ],
-    );
-
     var appbarWidget = PreferredSize(
       preferredSize: const Size.fromHeight(ConstList.appBarSize),
       child: AppBar(
@@ -54,7 +31,11 @@ class ViewEditor extends StatelessWidget {
             if (controller.isChanged) {
               showDialog(
                 context: context,
-                builder: (_) => alert,
+                builder: (_) => ViewBackDialog(
+                      () => controller.save(),
+                      () => Get.back(id: 1),
+                  cancelFunction: () => controller.isChanged = false,
+                ),
               );
             } else {
               Get.back(id: 1);
@@ -163,7 +144,11 @@ class ViewEditor extends StatelessWidget {
       onWillPop: () {
         return showDialog(
           context: context,
-          builder: (_) => alert,
+          builder: (_) => ViewBackDialog(
+                () => controller.save(),
+                () => Get.back(id: 1),
+            cancelFunction: () => controller.isChanged = false,
+          ),
         ) as Future<bool>;
       },
     );
