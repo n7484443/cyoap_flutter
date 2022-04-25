@@ -81,6 +81,9 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
   @override
   void generateParser() {
     recursiveStatus.generateParser();
+    for(var child in children){
+      child.generateParser();
+    }
   }
 
   @override
@@ -91,6 +94,9 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
         '${title.trim()}:random', ValueTypeWrapper(ValueType(random), false));
     if (status.isNotSelected()) {
       status = isSelectable ? SelectableStatus.open : SelectableStatus.selected;
+    }
+    for(var child in children){
+      child.initValueTypeWrapper();
     }
   }
 

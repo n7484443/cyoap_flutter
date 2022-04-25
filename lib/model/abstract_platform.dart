@@ -156,36 +156,17 @@ class AbstractPlatform {
       lineSetting.initValueTypeWrapper();
 
       for (var node in lineSetting.children) {
-        if (node.status.isSelected()) {
-          node.execute();
-          if (node.isSelectableCheck) {
-            lineSetting.execute();
-          }
+        node.execute();
+        if (node.status.isSelected() && node.isSelectableCheck) {
+          lineSetting.execute();
         }
       }
       for (var node in lineSetting.children) {
-        var visible = node.isVisible();
-        if (node.status != SelectableStatus.selected) {
-          if (!visible) {
-            node.status = SelectableStatus.hide;
-          }
-        }
+        node.checkVisible();
       }
-
       bool clickableLineTest = lineSetting.isClickable();
-
       for (var node in lineSetting.children) {
-        var selectable = node.isClickable();
-        if (node.isSelectableCheck) {
-          if (node.status != SelectableStatus.selected &&
-              node.status != SelectableStatus.hide) {
-            selectable &= clickableLineTest;
-            node.status =
-                selectable ? SelectableStatus.open : SelectableStatus.closed;
-          }
-        } else {
-          node.status = SelectableStatus.selected;
-        }
+        node.checkClickable(clickableLineTest);
       }
     }
   }

@@ -66,9 +66,14 @@ abstract class GenerableParserAndPosition {
   bool get isSelectableCheck => true;
 
   void execute() {
-    if (recursiveStatus.executeCodeRecursive != null) {
-      for (var codes in recursiveStatus.executeCodeRecursive!) {
-        codes.unzip();
+    if (status.isSelected()) {
+      if (recursiveStatus.executeCodeRecursive != null) {
+        for (var codes in recursiveStatus.executeCodeRecursive!) {
+          codes.unzip();
+        }
+      }
+      for (var child in children) {
+        child.execute();
       }
     }
   }
@@ -87,6 +92,19 @@ abstract class GenerableParserAndPosition {
     return true;
   }
 
+  void checkVisible() {
+    var visible = isVisible();
+    if (status != SelectableStatus.selected) {
+      if (!visible) {
+        status = SelectableStatus.hide;
+      }else{
+        for(var child in children){
+          child.checkVisible();
+        }
+      }
+    }
+  }
+
   bool isClickable() {
     if (recursiveStatus.conditionClickableRecursive != null) {
       var data =
@@ -100,6 +118,22 @@ abstract class GenerableParserAndPosition {
       }
     }
     return true;
+  }
+
+  void checkClickable(bool parentClickable) {
+    var selectable = isClickable();
+    if (isSelectableCheck) {
+      if (status != SelectableStatus.selected &&
+          status != SelectableStatus.hide) {
+        selectable &= parentClickable;
+        status = selectable ? SelectableStatus.open : SelectableStatus.closed;
+      }
+    } else {
+      status = SelectableStatus.selected;
+    }
+    for(var child in children){
+      child.checkClickable(selectable);
+    }
   }
 
   String get tag =>
