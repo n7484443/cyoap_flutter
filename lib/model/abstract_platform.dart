@@ -162,11 +162,11 @@ class AbstractPlatform {
         }
       }
       for (var node in lineSetting.children) {
-        node.checkVisible();
+        node.checkVisible(true);
       }
       bool clickableLineTest = lineSetting.isClickable();
       for (var node in lineSetting.children) {
-        node.checkClickable(clickableLineTest);
+        node.checkClickable(clickableLineTest, true);
       }
     }
   }

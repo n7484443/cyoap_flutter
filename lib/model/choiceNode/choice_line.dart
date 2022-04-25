@@ -122,4 +122,13 @@ class LineSetting extends GenerableParserAndPosition {
       node.initValueTypeWrapper();
     }
   }
+
+  @override
+  void execute() {
+    if (recursiveStatus.executeCodeRecursive != null) {
+      for (var codes in recursiveStatus.executeCodeRecursive!) {
+        codes.unzip();
+      }
+    }
+  }
 }

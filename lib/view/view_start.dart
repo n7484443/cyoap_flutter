@@ -1,6 +1,7 @@
 import 'package:cyoap_flutter/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../viewModel/vm_start.dart';
 
@@ -16,105 +17,106 @@ class ViewStart extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(
-              flex: 9,
-              child: Stack(
-                children: [
-                  Container(
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: Colors.lightBlue),
+            Align(
+              child: Obx(
+                    () => Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text('version : ${vmStart.version.value}'),
+                    Obx(
+                          () => Visibility(
+                        child: TextButton(
+                          onPressed: () {
+                            launchUrlString('https://github.com/n7484443/FlutterCyoap/releases');
+                          },
+                          child: const Text('새로운 버전이 나왔습니다!',
+                              style: TextStyle(color: Colors.redAccent)),
+                        ),
+                        visible: vmStart.needUpdate.value,
                       ),
                     ),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          flex: 12,
-                          child: Obx(
-                            () => ListView.builder(
-                              itemCount: vmStart.pathList.length,
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  title: Obx(
-                                    () {
-                                      int i = vmStart.pathList.length - 1 - index;
-                                      var text = Text(vmStart.pathList[i]);
-                                      if (vmStart.selected.value == index) {
-                                        return ElevatedButton(
-                                          onPressed: () => vmStart.select = index,
-                                          style: ElevatedButton.styleFrom(
-                                              primary: Colors.blue),
-                                          child: text,
-                                        );
-                                      }
-                                      return OutlinedButton(
-                                        onPressed: () => vmStart.select = index,
-                                        style: TextButton.styleFrom(
-                                            primary: Colors.black54),
-                                        child: text,
-                                      );
-                                    },
-                                  ),
-                                  trailing: IconButton(
-                                    icon: const Icon(Icons.delete),
-                                    onPressed: () {
-                                      vmStart.removeFrequentPath(index);
-                                    },
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              TextButton(
-                                child: const Text('파일 추가'),
-                                onPressed: () async {
-                                  if (await vmStart.addFile() == 0) {
-                                    vmStart.selected.value = 0;
+                  ],
+                ),
+              ),
+              alignment: Alignment.topRight,
+            ),
+            Expanded(
+              flex: 9,
+              child: Container(
+                decoration: const BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: Colors.lightBlue),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Expanded(
+                      flex: 12,
+                      child: Obx(
+                        () => ListView.builder(
+                          itemCount: vmStart.pathList.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Obx(
+                                () {
+                                  int i = vmStart.pathList.length - 1 - index;
+                                  var text = Text(vmStart.pathList[i]);
+                                  if (vmStart.selected.value == index) {
+                                    return ElevatedButton(
+                                      onPressed: () => vmStart.select = index,
+                                      style: ElevatedButton.styleFrom(
+                                          primary: Colors.blue),
+                                      child: text,
+                                    );
                                   }
+                                  return OutlinedButton(
+                                    onPressed: () => vmStart.select = index,
+                                    style: TextButton.styleFrom(
+                                        primary: Colors.black54),
+                                    child: text,
+                                  );
                                 },
                               ),
-                              Visibility(
-                                child: TextButton(
-                                  child: const Text('폴더 추가'),
-                                  onPressed: () async {
-                                    if (await vmStart.addDirectory() == 0) {
-                                      vmStart.selected.value = 0;
-                                    }
-                                  },
-                                ),
-                                visible: !ConstList.isOnlyFileAccept(),
+                              trailing: IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () {
+                                  vmStart.removeFrequentPath(index);
+                                },
                               ),
-                            ],
-                          ),
-                        )
-                      ],
+                            );
+                          },
+                        ),
+                      ),
                     ),
-                  ),
-                  Align(
-                    child: Obx(
-                      () => Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Text('version : ${vmStart.version.value}'),
-                          Obx(
-                            () => Visibility(
-                              child: const Text('새로운 버전이 나왔습니다!',
-                                  style: TextStyle(color: Colors.redAccent)),
-                              visible: vmStart.needUpdate.value,
+                          TextButton(
+                            child: const Text('파일 추가'),
+                            onPressed: () async {
+                              if (await vmStart.addFile() == 0) {
+                                vmStart.selected.value = 0;
+                              }
+                            },
+                          ),
+                          Visibility(
+                            child: TextButton(
+                              child: const Text('폴더 추가'),
+                              onPressed: () async {
+                                if (await vmStart.addDirectory() == 0) {
+                                  vmStart.selected.value = 0;
+                                }
+                              },
                             ),
+                            visible: !ConstList.isOnlyFileAccept(),
                           ),
                         ],
                       ),
-                    ),
-                    alignment: Alignment.topRight,
-                  ),
-                ],
+                    )
+                  ],
+                ),
               ),
             ),
             const Expanded(

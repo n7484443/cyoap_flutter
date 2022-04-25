@@ -15,6 +15,10 @@ extension SelectableStatusExtension on SelectableStatus {
     return this == SelectableStatus.selected;
   }
 
+  bool isHide() {
+    return this == SelectableStatus.hide;
+  }
+
   bool isPointerInteractive(bool isSelectable) {
     if (isSelectable) {
       return this == SelectableStatus.selected || this == SelectableStatus.open;
@@ -92,16 +96,16 @@ abstract class GenerableParserAndPosition {
     return true;
   }
 
-  void checkVisible() {
-    var visible = isVisible();
-    if (status != SelectableStatus.selected) {
-      if (!visible) {
+  void checkVisible(bool parent) {
+    if (!parent) {
+      status = SelectableStatus.hide;
+    } else if (status != SelectableStatus.selected) {
+      if (!isVisible()) {
         status = SelectableStatus.hide;
-      }else{
-        for(var child in children){
-          child.checkVisible();
-        }
       }
+    }
+    for (var child in children) {
+      child.checkVisible(!status.isHide());
     }
   }
 
@@ -120,19 +124,23 @@ abstract class GenerableParserAndPosition {
     return true;
   }
 
-  void checkClickable(bool parentClickable) {
-    var selectable = isClickable();
-    if (isSelectableCheck) {
-      if (status != SelectableStatus.selected &&
-          status != SelectableStatus.hide) {
-        selectable &= parentClickable;
-        status = selectable ? SelectableStatus.open : SelectableStatus.closed;
+  void checkClickable(bool parentClickable, bool onlyWorkLine) {
+    if(!onlyWorkLine && !parentClickable){
+      status = isVisible() ? SelectableStatus.closed : SelectableStatus.hide;
+    }else{
+      var selectable = isClickable();
+      if (isSelectableCheck) {
+        if (status != SelectableStatus.selected &&
+            status != SelectableStatus.hide) {
+          selectable &= parentClickable;
+          status = selectable ? SelectableStatus.open : SelectableStatus.closed;
+        }
+      } else {
+        status = SelectableStatus.selected;
       }
-    } else {
-      status = SelectableStatus.selected;
     }
-    for(var child in children){
-      child.checkClickable(selectable);
+    for (var child in children) {
+      child.checkClickable(status.isSelected(), false);
     }
   }
 

@@ -8,7 +8,7 @@ import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:get/get.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../main.dart';
 import '../model/abstract_platform.dart';
@@ -166,7 +166,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                     var url = getPlatformFileSystem
                         .getSource(nodeController.imageString.value);
                     if (url != null && url.isNotEmpty) {
-                      launch(url);
+                      launchUrlString(url);
                     }
                   },
                 ),
@@ -264,41 +264,6 @@ class SizeDialog extends StatelessWidget {
   }
 }
 
-class RandomDialog extends StatelessWidget {
-  final ChoiceNodeBase? node;
-
-  const RandomDialog(this.node, {Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    var controller = VMChoiceNode.getVMChoiceNodeFromNode(node!)!;
-    return Obx(
-      () => AlertDialog(
-          scrollable: true,
-          title: const Text('랜덤'),
-          content: AnimatedFlipCounter(
-              value: controller.randomValue.value,
-              duration: const Duration(milliseconds: 500),
-              textStyle: const TextStyle(
-                fontSize: 40,
-                color: Colors.blue,
-                fontWeight: FontWeight.bold,
-              )),
-          actions: [
-            Opacity(
-              opacity: controller.randomProcess.value ? 0 : 1,
-              child: TextButton(
-                onPressed: () {
-                  Get.back();
-                },
-                child: const Text('확인'),
-              ),
-            )
-          ]),
-    );
-  }
-}
-
 class ChoiceNodeSubDragTarget extends GetView<VMDraggableNestedMap> {
   final ChoiceNodeBase node;
 
@@ -333,6 +298,41 @@ class ChoiceNodeSubDragTarget extends GetView<VMDraggableNestedMap> {
       maintainSize: true,
       maintainAnimation: true,
       maintainState: true,
+    );
+  }
+}
+
+class RandomDialog extends StatelessWidget {
+  final ChoiceNodeBase? node;
+
+  const RandomDialog(this.node, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var controller = VMChoiceNode.getVMChoiceNodeFromNode(node!)!;
+    return Obx(
+          () => AlertDialog(
+          scrollable: true,
+          title: const Text('랜덤'),
+          content: AnimatedFlipCounter(
+              value: controller.randomValue.value,
+              duration: const Duration(milliseconds: 500),
+              textStyle: const TextStyle(
+                fontSize: 40,
+                color: Colors.blue,
+                fontWeight: FontWeight.bold,
+              )),
+          actions: [
+            Visibility(
+              visible: !controller.randomProcess.value,
+              child: TextButton(
+                onPressed: () {
+                  Get.back();
+                },
+                child: const Text('확인'),
+              ),
+            )
+          ]),
     );
   }
 }
