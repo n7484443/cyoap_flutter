@@ -4,8 +4,10 @@ import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/util/color_util.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../util/version.dart';
+import '../viewModel/vm_draggable_nested_map.dart';
 import 'choiceNode/choice_line.dart';
 import 'choiceNode/generable_parser.dart';
 import 'grammar/value_type.dart';
@@ -169,6 +171,7 @@ class AbstractPlatform {
         node.checkClickable(clickableLineTest, true);
       }
     }
+    Get.find<VMDraggableNestedMap>().update();
   }
 
   void generateRecursiveParser() {

@@ -11,11 +11,11 @@ class ViewWrapCustom extends StatelessWidget {
   final Widget Function(ChoiceNodeBase) builder;
   final Widget Function(int)? builderDraggable;
   final int maxSize;
-  final bool setSizeSame;
+  final bool isAllVisible;
   final bool setCenter;
 
   ViewWrapCustom(List<GenerableParserAndPosition> children, this.builder,
-      {this.setSizeSame = true,
+      {this.isAllVisible = false,
       this.maxSize = defaultMaxSize,
       this.builderDraggable,
       this.setCenter = false,
@@ -70,6 +70,9 @@ class ViewWrapCustom extends StatelessWidget {
     int size = 0;
     for (int i = 0; i < children.length; i++) {
       var child = children[i] as ChoiceNodeBase;
+      if(!isAllVisible && !child.isOccupySpace && child.status.isHide()){
+        continue;
+      }
       size = child.width == 0 ? maxSize : child.width;
       if (size == maxSize) {
         if (inner != 0) {

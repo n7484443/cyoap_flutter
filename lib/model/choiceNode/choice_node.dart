@@ -20,6 +20,7 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
   @override
   bool get isSelectableCheck => isSelectable;
   bool isSelectable = true;
+  bool isOccupySpace = true;
 
   bool get isRandom => maxRandom > 0;
 
@@ -44,6 +45,7 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
       : width = json['width'] ?? 2,
         isCard = json['isCard'] ?? true,
         isRound = json['isRound'] ?? true,
+        isOccupySpace = json['isOccupySpace'] ?? true,
         maxRandom = json['maxRandom'] ?? 0,
         isSelectable = json['isSelectable'],
         title = json['title'] ?? '',
@@ -65,6 +67,7 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
       'width': width,
       'isCard': isCard,
       'isRound': isRound,
+      'isOccupySpace': isOccupySpace,
       'isSelectable': isSelectable,
       'maxRandom': maxRandom,
       'title': title,

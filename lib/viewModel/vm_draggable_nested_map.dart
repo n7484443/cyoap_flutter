@@ -87,6 +87,7 @@ class VMDraggableNestedMap extends GetxController {
                   builderDraggable: _.isVisibleOnlyEdit()
                       ? (i) => NodeDragTarget(i, j)
                       : null,
+                  isAllVisible: true,
                 );
               }),
             );

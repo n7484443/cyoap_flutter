@@ -12,6 +12,9 @@ class VMCodeEditor extends GetxController {
   var conditionClickable = ''.obs;
   var conditionVisible = ''.obs;
   var executeCode = ''.obs;
+
+  var isOccupySpace = true.obs;
+
   bool isChanged = false;
 
   @override
@@ -25,6 +28,7 @@ class VMCodeEditor extends GetxController {
     conditionClickable.value = controllerClickable.text;
     conditionVisible.value = controllerVisible.text;
     executeCode.value = controllerExecute.text;
+    isOccupySpace.value = NodeEditor().target.isOccupySpace;
 
     controllerClickable.addListener(() {
       isChanged = true;
@@ -34,10 +38,13 @@ class VMCodeEditor extends GetxController {
       isChanged = true;
       conditionVisible.value = controllerVisible.text;
     });
-
     controllerExecute.addListener(() {
       isChanged = true;
       executeCode.value = controllerExecute.text;
+    });
+    isOccupySpace.listen((value) {
+      isChanged = true;
+      NodeEditor().target.isOccupySpace = value;
     });
 
     super.onInit();

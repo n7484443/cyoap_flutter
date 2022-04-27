@@ -56,7 +56,6 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
     });
 
     var mainBox = Column(
-      mainAxisSize: MainAxisSize.min,
       children: [
         Stack(
           alignment: Alignment.topCenter,
@@ -66,13 +65,9 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                 constraints: BoxConstraints(
                   maxHeight: MediaQuery.of(context).size.height / 3.5,
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(1.0),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(5)),
-                    child: PlatformSystem.getImage(
-                        nodeController.imageString.value),
-                  ),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(5)),
+                  child: PlatformSystem.getImage(nodeController.imageString.value),
                 ),
               ),
             if (nodeController.titleString.value.isNotEmpty)

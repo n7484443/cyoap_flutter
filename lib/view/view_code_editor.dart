@@ -1,4 +1,5 @@
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
+import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -19,8 +20,8 @@ class ViewCodeEditor extends StatelessWidget {
           showDialog(
             context: context,
             builder: (_) => ViewBackDialog(
-                  () => _vmCodeEditor.save(),
-                  () => Get.back(id: 1),
+              () => _vmCodeEditor.save(),
+              () => Get.back(id: 1),
               cancelFunction: () => _vmCodeEditor.isChanged = false,
             ),
           );
@@ -28,33 +29,6 @@ class ViewCodeEditor extends StatelessWidget {
           Get.back(id: 1);
         }
       },
-    );
-
-    var inputText = Column(
-      children: [
-        TextField(
-          controller: _vmCodeEditor.controllerClickable,
-          textAlign: TextAlign.center,
-          decoration: const InputDecoration(hintText: '실행 조건'),
-        ),
-        TextField(
-          controller: _vmCodeEditor.controllerVisible,
-          textAlign: TextAlign.center,
-          decoration: const InputDecoration(hintText: '숨김 조건(비어있을 시 항상 보임)'),
-        ),
-        Expanded(
-          child: TextField(
-            controller: _vmCodeEditor.controllerExecute,
-            textAlign: TextAlign.center,
-            scrollController: ScrollController(),
-            maxLines: null,
-            expands: true,
-            decoration: const InputDecoration(
-              hintText: '선택 시 시행 코드',
-            ),
-          ),
-        ),
-      ],
     );
 
     return WillPopScope(
@@ -73,14 +47,60 @@ class ViewCodeEditor extends StatelessWidget {
             ],
           ),
         ),
-        body: inputText,
+        body: Row(
+          children: [
+            Expanded(
+              child: Column(
+                children: [
+                  TextField(
+                    controller: _vmCodeEditor.controllerClickable,
+                    textAlign: TextAlign.center,
+                    decoration: const InputDecoration(hintText: '실행 조건'),
+                  ),
+                  TextField(
+                    controller: _vmCodeEditor.controllerVisible,
+                    textAlign: TextAlign.center,
+                    decoration:
+                        const InputDecoration(hintText: '숨김 조건(비어있을 시 항상 보임)'),
+                  ),
+                  Expanded(
+                    child: TextField(
+                      controller: _vmCodeEditor.controllerExecute,
+                      textAlign: TextAlign.center,
+                      scrollController: ScrollController(),
+                      maxLines: null,
+                      expands: true,
+                      decoration: const InputDecoration(
+                        hintText: '선택 시 시행 코드',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Obx(() => Column(
+                  children: [
+                    ViewSwitchLabel(
+                      () => _vmCodeEditor.isOccupySpace.value =
+                          !_vmCodeEditor.isOccupySpace.value,
+                      _vmCodeEditor.isOccupySpace.value,
+                      label: '숨김 시 공간 차지',
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
       onWillPop: () {
         return showDialog(
           context: context,
           builder: (_) => ViewBackDialog(
-                () => _vmCodeEditor.save(),
-                () => Get.back(id: 1),
+            () => _vmCodeEditor.save(),
+            () => Get.back(id: 1),
             cancelFunction: () => _vmCodeEditor.isChanged = false,
           ),
         ) as Future<bool>;
