@@ -13,7 +13,7 @@ class TextOutline extends StatelessWidget {
       {this.textColor = Colors.black,
       this.outlineColor = Colors.white,
       this.strokeWidth = 4.0,
-      this.fontWeight = FontWeight.bold,
+      this.fontWeight = FontWeight.normal,
       Key? key})
       : super(key: key);
 

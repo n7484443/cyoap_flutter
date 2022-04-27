@@ -31,8 +31,8 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
     if (node == null) {
       return Card(
         child: SizedBox(
-          width: controller.maxWidth / defaultMaxSize * 3 * controller.scale,
-          height: nodeBaseHeight * controller.scale,
+          width: controller.maxWidth / defaultMaxSize * 3 * controller.scale(context),
+          height: nodeBaseHeight * controller.scale(context),
         ),
       );
     }
@@ -49,7 +49,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
           padding: const EdgeInsets.only(top: 4),
           scrollController: ScrollController(),
           scrollable: false,
-          customStyles: ConstList.getDefaultThemeData(context, controller.scale,
+          customStyles: ConstList.getDefaultThemeData(context, controller.scale(context),
               fontStyle: ConstList.getFont(controller.mainFont.value)),
         ),
       );
@@ -78,7 +78,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
             if (nodeController.titleString.value.isNotEmpty)
               TextOutline(
                 nodeController.titleString.value,
-                20 * controller.scale,
+                18 * controller.scale(context),
                 ConstList.getFont(controller.titleFont.value),
               ),
           ],
@@ -204,9 +204,10 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                   ),
             color: baseColor,
             clipBehavior: Clip.antiAlias,
+            margin: ConstList.isSmallDisplay(context) ? const EdgeInsets.all(1.4) : null,
             elevation: nodeController.isCard.value ? ConstList.elevation : 0,
             child: Padding(
-              padding: const EdgeInsets.all(6.0),
+              padding: ConstList.isSmallDisplay(context) ? const EdgeInsets.all(2.0) : const EdgeInsets.all(4.0),
               child: isEditable
                   ? mainNode
                   : IgnorePointer(

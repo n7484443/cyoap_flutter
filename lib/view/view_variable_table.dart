@@ -11,42 +11,38 @@ class ViewVariable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget widget;
+    List<Widget> widgetList;
     if (isEditable) {
-      widget = Column(
-        children: [
-          ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text('출처 설정'),
-            onTap: () => Get.toNamed("/viewSource", id: 1),
-          ),
-          ListTile(
-            onTap: () {
-              Get.toNamed('/viewGlobalSetting', id: 1);
-            },
-            leading: const Icon(Icons.settings),
-            title: const Text('전역 설정'),
-          ),
-        ],
-      );
+      widgetList = [
+        ListTile(
+          leading: const Icon(Icons.settings),
+          title: const Text('출처 설정'),
+          onTap: () => Get.toNamed("/viewSource", id: 1),
+        ),
+        ListTile(
+          onTap: () {
+            Get.toNamed('/viewGlobalSetting', id: 1);
+          },
+          leading: const Icon(Icons.settings),
+          title: const Text('전역 설정'),
+        ),
+      ];
     } else {
-      widget = Column(
-        children: [
-          ListTile(
-            leading: const Text('버전'),
-            title: Text(ConstList.version),
-          ),
-          ListTile(
-            title: GetBuilder<VMVariableTable>(
-              builder: (_) => ViewSwitchLabel(
-                _.setSourceVisible,
-                _.sourceVisible,
-                label: '출처 보기',
-              ),
+      widgetList = [
+        ListTile(
+          leading: const Text('버전'),
+          title: Text(ConstList.version),
+        ),
+        ListTile(
+          title: GetBuilder<VMVariableTable>(
+            builder: (_) => ViewSwitchLabel(
+              _.setSourceVisible,
+              _.sourceVisible,
+              label: '출처 보기',
             ),
           ),
-        ],
-      );
+        ),
+      ];
     }
 
     return GetBuilder<VMVariableTable>(
@@ -70,7 +66,9 @@ class ViewVariable extends StatelessWidget {
               ],
             ),
           ),
-          widget,
+          Column(
+            children: widgetList,
+          ),
         ],
       ),
     );
