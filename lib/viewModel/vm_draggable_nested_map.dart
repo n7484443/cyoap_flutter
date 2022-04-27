@@ -203,8 +203,8 @@ class VMDraggableNestedMap extends GetxController {
     double topY = 0;
     double bottomY = topY + constrain!.maxHeight;
 
-    var detectedRange = constrain!.maxHeight * 0.1;
-    var moveDistance = ConstList.isSmallDisplay(context) ? 1.5 : 3;
+    var detectedRange = constrain!.maxHeight * 0.06;
+    var moveDistance = ConstList.isSmallDisplay(context) ? 0.8 : 1;
     if (details.localPosition.dy < topY + detectedRange) {
       scroller.jumpTo(scroller.offset - moveDistance);
     }
