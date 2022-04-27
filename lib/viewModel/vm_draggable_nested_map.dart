@@ -26,6 +26,9 @@ class VMDraggableNestedMap extends GetxController {
   var titleFont = getPlatform.titleFont.obs;
 
   bool isCapture = false;
+
+  BoxConstraints? constrain;
+
   @override
   void onClose() {
     ImageDB().clearImageCache();
@@ -51,7 +54,7 @@ class VMDraggableNestedMap extends GetxController {
     isChanged = true;
   }
 
-  List<Widget> widgetList({BoxConstraints? constrains}) {
+  List<Widget> widgetList() {
     var choiceNodeList = getPlatform.lineSettings;
     List<Widget> widgetList;
     if (isEditable) {
@@ -71,8 +74,7 @@ class VMDraggableNestedMap extends GetxController {
                     children: [
                       Expanded(
                         child: NodeDragTarget(
-                          0,
-                          j,
+                          [j, 0],
                           isHorizontal: true,
                         ),
                       )
@@ -82,10 +84,10 @@ class VMDraggableNestedMap extends GetxController {
                 return ViewWrapCustom(
                   xList,
                   (child) => _.isVisibleOnlyEdit()
-                      ? NodeDraggable(child.currentPos, j, constrains!)
+                      ? NodeDraggable(child)
                       : ViewChoiceNode(child.currentPos, j),
                   builderDraggable: _.isVisibleOnlyEdit()
-                      ? (i) => NodeDragTarget(i, j)
+                      ? (i) => NodeDragTarget([j, i])
                       : null,
                   isAllVisible: true,
                 );
@@ -94,19 +96,18 @@ class VMDraggableNestedMap extends GetxController {
           } else {
             return NodeDivider(j);
           }
-        } else if (y.isOdd){
+        } else if (y.isOdd) {
           return Row(
             children: [
               Expanded(
                 child: NodeDragTarget(
-                  0,
-                  choiceNodeList.length,
+                  [choiceNodeList.length, 0],
                   isHorizontal: true,
                 ),
               )
             ],
           );
-        }else {
+        } else {
           return GetBuilder<VMDraggableNestedMap>(
             builder: (_) => Visibility(
               child: NodeDivider(j),

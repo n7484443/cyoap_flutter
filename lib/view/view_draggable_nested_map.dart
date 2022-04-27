@@ -1,96 +1,18 @@
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/util/view_text_outline.dart';
-import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
-import 'package:cyoap_flutter/view/view_choice_node.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../main.dart';
 import '../model/abstract_platform.dart';
 import '../viewModel/vm_choice_node.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
 
-class NodeDraggable extends GetView<VMDraggableNestedMap> {
-  final int x;
-  final int y;
-  final BoxConstraints constrains;
-  const NodeDraggable(this.x, this.y, this.constrains, {Key? key})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    var widget = ViewChoiceNode(x, y);
-    var pos = widget.node!.pos();
-    if (ConstList.isSmallDisplay(context)) {
-      return LongPressDraggable<List<int>>(
-        onDragUpdate: (details) =>
-            controller.dragUpdate(constrains, details, context),
-        data: pos,
-        feedback: Opacity(
-          opacity: 0.5,
-          child: SizedBox(
-              width: controller.maxWidth /
-                  (defaultMaxSize + 3) *
-                  (widget.node!.width == 0
-                      ? defaultMaxSize
-                      : widget.node!.width),
-              child: widget),
-        ),
-        onDragStarted: () {
-          controller.dragStart(pos);
-        },
-        child: Opacity(
-          child: widget,
-          opacity: listEquals(controller.drag, pos) ? 0.2 : 1.0,
-        ),
-        onDragEnd: (DraggableDetails data) {
-          controller.dragEnd();
-        },
-        onDraggableCanceled: (Velocity velocity, Offset offset) {
-          controller.dragEnd();
-        },
-      );
-    } else {
-      return Draggable<List<int>>(
-        onDragUpdate: (details) =>
-            controller.dragUpdate(constrains, details, context),
-        data: pos,
-        feedback: Opacity(
-          opacity: 0.5,
-          child: SizedBox(
-              width: controller.maxWidth /
-                  (defaultMaxSize + 3) *
-                  (widget.node!.width == 0
-                      ? defaultMaxSize
-                      : widget.node!.width),
-              child: widget),
-        ),
-        onDragStarted: () {
-          controller.dragStart(pos);
-        },
-        child: Opacity(
-          child: widget,
-          opacity: listEquals(controller.drag, pos) ? 0.2 : 1.0,
-        ),
-        onDragEnd: (DraggableDetails data) {
-          controller.dragEnd();
-        },
-        onDraggableCanceled: (Velocity velocity, Offset offset) {
-          controller.dragEnd();
-        },
-      );
-    }
-  }
-}
-
 class NodeDragTarget extends GetView<VMDraggableNestedMap> {
-  final int x;
-  final int y;
+  final List<int> pos;
   final Color baseColor = Colors.black26;
   final bool isHorizontal;
 
-  const NodeDragTarget(this.x, this.y, {this.isHorizontal = false, Key? key})
+  const NodeDragTarget(this.pos, {this.isHorizontal = false, Key? key})
       : super(key: key);
 
   @override
@@ -106,11 +28,11 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
         },
         onAccept: (List<int> drag) {
           if (drag[drag.length - 1] == nonPositioned) {
-            controller.changeData(drag, [y, x]);
-          } else if (y == drag[0] && (x - 1) >= drag[1]) {
-            controller.changeData(drag, [y, x - 1]);
+            controller.changeData(drag, pos);
+          } else if (pos[0] == drag[0] && (pos[1] - 1) >= drag[1]) {
+            controller.changeData(drag, [pos[0], pos[1] - 1]);
           } else {
-            controller.changeData(drag, [y, x]);
+            controller.changeData(drag, pos);
           }
         },
       ),
@@ -230,6 +152,7 @@ class NestedMap extends StatelessWidget {
     if (isEditable) {
       return GetBuilder<VMDraggableNestedMap>(
         builder: (_) => LayoutBuilder(builder: (context, constrains) {
+          _.constrain = constrains;
           return SingleChildScrollView(
             controller: _.scroller,
             child: RepaintBoundary(
@@ -237,7 +160,7 @@ class NestedMap extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(color: _.backgroundColor),
                 child: Column(
-                  children: _.widgetList(constrains: constrains),
+                  children: _.widgetList(),
                 ),
               ),
             ),

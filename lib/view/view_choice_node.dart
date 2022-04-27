@@ -5,6 +5,7 @@ import 'package:cyoap_flutter/view/util/view_text_outline.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:get/get.dart';
@@ -83,7 +84,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
         if (node!.children.isNotEmpty)
           ViewWrapCustom(
             node!.children,
-            (child) => ViewChoiceNode.fromNode(child),
+            (child) => NodeDraggable(child),
             maxSize: node!.width,
           )
       ],
@@ -330,5 +331,77 @@ class RandomDialog extends StatelessWidget {
             )
           ]),
     );
+  }
+}
+
+class NodeDraggable extends GetView<VMDraggableNestedMap> {
+  final ChoiceNodeBase node;
+  const NodeDraggable(this.node, {Key? key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var widget = ViewChoiceNode.fromNode(node);
+    var pos = node.pos();
+    final vmDraggableNestedMap = Get.find<VMDraggableNestedMap>();
+    if (ConstList.isSmallDisplay(context)) {
+      return LongPressDraggable<List<int>>(
+        onDragUpdate: (details) =>
+            controller.dragUpdate(vmDraggableNestedMap.constrain!, details, context),
+        data: pos,
+        feedback: Opacity(
+          opacity: 0.5,
+          child: SizedBox(
+              width: controller.maxWidth /
+                  (defaultMaxSize + 3) *
+                  (widget.node!.width == 0
+                      ? defaultMaxSize
+                      : widget.node!.width),
+              child: widget),
+        ),
+        onDragStarted: () {
+          controller.dragStart(pos);
+        },
+        child: Opacity(
+          child: widget,
+          opacity: listEquals(controller.drag, pos) ? 0.2 : 1.0,
+        ),
+        onDragEnd: (DraggableDetails data) {
+          controller.dragEnd();
+        },
+        onDraggableCanceled: (Velocity velocity, Offset offset) {
+          controller.dragEnd();
+        },
+      );
+    } else {
+      return Draggable<List<int>>(
+        onDragUpdate: (details) =>
+            controller.dragUpdate(vmDraggableNestedMap.constrain!, details, context),
+        data: pos,
+        feedback: Opacity(
+          opacity: 0.5,
+          child: SizedBox(
+              width: controller.maxWidth /
+                  (defaultMaxSize + 3) *
+                  (widget.node!.width == 0
+                      ? defaultMaxSize
+                      : widget.node!.width),
+              child: widget),
+        ),
+        onDragStarted: () {
+          controller.dragStart(pos);
+        },
+        child: Opacity(
+          child: widget,
+          opacity: listEquals(controller.drag, pos) ? 0.2 : 1.0,
+        ),
+        onDragEnd: (DraggableDetails data) {
+          controller.dragEnd();
+        },
+        onDraggableCanceled: (Velocity velocity, Offset offset) {
+          controller.dragEnd();
+        },
+      );
+    }
   }
 }

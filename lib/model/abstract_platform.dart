@@ -171,7 +171,9 @@ class AbstractPlatform {
         node.checkClickable(clickableLineTest, true);
       }
     }
-    Get.find<VMDraggableNestedMap>().update();
+    if(Get.isRegistered<VMDraggableNestedMap>()){
+      Get.find<VMDraggableNestedMap>().update();
+    }
   }
 
   void generateRecursiveParser() {
