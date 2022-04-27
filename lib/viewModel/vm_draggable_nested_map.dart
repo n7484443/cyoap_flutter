@@ -150,7 +150,7 @@ class VMDraggableNestedMap extends GetxController {
   void updateVMChoiceNode(List<int> tag) {
     var node = VMChoiceNode.getNode(tag);
     if (node == null) return;
-    var parentNode = node.getParentLast();
+    var parentNode = (node as ChoiceNode).getParentLast();
     var y = parentNode!.parent!.currentPos;
 
     var lineSetting = getPlatform.lineSettings;
@@ -160,8 +160,8 @@ class VMDraggableNestedMap extends GetxController {
     }
   }
 
-  static ChoiceNodeBase createNodeForTemp() {
-    return ChoiceNodeBase.noTitle(3, true, '', '');
+  static ChoiceNode createNodeForTemp() {
+    return ChoiceNode.noTitle(3, true, '', '');
   }
 
   void changeData(List<int> data, List<int> pos) {
@@ -221,7 +221,7 @@ class VMDraggableNestedMap extends GetxController {
     isChanged = true;
   }
 
-  set editNode(ChoiceNodeBase node) => NodeEditor().target = node;
+  set editNode(ChoiceNode node) => NodeEditor().target = node;
 
   String getMaxSelect(int y) {
     var line = getPlatform.getLineSetting(y);

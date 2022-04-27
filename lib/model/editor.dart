@@ -12,11 +12,11 @@ class NodeEditor {
   }
   NodeEditor._init();
 
-  ChoiceNodeBase? _target;
+  ChoiceNode? _target;
 
-  ChoiceNodeBase get target => _target!;
+  ChoiceNode get target => _target!;
 
-  set target(ChoiceNodeBase node) => _target = node;
+  set target(ChoiceNode node) => _target = node;
 
   VMChoiceNode? getVMChoiceNode() {
     if(_target == null)return null;

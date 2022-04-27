@@ -7,9 +7,8 @@ import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.da
 import '../grammar/value_type.dart';
 import 'generable_parser.dart';
 
-class ChoiceNodeBase extends GenerableParserAndPosition {
+class ChoiceNode extends GenerableParserAndPosition {
   //grid 단위로 설정
-  int width; //0 = 무한대
   bool isCard;
   bool isRound = true;
   int maxRandom = 0;
@@ -24,26 +23,28 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
 
   bool get isRandom => maxRandom > 0;
 
-  ChoiceNodeBase(this.width, this.isCard, this.title, this.contentsString,
+  ChoiceNode(int width, this.isCard, this.title, this.contentsString,
       this.imageString) {
     recursiveStatus = RecursiveStatus();
+    this.width = width;
   }
 
-  ChoiceNodeBase.origin(this.width, this.isCard, this.title,
+  ChoiceNode.origin(int width, this.isCard, this.title,
       this.contentsString, this.imageString) {
     recursiveStatus = RecursiveStatus();
+    this.width = width;
   }
 
-  ChoiceNodeBase.noTitle(
-      this.width, this.isCard, this.contentsString, this.imageString)
+  ChoiceNode.noTitle(
+      int width, this.isCard, this.contentsString, this.imageString)
       : title = '' {
     recursiveStatus = RecursiveStatus();
     title = "선택지 " + Random().nextInt(99).toString();
+    this.width = width;
   } //랜덤 문자로 제목 중복 방지
 
-  ChoiceNodeBase.fromJson(Map<String, dynamic> json)
-      : width = json['width'] ?? 2,
-        isCard = json['isCard'] ?? true,
+  ChoiceNode.fromJson(Map<String, dynamic> json)
+      : isCard = json['isCard'] ?? true,
         isRound = json['isRound'] ?? true,
         isOccupySpace = json['isOccupySpace'] ?? true,
         maxRandom = json['maxRandom'] ?? 0,
@@ -51,11 +52,12 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
         title = json['title'] ?? '',
         contentsString = json['contentsString'],
         imageString = json['imageString'] ?? json['image'] {
+    width = json['width'] ?? 2;
     currentPos = json['x'] ?? json['pos'];
     recursiveStatus = RecursiveStatus.fromJson(json);
     if (json.containsKey('children')) {
       children.addAll((json['children'] as List)
-          .map((e) => ChoiceNodeBase.fromJson(e)..parent = this)
+          .map((e) => ChoiceNode.fromJson(e)..parent = this)
           .toList());
     }
   }
@@ -64,7 +66,6 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = super.toJson();
     map.addAll({
-      'width': width,
       'isCard': isCard,
       'isRound': isRound,
       'isOccupySpace': isOccupySpace,
@@ -107,12 +108,12 @@ class ChoiceNodeBase extends GenerableParserAndPosition {
     return PlatformSpecified().saveProject!.convertImageName(name);
   }
 
-  ChoiceNodeBase? getParentLast() {
-    ChoiceNodeBase parent = this;
+  ChoiceNode? getParentLast() {
+    ChoiceNode parent = this;
     while (true) {
       if (parent.parent == null) break;
-      if (parent.parent is! ChoiceNodeBase) break;
-      parent = parent.parent as ChoiceNodeBase;
+      if (parent.parent is! ChoiceNode) break;
+      parent = parent.parent as ChoiceNode;
     }
     return parent;
   }

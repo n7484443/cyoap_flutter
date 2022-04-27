@@ -50,6 +50,7 @@ abstract class GenerableParserAndPosition {
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = {
+      'width': width,
       'pos': currentPos,
       'children': children,
     };
@@ -61,6 +62,7 @@ abstract class GenerableParserAndPosition {
   SelectableStatus status = SelectableStatus.open;
 
   int currentPos = 0;
+  int width = 12;
 
   List<GenerableParserAndPosition> children = List.empty(growable: true);
 

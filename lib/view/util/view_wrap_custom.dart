@@ -8,7 +8,7 @@ const int defaultMaxSize = 12;
 
 class ViewWrapCustom extends StatelessWidget {
   final List<GenerableParserAndPosition> children = List.empty(growable: true);
-  final Widget Function(ChoiceNodeBase) builder;
+  final Widget Function(ChoiceNode) builder;
   final Widget Function(int)? builderDraggable;
   final int maxSize;
   final bool isAllVisible;
@@ -66,43 +66,47 @@ class ViewWrapCustom extends StatelessWidget {
       }
     }
 
-    int inner = 0;
-    int size = 0;
-    for (int i = 0; i < children.length; i++) {
-      var child = children[i] as ChoiceNodeBase;
-      if(!isAllVisible && !child.isOccupySpace && child.status.isHide()){
-        continue;
-      }
-      size = child.width == 0 ? maxSize : child.width;
-      if (size == maxSize) {
-        if (inner != 0) {
-          addBuildDraggable(i);
-          setEmptyFlexible(inner);
-        }
-        widget.add(List<Widget>.empty(growable: true));
-        addBuildDraggable(i, horizontal: true);
-        widget.add(List<Widget>.empty(growable: true));
-        widget.last.add(Expanded(flex: size * mul, child: builder(child)));
-        widget.add(List<Widget>.empty(growable: true));
-        inner = 0;
-      } else {
-        addBuildDraggable(i);
-        if (inner + size > maxSize) {
-          setEmptyFlexible(inner);
-          inner = size;
-          widget.add(List<Widget>.empty(growable: true));
-        } else {
-          inner += size;
-        }
-        widget.last.add(Expanded(flex: size * mul, child: builder(child)));
-      }
-    }
-    if (size == maxSize) {
-      widget.add(List<Widget>.empty(growable: true));
+    if(children.isEmpty){
       addBuildDraggable(children.length, horizontal: true);
-    } else {
-      addBuildDraggable(children.length);
-      setEmptyFlexible(inner);
+    }else{
+      int inner = 0;
+      int size = 0;
+      for (int i = 0; i < children.length; i++) {
+        var child = children[i] as ChoiceNode;
+        if(!isAllVisible && !child.isOccupySpace && child.status.isHide()){
+          continue;
+        }
+        size = child.width == 0 ? maxSize : child.width;
+        if (size == maxSize) {
+          if (inner != 0) {
+            addBuildDraggable(i);
+            setEmptyFlexible(inner);
+          }
+          widget.add(List<Widget>.empty(growable: true));
+          addBuildDraggable(i, horizontal: true);
+          widget.add(List<Widget>.empty(growable: true));
+          widget.last.add(Expanded(flex: size * mul, child: builder(child)));
+          widget.add(List<Widget>.empty(growable: true));
+          inner = 0;
+        } else {
+          addBuildDraggable(i);
+          if (inner + size > maxSize) {
+            setEmptyFlexible(inner);
+            inner = size;
+            widget.add(List<Widget>.empty(growable: true));
+          } else {
+            inner += size;
+          }
+          widget.last.add(Expanded(flex: size * mul, child: builder(child)));
+        }
+      }
+      if (size == maxSize) {
+        widget.add(List<Widget>.empty(growable: true));
+        addBuildDraggable(children.length, horizontal: true);
+      } else {
+        addBuildDraggable(children.length);
+        setEmptyFlexible(inner);
+      }
     }
 
     return Column(

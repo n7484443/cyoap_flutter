@@ -35,7 +35,7 @@ class LineSetting extends GenerableParserAndPosition {
     super.currentPos = json['y'] ?? json['pos'];
     if (json.containsKey('children')) {
       children.addAll((json['children'] as List)
-          .map((e) => ChoiceNodeBase.fromJson(e))
+          .map((e) => ChoiceNode.fromJson(e))
           .toList());
     }
     //recursiveStatus = RecursiveStatus.fromJson(json);
@@ -56,7 +56,7 @@ class LineSetting extends GenerableParserAndPosition {
     }
   }
 
-  void addData(int x, ChoiceNodeBase node) {
+  void addData(int x, ChoiceNode node) {
     node.currentPos = x;
     node.parent = this;
     if (x > children.length) {
@@ -66,9 +66,9 @@ class LineSetting extends GenerableParserAndPosition {
     }
   }
 
-  ChoiceNodeBase? getData(int x) {
+  ChoiceNode? getData(int x) {
     if (children.length <= x) return null;
-    return children[x] as ChoiceNodeBase?;
+    return children[x] as ChoiceNode?;
   }
 
   String getClickableString() {

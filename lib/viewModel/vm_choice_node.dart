@@ -16,7 +16,7 @@ const int nonPositioned = -10;
 
 class VMChoiceNode extends GetxController {
   late QuillController quillController;
-  ChoiceNodeBase node;
+  ChoiceNode node;
   final List<int> pos;
   var size = 0.obs;
   var imageString = ''.obs;
@@ -32,7 +32,7 @@ class VMChoiceNode extends GetxController {
 
   VMChoiceNode({int x = nonPositioned, int y = nonPositioned})
       : pos = [y, x],
-        node = getNode([y, x])!;
+        node = getNode([y, x])! as ChoiceNode;
 
   VMChoiceNode.fromNode(this.node) : pos = node.pos();
 
@@ -65,18 +65,18 @@ class VMChoiceNode extends GetxController {
     }
   }
 
-  static ChoiceNodeBase? getNode(List<int> pos) {
-    if (pos[pos.length - 1] == nonPositioned) {
+  static GenerableParserAndPosition? getNode(List<int> pos) {
+    if (pos.last == nonPositioned) {
       return VMDraggableNestedMap.createNodeForTemp();
     }
+    if(pos.length == 1)return getPlatform.getLineSetting(pos.first);
     return getPlatform.getChoiceNode(pos);
   }
 
-
   void sizeChange(int width) {
     size.value += width;
-    if (node.parent is ChoiceNodeBase) {
-      size.value = size.value.clamp(0, (node.parent as ChoiceNodeBase).width);
+    if (node.parent is ChoiceNode) {
+      size.value = size.value.clamp(0, (node.parent as ChoiceNode).width);
     } else {
       size.value = size.value.clamp(0, 12);
     }
@@ -94,7 +94,7 @@ class VMChoiceNode extends GetxController {
   }
 
   void updateFromNode() {
-    node = getNode(pos)!;
+    node = getNode(pos)! as ChoiceNode;
     onInit();
     for (var child in node.children) {
       getVMChoiceNodeFromList(child.pos())?.updateFromNode();
@@ -112,7 +112,7 @@ class VMChoiceNode extends GetxController {
     return getVMChoiceNodeFromTag(getTagFromList(tag));
   }
 
-  static VMChoiceNode? getVMChoiceNodeFromNode(ChoiceNodeBase node) {
+  static VMChoiceNode? getVMChoiceNodeFromNode(ChoiceNode node) {
     return getVMChoiceNodeFromTag(node.tag);
   }
 

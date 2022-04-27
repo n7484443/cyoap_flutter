@@ -18,7 +18,7 @@ import '../model/platform_system.dart';
 import '../viewModel/vm_variable_table.dart';
 
 class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
-  final ChoiceNodeBase? node;
+  final ChoiceNode? node;
 
   ViewChoiceNode(int posX, int posY, {Key? key})
       : node = posX == nonPositioned && posY == nonPositioned
@@ -33,7 +33,10 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
     if (node == null) {
       return Card(
         child: SizedBox(
-          width: controller.maxWidth / defaultMaxSize * 3 * controller.scale(context),
+          width: controller.maxWidth /
+              defaultMaxSize *
+              3 *
+              controller.scale(context),
           height: nodeBaseHeight * controller.scale(context),
         ),
       );
@@ -51,7 +54,8 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
           padding: const EdgeInsets.only(top: 4),
           scrollController: ScrollController(),
           scrollable: false,
-          customStyles: ConstList.getDefaultThemeData(context, controller.scale(context),
+          customStyles: ConstList.getDefaultThemeData(
+              context, controller.scale(context),
               fontStyle: ConstList.getFont(controller.mainFont.value)),
         ),
       );
@@ -69,7 +73,8 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                 ),
                 child: ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(5)),
-                  child: PlatformSystem.getImage(nodeController.imageString.value),
+                  child:
+                      PlatformSystem.getImage(nodeController.imageString.value),
                 ),
               ),
             if (nodeController.titleString.value.isNotEmpty)
@@ -81,14 +86,17 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
           ],
         ),
         editor,
-        if (controller.isVisibleOnlyEdit()) ChoiceNodeSubDragTarget(node!),
-        if (node!.children.isNotEmpty)
-          ViewWrapCustom(
-            node!.children,
-            (child) => NodeDraggable(child),
-            maxSize: node!.width,
-            builderDraggable: (i) => NodeDragTarget(List.from(node!.pos(), growable: true)..add(i)),
-          )
+        ViewWrapCustom(
+          node!.children,
+              (child) => isEditable
+              ? NodeDraggable(child)
+              : ViewChoiceNode.fromNode(child),
+          maxSize: node!.width,
+          builderDraggable: isEditable
+              ? (i) => NodeDragTarget(
+              List.from(node!.pos(), growable: true)..add(i))
+              : null,
+        )
       ],
     );
 
@@ -202,10 +210,14 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                   ),
             color: baseColor,
             clipBehavior: Clip.antiAlias,
-            margin: ConstList.isSmallDisplay(context) ? const EdgeInsets.all(1.4) : null,
+            margin: ConstList.isSmallDisplay(context)
+                ? const EdgeInsets.all(1.4)
+                : null,
             elevation: nodeController.isCard.value ? ConstList.elevation : 0,
             child: Padding(
-              padding: ConstList.isSmallDisplay(context) ? const EdgeInsets.all(2.0) : const EdgeInsets.all(4.0),
+              padding: ConstList.isSmallDisplay(context)
+                  ? const EdgeInsets.all(2.0)
+                  : const EdgeInsets.all(4.0),
               child: isEditable
                   ? mainNode
                   : IgnorePointer(
@@ -221,7 +233,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
 }
 
 class SizeDialog extends StatelessWidget {
-  final ChoiceNodeBase? node;
+  final ChoiceNode? node;
 
   const SizeDialog(this.node, {Key? key}) : super(key: key);
 
@@ -263,45 +275,8 @@ class SizeDialog extends StatelessWidget {
   }
 }
 
-class ChoiceNodeSubDragTarget extends GetView<VMDraggableNestedMap> {
-  final ChoiceNodeBase node;
-
-  const ChoiceNodeSubDragTarget(this.node, {Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Visibility(
-      child: DragTarget(
-        builder: (BuildContext context, List<Object?> candidateData,
-                List<dynamic> rejectedData) =>
-            Container(
-          color: Colors.blueAccent.withOpacity(0.3),
-          height: 20,
-        ),
-        onAccept: (List<int> data) {
-          if (data[data.length - 1] == nonPositioned) {
-            controller.changeData(data, node.pos());
-          } else {
-            var childNode = getPlatform.getChoiceNode(data)!;
-            var parentLastPos = childNode.getParentLast()!.pos();
-            childNode.parent!.removeChildren(childNode);
-            node.addChildren(childNode);
-            controller.updateVMChoiceNode(parentLastPos);
-            controller.update();
-          }
-          getPlatform.checkDataCollect();
-        },
-      ),
-      visible: controller.drag != null && controller.drag != node.pos(),
-      maintainSize: true,
-      maintainAnimation: true,
-      maintainState: true,
-    );
-  }
-}
-
 class RandomDialog extends StatelessWidget {
-  final ChoiceNodeBase? node;
+  final ChoiceNode? node;
 
   const RandomDialog(this.node, {Key? key}) : super(key: key);
 
@@ -336,9 +311,9 @@ class RandomDialog extends StatelessWidget {
 }
 
 class NodeDraggable extends GetView<VMDraggableNestedMap> {
-  final ChoiceNodeBase node;
-  const NodeDraggable(this.node, {Key? key})
-      : super(key: key);
+  final ChoiceNode node;
+
+  const NodeDraggable(this.node, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -347,8 +322,8 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
     final vmDraggableNestedMap = Get.find<VMDraggableNestedMap>();
     if (ConstList.isSmallDisplay(context)) {
       return LongPressDraggable<List<int>>(
-        onDragUpdate: (details) =>
-            controller.dragUpdate(vmDraggableNestedMap.constrain!, details, context),
+        onDragUpdate: (details) => controller.dragUpdate(
+            vmDraggableNestedMap.constrain!, details, context),
         data: pos,
         feedback: Opacity(
           opacity: 0.5,
@@ -376,8 +351,8 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
       );
     } else {
       return Draggable<List<int>>(
-        onDragUpdate: (details) =>
-            controller.dragUpdate(vmDraggableNestedMap.constrain!, details, context),
+        onDragUpdate: (details) => controller.dragUpdate(
+            vmDraggableNestedMap.constrain!, details, context),
         data: pos,
         feedback: Opacity(
           opacity: 0.5,

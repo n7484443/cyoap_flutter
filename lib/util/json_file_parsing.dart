@@ -45,7 +45,7 @@ class JsonProjectParser {
     return null;
   }
 
-  Future<ChoiceNodeBase?> parseToChoiceNode(Map<String, dynamic> input) async {
+  Future<ChoiceNode?> parseToChoiceNode(Map<String, dynamic> input) async {
     return null;
   }
 }

@@ -83,7 +83,7 @@ class AbstractPlatform {
     lineSettings[lineSetting.currentPos] = lineSetting;
   }
 
-  void addData(List<int> pos, ChoiceNodeBase node) {
+  void addData(List<int> pos, ChoiceNode node) {
     while (lineSettings.length <= pos.first) {
       lineSettings.add(LineSetting(lineSettings.length));
     }
@@ -106,7 +106,7 @@ class AbstractPlatform {
     checkDataCollect();
   }
 
-  ChoiceNodeBase? getChoiceNode(List<int> pos) {
+  ChoiceNode? getChoiceNode(List<int> pos) {
     if (pos.first >= lineSettings.length) return null;
     GenerableParserAndPosition child = lineSettings[pos.first];
     for (var i = 1; i < pos.length; i++) {
@@ -117,7 +117,7 @@ class AbstractPlatform {
       }
       child = child.children[pos[i]];
     }
-    return child as ChoiceNodeBase?;
+    return child as ChoiceNode?;
   }
 
   LineSetting? getLineSetting(int y) {
@@ -192,20 +192,20 @@ class AbstractPlatform {
     updateStatusAll();
   }
 
-  void doAllChoiceNode(void Function(ChoiceNodeBase node) action) {
+  void doAllChoiceNode(void Function(ChoiceNode node) action) {
     for (var lineSetting in lineSettings) {
       for (var node in lineSetting.children) {
-        doAllChoiceNodeInner(node as ChoiceNodeBase, action);
+        doAllChoiceNodeInner(node as ChoiceNode, action);
       }
     }
   }
 
   void doAllChoiceNodeInner(
-      ChoiceNodeBase nodeParent, void Function(ChoiceNodeBase node) action) {
+      ChoiceNode nodeParent, void Function(ChoiceNode node) action) {
     action(nodeParent);
     if (nodeParent.children.isNotEmpty) {
       for (var node in nodeParent.children) {
-        doAllChoiceNodeInner(node as ChoiceNodeBase, action);
+        doAllChoiceNodeInner(node as ChoiceNode, action);
       }
     }
   }
