@@ -37,7 +37,7 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
         onAccept: (List<int> drag) {
           if (drag[drag.length - 1] == nonPositioned) {
             controller.changeData(drag, pos);
-          } else if (listEqualExceptLast(pos, drag) && (pos[pos.length - 1] - 1) >= drag[drag.length - 1]) {
+          } else if (listEqualExceptLast(pos, drag) && (pos.last - 1) >= drag.last) {
             controller.changeData(drag, List.from(pos)..last -= 1);
           } else {
             controller.changeData(drag, pos);

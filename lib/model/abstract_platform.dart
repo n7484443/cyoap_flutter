@@ -3,6 +3,7 @@ import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/util/color_util.dart';
+import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -83,10 +84,12 @@ class AbstractPlatform {
   }
 
   void addData(List<int> pos, ChoiceNodeBase node) {
-    while (lineSettings.length <= pos[0]) {
+    while (lineSettings.length <= pos.first) {
       lineSettings.add(LineSetting(lineSettings.length));
     }
-    lineSettings[pos[0]].addData(pos[1], node);
+    var parent = VMChoiceNode.getNode(List.from(pos)..removeLast())!;
+    node.width = node.width.clamp(0, parent.width);
+    parent.addChildren(node, pos: pos.last);
     checkDataCollect();
   }
 
@@ -104,8 +107,8 @@ class AbstractPlatform {
   }
 
   ChoiceNodeBase? getChoiceNode(List<int> pos) {
-    if (pos[0] >= lineSettings.length) return null;
-    GenerableParserAndPosition child = lineSettings[pos[0]];
+    if (pos.first >= lineSettings.length) return null;
+    GenerableParserAndPosition child = lineSettings[pos.first];
     for (var i = 1; i < pos.length; i++) {
       if (child.children.length <= pos[i]) {
         return null;

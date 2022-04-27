@@ -3,6 +3,7 @@ import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/choiceNode/generable_parser.dart';
 import 'package:cyoap_flutter/view/util/view_text_outline.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
+import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/foundation.dart';
@@ -86,6 +87,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
             node!.children,
             (child) => NodeDraggable(child),
             maxSize: node!.width,
+            builderDraggable: (i) => NodeDragTarget(List.from(node!.pos(), growable: true)..add(i)),
           )
       ],
     );
@@ -278,8 +280,7 @@ class ChoiceNodeSubDragTarget extends GetView<VMDraggableNestedMap> {
         ),
         onAccept: (List<int> data) {
           if (data[data.length - 1] == nonPositioned) {
-            node.addChildren(VMDraggableNestedMap.createNodeForTemp());
-            controller.updateVMChoiceNode(node.pos());
+            controller.changeData(data, node.pos());
           } else {
             var childNode = getPlatform.getChoiceNode(data)!;
             var parentLastPos = childNode.getParentLast()!.pos();

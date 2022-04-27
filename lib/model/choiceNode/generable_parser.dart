@@ -160,10 +160,13 @@ abstract class GenerableParserAndPosition {
     return posList;
   }
 
-  void addChildren(GenerableParserAndPosition childNode) {
+  void addChildren(GenerableParserAndPosition childNode, {int? pos}) {
+    pos ??= children.length;
     childNode.parent = this;
-    childNode.currentPos = children.length;
-    children.add(childNode);
+    children.insert(pos, childNode);
+    for (int i = 0; i < children.length; i++) {
+      children[i].currentPos = i;
+    }
   }
 
   void removeChildren(GenerableParserAndPosition childNode) {
