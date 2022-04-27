@@ -143,15 +143,14 @@ class VMDraggableNestedMap extends GetxController {
 
   void removeData(List<int> data) {
     getPlatform.removeData(data);
-    updateVMChoiceNode(data);
     update();
   }
 
   void updateVMChoiceNode(List<int> tag) {
     var node = VMChoiceNode.getNode(tag);
     if (node == null) return;
-    var parentNode = (node as ChoiceNode).getParentLast();
-    var y = parentNode!.parent!.currentPos;
+    var parentNode = (node as ChoiceNode).getParentLast()!;
+    var y = parentNode.parent!.currentPos;
 
     var lineSetting = getPlatform.lineSettings;
     if (y >= lineSetting.length) return;
@@ -164,19 +163,19 @@ class VMDraggableNestedMap extends GetxController {
     return ChoiceNode.noTitle(3, true, '', '');
   }
 
-  void changeData(List<int> data, List<int> target) {
-    if (data.last == nonPositioned) {
+  void changeData(List<int> input, List<int> target) {
+    if (input.last == nonPositioned) {
       getPlatform.addData(target, createNodeForTemp());
     } else{
-      var inputNode = getPlatform.getChoiceNode(data)!;
+      var inputNode = getPlatform.getChoiceNode(input)!;
       var targetNode = getPlatform.getChoiceNode(target);
-      print('$data ::: $target');
       if(targetNode == null){
+        getPlatform.removeData(input);
         getPlatform.addData(target, inputNode);
-        updateVMChoiceNode(data);
+        updateVMChoiceNode(input);
       } else{
         getPlatform.insertData(inputNode, targetNode);
-        updateVMChoiceNode(data);
+        updateVMChoiceNode(input);
       }
     }
     updateVMChoiceNode(target);
@@ -199,12 +198,12 @@ class VMDraggableNestedMap extends GetxController {
 
   double get maxWidth => captureKey.currentContext!.width;
 
-  void dragUpdate(BoxConstraints constrains, DragUpdateDetails details,
+  void dragUpdate(DragUpdateDetails details,
       BuildContext context) {
     double topY = 0;
-    double bottomY = topY + constrains.maxHeight;
+    double bottomY = topY + constrain!.maxHeight;
 
-    var detectedRange = constrains.maxHeight * 0.1;
+    var detectedRange = constrain!.maxHeight * 0.1;
     var moveDistance = ConstList.isSmallDisplay(context) ? 1.5 : 3;
     if (details.localPosition.dy < topY + detectedRange) {
       scroller.jumpTo(scroller.offset - moveDistance);

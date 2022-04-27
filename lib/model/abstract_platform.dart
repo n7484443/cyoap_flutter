@@ -110,8 +110,8 @@ class AbstractPlatform {
   }
 
   void removeData(List<int> pos) {
-    var node = getChoiceNode(pos);
-    node?.parent?.removeChildren(node);
+    var node = getChoiceNode(pos)!;
+    node.parent!.removeChildren(node);
     checkDataCollect();
   }
 

@@ -319,11 +319,9 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
   Widget build(BuildContext context) {
     var widget = ViewChoiceNode.fromNode(node);
     var pos = node.pos();
-    final vmDraggableNestedMap = Get.find<VMDraggableNestedMap>();
     if (ConstList.isSmallDisplay(context)) {
       return LongPressDraggable<List<int>>(
-        onDragUpdate: (details) => controller.dragUpdate(
-            vmDraggableNestedMap.constrain!, details, context),
+        onDragUpdate: (details) => controller.dragUpdate(details, context),
         data: pos,
         feedback: Opacity(
           opacity: 0.5,
@@ -351,8 +349,7 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
       );
     } else {
       return Draggable<List<int>>(
-        onDragUpdate: (details) => controller.dragUpdate(
-            vmDraggableNestedMap.constrain!, details, context),
+        onDragUpdate: (details) => controller.dragUpdate(details, context),
         data: pos,
         feedback: Opacity(
           opacity: 0.5,

@@ -68,6 +68,9 @@ class ViewMake extends StatelessWidget {
               onDragEnd: (DraggableDetails data) {
                 Get.find<VMDraggableNestedMap>().dragEnd();
               },
+              onDragUpdate: (DragUpdateDetails details){
+                Get.find<VMDraggableNestedMap>().dragUpdate(details, context);
+              },
               child: const Icon(Icons.add),
             ),
           ],
