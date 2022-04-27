@@ -170,8 +170,13 @@ class VMDraggableNestedMap extends GetxController {
       var inputNode = getPlatform.getChoiceNode(input)!;
       var targetNode = getPlatform.getChoiceNode(target);
       if(targetNode == null){
-        getPlatform.removeData(input);
-        getPlatform.addData(target, inputNode);
+        var generableParser = getPlatform.getGenerableParserAndPosition(List.from(target)..removeLast());
+        if(generableParser == null){
+          getPlatform.removeData(input);
+          getPlatform.addData(target, inputNode);
+        }else{
+          getPlatform.insertDataWithParent(inputNode, generableParser);
+        }
         updateVMChoiceNode(input);
       } else{
         getPlatform.insertData(inputNode, targetNode);

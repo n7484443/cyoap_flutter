@@ -91,7 +91,6 @@ class AbstractPlatform {
     parent.addChildren(node, pos: pos.last);
     checkDataCollect();
   }
-
   void insertData(ChoiceNode nodeA, ChoiceNode nodeB) {
     var parentA = nodeA.parent!;
     var parentB = nodeB.parent!;
@@ -99,6 +98,13 @@ class AbstractPlatform {
 
     parentA.removeChildren(nodeA);
     parentB.addChildren(nodeA, pos: posB);
+    checkDataCollect();
+  }
+  void insertDataWithParent(ChoiceNode nodeA, GenerableParserAndPosition parentB) {
+    var parentA = nodeA.parent!;
+
+    parentA.removeChildren(nodeA);
+    parentB.addChildren(nodeA);
     checkDataCollect();
   }
 
@@ -115,7 +121,7 @@ class AbstractPlatform {
     checkDataCollect();
   }
 
-  ChoiceNode? getChoiceNode(List<int> pos) {
+  GenerableParserAndPosition? getGenerableParserAndPosition(List<int> pos) {
     if (pos.first >= lineSettings.length) return null;
     GenerableParserAndPosition child = lineSettings[pos.first];
     for (var i = 1; i < pos.length; i++) {
@@ -126,7 +132,11 @@ class AbstractPlatform {
       }
       child = child.children[pos[i]];
     }
-    return child as ChoiceNode?;
+    return child;
+  }
+
+  ChoiceNode? getChoiceNode(List<int> pos) {
+    return getGenerableParserAndPosition(pos) as ChoiceNode?;
   }
 
   LineSetting? getLineSetting(int y) {
