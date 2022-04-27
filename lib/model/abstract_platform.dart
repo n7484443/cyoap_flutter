@@ -88,8 +88,17 @@ class AbstractPlatform {
       lineSettings.add(LineSetting(lineSettings.length));
     }
     var parent = VMChoiceNode.getNode(List.from(pos)..removeLast())!;
-    node.width = node.width.clamp(0, parent.width);
     parent.addChildren(node, pos: pos.last);
+    checkDataCollect();
+  }
+
+  void insertData(ChoiceNode nodeA, ChoiceNode nodeB) {
+    var parentA = nodeA.parent!;
+    var parentB = nodeB.parent!;
+    var posB = nodeB.currentPos;
+
+    parentA.removeChildren(nodeA);
+    parentB.addChildren(nodeA, pos: posB);
     checkDataCollect();
   }
 
@@ -123,13 +132,6 @@ class AbstractPlatform {
   LineSetting? getLineSetting(int y) {
     if (lineSettings.length <= y) return null;
     return lineSettings[y];
-  }
-
-  void changeData(List<int> start, List<int> pos) {
-    var node = getChoiceNode(start)!;
-    removeData(start);
-    addData(pos, node);
-    checkDataCollect();
   }
 
   void compress() {
