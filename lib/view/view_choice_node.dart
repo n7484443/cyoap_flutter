@@ -311,7 +311,7 @@ class RandomDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     var controller = VMChoiceNode.getVMChoiceNodeFromNode(node!)!;
     return Obx(
-          () => AlertDialog(
+      () => AlertDialog(
           scrollable: true,
           title: const Text('랜덤'),
           content: AnimatedFlipCounter(

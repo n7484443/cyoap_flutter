@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../main.dart';
+import '../viewModel/vm_variable_table.dart';
 
 class ViewMakePlatform extends StatelessWidget {
   const ViewMakePlatform({Key? key}) : super(key: key);
@@ -49,6 +50,7 @@ class ViewMakePlatform extends StatelessWidget {
         }
       },
     );
+    Get.put(VMVariableTable());
     if (ConstList.isSmallDisplay(context)) {
       return WillPopScope(
         onWillPop: () async {

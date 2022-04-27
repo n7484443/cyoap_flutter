@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import '../main.dart';
 import '../viewModel/vm_platform.dart';
+import '../viewModel/vm_variable_table.dart';
 
 class ViewPlay extends StatelessWidget {
   const ViewPlay({Key? key}) : super(key: key);
@@ -28,6 +29,8 @@ class ViewPlay extends StatelessWidget {
             ),
           );
         }
+
+        Get.put(VMVariableTable());
         if (ConstList.isSmallDisplay(context)) {
           return Scaffold(
             appBar: PreferredSize(

@@ -11,7 +11,6 @@ class ViewVariable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(VMVariableTable());
     Widget widget;
     if (isEditable) {
       widget = Column(
@@ -62,6 +61,7 @@ class ViewVariable extends StatelessWidget {
                 ExpansionTile(
                   title: const Text('변수'),
                   children: _.variableList,
+                  initiallyExpanded: true,
                 ),
                 ExpansionTile(
                   title: const Text('노드'),
