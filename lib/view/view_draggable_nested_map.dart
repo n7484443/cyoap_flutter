@@ -15,6 +15,14 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
   const NodeDragTarget(this.pos, {this.isHorizontal = false, Key? key})
       : super(key: key);
 
+  bool listEqualExceptLast(List<int> A, List<int> B){
+    if(A.length != B.length)return false;
+    for(int i = 0; i < A.length - 1; i++){
+      if(A[i] != B[i])return false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Visibility(
@@ -29,8 +37,8 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
         onAccept: (List<int> drag) {
           if (drag[drag.length - 1] == nonPositioned) {
             controller.changeData(drag, pos);
-          } else if (pos[0] == drag[0] && (pos[1] - 1) >= drag[1]) {
-            controller.changeData(drag, [pos[0], pos[1] - 1]);
+          } else if (listEqualExceptLast(pos, drag) && (pos[pos.length - 1] - 1) >= drag[drag.length - 1]) {
+            controller.changeData(drag, List.from(pos)..last -= 1);
           } else {
             controller.changeData(drag, pos);
           }
