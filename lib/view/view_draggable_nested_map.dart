@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/util/view_text_outline.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -23,6 +26,13 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
     return true;
   }
 
+  bool listContain(List<int> A, List<int> B){
+    for(int i = 0; i < min(A.length, B.length); i++){
+      if(A[i] != B[i])return false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Visibility(
@@ -33,6 +43,9 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
             color: baseColor,
             height: isHorizontal ? 200 : null,
           );
+        },
+        onWillAccept: (List<int>? drag) {
+          return drag != null && !listContain(drag, pos);
         },
         onAccept: (List<int> drag) {
           if (drag[drag.length - 1] == nonPositioned) {
