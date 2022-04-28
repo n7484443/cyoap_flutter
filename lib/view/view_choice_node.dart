@@ -96,6 +96,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
               ? (i) => NodeDragTarget(
               List.from(node!.pos(), growable: true)..add(i))
               : null,
+          isAllVisible: isEditable,
         )
       ],
     );
