@@ -6,6 +6,7 @@ import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.da
 import 'package:cyoap_flutter/util/platform_specified_util/webp_converter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tuple/tuple.dart';
+import 'package:path/path.dart';
 
 class SaveProjectImp extends SaveProject {
   @override
@@ -47,11 +48,27 @@ class SaveProjectImp extends SaveProject {
 
   @override
   Future<void> saveRaw(String path, Map<String, dynamic> dataInput) async {
+    var map = await getMap(dataInput);
+
+    var existMap = List<String>.empty(growable: true);
     Directory dirNode = Directory('$path/nodes');
     if(await dirNode.exists()){
-      await dirNode.delete(recursive: true);
+      var nameList = dirNode.listSync(recursive: true).map((e) => ('nodes/${basename(e.path)}')).toList();
+      existMap.addAll(nameList);
     }
-    var map = await getMap(dataInput);
+    Directory dirImages = Directory('$path/images');
+    if(await dirImages.exists()){
+      var nameList = dirImages.listSync(recursive: true).map((e) => ('images/${basename(e.path)}')).toList();
+      existMap.addAll(nameList);
+    }
+
+    var needRemove = existMap.toSet().difference(map.keys.toSet());
+
+    for(var name in needRemove){
+      File f = File('$path/$name');
+      await f.delete(recursive: true);
+    }
+
     for (var name in map.keys) {
       var data = map[name]!;
       File f = File('$path/$name');
