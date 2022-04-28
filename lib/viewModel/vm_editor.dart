@@ -76,7 +76,7 @@ class VMEditor extends GetxController {
     NodeEditor().target.title = title.value;
     NodeEditor().target.contentsString =
         jsonEncode(quillController.document.toDelta().toJson());
-    VMChoiceNode.getVMChoiceNodeFromNode(NodeEditor().target.getParentLast()!)?.updateFromEditor();
+    VMChoiceNode.getVMChoiceNodeFromNode(NodeEditor().target)?.updateFromEditor();
     Get.find<VMDraggableNestedMap>().update();
     Get.find<VMDraggableNestedMap>().isChanged = true;
     quillController.updateSelection(
