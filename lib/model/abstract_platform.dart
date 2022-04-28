@@ -150,7 +150,9 @@ class AbstractPlatform {
   }
 
   void checkDataCollect() {
-    for (var line in lineSettings) {
+    for (int i = 0; i < lineSettings.length; i++) {
+      var line = lineSettings[i];
+      line.currentPos = i;
       for (int x = 0; x < line.children.length; x++) {
         line.children[x].currentPos = x;
       }

@@ -47,6 +47,10 @@ class SaveProjectImp extends SaveProject {
 
   @override
   Future<void> saveRaw(String path, Map<String, dynamic> dataInput) async {
+    Directory dirNode = Directory('$path/nodes');
+    if(await dirNode.exists()){
+      await dirNode.delete(recursive: true);
+    }
     var map = await getMap(dataInput);
     for (var name in map.keys) {
       var data = map[name]!;
