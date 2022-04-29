@@ -22,16 +22,20 @@ class PlatformFileSystem {
   AbstractPlatform? platform;
 
   final Map<String, String> _imageSource = {};
+
   Map<String, String> get imageSource => _imageSource;
 
   Image noImage = Image.asset('images/noImage.png');
   bool openAsFile = false;
   bool _isEditable = true;
+
   bool get isEditable => ConstList.isDistributed ? false : _isEditable;
+
   set isEditable(bool input) => _isEditable = input;
   String? path;
 
   PlatformFileSystem();
+
   /*TODO - page 시스템 개발*/
   Future<void> createFromFolder(String path) async {
     openAsFile = false;
@@ -183,6 +187,7 @@ class PlatformFileSystem {
   }
 
   final regReplace = RegExp(r'[.](png|jpg|jpeg|rawRgba)');
+
   String convertImageName(String name) {
     return name.replaceAll(regReplace, '.webp');
   }
@@ -211,12 +216,11 @@ class PlatformFileSystem {
   }
 
   Future<void> saveAsFolder() async {
-    await PlatformSpecified()
-        .saveProject!
-        .saveRaw(path!, await saveDataMap);
+    await PlatformSpecified().saveProject!.saveRaw(path!, await saveDataMap);
   }
 
   final regCheckImage = RegExp(r'[.](webp|png|jpg|jpeg|bmp|gif)$');
+
   //1 = 일반 이미지, 0 = 웹 이미지, -1 = 이미지 아님.
   int isImageFile(String path) {
     var name = basename(path).toLowerCase();
@@ -238,21 +242,21 @@ class PlatformFileSystem {
       temp.remove(tmp);
       temp.add(tmp);
       return tmp.item2;
-    } else if (await ImageDB().hasImage(name)) {
-      image = await ImageDB().getImage(name);
-      if (image != null) {
-        var output = Image.memory(
-          image,
-          filterQuality: ConstList.isDesktop() ? FilterQuality.high : FilterQuality.medium,
-          isAntiAlias: true,
-          fit: BoxFit.scaleDown,
-        );
-        temp.add(Tuple2(name, output));
-        while (temp.length > 30) {
-          temp.removeFirst();
-        }
-        return output;
+    }
+    image = await ImageDB().getImage(name);
+    if (image != null) {
+      var output = Image.memory(
+        image,
+        filterQuality:
+            ConstList.isDesktop() ? FilterQuality.high : FilterQuality.medium,
+        isAntiAlias: true,
+        fit: BoxFit.scaleDown,
+      );
+      temp.add(Tuple2(name, output));
+      while (temp.length > 30) {
+        temp.removeFirst();
       }
+      return output;
     }
 
     return noImage;

@@ -113,15 +113,6 @@ class ImageDB {
     }
   }
 
-  Future<bool> hasImage(String name) async {
-    if (ConstList.isOnlyFileAccept()) {
-      await init();
-      var value = await notesReadableTxn.getObject(name);
-      return value != null;
-    }
-    return _dirImageUint8Map.containsKey(name);
-  }
-
   String getImageName(int index) {
     return ImageDB().imageList[index];
   }
