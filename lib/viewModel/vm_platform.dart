@@ -135,16 +135,9 @@ class VMPlatform extends GetxController {
 
     print('web is Distribute mode');
 
-    var value = await PlatformSpecified().distribute!.getImageNodeList();
-    print('load start');
     loadString = '[ 로드 시작 ]';
-    var imageList = value.item1;
-    var nodeList = value.item2;
-    loadString = '[ 이미지 로드중 ]';
-    for (var name in imageList) {
-      ImageDB().uploadImagesFuture(
-          name, PlatformSpecified().distribute!.getFileAsUint8('images/$name'));
-    }
+    var nodeList = await PlatformSpecified().distribute!.getNodeList();
+    print('load start');
     loadString = '[ 선택지 로드중 ]';
     List<Future> futureMap = List.empty(growable: true);
     Map<String, String> nodeMap = {};

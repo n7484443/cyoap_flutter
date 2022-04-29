@@ -4,6 +4,8 @@ import 'package:cyoap_flutter/main.dart';
 import 'package:idb_shim/idb.dart';
 import 'package:idb_shim/idb_browser.dart';
 
+import '../util/platform_specified_util/platform_specified.dart';
+
 class ImageDB {
   static final ImageDB _instance = ImageDB._init();
 
@@ -83,7 +85,17 @@ class ImageDB {
   }
 
   Future<Uint8List?> getImage(String name) async {
-    if (ConstList.isOnlyFileAccept()) {
+    if(ConstList.isDistributed){
+      await init();
+      if(!_dirImageUint8Map.containsKey(name)){
+        _dirImageUint8Map[name] = null;
+        return PlatformSpecified().distribute!.getFileAsUint8('images/$name')..then((value) async{
+          await notesWritableTxn.put(value, name);
+        });
+      }else{
+        return await notesReadableTxn.getObject(name) as Uint8List;
+      }
+    }else if (ConstList.isOnlyFileAccept()) {
       await init();
       return await notesReadableTxn.getObject(name) as Uint8List;
     } else {

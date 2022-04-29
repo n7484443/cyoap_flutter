@@ -16,7 +16,7 @@ abstract class PlatformSpecified {
 }
 
 abstract class Distribute {
-  Future<Tuple2<List<String>, List<String>>> getImageNodeList() async {
+  Future<List<String>> getNodeList() async {
     throw UnimplementedError();
   }
 

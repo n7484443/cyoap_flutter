@@ -3,19 +3,15 @@ import 'dart:typed_data';
 
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
 import 'package:http/http.dart' as http;
-import 'package:tuple/tuple.dart';
 
 class DistributeImp extends Distribute {
   @override
-  Future<Tuple2<List<String>, List<String>>> getImageNodeList() async {
-    var imageListData = await getFileAsJson('images/list.json');
+  Future<List<String>> getNodeList() async {
     var nodeListData = await getFileAsJson('nodes/list.json');
-    var imageList =
-        (jsonDecode(imageListData) as List).map((e) => e.toString()).toList();
     var nodeList =
         (jsonDecode(nodeListData) as List).map((e) => e.toString()).toList();
 
-    return Tuple2(imageList, nodeList);
+    return nodeList;
   }
 
   @override
