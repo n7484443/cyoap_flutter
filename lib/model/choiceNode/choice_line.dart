@@ -20,13 +20,7 @@ class LineSetting extends GenerableParserAndPosition {
     Map<String, dynamic> map = super.toJson();
     map.addAll({
       'maxSelect': maxSelect,
-      //Todo remove after some version
-      'clickableRecursive': recursiveStatus.conditionClickableRecursive,
     });
-    //Todo remove after some version
-    if (recursiveStatus.executeCodeRecursive != null) {
-      map['executeRecursive'] = recursiveStatus.executeCodeRecursive![0];
-    }
     return map;
   }
 
@@ -38,18 +32,7 @@ class LineSetting extends GenerableParserAndPosition {
           .map((e) => ChoiceNode.fromJson(e))
           .toList());
     }
-    //recursiveStatus = RecursiveStatus.fromJson(json);
-    recursiveStatus = RecursiveStatus();
-    recursiveStatus.conditionClickableRecursive =
-        json['clickableRecursive'] == null
-            ? null
-            : getClassFromJson(json['clickableRecursive']);
-    var executeRecursive = json['executeRecursive'] == null
-        ? null
-        : getClassFromJson(json['executeRecursive']);
-    if (executeRecursive != null) {
-      recursiveStatus.executeCodeRecursive = [executeRecursive];
-    }
+    recursiveStatus = RecursiveStatus.fromJson(json);
 
     for (var element in children) {
       element.parent = this;

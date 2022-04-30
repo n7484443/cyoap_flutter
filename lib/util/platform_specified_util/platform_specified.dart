@@ -46,12 +46,10 @@ abstract class SaveProject {
     };
 
     var image = dataInput['imageMap'] as Map<String, String>;
-    var imageList = List.empty(growable: true);
     for (var name in image.keys) {
       var data = Uint8List.fromList(image[name]!.codeUnits);
       var output = await convertImage(name, data);
       map['images/${output.item1}'] = output.item2;
-      imageList.add(output.item1);
     }
 
     var fileList = List.empty(growable: true);
@@ -61,7 +59,6 @@ abstract class SaveProject {
       map['nodes/$nodeName'] = utf8.encode(lineSetting[nodeName]!) as Uint8List;
       fileList.add(nodeName);
     }
-    map['images/list.json'] = utf8.encode(jsonEncode(imageList));
     map['nodes/list.json'] = utf8.encode(jsonEncode(fileList));
 
     return map;

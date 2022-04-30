@@ -25,12 +25,14 @@ class RecursiveStatus {
       : conditionClickableString = json['conditionClickableString'],
         conditionVisibleString = json['conditionVisibleString'],
         executeCodeString = json['executeCodeString'] {
+
     if (json['conditionClickableRecursive'] == null) {
       conditionClickableRecursive = null;
     } else {
       conditionClickableRecursive =
           getClassFromJson(json['conditionClickableRecursive']);
     }
+
     if (json['conditionVisibleRecursive'] == null) {
       conditionVisibleRecursive = null;
     } else {
