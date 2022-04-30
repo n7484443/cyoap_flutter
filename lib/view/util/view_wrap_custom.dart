@@ -26,48 +26,48 @@ class ViewWrapCustom extends StatelessWidget {
 
   final int mul = 4;
 
+  void setEmptyFlexible(List<List<Widget>> widget, int innerPos) {
+    if (innerPos < maxSize) {
+      var leftOver = (maxSize - innerPos);
+      if (setCenter) {
+        var d = leftOver;
+        widget.last
+            .insert(0, Expanded(flex: d, child: const SizedBox.shrink()));
+        widget.last.add(Expanded(flex: d, child: const SizedBox.shrink()));
+      } else {
+        widget.last.add(
+          Expanded(
+            flex: leftOver * mul,
+            child: const SizedBox(
+              width: double.infinity,
+              height: 0,
+            ),
+          ),
+        );
+      }
+    }
+  }
+
+  void addBuildDraggable(List<List<Widget>> widget, int pos, {bool horizontal = false}) {
+    if (builderDraggable != null) {
+      widget.last.add(Expanded(
+          flex: 1,
+          child: horizontal
+              ? SizedBox(
+            height: nodeBaseHeight / 6,
+            child: builderDraggable!(pos),
+          )
+              : builderDraggable!(pos)));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     List<List<Widget>> widget =
         List.filled(1, List<Widget>.empty(growable: true), growable: true);
 
-    void setEmptyFlexible(int innerPos) {
-      if (innerPos < maxSize) {
-        var leftOver = (maxSize - innerPos);
-        if (setCenter) {
-          var d = leftOver;
-          widget.last
-              .insert(0, Expanded(flex: d, child: const SizedBox.shrink()));
-          widget.last.add(Expanded(flex: d, child: const SizedBox.shrink()));
-        } else {
-          widget.last.add(
-            Expanded(
-              flex: leftOver * mul,
-              child: const SizedBox(
-                width: double.infinity,
-                height: 0,
-              ),
-            ),
-          );
-        }
-      }
-    }
-
-    void addBuildDraggable(int pos, {bool horizontal = false}) {
-      if (builderDraggable != null) {
-        widget.last.add(Expanded(
-            flex: 1,
-            child: horizontal
-                ? SizedBox(
-                    height: nodeBaseHeight / 6,
-                    child: builderDraggable!(pos),
-                  )
-                : builderDraggable!(pos)));
-      }
-    }
-
     if(children.isEmpty){
-      addBuildDraggable(children.length, horizontal: true);
+      addBuildDraggable(widget, children.length, horizontal: true);
     }else{
       int inner = 0;
       int size = 0;
@@ -79,19 +79,19 @@ class ViewWrapCustom extends StatelessWidget {
         size = child.width == 0 ? maxSize : child.width;
         if (size == maxSize) {
           if (inner != 0) {
-            addBuildDraggable(i);
-            setEmptyFlexible(inner);
+            addBuildDraggable(widget, i);
+            setEmptyFlexible(widget, inner);
           }
           widget.add(List<Widget>.empty(growable: true));
-          addBuildDraggable(i, horizontal: true);
+          addBuildDraggable(widget, i, horizontal: true);
           widget.add(List<Widget>.empty(growable: true));
           widget.last.add(Expanded(flex: size * mul, child: builder(child)));
           widget.add(List<Widget>.empty(growable: true));
           inner = 0;
         } else {
-          addBuildDraggable(i);
+          addBuildDraggable(widget, i);
           if (inner + size > maxSize) {
-            setEmptyFlexible(inner);
+            setEmptyFlexible(widget, inner);
             inner = size;
             widget.add(List<Widget>.empty(growable: true));
           } else {
@@ -102,10 +102,10 @@ class ViewWrapCustom extends StatelessWidget {
       }
       if (size == maxSize) {
         widget.add(List<Widget>.empty(growable: true));
-        addBuildDraggable(children.length, horizontal: true);
+        addBuildDraggable(widget, children.length, horizontal: true);
       } else {
-        addBuildDraggable(children.length);
-        setEmptyFlexible(inner);
+        addBuildDraggable(widget, children.length);
+        setEmptyFlexible(widget, inner);
       }
     }
 

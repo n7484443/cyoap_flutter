@@ -1,7 +1,6 @@
 import 'package:cyoap_flutter/model/choiceNode/recursive_status.dart';
 
 import '../grammar/analyser.dart';
-import '../grammar/recursive_parser.dart';
 import '../grammar/value_type.dart';
 import '../variable_db.dart';
 import 'choice_node.dart';

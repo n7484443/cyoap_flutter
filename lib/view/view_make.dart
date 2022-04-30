@@ -50,7 +50,6 @@ class ViewMake extends StatelessWidget {
               onAccept: (List<int> data) {
                 Get.find<VMDraggableNestedMap>().removeData(data);
               },
-              onMove: (DragTargetDetails<List<int>> details) {},
             ),
             Draggable<List<int>>(
               data: [nonPositioned, nonPositioned],
