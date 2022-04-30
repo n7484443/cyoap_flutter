@@ -4,8 +4,6 @@ import 'package:archive/archive.dart';
 import 'package:archive/archive_io.dart';
 import 'package:cyoap_flutter/model/platform_file_system.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/widgets.dart';
-
 import 'abstract_platform.dart';
 
 class PlatformSystem {
@@ -54,9 +52,6 @@ class PlatformSystem {
   Future<void> openPlatformVoid() async {
     platformFileSystem.createFromVoid();
   }
-
-  static FutureBuilder getImage(String image) =>
-      PlatformSystem.platformFileSystem.getImage(image);
 }
 
 AbstractPlatform get getPlatform {

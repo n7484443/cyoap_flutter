@@ -23,7 +23,7 @@ class ViewSource extends StatelessWidget {
                 flex: 1,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: getPlatformFileSystem.getImage(name),
+                  child: ImageDB().getImageWidget(name),
                 ),
               ),
               Flexible(

@@ -76,7 +76,8 @@ class VMEditor extends GetxController {
     NodeEditor().target.title = title.value;
     NodeEditor().target.contentsString =
         jsonEncode(quillController.document.toDelta().toJson());
-    VMChoiceNode.getVMChoiceNodeFromNode(NodeEditor().target)?.updateFromEditor();
+    VMChoiceNode.getVMChoiceNodeFromNode(NodeEditor().target)
+        ?.updateFromEditor();
     Get.find<VMDraggableNestedMap>().update();
     Get.find<VMDraggableNestedMap>().isChanged = true;
     quillController.updateSelection(
@@ -85,7 +86,7 @@ class VMEditor extends GetxController {
   }
 
   FutureBuilder getImage(int i) {
-    return PlatformSystem.getImage(ImageDB().getImageName(i));
+    return ImageDB().getImageWidget(ImageDB().getImageName(i));
   }
 
   void setImage(int index) {

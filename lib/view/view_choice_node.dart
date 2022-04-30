@@ -14,6 +14,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import '../main.dart';
 import '../model/abstract_platform.dart';
+import '../model/image_db.dart';
 import '../model/platform_system.dart';
 import '../viewModel/vm_variable_table.dart';
 
@@ -73,8 +74,8 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                 ),
                 child: ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(5)),
-                  child:
-                      PlatformSystem.getImage(nodeController.imageString.value),
+                  child: ImageDB()
+                      .getImageWidget(nodeController.imageString.value),
                 ),
               ),
             if (nodeController.titleString.value.isNotEmpty)
@@ -88,13 +89,13 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
         editor,
         ViewWrapCustom(
           node!.children,
-              (child) => isEditable
+          (child) => isEditable
               ? NodeDraggable(child)
               : ViewChoiceNode.fromNode(child),
           maxSize: node!.width,
           builderDraggable: isEditable
-              ? (i) => NodeDragTarget(
-              List.from(node!.pos(), growable: true)..add(i))
+              ? (i) =>
+                  NodeDragTarget(List.from(node!.pos(), growable: true)..add(i))
               : null,
           isAllVisible: isEditable,
         )

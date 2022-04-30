@@ -1,8 +1,12 @@
+import 'dart:collection';
 import 'dart:typed_data';
 
 import 'package:cyoap_flutter/main.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:idb_shim/idb.dart';
 import 'package:idb_shim/idb_browser.dart';
+import 'package:tuple/tuple.dart';
 
 import '../util/platform_specified_util/platform_specified.dart';
 
@@ -12,6 +16,7 @@ class ImageDB {
   factory ImageDB() {
     return _instance;
   }
+
   ImageDB._init();
 
   Future<void> init() async {
@@ -84,18 +89,19 @@ class ImageDB {
     });
   }
 
-  Future<Uint8List?> getImage(String name) async {
-    if(ConstList.isDistributed){
+  Future<Uint8List?> _getImage(String name) async {
+    if (ConstList.isDistributed) {
       await init();
-      if(!_dirImageUint8Map.containsKey(name)){
+      if (!_dirImageUint8Map.containsKey(name)) {
         _dirImageUint8Map[name] = null;
-        return PlatformSpecified().distribute!.getFileAsUint8('images/$name')..then((value) async{
-          await notesWritableTxn.put(value, name);
-        });
-      }else{
+        return PlatformSpecified().distribute!.getFileAsUint8('images/$name')
+          ..then((value) async {
+            await notesWritableTxn.put(value, name);
+          });
+      } else {
         return await notesReadableTxn.getObject(name) as Uint8List;
       }
-    }else if (ConstList.isOnlyFileAccept()) {
+    } else if (ConstList.isOnlyFileAccept()) {
       await init();
       return await notesReadableTxn.getObject(name) as Uint8List;
     } else {
@@ -121,7 +127,56 @@ class ImageDB {
     return ImageDB().imageList.indexOf(name);
   }
 
-  void clearImageCache(){
+  void clearImageCache() {
     _dirImageUint8Map.clear();
+  }
+
+
+
+  Image noImage = Image.asset('images/noImage.png');
+  Queue<Tuple2<String, Image>> temp = Queue();
+
+  Future<Image> getImage(String name) async {
+    Uint8List? image;
+    if (temp.any((element) => element.item1 == name)) {
+      var tmp = temp.firstWhere((element) => element.item1 == name);
+      temp.remove(tmp);
+      temp.add(tmp);
+      return tmp.item2;
+    }
+    image = await _getImage(name);
+    if (image != null) {
+      var output = Image.memory(
+        image,
+        filterQuality:
+        ConstList.isDesktop() ? FilterQuality.high : FilterQuality.medium,
+        isAntiAlias: true,
+        fit: BoxFit.scaleDown,
+      );
+      temp.add(Tuple2(name, output));
+      while (temp.length > 30) {
+        temp.removeFirst();
+      }
+      return output;
+    }
+
+    return noImage;
+  }
+
+  FutureBuilder getImageWidget(String name) {
+    return FutureBuilder(
+      future: getImage(name),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData == false) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasError) {
+          return noImage;
+        } else {
+          return snapshot.data as Image;
+        }
+      },
+    );
   }
 }

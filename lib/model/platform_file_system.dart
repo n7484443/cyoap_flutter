@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
@@ -7,7 +6,6 @@ import 'dart:typed_data';
 import 'package:archive/archive.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
-import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:tuple/tuple.dart';
 
@@ -25,7 +23,6 @@ class PlatformFileSystem {
 
   Map<String, String> get imageSource => _imageSource;
 
-  Image noImage = Image.asset('images/noImage.png');
   bool openAsFile = false;
   bool _isEditable = true;
 
@@ -231,52 +228,6 @@ class PlatformFileSystem {
       return 1;
     }
     return -1;
-  }
-
-  Queue<Tuple2<String, Image>> temp = Queue();
-
-  Future<Image> _getImage(String name) async {
-    Uint8List? image;
-    if (temp.any((element) => element.item1 == name)) {
-      var tmp = temp.firstWhere((element) => element.item1 == name);
-      temp.remove(tmp);
-      temp.add(tmp);
-      return tmp.item2;
-    }
-    image = await ImageDB().getImage(name);
-    if (image != null) {
-      var output = Image.memory(
-        image,
-        filterQuality:
-            ConstList.isDesktop() ? FilterQuality.high : FilterQuality.medium,
-        isAntiAlias: true,
-        fit: BoxFit.scaleDown,
-      );
-      temp.add(Tuple2(name, output));
-      while (temp.length > 30) {
-        temp.removeFirst();
-      }
-      return output;
-    }
-
-    return noImage;
-  }
-
-  FutureBuilder getImage(String name) {
-    return FutureBuilder(
-      future: _getImage(name),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData == false) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (snapshot.hasError) {
-          return noImage;
-        } else {
-          return snapshot.data as Image;
-        }
-      },
-    );
   }
 
   void addSource(String image, String source) {
