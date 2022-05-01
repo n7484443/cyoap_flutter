@@ -92,7 +92,7 @@ class SemanticAnalyser {
     }
     int equalPos = -1;
     for (int i = 0; i < analysedData.length; i++) {
-      if (analysedData[i].type == AnalyserConst.equal) {
+      if (analysedData[i].data == '=') {
         equalPos = i;
         break;
       }

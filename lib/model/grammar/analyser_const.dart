@@ -10,9 +10,6 @@ class AnalyserConst {
   /// 판단 X
   static const int unspecified = 5;
 
-  /// = 기호
-  static const int equal = 0;
-
   /// 변수명
   static const int variableName = 10;
 
