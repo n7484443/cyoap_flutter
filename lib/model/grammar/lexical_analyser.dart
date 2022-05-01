@@ -2,10 +2,6 @@ import 'analyser_const.dart';
 import 'token.dart';
 
 class LexicalAnalyser {
-  // 같은 값이 반환시->다음값으로
-  // null 일때->함수 입력 끝
-  final RegExp pattern = RegExp(r'[^\s"]+|"[^"]*"');
-
   /*
     어휘분석기. 토큰으로 변환한다.
      */
@@ -129,7 +125,6 @@ class LexicalAnalyser {
       }
     }
     addToken();
-    print(tokenList);
     return tokenList;
   }
 
