@@ -128,25 +128,6 @@ class LexicalAnalyser {
     return tokenList;
   }
 
-  dynamic getTypeFromInt(int t) {
-    switch (t) {
-      case AnalyserConst.ints:
-        return int;
-      case AnalyserConst.doubles:
-        return double;
-      case AnalyserConst.bools:
-        return bool;
-      case AnalyserConst.strings:
-        return "string";
-      case AnalyserConst.function:
-        return Function;
-      case AnalyserConst.variableName:
-        return "var";
-      default:
-        return;
-    }
-  }
-
   bool isStringDouble(String s) {
     return double.tryParse(s) != null;
   }
