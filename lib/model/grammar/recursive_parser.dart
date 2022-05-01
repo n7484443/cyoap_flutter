@@ -91,8 +91,9 @@ class RecursiveParser extends RecursiveUnit {
       }
       var varName = (unzippedData0.data as VariableUnit).varName;
       if(createAsGlobal == null){
-        var config = VariableDataBase().getValueTypeWrapper(varName)!;
-        VariableDataBase().setValue(varName, ValueTypeWrapper(unzippedData1, config.visible));
+        var original = VariableDataBase().getValueTypeWrapper(varName)!;
+        var copy = ValueTypeWrapper.copy(original)..valueType = unzippedData1;
+        VariableDataBase().setValue(varName, copy);
       }else{
         VariableDataBase().setValue(varName, ValueTypeWrapper.normal(unzippedData1, createAsGlobal!));
       }

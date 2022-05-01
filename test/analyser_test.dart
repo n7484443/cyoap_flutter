@@ -21,6 +21,8 @@ void main() {
                 
                 var stringTest = "문자열 테스트String1"
                 var stringAddTest = "문자" + "열테스트1"
+                var stringAddTest1 = "문자열테스트1"
+                var stringAddTest2 = stringAddTest == stringAddTest1
                 
                 var comp1 = numberTest0 == -5.5
                 var comp2 = numberTest0 >= -5.5
@@ -81,6 +83,8 @@ void main() {
   test('stringTest', (){
     expect(ins.getValueType('stringTest')?.data, "문자열 테스트String1");
     expect(ins.getValueType('stringAddTest')?.data, "문자열테스트1");
+    expect(ins.getValueType('stringAddTest1')?.data, "문자열테스트1");
+    expect(ins.getValueType('stringAddTest2')?.data, true);
   });
 
   test('compTest', (){

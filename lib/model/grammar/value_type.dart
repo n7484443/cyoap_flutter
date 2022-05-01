@@ -101,6 +101,12 @@ class ValueTypeWrapper {
       : visible = false,
         displayName = '';
 
+  ValueTypeWrapper.copy(ValueTypeWrapper other):
+    visible = other.visible,
+    isGlobal = other.isGlobal,
+    displayName = other.displayName,
+    valueType = other.valueType;
+
   ValueTypeWrapper.fromJson(Map<String, dynamic> json)
       : valueType = ValueType.fromJson(json['valueType']),
         visible = json['visible'] == 'true',
