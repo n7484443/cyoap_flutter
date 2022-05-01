@@ -28,7 +28,7 @@ void main() {
                 if(numberTest0 == -5.5, var alpha = 11, var beta = 15)
                 if(numberTest0 != -5.5, var gamma = 12, var omega = 16)
                 var test_alpha = 1
-                test_alpha += 3
+                test_alpha+=3
                 var test_beta = 1
                 test_beta -= 5
                 
@@ -51,6 +51,8 @@ void main() {
   """;
   String strGlobalTest = """
                 if(globalTest == 123, var T = true, var T = false)
+                var existTest = exist(T)
+                var existTest2 = exist(TT)
                 """;
   var recursiveData = Analyser().analyseCodes(strTest);
   Analyser().run(recursiveData);
@@ -122,5 +124,7 @@ void main() {
     recursiveData = Analyser().analyseCodes(strGlobalTest);
     Analyser().run(recursiveData);
     expect(ins.getValueType('T')?.data, true);
+    expect(ins.getValueType('existTest')?.data, true);
+    expect(ins.getValueType('existTest2')?.data, false);
   });
 }

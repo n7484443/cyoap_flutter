@@ -40,10 +40,10 @@ class LexicalAnalyser {
         case '+':
         case '*':
         case '/':
-          tokenAdded = Token(AnalyserConst.functionUnspecified, c);
-          break;
         case '<':
         case '>':
+          addToken();
+          tokenAdded = null;
           tokenAdded = Token(AnalyserConst.functionUnspecified, c);
           break;
         case '=':

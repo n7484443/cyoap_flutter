@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cyoap_flutter/model/grammar/value_type.dart';
+import 'package:cyoap_flutter/model/variable_db.dart';
 
 class Functions {
   Map<String, ValueType Function(List<ValueType> input)> functionMap = {};
@@ -26,6 +27,7 @@ class Functions {
     functionMap['not'] = funcNot;
     functionMap['random'] = funcRandom;
     functionMap['none'] = funcNone;
+    functionMap['exist'] = funcExist;
   }
 
   Function getFunction(String name) {
@@ -191,5 +193,10 @@ class Functions {
     } else {
       return ValueType(false);
     }
+  }
+
+  ValueType funcExist(List<ValueType> input) {
+    var name = (input[0].data as VariableUnit).varName;
+    return ValueType(VariableDataBase().hasValue(name));
   }
 }

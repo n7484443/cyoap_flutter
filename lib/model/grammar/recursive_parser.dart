@@ -83,8 +83,7 @@ class RecursiveParser extends RecursiveUnit {
         return childNode[2].unzip();
       }
     }
-    if (childNode.length == 2 &&
-        value.data == Analyser().functionList.funcSet) {
+    if (value.data == Analyser().functionList.funcSet) {
       var unzippedData0 = childNode[0].unzip();
       var unzippedData1 = childNode[1].unzip();
       if(unzippedData0 is! VariableUnit){
@@ -98,6 +97,14 @@ class RecursiveParser extends RecursiveUnit {
         VariableDataBase().setValue(varName, ValueTypeWrapper.normal(unzippedData1, createAsGlobal!));
       }
       return unzippedData0;
+    }
+    if(value.data == Analyser().functionList.funcExist){
+      var unzippedData0 = childNode[0].unzip();
+      if(unzippedData0 is! VariableUnit){
+        unzippedData0 = childNode[0].value;
+      }
+      var varName = (unzippedData0.data as VariableUnit).varName;
+      return ValueType(VariableDataBase().hasValue(varName));
     }
     var input = childNode.map((e) => e.unzip()).toList();
     return value.data(input);
