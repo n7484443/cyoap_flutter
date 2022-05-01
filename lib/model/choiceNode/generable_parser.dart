@@ -1,5 +1,6 @@
 import 'package:cyoap_flutter/model/choiceNode/recursive_status.dart';
 
+import '../grammar/analyser.dart';
 import '../grammar/value_type.dart';
 
 enum SelectableStatus {
@@ -73,11 +74,7 @@ abstract class GenerableParserAndPosition {
 
   void execute() {
     if (status.isSelected()) {
-      if (recursiveStatus.executeCodeRecursive != null) {
-        for (var codes in recursiveStatus.executeCodeRecursive!) {
-          codes.unzip();
-        }
-      }
+      Analyser().run(recursiveStatus.executeCodeRecursive);
       for (var child in children) {
         child.execute();
       }
@@ -85,14 +82,12 @@ abstract class GenerableParserAndPosition {
   }
 
   bool isVisible() {
-    if (recursiveStatus.conditionVisibleRecursive != null) {
-      var data = recursiveStatus.conditionVisibleRecursive!.unzip().dataUnzip();
-      if (data != null) {
-        if (data is bool) {
-          return data;
-        } else if (data is ValueTypeWrapper) {
-          return data.valueType.data is bool ? data.valueType.data : true;
-        }
+    var data = Analyser().check(recursiveStatus.conditionVisibleRecursive);
+    if (data != null) {
+      if (data is bool) {
+        return data;
+      } else if (data is ValueTypeWrapper) {
+        return data.valueType.data is bool ? data.valueType.data : true;
       }
     }
     return true;
@@ -112,24 +107,21 @@ abstract class GenerableParserAndPosition {
   }
 
   bool isClickable() {
-    if (recursiveStatus.conditionClickableRecursive != null) {
-      var data =
-          recursiveStatus.conditionClickableRecursive!.unzip().dataUnzip();
-      if (data != null) {
-        if (data is bool) {
-          return data;
-        } else if (data is ValueTypeWrapper) {
-          return data.valueType.data is bool ? data.valueType.data : true;
-        }
+    var data = Analyser().check(recursiveStatus.conditionClickableRecursive);
+    if (data != null) {
+      if (data is bool) {
+        return data;
+      } else if (data is ValueTypeWrapper) {
+        return data.valueType.data is bool ? data.valueType.data : true;
       }
     }
     return true;
   }
 
   void checkClickable(bool parentClickable, bool onlyWorkLine) {
-    if(!onlyWorkLine && !parentClickable){
+    if (!onlyWorkLine && !parentClickable) {
       status = isVisible() ? SelectableStatus.closed : SelectableStatus.hide;
-    }else{
+    } else {
       var selectable = isClickable();
       if (isSelectableCheck) {
         if (status != SelectableStatus.selected &&

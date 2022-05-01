@@ -55,10 +55,10 @@ class RecursiveStatus {
 
   void generateParser() {
     var conditionClickableRecursiveParsed =
-        Analyser.analyseCodes(conditionClickableString);
+        Analyser().analyseCodes(conditionClickableString);
     var conditionVisibleRecursiveParsed =
-        Analyser.analyseCodes(conditionVisibleString);
-    var executeCodeRecursiveParsed = Analyser.analyseCodes(executeCodeString);
+        Analyser().analyseCodes(conditionVisibleString);
+    var executeCodeRecursiveParsed = Analyser().analyseCodes(executeCodeString);
 
     conditionClickableRecursive = conditionClickableRecursiveParsed.isNotEmpty
         ? conditionClickableRecursiveParsed[0]

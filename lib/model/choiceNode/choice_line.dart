@@ -69,9 +69,9 @@ class LineSetting extends GenerableParserAndPosition {
   void generateParser() {
     if (isNeedToCheck()) {
       var conditionClickableRecursiveParsed =
-          Analyser.analyseCodes(getClickableString());
+          Analyser().analyseCodes(getClickableString());
       var executeCodeRecursiveParsed =
-          Analyser.analyseCodes(getExecuteString());
+          Analyser().analyseCodes(getExecuteString());
 
       recursiveStatus.conditionClickableRecursive =
           conditionClickableRecursiveParsed.isNotEmpty
@@ -107,10 +107,6 @@ class LineSetting extends GenerableParserAndPosition {
 
   @override
   void execute() {
-    if (recursiveStatus.executeCodeRecursive != null) {
-      for (var codes in recursiveStatus.executeCodeRecursive!) {
-        codes.unzip();
-      }
-    }
+    Analyser().run(recursiveStatus.executeCodeRecursive);
   }
 }

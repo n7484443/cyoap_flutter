@@ -40,17 +40,20 @@ void main() {
                 and_test_4 = and(false, false)
                 
                 multiple_test_1 = and(not(and(true, false)), true)
+                
+                let globalTest = 123
                 """;
   String strTest2 = """
-  numberTest0 < 0
+                numberTest0 < 0
   """;
-  String strTest3 = """
-  numberTest4 >= 19
+  String strTest3 = """ 
+                numberTest4 >= 19
   """;
-  var recursiveData = Analyser.analyseCodes(strTest);
-  for(var recursive in recursiveData){
-    recursive.unzip();
-  }
+  String strGlobalTest = """
+                if(globalTest == 123, T = true, T = false)
+                """;
+  var recursiveData = Analyser().analyseCodes(strTest);
+  Analyser().run(recursiveData);
 
   var epsilon = 0.00001;
   test('numberTest', (){
@@ -108,13 +111,20 @@ void main() {
   });
 
   test('return Test', (){
-    var recursiveData = Analyser.analyseCodes(strTest2);
-    var ret = recursiveData[0].unzip();
+    var recursiveData = Analyser().analyseCodes(strTest2);
+    var ret = Analyser().check(recursiveData[0]);
     expect(ret.data as bool, true);
 
-    recursiveData = Analyser.analyseCodes(strTest3);
-    ret = recursiveData[0].unzip();
+    recursiveData = Analyser().analyseCodes(strTest3);
+    ret = Analyser().check(recursiveData[0]);
     expect(ret.data as bool, false);
   });
 
+  test('global variable Test', (){
+    recursiveData = Analyser().analyseCodes(strGlobalTest);
+    for (var e in recursiveData) {
+      e.unzip();
+    }
+    expect('T', true);
+  });
 }

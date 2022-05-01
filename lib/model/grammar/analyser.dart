@@ -40,7 +40,19 @@ class Analyser {
     return recursiveList;
   }
 
-  static List<RecursiveUnit> analyseCodes(String codeInput) {
+  void run(List<RecursiveUnit>? unitList){
+    if(unitList == null)return;
+    for(var unit in unitList){
+      unit.unzip();
+    }
+  }
+
+  dynamic check(RecursiveUnit? unitList){
+    if(unitList == null)return null;
+    return unitList.unzip().dataUnzip();
+  }
+
+  List<RecursiveUnit> analyseCodes(String codeInput) {
     return _instance.analyse(codeInput);
   }
 }

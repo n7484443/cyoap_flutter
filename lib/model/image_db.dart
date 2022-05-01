@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:cyoap_flutter/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:idb_shim/idb.dart';
 import 'package:idb_shim/idb_browser.dart';
 import 'package:tuple/tuple.dart';
@@ -131,8 +130,6 @@ class ImageDB {
     _dirImageUint8Map.clear();
   }
 
-
-
   Image noImage = Image.asset('images/noImage.png');
   Queue<Tuple2<String, Image>> temp = Queue();
 
@@ -149,7 +146,7 @@ class ImageDB {
       var output = Image.memory(
         image,
         filterQuality:
-        ConstList.isDesktop() ? FilterQuality.high : FilterQuality.medium,
+            ConstList.isDesktop() ? FilterQuality.high : FilterQuality.medium,
         isAntiAlias: true,
         fit: BoxFit.scaleDown,
       );
