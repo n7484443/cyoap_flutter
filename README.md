@@ -28,7 +28,7 @@
 * random
 * exist
 
-## 변수 정의
+## 변수 정의 예제
 * var i = 123
   * var은 지역변수로, 가로 줄마다 초기화됩니다. 따라서 간단한 계산에 사용됩니다.
 * var d = -3.14
@@ -42,18 +42,4 @@
 * windows 의 경우 추가정보->실행, android의 경우 무시하고 실행 하시면 됩니다.
 
 ## 배포 방법
-index.html 의
-```
-<script src="save_web.js" type="application/javascript"></script>
-<script src="jszip.js" type="application/javascript"></script>
-```
-이 두줄을 삭제.
-
-flutter_service_worker.js 의
-```
-Notice 검색 후 그 글자를 포함한 줄 삭제
-jszip.js 검색 후 그 글자를 포함한 줄 삭제
-request_multiple.js 검색 후 그 글자를 포함한 줄 삭제
-canvaskit 검색 후 그 글자를 포함한 줄 삭제
-```
-후 dist 폴더를 생성하고, 거기에 압축을 풀면 됩니다.
+dist 폴더를 생성하고, 거기에 압축을 풀면 됩니다.
