@@ -12,16 +12,18 @@ class LexicalAnalyser {
 
     void addToken() {
       if (tokenAdded != null) {
-        if (tokenAdded.data == 'let') {
-          tokenAdded.type = AnalyserConst.let;
+        if (tokenAdded.dataString == 'let') {
+          tokenAdded.type = AnalyserConst.variableLet;
+        } else if (tokenAdded.dataString == 'var') {
+          tokenAdded.type = AnalyserConst.variableVar;
         } else if (tokenAdded.type == AnalyserConst.unspecified) {
-          if (isStringDouble(tokenAdded.data)) {
-            if (tokenAdded.data.contains('.')) {
+          if (isStringDouble(tokenAdded.dataString)) {
+            if (tokenAdded.dataString.contains('.')) {
               tokenAdded.type = AnalyserConst.doubles;
             } else {
               tokenAdded.type = AnalyserConst.ints;
             }
-          } else if (tokenAdded.data == "true" || tokenAdded.data == "false") {
+          } else if (tokenAdded.dataString == "true" || tokenAdded.dataString == "false") {
             tokenAdded.type = AnalyserConst.bools;
           } else {
             tokenAdded.type = AnalyserConst.variableName;
@@ -47,10 +49,10 @@ class LexicalAnalyser {
         case '=':
           if (tokenAdded != null) {
             if (tokenAdded.type == AnalyserConst.functionUnspecified) {
-              if (tokenAdded.data == '+' ||
-                  tokenAdded.data == '-' ||
-                  tokenAdded.data == '*' ||
-                  tokenAdded.data == '/') {
+              if (tokenAdded.dataString == '+' ||
+                  tokenAdded.dataString == '-' ||
+                  tokenAdded.dataString == '*' ||
+                  tokenAdded.dataString == '/') {
                 tokenList.add(Token(AnalyserConst.functionUnspecified, '='));
                 tokenList.add(tokenList[tokenList.length - 2]);
                 tokenList.add(tokenAdded);
@@ -110,7 +112,7 @@ class LexicalAnalyser {
             tokenAdded = Token(AnalyserConst.unspecified, c);
           } else if (tokenAdded.type == AnalyserConst.functionUnspecified) {
             if (tokenList.last.type == AnalyserConst.functionUnspecified &&
-                (tokenAdded.data == '+' || tokenAdded.data == '-')) {
+                (tokenAdded.dataString == '+' || tokenAdded.dataString == '-')) {
               tokenAdded.type = AnalyserConst.unspecified;
               tokenAdded.addUnitData(c);
             } else {

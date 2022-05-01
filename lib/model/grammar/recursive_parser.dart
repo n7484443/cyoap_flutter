@@ -52,16 +52,21 @@ RecursiveUnit getClassFromJson(Map<String, dynamic> json) {
 }
 
 class RecursiveParser extends RecursiveUnit {
-  RecursiveParser(ValueType value) : super.fromValue(value);
+  bool? createAsGlobal;
+
+  RecursiveParser(ValueType value, {this.createAsGlobal})
+      : super.fromValue(value);
 
   @override
   Map<String, dynamic> toJson() => {
         'class': 'RecursiveParser',
         'childNode': childNode,
         'value': value,
+        'createAsGlobal': createAsGlobal,
       };
 
-  RecursiveParser.fromJson(Map<String, dynamic> json) {
+  RecursiveParser.fromJson(Map<String, dynamic> json)
+      : createAsGlobal = json['createAsGlobal'] {
     super.value = ValueType.fromJson(json['value']);
     super.childNode = json.containsKey('childNode')
         ? (json['childNode'] as List).map((e) => getClassFromJson(e)).toList()
@@ -78,19 +83,32 @@ class RecursiveParser extends RecursiveUnit {
         return childNode[2].unzip();
       }
     }
+    if (childNode.length == 2 &&
+        value.data == Analyser().functionList.funcSet) {
+      var unzippedData0 = childNode[0].unzip();
+      var unzippedData1 = childNode[1].unzip();
+      if(unzippedData0 is! VariableUnit){
+        unzippedData0 = childNode[0].value;
+      }
+      var varName = (unzippedData0.data as VariableUnit).varName;
+      if(createAsGlobal == null){
+        var config = VariableDataBase().getValueTypeWrapper(varName)!;
+        VariableDataBase().setValue(varName, ValueTypeWrapper(unzippedData1, config.visible));
+      }else{
+        VariableDataBase().setValue(varName, ValueTypeWrapper.normal(unzippedData1, createAsGlobal!));
+      }
+      return unzippedData0;
+    }
     var input = childNode.map((e) => e.unzip()).toList();
     return value.data(input);
   }
 }
 
 class RecursiveData extends RecursiveUnit {
-  bool dontReplace = false;
-
   RecursiveData(ValueType value) : super.fromValue(value);
 
   @override
-  RecursiveData.fromJson(Map<String, dynamic> json)
-      : dontReplace = json['dontReplace'] {
+  RecursiveData.fromJson(Map<String, dynamic> json) {
     super.value = ValueType.fromJson(json['value']);
   }
 
@@ -99,20 +117,15 @@ class RecursiveData extends RecursiveUnit {
         'class': 'RecursiveData',
         'childNode': childNode,
         'value': value,
-        'dontReplace': dontReplace,
       };
 
   @override
   ValueType unzip() {
     if (value.data is VariableUnit) {
       var variable = value.data as VariableUnit;
-      if (VariableDataBase().hasValue(variable.varName) && !dontReplace) {
-        return ValueType(VariableDataBase()
-            .getValueTypeWrapper(variable.varName)
-            ?.valueType
-            .data);
-      } else {
-        return value;
+      if (VariableDataBase().hasValue(variable.varName)) {
+        var wrapper = VariableDataBase().getValueTypeWrapper(variable.varName);
+        return ValueType(wrapper?.valueType.data);
       }
     }
     return value;

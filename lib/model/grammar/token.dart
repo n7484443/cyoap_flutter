@@ -3,35 +3,35 @@ import 'analyser_const.dart';
 
 class Token {
   int type;
-  String data;
+  String dataString;
 
-  Token(this.type, this.data);
+  Token(this.type, this.dataString);
   Token changeUnitType(int newType) {
-    return Token(newType, data);
+    return Token(newType, dataString);
   }
 
   void addUnitData(String newData) {
-    data += newData;
+    dataString += newData;
   }
 
   @override
   String toString() {
-    return '$type : $data';
+    return '$type : $dataString';
   }
 
-  dynamic toData() {
+  dynamic get data {
     switch (type) {
       case AnalyserConst.ints:
-        return int.tryParse(data);
+        return int.tryParse(dataString);
       case AnalyserConst.doubles:
-        return double.tryParse(data);
+        return double.tryParse(dataString);
       case AnalyserConst.bools:
-        return data == 'true';
+        return dataString == 'true';
       case AnalyserConst.strings:
-        return data;
+        return dataString;
       case AnalyserConst.functionUnspecified:
       case AnalyserConst.function:
-        return Analyser().functionList.getFunction(data);
+        return Analyser().functionList.getFunction(dataString);
       default:
         return;
     }

@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:cyoap_flutter/model/grammar/value_type.dart';
-import 'package:cyoap_flutter/model/variable_db.dart';
 
 class Functions {
   Map<String, ValueType Function(List<ValueType> input)> functionMap = {};
@@ -119,16 +118,6 @@ class Functions {
   }
 
   ValueType funcSet(List<ValueType> input) {
-    if (input[0].data is VariableUnit) {
-      var varName = (input[0].data as VariableUnit).varName;
-      if (VariableDataBase().hasValue(varName)) {
-        var config = VariableDataBase().getValueTypeWrapper(varName)!;
-        VariableDataBase()
-            .setValue(varName, ValueTypeWrapper(input[1], config.visible));
-      } else {
-        VariableDataBase().setValue(varName, ValueTypeWrapper.normal(input[1]));
-      }
-    }
     return input[0];
   }
 

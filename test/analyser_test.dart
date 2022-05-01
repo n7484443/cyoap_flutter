@@ -5,41 +5,41 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   var ins = VariableDataBase();
   String strTest = """
-                numberTest0 = -5.5
-                numberTest1 = 3
-                numberTest2 = 3 + 5
-                numberTest3 = 6 - 5.5
-                numberTest4 = 6 * 3
-                numberTest5 = 6 / 3
+                var numberTest0 = -5.5
+                var numberTest1 = 3
+                var numberTest2 = 3 + 5
+                var numberTest3 = 6 - 5.5
+                var numberTest4 = 6 * 3
+                var numberTest5 = 6 / 3
                 
-                boolTest1 = true
-                boolTest2 = false
+                var boolTest1 = true
+                var boolTest2 = false
                 
-                roundTest = round(4.8)
-                ceilTest = ceil(4.8)
-                floorTest = floor(4.8)
+                var roundTest = round(4.8)
+                var ceilTest = ceil(4.8)
+                var floorTest = floor(4.8)
                 
-                stringTest = "문자열 테스트String1"
-                stringAddTest = "문자" + "열테스트1"
+                var stringTest = "문자열 테스트String1"
+                var stringAddTest = "문자" + "열테스트1"
                 
-                comp1 = numberTest0 == -5.5
-                comp2 = numberTest0 >= -5.5
-                comp3 = numberTest0 > -5.5
-                if(numberTest0 == -5.5, alpha = 11, beta = 15)
-                if(numberTest0 != -5.5, gamma = 12, omega = 16)
-                test_alpha = 1
+                var comp1 = numberTest0 == -5.5
+                var comp2 = numberTest0 >= -5.5
+                var comp3 = numberTest0 > -5.5
+                if(numberTest0 == -5.5, var alpha = 11, var beta = 15)
+                if(numberTest0 != -5.5, var gamma = 12, var omega = 16)
+                var test_alpha = 1
                 test_alpha += 3
-                test_beta = 1
+                var test_beta = 1
                 test_beta -= 5
                 
-                and_test_alpha = true
-                and_test_beta = true
-                and_test_1 = and(true, and_test_beta, true, true, true, true)
-                and_test_2 = and(false, true, true, true)
-                and_test_3 = and(true, false)
-                and_test_4 = and(false, false)
+                var and_test_alpha = true
+                var and_test_beta = true
+                var and_test_1 = and(true, and_test_beta, true, true, true, true)
+                var and_test_2 = and(false, true, true, true)
+                var and_test_3 = and(true, false)
+                var and_test_4 = and(false, false)
                 
-                multiple_test_1 = and(not(and(true, false)), true)
+                var multiple_test_1 = and(not(and(true, false)), true)
                 
                 let globalTest = 123
                 """;
@@ -50,7 +50,7 @@ void main() {
                 numberTest4 >= 19
   """;
   String strGlobalTest = """
-                if(globalTest == 123, T = true, T = false)
+                if(globalTest == 123, var T = true, var T = false)
                 """;
   var recursiveData = Analyser().analyseCodes(strTest);
   Analyser().run(recursiveData);
@@ -120,9 +120,7 @@ void main() {
 
   test('global variable Test', (){
     recursiveData = Analyser().analyseCodes(strGlobalTest);
-    for (var e in recursiveData) {
-      e.unzip();
-    }
-    expect('T', true);
+    Analyser().run(recursiveData);
+    expect(ins.getValueType('T')?.data, true);
   });
 }

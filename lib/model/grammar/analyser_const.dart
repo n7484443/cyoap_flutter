@@ -10,12 +10,12 @@ class AnalyserConst {
   /// 판단 X
   static const int unspecified = 5;
 
-  /// 변수명
+  /// 변수 사용
   static const int variableName = 10;
-
-
   /// 전역 변수 설정, let
-  static const int let = 15;
+  static const int variableLet = 15;
+  /// 지역 변수 설정, var
+  static const int variableVar = 16;
 
   static const int functionUnspecified = 20;
   static const int function = 21;

@@ -11,11 +11,8 @@ class ValueType {
   }
 
   ValueType.none() : data = ValueTypeData.none;
-  ValueType.comma() : data = ValueTypeData.comma;
 
-  void set(ValueType a) {
-    data = a.data;
-  }
+  ValueType.comma() : data = ValueTypeData.comma;
 
   dynamic dataUnzip() {
     if (data == null) return null;
@@ -94,27 +91,31 @@ enum ValueTypeData {
 class ValueTypeWrapper {
   ValueType valueType;
   bool visible;
+  bool isGlobal;
   String displayName;
 
-  ValueTypeWrapper(this.valueType, this.visible, {this.displayName = ''});
+  ValueTypeWrapper(this.valueType, this.visible,
+      {this.displayName = '', this.isGlobal = true});
 
-  ValueTypeWrapper.normal(this.valueType)
+  ValueTypeWrapper.normal(this.valueType, this.isGlobal)
       : visible = false,
         displayName = '';
 
   ValueTypeWrapper.fromJson(Map<String, dynamic> json)
       : valueType = ValueType.fromJson(json['valueType']),
         visible = json['visible'] == 'true',
+        isGlobal = json['isGlobal'] ?? true,
         displayName = json['displayName'] ?? '';
 
   Map<String, dynamic> toJson() => {
         'visible': visible.toString().toLowerCase(),
         'valueType': valueType.toJson(),
         'displayName': displayName,
+        'isGlobal': isGlobal,
       };
 
   @override
   String toString() {
-    return '($valueType : $visible)';
+    return '( $valueType |{$visible : $isGlobal} )';
   }
 }
