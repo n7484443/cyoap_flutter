@@ -103,17 +103,15 @@ class LexicalAnalyser {
             } else {
               if (func[size].type == AnalyserConst.variableName) {
                 func[size] = func[size].addUnitData(c);
-                if (func[size].data.toLowerCase() == "true") {
-                  func[size] = Token(AnalyserConst.bools, 'true');
-                } else if (func[size].data.toLowerCase() == "false") {
-                  func[size] = Token(AnalyserConst.bools, 'false');
+                var str = func[size].data.toLowerCase();
+                if (str == "true" || str == "false") {
+                  func[size] = Token(AnalyserConst.bools, str);
                 }
               } else if (func[size].type != AnalyserConst.ints) {
                 func.add(Token(AnalyserConst.variableName, c.toString()));
-                if (func[size].data.toLowerCase() == "true") {
-                  func[size] = Token(AnalyserConst.bools, 'true');
-                } else if (func[size].data.toLowerCase() == "false") {
-                  func[size] = Token(AnalyserConst.bools, 'false');
+                var str = func[size].data.toLowerCase();
+                if (str == "true" || str == "false") {
+                  func[size] = Token(AnalyserConst.bools, str);
                 }
               }
             }

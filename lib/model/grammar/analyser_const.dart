@@ -14,6 +14,10 @@ class AnalyserConst {
   /// 변수명
   static const int variableName = 10;
 
+
+  /// 전역 변수 설정, let
+  static const int let = 15;
+
   static const int functionUnspecified = 20;
   static const int function = 21;
   /// (

@@ -112,12 +112,10 @@ void main() {
 
   test('return Test', (){
     var recursiveData = Analyser().analyseCodes(strTest2);
-    var ret = Analyser().check(recursiveData[0]);
-    expect(ret.data as bool, true);
+    expect(Analyser().check(recursiveData[0]) as bool, true);
 
     recursiveData = Analyser().analyseCodes(strTest3);
-    ret = Analyser().check(recursiveData[0]);
-    expect(ret.data as bool, false);
+    expect(Analyser().check(recursiveData[0]) as bool, false);
   });
 
   test('global variable Test', (){
