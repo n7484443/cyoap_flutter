@@ -24,11 +24,11 @@ class Analyser {
     List<RecursiveUnit> recursiveList = List.empty(growable: true);
     var codes = codeInput.split('\n');
     for (var code in codes) {
+      if (code.trim().isEmpty) {
+        continue;
+      }
       try {
-        if (code.isEmpty) {
-          continue;
-        }
-        var tokens = lexicalAnalyser.analyze(code);
+        var tokens = lexicalAnalyser.analyse(code);
         if (syntaxAnalyser.checkSyntax(tokens)) {
           var t = semanticAnalyser.compile(tokens);
           recursiveList.add(t);

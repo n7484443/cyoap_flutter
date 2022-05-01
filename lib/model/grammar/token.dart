@@ -10,8 +10,8 @@ class Token {
     return Token(newType, data);
   }
 
-  Token addUnitData(String newData) {
-    return Token(type, data + newData);
+  void addUnitData(String newData) {
+    data += newData;
   }
 
   @override

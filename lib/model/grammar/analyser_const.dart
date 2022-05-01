@@ -7,6 +7,8 @@ class AnalyserConst {
   static const int bools = 3;
   /// string, "" 혹은 ''로 판단
   static const int strings = 4;
+  /// 판단 X
+  static const int unspecified = 5;
 
   /// = 기호
   static const int equal = 0;

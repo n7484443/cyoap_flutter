@@ -4,121 +4,133 @@ import 'token.dart';
 class LexicalAnalyser {
   // 같은 값이 반환시->다음값으로
   // null 일때->함수 입력 끝
-  bool boolForStringInput = false;
   final RegExp pattern = RegExp(r'[^\s"]+|"[^"]*"');
 
   /*
     어휘분석기. 토큰으로 변환한다.
      */
-  List<Token> analyze(String s) {
-    var str = pattern.allMatches(s).map((e) => e.group(0)).join();
-    List<Token> func = [];
-    for (int i = 0; i < str.length; i++) {
-      var c = str[i];
-      var size = func.length - 1;
+  List<Token> analyse(String input) {
+    bool isStringInput = false;
+    List<Token> tokenList = List.empty(growable: true);
+    Token? tokenAdded;
+
+    void addToken() {
+      if (tokenAdded != null) {
+        if(tokenAdded.data == 'let'){
+          tokenAdded.type = AnalyserConst.let;
+        }else if (tokenAdded.type == AnalyserConst.unspecified) {
+          if (isStringDouble(tokenAdded.data)) {
+            if (tokenAdded.data.contains('.')) {
+              tokenAdded.type = AnalyserConst.doubles;
+            } else {
+              tokenAdded.type = AnalyserConst.ints;
+            }
+          } else if (tokenAdded.data == "true" || tokenAdded.data == "false") {
+            tokenAdded.type = AnalyserConst.bools;
+          } else {
+            tokenAdded.type = AnalyserConst.variableName;
+          }
+        }
+        tokenList.add(tokenAdded);
+      }
+    }
+
+    for (int i = 0; i < input.length; i++) {
+      var c = input[i];
       switch (c) {
         case '-':
-          if (i + 1 < str.length && str[i + 1] != '=') {
-            if (func[size].type != AnalyserConst.doubles &&
-                func[size].type != AnalyserConst.ints) {
-              func.add(Token(AnalyserConst.ints, '0'));
-            }
-          }
-          func.add(Token(AnalyserConst.functionUnspecified, c.toString()));
-
-          break;
         case '+':
         case '*':
         case '/':
+          tokenAdded = Token(AnalyserConst.functionUnspecified, c);
+          break;
         case '<':
         case '>':
-          func.add(Token(AnalyserConst.functionUnspecified, c.toString()));
+          tokenAdded = Token(AnalyserConst.functionUnspecified, c);
           break;
         case '=':
-          String sFront = str[i - 1].toString();
-          if (str[i - 1] == '=' || str[i - 1] == '!') {
-            func[size] = Token(AnalyserConst.functionUnspecified, sFront + "=");
-          } else if (str[i - 1] == '<' || str[i - 1] == '>') {
-            func[size] = Token(AnalyserConst.functionUnspecified, sFront + "=");
-          } else if (str[i - 1] == '+' ||
-              str[i - 1] == '-' ||
-              str[i - 1] == '*' ||
-              str[i - 1] == '/') {
-            func[size] = Token(AnalyserConst.equal, "=");
-            func.add(Token(AnalyserConst.variableName,
-                func[0].data)); //a += b 를 a = a + b 꼴로 변환
-            func.add(Token(AnalyserConst.functionUnspecified,
-                sFront)); //a += b 를 a = a + b 꼴로 변환
+          if (tokenAdded != null) {
+            if (tokenAdded.type == AnalyserConst.functionUnspecified) {
+              if(tokenAdded.data == '+' || tokenAdded.data == '-' || tokenAdded.data == '*' || tokenAdded.data == '/'){
+                tokenList.add(Token(AnalyserConst.equal, '='));
+                tokenList.add(tokenList[tokenList.length - 2]);
+                tokenList.add(tokenAdded);
+                tokenAdded = null;
+              }else{
+                tokenAdded.addUnitData(c);
+              }
+            } else if (tokenAdded.type == AnalyserConst.equal) {
+              tokenAdded.type = AnalyserConst.functionUnspecified;
+              tokenAdded.addUnitData(c);
+            }
+            addToken();
+            tokenAdded = null;
           } else {
-            func.add(Token(AnalyserConst.equal, "="));
+            tokenAdded = Token(AnalyserConst.equal, c);
           }
           break;
+        case '\'':
         case '"':
-          boolForStringInput = !boolForStringInput;
+          if (isStringInput) {
+            tokenList.add(tokenAdded!);
+            tokenAdded = null;
+          } else {
+            tokenAdded = Token(AnalyserConst.strings, "");
+          }
+          isStringInput = !isStringInput;
+
           break;
         case '(':
-          if (func[size].type == AnalyserConst.variableName) {
-            func[size] = func[size].changeUnitType(AnalyserConst.function);
-            func.add(Token(AnalyserConst.functionStart, "("));
+          if (tokenAdded != null) {
+            tokenAdded.type = AnalyserConst.function;
+            tokenList.add(tokenAdded);
+            tokenAdded = null;
           }
+          tokenList.add(Token(AnalyserConst.functionStart, "("));
           break;
         case ')':
-          func.add(Token(AnalyserConst.functionEnd, ")"));
+          addToken();
+          tokenAdded = null;
+          tokenList.add(Token(AnalyserConst.functionEnd, ")"));
           break;
         case ',':
-          func.add(Token(AnalyserConst.functionComma, ","));
+          addToken();
+          tokenAdded = null;
+          tokenList.add(Token(AnalyserConst.functionComma, ","));
           break;
         case '!':
-          func.add(Token(AnalyserConst.functionUnspecified, "!"));
+          tokenAdded = Token(AnalyserConst.functionUnspecified, "!");
+          break;
+        case ' ':
+          if (!isStringInput) {
+            addToken();
+            tokenAdded = null;
+          } else {
+            tokenAdded!.addUnitData(c);
+          }
           break;
         default:
-          if (boolForStringInput) {
-            if (func[size].type == AnalyserConst.strings) {
-              func[size] = func[size].addUnitData(c);
+          if (tokenAdded == null) {
+            tokenAdded = Token(AnalyserConst.unspecified, c);
+          } else if (tokenAdded.type == AnalyserConst.functionUnspecified) {
+            if ((tokenList.last.type == AnalyserConst.functionUnspecified ||
+                    tokenList.last.type == AnalyserConst.equal) &&
+                (tokenAdded.data == '+' || tokenAdded.data == '-')) {
+              tokenAdded.type = AnalyserConst.unspecified;
+              tokenAdded.addUnitData(c);
             } else {
-              func.add(Token(AnalyserConst.strings, c.toString()));
+              addToken();
+              tokenAdded = Token(AnalyserConst.unspecified, c);
             }
           } else {
-            var isDigit = isStringDouble(c);
-            if (func.isEmpty) {
-              func.add(Token(
-                  isDigit ? AnalyserConst.ints : AnalyserConst.variableName,
-                  c.toString()));
-            } else if (c == '.') {
-              func[size] = Token(AnalyserConst.doubles, func[size].data + c);
-              if (!isStringDouble(func[size].data)) {
-                throw "error! float has more than two point(.)";
-              }
-            } else if (isDigit) {
-              switch (func[size].type) {
-                case AnalyserConst.variableName:
-                case AnalyserConst.ints:
-                case AnalyserConst.doubles:
-                  func[size] = func[size].addUnitData(c);
-                  break;
-                default:
-                  func.add(Token(AnalyserConst.ints, c.toString()));
-                  break;
-              }
-            } else {
-              if (func[size].type == AnalyserConst.variableName) {
-                func[size] = func[size].addUnitData(c);
-                var str = func[size].data.toLowerCase();
-                if (str == "true" || str == "false") {
-                  func[size] = Token(AnalyserConst.bools, str);
-                }
-              } else if (func[size].type != AnalyserConst.ints) {
-                func.add(Token(AnalyserConst.variableName, c.toString()));
-                var str = func[size].data.toLowerCase();
-                if (str == "true" || str == "false") {
-                  func[size] = Token(AnalyserConst.bools, str);
-                }
-              }
-            }
+            tokenAdded.addUnitData(c);
           }
+          break;
       }
     }
-    return func;
+    addToken();
+    print(tokenList);
+    return tokenList;
   }
 
   dynamic getTypeFromInt(int t) {
