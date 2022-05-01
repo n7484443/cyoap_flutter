@@ -187,6 +187,7 @@ class AbstractPlatform {
       for (var node in lineSetting.children) {
         node.checkClickable(clickableLineTest, true);
       }
+      VariableDataBase().clearLocalVariable();
     }
     if(Get.isRegistered<VMDraggableNestedMap>()){
       Get.find<VMDraggableNestedMap>().update();

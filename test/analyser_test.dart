@@ -52,7 +52,7 @@ void main() {
   String strGlobalTest = """
                 if(globalTest == 123, var T = true, var T = false)
                 var existTest = exist(T)
-                var existTest2 = exist(TT)
+                var existTest2 = exist(numberTest0)
                 """;
   var recursiveData = Analyser().analyseCodes(strTest);
   Analyser().run(recursiveData);
@@ -122,6 +122,7 @@ void main() {
 
   test('global variable Test', (){
     recursiveData = Analyser().analyseCodes(strGlobalTest);
+    VariableDataBase().clearLocalVariable();
     Analyser().run(recursiveData);
     expect(ins.getValueType('T')?.data, true);
     expect(ins.getValueType('existTest')?.data, true);

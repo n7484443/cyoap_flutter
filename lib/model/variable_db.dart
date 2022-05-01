@@ -43,4 +43,8 @@ class VariableDataBase {
     varMap.clear();
     viewModel?.update();
   }
+
+  void clearLocalVariable(){
+    varMap.removeWhere((key, value) => !value.isGlobal);
+  }
 }
