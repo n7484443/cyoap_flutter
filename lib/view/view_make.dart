@@ -24,14 +24,15 @@ class ViewMake extends StatelessWidget {
       preferredSize: const Size.fromHeight(ConstList.appBarSize),
       child: AppBar(
         leading: IconButton(
+          tooltip: '뒤로가기',
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             if (Get.find<VMDraggableNestedMap>().isChanged) {
               showDialog(
                 context: context,
                 builder: (_) => ViewBackDialog(
-                      () => vmPlatform.save(ConstList.isOnlyFileAccept()),
-                      () => Get.back(),
+                  () => vmPlatform.save(ConstList.isOnlyFileAccept()),
+                  () => Get.back(),
                 ),
               );
             } else {
@@ -45,7 +46,7 @@ class ViewMake extends StatelessWidget {
             DragTarget<List<int>>(
               builder: (BuildContext context, List<dynamic> accepted,
                   List<dynamic> rejected) {
-                return const Icon(Icons.delete);
+                return const Tooltip(message:'드래그&드랍으로 선택지 삭제',child: Icon(Icons.delete));
               },
               onAccept: (List<int> data) {
                 Get.find<VMDraggableNestedMap>().removeData(data);
@@ -67,22 +68,27 @@ class ViewMake extends StatelessWidget {
               onDragEnd: (DraggableDetails data) {
                 Get.find<VMDraggableNestedMap>().dragEnd();
               },
-              onDragUpdate: (DragUpdateDetails details){
+              onDragUpdate: (DragUpdateDetails details) {
                 Get.find<VMDraggableNestedMap>().dragUpdate(details, context);
               },
-              child: const Icon(Icons.add),
+              child: const Tooltip(
+                message: '드래그로 선택지 생성',
+                child: Icon(Icons.add),
+              ),
             ),
           ],
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.play_arrow),
+            tooltip: '변수 목록 갱신',
             onPressed: () {
               vmPlatform.loadVariable();
             },
           ),
           IconButton(
             icon: const Icon(Icons.image),
+            tooltip: '이미지 파일로 추출',
             onPressed: () {
               Get.defaultDialog(
                 barrierDismissible: false,
@@ -103,6 +109,7 @@ class ViewMake extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.save_alt),
+            tooltip: 'zip 파일로 추출',
             onPressed: () {
               Get.defaultDialog(
                 barrierDismissible: false,
@@ -124,6 +131,7 @@ class ViewMake extends StatelessWidget {
           Visibility(
             child: IconButton(
               icon: const Icon(Icons.save),
+              tooltip: '저장',
               onPressed: () {
                 Get.defaultDialog(
                   barrierDismissible: false,
@@ -152,10 +160,9 @@ class ViewMake extends StatelessWidget {
       onWillPop: () {
         return showDialog(
           context: context,
-          builder: (_) =>
-              ViewBackDialog(
-                () => vmPlatform.save(ConstList.isOnlyFileAccept()),
-                () => Get.back(),
+          builder: (_) => ViewBackDialog(
+            () => vmPlatform.save(ConstList.isOnlyFileAccept()),
+            () => Get.back(),
           ),
         ) as Future<bool>;
       },

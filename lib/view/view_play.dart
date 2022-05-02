@@ -31,19 +31,21 @@ class ViewPlay extends StatelessWidget {
         }
 
         Get.put(VMVariableTable());
+        var appbar = PreferredSize(
+          preferredSize: const Size.fromHeight(ConstList.appBarSize),
+          child: AppBar(
+            leading: IconButton(
+              tooltip: '뒤로가기',
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Get.back();
+              },
+            ),
+          ),
+        );
         if (ConstList.isSmallDisplay(context)) {
           return Scaffold(
-            appBar: PreferredSize(
-              preferredSize: const Size.fromHeight(ConstList.appBarSize),
-              child: AppBar(
-                leading: IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () {
-                    Get.back();
-                  },
-                ),
-              ),
-            ),
+            appBar: appbar,
             drawer: const Drawer(
               child: ViewVariable(),
             ),
@@ -59,11 +61,7 @@ class ViewPlay extends StatelessWidget {
                 ),
                 Flexible(
                   child: Scaffold(
-                    appBar: PreferredSize(
-                      preferredSize:
-                          const Size.fromHeight(ConstList.appBarSize),
-                      child: AppBar(),
-                    ),
+                    appBar: appbar,
                     body: const NestedMap(),
                   ),
                 ),
