@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
+import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'package:get/get.dart';
 import 'package:image_cropping/image_cropping.dart';
 
 import '../main.dart';
+import '../model/image_db.dart';
 import '../viewModel/vm_editor.dart';
 
 class ViewEditor extends StatelessWidget {
@@ -274,7 +276,7 @@ class ViewEditorTyping extends StatelessWidget {
                                 ),
                               ),
                               child: GestureDetector(
-                                child: controller.getImage(index),
+                                child: ViewImageLoading(ImageDB().getImageName(index)),
                                 onDoubleTap: () {
                                   controller.setImage(index);
                                 },

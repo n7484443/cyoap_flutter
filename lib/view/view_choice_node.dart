@@ -1,6 +1,7 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/choiceNode/generable_parser.dart';
+import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_text_outline.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
@@ -14,7 +15,6 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import '../main.dart';
 import '../model/abstract_platform.dart';
-import '../model/image_db.dart';
 import '../model/platform_system.dart';
 import '../viewModel/vm_variable_table.dart';
 
@@ -74,8 +74,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                 ),
                 child: ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(5)),
-                  child: ImageDB()
-                      .getImageWidget(nodeController.imageString.value),
+                  child: ViewImageLoading(nodeController.imageString.value),
                 ),
               ),
             if (nodeController.titleString.value.isNotEmpty)

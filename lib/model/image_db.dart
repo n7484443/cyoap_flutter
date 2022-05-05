@@ -133,15 +133,18 @@ class ImageDB {
   Image noImage = Image.asset('images/noImage.png');
   Queue<Tuple2<String, Image>> temp = Queue();
 
+  bool isInCache(String name){
+    return temp.any((element) => element.item1 == name);
+  }
+
   Future<Image> getImage(String name) async {
-    Uint8List? image;
-    if (temp.any((element) => element.item1 == name)) {
+    if(isInCache(name)){
       var tmp = temp.firstWhere((element) => element.item1 == name);
       temp.remove(tmp);
       temp.add(tmp);
       return tmp.item2;
     }
-    image = await _getImage(name);
+    Uint8List? image = await _getImage(name);
     if (image != null) {
       var output = Image.memory(
         image,
@@ -158,19 +161,5 @@ class ImageDB {
     }
 
     return noImage;
-  }
-
-  FutureBuilder getImageWidget(String name) {
-    return FutureBuilder(
-      future: getImage(name),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData) {
-          return snapshot.data as Image;
-        }
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
   }
 }

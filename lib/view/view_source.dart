@@ -1,4 +1,5 @@
 import 'package:cyoap_flutter/model/platform_system.dart';
+import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -23,7 +24,7 @@ class ViewSource extends StatelessWidget {
                 flex: 1,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: ImageDB().getImageWidget(name),
+                  child: ViewImageLoading(name),
                 ),
               ),
               Flexible(

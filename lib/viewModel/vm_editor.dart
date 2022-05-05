@@ -85,10 +85,6 @@ class VMEditor extends GetxController {
     isChanged = false;
   }
 
-  FutureBuilder getImage(int i) {
-    return ImageDB().getImageWidget(ImageDB().getImageName(i));
-  }
-
   void setImage(int index) {
     this.index = index;
     NodeEditor().target.imageString = ImageDB().getImageName(index);
