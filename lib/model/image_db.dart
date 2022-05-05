@@ -164,15 +164,12 @@ class ImageDB {
     return FutureBuilder(
       future: getImage(name),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData == false) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (snapshot.hasError) {
-          return noImage;
-        } else {
+        if (snapshot.hasData) {
           return snapshot.data as Image;
         }
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
       },
     );
   }
