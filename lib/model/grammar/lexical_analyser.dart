@@ -32,18 +32,26 @@ class LexicalAnalyser {
         tokenList.add(tokenAdded);
       }
     }
-
-    for (int i = 0; i < input.length; i++) {
+    var isCommitLine = false;
+    outerLoop:for (int i = 0; i < input.length; i++) {
       var c = input[i];
       switch (c) {
+        case '/':
+          if(isCommitLine){
+            tokenAdded = null;
+            break outerLoop;
+          }else{
+            isCommitLine = true;
+            addToken();
+            tokenAdded = Token(AnalyserConst.functionUnspecified, c);
+          }
+          break;
         case '-':
         case '+':
         case '*':
-        case '/':
         case '<':
         case '>':
           addToken();
-          tokenAdded = null;
           tokenAdded = Token(AnalyserConst.functionUnspecified, c);
           break;
         case '=':

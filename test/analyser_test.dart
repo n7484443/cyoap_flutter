@@ -149,4 +149,15 @@ void main() {
     expect(ins.getValueType('existTest')?.data, true);
     expect(ins.getValueType('existTest2')?.data, false);
   });
+  test('comment test', (){
+    String strTest = """
+      var commentTest = 123
+      //이건 해석하면 안되는 문장. var asb = 0
+      var commentTest1 = 0
+    """;
+    Analyser().run(Analyser().analyseCodes(strTest));
+    expect(ins.getValueType('commentTest')?.data, 123);
+    expect(ins.getValueType('asb')?.data, null);
+    expect(ins.getValueType('commentTest1')?.data, 0);
+  });
 }
