@@ -22,7 +22,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
   final ChoiceNode? node;
 
   ViewChoiceNode(int posX, int posY, {Key? key})
-      : node = posX == nonPositioned && posY == nonPositioned
+      : node = posX <0 && posY < 0
             ? null
             : getPlatform.getChoiceNode([posY, posX])!,
         super(key: key);

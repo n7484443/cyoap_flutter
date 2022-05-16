@@ -29,6 +29,8 @@ class VMDraggableNestedMap extends GetxController {
 
   BoxConstraints? constrain;
 
+  Rx<ChoiceNode?> removedData = Rx(null);
+
   @override
   void onClose() {
     ImageDB().clearImageCache();
@@ -142,7 +144,15 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   void removeData(List<int> data) {
-    getPlatform.removeData(data);
+    var choiceNode = getPlatform.removeData(data);
+    removedData.value = choiceNode;
+    removedData.refresh();
+    update();
+  }
+
+  void addData(List<int> data, ChoiceNode choiceNode) {
+    getPlatform.addData(data, choiceNode);
+    updateVMChoiceNode(data);
     update();
   }
 
@@ -166,19 +176,20 @@ class VMDraggableNestedMap extends GetxController {
   void changeData(List<int> input, List<int> target) {
     if (input.last == nonPositioned) {
       getPlatform.addData(target, createNodeForTemp());
-    } else{
+    } else {
       var inputNode = getPlatform.getChoiceNode(input)!;
       var targetNode = getPlatform.getChoiceNode(target);
-      if(targetNode == null){
-        var generableParser = getPlatform.getGenerableParserAndPosition(List.from(target)..removeLast());
-        if(generableParser == null){
+      if (targetNode == null) {
+        var generableParser = getPlatform
+            .getGenerableParserAndPosition(List.from(target)..removeLast());
+        if (generableParser == null) {
           getPlatform.removeData(input);
           getPlatform.addData(target, inputNode);
-        }else{
+        } else {
           getPlatform.insertDataWithParent(inputNode, generableParser);
         }
         updateVMChoiceNode(input);
-      } else{
+      } else {
         getPlatform.insertData(inputNode, targetNode);
         updateVMChoiceNode(input);
       }
@@ -203,8 +214,7 @@ class VMDraggableNestedMap extends GetxController {
 
   double get maxWidth => captureKey.currentContext!.width;
 
-  void dragUpdate(DragUpdateDetails details,
-      BuildContext context) {
+  void dragUpdate(DragUpdateDetails details, BuildContext context) {
     double topY = 0;
     double bottomY = topY + constrain!.maxHeight;
 

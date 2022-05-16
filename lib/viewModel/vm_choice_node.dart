@@ -13,6 +13,7 @@ import '../model/platform_system.dart';
 
 const double nodeBaseHeight = 200;
 const int nonPositioned = -10;
+const int removedPositioned = -15;
 
 class VMChoiceNode extends GetxController {
   late QuillController quillController;

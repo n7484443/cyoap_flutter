@@ -46,7 +46,8 @@ class ViewMake extends StatelessWidget {
             DragTarget<List<int>>(
               builder: (BuildContext context, List<dynamic> accepted,
                   List<dynamic> rejected) {
-                return const Tooltip(message:'드래그&드랍으로 선택지 삭제',child: Icon(Icons.delete));
+                return const Tooltip(
+                    message: '드래그&드랍으로 선택지 삭제', child: Icon(Icons.delete));
               },
               onAccept: (List<int> data) {
                 Get.find<VMDraggableNestedMap>().removeData(data);
@@ -76,6 +77,38 @@ class ViewMake extends StatelessWidget {
                 child: Icon(Icons.add),
               ),
             ),
+            Obx(
+              () => Visibility(
+                visible:
+                    Get.find<VMDraggableNestedMap>().removedData.value != null,
+                child: Draggable<List<int>>(
+                  data: [removedPositioned, removedPositioned],
+                  feedback: Transform.scale(
+                    scale: 0.9,
+                    child: Opacity(
+                      child:
+                          ViewChoiceNode(removedPositioned, removedPositioned),
+                      opacity: 0.6,
+                    ),
+                  ),
+                  onDragStarted: () {
+                    Get.find<VMDraggableNestedMap>()
+                        .dragStart([removedPositioned, removedPositioned]);
+                  },
+                  onDragEnd: (DraggableDetails data) {
+                    Get.find<VMDraggableNestedMap>().dragEnd();
+                  },
+                  onDragUpdate: (DragUpdateDetails details) {
+                    Get.find<VMDraggableNestedMap>()
+                        .dragUpdate(details, context);
+                  },
+                  child: const Tooltip(
+                    message: '최근 삭제된 선택지 생성',
+                    child: Icon(Icons.auto_delete),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
         actions: [
@@ -86,13 +119,17 @@ class ViewMake extends StatelessWidget {
               vmPlatform.loadVariable();
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.image),
-            tooltip: '이미지 파일로 추출',
-            onPressed: () {
+          PopupMenuButton(
+            icon: const Icon(Icons.save),
+            tooltip: '저장 관련 옵션',
+            onSelected: (selected) {
               Get.defaultDialog(
                 barrierDismissible: false,
-                title: '이미지로 추출중...',
+                title: selected == 0
+                    ? '저장중...'
+                    : selected == 1
+                        ? '압축중...'
+                        : '이미지로 추출중...',
                 content: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -104,53 +141,35 @@ class ViewMake extends StatelessWidget {
                   ],
                 ),
               );
-              vmPlatform.exportAsImage();
+              switch (selected) {
+                case 0:
+                  vmPlatform.save(false);
+                  break;
+                case 1:
+                  vmPlatform.save(true);
+                  break;
+                case 2:
+                  vmPlatform.exportAsImage();
+                  break;
+              }
             },
-          ),
-          IconButton(
-            icon: const Icon(Icons.save_alt),
-            tooltip: 'zip 파일로 추출',
-            onPressed: () {
-              Get.defaultDialog(
-                barrierDismissible: false,
-                title: '압축중...',
-                content: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const CircularProgressIndicator(),
-                    Obx(() =>
-                        Text(vmPlatform.stopwatch.value.elapsed.toString())),
-                  ],
-                ),
-              );
-              vmPlatform.save(true);
-            },
-          ),
-          Visibility(
-            child: IconButton(
-              icon: const Icon(Icons.save),
-              tooltip: '저장',
-              onPressed: () {
-                Get.defaultDialog(
-                  barrierDismissible: false,
-                  title: '저장중...',
-                  content: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const CircularProgressIndicator(),
-                      Obx(() =>
-                          Text(vmPlatform.stopwatch.value.elapsed.toString())),
-                    ],
+            itemBuilder: (BuildContext context) {
+              return [
+                if (!getPlatformFileSystem.openAsFile)
+                  const PopupMenuItem(
+                    value: 0,
+                    child: Text('저장'),
                   ),
-                );
-                vmPlatform.save(false);
-              },
-            ),
-            visible: !getPlatformFileSystem.openAsFile,
+                const PopupMenuItem(
+                  value: 1,
+                  child: Text('zip 파일로 추출'),
+                ),
+                const PopupMenuItem(
+                  value: 2,
+                  child: Text('이미지로 추출'),
+                ),
+              ];
+            },
           )
         ],
       ),

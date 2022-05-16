@@ -115,10 +115,11 @@ class AbstractPlatform {
     checkDataCollect();
   }
 
-  void removeData(List<int> pos) {
+  ChoiceNode removeData(List<int> pos) {
     var node = getChoiceNode(pos)!;
     node.parent!.removeChildren(node);
     checkDataCollect();
+    return node;
   }
 
   GenerableParserAndPosition? getGenerableParserAndPosition(List<int> pos) {
