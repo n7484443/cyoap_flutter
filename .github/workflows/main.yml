@@ -34,14 +34,14 @@ jobs:
       - run: Rename-Item "build/app/outputs/flutter-apk/app-release.apk" "cyoap_android_${{ steps.get_version.outputs.version-without-v }}.apk"
 
       - run: flutter build appbundle
-      - run: Rename-Item "build/app/outputs/bundle/release/app-release.abb" "cyoap_android_${{ steps.get_version.outputs.version-without-v }}.abb"
+      - run: Rename-Item "build/app/outputs/bundle/release/app-release.aab" "cyoap_android_${{ steps.get_version.outputs.version-without-v }}.aab"
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
             build/app/outputs/flutter-apk/cyoap_android_${{ steps.get_version.outputs.version-without-v }}.apk
-            build/app/outputs/flutter-apk/cyoap_android_${{ steps.get_version.outputs.version-without-v }}.abb
+            build/app/outputs/flutter-apk/cyoap_android_${{ steps.get_version.outputs.version-without-v }}.aab
   build_windows:
     runs-on: windows-latest
     steps:
