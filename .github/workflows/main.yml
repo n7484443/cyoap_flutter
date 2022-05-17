@@ -30,7 +30,7 @@ jobs:
           fileName: 'key.properties'
           fileDir: './android/'
           encodedString: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-      - run: flutter build appbundle --release
+      - run: flutter build apk --release
       - run: Rename-Item "build/app/outputs/flutter-apk/app-release.apk" "cyoap_android_${{ steps.get_version.outputs.version-without-v }}.apk"
 
       - run: flutter build appbundle
