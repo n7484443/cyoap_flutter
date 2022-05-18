@@ -62,18 +62,12 @@ class ViewStart extends StatelessWidget {
                                 () {
                                   int i = vmStart.pathList.length - 1 - index;
                                   var text = Text(vmStart.pathList[i]);
-                                  if (vmStart.selected.value == index) {
-                                    return ElevatedButton(
-                                      onPressed: () => vmStart.select = index,
-                                      style: ElevatedButton.styleFrom(
-                                          primary: Colors.blue),
-                                      child: text,
-                                    );
-                                  }
                                   return OutlinedButton(
                                     onPressed: () => vmStart.select = index,
-                                    style: TextButton.styleFrom(
+                                    style: vmStart.select == index ? OutlinedButton.styleFrom(
+                                        primary: Colors.white, backgroundColor: Colors.blue) : OutlinedButton.styleFrom(
                                         primary: Colors.black54),
+
                                     child: text,
                                   );
                                 },

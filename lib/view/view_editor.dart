@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:cyoap_flutter/model/platform_system.dart';
@@ -11,7 +10,6 @@ import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:flutter_quill/src/translations/toolbar.i18n.dart';
 import 'package:flutter_quill/src/utils/color.dart' as quill_color;
 import 'package:get/get.dart';
-import 'package:image_cropping/image_cropping.dart';
 
 import '../main.dart';
 import '../model/image_db.dart';
@@ -234,18 +232,7 @@ class ViewEditorTyping extends StatelessWidget {
                             context: context,
                           );
                           if (controller.imageLast != null) {
-                            ImageCropping.cropImage(
-                              context: Get.nestedKey(1)!.currentContext!,
-                              imageBytes: controller.imageLast!,
-                              onImageDoneListener: (data) => controller
-                                  .addImageCrop(name, data as Uint8List),
-                              squareBorderWidth: 2,
-                              colorForWhiteSpace: Colors.black,
-                              selectedImageRatio: ImageRatio.FREE,
-                              isConstrain: true,
-                              imageEdgeInsets: const EdgeInsets.all(10),
-                              rootNavigator: true,
-                            );
+                            Get.toNamed('/viewImageEditor', id:1);
                           }
                         }
                       },

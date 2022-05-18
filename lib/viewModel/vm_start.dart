@@ -114,6 +114,7 @@ class VMStartPlatform extends GetxController {
       selected.value = index;
     }
   }
+  int get select => selected.value;
 
   void removeFrequentPath(int index) async {
     await frequentlyUsedPath.removeFrequentPath(index);
