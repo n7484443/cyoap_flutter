@@ -132,11 +132,15 @@ class VMPlatform extends GetxController {
       update();
     });
 
-    print('web is Distribute mode');
+    if (kDebugMode) {
+      print('web is Distribute mode');
+    }
 
     loadString = '[ 로드 시작 ]';
     var nodeList = await PlatformSpecified().distribute!.getNodeList();
-    print('load start');
+    if (kDebugMode) {
+      print('load start');
+    }
     loadString = '[ 선택지 로드중 ]';
     List<Future> futureMap = List.empty(growable: true);
     Map<String, String> nodeMap = {};
@@ -148,14 +152,18 @@ class VMPlatform extends GetxController {
     await Future.wait(futureMap);
 
     loadString = '[ 구조 생성중 ]';
-    print('node loaded');
+    if (kDebugMode) {
+      print('node loaded');
+    }
 
     String imageSource =
         await PlatformSpecified().distribute!.getFileAsJson('imageSource.json');
     String platformData =
         await PlatformSpecified().distribute!.getFileAsJson('platform.json');
     loadString = '[ 로드 완료 ]';
-    print('load end');
+    if (kDebugMode) {
+      print('load end');
+    }
     stopwatchLoad.stop();
     timer.cancel();
 

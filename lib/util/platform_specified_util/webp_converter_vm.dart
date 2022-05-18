@@ -75,9 +75,12 @@ class WebpConverterImpWindows implements WebpConverterImp {
       Uint8List input, String name) async {
     Image decodedImage;
     bool isLossless = true;
-    if (name.endsWith(".png") | name.endsWith(".jpg") | name.endsWith(".jpeg") | name.endsWith(".bmp")) {
+    if (name.endsWith(".png")){
       decodedImage = decodeImage(input)!;
       isLossless = true;
+    } else if(name.endsWith(".jpg") | name.endsWith(".jpeg") | name.endsWith(".bmp")) {
+      decodedImage = decodeImage(input)!;
+      isLossless = false;
     } else {
       return Tuple2(name, input);
     }
