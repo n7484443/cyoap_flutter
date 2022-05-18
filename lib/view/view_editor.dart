@@ -118,16 +118,13 @@ class ViewEditor extends StatelessWidget {
         appBar: appbarWidget,
         body: Column(
           children: [
-            Container(
-              color: Colors.black12,
-              child: TextField(
-                controller: controller.controllerTitle,
-                textAlign: TextAlign.center,
-                decoration: const InputDecoration(hintText: '제목'),
-                style: ConstList.getFont(getPlatform.titleFont).copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                ),
+            TextField(
+              controller: controller.controllerTitle,
+              textAlign: TextAlign.center,
+              decoration: const InputDecoration(hintText: '제목'),
+              style: ConstList.getFont(getPlatform.titleFont).copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
               ),
             ),
             Expanded(
