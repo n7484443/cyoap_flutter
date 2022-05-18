@@ -197,7 +197,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                     side: BorderSide(
                       color: isSelectedCheck
                           ? Colors.lightBlueAccent
-                          : Colors.transparent,
+                          : Colors.white,
                       width: 4,
                     ),
                   )
@@ -205,7 +205,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                     BorderSide(
                       color: isSelectedCheck
                           ? Colors.lightBlueAccent
-                          : Colors.transparent,
+                          : Colors.white,
                       width: 4,
                     ),
                   ),
