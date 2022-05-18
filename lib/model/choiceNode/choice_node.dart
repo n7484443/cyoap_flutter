@@ -20,6 +20,7 @@ class ChoiceNode extends GenerableParserAndPosition {
   bool get isSelectableCheck => isSelectable;
   bool isSelectable = true;
   bool isOccupySpace = true;
+  bool maximizingImage = false;
 
   bool get isRandom => maxRandom > 0;
 
@@ -47,6 +48,7 @@ class ChoiceNode extends GenerableParserAndPosition {
       : isCard = json['isCard'] ?? true,
         isRound = json['isRound'] ?? true,
         isOccupySpace = json['isOccupySpace'] ?? true,
+        maximizingImage = json['maximizingImage'] ?? false,
         maxRandom = json['maxRandom'] ?? 0,
         isSelectable = json['isSelectable'],
         title = json['title'] ?? '',
@@ -74,6 +76,7 @@ class ChoiceNode extends GenerableParserAndPosition {
       'title': title,
       'contentsString': contentsString,
       'image': convertToWebp(imageString),
+      'maximizingImage': maximizingImage,
     });
     return map;
   }

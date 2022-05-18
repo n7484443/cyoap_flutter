@@ -73,16 +73,10 @@ class WebpConverterImpWindows implements WebpConverterImp {
   @override
   Future<Tuple2<String, Uint8List>> convert(
       Uint8List input, String name) async {
-    Image decodeImage;
+    Image decodedImage;
     bool isLossless = true;
-    if (name.endsWith(".png")) {
-      decodeImage = PngDecoder().decodeImage(input)!;
-      isLossless = true;
-    } else if (name.endsWith(".jpg") | name.endsWith(".jpeg")) {
-      decodeImage = JpegDecoder().decodeImage(input)!;
-      isLossless = false;
-    } else if (name.endsWith(".bmp")) {
-      decodeImage = BmpDecoder().decodeImage(input)!;
+    if (name.endsWith(".png") | name.endsWith(".jpg") | name.endsWith(".jpeg") | name.endsWith(".bmp")) {
+      decodedImage = decodeImage(input)!;
       isLossless = true;
     } else {
       return Tuple2(name, input);
@@ -91,34 +85,34 @@ class WebpConverterImpWindows implements WebpConverterImp {
     Pointer<Uint8> inputBuff;
     Uint8List output;
     int outputSize;
-    if (decodeImage.channels == Channels.rgb) {
-      var inputBuffered = decodeImage.getBytes(format: Format.rgb);
+    if (decodedImage.channels == Channels.rgb) {
+      var inputBuffered = decodedImage.getBytes(format: Format.rgb);
       int size = inputBuffered.length;
       inputBuff = calloc.allocate<Uint8>(size);
       for (int i = 0; i < inputBuffered.length; i++) {
         inputBuff[i] = inputBuffered[i];
       }
       if (isLossless) {
-        outputSize = webPEncodeLosslessRGB(inputBuff, decodeImage.width,
-            decodeImage.height, decodeImage.width * 3, outputBuff);
+        outputSize = webPEncodeLosslessRGB(inputBuff, decodedImage.width,
+            decodedImage.height, decodedImage.width * 3, outputBuff);
       } else {
-        outputSize = webPEncodeRGB(inputBuff, decodeImage.width,
-            decodeImage.height, decodeImage.width * 3, quality, outputBuff);
+        outputSize = webPEncodeRGB(inputBuff, decodedImage.width,
+            decodedImage.height, decodedImage.width * 3, quality, outputBuff);
       }
     } else {
       //rgba
-      var inputBuffered = decodeImage.getBytes(format: Format.rgba);
+      var inputBuffered = decodedImage.getBytes(format: Format.rgba);
       int size = inputBuffered.length;
       inputBuff = calloc.allocate<Uint8>(size);
       for (int i = 0; i < inputBuffered.length; i++) {
         inputBuff[i] = inputBuffered[i];
       }
       if (isLossless) {
-        outputSize = webPEncodeLosslessRGBA(inputBuff, decodeImage.width,
-            decodeImage.height, decodeImage.width * 4, outputBuff);
+        outputSize = webPEncodeLosslessRGBA(inputBuff, decodedImage.width,
+            decodedImage.height, decodedImage.width * 4, outputBuff);
       } else {
-        outputSize = webPEncodeRGBA(inputBuff, decodeImage.width,
-            decodeImage.height, decodeImage.width * 4, quality, outputBuff);
+        outputSize = webPEncodeRGBA(inputBuff, decodedImage.width,
+            decodedImage.height, decodedImage.width * 4, quality, outputBuff);
       }
     }
     if (outputSize == 0) throw 'encoding error!';

@@ -97,6 +97,11 @@ class ViewEditor extends StatelessWidget {
             ),
             visible: controller.isRandom.value,
           ),
+          ViewSwitchLabel(
+                () => controller.maximizingImage.value = !controller.maximizingImage.value,
+            controller.maximizingImage.value,
+            label: '이미지 최대화',
+          ),
           const Spacer(),
           Padding(
             padding: const EdgeInsets.only(bottom: 10.0),

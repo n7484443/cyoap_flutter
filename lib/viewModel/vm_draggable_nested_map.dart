@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:flutter/material.dart';
@@ -221,7 +223,7 @@ class VMDraggableNestedMap extends GetxController {
     var detectedRange = constrain!.maxHeight * 0.06;
     var moveDistance = ConstList.isSmallDisplay(context) ? 0.8 : 1;
     if (details.localPosition.dy < topY + detectedRange) {
-      scroller.jumpTo(scroller.offset - moveDistance);
+      scroller.jumpTo(max(scroller.offset - moveDistance, 0));
     }
     if (details.localPosition.dy > bottomY - detectedRange) {
       scroller.jumpTo(scroller.offset + moveDistance);

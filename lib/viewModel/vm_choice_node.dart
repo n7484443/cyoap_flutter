@@ -28,6 +28,7 @@ class VMChoiceNode extends GetxController {
   var status = SelectableStatus.open.obs;
 
   var isRandom = false.obs;
+  var maximizingImage = false.obs;
   var randomValue = (-1).obs;
   var randomProcess = false.obs;
 
@@ -50,6 +51,7 @@ class VMChoiceNode extends GetxController {
     isCard.value = node.isCard;
     isRound.value = node.isRound;
     isRandom.value = node.isRandom;
+    maximizingImage.value = node.maximizingImage;
     randomValue.value = -1;
     status.value = node.status;
   }
@@ -92,6 +94,7 @@ class VMChoiceNode extends GetxController {
     imageString.value = node.imageString;
     isCard.value = node.isCard;
     isRound.value = node.isRound;
+    maximizingImage.value = node.maximizingImage;
   }
 
   void updateFromNode() {

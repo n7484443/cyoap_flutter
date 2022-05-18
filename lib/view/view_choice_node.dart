@@ -70,7 +70,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
             if (nodeController.imageString.value.isNotEmpty)
               ConstrainedBox(
                 constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height / 3.5,
+                  maxHeight: nodeController.maximizingImage.value ? double.infinity : MediaQuery.of(context).size.height / 3.5,
                 ),
                 child: ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(5)),

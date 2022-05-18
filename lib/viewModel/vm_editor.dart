@@ -25,6 +25,7 @@ class VMEditor extends GetxController {
   var isRound = NodeEditor().target.isRound.obs;
   var isSelectable = NodeEditor().target.isSelectable.obs;
   var isRandom = NodeEditor().target.isRandom.obs;
+  var maximizingImage = NodeEditor().target.maximizingImage.obs;
 
   bool isChanged = false;
 
@@ -51,10 +52,16 @@ class VMEditor extends GetxController {
       NodeEditor().target.maxRandom = value ? 2 : 0;
     });
 
+    maximizingImage.listen((value) {
+      isChanged = true;
+      NodeEditor().target.maximizingImage = value;
+    });
+
     controllerRandom.addListener(() {
       isChanged = true;
       NodeEditor().target.maxRandom = int.parse(controllerRandom.text);
     });
+
     controllerRandom.text = NodeEditor().target.maxRandom.toString();
 
     controllerTitle.text = title.value;
