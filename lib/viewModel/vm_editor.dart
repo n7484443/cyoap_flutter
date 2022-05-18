@@ -34,32 +34,26 @@ class VMEditor extends GetxController {
     quillController = NodeEditor().getVMChoiceNode()!.quillController;
     isCard.listen((value) {
       isChanged = true;
-      NodeEditor().target.isCard = value;
     });
 
     isRound.listen((value) {
       isChanged = true;
-      NodeEditor().target.isRound = value;
     });
 
     isSelectable.listen((value) {
       isChanged = true;
-      NodeEditor().target.isSelectable = value;
     });
 
     isRandom.listen((value) {
       isChanged = true;
-      NodeEditor().target.maxRandom = value ? 2 : 0;
     });
 
     maximizingImage.listen((value) {
       isChanged = true;
-      NodeEditor().target.maximizingImage = value;
     });
 
     controllerRandom.addListener(() {
       isChanged = true;
-      NodeEditor().target.maxRandom = int.parse(controllerRandom.text);
     });
 
     controllerRandom.text = NodeEditor().target.maxRandom.toString();
@@ -83,18 +77,25 @@ class VMEditor extends GetxController {
     NodeEditor().target.title = title.value;
     NodeEditor().target.contentsString =
         jsonEncode(quillController.document.toDelta().toJson());
+    NodeEditor().target.imageString = ImageDB().getImageName(index);
+    NodeEditor().target.maxRandom = int.parse(controllerRandom.text);
+    NodeEditor().target.maximizingImage = maximizingImage.value;
+    NodeEditor().target.maxRandom = isRandom.value ? 2 : 0;
+    NodeEditor().target.isSelectable = isSelectable.value;
+    NodeEditor().target.isRound = isRound.value;
+    NodeEditor().target.isCard = isCard.value;
+
+    quillController.updateSelection(
+        const TextSelection.collapsed(offset: 0), ChangeSource.REMOTE);
     VMChoiceNode.getVMChoiceNodeFromNode(NodeEditor().target)
         ?.updateFromEditor();
     Get.find<VMDraggableNestedMap>().update();
     Get.find<VMDraggableNestedMap>().isChanged = true;
-    quillController.updateSelection(
-        const TextSelection.collapsed(offset: 0), ChangeSource.REMOTE);
     isChanged = false;
   }
 
-  void setImage(int index) {
+  void setIndex(int index) {
     this.index = index;
-    NodeEditor().target.imageString = ImageDB().getImageName(index);
     isChanged = true;
     update();
   }
@@ -104,6 +105,7 @@ class VMEditor extends GetxController {
   }
 
   Uint8List? imageLast;
+  String? name;
 
   Future<String> addImage() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -119,14 +121,14 @@ class VMEditor extends GetxController {
     return name;
   }
 
-  Future<void> addImageCrop(String name, Uint8List data) async {
-    ImageDB().uploadImages(name, data);
-    NodeEditor().target.imageString = name;
-    index = ImageDB().getImageIndex(name);
+  Future<void> addImageCrop(Uint8List data) async {
+    ImageDB().uploadImages(name!, data);
+    NodeEditor().target.imageString = name!;
+    index = ImageDB().getImageIndex(name!);
     Get.find<VMDraggableNestedMap>().isChanged = true;
-    imageLast = null;
-
     isChanged = true;
+    name = null;
+    imageLast = null;
     update();
   }
 

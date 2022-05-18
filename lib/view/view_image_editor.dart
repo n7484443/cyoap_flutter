@@ -34,7 +34,8 @@ class ViewImageEditor extends StatelessWidget {
         FloatingActionButton(
           child: const Icon(Icons.crop),
           onPressed: () async{
-            await controller.cropImage();
+            controllerEditor.imageLast = null;
+            controllerEditor.addImageCrop(await controller.cropImage());
             Get.back(id: 1);
           },
         ),

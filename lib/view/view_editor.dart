@@ -1,4 +1,4 @@
-import 'dart:ui';
+import  'dart:ui';
 
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
@@ -200,6 +200,7 @@ class ViewEditorTyping extends StatelessWidget {
                       onPressed: () async {
                         var name = await controller.addImage();
                         if (name != '') {
+                          controller.name = name;
                           await showDialog(
                             builder: (_) => AlertDialog(
                               title: const Text('출처'),
@@ -221,8 +222,7 @@ class ViewEditorTyping extends StatelessWidget {
                                 TextButton(
                                   onPressed: () {
                                     controller.addImageSource(name);
-                                    controller.addImageCrop(
-                                        name, controller.imageLast!);
+                                    controller.addImageCrop(controller.imageLast!);
                                     Get.back();
                                   },
                                   child: const Text('저장하기'),
@@ -270,7 +270,7 @@ class ViewEditorTyping extends StatelessWidget {
                               child: GestureDetector(
                                 child: ViewImageLoading(ImageDB().getImageName(index)),
                                 onDoubleTap: () {
-                                  controller.setImage(index);
+                                  controller.setIndex(index);
                                 },
                               ),
                             );
