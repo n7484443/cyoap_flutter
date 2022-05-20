@@ -3,6 +3,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FrequentlyUsedPath {
+  late final bool isAndroidSdkOver30;
   List<String> pathList = List.empty(growable: true);
 
   Future<bool> getStatuses() async {
@@ -12,15 +13,8 @@ class FrequentlyUsedPath {
     if (await Permission.storage.isDenied) {
       await Permission.storage.request();
     }
-    if (androidInfo.version.sdkInt! >= 30) {
-      if (await Permission.manageExternalStorage.isDenied) {
-        await Permission.manageExternalStorage.request();
-      }
-      return await Permission.storage.isGranted &&
-          await Permission.manageExternalStorage.isGranted;
-    } else {
-      return await Permission.storage.isGranted;
-    }
+    isAndroidSdkOver30 = androidInfo.version.sdkInt! >= 30;
+    return await Permission.storage.isGranted;
   }
 
   Future<List<String>> get frequentPathFromData async {

@@ -54,6 +54,7 @@ dependencies:
   idb_shim: ^2.0.1
   animated_flip_counter: ^0.2.4
   url_strategy: ^0.2.0
+  path_provider: ^2.0.10
 
 dev_dependencies:
   flutter_test:
