@@ -37,6 +37,8 @@ class VMStartPlatform extends GetxController {
       if (!status) {
         return -1;
       }
+      ///TODO 프로젝트 이름 입력창 뜨고 입력시 폴더 생성, path에 추가
+      return 0;
     }
     String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
     if (selectedDirectory != null) {
