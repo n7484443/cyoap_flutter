@@ -148,8 +148,7 @@ class ImageDB {
     if (image != null) {
       var output = Image.memory(
         image,
-        filterQuality:
-            ConstList.isDesktop() ? FilterQuality.high : FilterQuality.medium,
+        filterQuality: FilterQuality.high,
         isAntiAlias: true,
         fit: BoxFit.scaleDown,
       );

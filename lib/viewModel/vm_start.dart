@@ -91,11 +91,24 @@ class VMStartPlatform extends GetxController {
       } else if (path.isNotEmpty) {
         if (path.endsWith('.zip')) {
           var file = File(path);
+          if (!await file.exists()) {
+            await removeFrequentPath(selected.value);
+            return false;
+          }
           await PlatformSystem().openPlatformZip(file);
         } else if (path.endsWith('.json')) {
           var file = File(path);
+          if (!await file.exists()) {
+            await removeFrequentPath(selected.value);
+            return false;
+          }
           await PlatformSystem().openPlatformJson(file);
         } else {
+          var file = File(path);
+          if (!await file.exists()) {
+            await removeFrequentPath(selected.value);
+            return false;
+          }
           await PlatformSystem().openPlatformFolder(path);
         }
         return true;
@@ -114,9 +127,10 @@ class VMStartPlatform extends GetxController {
       selected.value = index;
     }
   }
+
   int get select => selected.value;
 
-  void removeFrequentPath(int index) async {
+  Future<void> removeFrequentPath(int index) async {
     await frequentlyUsedPath.removeFrequentPath(index);
     pathList.clear();
     pathList.addAll(frequentlyUsedPath.pathList);

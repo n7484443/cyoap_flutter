@@ -31,7 +31,7 @@ class ViewPlay extends StatelessWidget {
         }
 
         Get.put(VMVariableTable());
-        var appbar = PreferredSize(
+        var appbar = ConstList.isDistributed ? null : PreferredSize(
           preferredSize: const Size.fromHeight(ConstList.appBarSize),
           child: AppBar(
             leading: IconButton(
