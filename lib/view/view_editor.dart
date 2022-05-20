@@ -79,6 +79,7 @@ class ViewEditor extends StatelessWidget {
             label: '랜덤 기능',
           ),
           Visibility(
+            visible: controller.isRandom.value,
             child: SizedBox(
               width: 80,
               child: TextField(
@@ -93,7 +94,6 @@ class ViewEditor extends StatelessWidget {
                 ),
               ),
             ),
-            visible: controller.isRandom.value,
           ),
           ViewSwitchLabel(
                 () => controller.maximizingImage.value = !controller.maximizingImage.value,

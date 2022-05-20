@@ -36,10 +36,10 @@ class PlatformFileSystem {
   /*TODO - page 시스템 개발*/
   Future<void> createFromFolder(String path) async {
     openAsFile = false;
-    var dirImages = Directory(path + '/images');
-    var dirNodes = Directory(path + '/nodes');
-    var platformJson = File(path + '/platform.json');
-    var imageSourceJson = File(path + '/imageSource.json');
+    var dirImages = Directory('$path/images');
+    var dirNodes = Directory('$path/nodes');
+    var platformJson = File('$path/platform.json');
+    var imageSourceJson = File('$path/imageSource.json');
 
     var existImages = await dirImages.exists();
     if (!existImages) {

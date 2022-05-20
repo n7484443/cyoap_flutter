@@ -338,8 +338,8 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
           controller.dragStart(pos);
         },
         child: Opacity(
-          child: widget,
           opacity: listEquals(controller.drag, pos) ? 0.2 : 1.0,
+          child: widget,
         ),
         onDragEnd: (DraggableDetails data) {
           controller.dragEnd();
@@ -366,8 +366,8 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
           controller.dragStart(pos);
         },
         child: Opacity(
-          child: widget,
           opacity: listEquals(controller.drag, pos) ? 0.2 : 1.0,
+          child: widget,
         ),
         onDragEnd: (DraggableDetails data) {
           controller.dragEnd();

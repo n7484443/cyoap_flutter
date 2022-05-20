@@ -56,8 +56,8 @@ class ViewVariable extends StatelessWidget {
               children: [
                 ExpansionTile(
                   title: const Text('변수'),
-                  children: _.variableList,
                   initiallyExpanded: true,
+                  children: _.variableList,
                 ),
                 ExpansionTile(
                   title: const Text('노드'),

@@ -40,7 +40,7 @@ class ChoiceNode extends GenerableParserAndPosition {
       int width, this.isCard, this.contentsString, this.imageString)
       : title = '' {
     recursiveStatus = RecursiveStatus();
-    title = "선택지 " + Random().nextInt(99).toString();
+    title = "선택지 ${Random().nextInt(99)}";
     this.width = width;
   } //랜덤 문자로 제목 중복 방지
 

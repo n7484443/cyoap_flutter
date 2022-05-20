@@ -227,8 +227,8 @@ class ViewGlobalSetting extends StatelessWidget {
                 child: DropdownButton<String>(
                   items: ConstList.textFontList
                       .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
-                          child: Text(name, style: ConstList.getFont(name)),
-                          value: name))
+                          value: name,
+                          child: Text(name, style: ConstList.getFont(name))))
                       .toList(),
                   onChanged: (String? t) {
                     if (t != null) _.setTitleFont(t);
@@ -245,8 +245,8 @@ class ViewGlobalSetting extends StatelessWidget {
                 child: DropdownButton<String>(
                   items: ConstList.textFontList
                       .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
-                          child: Text(name, style: ConstList.getFont(name)),
-                          value: name))
+                          value: name,
+                          child: Text(name, style: ConstList.getFont(name))))
                       .toList(),
                   onChanged: (String? t) {
                     if (t != null) _.setMainFont(t);

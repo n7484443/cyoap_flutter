@@ -18,6 +18,7 @@ class ViewStart extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Align(
+              alignment: Alignment.topRight,
               child: Obx(
                     () => Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -25,6 +26,7 @@ class ViewStart extends StatelessWidget {
                     Text('version : ${vmStart.version.value}'),
                     Obx(
                           () => Visibility(
+                        visible: vmStart.needUpdate.value,
                         child: TextButton(
                           onPressed: () {
                             launchUrlString('https://github.com/n7484443/FlutterCyoap/releases');
@@ -32,13 +34,11 @@ class ViewStart extends StatelessWidget {
                           child: const Text('새로운 버전이 나왔습니다!',
                               style: TextStyle(color: Colors.redAccent)),
                         ),
-                        visible: vmStart.needUpdate.value,
                       ),
                     ),
                   ],
                 ),
               ),
-              alignment: Alignment.topRight,
             ),
             Expanded(
               flex: 9,
@@ -96,6 +96,7 @@ class ViewStart extends StatelessWidget {
                             },
                           ),
                           Visibility(
+                            visible: !ConstList.isOnlyFileAccept(),
                             child: TextButton(
                               child: const Text('폴더 추가'),
                               onPressed: () async {
@@ -104,7 +105,6 @@ class ViewStart extends StatelessWidget {
                                 }
                               },
                             ),
-                            visible: !ConstList.isOnlyFileAccept(),
                           ),
                         ],
                       ),

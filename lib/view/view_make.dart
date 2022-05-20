@@ -58,8 +58,8 @@ class ViewMake extends StatelessWidget {
               feedback: Transform.scale(
                 scale: 0.9,
                 child: Opacity(
-                  child: ViewChoiceNode(nonPositioned, nonPositioned),
                   opacity: 0.6,
+                  child: ViewChoiceNode(nonPositioned, nonPositioned),
                 ),
               ),
               onDragStarted: () {
@@ -86,9 +86,9 @@ class ViewMake extends StatelessWidget {
                   feedback: Transform.scale(
                     scale: 0.9,
                     child: Opacity(
+                      opacity: 0.6,
                       child:
                           ViewChoiceNode(removedPositioned, removedPositioned),
-                      opacity: 0.6,
                     ),
                   ),
                   onDragStarted: () {

@@ -114,8 +114,8 @@ class VMDraggableNestedMap extends GetxController {
         } else {
           return GetBuilder<VMDraggableNestedMap>(
             builder: (_) => Visibility(
-              child: NodeDivider(j),
               visible: drag != null,
+              child: NodeDivider(j),
             ),
           );
         }

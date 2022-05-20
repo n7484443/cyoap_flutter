@@ -35,6 +35,10 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
   @override
   Widget build(BuildContext context) {
     return Visibility(
+      visible: controller.drag != null,
+      maintainSize: true,
+      maintainAnimation: true,
+      maintainState: true,
       child: DragTarget<List<int>>(
         builder: (BuildContext context, List<dynamic> accepted,
             List<dynamic> rejected) {
@@ -60,10 +64,6 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
           }
         },
       ),
-      visible: controller.drag != null,
-      maintainSize: true,
-      maintainAnimation: true,
-      maintainState: true,
     );
   }
 }
@@ -111,10 +111,10 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
   @override
   Widget build(BuildContext context) {
     var maxSelectText = Visibility(
+      visible: controller.getMaxSelect(y) != '무한',
       child: TextOutline(
           '최대 ${controller.getMaxSelect(y)}개만큼 선택 가능', 18.0, titleFont,
           strokeWidth: 5.0),
-      visible: controller.getMaxSelect(y) != '무한',
     );
 
     var divider = Divider(
@@ -130,6 +130,7 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
             content: NodeDividerDialog(y),
           );
       return Stack(
+        alignment: Alignment.center,
         children: [
           divider,
           maxSelectText,
@@ -153,15 +154,14 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
             ),
           ),
         ],
-        alignment: Alignment.center,
       );
     } else {
       return Stack(
+        alignment: Alignment.center,
         children: [
           divider,
           maxSelectText,
         ],
-        alignment: Alignment.center,
       );
     }
   }

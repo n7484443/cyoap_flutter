@@ -11,18 +11,18 @@ class ViewCodeEditor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final VMCodeEditor _vmCodeEditor = Get.put(VMCodeEditor());
+    final VMCodeEditor vmCodeEditor = Get.put(VMCodeEditor());
 
     var leadingWidget = IconButton(
       icon: const Icon(Icons.arrow_back),
       onPressed: () {
-        if (_vmCodeEditor.isChanged) {
+        if (vmCodeEditor.isChanged) {
           showDialog(
             context: context,
             builder: (_) => ViewBackDialog(
-              () => _vmCodeEditor.save(),
+              () => vmCodeEditor.save(),
               () => Get.back(id: 1),
-              cancelFunction: () => _vmCodeEditor.isChanged = false,
+              cancelFunction: () => vmCodeEditor.isChanged = false,
             ),
           );
         } else {
@@ -41,7 +41,7 @@ class ViewCodeEditor extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.save),
                 onPressed: () {
-                  _vmCodeEditor.save();
+                  vmCodeEditor.save();
                 },
               )
             ],
@@ -53,19 +53,19 @@ class ViewCodeEditor extends StatelessWidget {
               child: Column(
                 children: [
                   TextField(
-                    controller: _vmCodeEditor.controllerClickable,
+                    controller: vmCodeEditor.controllerClickable,
                     textAlign: TextAlign.center,
                     decoration: const InputDecoration(hintText: '실행 조건'),
                   ),
                   TextField(
-                    controller: _vmCodeEditor.controllerVisible,
+                    controller: vmCodeEditor.controllerVisible,
                     textAlign: TextAlign.center,
                     decoration:
                         const InputDecoration(hintText: '숨김 조건(비어있을 시 항상 보임)'),
                   ),
                   Expanded(
                     child: TextField(
-                      controller: _vmCodeEditor.controllerExecute,
+                      controller: vmCodeEditor.controllerExecute,
                       textAlign: TextAlign.center,
                       scrollController: ScrollController(),
                       maxLines: null,
@@ -83,9 +83,9 @@ class ViewCodeEditor extends StatelessWidget {
               child: Obx(() => Column(
                   children: [
                     ViewSwitchLabel(
-                      () => _vmCodeEditor.isOccupySpace.value =
-                          !_vmCodeEditor.isOccupySpace.value,
-                      _vmCodeEditor.isOccupySpace.value,
+                      () => vmCodeEditor.isOccupySpace.value =
+                          !vmCodeEditor.isOccupySpace.value,
+                      vmCodeEditor.isOccupySpace.value,
                       label: '숨김 시 공간 차지',
                     ),
                   ],
@@ -99,9 +99,9 @@ class ViewCodeEditor extends StatelessWidget {
         return showDialog(
           context: context,
           builder: (_) => ViewBackDialog(
-            () => _vmCodeEditor.save(),
+            () => vmCodeEditor.save(),
             () => Get.back(id: 1),
-            cancelFunction: () => _vmCodeEditor.isChanged = false,
+            cancelFunction: () => vmCodeEditor.isChanged = false,
           ),
         ) as Future<bool>;
       },

@@ -1,25 +1,42 @@
+import 'dart:io';
+
+import 'package:cyoap_flutter/main.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FrequentlyUsedPath {
-  late final bool isAndroidSdkOver30;
   List<String> pathList = List.empty(growable: true);
 
   Future<bool> getStatuses() async {
-    var deviceInfoPlugin = DeviceInfoPlugin();
-    var androidInfo = await deviceInfoPlugin.androidInfo;
-
     if (await Permission.storage.isDenied) {
       await Permission.storage.request();
     }
-    isAndroidSdkOver30 = androidInfo.version.sdkInt! >= 30;
     return await Permission.storage.isGranted;
   }
 
+  Future<bool> get androidVersion async{
+    var deviceInfoPlugin = DeviceInfoPlugin();
+    var androidInfo = await deviceInfoPlugin.androidInfo;
+    return androidInfo.version.sdkInt! >= 30;
+  }
+
   Future<List<String>> get frequentPathFromData async {
-    var prefs = await SharedPreferences.getInstance();
-    pathList = prefs.getStringList('cyoap_frequent_path') ?? [];
+    if(ConstList.isMobile() && await androidVersion){
+      var dir = await getApplicationDocumentsDirectory();
+      dir = Directory("${dir.path}/project");
+      if(!await dir.exists()){
+        await dir.create();
+      }
+      pathList.clear();
+      for (var sub in dir.listSync()){
+        pathList.add(sub.path);
+      }
+    }else{
+      var prefs = await SharedPreferences.getInstance();
+      pathList = prefs.getStringList('cyoap_frequent_path') ?? [];
+    }
     return pathList;
   }
 
