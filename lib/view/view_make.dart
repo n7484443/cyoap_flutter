@@ -31,7 +31,7 @@ class ViewMake extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (_) => ViewBackDialog(
-                  () => vmPlatform.save(ConstList.isOnlyFileAccept()),
+                  () => vmPlatform.save(ConstList.isWeb()),
                   () => Get.back(),
                 ),
               );
@@ -180,7 +180,7 @@ class ViewMake extends StatelessWidget {
         return showDialog(
           context: context,
           builder: (_) => ViewBackDialog(
-            () => vmPlatform.save(ConstList.isOnlyFileAccept()),
+            () => vmPlatform.save(ConstList.isWeb()),
             () => Get.back(),
           ),
         ) as Future<bool>;

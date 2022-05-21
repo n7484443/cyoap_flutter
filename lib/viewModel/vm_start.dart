@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../main.dart';
@@ -12,6 +13,7 @@ import '../model/platform_system.dart';
 class VMStartPlatform extends GetxController {
   FrequentlyUsedPath frequentlyUsedPath = FrequentlyUsedPath();
   List<Future<void>> isAdded = List.empty(growable: true);
+  TextEditingController textInputController = TextEditingController();
 
   var needUpdate = false.obs;
   var version = ''.obs;
@@ -37,7 +39,33 @@ class VMStartPlatform extends GetxController {
       if (!status) {
         return -1;
       }
-      ///TODO 프로젝트 이름 입력창 뜨고 입력시 폴더 생성, path에 추가
+      textInputController.text = "";
+      Get.dialog(
+        AlertDialog(
+          title: const Text("프로젝트명"),
+          content: TextField(
+            controller: textInputController,
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: const Text('취소'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                var path = await FrequentlyUsedPath.getProjectFolder(textInputController.text);
+                await Directory(path).create(recursive: true);
+                await frequentlyUsedPath.addFrequentPath(path);
+                Get.back();
+              },
+              child: const Text('생성'),
+            ),
+          ],
+        ),
+        barrierDismissible: false,
+      );
       return 0;
     }
     String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
@@ -62,7 +90,7 @@ class VMStartPlatform extends GetxController {
       allowedExtensions: ['zip', 'json'],
     );
     if (result != null) {
-      if (ConstList.isOnlyFileAccept()) {
+      if (ConstList.isWeb()) {
         isAdded
             .add(PlatformSystem().openPlatformZipForWeb(result.files.single));
         pathList.add(result.files.single.name);
@@ -88,7 +116,7 @@ class VMStartPlatform extends GetxController {
 
       isAdded.clear();
       var path = pathList[pathList.length - 1 - selected.value];
-      if (ConstList.isOnlyFileAccept()) {
+      if (ConstList.isWeb()) {
         return true;
       } else if (path.isNotEmpty) {
         if (path.endsWith('.zip')) {
@@ -106,8 +134,8 @@ class VMStartPlatform extends GetxController {
           }
           await PlatformSystem().openPlatformJson(file);
         } else {
-          var file = File(path);
-          if (!await file.exists()) {
+          var dir = Directory(path);
+          if (!await dir.exists()) {
             await removeFrequentPath(selected.value);
             return false;
           }
@@ -115,7 +143,7 @@ class VMStartPlatform extends GetxController {
         }
         return true;
       }
-    } else if (ConstList.isOnlyFileAccept()) {
+    } else if (ConstList.isWeb()) {
       await PlatformSystem().openPlatformVoid();
       return true;
     }

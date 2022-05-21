@@ -65,7 +65,7 @@ class ImageDB {
       return;
     }
     _dirImageUint8Map[name] = null;
-    if (ConstList.isOnlyFileAccept()) {
+    if (ConstList.isWeb()) {
       await init();
       await notesWritableTxn.put(data, name);
     } else {
@@ -79,7 +79,7 @@ class ImageDB {
     }
     _dirImageUint8Map[name] = null;
     data.then((value) async {
-      if (ConstList.isOnlyFileAccept()) {
+      if (ConstList.isWeb()) {
         await init();
         await notesWritableTxn.put(value, name);
       } else {
@@ -100,7 +100,7 @@ class ImageDB {
       } else {
         return await notesReadableTxn.getObject(name) as Uint8List;
       }
-    } else if (ConstList.isOnlyFileAccept()) {
+    } else if (ConstList.isWeb()) {
       await init();
       return await notesReadableTxn.getObject(name) as Uint8List;
     } else {
@@ -109,7 +109,7 @@ class ImageDB {
   }
 
   Future<String?> getImageAsString(String name) async {
-    if (ConstList.isOnlyFileAccept()) {
+    if (ConstList.isWeb()) {
       await init();
       var value = await notesReadableTxn.getObject(name) as Uint8List;
       return String.fromCharCodes(value);

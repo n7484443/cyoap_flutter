@@ -96,7 +96,7 @@ class ViewStart extends StatelessWidget {
                             },
                           ),
                           Visibility(
-                            visible: !ConstList.isOnlyFileAccept(),
+                            visible: !ConstList.isWeb(),
                             child: TextButton(
                               child: const Text('폴더 추가'),
                               onPressed: () async {

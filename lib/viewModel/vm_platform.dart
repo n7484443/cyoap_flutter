@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:cyoap_flutter/model/opening_file_folder.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
@@ -24,7 +25,7 @@ class VMPlatform extends GetxController {
 
   var stopwatch = Stopwatch().obs;
 
-  void save(bool toFile) async {
+  void save(bool asZip) async {
     stopwatch.update((val) => val?.reset());
     stopwatch.update((val) => val?.start());
 
@@ -35,12 +36,7 @@ class VMPlatform extends GetxController {
     getPlatform.compress();
     getPlatform.generateRecursiveParser();
 
-    Future output;
-    if (toFile) {
-      output = getPlatformFileSystem.saveAsFile();
-    } else {
-      output = getPlatformFileSystem.saveAsFolder();
-    }
+    Future output = getPlatformFileSystem.save(asZip);
 
     output.then((value) {
       stopwatch.update((val) => val?.stop());
@@ -86,10 +82,13 @@ class VMPlatform extends GetxController {
         Future<Tuple2<String, Uint8List>> output =
             compute(getPlatformFileSystem.saveCapture, byteData);
         output.then((value) {
-          if (ConstList.isOnlyFileAccept()) {
+          if (ConstList.isWeb()) {
             PlatformSpecified()
                 .saveProject!
                 .downloadCapture(value.item1, value.item2);
+          } else if(ConstList.isMobile()){
+            PlatformSpecified().saveProject!.downloadCapture(
+                '${FrequentlyUsedPath.getDownloadFolder()}/${value.item1}', value.item2);
           } else {
             PlatformSpecified().saveProject!.downloadCapture(
                 '${getPlatformFileSystem.path}/${value.item1}', value.item2);
@@ -100,10 +99,13 @@ class VMPlatform extends GetxController {
           Get.back();
         });
       } else {
-        if (ConstList.isOnlyFileAccept()) {
+        if (ConstList.isWeb()) {
           PlatformSpecified()
               .saveProject!
               .downloadCapture('exported.png', byteData);
+        }else if(ConstList.isMobile()){
+          PlatformSpecified().saveProject!.downloadCapture(
+              '${FrequentlyUsedPath.getDownloadFolder()}/exported.png',byteData);
         } else {
           PlatformSpecified().saveProject!.downloadCapture(
               '${getPlatformFileSystem.path}/exported.png', byteData);

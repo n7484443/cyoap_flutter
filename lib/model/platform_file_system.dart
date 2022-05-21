@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
+import 'package:cyoap_flutter/model/opening_file_folder.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:path/path.dart';
 import 'package:tuple/tuple.dart';
@@ -206,14 +207,19 @@ class PlatformFileSystem {
     return input;
   }
 
-  Future<void> saveAsFile() async {
-    await PlatformSpecified().saveProject!.saveZip(
-        ConstList.isOnlyFileAccept() ? 'exported.zip' : path!,
-        await saveDataMap);
-  }
-
-  Future<void> saveAsFolder() async {
-    await PlatformSpecified().saveProject!.saveRaw(path!, await saveDataMap);
+  Future<void> save(bool asFile) async {
+    var data = await saveDataMap;
+    if (asFile) {
+      if (ConstList.isWeb()) {
+        await PlatformSpecified().saveProject!.saveZip('exported.zip', data);
+      } else if(ConstList.isMobile()){
+        await PlatformSpecified().saveProject!.saveZip(await FrequentlyUsedPath.getDownloadFolder(), data);
+      }else{
+        await PlatformSpecified().saveProject!.saveZip(path!, data);
+      }
+    } else {
+      await PlatformSpecified().saveProject!.saveRaw(path!, data);
+    }
   }
 
   final regCheckImage = RegExp(r'[.](webp|png|jpg|jpeg|bmp|gif)$');

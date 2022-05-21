@@ -22,15 +22,30 @@ class FrequentlyUsedPath {
     return androidInfo.version.sdkInt! >= 30;
   }
 
+  static Future<String> getProjectFolder(String? name) async{
+    if(ConstList.isMobile()){
+      var dir = (await getExternalStorageDirectory())!;
+      if(name == null){
+        return "${dir.path}/project";
+      }
+      return "${dir.path}/project/$name";
+    }
+    return name!;
+  }
+
+  static Future<String> getDownloadFolder() async{
+    return "/storage/emulated/0/Download";
+  }
+
   Future<List<String>> get frequentPathFromData async {
-    if(ConstList.isMobile() && await androidVersion){
-      var dir = await getApplicationDocumentsDirectory();
-      dir = Directory("${dir.path}/project");
-      if(!await dir.exists()){
-        await dir.create();
+    if(ConstList.isMobile()){
+      var dir = await getProjectFolder(null);
+      var directory = Directory(dir);
+      if(!await directory.exists()){
+        await directory.create();
       }
       pathList.clear();
-      for (var sub in dir.listSync()){
+      for (var sub in directory.listSync()){
         pathList.add(sub.path);
       }
     }else{

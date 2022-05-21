@@ -20,7 +20,7 @@ class ConstList {
   static const double elevation = 6.0;
   static late final PlatformType actualPlatformType;
 
-  static bool isOnlyFileAccept() {
+  static bool isWeb() {
     return isDistributed || actualPlatformType == PlatformType.web;
   }
 
