@@ -76,6 +76,9 @@ class RecursiveParser extends RecursiveUnit {
   @override
   ValueType unzip() {
     if (value.data == null) return ValueType.none();
+    if (value.data is ValueTypeData){
+      return ValueType.none();
+    }
     if (childNode.length == 3 && value.data == Analyser().functionList.funcIf) {
       if (childNode[0].unzip().data) {
         return childNode[1].unzip();
