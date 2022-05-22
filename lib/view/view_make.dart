@@ -160,14 +160,15 @@ class ViewMake extends StatelessWidget {
                     value: 0,
                     child: Text('저장'),
                   ),
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 1,
-                  child: Text('zip 파일로 추출'),
+                  child: Text('${ConstList.isMobile() ? 'download 폴더에 ' : ''}zip 파일로 추출'),
                 ),
-                const PopupMenuItem(
-                  value: 2,
-                  child: Text('이미지로 추출'),
-                ),
+                if (ConstList.isDesktop())
+                  const PopupMenuItem(
+                    value: 2,
+                    child: Text('이미지로 추출'),
+                  ),
               ];
             },
           )
