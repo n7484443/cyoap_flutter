@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -55,9 +56,10 @@ class VMStartPlatform extends GetxController {
             ),
             ElevatedButton(
               onPressed: () async {
-                var path = await FrequentlyUsedPath.getProjectFolder(textInputController.text);
+                var path = await FrequentlyUsedPath.getProjectFolder(
+                    textInputController.text);
                 await Directory(path).create(recursive: true);
-                await frequentlyUsedPath.addFrequentPath(path);
+                await updatePathList();
                 Get.back();
               },
               child: const Text('생성'),
@@ -115,7 +117,7 @@ class VMStartPlatform extends GetxController {
       await Future.wait(isAdded);
 
       isAdded.clear();
-      var path = pathList[pathList.length - 1 - selected.value];
+      var path = pathList[selected.value];
       if (ConstList.isWeb()) {
         return true;
       } else if (path.isNotEmpty) {
@@ -161,10 +163,25 @@ class VMStartPlatform extends GetxController {
   int get select => selected.value;
 
   Future<void> removeFrequentPath(int index) async {
-    await frequentlyUsedPath.removeFrequentPath(index);
-    pathList.clear();
-    pathList.addAll(frequentlyUsedPath.pathList);
+    if (!ConstList.isMobile()) {
+      await frequentlyUsedPath.removeFrequentPath(index);
+      pathList.clear();
+      pathList.addAll(frequentlyUsedPath.pathList);
+      await updatePathList();
+    } else {
+      Get.dialog(ViewWarningDialog(
+        acceptFunction: () async {
+          await frequentlyUsedPath.removeFrequentPath(index);
+          await updatePathList();
+        },
+      ));
+    }
   }
 
   set editable(bool b) => getPlatformFileSystem.isEditable = b;
+
+  Future<void> updatePathList() async{
+    pathList.clear();
+    pathList.addAll(await frequentlyUsedPath.frequentPathFromData);
+  }
 }

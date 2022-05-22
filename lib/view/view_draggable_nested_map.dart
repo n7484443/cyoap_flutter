@@ -11,7 +11,7 @@ import '../viewModel/vm_draggable_nested_map.dart';
 
 class NodeDragTarget extends GetView<VMDraggableNestedMap> {
   final List<int> pos;
-  final Color baseColor = Colors.black26;
+  final Color baseColor = Colors.black12;
   final bool isHorizontal;
 
   const NodeDragTarget(this.pos, {this.isHorizontal = false, Key? key})

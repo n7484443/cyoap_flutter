@@ -20,16 +20,17 @@ class ViewStart extends StatelessWidget {
             Align(
               alignment: Alignment.topRight,
               child: Obx(
-                    () => Column(
+                () => Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text('version : ${vmStart.version.value}'),
                     Obx(
-                          () => Visibility(
+                      () => Visibility(
                         visible: vmStart.needUpdate.value,
                         child: TextButton(
                           onPressed: () {
-                            launchUrlString('https://github.com/n7484443/FlutterCyoap/releases');
+                            launchUrlString(
+                                'https://github.com/n7484443/FlutterCyoap/releases');
                           },
                           child: const Text('새로운 버전이 나왔습니다!',
                               style: TextStyle(color: Colors.redAccent)),
@@ -60,14 +61,15 @@ class ViewStart extends StatelessWidget {
                             return ListTile(
                               title: Obx(
                                 () {
-                                  int i = vmStart.pathList.length - 1 - index;
-                                  var text = Text(vmStart.pathList[i]);
+                                  var text = Text(vmStart.pathList[index]);
                                   return OutlinedButton(
                                     onPressed: () => vmStart.select = index,
-                                    style: vmStart.select == index ? OutlinedButton.styleFrom(
-                                        primary: Colors.white, backgroundColor: Colors.blue) : OutlinedButton.styleFrom(
-                                        primary: Colors.black54),
-
+                                    style: vmStart.select == index
+                                        ? OutlinedButton.styleFrom(
+                                            primary: Colors.white,
+                                            backgroundColor: Colors.blue)
+                                        : OutlinedButton.styleFrom(
+                                            primary: Colors.black54),
                                     child: text,
                                   );
                                 },

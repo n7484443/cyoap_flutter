@@ -10,8 +10,9 @@ class ViewBackDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('뒤로가기'),
+      title: const Center(child: Text('뒤로가기')),
       content: const Text('저장되지 않은 내용이 있습니다. 저장하시겠습니까?'),
+      actionsAlignment: MainAxisAlignment.spaceAround,
       actions: [
         ElevatedButton(
           onPressed: () {
@@ -34,6 +35,41 @@ class ViewBackDialog extends StatelessWidget {
             saveFunction();
             Get.back();
             backFunction();
+          },
+          child: const Text('예'),
+        ),
+      ],
+    );
+  }
+}
+
+class ViewWarningDialog extends StatelessWidget {
+  final void Function()? cancelFunction;
+  final void Function()? acceptFunction;
+  const ViewWarningDialog({this.acceptFunction, this.cancelFunction, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Center(child: Text('!경고!')),
+      content: const Text('이것은 선택된 프로젝트를 완전히 삭제하는 것이며, 복구할 수 없습니다. 삭제하시겠습니까?'),
+      actionsAlignment: MainAxisAlignment.spaceAround,
+      actions: [
+        ElevatedButton(
+          onPressed: () {
+            if(cancelFunction != null) {
+              cancelFunction!();
+            }
+            Get.back();
+          },
+          child: const Text('아니오'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            if(acceptFunction != null) {
+              acceptFunction!();
+            }
+            Get.back();
           },
           child: const Text('예'),
         ),

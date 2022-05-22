@@ -61,20 +61,19 @@ class FrequentlyUsedPath {
   }
 
   Future<void> addFrequentPath(String path) async {
-    if (pathList.contains(path)) {
-      pathList.remove(path);
-    }
     pathList.add(path);
-
-    while (pathList.length > 10) {
-      pathList.removeLast();
-    }
     await setFrequentPathFromData(pathList.toList());
   }
 
   Future<void> removeFrequentPath(int index) async {
-    pathList = await frequentPathFromData;
-    pathList.removeAt(pathList.length - 1 - index);
-    await setFrequentPathFromData(pathList.toList());
+    if(ConstList.isMobile()) {
+      var dir = Directory(pathList[index]);
+      await dir.delete(recursive: true);
+      pathList = await frequentPathFromData;
+    }else{
+      pathList = await frequentPathFromData;
+      pathList.removeAt(pathList.length);
+      await setFrequentPathFromData(pathList.toList());
+    }
   }
 }
