@@ -1,4 +1,4 @@
-import  'dart:ui';
+import 'dart:ui';
 
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
@@ -28,17 +28,19 @@ class ViewEditor extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            if (controller.isChanged) {
-              showDialog(
-                context: context,
-                builder: (_) => ViewBackDialog(
-                      () => controller.save(),
-                      () => Get.back(id: 1),
-                  cancelFunction: () => controller.isChanged = false,
-                ),
-              );
-            } else {
-              Get.back(id: 1);
+            if (controller.title.value.trim().isNotEmpty) {
+              if (controller.isChanged) {
+                showDialog(
+                  context: context,
+                  builder: (_) => ViewBackDialog(
+                    () => controller.save(),
+                    () => Get.back(id: 1),
+                    cancelFunction: () => controller.isChanged = false,
+                  ),
+                );
+              } else {
+                Get.back(id: 1);
+              }
             }
           },
         ),
@@ -63,7 +65,7 @@ class ViewEditor extends StatelessWidget {
             label: '카드 모드',
           ),
           ViewSwitchLabel(
-                () => controller.isRound.value = !controller.isRound.value,
+            () => controller.isRound.value = !controller.isRound.value,
             controller.isRound.value,
             label: '외곽선 둥글게',
           ),
@@ -96,7 +98,8 @@ class ViewEditor extends StatelessWidget {
             ),
           ),
           ViewSwitchLabel(
-                () => controller.maximizingImage.value = !controller.maximizingImage.value,
+            () => controller.maximizingImage.value =
+                !controller.maximizingImage.value,
             controller.maximizingImage.value,
             label: '이미지 최대화',
           ),
@@ -118,15 +121,25 @@ class ViewEditor extends StatelessWidget {
         appBar: appbarWidget,
         body: Column(
           children: [
-            TextField(
+            Obx(() => TextField(
               controller: controller.controllerTitle,
               textAlign: TextAlign.center,
-              decoration: const InputDecoration(hintText: '제목'),
+              decoration: InputDecoration(
+                fillColor: controller.title.value.trim().isEmpty
+                    ? Colors.redAccent
+                    : null,
+                hintText: '제목',
+                hintStyle: ConstList.getFont(getPlatform.titleFont).copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                    color: Colors.white),
+                filled: true,
+              ),
               style: ConstList.getFont(getPlatform.titleFont).copyWith(
                 fontWeight: FontWeight.bold,
                 fontSize: 24,
               ),
-            ),
+            )),
             Expanded(
               child: Row(
                 children: [
@@ -143,15 +156,18 @@ class ViewEditor extends StatelessWidget {
           ],
         ),
       ),
-      onWillPop: () {
-        return showDialog(
-          context: context,
-          builder: (_) => ViewBackDialog(
-                () => controller.save(),
-                () => Get.back(id: 1),
-            cancelFunction: () => controller.isChanged = false,
-          ),
-        ) as Future<bool>;
+      onWillPop: () async {
+        if (controller.title.value.trim().isNotEmpty) {
+          return await showDialog(
+            context: context,
+            builder: (_) => ViewBackDialog(
+              () => controller.save(),
+              () => Get.back(id: 1),
+              cancelFunction: () => controller.isChanged = false,
+            ),
+          );
+        }
+        return false;
       },
     );
   }
@@ -219,7 +235,8 @@ class ViewEditorTyping extends StatelessWidget {
                                 TextButton(
                                   onPressed: () {
                                     controller.addImageSource(name);
-                                    controller.addImageCrop(controller.imageLast!);
+                                    controller
+                                        .addImageCrop(controller.imageLast!);
                                     Get.back();
                                   },
                                   child: const Text('저장하기'),
@@ -229,7 +246,7 @@ class ViewEditorTyping extends StatelessWidget {
                             context: context,
                           );
                           if (controller.imageLast != null) {
-                            Get.toNamed('/viewImageEditor', id:1);
+                            Get.toNamed('/viewImageEditor', id: 1);
                           }
                         }
                       },
@@ -265,7 +282,8 @@ class ViewEditorTyping extends StatelessWidget {
                                 ),
                               ),
                               child: GestureDetector(
-                                child: ViewImageLoading(ImageDB().getImageName(index)),
+                                child: ViewImageLoading(
+                                    ImageDB().getImageName(index)),
                                 onDoubleTap: () {
                                   controller.setIndex(index);
                                 },
