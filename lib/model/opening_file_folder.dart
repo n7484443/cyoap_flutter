@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class FrequentlyUsedPath {
+class ProjectPath {
   List<String> pathList = List.empty(growable: true);
 
   Future<bool> getStatuses() async {

@@ -12,7 +12,7 @@ import '../model/opening_file_folder.dart';
 import '../model/platform_system.dart';
 
 class VMStartPlatform extends GetxController {
-  FrequentlyUsedPath frequentlyUsedPath = FrequentlyUsedPath();
+  ProjectPath frequentlyUsedPath = ProjectPath();
   List<Future<void>> isAdded = List.empty(growable: true);
   TextEditingController textInputController = TextEditingController();
 
@@ -56,7 +56,7 @@ class VMStartPlatform extends GetxController {
             ),
             ElevatedButton(
               onPressed: () async {
-                var path = await FrequentlyUsedPath.getProjectFolder(
+                var path = await ProjectPath.getProjectFolder(
                     textInputController.text);
                 await Directory(path).create(recursive: true);
                 await updatePathList();

@@ -1,15 +1,16 @@
 import 'dart:collection';
-
 import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
-
 import 'grammar/value_type.dart';
 
 class VariableDataBase {
   static final VariableDataBase _instance = VariableDataBase._init();
+
   factory VariableDataBase() {
     return _instance;
   }
+
   VariableDataBase._init();
+
   var varMap = HashMap<String, ValueTypeWrapper>();
   VMVariableTable? viewModel;
 
@@ -44,7 +45,7 @@ class VariableDataBase {
     viewModel?.update();
   }
 
-  void clearLocalVariable(){
+  void clearLocalVariable() {
     varMap.removeWhere((key, value) => !value.isGlobal);
   }
 }

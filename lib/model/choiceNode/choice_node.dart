@@ -95,10 +95,11 @@ class ChoiceNode extends GenerableParserAndPosition {
 
   @override
   void initValueTypeWrapper() {
+    var titleWhitespaceRemoved = title.replaceAll(" ", "");
     VariableDataBase().setValue(
-        title.trim(), ValueTypeWrapper(ValueType(status.isSelected()), false));
+        titleWhitespaceRemoved, ValueTypeWrapper(ValueType(status.isSelected()), false));
     VariableDataBase().setValue(
-        '${title.trim()}:random', ValueTypeWrapper(ValueType(random), false));
+        '$titleWhitespaceRemoved:random', ValueTypeWrapper(ValueType(random), false));
     if (status.isNotSelected()) {
       status = isSelectable ? SelectableStatus.open : SelectableStatus.selected;
     }
