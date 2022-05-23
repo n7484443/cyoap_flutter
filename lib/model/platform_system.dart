@@ -55,7 +55,9 @@ class PlatformSystem {
 }
 
 AbstractPlatform get getPlatform {
-  getPlatformFileSystem.platform ??= AbstractPlatform.none();
+  if(getPlatformFileSystem.platform == null){
+    PlatformSystem().openPlatformVoid();
+  }
   return getPlatformFileSystem.platform!;
 }
 
