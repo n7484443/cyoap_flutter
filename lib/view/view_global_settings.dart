@@ -225,7 +225,7 @@ class ViewGlobalSetting extends StatelessWidget {
               title: const Text('제목 폰트'),
               trailing: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
-                  items: ConstList.textFontList
+                  items: ConstList.textFontList.keys
                       .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
                           value: name,
                           child: Text(name, style: ConstList.getFont(name))))
@@ -243,7 +243,7 @@ class ViewGlobalSetting extends StatelessWidget {
               title: const Text('내용 폰트'),
               trailing: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
-                  items: ConstList.textFontList
+                  items: ConstList.textFontList.keys
                       .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
                           value: name,
                           child: Text(name, style: ConstList.getFont(name))))

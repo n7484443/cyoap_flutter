@@ -68,39 +68,22 @@ class ConstList {
 
   static TextStyle defaultFont = GoogleFonts.notoSans(color: Colors.black);
 
-  static List<String> textFontList = [
-    "jua",
-    "notoSans",
-    "나눔고딕",
-    "나눔손글씨 붓",
-    "나눔손글씨 펜",
-    "메이플스토리체",
-    "넥슨 Lv2 고딕",
-    "Neo 둥근모",
-  ];
+  static Map<String, TextStyle> textFontList = {
+    "jua": GoogleFonts.jua(color: Colors.black),
+    "notoSans": GoogleFonts.notoSans(color: Colors.black),
+    "나눔고딕": GoogleFonts.nanumGothic(color: Colors.black),
+    "나눔손글씨 붓": GoogleFonts.nanumBrushScript(color: Colors.black),
+    "나눔손글씨 펜": GoogleFonts.nanumPenScript(color: Colors.black),
+    "Poor Story": GoogleFonts.poorStory(color: Colors.black),
+    "East Sea Dokdo": GoogleFonts.eastSeaDokdo(color: Colors.black),
+    "메이플스토리체": const TextStyle(fontFamily: 'MapleStory', color: Colors.black),
+    "넥슨 Lv2 고딕":
+        const TextStyle(fontFamily: 'NexonLv2Gothic', color: Colors.black),
+    "Neo 둥근모": const TextStyle(fontFamily: 'NeoDGM', color: Colors.black),
+  };
 
   static TextStyle getFont(String font) {
-    switch (font) {
-      case 'jua':
-        return GoogleFonts.jua(color: Colors.black);
-      case 'notoSans':
-        return GoogleFonts.notoSans(color: Colors.black);
-      case '나눔고딕':
-        return GoogleFonts.nanumGothic(color: Colors.black);
-      case '나눔손글씨 붓':
-        return GoogleFonts.nanumBrushScript(color: Colors.black);
-      case '나눔손글씨 펜':
-        return GoogleFonts.nanumPenScript(color: Colors.black);
-      case '메이플스토리체':
-        return const TextStyle(fontFamily: 'MapleStory', color: Colors.black);
-      case '넥슨 Lv2 고딕':
-        return const TextStyle(
-            fontFamily: 'NexonLv2Gothic', color: Colors.black);
-      case 'Neo 둥근모':
-        return const TextStyle(fontFamily: 'NeoDGM', color: Colors.black);
-      default:
-        return defaultFont;
-    }
+    return textFontList[font] ?? defaultFont;
   }
 
   static Future<void> preInit() async {
@@ -126,6 +109,7 @@ enum PlatformType {
   mobile,
   web,
 }
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
