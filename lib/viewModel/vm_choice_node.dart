@@ -12,8 +12,8 @@ import '../model/choiceNode/generable_parser.dart';
 import '../model/platform_system.dart';
 
 const double nodeBaseHeight = 200;
-const int nonPositioned = -10;
-const int removedPositioned = -15;
+const int nonPositioned = -1;
+const int removedPositioned = -2;
 
 class VMChoiceNode extends GetxController {
   late QuillController quillController;
