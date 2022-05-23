@@ -4,6 +4,7 @@ import 'package:cyoap_flutter/model/choiceNode/recursive_status.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
 
+import '../../view/util/view_wrap_custom.dart';
 import '../grammar/value_type.dart';
 import 'generable_parser.dart';
 
@@ -120,5 +121,25 @@ class ChoiceNode extends GenerableParserAndPosition {
       parent = parent.parent as ChoiceNode;
     }
     return parent;
+  }
+
+  int getMaxSize(bool containSelf){
+    var nodeParent = containSelf ? this : parent;
+    var out = 0;
+    while (true) {
+      if (nodeParent is ChoiceNode) {
+        if(nodeParent.width == 0){
+          nodeParent = nodeParent.parent;
+          continue;
+        }else{
+          out = nodeParent.width;
+          break;
+        }
+      }else{
+        out = defaultMaxSize;
+        break;
+      }
+    }
+    return out;
   }
 }

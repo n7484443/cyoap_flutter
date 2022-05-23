@@ -72,17 +72,13 @@ class VMChoiceNode extends GetxController {
     if (pos.last == nonPositioned) {
       return VMDraggableNestedMap.createNodeForTemp();
     }
-    if(pos.length == 1)return getPlatform.getLineSetting(pos.first);
+    if (pos.length == 1) return getPlatform.getLineSetting(pos.first);
     return getPlatform.getChoiceNode(pos);
   }
 
   void sizeChange(int width) {
     size.value += width;
-    if (node.parent is ChoiceNode) {
-      size.value = size.value.clamp(0, (node.parent as ChoiceNode).width);
-    } else {
-      size.value = size.value.clamp(0, 12);
-    }
+    size.value = size.value.clamp(0, node.getMaxSize(false));
     node.width = size.value;
     for (var child in node.children) {
       getVMChoiceNodeFromTag(child.tag)!.sizeChange(0);
@@ -133,7 +129,8 @@ class VMChoiceNode extends GetxController {
     return getPlatform.isSelect(node.pos());
   }
 
-  bool get isIgnorePointer => status.value.isPointerInteractive(node.isSelectable);
+  bool get isIgnorePointer =>
+      status.value.isPointerInteractive(node.isSelectable);
 
   void select() {
     getPlatform.setSelect(node.pos());

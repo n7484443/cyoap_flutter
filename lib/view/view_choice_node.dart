@@ -91,7 +91,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
           (child) => isEditable
               ? NodeDraggable(child)
               : ViewChoiceNode.fromNode(child),
-          maxSize: node!.width,
+          maxSize: node!.getMaxSize(true),
           builderDraggable: isEditable
               ? (i) =>
                   NodeDragTarget(List.from(node!.pos(), growable: true)..add(i))
