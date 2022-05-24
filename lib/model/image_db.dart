@@ -32,6 +32,9 @@ class ImageDB {
     );
   }
 
+  Queue<String> temp = Queue();
+  HashMap<String, Image> tempData = HashMap();
+
   final Map<String, Uint8List?> _dirImageUint8Map = {};
 
   List<String> get imageList => _dirImageUint8Map.keys.toList();
@@ -134,18 +137,39 @@ class ImageDB {
   }
 
   Image noImage = Image.asset('images/noImage.png');
-  Queue<Tuple2<String, Image>> temp = Queue();
+
+  Future<void> removeImage(String name) async{
+    if (ConstList.isWeb()) {
+      await init();
+      await notesWritableTxn.delete(name);
+    } else {
+      _dirImageUint8Map.remove(name);
+    }
+    checkCache();
+  }
+
+  void checkCache(){
+    temp = Queue.from(_dirImageUint8Map.keys);
+  }
 
   bool isInCache(String name){
-    return temp.any((element) => element.item1 == name);
+    return temp.contains(name);
+  }
+
+  bool isInData(String name){
+    return _dirImageUint8Map.keys.contains(name);
+  }
+
+  Image getImageFromCache(String name){
+    return tempData[name] ?? ImageDB().noImage;
   }
 
   Future<Image> getImage(String name) async {
     if(isInCache(name)){
-      var tmp = temp.firstWhere((element) => element.item1 == name);
-      temp.remove(tmp);
-      temp.add(tmp);
-      return tmp.item2;
+      var tmp = tempData[name] ?? noImage;
+      temp.remove(name);
+      temp.add(name);
+      return tmp;
     }
     Uint8List? image = await _getImage(name);
     if (image != null) {
@@ -155,10 +179,8 @@ class ImageDB {
         isAntiAlias: true,
         fit: BoxFit.scaleDown,
       );
-      temp.add(Tuple2(name, output));
-      while (temp.length > 30) {
-        temp.removeFirst();
-      }
+      temp.add(name);
+      tempData[name] = output;
       return output;
     }
 

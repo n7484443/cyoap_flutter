@@ -12,32 +12,44 @@ class ViewImageLoading extends StatelessWidget {
   Widget build(BuildContext context) {
     var controller = Get.put(VMImageLoading(name), tag: name);
     return Obx(() {
-      if (controller.image.value == null) {
-        return SizedBox.fromSize(
-          size: controller.size ?? const Size(100, 50),
-          child: const Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
+      switch(controller.imageLoaded.value){
+        case 0:
+          return SizedBox.fromSize(
+            size: const Size(100, 100),
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        case 1:
+          return controller.getData();
+        default:
+          return ImageDB().noImage;
       }
-      return controller.image.value!;
     });
   }
 }
 
 class VMImageLoading extends GetxController {
-  Rx<Image?> image = Rx(null);
+  var imageLoaded = 0.obs; // 0 = unloaded 1 = loaded 2 = no data
   String name;
-  Size? size;
 
   VMImageLoading(this.name);
 
   @override
   void onInit() {
-    image = Rx(null);
     ImageDB().getImage(name).then((value) {
-      image.value = value;
+      imageLoaded.value = 1;
     });
     super.onInit();
+  }
+
+  Image getData(){
+    return ImageDB().getImageFromCache(name);
+  }
+
+  void checkNeedRemove(){
+    if(!ImageDB().isInCache(name) && !ImageDB().isInData(name)){
+      imageLoaded.value = 2;
+    }
   }
 }
