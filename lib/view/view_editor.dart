@@ -7,8 +7,6 @@ import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
-import 'package:flutter_quill/src/translations/toolbar.i18n.dart';
-import 'package:flutter_quill/src/utils/color.dart' as quill_color;
 import 'package:get/get.dart';
 
 import '../main.dart';
@@ -122,24 +120,25 @@ class ViewEditor extends StatelessWidget {
         body: Column(
           children: [
             Obx(() => TextField(
-              controller: controller.controllerTitle,
-              textAlign: TextAlign.center,
-              decoration: InputDecoration(
-                fillColor: controller.title.value.trim().isEmpty
-                    ? Colors.redAccent
-                    : null,
-                hintText: '제목',
-                hintStyle: ConstList.getFont(getPlatform.titleFont).copyWith(
+                  controller: controller.controllerTitle,
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                    fillColor: controller.title.value.trim().isEmpty
+                        ? Colors.redAccent
+                        : null,
+                    hintText: '제목',
+                    hintStyle: ConstList.getFont(getPlatform.titleFont)
+                        .copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                            color: Colors.white),
+                    filled: true,
+                  ),
+                  style: ConstList.getFont(getPlatform.titleFont).copyWith(
                     fontWeight: FontWeight.bold,
                     fontSize: 24,
-                    color: Colors.white),
-                filled: true,
-              ),
-              style: ConstList.getFont(getPlatform.titleFont).copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
-              ),
-            )),
+                  ),
+                )),
             Expanded(
               child: Row(
                 children: [
@@ -179,11 +178,89 @@ class ViewEditorTyping extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final VMEditor controller = Get.put(VMEditor());
+
+    void changeColor(QuillController controller, Color color, bool background) {
+      var hex = color.value.toRadixString(16);
+      if (hex.startsWith('ff')) {
+        hex = hex.substring(2);
+      }
+      hex = '#$hex';
+      controller.formatSelection(background ? BackgroundAttribute(hex) : ColorAttribute(hex));
+    }
+    void colorIconDialog(bool background){
+      Color newColor = const Color(0x00000000);
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Select Color'),
+          backgroundColor: Theme.of(context).canvasColor,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ColorPicker(
+                pickersEnabled: {
+                  ColorPickerType.both: true,
+                  ColorPickerType.primary: false,
+                  ColorPickerType.accent: false
+                },
+                color: const Color(0x00000000),
+                onColorChanged: (color) {
+                  newColor = color;
+                },
+              ),
+            ],
+          ),
+          actionsAlignment: MainAxisAlignment.spaceEvenly,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: () {
+                Get.back();
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.check),
+              onPressed: () {
+                changeColor(controller.quillController, newColor, background);
+                Get.back();
+              },
+            ),
+          ],
+        ),
+      );
+    }
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: getQuillToolbar(controller.quillController),
+          child: QuillToolbar.basic(
+            controller: controller.quillController,
+            showListCheck: false,
+            showInlineCode: false,
+            showVideoButton: false,
+            showCameraButton: false,
+            showImageButton: false,
+            showLink: false,
+            showCodeBlock: false,
+            showHeaderStyle: false,
+            showAlignmentButtons: true,
+            showColorButton: false,
+            showBackgroundColorButton: false,
+            customIcons: [
+              QuillCustomIcon(
+                icon: Icons.color_lens,
+                onTap: () {
+                  colorIconDialog(false);
+                },
+              ),
+              QuillCustomIcon(
+                icon: Icons.format_color_fill,
+                onTap: () {
+                  colorIconDialog(true);
+                },
+              ),
+            ],
+          ),
         ),
         Expanded(
           flex: 3,
@@ -300,218 +377,6 @@ class ViewEditorTyping extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-QuillToolbar getQuillToolbar(QuillController controller) {
-  var quillToolbar = QuillToolbar.basic(
-    controller: controller,
-    showListCheck: false,
-    showInlineCode: false,
-    showVideoButton: false,
-    showCameraButton: false,
-    showImageButton: false,
-    showLink: false,
-    showCodeBlock: false,
-    showHeaderStyle: false,
-    showAlignmentButtons: true,
-  );
-  bool b = true;
-  List<Widget> children = quillToolbar.children.map((e) {
-    if (e is ColorButton) {
-      if (b) {
-        var button = ColorButtonExtension(
-          icon: Icons.color_lens,
-          iconSize: kDefaultIconSize,
-          controller: controller,
-          background: false,
-        );
-        b = false;
-        return button;
-      } else {
-        var button = ColorButtonExtension(
-          icon: Icons.format_color_fill,
-          iconSize: kDefaultIconSize,
-          controller: controller,
-          background: true,
-        );
-        return button;
-      }
-    }
-    return e;
-  }).toList();
-  return QuillToolbar(
-    children: children,
-  );
-}
-
-class ColorButtonExtension extends StatefulWidget {
-  const ColorButtonExtension({
-    required this.icon,
-    required this.controller,
-    required this.background,
-    this.iconSize = kDefaultIconSize,
-    this.iconTheme,
-    Key? key,
-  }) : super(key: key);
-
-  final IconData icon;
-  final double iconSize;
-  final bool background;
-  final QuillController controller;
-  final QuillIconTheme? iconTheme;
-
-  @override
-  _ColorButtonExtensionState createState() => _ColorButtonExtensionState();
-}
-
-class _ColorButtonExtensionState extends State<ColorButtonExtension> {
-  late bool _isToggledColor;
-  late bool _isToggledBackground;
-  late bool _isWhite;
-  late bool _isWhiteBackground;
-
-  Style get _selectionStyle => widget.controller.getSelectionStyle();
-
-  void _didChangeEditingValue() {
-    setState(() {
-      _isToggledColor =
-          _getIsToggledColor(widget.controller.getSelectionStyle().attributes);
-      _isToggledBackground = _getIsToggledBackground(
-          widget.controller.getSelectionStyle().attributes);
-      _isWhite = _isToggledColor &&
-          _selectionStyle.attributes['color']!.value == '#ffffff';
-      _isWhiteBackground = _isToggledBackground &&
-          _selectionStyle.attributes['background']!.value == '#ffffff';
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _isToggledColor = _getIsToggledColor(_selectionStyle.attributes);
-    _isToggledBackground = _getIsToggledBackground(_selectionStyle.attributes);
-    _isWhite = _isToggledColor &&
-        _selectionStyle.attributes['color']!.value == '#ffffff';
-    _isWhiteBackground = _isToggledBackground &&
-        _selectionStyle.attributes['background']!.value == '#ffffff';
-    widget.controller.addListener(_didChangeEditingValue);
-  }
-
-  bool _getIsToggledColor(Map<String, Attribute> attrs) {
-    return attrs.containsKey(Attribute.color.key);
-  }
-
-  bool _getIsToggledBackground(Map<String, Attribute> attrs) {
-    return attrs.containsKey(Attribute.background.key);
-  }
-
-  @override
-  void didUpdateWidget(covariant ColorButtonExtension oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.controller != widget.controller) {
-      oldWidget.controller.removeListener(_didChangeEditingValue);
-      widget.controller.addListener(_didChangeEditingValue);
-      _isToggledColor = _getIsToggledColor(_selectionStyle.attributes);
-      _isToggledBackground =
-          _getIsToggledBackground(_selectionStyle.attributes);
-      _isWhite = _isToggledColor &&
-          _selectionStyle.attributes['color']!.value == '#ffffff';
-      _isWhiteBackground = _isToggledBackground &&
-          _selectionStyle.attributes['background']!.value == '#ffffff';
-    }
-  }
-
-  @override
-  void dispose() {
-    widget.controller.removeListener(_didChangeEditingValue);
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final iconColor = _isToggledColor && !widget.background && !_isWhite
-        ? quill_color.stringToColor(_selectionStyle.attributes['color']!.value)
-        : (widget.iconTheme?.iconUnselectedColor ?? theme.iconTheme.color);
-
-    final iconColorBackground =
-        _isToggledBackground && widget.background && !_isWhiteBackground
-            ? quill_color
-                .stringToColor(_selectionStyle.attributes['background']!.value)
-            : (widget.iconTheme?.iconUnselectedColor ?? theme.iconTheme.color);
-
-    final fillColor = _isToggledColor && !widget.background && _isWhite
-        ? quill_color.stringToColor('#ffffff')
-        : (widget.iconTheme?.iconUnselectedFillColor ?? theme.canvasColor);
-    final fillColorBackground =
-        _isToggledBackground && widget.background && _isWhiteBackground
-            ? quill_color.stringToColor('#ffffff')
-            : (widget.iconTheme?.iconUnselectedFillColor ?? theme.canvasColor);
-
-    return QuillIconButton(
-      highlightElevation: 0,
-      hoverElevation: 0,
-      size: widget.iconSize * kIconButtonFactor,
-      icon: Icon(widget.icon,
-          size: widget.iconSize,
-          color: widget.background ? iconColorBackground : iconColor),
-      fillColor: widget.background ? fillColorBackground : fillColor,
-      onPressed: _showColorPicker,
-    );
-  }
-
-  void _changeColor(BuildContext context, Color color) {
-    var hex = color.value.toRadixString(16);
-    if (hex.startsWith('ff')) {
-      hex = hex.substring(2);
-    }
-    hex = '#$hex';
-    widget.controller.formatSelection(
-        widget.background ? BackgroundAttribute(hex) : ColorAttribute(hex));
-  }
-
-  void _showColorPicker() {
-    Color newColor = const Color(0x00000000);
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Select Color'.i18n),
-        backgroundColor: Theme.of(context).canvasColor,
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ColorPicker(
-              pickersEnabled: {
-                ColorPickerType.both: true,
-                ColorPickerType.primary: false,
-                ColorPickerType.accent: false
-              },
-              color: const Color(0x00000000),
-              onColorChanged: (color) {
-                newColor = color;
-              },
-            ),
-          ],
-        ),
-        actionsAlignment: MainAxisAlignment.spaceEvenly,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: () {
-              Get.back();
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.check),
-            onPressed: () {
-              _changeColor(context, newColor);
-              Get.back();
-            },
-          ),
-        ],
-      ),
     );
   }
 }
