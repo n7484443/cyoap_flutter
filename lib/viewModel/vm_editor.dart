@@ -70,6 +70,8 @@ class VMEditor extends GetxController {
       contents.value = quillController.document.toPlainText();
       isChanged = true;
     });
+
+    index = ImageDB().getImageIndex(NodeEditor().target.imageString);
     super.onInit();
   }
 
@@ -77,9 +79,7 @@ class VMEditor extends GetxController {
     NodeEditor().target.title = title.value;
     NodeEditor().target.contentsString =
         jsonEncode(quillController.document.toDelta().toJson());
-    if (index != -1){
-      NodeEditor().target.imageString = ImageDB().getImageName(index);
-    }
+    NodeEditor().target.imageString = ImageDB().getImageName(index);
     NodeEditor().target.maxRandom = int.parse(controllerRandom.text);
     NodeEditor().target.maximizingImage = maximizingImage.value;
     NodeEditor().target.maxRandom = isRandom.value ? 2 : 0;
@@ -97,7 +97,11 @@ class VMEditor extends GetxController {
   }
 
   void setIndex(int index) {
-    this.index = index;
+    if(this.index == index){
+      this.index = -1;
+    }else{
+      this.index = index;
+    }
     isChanged = true;
     update();
   }
