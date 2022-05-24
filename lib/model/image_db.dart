@@ -119,9 +119,6 @@ class ImageDB {
   }
 
   String getImageName(int index) {
-    if(index == -1){
-      return "";
-    }
     return ImageDB().imageList[index];
   }
 

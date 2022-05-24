@@ -13,7 +13,7 @@
     </queries>
     <application
             android:requestLegacyExternalStorage="true"
-            android:label="cyoap"
+            android:label="cyoap_flutter"
             android:name="${applicationName}"
             android:icon="@mipmap/ic_launcher">
         <activity
