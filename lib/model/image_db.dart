@@ -5,7 +5,6 @@ import 'package:cyoap_flutter/main.dart';
 import 'package:flutter/material.dart';
 import 'package:idb_shim/idb.dart';
 import 'package:idb_shim/idb_browser.dart';
-import 'package:tuple/tuple.dart';
 
 import '../util/platform_specified_util/platform_specified.dart';
 
