@@ -12,6 +12,7 @@ import '../viewModel/vm_draggable_nested_map.dart';
 import 'choiceNode/choice_line.dart';
 import 'choiceNode/generable_parser.dart';
 import 'grammar/value_type.dart';
+import 'layout_setting.dart';
 
 class AbstractPlatform {
   String stringImageName;
@@ -23,6 +24,7 @@ class AbstractPlatform {
 
   String titleFont;
   String mainFont;
+  PlatformLayoutSetting layoutSetting = PlatformLayoutSetting();
 
   void init() {
     checkDataCollect();

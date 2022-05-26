@@ -7,6 +7,7 @@ import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
+import 'package:cyoap_flutter/viewModel/vm_layout_setting.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
@@ -22,7 +23,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
   final ChoiceNode? node;
 
   ViewChoiceNode(int posX, int posY, {Key? key})
-      : node = posX <0 && posY < 0
+      : node = posX < 0 && posY < 0
             ? null
             : getPlatform.getChoiceNode([posY, posX])!,
         super(key: key);
@@ -43,63 +44,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
       );
     }
     var nodeController = Get.put(VMChoiceNode.fromNode(node!), tag: node!.tag);
-
-    var editor = Obx(() {
-      return IgnorePointer(
-        child: QuillEditor(
-          controller: nodeController.quillController,
-          focusNode: FocusNode(),
-          readOnly: true,
-          autoFocus: false,
-          expands: false,
-          padding: const EdgeInsets.only(top: 4),
-          scrollController: ScrollController(),
-          scrollable: false,
-          customStyles: ConstList.getDefaultThemeData(
-              context, controller.scale(context),
-              fontStyle: ConstList.getFont(controller.mainFont.value)),
-        ),
-      );
-    });
-
-    var mainBox = Column(
-      children: [
-        Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            if (nodeController.imageString.value.isNotEmpty)
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: nodeController.maximizingImage.value ? double.infinity : MediaQuery.of(context).size.height / 3.5,
-                ),
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(5)),
-                  child: ViewImageLoading(nodeController.imageString.value),
-                ),
-              ),
-            if (nodeController.titleString.value.isNotEmpty)
-              TextOutline(
-                nodeController.titleString.value,
-                18 * controller.scale(context),
-                ConstList.getFont(controller.titleFont.value),
-              ),
-          ],
-        ),
-        editor,
-        ViewWrapCustom(
-          node!.children,
-          (child) => isEditable
-              ? NodeDraggable(child)
-              : ViewChoiceNode.fromNode(child),
-          maxSize: node!.getMaxSize(true),
-          builderDraggable: isEditable
-              ? (i) =>
-                  NodeDragTarget(List.from(node!.pos(), growable: true)..add(i))
-              : null,
-          isAllVisible: isEditable,
-        )
-      ],
-    );
+    var layoutController = Get.find<VMLayoutSetting>();
 
     var baseColor = node!.isCard ? Colors.white : baseNodeColor;
     var mainNode = Ink(
@@ -132,7 +77,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
         child: Stack(
           alignment: Alignment.topCenter,
           children: [
-            mainBox,
+            ViewChoiceNodeContent(node!, nodeController, controller, layoutController),
             if (controller.isVisibleOnlyEdit()) ...[
               Positioned(
                 top: 0,
@@ -377,5 +322,97 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
         },
       );
     }
+  }
+}
+
+class ViewChoiceNodeContent extends StatelessWidget {
+  final ChoiceNode node;
+  final VMChoiceNode controller;
+  final VMDraggableNestedMap draggableController;
+  final VMLayoutSetting layoutSetting;
+
+  const ViewChoiceNodeContent(
+      this.node, this.controller, this.draggableController, this.layoutSetting,
+      {Key? key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      Widget? image;
+      Widget? title;
+      if (controller.imageString.value.isNotEmpty) {
+        image = ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: controller.maximizingImage.value
+                ? double.infinity
+                : MediaQuery.of(context).size.height / 3.5,
+          ),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(5)),
+            child: ViewImageLoading(controller.imageString.value),
+          ),
+        );
+      }
+      if (controller.titleString.value.isNotEmpty) {
+        title = TextOutline(
+          controller.titleString.value,
+          18 * draggableController.scale(context),
+          ConstList.getFont(draggableController.titleFont.value),
+        );
+      }
+      Widget contents = IgnorePointer(
+        child: QuillEditor(
+          controller: controller.quillController,
+          focusNode: FocusNode(),
+          readOnly: true,
+          autoFocus: false,
+          expands: false,
+          padding: const EdgeInsets.only(top: 4),
+          scrollController: ScrollController(),
+          scrollable: false,
+          customStyles: ConstList.getDefaultThemeData(
+              context, draggableController.scale(context),
+              fontStyle: ConstList.getFont(draggableController.mainFont.value)),
+        ),
+      );
+      Widget child = ViewWrapCustom(
+        node.children,
+        (child) =>
+            isEditable ? NodeDraggable(child) : ViewChoiceNode.fromNode(child),
+        maxSize: node.getMaxSize(true),
+        builderDraggable: isEditable
+            ? (i) =>
+                NodeDragTarget(List.from(node.pos(), growable: true)..add(i))
+            : null,
+        isAllVisible: isEditable,
+      );
+      List<Widget> subWidget;
+      if (layoutSetting.titleOverlap.value) {
+        subWidget = [
+          Stack(
+            alignment: layoutSetting.titlePosition.value ? Alignment.topCenter : Alignment.bottomCenter,
+            children: [
+              if (image != null) image,
+              if (title != null) title,
+            ],
+          ),
+        ];
+      } else if(layoutSetting.titlePosition.value){
+        subWidget = [
+          if (title != null) title,
+          if (image != null) image,
+        ];
+      }else{
+        subWidget = [
+          if (image != null) image,
+          if (title != null) title,
+        ];
+      }
+      subWidget.addAll([contents, child]);
+      return Column(
+        children: subWidget,
+      );
+    });
   }
 }

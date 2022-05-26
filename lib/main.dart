@@ -5,6 +5,7 @@ import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.da
 import 'package:cyoap_flutter/view/view_make_platform.dart' deferred as v_make;
 import 'package:cyoap_flutter/view/view_play.dart' deferred as v_play;
 import 'package:cyoap_flutter/view/view_start.dart' deferred as v_start;
+import 'package:cyoap_flutter/viewModel/vm_layout_setting.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -140,11 +141,13 @@ void main() {
                 return GetPage(
                   name: '/viewPlay',
                   page: () => v_play.ViewPlay(),
+                  binding: BindingsBuilder.put(() => VMLayoutSetting()),
                 );
               default:
                 return GetPage(
                   name: '/viewMake',
                   page: () => v_make.ViewMakePlatform(),
+                  binding: BindingsBuilder.put(() => VMLayoutSetting()),
                 );
             }
           }
