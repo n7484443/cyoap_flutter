@@ -73,53 +73,50 @@ class ViewSource extends StatelessWidget {
 
     return WillPopScope(
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(ConstList.appBarSize),
-          child: AppBar(
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                Get.back(id: 1);
-              },
-            ),
-            title: Obx(() {
-              if (!controller.deleteMode.value) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.delete),
-                      tooltip: '프로젝트에서 이미지 삭제',
-                      onPressed: () {
-                        controller.deleteMode.value = true;
-                      },
-                    ),
-                  ],
-                );
-              }
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Get.back(id: 1);
+            },
+          ),
+          title: Obx(() {
+            if (!controller.deleteMode.value) {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.close),
-                    tooltip: '이미지 삭제 취소',
-                    onPressed: () {
-                      controller.deleteList.clear();
-                      controller.deleteMode.value = false;
-                    },
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.check),
+                    icon: const Icon(Icons.delete),
                     tooltip: '프로젝트에서 이미지 삭제',
                     onPressed: () {
-                      controller.remove();
-                      controller.deleteMode.value = false;
+                      controller.deleteMode.value = true;
                     },
                   ),
                 ],
               );
-            }),
-          ),
+            }
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  tooltip: '이미지 삭제 취소',
+                  onPressed: () {
+                    controller.deleteList.clear();
+                    controller.deleteMode.value = false;
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.check),
+                  tooltip: '프로젝트에서 이미지 삭제',
+                  onPressed: () {
+                    controller.remove();
+                    controller.deleteMode.value = false;
+                  },
+                ),
+              ],
+            );
+          }),
         ),
         body: widget,
       ),

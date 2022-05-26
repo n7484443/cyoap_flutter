@@ -20,41 +20,38 @@ class ViewGlobalSetting extends StatelessWidget {
   Widget build(BuildContext context) {
     final vmGlobalSetting = Get.put(VMGlobalSetting());
 
-    var appbarWidget = PreferredSize(
-      preferredSize: const Size.fromHeight(ConstList.appBarSize),
-      child: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+    var appbarWidget = AppBar(
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () {
+          if (vmGlobalSetting.isChanged) {
+            showDialog(
+              context: context,
+              builder: (_) => ViewBackDialog(
+                    () => vmGlobalSetting.save(),
+                    () => Get.back(id: 1),
+                cancelFunction: () => vmGlobalSetting.isChanged = false,
+              ),
+            );
+          } else {
+            Get.back(id: 1);
+          }
+        },
+      ),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.settings),
           onPressed: () {
-            if (vmGlobalSetting.isChanged) {
-              showDialog(
-                context: context,
-                builder: (_) => ViewBackDialog(
-                  () => vmGlobalSetting.save(),
-                  () => Get.back(id: 1),
-                  cancelFunction: () => vmGlobalSetting.isChanged = false,
-                ),
-              );
-            } else {
-              Get.back(id: 1);
-            }
+            Get.toNamed('/viewFontSource', id: 1);
           },
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              Get.toNamed('/viewFontSource', id: 1);
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: () {
-              vmGlobalSetting.save();
-            },
-          )
-        ],
-      ),
+        IconButton(
+          icon: const Icon(Icons.save),
+          onPressed: () {
+            vmGlobalSetting.save();
+          },
+        )
+      ],
     );
 
     editDialog(int index) {

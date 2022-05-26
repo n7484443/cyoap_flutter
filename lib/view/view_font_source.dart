@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../main.dart';
-
 class ViewFontSource extends StatelessWidget {
   const ViewFontSource({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(ConstList.appBarSize),
-        child: AppBar(),
-      ),
+      appBar: AppBar(),
       body: ListView(
         controller: ScrollController(),
         children: [

@@ -165,6 +165,7 @@ final ThemeData appThemeData = ThemeData(
     iconTheme: IconThemeData(color: Colors.black),
     color: Colors.white,
     elevation: ConstList.elevation,
+    toolbarHeight: ConstList.appBarSize,
   ),
   drawerTheme: const DrawerThemeData(
     backgroundColor: Colors.white,

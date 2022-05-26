@@ -3,7 +3,6 @@ import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../main.dart';
 import '../viewModel/vm_code_editor.dart';
 
 class ViewCodeEditor extends StatelessWidget {
@@ -33,19 +32,16 @@ class ViewCodeEditor extends StatelessWidget {
 
     return WillPopScope(
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(ConstList.appBarSize),
-          child: AppBar(
-            leading: leadingWidget,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.save),
-                onPressed: () {
-                  vmCodeEditor.save();
-                },
-              )
-            ],
-          ),
+        appBar: AppBar(
+          leading: leadingWidget,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.save),
+              onPressed: () {
+                vmCodeEditor.save();
+              },
+            )
+          ],
         ),
         body: Row(
           children: [
@@ -80,7 +76,8 @@ class ViewCodeEditor extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(2.0),
-              child: Obx(() => Column(
+              child: Obx(
+                () => Column(
                   children: [
                     ViewSwitchLabel(
                       () => vmCodeEditor.isOccupySpace.value =

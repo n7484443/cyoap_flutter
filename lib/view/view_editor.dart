@@ -20,37 +20,34 @@ class ViewEditor extends StatelessWidget {
   Widget build(BuildContext context) {
     final VMEditor controller = Get.put(VMEditor());
 
-    var appbarWidget = PreferredSize(
-      preferredSize: const Size.fromHeight(ConstList.appBarSize),
-      child: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            if (controller.title.value.trim().isNotEmpty) {
-              if (controller.isChanged) {
-                showDialog(
-                  context: context,
-                  builder: (_) => ViewBackDialog(
-                    () => controller.save(),
-                    () => Get.back(id: 1),
-                    cancelFunction: () => controller.isChanged = false,
-                  ),
-                );
-              } else {
-                Get.back(id: 1);
-              }
+    var appbarWidget = AppBar(
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () {
+          if (controller.title.value.trim().isNotEmpty) {
+            if (controller.isChanged) {
+              showDialog(
+                context: context,
+                builder: (_) => ViewBackDialog(
+                      () => controller.save(),
+                      () => Get.back(id: 1),
+                  cancelFunction: () => controller.isChanged = false,
+                ),
+              );
+            } else {
+              Get.back(id: 1);
             }
+          }
+        },
+      ),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.save),
+          onPressed: () {
+            Get.find<VMEditor>().save();
           },
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: () {
-              Get.find<VMEditor>().save();
-            },
-          ),
-        ],
-      ),
+      ],
     );
 
     var editingNodeValues = Obx(

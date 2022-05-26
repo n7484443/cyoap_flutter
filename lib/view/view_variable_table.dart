@@ -12,8 +12,15 @@ class ViewVariable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> widgetList;
-    if (isEditable) {
+    if (!ConstList.isDistributed && isEditable) {
       widgetList = [
+        ListTile(
+          onTap: () {
+            Get.toNamed('/viewLayoutSetting', id: 1);
+          },
+          leading: const Icon(Icons.settings),
+          title: const Text('레이아웃 설정'),
+        ),
         ListTile(
           leading: const Icon(Icons.settings),
           title: const Text('이미지 설정'),

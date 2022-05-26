@@ -31,16 +31,13 @@ class ViewPlay extends StatelessWidget {
         }
 
         Get.put(VMVariableTable());
-        var appbar = ConstList.isDistributed ? null : PreferredSize(
-          preferredSize: const Size.fromHeight(ConstList.appBarSize),
-          child: AppBar(
-            leading: IconButton(
-              tooltip: '뒤로가기',
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                Get.back();
-              },
-            ),
+        var appbar = ConstList.isDistributed ? null : AppBar(
+          leading: IconButton(
+            tooltip: '뒤로가기',
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Get.back();
+            },
           ),
         );
         if (ConstList.isSmallDisplay(context)) {
