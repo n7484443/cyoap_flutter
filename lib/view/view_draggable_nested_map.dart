@@ -5,7 +5,7 @@ import 'package:cyoap_flutter/view/util/view_text_outline.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../model/abstract_platform.dart';
+import '../model/design_setting.dart';
 import '../viewModel/vm_choice_node.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
 

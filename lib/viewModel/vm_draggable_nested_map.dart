@@ -24,9 +24,6 @@ class VMDraggableNestedMap extends GetxController {
 
   bool isChanged = false;
 
-  var mainFont = getPlatform.mainFont.obs;
-  var titleFont = getPlatform.titleFont.obs;
-
   bool isCapture = false;
 
   BoxConstraints? constrain;

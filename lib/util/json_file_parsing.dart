@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 
 import '../main.dart';
-import '../model/abstract_platform.dart';
+import '../model/platform.dart';
 import 'base64_to_image.dart';
 
 class JsonProjectParser {

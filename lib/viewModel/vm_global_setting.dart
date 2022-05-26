@@ -97,9 +97,6 @@ class VMGlobalSetting extends GetxController {
 
   void save() {
     getPlatform.setGlobalSetting(initialValueList);
-    var vmDraggable = Get.find<VMDraggableNestedMap>();
-    vmDraggable.titleFont.value = getPlatform.titleFont;
-    vmDraggable.mainFont.value = getPlatform.mainFont;
     Get.find<VMVariableTable>().update();
     isChanged = false;
   }
@@ -118,18 +115,6 @@ class VMGlobalSetting extends GetxController {
       initialValueList[getKey(index)]!.visible = value;
     }
     update();
-  }
-
-  void setTitleFont(String font) {
-    getPlatform.titleFont = font;
-    update();
-    isChanged = true;
-  }
-
-  void setMainFont(String font) {
-    getPlatform.mainFont = font;
-    update();
-    isChanged = true;
   }
 
   void updateColor(Color color) {

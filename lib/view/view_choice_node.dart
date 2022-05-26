@@ -7,7 +7,7 @@ import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
-import 'package:cyoap_flutter/viewModel/vm_layout_setting.dart';
+import 'package:cyoap_flutter/viewModel/vm_design_setting.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
@@ -15,7 +15,7 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../main.dart';
-import '../model/abstract_platform.dart';
+import '../model/platform.dart';
 import '../model/platform_system.dart';
 import '../viewModel/vm_variable_table.dart';
 
@@ -44,7 +44,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
       );
     }
     var nodeController = Get.put(VMChoiceNode.fromNode(node!), tag: node!.tag);
-    var layoutController = Get.find<VMLayoutSetting>();
+    var layoutController = Get.find<VMDesignSetting>();
 
     var baseColor = node!.isCard ? Colors.white : baseNodeColor;
     var mainNode = Ink(
@@ -329,7 +329,7 @@ class ViewChoiceNodeContent extends StatelessWidget {
   final ChoiceNode node;
   final VMChoiceNode controller;
   final VMDraggableNestedMap draggableController;
-  final VMLayoutSetting layoutSetting;
+  final VMDesignSetting layoutSetting;
 
   const ViewChoiceNodeContent(
       this.node, this.controller, this.draggableController, this.layoutSetting,
@@ -358,7 +358,7 @@ class ViewChoiceNodeContent extends StatelessWidget {
         title = TextOutline(
           controller.titleString.value,
           18 * draggableController.scale(context),
-          ConstList.getFont(draggableController.titleFont.value),
+          ConstList.getFont(layoutSetting.titleFont.value),
         );
       }
       Widget contents = IgnorePointer(
@@ -373,7 +373,7 @@ class ViewChoiceNodeContent extends StatelessWidget {
           scrollable: false,
           customStyles: ConstList.getDefaultThemeData(
               context, draggableController.scale(context),
-              fontStyle: ConstList.getFont(draggableController.mainFont.value)),
+              fontStyle: ConstList.getFont(layoutSetting.mainFont.value)),
         ),
       );
       Widget child = ViewWrapCustom(

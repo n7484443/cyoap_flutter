@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
@@ -11,6 +10,7 @@ import 'package:get/get.dart';
 
 import '../main.dart';
 import '../model/image_db.dart';
+import '../model/design_setting.dart';
 import '../viewModel/vm_editor.dart';
 
 class ViewEditor extends StatelessWidget {
@@ -29,8 +29,8 @@ class ViewEditor extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (_) => ViewBackDialog(
-                      () => controller.save(),
-                      () => Get.back(id: 1),
+                  () => controller.save(),
+                  () => Get.back(id: 1),
                   cancelFunction: () => controller.isChanged = false,
                 ),
               );
@@ -124,14 +124,13 @@ class ViewEditor extends StatelessWidget {
                         ? Colors.redAccent
                         : null,
                     hintText: '제목',
-                    hintStyle: ConstList.getFont(getPlatform.titleFont)
-                        .copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24,
-                            color: Colors.white),
+                    hintStyle: titleFont.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                        color: Colors.white),
                     filled: true,
                   ),
-                  style: ConstList.getFont(getPlatform.titleFont).copyWith(
+                  style: titleFont.copyWith(
                     fontWeight: FontWeight.bold,
                     fontSize: 24,
                   ),
@@ -182,9 +181,11 @@ class ViewEditorTyping extends StatelessWidget {
         hex = hex.substring(2);
       }
       hex = '#$hex';
-      controller.formatSelection(background ? BackgroundAttribute(hex) : ColorAttribute(hex));
+      controller.formatSelection(
+          background ? BackgroundAttribute(hex) : ColorAttribute(hex));
     }
-    void colorIconDialog(bool background){
+
+    void colorIconDialog(bool background) {
       Color newColor = const Color(0x00000000);
       showDialog(
         context: context,
@@ -226,6 +227,7 @@ class ViewEditorTyping extends StatelessWidget {
         ),
       );
     }
+
     return Column(
       children: [
         Padding(
@@ -273,7 +275,7 @@ class ViewEditorTyping extends StatelessWidget {
               readOnly: false,
               scrollController: ScrollController(),
               customStyles: ConstList.getDefaultThemeData(context, 1,
-                  fontStyle: ConstList.getFont(getPlatform.mainFont)),
+                  fontStyle: mainFont),
             ),
           ),
         ),

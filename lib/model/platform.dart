@@ -12,7 +12,7 @@ import '../viewModel/vm_draggable_nested_map.dart';
 import 'choiceNode/choice_line.dart';
 import 'choiceNode/generable_parser.dart';
 import 'grammar/value_type.dart';
-import 'layout_setting.dart';
+import 'design_setting.dart';
 
 class AbstractPlatform {
   String stringImageName;
@@ -22,9 +22,7 @@ class AbstractPlatform {
   Map<String, ValueTypeWrapper> globalSetting = {};
   String version;
 
-  String titleFont;
-  String mainFont;
-  PlatformLayoutSetting layoutSetting = PlatformLayoutSetting();
+  PlatformDesignSetting designSetting = PlatformDesignSetting();
 
   void init() {
     checkDataCollect();
@@ -42,18 +40,14 @@ class AbstractPlatform {
     this.stringImageName,
     this.colorBackground,
     this.flag,
-    this.version, {
-    this.titleFont = "notoSans",
-    this.mainFont = "notoSans",
-  });
+    this.version,
+  );
 
   AbstractPlatform.none()
       : stringImageName = '',
         colorBackground = Colors.white,
         flag = 0,
-        version = ConstList.version,
-        titleFont = "notoSans",
-        mainFont = "notoSans";
+        version = ConstList.version;
 
   AbstractPlatform.fromJson(Map<String, dynamic> json)
       : stringImageName = json['stringImageName'] ?? '',
@@ -65,18 +59,19 @@ class AbstractPlatform {
         globalSetting = (json['globalSetting'] as Map)
             .map((k, v) => MapEntry(k, ValueTypeWrapper.fromJson(v))),
         version = json['version'] ?? ConstList.version,
-        titleFont = json['titleFont'] ?? 'notoSans',
-        mainFont = json['mainFont'] ?? 'notoSans';
+        designSetting = PlatformDesignSetting.fromJson(json);
 
-  Map<String, dynamic> toJson() => {
-        'stringImageName': stringImageName,
-        'colorBackground': colorBackground.value,
-        'flag': flag,
-        'globalSetting': globalSetting,
-        'version': version,
-        'titleFont': titleFont,
-        'mainFont': mainFont,
-      };
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> out = {
+      'stringImageName': stringImageName,
+      'colorBackground': colorBackground.value,
+      'flag': flag,
+      'globalSetting': globalSetting,
+      'version': version,
+    };
+    out.addAll(designSetting.toJson());
+    return out;
+  }
 
   void addLineSettingData(LineSetting lineSetting) {
     while (lineSettings.length <= lineSetting.currentPos) {
@@ -93,6 +88,7 @@ class AbstractPlatform {
     parent.addChildren(node, pos: pos.last);
     checkDataCollect();
   }
+
   void insertData(ChoiceNode nodeA, ChoiceNode nodeB) {
     var parentA = nodeA.parent!;
     var parentB = nodeB.parent!;
@@ -102,7 +98,9 @@ class AbstractPlatform {
     parentB.addChildren(nodeA, pos: posB);
     checkDataCollect();
   }
-  void insertDataWithParent(ChoiceNode nodeA, GenerableParserAndPosition parentB) {
+
+  void insertDataWithParent(
+      ChoiceNode nodeA, GenerableParserAndPosition parentB) {
     var parentA = nodeA.parent!;
 
     parentA.removeChildren(nodeA);
@@ -192,7 +190,7 @@ class AbstractPlatform {
       }
       VariableDataBase().clearLocalVariable();
     }
-    if(Get.isRegistered<VMDraggableNestedMap>()){
+    if (Get.isRegistered<VMDraggableNestedMap>()) {
       Get.find<VMDraggableNestedMap>().update();
     }
   }
@@ -229,6 +227,4 @@ class AbstractPlatform {
   }
 }
 
-TextStyle get titleFont => ConstList.getFont(getPlatform.titleFont);
-TextStyle get mainFont => ConstList.getFont(getPlatform.mainFont);
 Color get baseNodeColor => getPlatform.colorBackground.lighten();
