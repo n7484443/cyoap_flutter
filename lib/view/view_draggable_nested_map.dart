@@ -119,7 +119,7 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
 
     var divider = Divider(
       thickness: 4,
-      color: getPlatform.colorBackground.computeLuminance() > 0.5
+      color: getPlatform.designSetting.colorBackground.computeLuminance() > 0.5
           ? Colors.black45
           : Colors.white30,
     );

@@ -2,15 +2,11 @@ import 'package:cyoap_flutter/model/grammar/value_type.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/viewModel/vm_global_setting.dart';
-import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
-
-import '../main.dart';
-import '../model/platform_system.dart';
 
 class ViewGlobalSetting extends StatelessWidget {
   const ViewGlobalSetting({Key? key}) : super(key: key);
@@ -192,73 +188,7 @@ class ViewGlobalSetting extends StatelessWidget {
 
     return Scaffold(
       appBar: appbarWidget,
-      body: Row(
-        children: [
-          Expanded(
-            flex: ConstList.isSmallDisplay(context) ? 1 : 3,
-            child: Column(
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: initialValueList,
-                ),
-                const Divider(
-                  thickness: 5,
-                ),
-                Expanded(
-                  child: GetBuilder<VMGlobalSetting>(
-                    builder: (_) => TextField(
-                      controller: vmGlobalSetting.controllerGlobal,
-                      textAlign: TextAlign.center,
-                      scrollController: ScrollController(),
-                      maxLines: null,
-                      expands: true,
-                      decoration: const InputDecoration(
-                        hintText: '기초 코드(미구현)',
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: ListView(
-                      controller: ScrollController(),
-                      children: [
-                        ColorPicker(
-                          color: getPlatform.colorBackground,
-                          heading: const Text('배경색 설정'),
-                          subheading: const Text('색조 설정'),
-                          onColorChanged: (Color value) {
-                            vmGlobalSetting.updateColor(value);
-                          },
-                          pickersEnabled: {
-                            ColorPickerType.wheel: true,
-                            ColorPickerType.accent: false
-                          },
-                          pickerTypeLabels: {
-                            ColorPickerType.primary: "배경색",
-                            ColorPickerType.wheel: "색상 선택"
-                          },
-                          width: 22,
-                          height: 22,
-                          borderRadius: 22,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+      body: initialValueList,
     );
   }
 }

@@ -2,9 +2,7 @@ import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
-import 'package:cyoap_flutter/util/color_util.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../util/version.dart';
@@ -16,7 +14,6 @@ import 'design_setting.dart';
 
 class AbstractPlatform {
   String stringImageName;
-  Color colorBackground;
   List<LineSetting> lineSettings = List.empty(growable: true);
   Map<String, ValueTypeWrapper> globalSetting = {};
   String version;
@@ -37,21 +34,15 @@ class AbstractPlatform {
 
   AbstractPlatform(
     this.stringImageName,
-    this.colorBackground,
     this.version,
   );
 
   AbstractPlatform.none()
       : stringImageName = '',
-        colorBackground = Colors.white,
         version = ConstList.version;
 
   AbstractPlatform.fromJson(Map<String, dynamic> json)
       : stringImageName = json['stringImageName'] ?? '',
-        colorBackground =
-            (json['colorBackground'] != null && json['colorBackground'] is int)
-                ? Color(json['colorBackground'])
-                : Colors.white,
         globalSetting = (json['globalSetting'] as Map)
             .map((k, v) => MapEntry(k, ValueTypeWrapper.fromJson(v))),
         version = json['version'] ?? ConstList.version,
@@ -60,7 +51,6 @@ class AbstractPlatform {
   Map<String, dynamic> toJson() {
     Map<String, dynamic> out = {
       'stringImageName': stringImageName,
-      'colorBackground': colorBackground.value,
       'globalSetting': globalSetting,
       'version': version,
     };
@@ -221,5 +211,3 @@ class AbstractPlatform {
     }
   }
 }
-
-Color get baseNodeColor => getPlatform.colorBackground.lighten();

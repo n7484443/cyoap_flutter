@@ -228,7 +228,7 @@ class VMDraggableNestedMap extends GetxController {
     }
   }
 
-  Color get backgroundColor => getPlatform.colorBackground;
+  Color get backgroundColor => getPlatform.designSetting.colorBackground;
 
   double scale(BuildContext context) {
     var sizeMultiply = ConstList.isSmallDisplay(context) ? 0.85 : 1.0;

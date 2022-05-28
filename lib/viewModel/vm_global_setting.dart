@@ -1,6 +1,5 @@
 import 'package:cyoap_flutter/model/grammar/value_type.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
-import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -115,10 +114,5 @@ class VMGlobalSetting extends GetxController {
       initialValueList[getKey(index)]!.visible = value;
     }
     update();
-  }
-
-  void updateColor(Color color) {
-    getPlatform.colorBackground = color;
-    Get.find<VMDraggableNestedMap>().update();
   }
 }
