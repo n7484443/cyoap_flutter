@@ -19,92 +19,93 @@ class ViewDesignSetting extends GetView<VMDesignSetting> {
         padding: const EdgeInsets.all(ConstList.padding),
         child: ListView(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(ConstList.padding),
-              child: Obx(
-                () => Wrap(
-                  children: [
-                    Row(
-                      children: [
-                        ViewSwitchLabel(
-                          label: "제목을 이미지 위에 겹치기",
-                          () {
-                            controller.titleOverlap.value =
-                                !controller.titleOverlap.value;
-                          },
-                          controller.titleOverlap.value,
-                        ),
-                        ViewSwitchLabel(
-                          label: "제목을 위로",
-                          () {
-                            controller.titlePosition.value =
-                                !controller.titlePosition.value;
-                          },
-                          controller.titlePosition.value,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: DropdownButtonFormField<String>(
-                            decoration:
-                                const InputDecoration(labelText: '제목 폰트'),
-                            items: ConstList.textFontList.keys
-                                .map<DropdownMenuItem<String>>((name) =>
-                                    DropdownMenuItem(
-                                        value: name,
-                                        child: Text(name,
-                                            style: ConstList.getFont(name))))
-                                .toList(),
-                            onChanged: (String? t) {
-                              if (t != null) controller.setTitleFont(t);
-                            },
-                            value: controller.titleFont.value,
-                          ),
-                        ),
-                        const Spacer(),
-                        Expanded(
-                          child: DropdownButtonFormField<String>(
-                            decoration:
-                                const InputDecoration(labelText: '내용 폰트'),
-                            items: ConstList.textFontList.keys
-                                .map<DropdownMenuItem<String>>((name) =>
-                                    DropdownMenuItem(
-                                        value: name,
-                                        child: Text(name,
-                                            style: ConstList.getFont(name))))
-                                .toList(),
-                            onChanged: (String? t) {
-                              if (t != null) controller.setMainFont(t);
-                            },
-                            value: controller.mainFont.value,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+            Obx(
+              () => Wrap(
+                children: [
+                  Row(
+                    children: [
+                      ViewSwitchLabel(
+                        label: "제목을 이미지 위에 겹치기",
+                        () {
+                          controller.titleOverlap.value =
+                              !controller.titleOverlap.value;
+                        },
+                        controller.titleOverlap.value,
+                      ),
+                      ViewSwitchLabel(
+                        label: "제목을 위로",
+                        () {
+                          controller.titlePosition.value =
+                              !controller.titlePosition.value;
+                        },
+                        controller.titlePosition.value,
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            ColorPicker(
-              color: controller.colorBackground.value,
-              heading: const Text('배경색 설정'),
-              subheading: const Text('색조 설정'),
-              onColorChanged: (Color value) {
-                controller.updateColor(value);
-              },
-              pickersEnabled: {
-                ColorPickerType.wheel: true,
-                ColorPickerType.accent: false
-              },
-              pickerTypeLabels: {
-                ColorPickerType.primary: "배경색",
-                ColorPickerType.wheel: "색상 선택"
-              },
-              width: 22,
-              height: 22,
-              borderRadius: 22,
+            Obx(
+              () => Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: ColorPicker(
+                      color: controller.colorBackground.value,
+                      heading: const Text('배경색 설정'),
+                      subheading: const Text('색조 설정'),
+                      onColorChanged: (Color value) {
+                        controller.updateColor(value);
+                      },
+                      pickersEnabled: {
+                        ColorPickerType.wheel: true,
+                        ColorPickerType.accent: false
+                      },
+                      pickerTypeLabels: {
+                        ColorPickerType.primary: "배경색",
+                        ColorPickerType.wheel: "색상 선택"
+                      },
+                      width: 22,
+                      height: 22,
+                      borderRadius: 22,
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        DropdownButtonFormField<String>(
+                          decoration: const InputDecoration(labelText: '제목 폰트'),
+                          items: ConstList.textFontList.keys
+                              .map<DropdownMenuItem<String>>((name) =>
+                                  DropdownMenuItem(
+                                      value: name,
+                                      child: Text(name,
+                                          style: ConstList.getFont(name))))
+                              .toList(),
+                          onChanged: (String? t) {
+                            if (t != null) controller.setTitleFont(t);
+                          },
+                          value: controller.titleFont.value,
+                        ),
+                        DropdownButtonFormField<String>(
+                          decoration: const InputDecoration(labelText: '내용 폰트'),
+                          items: ConstList.textFontList.keys
+                              .map<DropdownMenuItem<String>>((name) =>
+                                  DropdownMenuItem(
+                                      value: name,
+                                      child: Text(name,
+                                          style: ConstList.getFont(name))))
+                              .toList(),
+                          onChanged: (String? t) {
+                            if (t != null) controller.setMainFont(t);
+                          },
+                          value: controller.mainFont.value,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
             Obx(
               () => ColoredBox(
