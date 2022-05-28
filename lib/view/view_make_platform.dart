@@ -3,7 +3,7 @@ import 'package:cyoap_flutter/view/view_editor.dart';
 import 'package:cyoap_flutter/view/view_font_source.dart';
 import 'package:cyoap_flutter/view/view_global_settings.dart';
 import 'package:cyoap_flutter/view/view_image_editor.dart';
-import 'package:cyoap_flutter/view/view_layout.dart';
+import 'package:cyoap_flutter/view/view_design.dart';
 import 'package:cyoap_flutter/view/view_make.dart';
 import 'package:cyoap_flutter/view/view_source.dart';
 import 'package:cyoap_flutter/view/view_variable_table.dart';
@@ -53,7 +53,7 @@ class ViewMakePlatform extends StatelessWidget {
             );
           case '/viewLayoutSetting':
             return GetPageRoute(
-              page: () => const ViewLayoutSetting(),
+              page: () => const ViewDesignSetting(),
             );
           default:
             return null;

@@ -124,6 +124,9 @@ class ImageDB {
     if(index == -1){
       return "";
     }
+    if(ImageDB().imageList.length <= index){
+      return "";
+    }
     return ImageDB().imageList[index];
   }
 

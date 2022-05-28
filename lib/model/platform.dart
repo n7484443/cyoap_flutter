@@ -17,7 +17,6 @@ import 'design_setting.dart';
 class AbstractPlatform {
   String stringImageName;
   Color colorBackground;
-  int flag;
   List<LineSetting> lineSettings = List.empty(growable: true);
   Map<String, ValueTypeWrapper> globalSetting = {};
   String version;
@@ -39,14 +38,12 @@ class AbstractPlatform {
   AbstractPlatform(
     this.stringImageName,
     this.colorBackground,
-    this.flag,
     this.version,
   );
 
   AbstractPlatform.none()
       : stringImageName = '',
         colorBackground = Colors.white,
-        flag = 0,
         version = ConstList.version;
 
   AbstractPlatform.fromJson(Map<String, dynamic> json)
@@ -55,7 +52,6 @@ class AbstractPlatform {
             (json['colorBackground'] != null && json['colorBackground'] is int)
                 ? Color(json['colorBackground'])
                 : Colors.white,
-        flag = json['flag'] ?? 0,
         globalSetting = (json['globalSetting'] as Map)
             .map((k, v) => MapEntry(k, ValueTypeWrapper.fromJson(v))),
         version = json['version'] ?? ConstList.version,
@@ -65,7 +61,6 @@ class AbstractPlatform {
     Map<String, dynamic> out = {
       'stringImageName': stringImageName,
       'colorBackground': colorBackground.value,
-      'flag': flag,
       'globalSetting': globalSetting,
       'version': version,
     };

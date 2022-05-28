@@ -19,7 +19,7 @@ class ViewVariable extends StatelessWidget {
             Get.toNamed('/viewLayoutSetting', id: 1);
           },
           leading: const Icon(Icons.settings),
-          title: const Text('레이아웃 설정'),
+          title: const Text('디자인 설정'),
         ),
         ListTile(
           leading: const Icon(Icons.settings),
