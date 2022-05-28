@@ -3,18 +3,10 @@ import 'dart:io';
 import 'package:cyoap_flutter/main.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProjectPath {
   List<String> pathList = List.empty(growable: true);
-
-  Future<bool> getStatuses() async {
-    if (await Permission.storage.isDenied) {
-      await Permission.storage.request();
-    }
-    return await Permission.storage.isGranted;
-  }
 
   Future<bool> get androidVersion async{
     var deviceInfoPlugin = DeviceInfoPlugin();

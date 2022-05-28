@@ -36,10 +36,6 @@ class VMStartPlatform extends GetxController {
 
   Future<int> addDirectory() async {
     if (ConstList.isMobile()) {
-      var status = await frequentlyUsedPath.getStatuses();
-      if (!status) {
-        return -1;
-      }
       textInputController.text = "";
       Get.dialog(
         AlertDialog(
@@ -81,12 +77,6 @@ class VMStartPlatform extends GetxController {
   }
 
   Future<int> addFile() async {
-    if (ConstList.isMobile()) {
-      var status = await frequentlyUsedPath.getStatuses();
-      if (!status) {
-        return -1;
-      }
-    }
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['zip', 'json'],
@@ -108,12 +98,6 @@ class VMStartPlatform extends GetxController {
 
   Future<bool> openProject() async {
     if (selected.value >= 0) {
-      if (ConstList.isMobile()) {
-        if (!await frequentlyUsedPath.getStatuses()) {
-          return false;
-        }
-      }
-
       await Future.wait(isAdded);
 
       isAdded.clear();
