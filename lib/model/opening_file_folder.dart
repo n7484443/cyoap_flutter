@@ -72,7 +72,7 @@ class ProjectPath {
       pathList = await frequentPathFromData;
     }else{
       pathList = await frequentPathFromData;
-      pathList.removeAt(pathList.length);
+      pathList.removeAt(index);
       await setFrequentPathFromData(pathList.toList());
     }
   }
