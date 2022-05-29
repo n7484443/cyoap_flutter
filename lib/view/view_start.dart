@@ -146,7 +146,6 @@ class SelectMode extends GetView<VMStartPlatform> {
                 'Play',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Colors.black,
                   fontWeight: FontWeight.bold,
                   fontSize: 56,
                 ),
@@ -167,7 +166,6 @@ class SelectMode extends GetView<VMStartPlatform> {
                 'Make',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Colors.black,
                   fontWeight: FontWeight.bold,
                   fontSize: 56,
                 ),

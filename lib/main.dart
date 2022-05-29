@@ -155,25 +155,17 @@ void main() {
         }),
         theme: appThemeData,
         defaultTransition: Transition.fade,
+        debugShowCheckedModeBanner: false,
       ),
     );
   }).then((value) => ConstList.init());
 }
 
 final ThemeData appThemeData = ThemeData(
-  primaryColor: Colors.black,
+  colorSchemeSeed: Colors.blueAccent,
   textTheme: GoogleFonts.notoSansTextTheme(),
-  scaffoldBackgroundColor: Colors.white,
-  iconTheme: const IconThemeData(color: Colors.black),
   appBarTheme: const AppBarTheme(
-    iconTheme: IconThemeData(color: Colors.black),
-    color: Colors.white,
-    elevation: ConstList.elevation,
     toolbarHeight: ConstList.appBarSize,
-  ),
-  drawerTheme: const DrawerThemeData(
-    backgroundColor: Colors.white,
-    elevation: ConstList.elevation,
   ),
   useMaterial3: true,
 );
