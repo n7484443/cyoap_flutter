@@ -124,7 +124,7 @@ class ViewDesignSetting extends GetView<VMDesignSetting> {
                               "디자인",
                               "[{\"insert\":\"레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.\\n\"}]",
                               "noImage",
-                            )..currentPos = 0,
+                            )..currentPos = -1,
                           ),
                         ),
                       ),
@@ -141,7 +141,7 @@ class ViewDesignSetting extends GetView<VMDesignSetting> {
                               "noImage",
                             )
                               ..isRound = false
-                              ..currentPos = 1,
+                              ..currentPos = -2,
                           ),
                         ),
                       )

@@ -26,8 +26,8 @@ class PlatformSystem {
   }
 
   Future<void> openPlatformZip(File file) async {
-    var bytes = await file.readAsBytes();
     platformFileSystem.path = file.parent.path;
+    var bytes = await file.readAsBytes();
 
     var archiveBytes = ZipDecoder().decodeBytes(bytes);
     await platformFileSystem.createFromZip(archiveBytes);
