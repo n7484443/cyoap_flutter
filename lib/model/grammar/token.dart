@@ -5,9 +5,10 @@ class Token {
   int type;
   String dataString;
 
-  Token(this.type, this.dataString);
+  Token(this.type, {this.dataString = ""});
+
   Token changeUnitType(int newType) {
-    return Token(newType, dataString);
+    return Token(newType, dataString: dataString);
   }
 
   void addUnitData(String newData) {

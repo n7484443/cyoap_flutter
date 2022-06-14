@@ -15,7 +15,6 @@ class Functions {
     functionMap['-'] = funcMinus;
     functionMap['*'] = funcMulti;
     functionMap['/'] = funcDiv;
-    functionMap['='] = funcSet;
     functionMap['=='] = funcEqual;
     functionMap['!='] = funcNotEqual;
     functionMap['>'] = funcBigger;
@@ -119,7 +118,13 @@ class Functions {
     }
   }
 
-  ValueType funcSet(List<ValueType> input) {
+  ValueType funcSetVariable(List<ValueType> input) {
+    return input[0];
+  }
+  ValueType funcSetLocal(List<ValueType> input) {
+    return input[0];
+  }
+  ValueType funcSetGlobal(List<ValueType> input) {
     return input[0];
   }
 

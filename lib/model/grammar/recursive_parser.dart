@@ -86,7 +86,7 @@ class RecursiveParser extends RecursiveUnit {
         return childNode[2].unzip();
       }
     }
-    if (value.data == Analyser().functionList.funcSet) {
+    if (value.data == Analyser().functionList.funcSetVariable) {
       var unzippedData0 = childNode[0].unzip();
       var unzippedData1 = childNode[1].unzip();
       if(unzippedData0 is! VariableUnit){

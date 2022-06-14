@@ -25,4 +25,14 @@ class AnalyserConst {
   static const int functionEnd = 31;
   /// ,
   static const int functionComma = 40;
+
+  /// if
+  static const int functionIf = 45;
+  /// else
+  static const int functionElse = 46;
+
+  /// {
+  static const int blockStart = 50;
+  /// }
+  static const int blockEnd = 51;
 }

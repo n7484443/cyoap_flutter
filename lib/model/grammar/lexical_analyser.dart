@@ -5,10 +5,10 @@ class LexicalAnalyser {
   /*
     어휘분석기. 토큰으로 변환한다.
      */
-  List<Token> analyse(String input) {
+  List<Token> analyse(List<String> input) {
     bool isStringInput = false;
-    List<Token> tokenList = List.empty(growable: true);
     Token? tokenAdded;
+    List<Token> tokenList = List.empty(growable: true);
 
     void addToken() {
       if (tokenAdded != null) {
@@ -23,8 +23,13 @@ class LexicalAnalyser {
             } else {
               tokenAdded.type = AnalyserConst.ints;
             }
-          } else if (tokenAdded.dataString == "true" || tokenAdded.dataString == "false") {
+          } else if (tokenAdded.dataString == "true" ||
+              tokenAdded.dataString == "false") {
             tokenAdded.type = AnalyserConst.bools;
+          } else if (tokenAdded.dataString == "if") {
+            tokenAdded.type = AnalyserConst.functionIf;
+          } else if (tokenAdded.dataString == "else") {
+            tokenAdded.type = AnalyserConst.functionElse;
           } else {
             tokenAdded.type = AnalyserConst.variableName;
           }
@@ -32,107 +37,127 @@ class LexicalAnalyser {
         tokenList.add(tokenAdded);
       }
     }
-    var isCommitLine = false;
-    outerLoop:for (int i = 0; i < input.length; i++) {
-      var c = input[i];
-      switch (c) {
-        case '/':
-          if(isCommitLine){
-            tokenAdded = null;
-            break outerLoop;
-          }else{
-            isCommitLine = true;
-            addToken();
-            tokenAdded = Token(AnalyserConst.functionUnspecified, c);
-          }
-          break;
-        case '-':
-        case '+':
-        case '*':
-        case '<':
-        case '>':
-          addToken();
-          tokenAdded = Token(AnalyserConst.functionUnspecified, c);
-          break;
-        case '=':
-          if (tokenAdded != null) {
-            if (tokenAdded.type == AnalyserConst.functionUnspecified) {
-              if (tokenAdded.dataString == '+' ||
-                  tokenAdded.dataString == '-' ||
-                  tokenAdded.dataString == '*' ||
-                  tokenAdded.dataString == '/') {
-                tokenList.add(Token(AnalyserConst.functionUnspecified, '='));
-                tokenList.add(tokenList[tokenList.length - 2]);
-                tokenList.add(tokenAdded);
-                tokenAdded = null;
-              } else {
-                tokenAdded.addUnitData(c);
-              }
-            }
-            addToken();
-            tokenAdded = null;
-          } else {
-            tokenAdded = Token(AnalyserConst.functionUnspecified, c);
-          }
-          break;
-        case '\'':
-        case '"':
-          if (isStringInput) {
-            tokenList.add(tokenAdded!);
-            tokenAdded = null;
-          } else {
-            tokenAdded = Token(AnalyserConst.strings, "");
-          }
-          isStringInput = !isStringInput;
 
-          break;
-        case '(':
-          if (tokenAdded != null) {
-            tokenAdded.type = AnalyserConst.function;
-            tokenList.add(tokenAdded);
-            tokenAdded = null;
-          }
-          tokenList.add(Token(AnalyserConst.functionStart, "("));
-          break;
-        case ')':
-          addToken();
-          tokenAdded = null;
-          tokenList.add(Token(AnalyserConst.functionEnd, ")"));
-          break;
-        case ',':
-          addToken();
-          tokenAdded = null;
-          tokenList.add(Token(AnalyserConst.functionComma, ","));
-          break;
-        case '!':
-          tokenAdded = Token(AnalyserConst.functionUnspecified, "!");
-          break;
-        case ' ':
-          if (!isStringInput) {
+    var isCommitLine = false;
+    for (var line in input) {
+      if (line.trim().isEmpty) {
+        continue;
+      }
+      line = line.trim();
+      for (int i = 0; i < line.length; i++) {
+        var c = line[i];
+        switch (c) {
+          case '/':
+            if (isCommitLine) {
+              tokenAdded = null;
+              break;
+            } else {
+              isCommitLine = true;
+              addToken();
+              tokenAdded =
+                  Token(AnalyserConst.functionUnspecified, dataString: c);
+            }
+            break;
+          case '-':
+          case '+':
+          case '*':
+          case '<':
+          case '>':
+            addToken();
+            tokenAdded =
+                Token(AnalyserConst.functionUnspecified, dataString: c);
+            break;
+          case '=':
+            if (tokenAdded != null) {
+              if (tokenAdded.type == AnalyserConst.functionUnspecified) {
+                if (tokenAdded.dataString == '+' ||
+                    tokenAdded.dataString == '-' ||
+                    tokenAdded.dataString == '*' ||
+                    tokenAdded.dataString == '/') {
+                  tokenList.add(Token(AnalyserConst.functionUnspecified,
+                      dataString: '='));
+                  tokenList.add(tokenList[tokenList.length - 2]);
+                  tokenList.add(tokenAdded);
+                  tokenAdded = null;
+                } else {
+                  tokenAdded.addUnitData(c);
+                }
+              }
+              addToken();
+              tokenAdded = null;
+            } else {
+              tokenAdded =
+                  Token(AnalyserConst.functionUnspecified, dataString: c);
+            }
+            break;
+          case '\'':
+          case '"':
+            if (isStringInput) {
+              tokenList.add(tokenAdded!);
+              tokenAdded = null;
+            } else {
+              tokenAdded = Token(AnalyserConst.strings);
+            }
+            isStringInput = !isStringInput;
+
+            break;
+          case '(':
+            if (tokenAdded != null) {
+              tokenAdded.type = AnalyserConst.function;
+              tokenList.add(tokenAdded);
+              tokenAdded = null;
+            }
+            tokenList.add(Token(AnalyserConst.functionStart));
+            break;
+          case ')':
             addToken();
             tokenAdded = null;
-          } else {
-            tokenAdded!.addUnitData(c);
-          }
-          break;
-        default:
-          if (tokenAdded == null) {
-            tokenAdded = Token(AnalyserConst.unspecified, c);
-          } else if (tokenAdded.type == AnalyserConst.functionUnspecified) {
-            if (tokenList.last.type == AnalyserConst.functionUnspecified &&
-                (tokenAdded.dataString == '+' || tokenAdded.dataString == '-')) {
-              tokenAdded.type = AnalyserConst.unspecified;
-              tokenAdded.addUnitData(c);
-            } else {
+            tokenList.add(Token(AnalyserConst.functionEnd));
+            break;
+          case ',':
+            addToken();
+            tokenAdded = null;
+            tokenList.add(Token(AnalyserConst.functionComma));
+            break;
+          case '!':
+            tokenAdded =
+                Token(AnalyserConst.functionUnspecified, dataString: "!");
+            break;
+          case '{':
+            tokenAdded = Token(AnalyserConst.blockStart);
+            break;
+          case '}':
+            tokenAdded = Token(AnalyserConst.blockEnd);
+            break;
+          case ' ':
+            if (!isStringInput) {
               addToken();
-              tokenAdded = Token(AnalyserConst.unspecified, c);
+              tokenAdded = null;
+            } else {
+              tokenAdded!.addUnitData(c);
             }
-          } else {
-            tokenAdded.addUnitData(c);
-          }
-          break;
+            break;
+          default:
+            if (tokenAdded == null) {
+              tokenAdded = Token(AnalyserConst.unspecified, dataString: c);
+            } else if (tokenAdded.type == AnalyserConst.functionUnspecified) {
+              if (tokenList.last.type == AnalyserConst.functionUnspecified &&
+                  (tokenAdded.dataString == '+' ||
+                      tokenAdded.dataString == '-')) {
+                tokenAdded.type = AnalyserConst.unspecified;
+                tokenAdded.addUnitData(c);
+              } else {
+                addToken();
+                tokenAdded = Token(AnalyserConst.unspecified, dataString: c);
+              }
+            } else {
+              tokenAdded.addUnitData(c);
+            }
+            break;
+        }
       }
     }
+
     addToken();
     return tokenList;
   }

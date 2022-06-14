@@ -10,11 +10,57 @@ class SemanticAnalyser {
   RecursiveUnit parserComma = RecursiveData(ValueType.comma());
   RecursiveUnit parserEnd = RecursiveData(ValueType.comma());
 
-  RecursiveUnit compile(List<Token> tokens) {
-    return analyseLines(tokens);
-  }
-
   List<Token> tokens = List.empty(growable: true);
+
+  RecursiveUnit loopRecursive(List<Token> tokens) {
+    var motherUnit = RecursiveParser(ValueType.none());
+    List<RecursiveUnit> stack = List.empty(growable: true);
+    while (tokens.isNotEmpty) {
+      var token = tokens.removeAt(0);
+      switch (token.type) {
+        case AnalyserConst.functionEnd | AnalyserConst.functionComma:
+          if (stack.length == 1) {
+            motherUnit.add(stack.removeLast());
+          } else {
+            var t = stack.removeLast();
+            stack.last.childNode.add(t);
+          }
+          break;
+        case AnalyserConst.function:
+          stack.add(RecursiveParser(ValueType(token.data)));
+          break;
+        case AnalyserConst.variableLet:
+          stack.add(RecursiveParser(
+              ValueType(Analyser().functionList.funcSetGlobal)));
+          break;
+        case AnalyserConst.variableVar:
+          stack.add(
+              RecursiveParser(ValueType(Analyser().functionList.funcSetLocal)));
+          break;
+        case AnalyserConst.variableName:
+          stack.add(RecursiveParser(
+              ValueType(Analyser().functionList.funcSetVariable)));
+          break;
+        case AnalyserConst.functionUnspecified:
+          var functionParser = RecursiveParser(ValueType(token.data));
+          var before = stack.removeLast();
+          functionParser.childNode.add(before);
+          stack.add(functionParser);
+          break;
+        default:
+          if (stack.last.value.data ==
+              Analyser().functionList.funcSetVariable) {
+            stack.last.childNode
+                .add(RecursiveData(ValueType(VariableUnit(token.dataString))));
+          } else {
+            stack.last.childNode.add(RecursiveData(ValueType(token.data)));
+          }
+          break;
+      }
+    }
+
+    return motherUnit;
+  }
 
   RecursiveUnit recursiveCreate(RecursiveUnit motherUnit) {
     if (tokens.isEmpty) {
@@ -111,10 +157,13 @@ class SemanticAnalyser {
     var parserAns = recursiveCreate(parser);
 
     if (analysedData[equalPos - 1].type == AnalyserConst.variableName) {
-      var createGlobal = equalPos == 2 ? analysedData[0].type == AnalyserConst.variableLet : null;
+      var createGlobal = equalPos == 2
+          ? analysedData[0].type == AnalyserConst.variableLet
+          : null;
       var recursive = RecursiveData(
           ValueType(VariableUnit(analysedData[equalPos - 1].dataString)));
-      return RecursiveParser(ValueType(Analyser().functionList.funcSet), createAsGlobal: createGlobal)
+      return RecursiveParser(ValueType(Analyser().functionList.funcSetVariable),
+          createAsGlobal: createGlobal)
         ..add(recursive)
         ..add(parserAns);
     }

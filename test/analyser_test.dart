@@ -70,18 +70,6 @@ void main() {
     expect(ins.getValueType('comp2')?.data, true);
     expect(ins.getValueType('comp3')?.data, false);
   });
-
-  test('ifTest', () {
-    String strTest = """
-    if(numberTest0 == -5.5, var alpha = 11, var beta = 15)
-    if(numberTest0 != -5.5, var gamma = 12, var omega = 16)
-    """;
-    Analyser().run(Analyser().analyseCodes(strTest));
-    expect(ins.getValueType('alpha')?.data, 11);
-    expect(ins.getValueType('beta')?.data, null);
-    expect(ins.getValueType('gamma')?.data, null);
-    expect(ins.getValueType('omega')?.data, 16);
-  });
   test('addTest', () {
     var addTestStr = """
     var test_alpha = 1
@@ -159,5 +147,25 @@ void main() {
     expect(ins.getValueType('commentTest')?.data, 123);
     expect(ins.getValueType('asb')?.data, null);
     expect(ins.getValueType('commentTest1')?.data, 0);
+  });
+
+  test('ifTest', () {
+    String strTest = """
+    if(numberTest0 == -5.5){
+      var alpha = 11
+    }else{
+      var beta = 15
+    }
+    if(numberTest0 != -5.5){
+      var gamma = 12
+    }else{
+      var omega = 16
+    }
+    """;
+    Analyser().run(Analyser().analyseCodes(strTest));
+    expect(ins.getValueType('alpha')?.data, 11);
+    expect(ins.getValueType('beta')?.data, null);
+    expect(ins.getValueType('gamma')?.data, null);
+    expect(ins.getValueType('omega')?.data, 16);
   });
 }

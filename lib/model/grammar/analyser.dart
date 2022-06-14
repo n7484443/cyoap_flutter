@@ -1,6 +1,7 @@
 import 'package:cyoap_flutter/model/grammar/lexical_analyser.dart';
 import 'package:cyoap_flutter/model/grammar/recursive_parser.dart';
 import 'package:cyoap_flutter/model/grammar/semantic_analyser.dart';
+import 'package:flutter/foundation.dart';
 
 import 'function_list.dart';
 import 'token.dart';
@@ -9,6 +10,7 @@ class Analyser {
   Analyser._init() {
     functionList.init();
   }
+
   static final Analyser _instance = Analyser._init();
 
   factory Analyser() {
@@ -23,32 +25,32 @@ class Analyser {
   List<RecursiveUnit> analyse(String codeInput) {
     List<RecursiveUnit> recursiveList = List.empty(growable: true);
     var codes = codeInput.split('\n');
-    for (var code in codes) {
-      if (code.trim().isEmpty) {
-        continue;
+    var tokens = lexicalAnalyser.analyse(codes);
+    if (kDebugMode) {
+      print(tokens);
+    }
+    try {
+      if (syntaxAnalyser.checkSyntax(tokens)) {
+        var t = semanticAnalyser.analyseLines(tokens);
+        recursiveList.add(t);
       }
-      try {
-        var tokens = lexicalAnalyser.analyse(code);
-        if (syntaxAnalyser.checkSyntax(tokens)) {
-          var t = semanticAnalyser.compile(tokens);
-          recursiveList.add(t);
-        }
-      } catch (e) {
-        print('something wrong in $code');
+    } catch (e) {
+      if (kDebugMode) {
+        print('something wrong in $codes');
       }
     }
     return recursiveList;
   }
 
-  void run(List<RecursiveUnit>? unitList){
-    if(unitList == null)return;
-    for(var unit in unitList){
+  void run(List<RecursiveUnit>? unitList) {
+    if (unitList == null) return;
+    for (var unit in unitList) {
       unit.unzip();
     }
   }
 
-  dynamic check(RecursiveUnit? unitList){
-    if(unitList == null)return null;
+  dynamic check(RecursiveUnit? unitList) {
+    if (unitList == null) return null;
     return unitList.unzip().dataUnzip();
   }
 
