@@ -73,6 +73,7 @@ class ConstList {
   static Map<String, TextStyle> textFontList = {
     "jua": GoogleFonts.jua(color: Colors.black),
     "notoSans": GoogleFonts.notoSans(color: Colors.black),
+    "notoSerif": GoogleFonts.notoSerif(color: Colors.black),
     "나눔고딕": GoogleFonts.nanumGothic(color: Colors.black),
     "나눔손글씨 붓": GoogleFonts.nanumBrushScript(color: Colors.black),
     "나눔손글씨 펜": GoogleFonts.nanumPenScript(color: Colors.black),
