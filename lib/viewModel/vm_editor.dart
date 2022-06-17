@@ -26,6 +26,7 @@ class VMEditor extends GetxController {
   var isSelectable = NodeEditor().target.isSelectable.obs;
   var isRandom = NodeEditor().target.isRandom.obs;
   var maximizingImage = NodeEditor().target.maximizingImage.obs;
+  var hideTitle = NodeEditor().target.hideTitle.obs;
 
   bool isChanged = false;
 
@@ -52,9 +53,14 @@ class VMEditor extends GetxController {
       isChanged = true;
     });
 
+    hideTitle.listen((value){
+      isChanged = true;
+    });
+
     controllerRandom.addListener(() {
       isChanged = true;
     });
+
 
     controllerRandom.text = NodeEditor().target.maxRandom.toString();
 
@@ -86,6 +92,7 @@ class VMEditor extends GetxController {
     NodeEditor().target.isSelectable = isSelectable.value;
     NodeEditor().target.isRound = isRound.value;
     NodeEditor().target.isCard = isCard.value;
+    NodeEditor().target.hideTitle = hideTitle.value;
 
     quillController.updateSelection(
         const TextSelection.collapsed(offset: 0), ChangeSource.REMOTE);

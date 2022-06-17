@@ -25,6 +25,7 @@ class VMChoiceNode extends GetxController {
   var isDrag = false.obs;
   var isCard = false.obs;
   var isRound = true.obs;
+  var hideTitle = false.obs;
   var status = SelectableStatus.open.obs;
 
   var isRandom = false.obs;
@@ -50,6 +51,7 @@ class VMChoiceNode extends GetxController {
     imageString.value = node.imageString;
     isCard.value = node.isCard;
     isRound.value = node.isRound;
+    hideTitle.value = node.hideTitle;
     isRandom.value = node.isRandom;
     maximizingImage.value = node.maximizingImage;
     randomValue.value = -1;
@@ -90,6 +92,7 @@ class VMChoiceNode extends GetxController {
     imageString.value = node.imageString;
     isCard.value = node.isCard;
     isRound.value = node.isRound;
+    hideTitle.value = node.hideTitle;
     maximizingImage.value = node.maximizingImage;
   }
 
