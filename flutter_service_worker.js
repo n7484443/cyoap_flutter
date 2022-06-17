@@ -39,7 +39,7 @@ const RESOURCES = {
 "main.dart.js_6.part.js": "b2b669910957a690f45d65377099aeea",
 "manifest.json": "ebc04e4594e86d4e5763ccf0df7285b3",
 "save_web.js": "6d7f19b0443d2ca2a960f0532299e5d7",
-"version.json": "a0bb0692dd96ecd05af98924d1e7d366",
+"version.json": "72e29c4c26716af121ad213aebe94dd8",
 "worker.js": "55118d4a43a00cedd42f65ca3b0b0d2a"
 };
 
