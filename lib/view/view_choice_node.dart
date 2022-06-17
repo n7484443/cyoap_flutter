@@ -354,7 +354,7 @@ class ViewChoiceNodeContent extends StatelessWidget {
           ),
         );
       }
-      if (controller.titleString.value.isNotEmpty) {
+      if (!controller.hideTitle.value) {
         title = TextOutline(
           controller.titleString.value,
           18 * draggableController.scale(context),

@@ -17,11 +17,13 @@ class ChoiceNode extends GenerableParserAndPosition {
   String title;
   String contentsString;
   String imageString;
+
   @override
   bool get isSelectableCheck => isSelectable;
   bool isSelectable = true;
   bool isOccupySpace = true;
   bool maximizingImage = false;
+  bool hideTitle = false;
 
   bool get isRandom => maxRandom > 0;
 
@@ -31,8 +33,8 @@ class ChoiceNode extends GenerableParserAndPosition {
     this.width = width;
   }
 
-  ChoiceNode.origin(int width, this.isCard, this.title,
-      this.contentsString, this.imageString) {
+  ChoiceNode.origin(int width, this.isCard, this.title, this.contentsString,
+      this.imageString) {
     recursiveStatus = RecursiveStatus();
     this.width = width;
   }
@@ -54,7 +56,8 @@ class ChoiceNode extends GenerableParserAndPosition {
         isSelectable = json['isSelectable'],
         title = json['title'] ?? '',
         contentsString = json['contentsString'],
-        imageString = json['imageString'] ?? json['image'] {
+        imageString = json['imageString'] ?? json['image'],
+        hideTitle = json['hideTitle'] ?? false {
     width = json['width'] ?? 2;
     currentPos = json['x'] ?? json['pos'];
     recursiveStatus = RecursiveStatus.fromJson(json);
@@ -73,6 +76,7 @@ class ChoiceNode extends GenerableParserAndPosition {
       'isRound': isRound,
       'isOccupySpace': isOccupySpace,
       'isSelectable': isSelectable,
+      'hideTitle': hideTitle,
       'maxRandom': maxRandom,
       'title': title,
       'contentsString': contentsString,
@@ -89,7 +93,7 @@ class ChoiceNode extends GenerableParserAndPosition {
   @override
   void generateParser() {
     recursiveStatus.generateParser();
-    for(var child in children){
+    for (var child in children) {
       child.generateParser();
     }
   }
@@ -97,14 +101,14 @@ class ChoiceNode extends GenerableParserAndPosition {
   @override
   void initValueTypeWrapper() {
     var titleWhitespaceRemoved = title.replaceAll(" ", "");
-    VariableDataBase().setValue(
-        titleWhitespaceRemoved, ValueTypeWrapper(ValueType(status.isSelected()), false));
-    VariableDataBase().setValue(
-        '$titleWhitespaceRemoved:random', ValueTypeWrapper(ValueType(random), false));
+    VariableDataBase().setValue(titleWhitespaceRemoved,
+        ValueTypeWrapper(ValueType(status.isSelected()), false));
+    VariableDataBase().setValue('$titleWhitespaceRemoved:random',
+        ValueTypeWrapper(ValueType(random), false));
     if (status.isNotSelected()) {
       status = isSelectable ? SelectableStatus.open : SelectableStatus.selected;
     }
-    for(var child in children){
+    for (var child in children) {
       child.initValueTypeWrapper();
     }
   }
@@ -123,19 +127,19 @@ class ChoiceNode extends GenerableParserAndPosition {
     return parent;
   }
 
-  int getMaxSize(bool containSelf){
+  int getMaxSize(bool containSelf) {
     var nodeParent = containSelf ? this : parent;
     var out = 0;
     while (true) {
       if (nodeParent is ChoiceNode) {
-        if(nodeParent.width == 0){
+        if (nodeParent.width == 0) {
           nodeParent = nodeParent.parent;
           continue;
-        }else{
+        } else {
           out = nodeParent.width;
           break;
         }
-      }else{
+      } else {
         out = defaultMaxSize;
         break;
       }

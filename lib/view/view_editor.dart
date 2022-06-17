@@ -98,6 +98,12 @@ class ViewEditor extends StatelessWidget {
             controller.maximizingImage.value,
             label: '이미지 최대화',
           ),
+          ViewSwitchLabel(
+                () => controller.hideTitle.value =
+            !controller.hideTitle.value,
+            controller.hideTitle.value,
+            label: '제목 숨기기',
+          ),
           const Spacer(),
           Padding(
             padding: const EdgeInsets.only(bottom: 10.0),
