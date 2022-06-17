@@ -1,7 +1,7 @@
 import 'package:cyoap_flutter/model/grammar/lexical_analyser.dart';
 import 'package:cyoap_flutter/model/grammar/recursive_parser.dart';
 import 'package:cyoap_flutter/model/grammar/semantic_analyser.dart';
-import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 
 import 'function_list.dart';
 import 'token.dart';
@@ -26,18 +26,15 @@ class Analyser {
     List<RecursiveUnit> recursiveList = List.empty(growable: true);
     var codes = codeInput.split('\n');
     var tokens = lexicalAnalyser.analyse(codes);
-    if (kDebugMode) {
-      print(tokens);
-    }
+    print(tokens);
     try {
       if (syntaxAnalyser.checkSyntax(tokens)) {
         var t = semanticAnalyser.analyseLines(tokens);
+        print(t);
         recursiveList.add(t);
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('something wrong in $codes');
-      }
+      e.printError(info: 'something wrong in $codes');
     }
     return recursiveList;
   }
