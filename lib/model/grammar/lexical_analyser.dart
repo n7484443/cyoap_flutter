@@ -124,10 +124,14 @@ class LexicalAnalyser {
                 Token(AnalyserConst.functionUnspecified, dataString: "!");
             break;
           case '{':
-            tokenAdded = Token(AnalyserConst.blockStart);
+            addToken();
+            tokenAdded = null;
+            tokenList.add(Token(AnalyserConst.blockStart));
             break;
           case '}':
-            tokenAdded = Token(AnalyserConst.blockEnd);
+            addToken();
+            tokenAdded = null;
+            tokenList.add(Token(AnalyserConst.blockEnd));
             break;
           case ' ':
             if (!isStringInput) {
@@ -157,9 +161,28 @@ class LexicalAnalyser {
         }
       }
     }
-
     addToken();
-    return tokenList;
+    var tokenOutput = List<Token>.empty(growable: true);
+    var check = 0;
+    for (var token in tokenList) {
+      if (token.type == AnalyserConst.variableVar) {
+        check = 1;
+      } else if (token.type == AnalyserConst.variableLet) {
+        check = 2;
+      } else if(token.dataString == "="){
+        if (check == 0){
+          tokenOutput.add(Token(AnalyserConst.functionUnspecified, dataString: "setVariable"));
+        } else if (check == 1){
+          tokenOutput.add(Token(AnalyserConst.functionUnspecified, dataString: "setLocal"));
+        } else if(check == 2){
+          tokenOutput.add(Token(AnalyserConst.functionUnspecified, dataString: "setGlobal"));
+        }
+        check = 0;
+      } else{
+        tokenOutput.add(token);
+      }
+    }
+    return tokenOutput;
   }
 
   bool isStringDouble(String s) {

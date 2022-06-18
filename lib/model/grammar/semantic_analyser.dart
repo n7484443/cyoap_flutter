@@ -10,59 +10,73 @@ class SemanticAnalyser {
   RecursiveUnit parserComma = RecursiveData(ValueType.comma());
   RecursiveUnit parserEnd = RecursiveData(ValueType.comma());
 
-  RecursiveUnit loopRecursive(List<Token> tokens) {
-    var motherUnit = RecursiveParser(ValueType.none());
-    List<RecursiveUnit> stack = List.empty(growable: true);
-    while (tokens.isNotEmpty) {
-      print("token : $tokens stack : $stack");
-      var token = tokens.removeAt(0);
-      switch (token.type) {
-        case AnalyserConst.functionEnd | AnalyserConst.functionComma:
-          if (stack.length == 1) {
-            motherUnit.add(stack.removeLast());
-          } else {
-            var t = stack.removeLast();
-            stack.last.childNode.add(t);
-          }
-          break;
-        case AnalyserConst.function:
-          stack.add(RecursiveParser(ValueType(token.data)));
-          break;
-        case AnalyserConst.variableLet:
-          stack.add(RecursiveParser(
-              ValueType(Analyser().functionList.funcSetGlobal)));
-          break;
-        case AnalyserConst.variableVar:
-          stack.add(
-              RecursiveParser(ValueType(Analyser().functionList.funcSetLocal)));
-          break;
-        case AnalyserConst.variableName:
-          stack.add(RecursiveParser(
-              ValueType(Analyser().functionList.funcSetVariable)));
-          break;
-        case AnalyserConst.functionUnspecified:
-          var functionParser = RecursiveParser(ValueType(token.data));
-          var before = stack.removeLast();
-          functionParser.childNode.add(before);
-          stack.add(functionParser);
-          break;
-        default:
-          if (stack.last.value.data ==
-              Analyser().functionList.funcSetVariable) {
-            stack.last.childNode
-                .add(RecursiveData(ValueType(VariableUnit(token.dataString))));
-          } else {
-            stack.last.childNode.add(RecursiveData(ValueType(token.data)));
-          }
-          break;
-      }
+  ///-1:block end
+  int recursiveAnalyse(
+      RecursiveUnit parent, List<Token> tokens, int posFromParent) {
+    var pos = posFromParent;
+    if (pos >= tokens.length) {
+      return -1;
     }
-
-    return motherUnit;
+    var token = tokens[pos];
+    switch (token.type) {
+      case AnalyserConst.functionIf:
+      case AnalyserConst.function:
+      case AnalyserConst.blockStart:
+        RecursiveFunction sub;
+        if (token.type == AnalyserConst.blockStart) {
+          sub = RecursiveFunction(ValueType(Analyser().functionList.doLines));
+        } else {
+          sub = RecursiveFunction(ValueType(token.data));
+          pos++;
+        }
+        parent.add(sub);
+        while (true) {
+          var outPos = recursiveAnalyse(sub, tokens, pos + 1);
+          if (outPos == -1) {
+            pos++;
+            break;
+          }
+          pos = outPos;
+        }
+        break;
+      case AnalyserConst.functionComma:
+        pos++;
+        break;
+      case AnalyserConst.blockEnd:
+      case AnalyserConst.functionEnd:
+        return -1;
+      case AnalyserConst.variableName:
+        var out = RecursiveFunction(ValueType(Analyser().functionList.funcLoadVariable));
+        out.add(RecursiveData(ValueType(token.dataString)));
+        parent.add(out);
+        break;
+      case AnalyserConst.functionUnspecified:
+        var out = parent.child.removeLast();
+        var subParent = RecursiveFunction(ValueType(token.data));
+        subParent.add(out);
+        while (true) {
+          var outPos = recursiveAnalyse(subParent, tokens, pos + 1);
+          if (outPos == -1) {
+            pos++;
+            break;
+          }
+          pos = outPos;
+        }
+        parent.add(subParent);
+        break;
+      case AnalyserConst.functionElse:
+        break;
+      default:
+        parent.add(RecursiveData(ValueType(token.data)));
+        break;
+    }
+    return pos;
   }
 
   RecursiveUnit analyseLines(List<Token> analysedData) {
     if (analysedData.isEmpty) return parserNull;
-    return loopRecursive(analysedData);
+    var parent = RecursiveFunction(ValueType(Analyser().functionList.doLines));
+    recursiveAnalyse(parent, analysedData, 0);
+    return parent;
   }
 }

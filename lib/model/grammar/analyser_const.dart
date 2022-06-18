@@ -13,9 +13,9 @@ class AnalyserConst {
   /// 변수 사용
   static const int variableName = 10;
   /// 전역 변수 설정, let
-  static const int variableLet = 15;
+  static const int variableLet = 11;
   /// 지역 변수 설정, var
-  static const int variableVar = 16;
+  static const int variableVar = 12;
 
   static const int functionUnspecified = 20;
   static const int function = 21;
@@ -24,7 +24,7 @@ class AnalyserConst {
   /// )
   static const int functionEnd = 31;
   /// ,
-  static const int functionComma = 40;
+  static const int functionComma = 32;
 
   /// if
   static const int functionIf = 45;

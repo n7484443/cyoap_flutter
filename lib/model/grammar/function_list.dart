@@ -27,6 +27,10 @@ class Functions {
     functionMap['random'] = funcRandom;
     functionMap['none'] = funcNone;
     functionMap['exist'] = funcExist;
+    functionMap['doLines'] = doLines;
+    functionMap['setVariable'] = funcSetVariable;
+    functionMap['setLocal'] = funcSetLocal;
+    functionMap['setGlobal'] = funcSetGlobal;
   }
 
   Function getFunction(String name) {
@@ -48,6 +52,10 @@ class Functions {
       }
     }
     return 'none';
+  }
+
+  ValueType doLines(List<ValueType> input){
+    return input[0];
   }
 
   ValueType funcNone(List<ValueType> input) {
@@ -125,6 +133,9 @@ class Functions {
     return input[0];
   }
   ValueType funcSetGlobal(List<ValueType> input) {
+    return input[0];
+  }
+  ValueType funcLoadVariable(List<ValueType> input) {
     return input[0];
   }
 

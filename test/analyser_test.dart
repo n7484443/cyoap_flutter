@@ -150,6 +150,7 @@ void main() {
   });
 
   test('ifTest', () {
+    /*
     String strTest = """
     if(numberTest0 == -5.5){
       var alpha = 11
@@ -161,8 +162,17 @@ void main() {
     }else{
       var omega = 16
     }
+    """;*/
+    String strTest = """
+    if(numberTest0 == -5.5){
+      var alpha = 11
+    }else{
+      var beta = 15
+    }
     """;
-    Analyser().run(Analyser().analyseCodes(strTest));
+    var t = Analyser().analyseCodes(strTest);
+    print(t);
+    Analyser().run(t);
     expect(ins.getValueType('alpha')?.data, 11);
     expect(ins.getValueType('beta')?.data, null);
     expect(ins.getValueType('gamma')?.data, null);
