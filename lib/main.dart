@@ -130,6 +130,7 @@ void main() {
           if (ConstList.isDistributed) {
             return GetPage(
               name: '/',
+              binding: BindingsBuilder.put(() => VMDesignSetting()),
               page: () => v_play.ViewPlay(),
             );
           } else {
