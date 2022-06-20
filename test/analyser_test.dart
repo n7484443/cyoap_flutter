@@ -172,7 +172,6 @@ void main() {
     }
     """;
     var t = Analyser().analyseCodes(strTest);
-    print(t);
     Analyser().run(t);
     print(VariableDataBase().varMap);
     expect(ins.getValueType('alpha')?.data, 11);

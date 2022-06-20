@@ -26,8 +26,6 @@ class LexicalAnalyser {
           } else if (tokenAdded.dataString == "true" ||
               tokenAdded.dataString == "false") {
             tokenAdded.type = AnalyserConst.bools;
-          } else if (tokenAdded.dataString == "if") {
-            tokenAdded.type = AnalyserConst.functionIf;
           } else if (tokenAdded.dataString == "else") {
             tokenAdded.type = AnalyserConst.functionElse;
           } else {
@@ -98,7 +96,11 @@ class LexicalAnalyser {
           break;
         case '(':
           if (tokenAdded != null) {
-            tokenAdded.type = AnalyserConst.function;
+            if (tokenAdded.dataString == "if") {
+              tokenAdded.type = AnalyserConst.functionIf;
+            } else {
+              tokenAdded.type = AnalyserConst.function;
+            }
             tokenList.add(tokenAdded);
             tokenAdded = null;
           }
@@ -160,7 +162,7 @@ class LexicalAnalyser {
     return changeToSet(tokenList);
   }
 
-  List<Token> changeToSet(List<Token> tokenList){
+  List<Token> changeToSet(List<Token> tokenList) {
     var tokenOutput = List<Token>.empty(growable: true);
     var check = 0;
     for (var token in tokenList) {
@@ -188,19 +190,22 @@ class LexicalAnalyser {
     return changeInfixToPostfix(tokenOutput);
   }
 
-  List<Token> changeInfixToPostfix(List<Token> tokenList){
+  List<Token> changeInfixToPostfix(List<Token> tokenList) {
     var tokenOutput = List<Token>.empty(growable: true);
     var stack = List<Token>.empty(growable: true);
-    for(var token in tokenList.reversed){
-      switch(token.type){
+    for (var token in tokenList.reversed) {
+      switch (token.type) {
         case AnalyserConst.functionUnspecified:
-          if(token.data == "*" || token.data == "/"){
-            while(stack.isNotEmpty && (stack.last.data == "*" || stack.last.data == "/") && stack.last.type != AnalyserConst.functionEnd) {
+          if (token.data == "*" || token.data == "/") {
+            while (stack.isNotEmpty &&
+                (stack.last.data == "*" || stack.last.data == "/") &&
+                stack.last.type != AnalyserConst.functionEnd) {
               tokenOutput.add(stack.removeLast());
             }
             stack.add(token);
-          }else{
-            while(stack.isNotEmpty && stack.last.type != AnalyserConst.functionEnd) {
+          } else {
+            while (stack.isNotEmpty &&
+                stack.last.type != AnalyserConst.functionEnd) {
               tokenOutput.add(stack.removeLast());
             }
             stack.add(token);
@@ -211,7 +216,8 @@ class LexicalAnalyser {
           stack.add(token);
           break;
         case AnalyserConst.functionStart:
-          while(stack.isNotEmpty && stack.last.type != AnalyserConst.functionEnd) {
+          while (stack.isNotEmpty &&
+              stack.last.type != AnalyserConst.functionEnd) {
             tokenOutput.add(stack.removeLast());
           }
           tokenOutput.add(Token(AnalyserConst.functionStart));
@@ -224,7 +230,7 @@ class LexicalAnalyser {
           break;
       }
     }
-    while(stack.isNotEmpty){
+    while (stack.isNotEmpty) {
       tokenOutput.add(stack.removeLast());
     }
     tokenOutput = List.from(tokenOutput.reversed);

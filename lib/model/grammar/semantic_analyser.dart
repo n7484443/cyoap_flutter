@@ -12,6 +12,7 @@ class SemanticAnalyser {
       return -1;
     }
     var token = tokens[pos];
+    //print("$pos $token $parent");
     switch (token.type) {
       case AnalyserConst.functionUnspecified:
         RecursiveFunction sub = RecursiveFunction(ValueType(token.data));
@@ -21,6 +22,22 @@ class SemanticAnalyser {
         }
         break;
       case AnalyserConst.functionIf:
+        RecursiveFunction sub = RecursiveFunction(ValueType("if"));
+        pos++;// ( 가 있으므로
+        parent.add(sub);
+        while (true) {
+          var outPos = recursiveAnalyse(sub, tokens, pos + 1);
+          if (outPos == -1) {
+            pos++;
+            break;
+          }
+          pos = outPos;
+        }
+        pos = recursiveAnalyse(sub, tokens, pos + 1) + 1;
+        if(pos < tokens.length && tokens[pos].type == AnalyserConst.functionElse){
+          pos = recursiveAnalyse(sub, tokens, pos + 1);
+        }
+        break;
       case AnalyserConst.function:
       case AnalyserConst.blockStart:
         RecursiveFunction sub;
@@ -72,5 +89,12 @@ class SemanticAnalyser {
     var parent = RecursiveFunction(ValueType("doLines"));
     recursiveAnalyse(parent, analysedData, 0);
     return parent;
+  }
+
+  RecursiveUnit? analyseLine(List<Token> analysedData) {
+    if (analysedData.isEmpty) return null;
+    var parent = RecursiveFunction(ValueType.none());
+    recursiveAnalyse(parent, analysedData, 0);
+    return parent.child[0];
   }
 }

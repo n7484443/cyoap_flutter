@@ -32,6 +32,7 @@ class Functions {
         (input) => VariableDataBase().getValueType(input[0].data) ?? input[0];
 
     functionVoid['if'] = (input) {
+      print(input);
       var data0 = input[0].unzip();
       if (data0.data is bool && data0.data) {
         input[1].unzip();
@@ -44,7 +45,6 @@ class Functions {
       var data1 = input[1].unzip();
       VariableDataBase().setValue(
           data0.data, ValueTypeWrapper(data1, false, isGlobal: false));
-      print("save local : $data0 \n$data1");
     };
     functionVoid['setGlobal'] = (input) {
       var data0 = input[0].unzip();

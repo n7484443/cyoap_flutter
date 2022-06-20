@@ -30,7 +30,6 @@ class Analyser {
       }
       tokenList.addAll(lexicalAnalyser.analyse(code));
     }
-    print(tokenList);
 
     var t = semanticAnalyser.analyseLines(tokenList);
     if(t != null){
