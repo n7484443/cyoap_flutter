@@ -14,6 +14,7 @@ abstract class RecursiveUnit {
   Map<String, dynamic> toJson();
 
   void add(RecursiveUnit unit) {}
+
   List<RecursiveUnit> get child => [];
 
   ValueType unzip();
@@ -61,6 +62,7 @@ class RecursiveFunction extends RecursiveUnit {
   ValueType unzip() {
     if (body.data == null) return ValueType.none();
     if (body.data is ValueTypeData) {
+      ///버그 처리
       return ValueType.none();
     }
     if (childNode.length == 3 && body.data == Analyser().functionList.funcIf) {
@@ -73,9 +75,6 @@ class RecursiveFunction extends RecursiveUnit {
     if (body.data == Analyser().functionList.funcSetVariable) {
       var unzippedData0 = childNode[0].unzip();
       var unzippedData1 = childNode[1].unzip();
-      if (unzippedData0 is! VariableUnit) {
-        unzippedData0 = childNode[0].body;
-      }
       var varName = (unzippedData0.data as VariableUnit).varName;
       var original = VariableDataBase().getValueTypeWrapper(varName)!;
       var copy = ValueTypeWrapper.copy(original)..valueType = unzippedData1;
@@ -85,9 +84,6 @@ class RecursiveFunction extends RecursiveUnit {
     if (body.data == Analyser().functionList.funcSetGlobal) {
       var unzippedData0 = childNode[0].unzip();
       var unzippedData1 = childNode[1].unzip();
-      if (unzippedData0 is! VariableUnit) {
-        unzippedData0 = childNode[0].body;
-      }
       var varName = (unzippedData0.data as VariableUnit).varName;
       VariableDataBase()
           .setValue(varName, ValueTypeWrapper.normal(unzippedData1, true));
@@ -96,9 +92,6 @@ class RecursiveFunction extends RecursiveUnit {
     if (body.data == Analyser().functionList.funcSetLocal) {
       var unzippedData0 = childNode[0].unzip();
       var unzippedData1 = childNode[1].unzip();
-      if (unzippedData0 is! VariableUnit) {
-        unzippedData0 = childNode[0].body;
-      }
       var varName = (unzippedData0.data as VariableUnit).varName;
       VariableDataBase()
           .setValue(varName, ValueTypeWrapper.normal(unzippedData1, false));
@@ -106,9 +99,11 @@ class RecursiveFunction extends RecursiveUnit {
     }
     if (body.data == Analyser().functionList.funcExist) {
       var unzippedData0 = childNode[0].unzip();
-      if (unzippedData0 is! VariableUnit) {
-        unzippedData0 = childNode[0].body;
-      }
+      var varName = (unzippedData0.data as VariableUnit).varName;
+      return ValueType(VariableDataBase().hasValue(varName));
+    }
+    if (body.data == Analyser().functionList.funcLoadVariable) {
+      var unzippedData0 = childNode[0].body;
       var varName = (unzippedData0.data as VariableUnit).varName;
       return ValueType(VariableDataBase().hasValue(varName));
     }

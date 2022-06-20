@@ -131,7 +131,7 @@ class WebpConverterImpWindows implements WebpConverterImp {
 }
 
 class WebpConverterImpAndroid implements WebpConverterImp {
-  final int quality = 90;
+  final int quality = 80;
   @override
   Future<Tuple2<String, Uint8List>> convert(
       Uint8List input, String name) async {
@@ -145,7 +145,6 @@ class WebpConverterImpAndroid implements WebpConverterImp {
     } else {
       return Tuple2(name, input);
     }
-
     var output = await FlutterImageCompress.compressWithList(
       input,
       format: CompressFormat.webp,

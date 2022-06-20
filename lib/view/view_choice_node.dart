@@ -77,7 +77,8 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
         child: Stack(
           alignment: Alignment.topCenter,
           children: [
-            ViewChoiceNodeContent(node!, nodeController, controller, layoutController),
+            ViewChoiceNodeContent(
+                node!, nodeController, controller, layoutController),
             if (controller.isVisibleOnlyEdit()) ...[
               Positioned(
                 top: 0,
@@ -361,19 +362,22 @@ class ViewChoiceNodeContent extends StatelessWidget {
           ConstList.getFont(layoutSetting.titleFont.value),
         );
       }
-      Widget contents = IgnorePointer(
-        child: QuillEditor(
-          controller: controller.quillController,
-          focusNode: FocusNode(),
-          readOnly: true,
-          autoFocus: false,
-          expands: false,
-          padding: const EdgeInsets.only(top: 4),
-          scrollController: ScrollController(),
-          scrollable: false,
-          customStyles: ConstList.getDefaultThemeData(
-              context, draggableController.scale(context),
-              fontStyle: ConstList.getFont(layoutSetting.mainFont.value)),
+      Widget contents = Visibility(
+        visible: !controller.quillController.document.isEmpty(),
+        child: IgnorePointer(
+          child: QuillEditor(
+            controller: controller.quillController,
+            focusNode: FocusNode(),
+            readOnly: true,
+            autoFocus: false,
+            expands: false,
+            padding: const EdgeInsets.only(top: 4),
+            scrollController: ScrollController(),
+            scrollable: false,
+            customStyles: ConstList.getDefaultThemeData(
+                context, draggableController.scale(context),
+                fontStyle: ConstList.getFont(layoutSetting.mainFont.value)),
+          ),
         ),
       );
       Widget child = ViewWrapCustom(
@@ -391,19 +395,21 @@ class ViewChoiceNodeContent extends StatelessWidget {
       if (layoutSetting.titleOverlap.value) {
         subWidget = [
           Stack(
-            alignment: layoutSetting.titlePosition.value ? Alignment.topCenter : Alignment.bottomCenter,
+            alignment: layoutSetting.titlePosition.value
+                ? Alignment.topCenter
+                : Alignment.bottomCenter,
             children: [
               if (image != null) image,
               if (title != null) title,
             ],
           ),
         ];
-      } else if(layoutSetting.titlePosition.value){
+      } else if (layoutSetting.titlePosition.value) {
         subWidget = [
           if (title != null) title,
           if (image != null) image,
         ];
-      }else{
+      } else {
         subWidget = [
           if (image != null) image,
           if (title != null) title,

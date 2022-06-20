@@ -31,6 +31,8 @@ class Functions {
     functionMap['setVariable'] = funcSetVariable;
     functionMap['setLocal'] = funcSetLocal;
     functionMap['setGlobal'] = funcSetGlobal;
+    functionMap['setGlobal'] = funcSetGlobal;
+    functionMap['loadVariable'] = funcLoadVariable;
   }
 
   Function getFunction(String name) {
