@@ -115,10 +115,10 @@ void main() {
     numberTest4 >= 19
     """;
     var recursiveData = Analyser().analyseCodes(strTest);
-    expect(Analyser().check(recursiveData[0]) as bool, true);
+    expect(Analyser().check(recursiveData) as bool, true);
 
     recursiveData = Analyser().analyseCodes(strTest1);
-    expect(Analyser().check(recursiveData[0]) as bool, false);
+    expect(Analyser().check(recursiveData) as bool, false);
   });
 
   test('global variable Test', () {
@@ -126,7 +126,11 @@ void main() {
     let globalTest = 123
     """;
     String strGlobalTest = """
-    if(globalTest == 123, var T = true, var T2 = false)
+    if(globalTest == 123){
+      var T = true;
+    }else{
+      var T2 = false
+    }
     var existTest = exist(T)
     var existTest2 = exist(T2)
     """;
@@ -150,19 +154,6 @@ void main() {
   });
 
   test('ifTest', () {
-    /*
-    String strTest = """
-    if(numberTest0 == -5.5){
-      var alpha = 11
-    }else{
-      var beta = 15
-    }
-    if(numberTest0 != -5.5){
-      var gamma = 12
-    }else{
-      var omega = 16
-    }
-    """;*/
     String strTest = """
     var numberTest0 = -5.5
     if(numberTest0 == -5.5){
@@ -170,13 +161,18 @@ void main() {
     }else{
       var beta = 15
     }
+    if(numberTest0 == -5.5){
+      var gamma = 12
+    }
+    
+    if(numberTest0 == -5.5){var delta = 12}
     """;
     var t = Analyser().analyseCodes(strTest);
     Analyser().run(t);
     print(VariableDataBase().varMap);
     expect(ins.getValueType('alpha')?.data, 11);
     expect(ins.getValueType('beta')?.data, null);
-    //xpect(ins.getValueType('gamma')?.data, null);
-    //expect(ins.getValueType('omega')?.data, 16);
+    expect(ins.getValueType('gamma')?.data, 12);
+    expect(ins.getValueType('delta')?.data, 12);
   });
 }

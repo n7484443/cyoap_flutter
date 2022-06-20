@@ -20,8 +20,7 @@ class Analyser {
   SemanticAnalyser semanticAnalyser = SemanticAnalyser();
   Functions functionList = Functions();
 
-  List<RecursiveUnit> analyse(String codeInput) {
-    List<RecursiveUnit> recursiveList = List.empty(growable: true);
+  RecursiveUnit? analyse(String codeInput) {
     var codes = codeInput.split('\n');
     var tokenList = List<Token>.empty(growable: true);
     for (var code in codes) {
@@ -29,11 +28,6 @@ class Analyser {
         continue;
       }
       tokenList.addAll(lexicalAnalyser.analyse(code));
-    }
-
-    var t = semanticAnalyser.analyseLines(tokenList);
-    if(t != null){
-      recursiveList.add(t);
     }
     /*
     try {
@@ -45,14 +39,12 @@ class Analyser {
       print(e);
       //e.printError(info: 'something wrong in $codes');
     }*/
-    return recursiveList;
+    return semanticAnalyser.analyseLines(tokenList);
   }
 
-  void run(List<RecursiveUnit>? unitList) {
+  void run(RecursiveUnit? unitList) {
     if (unitList == null) return;
-    for (var unit in unitList) {
-      unit.unzip();
-    }
+    unitList.unzip();
   }
 
   dynamic check(RecursiveUnit? unitList) {
@@ -60,7 +52,7 @@ class Analyser {
     return unitList.unzip().dataUnzip();
   }
 
-  List<RecursiveUnit> analyseCodes(String codeInput) {
+  RecursiveUnit? analyseCodes(String codeInput) {
     return _instance.analyse(codeInput);
   }
 }

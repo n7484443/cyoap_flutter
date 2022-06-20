@@ -4,7 +4,7 @@ import '../grammar/recursive_parser.dart';
 class RecursiveStatus {
   RecursiveUnit? conditionClickableRecursive;
   RecursiveUnit? conditionVisibleRecursive;
-  List<RecursiveUnit>? executeCodeRecursive;
+  RecursiveUnit? executeCodeRecursive;
 
   String conditionClickableString = '';
   String conditionVisibleString = '';
@@ -25,7 +25,6 @@ class RecursiveStatus {
       : conditionClickableString = json['conditionClickableString'],
         conditionVisibleString = json['conditionVisibleString'],
         executeCodeString = json['executeCodeString'] {
-
     if (json['conditionClickableRecursive'] == null) {
       conditionClickableRecursive = null;
     } else {
@@ -43,29 +42,13 @@ class RecursiveStatus {
     if (json['executeCodeRecursive'] == null) {
       executeCodeRecursive = null;
     } else {
-      executeCodeRecursive = List.generate(
-        (json['executeCodeRecursive'] as List).length,
-        (index) {
-          return getClassFromJson(
-              (json['executeCodeRecursive'] as List)[index]);
-        },
-      );
+      executeCodeRecursive = getClassFromJson(json['executeCodeRecursive']);
     }
   }
 
   void generateParser() {
-    var conditionClickableRecursiveParsed =
-        Analyser().analyseCodes(conditionClickableString);
-    var conditionVisibleRecursiveParsed =
-        Analyser().analyseCodes(conditionVisibleString);
-    var executeCodeRecursiveParsed = Analyser().analyseCodes(executeCodeString);
-
-    conditionClickableRecursive = conditionClickableRecursiveParsed.isNotEmpty
-        ? conditionClickableRecursiveParsed[0]
-        : null;
-    conditionVisibleRecursive = conditionVisibleRecursiveParsed.isNotEmpty
-        ? conditionVisibleRecursiveParsed[0]
-        : null;
-    executeCodeRecursive = executeCodeRecursiveParsed;
+    conditionClickableRecursive = Analyser().analyseCodes(conditionClickableString);
+    conditionVisibleRecursive = Analyser().analyseCodes(conditionVisibleString);
+    executeCodeRecursive = Analyser().analyseCodes(executeCodeString);
   }
 }
