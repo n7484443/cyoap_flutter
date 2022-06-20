@@ -3,13 +3,7 @@ import 'package:cyoap_flutter/model/grammar/recursive_parser.dart';
 import 'package:cyoap_flutter/model/grammar/token.dart';
 import 'package:cyoap_flutter/model/grammar/value_type.dart';
 
-import 'analyser.dart';
-
 class SemanticAnalyser {
-  RecursiveUnit parserNull = RecursiveData(ValueType.none());
-  RecursiveUnit parserComma = RecursiveData(ValueType.comma());
-  RecursiveUnit parserEnd = RecursiveData(ValueType.comma());
-
   ///-1:block end
   int recursiveAnalyse(
       RecursiveUnit parent, List<Token> tokens, int posFromParent) {
@@ -19,15 +13,22 @@ class SemanticAnalyser {
     }
     var token = tokens[pos];
     switch (token.type) {
+      case AnalyserConst.functionUnspecified:
+        RecursiveFunction sub = RecursiveFunction(ValueType(token.data));
+        parent.add(sub);
+        for(var i = 0; i < 2; i++){
+          pos = recursiveAnalyse(sub, tokens, pos + 1);
+        }
+        break;
       case AnalyserConst.functionIf:
       case AnalyserConst.function:
       case AnalyserConst.blockStart:
         RecursiveFunction sub;
         if (token.type == AnalyserConst.blockStart) {
-          sub = RecursiveFunction(ValueType(Analyser().functionList.doLines));
+          sub = RecursiveFunction(ValueType("doLines"));
         } else {
           sub = RecursiveFunction(ValueType(token.data));
-          pos++;
+          pos++;// ( 가 있으므로
         }
         parent.add(sub);
         while (true) {
@@ -46,23 +47,14 @@ class SemanticAnalyser {
       case AnalyserConst.functionEnd:
         return -1;
       case AnalyserConst.variableName:
-        var out = RecursiveFunction(ValueType(Analyser().functionList.funcLoadVariable));
+        RecursiveUnit out;
+        if(parent.body.data == "setLocal" || parent.body.data == "setGlobal" || parent.body.data == "setVariable"){
+          out = RecursiveData(ValueType(token.dataString));
+        }else{
+          out = RecursiveFunction(ValueType("loadVariable"));
+        }
         out.add(RecursiveData(ValueType(token.dataString)));
         parent.add(out);
-        break;
-      case AnalyserConst.functionUnspecified:
-        var out = parent.child.removeLast();
-        var subParent = RecursiveFunction(ValueType(token.data));
-        subParent.add(out);
-        while (true) {
-          var outPos = recursiveAnalyse(subParent, tokens, pos + 1);
-          if (outPos == -1) {
-            pos++;
-            break;
-          }
-          pos = outPos;
-        }
-        parent.add(subParent);
         break;
       case AnalyserConst.functionElse:
         break;
@@ -73,9 +65,11 @@ class SemanticAnalyser {
     return pos;
   }
 
-  RecursiveUnit analyseLines(List<Token> analysedData) {
-    if (analysedData.isEmpty) return parserNull;
-    var parent = RecursiveFunction(ValueType(Analyser().functionList.doLines));
+  RecursiveUnit? analyseLines(List<Token> analysedData) {
+    if (analysedData.isEmpty) return null;
+    analysedData.insert(0, Token(AnalyserConst.blockStart));
+    analysedData.add(Token(AnalyserConst.blockEnd));
+    var parent = RecursiveFunction(ValueType("doLines"));
     recursiveAnalyse(parent, analysedData, 0);
     return parent;
   }

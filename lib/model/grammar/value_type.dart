@@ -1,4 +1,3 @@
-import '../variable_db.dart';
 import 'analyser.dart';
 
 class ValueType {
@@ -17,9 +16,6 @@ class ValueType {
   dynamic dataUnzip() {
     if (data == null) return null;
     if (data != ValueTypeData.none) {
-      if (data is VariableUnit) {
-        return VariableDataBase().getValueTypeWrapper(data.varName);
-      }
       return data;
     }
     return null;
@@ -27,19 +23,16 @@ class ValueType {
 
   @override
   String toString() {
-    if (data is Function) {
-      return data.toString().split('\'')[1];
+    if (data is String && Analyser().functionList.getFunction(data) != null) {
+      return data;
     }
-    return 'value Type : $data';
+    return 'ValueType|$data';
   }
 
   ValueType.fromJson(Map<String, dynamic> json) {
     switch (json['type']) {
       case 'function':
         data = Analyser().functionList.getFunction(json['data']);
-        break;
-      case 'VariableUnit':
-        data = VariableUnit.fromJson(json['data']);
         break;
       case 'int':
         data = int.tryParse(json['data']);
@@ -57,29 +50,10 @@ class ValueType {
   }
 
   Map<String, dynamic> toJson() => {
-        'data': data is VariableUnit
-            ? (data as VariableUnit).toJson()
-            : (data is Function
-                ? Analyser().functionList.getFunctionName(data)
-                : data.toString()),
+        'data': data is Function
+            ? Analyser().functionList.getFunctionName(data)
+            : data.toString(),
         'type': data is Function ? 'function' : data.runtimeType.toString(),
-      };
-}
-
-class VariableUnit {
-  String varName;
-
-  VariableUnit(this.varName);
-
-  @override
-  String toString() {
-    return 'Data From DB: "$varName"';
-  }
-
-  VariableUnit.fromJson(Map<String, dynamic> json) : varName = json['varName'];
-
-  Map<String, dynamic> toJson() => {
-        'varName': varName,
       };
 }
 
@@ -101,11 +75,11 @@ class ValueTypeWrapper {
       : visible = false,
         displayName = '';
 
-  ValueTypeWrapper.copy(ValueTypeWrapper other):
-    visible = other.visible,
-    isGlobal = other.isGlobal,
-    displayName = other.displayName,
-    valueType = other.valueType;
+  ValueTypeWrapper.copy(ValueTypeWrapper other)
+      : visible = other.visible,
+        isGlobal = other.isGlobal,
+        displayName = other.displayName,
+        valueType = other.valueType;
 
   ValueTypeWrapper.fromJson(Map<String, dynamic> json)
       : valueType = ValueType.fromJson(json['valueType']),

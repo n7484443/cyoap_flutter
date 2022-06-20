@@ -1,6 +1,5 @@
-import 'package:cyoap_flutter/model/variable_db.dart';
+import 'package:cyoap_flutter/model/grammar/analyser.dart';
 
-import 'analyser.dart';
 import 'value_type.dart';
 
 abstract class RecursiveUnit {
@@ -55,60 +54,24 @@ class RecursiveFunction extends RecursiveUnit {
 
   @override
   String toString() {
-    return '$body$childNode';
+    return '$body $childNode';
   }
 
   @override
   ValueType unzip() {
     if (body.data == null) return ValueType.none();
-    if (body.data is ValueTypeData) {
-      ///버그 처리
-      return ValueType.none();
-    }
-    if (childNode.length == 3 && body.data == Analyser().functionList.funcIf) {
-      if (childNode[0].unzip().data) {
-        return childNode[1].unzip();
-      } else {
-        return childNode[2].unzip();
+    if (Analyser().functionList.getFunction(body.data) != null) {
+      var functionValueType = Analyser().functionList.getFunctionValueType(body.data);
+      if(functionValueType != null){
+        var input = childNode.map((e) => e.unzip()).toList();
+        return functionValueType(input);
+      }
+      var functionVoid = Analyser().functionList.getFunctionVoid(body.data);
+      if(functionVoid != null){
+        functionVoid(child);
       }
     }
-    if (body.data == Analyser().functionList.funcSetVariable) {
-      var unzippedData0 = childNode[0].unzip();
-      var unzippedData1 = childNode[1].unzip();
-      var varName = (unzippedData0.data as VariableUnit).varName;
-      var original = VariableDataBase().getValueTypeWrapper(varName)!;
-      var copy = ValueTypeWrapper.copy(original)..valueType = unzippedData1;
-      VariableDataBase().setValue(varName, copy);
-      return unzippedData0;
-    }
-    if (body.data == Analyser().functionList.funcSetGlobal) {
-      var unzippedData0 = childNode[0].unzip();
-      var unzippedData1 = childNode[1].unzip();
-      var varName = (unzippedData0.data as VariableUnit).varName;
-      VariableDataBase()
-          .setValue(varName, ValueTypeWrapper.normal(unzippedData1, true));
-      return unzippedData0;
-    }
-    if (body.data == Analyser().functionList.funcSetLocal) {
-      var unzippedData0 = childNode[0].unzip();
-      var unzippedData1 = childNode[1].unzip();
-      var varName = (unzippedData0.data as VariableUnit).varName;
-      VariableDataBase()
-          .setValue(varName, ValueTypeWrapper.normal(unzippedData1, false));
-      return unzippedData0;
-    }
-    if (body.data == Analyser().functionList.funcExist) {
-      var unzippedData0 = childNode[0].unzip();
-      var varName = (unzippedData0.data as VariableUnit).varName;
-      return ValueType(VariableDataBase().hasValue(varName));
-    }
-    if (body.data == Analyser().functionList.funcLoadVariable) {
-      var unzippedData0 = childNode[0].body;
-      var varName = (unzippedData0.data as VariableUnit).varName;
-      return ValueType(VariableDataBase().hasValue(varName));
-    }
-    var input = childNode.map((e) => e.unzip()).toList();
-    return body.data(input);
+    return ValueType.none();
   }
 }
 
@@ -128,13 +91,6 @@ class RecursiveData extends RecursiveUnit {
 
   @override
   ValueType unzip() {
-    if (body.data is VariableUnit) {
-      var variable = body.data as VariableUnit;
-      if (VariableDataBase().hasValue(variable.varName)) {
-        var wrapper = VariableDataBase().getValueTypeWrapper(variable.varName);
-        return ValueType(wrapper?.valueType.data);
-      }
-    }
     return body;
   }
 

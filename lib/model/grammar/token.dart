@@ -1,4 +1,3 @@
-import 'analyser.dart';
 import 'analyser_const.dart';
 
 class Token {
@@ -28,11 +27,10 @@ class Token {
         return double.tryParse(dataString);
       case AnalyserConst.bools:
         return dataString == 'true';
-      case AnalyserConst.strings:
-        return dataString;
       case AnalyserConst.functionUnspecified:
       case AnalyserConst.function:
-        return Analyser().functionList.getFunction(dataString);
+      case AnalyserConst.strings:
+        return dataString;
       default:
         return;
     }
