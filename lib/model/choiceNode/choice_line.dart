@@ -69,7 +69,7 @@ class LineSetting extends GenerableParserAndPosition {
   void generateParser() {
     if (isNeedToCheck()) {
       var conditionClickableRecursiveParsed =
-          Analyser().analyseCodes(getClickableString());
+          Analyser().analyseSingleLine(getClickableString());
       var executeCodeRecursiveParsed =
           Analyser().analyseCodes(getExecuteString());
 

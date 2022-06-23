@@ -31,9 +31,6 @@ class ValueType {
 
   ValueType.fromJson(Map<String, dynamic> json) {
     switch (json['type']) {
-      case 'function':
-        data = Analyser().functionList.getFunction(json['data']);
-        break;
       case 'int':
         data = int.tryParse(json['data']);
         break;
@@ -50,10 +47,8 @@ class ValueType {
   }
 
   Map<String, dynamic> toJson() => {
-        'data': data is Function
-            ? Analyser().functionList.getFunctionName(data)
-            : data.toString(),
-        'type': data is Function ? 'function' : data.runtimeType.toString(),
+        'data': data.toString(),
+        'type': data.runtimeType.toString(),
       };
 }
 

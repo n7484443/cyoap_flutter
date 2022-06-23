@@ -55,8 +55,8 @@ class RecursiveStatus {
 
   void generateParser() {
     conditionClickableRecursive =
-        Analyser().analyseCodes(conditionClickableString);
-    conditionVisibleRecursive = Analyser().analyseCodes(conditionVisibleString);
+        Analyser().analyseSingleLine(conditionClickableString);
+    conditionVisibleRecursive = Analyser().analyseSingleLine(conditionVisibleString);
     executeCodeRecursive = Analyser().analyseCodes(executeCodeString);
   }
 }

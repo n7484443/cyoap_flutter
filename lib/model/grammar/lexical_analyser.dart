@@ -187,66 +187,8 @@ class LexicalAnalyser {
       }
     }
 
-    return changeInfixToPostfix(tokenOutput);
-  }
-
-  List<Token> changeInfixToPostfix(List<Token> tokenList) {
-    var tokenOutput = List<Token>.empty(growable: true);
-    var stack = List<Token>.empty(growable: true);
-    for (var token in tokenList.reversed) {
-      switch (token.type) {
-        case AnalyserConst.functionUnspecified:
-          if (token.data == "*" || token.data == "/") {
-            while (stack.isNotEmpty &&
-                (stack.last.data == "*" || stack.last.data == "/") &&
-                stack.last.type != AnalyserConst.functionEnd && stack.last.type != AnalyserConst.blockEnd) {
-              tokenOutput.add(stack.removeLast());
-            }
-            stack.add(token);
-          } else {
-            while (stack.isNotEmpty &&
-                stack.last.type != AnalyserConst.functionEnd && stack.last.type != AnalyserConst.blockEnd) {
-              tokenOutput.add(stack.removeLast());
-            }
-            stack.add(token);
-          }
-          break;
-        case AnalyserConst.blockEnd:
-        case AnalyserConst.functionEnd:
-          tokenOutput.add(token);
-          stack.add(token);
-          break;
-        case AnalyserConst.blockStart:
-          while (stack.isNotEmpty &&
-              stack.last.type != AnalyserConst.blockEnd) {
-            tokenOutput.add(stack.removeLast());
-          }
-          tokenOutput.add(token);
-          stack.removeLast();
-          break;
-        case AnalyserConst.functionStart:
-          while (stack.isNotEmpty &&
-              stack.last.type != AnalyserConst.functionEnd &&
-              stack.last.type != AnalyserConst.blockEnd) {
-            tokenOutput.add(stack.removeLast());
-          }
-          tokenOutput.add(token);
-          stack.removeLast();
-          break;
-        case AnalyserConst.functionComma:
-          break;
-        default:
-          tokenOutput.add(token);
-          break;
-      }
-    }
-    while (stack.isNotEmpty) {
-      tokenOutput.add(stack.removeLast());
-    }
-    tokenOutput = List.from(tokenOutput.reversed);
     return tokenOutput;
   }
-
   bool isStringDouble(String s) {
     return double.tryParse(s) != null;
   }

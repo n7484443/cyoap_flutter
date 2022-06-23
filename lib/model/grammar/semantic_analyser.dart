@@ -4,97 +4,93 @@ import 'package:cyoap_flutter/model/grammar/token.dart';
 import 'package:cyoap_flutter/model/grammar/value_type.dart';
 
 class SemanticAnalyser {
+  static const int blockEndSign = -1;
+  static const int functionEndSign = -2;
+
   ///-1:block end
-  int recursiveAnalyse(
-      RecursiveUnit parent, List<Token> tokens, int posFromParent) {
-    var pos = posFromParent;
-    if (pos >= tokens.length) {
-      return -1;
-    }
-    var token = tokens[pos];
-    //print("$pos $token $parent");
-    switch (token.type) {
-      case AnalyserConst.functionUnspecified:
-        RecursiveFunction sub = RecursiveFunction(ValueType(token.data));
-        parent.add(sub);
-        for(var i = 0; i < 2; i++){
-          pos = recursiveAnalyse(sub, tokens, pos + 1);
-        }
-        break;
-      case AnalyserConst.functionIf:
-        RecursiveFunction sub = RecursiveFunction(ValueType("if"));
-        pos++;// ( 가 있으므로
-        parent.add(sub);
-        while (true) {
-          var outPos = recursiveAnalyse(sub, tokens, pos + 1);
-          if (outPos == -1) {
-            pos++;
-            break;
+  void abstractSyntaxTreeAnalyse(RecursiveUnit mother, List<Token> tokens) {
+    RecursiveUnit pointer = mother;
+    for(var pos = 0; pos < tokens.length; pos++){
+      var token = tokens[pos];
+      switch(token.type){
+        case AnalyserConst.functionUnspecified:
+          RecursiveFunction sub = RecursiveFunction(ValueType(token.data));
+          var deleted = pointer.child.removeLast();
+          pointer.add(sub);
+          if(token.data == "setLocal" || token.data == "setGlobal" || token.data == "setVariable"){
+            sub.add(RecursiveData(deleted.child[0].body));
+          }else{
+            sub.add(deleted);
           }
-          pos = outPos;
-        }
-        pos = recursiveAnalyse(sub, tokens, pos + 1) + 1;
-        if(pos < tokens.length && tokens[pos].type == AnalyserConst.functionElse){
-          pos = recursiveAnalyse(sub, tokens, pos + 1);
-        }
-        break;
-      case AnalyserConst.function:
-      case AnalyserConst.blockStart:
-        RecursiveFunction sub;
-        if (token.type == AnalyserConst.blockStart) {
-          sub = RecursiveFunction(ValueType("doLines"));
-        } else {
-          sub = RecursiveFunction(ValueType(token.data));
-          pos++;// ( 가 있으므로
-        }
-        parent.add(sub);
-        while (true) {
-          var outPos = recursiveAnalyse(sub, tokens, pos + 1);
-          if (outPos == -1) {
-            pos++;
-            break;
+          pointer = sub;
+          break;
+        case AnalyserConst.blockStart:
+          RecursiveFunction sub = RecursiveFunction(ValueType("doLines"));
+          pointer.add(sub);
+          pointer = sub;
+          break;
+        case AnalyserConst.blockEnd:
+          while(pointer.body.data != "if"){
+            pointer = pointer.parent!;
           }
-          pos = outPos;
-        }
-        break;
-      case AnalyserConst.functionComma:
-        pos++;
-        break;
-      case AnalyserConst.blockEnd:
-      case AnalyserConst.functionEnd:
-        return -1;
-      case AnalyserConst.variableName:
-        RecursiveUnit out;
-        if(parent.body.data == "setLocal" || parent.body.data == "setGlobal" || parent.body.data == "setVariable"){
-          out = RecursiveData(ValueType(token.dataString));
-        }else{
-          out = RecursiveFunction(ValueType("loadVariable"));
-        }
-        out.add(RecursiveData(ValueType(token.dataString)));
-        parent.add(out);
-        break;
-      case AnalyserConst.functionElse:
-        break;
-      default:
-        parent.add(RecursiveData(ValueType(token.data)));
-        break;
+          if(!(pos + 1 < tokens.length && tokens[pos + 1].type == AnalyserConst.functionElse)){
+            pointer = pointer.parent!;
+          }
+          break;
+        case AnalyserConst.functionElse:
+          break;
+        case AnalyserConst.functionIf:
+          RecursiveFunction sub = RecursiveFunction(ValueType("if"));
+          pointer.add(sub);
+          pointer = sub;
+          break;
+        case AnalyserConst.function:
+          RecursiveFunction sub = RecursiveFunction(ValueType(token.data));
+          pointer.add(sub);
+          pointer = sub;
+          break;
+        case AnalyserConst.functionStart:
+          break;
+        case AnalyserConst.functionEnd:
+          pointer = pointer.parent!;
+          break;
+        case AnalyserConst.functionComma:
+
+          break;
+        case AnalyserConst.variableName:
+          RecursiveUnit out = RecursiveFunction(ValueType("loadVariable"));
+          out.add(RecursiveData(ValueType(token.dataString)));
+          pointer.add(out);
+          break;
+        case AnalyserConst.lineEnd:
+          while(pointer.body.data != "doLines" && pointer.body.data != "condition"){
+            pointer = pointer.parent!;
+          }
+          break;
+        default:
+          var sub = RecursiveData(ValueType(token.data));
+          pointer.add(sub);
+          break;
+      }
+
+      // print("mother : $mother");
+      // print("pointer : $pointer");
+      // print("token : $token");
+      // print("");
     }
-    return pos;
   }
 
   RecursiveUnit? analyseLines(List<Token> analysedData) {
     if (analysedData.isEmpty) return null;
-    analysedData.insert(0, Token(AnalyserConst.blockStart));
-    analysedData.add(Token(AnalyserConst.blockEnd));
-    var parent = RecursiveFunction(ValueType("doLines"));
-    recursiveAnalyse(parent, analysedData, 0);
-    return parent.child[0];
+    RecursiveUnit mother = RecursiveFunction(ValueType("doLines"));
+    abstractSyntaxTreeAnalyse(mother, analysedData);
+    return mother;
   }
 
   RecursiveUnit? analyseLine(List<Token> analysedData) {
     if (analysedData.isEmpty) return null;
-    var parent = RecursiveFunction(ValueType.none());
-    recursiveAnalyse(parent, analysedData, 0);
-    return parent.child[0];
+    RecursiveUnit mother = RecursiveFunction(ValueType("condition"));
+    abstractSyntaxTreeAnalyse(mother, analysedData);
+    return mother;
   }
 }

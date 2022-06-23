@@ -30,6 +30,7 @@ class Functions {
         (input) => ValueType(VariableDataBase().hasValue(input[0].data));
     functionValueType['loadVariable'] =
         (input) => VariableDataBase().getValueType(input[0].data) ?? input[0];
+    functionValueType['condition'] = (input) => input[0];
 
     functionVoid['if'] = (input) {
       var data0 = input[0].unzip();

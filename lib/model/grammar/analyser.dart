@@ -3,6 +3,7 @@ import 'package:cyoap_flutter/model/grammar/recursive_parser.dart';
 import 'package:cyoap_flutter/model/grammar/semantic_analyser.dart';
 import 'package:cyoap_flutter/model/grammar/token.dart';
 
+import 'analyser_const.dart';
 import 'function_list.dart';
 
 class Analyser {
@@ -28,6 +29,7 @@ class Analyser {
         continue;
       }
       tokenList.addAll(lexicalAnalyser.analyse(code.replaceAll(RegExp(r"//.*"), "")));
+      tokenList.add(Token(AnalyserConst.lineEnd));
     }
     tokenList = lexicalAnalyser.changeToSet(tokenList);
     return tokenList;

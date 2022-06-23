@@ -3,6 +3,7 @@ import 'package:cyoap_flutter/model/grammar/analyser.dart';
 import 'value_type.dart';
 
 abstract class RecursiveUnit {
+  RecursiveUnit? parent;
   ValueType body;
 
   // 함수 or 값
@@ -12,7 +13,9 @@ abstract class RecursiveUnit {
 
   Map<String, dynamic> toJson();
 
-  void add(RecursiveUnit unit) {}
+  void add(RecursiveUnit unit) {
+    unit.parent = this;
+  }
 
   List<RecursiveUnit> get child => [];
 
@@ -33,10 +36,9 @@ class RecursiveFunction extends RecursiveUnit {
 
   @override
   void add(RecursiveUnit unit) {
+    super.add(unit);
     childNode.add(unit);
   }
-
-  RecursiveFunction(ValueType value) : super.fromValue(value);
 
   @override
   Map<String, dynamic> toJson() => {
@@ -44,6 +46,7 @@ class RecursiveFunction extends RecursiveUnit {
         'childNode': childNode,
         'value': body,
       };
+  RecursiveFunction(ValueType value) : super.fromValue(value);
 
   RecursiveFunction.fromJson(Map<String, dynamic> json) {
     super.body = ValueType.fromJson(json['value']);

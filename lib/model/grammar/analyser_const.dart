@@ -35,4 +35,7 @@ class AnalyserConst {
   static const int blockStart = 50;
   /// }
   static const int blockEnd = 51;
+
+  /// ;
+  static const int lineEnd = 100;
 }

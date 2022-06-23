@@ -9,16 +9,16 @@ void main() {
   test('numberTest', () {
     String strTest = """
     let numberTest0 = -5.5
-    let numberTest1 = 3
-    let numberTest2 = 3 + 5
+    let numberTest1 = 3 * (3 + 5)
+    let numberTest2 = (3 * 3) + 5
     let numberTest3 = 6 - 5.5
     let numberTest4 = 6 * 3
     let numberTest5 = 6 / 3
     """;
     Analyser().run(Analyser().analyseCodes(strTest));
     expect(ins.getValueType('numberTest0')?.data, closeTo(-5.5, epsilon));
-    expect(ins.getValueType('numberTest1')?.data, 3);
-    expect(ins.getValueType('numberTest2')?.data, 8);
+    expect(ins.getValueType('numberTest1')?.data, 24);
+    expect(ins.getValueType('numberTest2')?.data, 14);
     expect(ins.getValueType('numberTest3')?.data, closeTo(0.5, epsilon));
     expect(ins.getValueType('numberTest4')?.data, 18);
     expect(ins.getValueType('numberTest5')?.data, 2);
@@ -115,7 +115,6 @@ void main() {
     numberTest4 >= 19
     """;
     var recursiveData = Analyser().analyseSingleLine(strTest);
-    print(recursiveData);
     expect(Analyser().check(recursiveData) as bool, true);
 
     recursiveData = Analyser().analyseSingleLine(strTest1);
@@ -166,15 +165,10 @@ void main() {
     if(numberTest0 == -5.5){
       var gamma = 12
     }
-    
-    if(numberTest0 == -5.5){var delta = 12}
     """;
-    var t = Analyser().analyseCodes(strTest);
-    print(t);
-    Analyser().run(t);
+    Analyser().run(Analyser().analyseCodes(strTest));
     expect(ins.getValueType('alpha')?.data, 11);
     expect(ins.getValueType('beta')?.data, null);
     expect(ins.getValueType('gamma')?.data, 12);
-    expect(ins.getValueType('delta')?.data, 12);
   });
 }
