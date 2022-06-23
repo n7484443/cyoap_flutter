@@ -114,10 +114,11 @@ void main() {
     String strTest1 = """ 
     numberTest4 >= 19
     """;
-    var recursiveData = Analyser().analyseCodes(strTest);
+    var recursiveData = Analyser().analyseSingleLine(strTest);
+    print(recursiveData);
     expect(Analyser().check(recursiveData) as bool, true);
 
-    recursiveData = Analyser().analyseCodes(strTest1);
+    recursiveData = Analyser().analyseSingleLine(strTest1);
     expect(Analyser().check(recursiveData) as bool, false);
   });
 
@@ -127,12 +128,12 @@ void main() {
     """;
     String strGlobalTest = """
     if(globalTest == 123){
-      var T = true;
+      var T = true
     }else{
       var T2 = false
     }
-    var existTest = exist(T)
-    var existTest2 = exist(T2)
+    var existTest = exist("T")
+    var existTest2 = exist("T2")
     """;
     Analyser().run(Analyser().analyseCodes(strTest));
     ins.clearLocalVariable();
@@ -147,6 +148,7 @@ void main() {
       //이건 해석하면 안되는 문장. var asb = 0
       var commentTest1 = 0
     """;
+    ins.clearLocalVariable();
     Analyser().run(Analyser().analyseCodes(strTest));
     expect(ins.getValueType('commentTest')?.data, 123);
     expect(ins.getValueType('asb')?.data, null);
@@ -168,8 +170,8 @@ void main() {
     if(numberTest0 == -5.5){var delta = 12}
     """;
     var t = Analyser().analyseCodes(strTest);
+    print(t);
     Analyser().run(t);
-    print(VariableDataBase().varMap);
     expect(ins.getValueType('alpha')?.data, 11);
     expect(ins.getValueType('beta')?.data, null);
     expect(ins.getValueType('gamma')?.data, 12);

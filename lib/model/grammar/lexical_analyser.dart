@@ -159,7 +159,7 @@ class LexicalAnalyser {
     }
     addToken();
 
-    return changeToSet(tokenList);
+    return tokenList;
   }
 
   List<Token> changeToSet(List<Token> tokenList) {
@@ -199,28 +199,38 @@ class LexicalAnalyser {
           if (token.data == "*" || token.data == "/") {
             while (stack.isNotEmpty &&
                 (stack.last.data == "*" || stack.last.data == "/") &&
-                stack.last.type != AnalyserConst.functionEnd) {
+                stack.last.type != AnalyserConst.functionEnd && stack.last.type != AnalyserConst.blockEnd) {
               tokenOutput.add(stack.removeLast());
             }
             stack.add(token);
           } else {
             while (stack.isNotEmpty &&
-                stack.last.type != AnalyserConst.functionEnd) {
+                stack.last.type != AnalyserConst.functionEnd && stack.last.type != AnalyserConst.blockEnd) {
               tokenOutput.add(stack.removeLast());
             }
             stack.add(token);
           }
           break;
+        case AnalyserConst.blockEnd:
         case AnalyserConst.functionEnd:
-          tokenOutput.add(Token(AnalyserConst.functionEnd));
+          tokenOutput.add(token);
           stack.add(token);
+          break;
+        case AnalyserConst.blockStart:
+          while (stack.isNotEmpty &&
+              stack.last.type != AnalyserConst.blockEnd) {
+            tokenOutput.add(stack.removeLast());
+          }
+          tokenOutput.add(token);
+          stack.removeLast();
           break;
         case AnalyserConst.functionStart:
           while (stack.isNotEmpty &&
-              stack.last.type != AnalyserConst.functionEnd) {
+              stack.last.type != AnalyserConst.functionEnd &&
+              stack.last.type != AnalyserConst.blockEnd) {
             tokenOutput.add(stack.removeLast());
           }
-          tokenOutput.add(Token(AnalyserConst.functionStart));
+          tokenOutput.add(token);
           stack.removeLast();
           break;
         case AnalyserConst.functionComma:

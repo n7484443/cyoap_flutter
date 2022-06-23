@@ -18,14 +18,18 @@
 
 ## 연산자와 함수 리스트
 ```python
-if(조건, 조건이 참일 경우 실행 문장, 조건이 거짓일 경우 실행 문장)
+if(조건){
+    조건이 참일 경우 실행 문장
+}else{
+    조건이 거짓일 경우 실행 문장
+}
 floor(내릴 숫자)
 round(반올림 할 숫자)
 ceil(올릴 숫자)
 and(조건1, 조건2, true, false, 등등)
 or(조건1, 조건2, true, false, 등등)
 not(true, false 혹은 조건)
-exist(변수 이름)
+exist("변수 이름") 혹은 exist('변수 이름')
 random(최대값)
 ```
 그 외의 기본 연산

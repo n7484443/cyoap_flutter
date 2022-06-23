@@ -32,7 +32,6 @@ class Functions {
         (input) => VariableDataBase().getValueType(input[0].data) ?? input[0];
 
     functionVoid['if'] = (input) {
-      print(input);
       var data0 = input[0].unzip();
       if (data0.data is bool && data0.data) {
         input[1].unzip();
@@ -50,14 +49,21 @@ class Functions {
       var data0 = input[0].unzip();
       var data1 = input[1].unzip();
       VariableDataBase().setValue(
-          data0.data, ValueTypeWrapper(data1, false, isGlobal: false));
+          data0.data, ValueTypeWrapper(data1, false, isGlobal: true));
     };
     functionVoid['setVariable'] = (input) {
       var data0 = input[0].unzip();
       var data1 = input[1].unzip();
-      var original = VariableDataBase().getValueTypeWrapper(data0.data)!;
-      var copy = ValueTypeWrapper.copy(original)..valueType = data1;
-      VariableDataBase().setValue(data0.data, copy);
+      if(data0.data is! String){
+        return;
+      }
+      var original = VariableDataBase().getValueTypeWrapper(data0.data);
+      if(original != null){
+        var copy = ValueTypeWrapper.copy(original)..valueType = data1;
+        VariableDataBase().setValue(data0.data, copy);
+      }else{
+        VariableDataBase().setValue(data0.data, ValueTypeWrapper.normal(ValueType(data0.data), false));
+      }
     };
     functionVoid['doLines'] = (input) {
       for (var line in input) {

@@ -20,26 +20,35 @@ class Analyser {
   SemanticAnalyser semanticAnalyser = SemanticAnalyser();
   Functions functionList = Functions();
 
-  RecursiveUnit? analyse(String codeInput) {
+  List<Token> toTokenList(String codeInput){
     var codes = codeInput.split('\n');
     var tokenList = List<Token>.empty(growable: true);
     for (var code in codes) {
       if (code.trim().isEmpty) {
         continue;
       }
-      tokenList.addAll(lexicalAnalyser.analyse(code));
+      tokenList.addAll(lexicalAnalyser.analyse(code.replaceAll(RegExp(r"//.*"), "")));
     }
-    /*
+    tokenList = lexicalAnalyser.changeToSet(tokenList);
+    return tokenList;
+  }
+
+  RecursiveUnit? analyse(String codeInput) {
     try {
-      var t = semanticAnalyser.analyseLines(tokenList);
-      if(t != null){
-        recursiveList.add(t);
-      }
+      return semanticAnalyser.analyseLines(toTokenList(codeInput));
     } catch (e) {
       print(e);
-      //e.printError(info: 'something wrong in $codes');
-    }*/
-    return semanticAnalyser.analyseLines(tokenList);
+    }
+    return null;
+  }
+
+  RecursiveUnit? analyseSingleLine(String codeInput) {
+    try {
+      return semanticAnalyser.analyseLine(toTokenList(codeInput));
+    } catch (e) {
+      print(e);
+    }
+    return null;
   }
 
   void run(RecursiveUnit? unitList) {

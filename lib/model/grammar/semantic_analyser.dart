@@ -88,7 +88,7 @@ class SemanticAnalyser {
     analysedData.add(Token(AnalyserConst.blockEnd));
     var parent = RecursiveFunction(ValueType("doLines"));
     recursiveAnalyse(parent, analysedData, 0);
-    return parent;
+    return parent.child[0];
   }
 
   RecursiveUnit? analyseLine(List<Token> analysedData) {
