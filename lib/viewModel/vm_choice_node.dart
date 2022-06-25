@@ -26,6 +26,7 @@ class VMChoiceNode extends GetxController {
   var isCard = false.obs;
   var isRound = true.obs;
   var hideTitle = false.obs;
+  var imagePosition = 0.obs;
   var status = SelectableStatus.open.obs;
 
   var isRandom = false.obs;
@@ -44,14 +45,13 @@ class VMChoiceNode extends GetxController {
     super.onInit();
     quillController = initQuillController();
     size.value = node.width;
-    size.listen((p0) {
-      Get.find<VMDraggableNestedMap>().update();
-    });
+    size.listen((value) => Get.find<VMDraggableNestedMap>().update());
     titleString.value = node.title;
     imageString.value = node.imageString;
     isCard.value = node.isCard;
     isRound.value = node.isRound;
     hideTitle.value = node.hideTitle;
+    imagePosition.value = node.imagePosition;
     isRandom.value = node.isRandom;
     maximizingImage.value = node.maximizingImage;
     randomValue.value = -1;
@@ -91,6 +91,7 @@ class VMChoiceNode extends GetxController {
     titleString.value = node.title;
     imageString.value = node.imageString;
     isCard.value = node.isCard;
+    imagePosition.value = node.imagePosition;
     isRound.value = node.isRound;
     hideTitle.value = node.hideTitle;
     maximizingImage.value = node.maximizingImage;

@@ -391,6 +391,40 @@ class ViewChoiceNodeContent extends StatelessWidget {
             : null,
         isAllVisible: isEditable,
       );
+      if (node.imagePosition == 1) {
+        return Column(
+          children: [
+            if (title != null) title,
+            Row(
+              children: [
+                Expanded(
+                  child: contents,
+                ),
+                if (image != null) image,
+              ],
+            ),
+            child,
+          ],
+        );
+      }
+      if (node.imagePosition == 2) {
+        return Column(
+          children: [
+            if (title != null) title,
+            Row(
+              children: [
+                if (image != null) image,
+                Expanded(
+                  child: contents,
+                ),
+              ],
+            ),
+            child,
+          ],
+        );
+      }
+
+
       List<Widget> subWidget;
       if (layoutSetting.titleOverlap.value) {
         subWidget = [
@@ -415,6 +449,7 @@ class ViewChoiceNodeContent extends StatelessWidget {
           if (title != null) title,
         ];
       }
+
       subWidget.addAll([contents, child]);
       return Column(
         children: subWidget,

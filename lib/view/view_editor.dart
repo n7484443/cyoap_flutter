@@ -24,15 +24,18 @@ class ViewEditor extends StatelessWidget {
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () {
-          if (controller.title.value.trim().isNotEmpty) {
+          if (controller.title.value
+              .trim()
+              .isNotEmpty) {
             if (controller.isChanged) {
               showDialog(
                 context: context,
-                builder: (_) => ViewBackDialog(
-                  () => controller.save(),
-                  () => Get.back(id: 1),
-                  cancelFunction: () => controller.isChanged = false,
-                ),
+                builder: (_) =>
+                    ViewBackDialog(
+                          () => controller.save(),
+                          () => Get.back(id: 1),
+                      cancelFunction: () => controller.isChanged = false,
+                    ),
               );
             } else {
               Get.back(id: 1);
@@ -51,82 +54,109 @@ class ViewEditor extends StatelessWidget {
     );
 
     var editingNodeValues = Obx(
-      () => Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          ViewSwitchLabel(
-            () => controller.isCard.value = !controller.isCard.value,
-            controller.isCard.value,
-            label: '카드 모드',
-          ),
-          ViewSwitchLabel(
-            () => controller.isRound.value = !controller.isRound.value,
-            controller.isRound.value,
-            label: '외곽선 둥글게',
-          ),
-          ViewSwitchLabel(
-            () =>
+          () =>
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              ViewSwitchLabel(
+                    () => controller.isCard.value = !controller.isCard.value,
+                controller.isCard.value,
+                label: '카드 모드',
+              ),
+              ViewSwitchLabel(
+                    () => controller.isRound.value = !controller.isRound.value,
+                controller.isRound.value,
+                label: '외곽선 둥글게',
+              ),
+              ViewSwitchLabel(
+                    () =>
                 controller.isSelectable.value = !controller.isSelectable.value,
-            controller.isSelectable.value,
-            label: '선택 가능',
-          ),
-          ViewSwitchLabel(
-            () => controller.isRandom.value = !controller.isRandom.value,
-            controller.isRandom.value,
-            label: '랜덤 기능',
-          ),
-          Visibility(
-            visible: controller.isRandom.value,
-            child: SizedBox(
-              width: 80,
-              child: TextField(
-                textAlign: TextAlign.end,
-                maxLength: 3,
-                minLines: 1,
-                maxLines: 1,
-                keyboardType: TextInputType.number,
-                controller: controller.controllerRandom,
-                decoration: const InputDecoration(
-                  label: Text('랜덤 범위'),
+                controller.isSelectable.value,
+                label: '선택 가능',
+              ),
+              ViewSwitchLabel(
+                    () =>
+                controller.isRandom.value = !controller.isRandom.value,
+                controller.isRandom.value,
+                label: '랜덤 기능',
+              ),
+              Visibility(
+                visible: controller.isRandom.value,
+                child: SizedBox(
+                  width: 80,
+                  child: TextField(
+                    textAlign: TextAlign.end,
+                    maxLength: 3,
+                    minLines: 1,
+                    maxLines: 1,
+                    keyboardType: TextInputType.number,
+                    controller: controller.controllerRandom,
+                    decoration: const InputDecoration(
+                      label: Text('랜덤 범위'),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          ViewSwitchLabel(
-            () => controller.maximizingImage.value =
+              ViewSwitchLabel(
+                    () =>
+                controller.maximizingImage.value =
                 !controller.maximizingImage.value,
-            controller.maximizingImage.value,
-            label: '이미지 최대화',
+                controller.maximizingImage.value,
+                label: '이미지 최대화',
+              ),
+              ViewSwitchLabel(
+                    () =>
+                controller.hideTitle.value =
+                !controller.hideTitle.value,
+                controller.hideTitle.value,
+                label: '제목 숨기기',
+              ),
+              ViewSwitchLabel(
+                    () =>
+                controller.imagePosition.value =
+                (controller.imagePosition.value == 0) ? 1 : 0,
+                controller.imagePosition.value != 0,
+                label: '가로 모드',
+              ),
+
+              ViewSwitchLabel(
+                    () {
+                      if(controller.imagePosition.value == 1) {
+                        controller.imagePosition.value = 2;
+                      }else if(controller.imagePosition.value == 2) {
+                        controller.imagePosition.value = 1;
+                      }
+                },
+                controller.imagePosition.value == 2,
+                disable: controller.imagePosition.value == 0,
+                label: '이미지 왼쪽으로',
+              ),
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: OutlinedButton(
+                  child: const Text('코드 수정'),
+                  onPressed: () {
+                    Get.toNamed('/viewCodeEditor', id: 1);
+                  },
+                ),
+              ),
+            ],
           ),
-          ViewSwitchLabel(
-                () => controller.hideTitle.value =
-            !controller.hideTitle.value,
-            controller.hideTitle.value,
-            label: '제목 숨기기',
-          ),
-          const Spacer(),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10.0),
-            child: OutlinedButton(
-              child: const Text('코드 수정'),
-              onPressed: () {
-                Get.toNamed('/viewCodeEditor', id: 1);
-              },
-            ),
-          ),
-        ],
-      ),
     );
     return WillPopScope(
       child: Scaffold(
         appBar: appbarWidget,
         body: Column(
           children: [
-            Obx(() => TextField(
+            Obx(() =>
+                TextField(
                   controller: controller.controllerTitle,
                   textAlign: TextAlign.center,
                   decoration: InputDecoration(
-                    fillColor: controller.title.value.trim().isEmpty
+                    fillColor: controller.title.value
+                        .trim()
+                        .isEmpty
                         ? Colors.redAccent
                         : null,
                     hintText: '제목',
@@ -158,14 +188,17 @@ class ViewEditor extends StatelessWidget {
         ),
       ),
       onWillPop: () async {
-        if (controller.title.value.trim().isNotEmpty) {
+        if (controller.title.value
+            .trim()
+            .isNotEmpty) {
           return await showDialog(
             context: context,
-            builder: (_) => ViewBackDialog(
-              () => controller.save(),
-              () => Get.back(id: 1),
-              cancelFunction: () => controller.isChanged = false,
-            ),
+            builder: (_) =>
+                ViewBackDialog(
+                      () => controller.save(),
+                      () => Get.back(id: 1),
+                  cancelFunction: () => controller.isChanged = false,
+                ),
           );
         }
         return false;
@@ -195,42 +228,46 @@ class ViewEditorTyping extends StatelessWidget {
       Color newColor = const Color(0x00000000);
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Select Color'),
-          backgroundColor: Theme.of(context).canvasColor,
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ColorPicker(
-                pickersEnabled: {
-                  ColorPickerType.both: true,
-                  ColorPickerType.primary: false,
-                  ColorPickerType.accent: false
-                },
-                color: const Color(0x00000000),
-                onColorChanged: (color) {
-                  newColor = color;
-                },
+        builder: (context) =>
+            AlertDialog(
+              title: const Text('Select Color'),
+              backgroundColor: Theme
+                  .of(context)
+                  .canvasColor,
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ColorPicker(
+                    pickersEnabled: {
+                      ColorPickerType.both: true,
+                      ColorPickerType.primary: false,
+                      ColorPickerType.accent: false
+                    },
+                    color: const Color(0x00000000),
+                    onColorChanged: (color) {
+                      newColor = color;
+                    },
+                  ),
+                ],
               ),
-            ],
-          ),
-          actionsAlignment: MainAxisAlignment.spaceEvenly,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () {
-                Get.back();
-              },
+              actionsAlignment: MainAxisAlignment.spaceEvenly,
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () {
+                    Get.back();
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.check),
+                  onPressed: () {
+                    changeColor(
+                        controller.quillController, newColor, background);
+                    Get.back();
+                  },
+                ),
+              ],
             ),
-            IconButton(
-              icon: const Icon(Icons.check),
-              onPressed: () {
-                changeColor(controller.quillController, newColor, background);
-                Get.back();
-              },
-            ),
-          ],
-        ),
       );
     }
 
@@ -277,8 +314,9 @@ class ViewEditorTyping extends StatelessWidget {
               focusNode: FocusNode(),
               expands: true,
               scrollable: true,
-              autoFocus: false,
+              autoFocus: true,
               readOnly: false,
+              showCursor: true,
               scrollController: ScrollController(),
               customStyles: ConstList.getDefaultThemeData(context, 1,
                   fontStyle: mainFont),
@@ -297,34 +335,37 @@ class ViewEditorTyping extends StatelessWidget {
                         if (name != '') {
                           controller.name = name;
                           await showDialog(
-                            builder: (_) => AlertDialog(
-                              title: const Text('출처'),
-                              content: TextField(
-                                controller: controller.controllerSource,
-                                decoration: const InputDecoration(
-                                  hintText: '출처를 모르거나 없을 경우 비워두세요.',
+                            builder: (_) =>
+                                AlertDialog(
+                                  title: const Text('출처'),
+                                  content: TextField(
+                                    controller: controller.controllerSource,
+                                    decoration: const InputDecoration(
+                                      hintText: '출처를 모르거나 없을 경우 비워두세요.',
+                                    ),
+                                  ),
+                                  actionsAlignment: MainAxisAlignment
+                                      .spaceBetween,
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        controller.addImageSource(name);
+                                        Get.back();
+                                      },
+                                      child: const Text('자르기'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        controller.addImageSource(name);
+                                        controller
+                                            .addImageCrop(
+                                            controller.imageLast!);
+                                        Get.back();
+                                      },
+                                      child: const Text('저장하기'),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              actionsAlignment: MainAxisAlignment.spaceBetween,
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    controller.addImageSource(name);
-                                    Get.back();
-                                  },
-                                  child: const Text('자르기'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    controller.addImageSource(name);
-                                    controller
-                                        .addImageCrop(controller.imageLast!);
-                                    Get.back();
-                                  },
-                                  child: const Text('저장하기'),
-                                ),
-                              ],
-                            ),
                             context: context,
                           );
                           if (controller.imageLast != null) {
@@ -347,32 +388,33 @@ class ViewEditorTyping extends StatelessWidget {
                         PointerDeviceKind.mouse,
                       }),
                       child: GetBuilder<VMEditor>(
-                        builder: (_) => ListView.builder(
-                          shrinkWrap: true,
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          scrollDirection: Axis.horizontal,
-                          controller: ScrollController(),
-                          itemCount: controller.getImageLength(),
-                          itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  width: 3,
-                                  color: index == controller.index
-                                      ? Colors.redAccent
-                                      : Colors.white,
-                                ),
-                              ),
-                              child: GestureDetector(
-                                child: ViewImageLoading(
-                                    ImageDB().getImageName(index)),
-                                onDoubleTap: () {
-                                  controller.setIndex(index);
-                                },
-                              ),
-                            );
-                          },
-                        ),
+                        builder: (_) =>
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              controller: ScrollController(),
+                              itemCount: controller.getImageLength(),
+                              itemBuilder: (BuildContext context, int index) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      width: 3,
+                                      color: index == controller.index
+                                          ? Colors.redAccent
+                                          : Colors.white,
+                                    ),
+                                  ),
+                                  child: GestureDetector(
+                                    child: ViewImageLoading(
+                                        ImageDB().getImageName(index)),
+                                    onDoubleTap: () {
+                                      controller.setIndex(index);
+                                    },
+                                  ),
+                                );
+                              },
+                            ),
                       ),
                     ),
                   ),

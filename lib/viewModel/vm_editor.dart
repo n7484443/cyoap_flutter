@@ -25,6 +25,7 @@ class VMEditor extends GetxController {
   var isRound = NodeEditor().target.isRound.obs;
   var isSelectable = NodeEditor().target.isSelectable.obs;
   var isRandom = NodeEditor().target.isRandom.obs;
+  var imagePosition = NodeEditor().target.imagePosition.obs;
   var maximizingImage = NodeEditor().target.maximizingImage.obs;
   var hideTitle = NodeEditor().target.hideTitle.obs;
 
@@ -33,34 +34,14 @@ class VMEditor extends GetxController {
   @override
   void onInit() {
     quillController = NodeEditor().getVMChoiceNode()!.quillController;
-    isCard.listen((value) {
-      isChanged = true;
-    });
-
-    isRound.listen((value) {
-      isChanged = true;
-    });
-
-    isSelectable.listen((value) {
-      isChanged = true;
-    });
-
-    isRandom.listen((value) {
-      isChanged = true;
-    });
-
-    maximizingImage.listen((value) {
-      isChanged = true;
-    });
-
-    hideTitle.listen((value){
-      isChanged = true;
-    });
-
-    controllerRandom.addListener(() {
-      isChanged = true;
-    });
-
+    isCard.listen((value) => isChanged = true);
+    isRound.listen((value) => isChanged = true);
+    isSelectable.listen((value) => isChanged = true);
+    isRandom.listen((value) => isChanged = true);
+    imagePosition.listen((value) => isChanged = true);
+    maximizingImage.listen((value) => isChanged = true);
+    hideTitle.listen((value) => isChanged = true);
+    controllerRandom.addListener(() => isChanged = true);
 
     controllerRandom.text = NodeEditor().target.maxRandom.toString();
 
@@ -92,6 +73,7 @@ class VMEditor extends GetxController {
     NodeEditor().target.isSelectable = isSelectable.value;
     NodeEditor().target.isRound = isRound.value;
     NodeEditor().target.isCard = isCard.value;
+    NodeEditor().target.imagePosition = imagePosition.value;
     NodeEditor().target.hideTitle = hideTitle.value;
 
     quillController.updateSelection(

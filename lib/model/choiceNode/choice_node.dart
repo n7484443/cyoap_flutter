@@ -14,6 +14,7 @@ class ChoiceNode extends GenerableParserAndPosition {
   bool isRound = true;
   int maxRandom = 0;
   int random = -1;
+  int imagePosition = 0; //0:default, 1:left 2:right
   String title;
   String contentsString;
   String imageString;
@@ -54,6 +55,7 @@ class ChoiceNode extends GenerableParserAndPosition {
         maximizingImage = json['maximizingImage'] ?? false,
         maxRandom = json['maxRandom'] ?? 0,
         isSelectable = json['isSelectable'],
+        imagePosition = json['imagePosition'] ?? 0,
         title = json['title'] ?? '',
         contentsString = json['contentsString'],
         imageString = json['imageString'] ?? json['image'],
@@ -76,6 +78,7 @@ class ChoiceNode extends GenerableParserAndPosition {
       'isRound': isRound,
       'isOccupySpace': isOccupySpace,
       'isSelectable': isSelectable,
+      'imagePosition': imagePosition,
       'hideTitle': hideTitle,
       'maxRandom': maxRandom,
       'title': title,

@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 class ViewSwitchLabel extends StatelessWidget {
   final void Function() updateState;
   final bool state;
+  final bool disable;
   final String label;
   final double labelSize;
 
   const ViewSwitchLabel(this.updateState, this.state,
-      {this.label = '', this.labelSize = 14.0, Key? key})
+      {this.label = '', this.disable = false, this.labelSize = 14.0, Key? key})
       : super(key: key);
 
   @override
@@ -19,10 +20,10 @@ class ViewSwitchLabel extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(color: Colors.black, fontSize: labelSize),
+            style: TextStyle(color: disable ? Colors.black38 : Colors.black, fontSize: labelSize),
           ),
           Switch(
-            onChanged: (bool value) => updateState(),
+            onChanged: (disable && !state) ? null : (bool value) => updateState(),
             value: state,
           ),
         ],
