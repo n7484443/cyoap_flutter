@@ -17,17 +17,17 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
   const NodeDragTarget(this.pos, {this.isHorizontal = false, Key? key})
       : super(key: key);
 
-  bool listEqualExceptLast(List<int> A, List<int> B){
-    if(A.length != B.length)return false;
-    for(int i = 0; i < A.length - 1; i++){
-      if(A[i] != B[i])return false;
+  bool listEqualExceptLast(List<int> A, List<int> B) {
+    if (A.length != B.length) return false;
+    for (int i = 0; i < A.length - 1; i++) {
+      if (A[i] != B[i]) return false;
     }
     return true;
   }
 
-  bool listContain(List<int> A, List<int> B){
-    for(int i = 0; i < min(A.length, B.length); i++){
-      if(A[i] != B[i])return false;
+  bool listContain(List<int> A, List<int> B) {
+    for (int i = 0; i < min(A.length, B.length); i++) {
+      if (A[i] != B[i]) return false;
     }
     return true;
   }
@@ -57,7 +57,8 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
             controller.addData(pos, controller.removedData.value!);
             controller.removedData.value = null;
             controller.removedData.refresh();
-          } else if (listEqualExceptLast(pos, drag) && (pos.last - 1) >= drag.last) {
+          } else if (listEqualExceptLast(pos, drag) &&
+              (pos.last - 1) >= drag.last) {
             controller.changeData(drag, List.from(pos)..last -= 1);
           } else {
             controller.changeData(drag, pos);
@@ -70,6 +71,7 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
 
 class NodeDividerDialog extends StatelessWidget {
   final int y;
+
   const NodeDividerDialog(this.y, {Key? key}) : super(key: key);
 
   @override
@@ -172,7 +174,7 @@ class NestedMap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(VMDraggableNestedMap());
+    var controller = Get.put(VMDraggableNestedMap());
     if (isEditable) {
       return GetBuilder<VMDraggableNestedMap>(
         builder: (_) => LayoutBuilder(builder: (context, constrains) {
@@ -183,30 +185,23 @@ class NestedMap extends StatelessWidget {
               key: _.captureKey,
               child: Container(
                 decoration: BoxDecoration(color: _.backgroundColor),
-                child: Column(
-                  children: _.widgetList(),
-                ),
+                child: _.widgetList(),
               ),
             ),
           );
         }),
       );
     } else {
-      return GetBuilder<VMDraggableNestedMap>(
-        builder: (_) {
-          var inner = _.widgetList();
-          return Container(
-            decoration: BoxDecoration(color: _.backgroundColor),
-            child: ListView.builder(
-              controller: _.scroller,
-              itemCount: _.getLength(),
-              itemBuilder: (BuildContext context, int index) {
-                return inner[index];
-              },
-              cacheExtent: 400,
-            ),
-          );
-        },
+      return Container(
+        decoration: BoxDecoration(color: controller.backgroundColor),
+        child: ListView.builder(
+          controller: controller.scroller,
+          itemCount: controller.getLength(),
+          itemBuilder: (BuildContext context, int index) {
+            return controller.getWidget(index);
+          },
+          cacheExtent: 400,
+        ),
       );
     }
   }
