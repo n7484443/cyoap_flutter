@@ -45,10 +45,6 @@ class VMDraggableNestedMap extends GetxController {
     return drag![drag!.length - 1] != x - 1 || drag![drag!.length - 2] != y;
   }
 
-  int getLength() {
-    return getPlatform.lineSettings.length * 2 + (isEditable ? 2 : 0);
-  }
-
   @override
   void update([List<Object>? ids, bool condition = true]) {
     super.update();
@@ -80,7 +76,8 @@ class VMDraggableNestedMap extends GetxController {
   Widget widgetList() {
     var choiceNodeList = getPlatform.lineSettings;
     return Column(
-        children: List<Widget>.generate(getLength(), (y) {
+        children: List<Widget>.generate(
+            (getPlatform.lineSettings.length + 1) * 2, (y) {
       var j = y ~/ 2;
       if (y < choiceNodeList.length * 2) {
         if (y.isOdd) {
@@ -120,19 +117,19 @@ class VMDraggableNestedMap extends GetxController {
         }
       } else if (y.isOdd) {
         return Row(
-            children: [
-              Expanded(
-                child: NodeDragTarget(
-                  [choiceNodeList.length, 0],
-                  isHorizontal: true,
-                ),
-              )
-            ],
+          children: [
+            Expanded(
+              child: NodeDragTarget(
+                [choiceNodeList.length, 0],
+                isHorizontal: true,
+              ),
+            )
+          ],
         );
       } else {
         return Visibility(
-            visible: drag != null,
-            child: NodeDivider(j),
+          visible: drag != null,
+          child: NodeDivider(j),
         );
       }
     }));

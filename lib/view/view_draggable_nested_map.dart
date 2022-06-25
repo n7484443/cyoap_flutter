@@ -196,7 +196,7 @@ class NestedMap extends StatelessWidget {
         decoration: BoxDecoration(color: controller.backgroundColor),
         child: ListView.builder(
           controller: controller.scroller,
-          itemCount: controller.getLength(),
+          itemCount: getPlatform.lineSettings.length * 2,
           itemBuilder: (BuildContext context, int index) {
             return controller.getWidget(index);
           },
