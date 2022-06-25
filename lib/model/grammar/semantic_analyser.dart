@@ -10,16 +10,18 @@ class SemanticAnalyser {
   ///-1:block end
   void abstractSyntaxTreeAnalyse(RecursiveUnit mother, List<Token> tokens) {
     RecursiveUnit pointer = mother;
-    for(var pos = 0; pos < tokens.length; pos++){
+    for (var pos = 0; pos < tokens.length; pos++) {
       var token = tokens[pos];
-      switch(token.type){
+      switch (token.type) {
         case AnalyserConst.functionUnspecified:
           RecursiveFunction sub = RecursiveFunction(ValueType(token.data));
           var deleted = pointer.child.removeLast();
           pointer.add(sub);
-          if(token.data == "setLocal" || token.data == "setGlobal" || token.data == "setVariable"){
+          if (token.data == "setLocal" ||
+              token.data == "setGlobal" ||
+              token.data == "setVariable") {
             sub.add(RecursiveData(deleted.child[0].body));
-          }else{
+          } else {
             sub.add(deleted);
           }
           pointer = sub;
@@ -30,10 +32,11 @@ class SemanticAnalyser {
           pointer = sub;
           break;
         case AnalyserConst.blockEnd:
-          while(pointer.body.data != "if"){
+          while (pointer.body.data != "if") {
             pointer = pointer.parent!;
           }
-          if(!(pos + 1 < tokens.length && tokens[pos + 1].type == AnalyserConst.functionElse)){
+          if (!(pos + 1 < tokens.length &&
+              tokens[pos + 1].type == AnalyserConst.functionElse)) {
             pointer = pointer.parent!;
           }
           break;
@@ -55,7 +58,6 @@ class SemanticAnalyser {
           pointer = pointer.parent!;
           break;
         case AnalyserConst.functionComma:
-
           break;
         case AnalyserConst.variableName:
           RecursiveUnit out = RecursiveFunction(ValueType("loadVariable"));
@@ -63,7 +65,8 @@ class SemanticAnalyser {
           pointer.add(out);
           break;
         case AnalyserConst.lineEnd:
-          while(pointer.body.data != "doLines" && pointer.body.data != "condition"){
+          while (pointer.body.data != "doLines" &&
+              pointer.body.data != "condition") {
             pointer = pointer.parent!;
           }
           break;

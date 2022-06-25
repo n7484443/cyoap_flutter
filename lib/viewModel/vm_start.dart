@@ -164,7 +164,7 @@ class VMStartPlatform extends GetxController {
 
   set editable(bool b) => getPlatformFileSystem.isEditable = b;
 
-  Future<void> updatePathList() async{
+  Future<void> updatePathList() async {
     pathList.clear();
     pathList.addAll(await frequentlyUsedPath.frequentPathFromData);
   }

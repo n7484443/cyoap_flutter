@@ -424,7 +424,6 @@ class ViewChoiceNodeContent extends StatelessWidget {
         );
       }
 
-
       List<Widget> subWidget;
       if (layoutSetting.titleOverlap.value) {
         subWidget = [

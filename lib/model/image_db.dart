@@ -121,10 +121,10 @@ class ImageDB {
   }
 
   String getImageName(int index) {
-    if(index == -1){
+    if (index == -1) {
       return "";
     }
-    if(ImageDB().imageList.length <= index){
+    if (ImageDB().imageList.length <= index) {
       return "";
     }
     return ImageDB().imageList[index];
@@ -140,7 +140,7 @@ class ImageDB {
 
   Image noImage = Image.asset('images/noImage.png');
 
-  Future<void> removeImage(String name) async{
+  Future<void> removeImage(String name) async {
     if (ConstList.isWeb()) {
       await init();
       await notesWritableTxn.delete(name);
@@ -150,24 +150,24 @@ class ImageDB {
     checkCache();
   }
 
-  void checkCache(){
+  void checkCache() {
     temp = Queue.from(_dirImageUint8Map.keys);
   }
 
-  bool isInCache(String name){
+  bool isInCache(String name) {
     return temp.contains(name);
   }
 
-  bool isInData(String name){
+  bool isInData(String name) {
     return _dirImageUint8Map.keys.contains(name);
   }
 
-  Image getImageFromCache(String name){
+  Image getImageFromCache(String name) {
     return tempData[name] ?? ImageDB().noImage;
   }
 
   Future<Image> getImage(String name) async {
-    if(isInCache(name)){
+    if (isInCache(name)) {
       var tmp = tempData[name] ?? noImage;
       temp.remove(name);
       temp.add(name);

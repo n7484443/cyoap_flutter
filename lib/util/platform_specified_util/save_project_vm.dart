@@ -52,19 +52,25 @@ class SaveProjectImp extends SaveProject {
 
     var existMap = List<String>.empty(growable: true);
     Directory dirNode = Directory('$path/nodes');
-    if(await dirNode.exists()){
-      var nameList = dirNode.listSync(recursive: true).map((e) => ('nodes/${basename(e.path)}')).toList();
+    if (await dirNode.exists()) {
+      var nameList = dirNode
+          .listSync(recursive: true)
+          .map((e) => ('nodes/${basename(e.path)}'))
+          .toList();
       existMap.addAll(nameList);
     }
     Directory dirImages = Directory('$path/images');
-    if(await dirImages.exists()){
-      var nameList = dirImages.listSync(recursive: true).map((e) => ('images/${basename(e.path)}')).toList();
+    if (await dirImages.exists()) {
+      var nameList = dirImages
+          .listSync(recursive: true)
+          .map((e) => ('images/${basename(e.path)}'))
+          .toList();
       existMap.addAll(nameList);
     }
 
     var needRemove = existMap.toSet().difference(map.keys.toSet());
 
-    for(var name in needRemove){
+    for (var name in needRemove) {
       File f = File('$path/$name');
       await f.delete(recursive: true);
     }

@@ -21,14 +21,15 @@ class Analyser {
   SemanticAnalyser semanticAnalyser = SemanticAnalyser();
   Functions functionList = Functions();
 
-  List<Token> toTokenList(String codeInput){
+  List<Token> toTokenList(String codeInput) {
     var codes = codeInput.split('\n');
     var tokenList = List<Token>.empty(growable: true);
     for (var code in codes) {
       if (code.trim().isEmpty) {
         continue;
       }
-      tokenList.addAll(lexicalAnalyser.analyse(code.replaceAll(RegExp(r"//.*"), "")));
+      tokenList.addAll(
+          lexicalAnalyser.analyse(code.replaceAll(RegExp(r"//.*"), "")));
       tokenList.add(Token(AnalyserConst.lineEnd));
     }
     tokenList = lexicalAnalyser.changeToSet(tokenList);

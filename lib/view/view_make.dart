@@ -85,8 +85,7 @@ class ViewMake extends StatelessWidget {
                   scale: 0.9,
                   child: Opacity(
                     opacity: 0.6,
-                    child:
-                        ViewChoiceNode(removedPositioned, removedPositioned),
+                    child: ViewChoiceNode(removedPositioned, removedPositioned),
                   ),
                 ),
                 onDragStarted: () {
@@ -97,8 +96,7 @@ class ViewMake extends StatelessWidget {
                   Get.find<VMDraggableNestedMap>().dragEnd();
                 },
                 onDragUpdate: (DragUpdateDetails details) {
-                  Get.find<VMDraggableNestedMap>()
-                      .dragUpdate(details, context);
+                  Get.find<VMDraggableNestedMap>().dragUpdate(details, context);
                 },
                 child: const Tooltip(
                   message: '최근 삭제된 선택지 생성',
@@ -160,7 +158,8 @@ class ViewMake extends StatelessWidget {
                 ),
               PopupMenuItem(
                 value: 1,
-                child: Text('${ConstList.isMobile() ? 'download 폴더에 ' : ''}zip 파일로 추출'),
+                child: Text(
+                    '${ConstList.isMobile() ? 'download 폴더에 ' : ''}zip 파일로 추출'),
               ),
               if (ConstList.isDesktop())
                 const PopupMenuItem(

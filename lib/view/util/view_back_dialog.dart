@@ -5,7 +5,9 @@ class ViewBackDialog extends StatelessWidget {
   final void Function() saveFunction;
   final void Function() backFunction;
   final void Function()? cancelFunction;
-  const ViewBackDialog(this.saveFunction, this.backFunction, {this.cancelFunction, Key? key}) : super(key: key);
+  const ViewBackDialog(this.saveFunction, this.backFunction,
+      {this.cancelFunction, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,7 @@ class ViewBackDialog extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () {
-            if(cancelFunction != null) {
+            if (cancelFunction != null) {
               cancelFunction!();
             }
             Get.back();
@@ -46,7 +48,8 @@ class ViewBackDialog extends StatelessWidget {
 class ViewWarningDialog extends StatelessWidget {
   final void Function()? cancelFunction;
   final void Function()? acceptFunction;
-  const ViewWarningDialog({this.acceptFunction, this.cancelFunction, Key? key}) : super(key: key);
+  const ViewWarningDialog({this.acceptFunction, this.cancelFunction, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +60,7 @@ class ViewWarningDialog extends StatelessWidget {
       actions: [
         ElevatedButton(
           onPressed: () {
-            if(cancelFunction != null) {
+            if (cancelFunction != null) {
               cancelFunction!();
             }
             Get.back();
@@ -66,7 +69,7 @@ class ViewWarningDialog extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () {
-            if(acceptFunction != null) {
+            if (acceptFunction != null) {
               acceptFunction!();
             }
             Get.back();

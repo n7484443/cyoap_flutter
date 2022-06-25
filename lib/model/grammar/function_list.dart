@@ -49,21 +49,22 @@ class Functions {
     functionVoid['setGlobal'] = (input) {
       var data0 = input[0].unzip();
       var data1 = input[1].unzip();
-      VariableDataBase().setValue(
-          data0.data, ValueTypeWrapper(data1, false, isGlobal: true));
+      VariableDataBase()
+          .setValue(data0.data, ValueTypeWrapper(data1, false, isGlobal: true));
     };
     functionVoid['setVariable'] = (input) {
       var data0 = input[0].unzip();
       var data1 = input[1].unzip();
-      if(data0.data is! String){
+      if (data0.data is! String) {
         return;
       }
       var original = VariableDataBase().getValueTypeWrapper(data0.data);
-      if(original != null){
+      if (original != null) {
         var copy = ValueTypeWrapper.copy(original)..valueType = data1;
         VariableDataBase().setValue(data0.data, copy);
-      }else{
-        VariableDataBase().setValue(data0.data, ValueTypeWrapper.normal(ValueType(data0.data), false));
+      } else {
+        VariableDataBase().setValue(
+            data0.data, ValueTypeWrapper.normal(ValueType(data0.data), false));
       }
     };
     functionVoid['doLines'] = (input) {
@@ -77,9 +78,11 @@ class Functions {
   Function? getFunction(String name) {
     return functionValueType[name] ?? functionVoid[name];
   }
+
   ValueType Function(List<ValueType> input)? getFunctionValueType(String name) {
     return functionValueType[name];
   }
+
   void Function(List<RecursiveUnit> input)? getFunctionVoid(String name) {
     return functionVoid[name];
   }

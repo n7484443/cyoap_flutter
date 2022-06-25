@@ -64,13 +64,14 @@ class RecursiveFunction extends RecursiveUnit {
   ValueType unzip() {
     if (body.data == null) return ValueType.none();
     if (Analyser().functionList.getFunction(body.data) != null) {
-      var functionValueType = Analyser().functionList.getFunctionValueType(body.data);
-      if(functionValueType != null){
+      var functionValueType =
+          Analyser().functionList.getFunctionValueType(body.data);
+      if (functionValueType != null) {
         var input = childNode.map((e) => e.unzip()).toList();
         return functionValueType(input);
       }
       var functionVoid = Analyser().functionList.getFunctionVoid(body.data);
-      if(functionVoid != null){
+      if (functionVoid != null) {
         functionVoid(child);
       }
     }

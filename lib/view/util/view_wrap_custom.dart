@@ -48,15 +48,16 @@ class ViewWrapCustom extends StatelessWidget {
     }
   }
 
-  void addBuildDraggable(List<List<Widget>> widget, int pos, {bool horizontal = false}) {
+  void addBuildDraggable(List<List<Widget>> widget, int pos,
+      {bool horizontal = false}) {
     if (builderDraggable != null) {
       widget.last.add(Expanded(
           flex: 1,
           child: horizontal
               ? SizedBox(
-            height: nodeBaseHeight / 6,
-            child: builderDraggable!(pos),
-          )
+                  height: nodeBaseHeight / 6,
+                  child: builderDraggable!(pos),
+                )
               : builderDraggable!(pos)));
     }
   }
@@ -66,14 +67,14 @@ class ViewWrapCustom extends StatelessWidget {
     List<List<Widget>> widget =
         List.filled(1, List<Widget>.empty(growable: true), growable: true);
 
-    if(children.isEmpty){
+    if (children.isEmpty) {
       addBuildDraggable(widget, children.length, horizontal: true);
-    }else{
+    } else {
       int inner = 0;
       int size = 0;
       for (int i = 0; i < children.length; i++) {
         var child = children[i] as ChoiceNode;
-        if(!isAllVisible && !child.isOccupySpace && child.status.isHide()){
+        if (!isAllVisible && !child.isOccupySpace && child.status.isHide()) {
           continue;
         }
         size = child.width == 0 ? maxSize : child.width;

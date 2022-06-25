@@ -19,7 +19,7 @@ class NodeEditor {
   set target(ChoiceNode node) => _target = node;
 
   VMChoiceNode? getVMChoiceNode() {
-    if(_target == null)return null;
+    if (_target == null) return null;
     return VMChoiceNode.getVMChoiceNodeFromTag(_target!.tag);
   }
 }

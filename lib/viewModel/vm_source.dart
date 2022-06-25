@@ -18,12 +18,12 @@ class VMSource extends GetxController {
     return textEditingController;
   }
 
-  void checkRemove(String name){
+  void checkRemove(String name) {
     deleteList.add(name);
   }
 
-  void remove(){
-    for(var name in deleteList){
+  void remove() {
+    for (var name in deleteList) {
       ImageDB().removeImage(name);
       Get.find<VMImageLoading>(tag: name).checkNeedRemove();
     }

@@ -55,7 +55,7 @@ class PlatformSystem {
 }
 
 AbstractPlatform get getPlatform {
-  if(getPlatformFileSystem.platform == null){
+  if (getPlatformFileSystem.platform == null) {
     PlatformSystem().openPlatformVoid();
   }
   return getPlatformFileSystem.platform!;
@@ -63,4 +63,5 @@ AbstractPlatform get getPlatform {
 
 bool get isEditable => getPlatformFileSystem.isEditable;
 
-PlatformFileSystem get getPlatformFileSystem => PlatformSystem.platformFileSystem;
+PlatformFileSystem get getPlatformFileSystem =>
+    PlatformSystem.platformFileSystem;

@@ -212,9 +212,11 @@ class PlatformFileSystem {
     if (asFile) {
       if (ConstList.isWeb()) {
         await PlatformSpecified().saveProject!.saveZip('exported.zip', data);
-      } else if(ConstList.isMobile()){
-        await PlatformSpecified().saveProject!.saveZip(await ProjectPath.getDownloadFolder(), data);
-      }else{
+      } else if (ConstList.isMobile()) {
+        await PlatformSpecified()
+            .saveProject!
+            .saveZip(await ProjectPath.getDownloadFolder(), data);
+      } else {
         await PlatformSpecified().saveProject!.saveZip(path!, data);
       }
     } else {

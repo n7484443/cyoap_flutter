@@ -20,10 +20,13 @@ class ViewSwitchLabel extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(color: disable ? Colors.black38 : Colors.black, fontSize: labelSize),
+            style: TextStyle(
+                color: disable ? Colors.black38 : Colors.black,
+                fontSize: labelSize),
           ),
           Switch(
-            onChanged: (disable && !state) ? null : (bool value) => updateState(),
+            onChanged:
+                (disable && !state) ? null : (bool value) => updateState(),
             value: state,
           ),
         ],

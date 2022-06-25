@@ -189,6 +189,7 @@ class LexicalAnalyser {
 
     return tokenOutput;
   }
+
   bool isStringDouble(String s) {
     return double.tryParse(s) != null;
   }

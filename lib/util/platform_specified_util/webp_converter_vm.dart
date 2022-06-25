@@ -39,8 +39,8 @@ class WebpConverterImpWindows implements WebpConverterImp {
     nativeWebp = DynamicLibrary.open(startPath);
 
     webPEncodeRGB = nativeWebp.lookupFunction<
-        Uint64 Function(
-            Pointer<Uint8>, Int32, Int32, Int32, Float, Pointer<Pointer<Uint8>>),
+        Uint64 Function(Pointer<Uint8>, Int32, Int32, Int32, Float,
+            Pointer<Pointer<Uint8>>),
         int Function(
             Pointer<Uint8> rgb,
             int width,
@@ -49,8 +49,8 @@ class WebpConverterImpWindows implements WebpConverterImp {
             double qualityFactor,
             Pointer<Pointer<Uint8>> output)>('WebPEncodeRGB');
     webPEncodeRGBA = nativeWebp.lookupFunction<
-        Uint64 Function(
-            Pointer<Uint8>, Int32, Int32, Int32, Float, Pointer<Pointer<Uint8>>),
+        Uint64 Function(Pointer<Uint8>, Int32, Int32, Int32, Float,
+            Pointer<Pointer<Uint8>>),
         int Function(
             Pointer<Uint8> rgb,
             int width,
@@ -59,11 +59,13 @@ class WebpConverterImpWindows implements WebpConverterImp {
             double qualityFactor,
             Pointer<Pointer<Uint8>> output)>('WebPEncodeRGBA');
     webPEncodeLosslessRGB = nativeWebp.lookupFunction<
-        Uint64 Function(Pointer<Uint8>, Int32, Int32, Int32, Pointer<Pointer<Uint8>>),
+        Uint64 Function(
+            Pointer<Uint8>, Int32, Int32, Int32, Pointer<Pointer<Uint8>>),
         int Function(Pointer<Uint8> rgb, int width, int height, int stride,
             Pointer<Pointer<Uint8>> output)>('WebPEncodeLosslessRGB');
     webPEncodeLosslessRGBA = nativeWebp.lookupFunction<
-        Uint64 Function(Pointer<Uint8>, Int32, Int32, Int32, Pointer<Pointer<Uint8>>),
+        Uint64 Function(
+            Pointer<Uint8>, Int32, Int32, Int32, Pointer<Pointer<Uint8>>),
         int Function(Pointer<Uint8> rgb, int width, int height, int stride,
             Pointer<Pointer<Uint8>> output)>('WebPEncodeLosslessRGBA');
   }
@@ -75,10 +77,12 @@ class WebpConverterImpWindows implements WebpConverterImp {
       Uint8List input, String name) async {
     Image decodedImage;
     bool isLossless = true;
-    if (name.endsWith(".png")){
+    if (name.endsWith(".png")) {
       decodedImage = decodeImage(input)!;
       isLossless = true;
-    } else if(name.endsWith(".jpg") | name.endsWith(".jpeg") | name.endsWith(".bmp")) {
+    } else if (name.endsWith(".jpg") |
+        name.endsWith(".jpeg") |
+        name.endsWith(".bmp")) {
       decodedImage = decodeImage(input)!;
       isLossless = false;
     } else {

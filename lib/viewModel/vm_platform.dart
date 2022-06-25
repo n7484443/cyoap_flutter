@@ -86,9 +86,10 @@ class VMPlatform extends GetxController {
             PlatformSpecified()
                 .saveProject!
                 .downloadCapture(value.item1, value.item2);
-          } else if(ConstList.isMobile()){
+          } else if (ConstList.isMobile()) {
             PlatformSpecified().saveProject!.downloadCapture(
-                '${ProjectPath.getDownloadFolder()}/${value.item1}', value.item2);
+                '${ProjectPath.getDownloadFolder()}/${value.item1}',
+                value.item2);
           } else {
             PlatformSpecified().saveProject!.downloadCapture(
                 '${getPlatformFileSystem.path}/${value.item1}', value.item2);
@@ -103,9 +104,9 @@ class VMPlatform extends GetxController {
           PlatformSpecified()
               .saveProject!
               .downloadCapture('exported.png', byteData);
-        }else if(ConstList.isMobile()){
+        } else if (ConstList.isMobile()) {
           PlatformSpecified().saveProject!.downloadCapture(
-              '${ProjectPath.getDownloadFolder()}/exported.png',byteData);
+              '${ProjectPath.getDownloadFolder()}/exported.png', byteData);
         } else {
           PlatformSpecified().saveProject!.downloadCapture(
               '${getPlatformFileSystem.path}/exported.png', byteData);

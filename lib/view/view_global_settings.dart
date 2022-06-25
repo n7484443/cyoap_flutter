@@ -23,8 +23,8 @@ class ViewGlobalSetting extends StatelessWidget {
             showDialog(
               context: context,
               builder: (_) => ViewBackDialog(
-                    () => vmGlobalSetting.save(),
-                    () => Get.back(id: 1),
+                () => vmGlobalSetting.save(),
+                () => Get.back(id: 1),
                 cancelFunction: () => vmGlobalSetting.isChanged = false,
               ),
             );
