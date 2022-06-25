@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/util/view_text_outline.dart';
+import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
+import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -59,7 +61,8 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
             controller.removedData.refresh();
           } else if (listEqualExceptLast(pos, drag) &&
               (pos.last - 1) >= drag.last) {
-            controller.changeData(drag, List.from(pos)..last -= 1);
+            controller.changeData(drag, List.from(pos)
+              ..last -= 1);
           } else {
             controller.changeData(drag, pos);
           }
@@ -77,30 +80,31 @@ class NodeDividerDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<VMDraggableNestedMap>(
-      builder: (_) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
+      builder: (_) =>
+          Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('선택 가능'),
-              const Spacer(),
-              IconButton(
-                icon: const Icon(Icons.chevron_left),
-                onPressed: () {
-                  _.addMaxSelect(y, -1);
-                },
-              ),
-              Text(_.getMaxSelect(y)),
-              IconButton(
-                icon: const Icon(Icons.chevron_right),
-                onPressed: () {
-                  _.addMaxSelect(y, 1);
-                },
+              Row(
+                children: [
+                  const Text('선택 가능'),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Icons.chevron_left),
+                    onPressed: () {
+                      _.addMaxSelect(y, -1);
+                    },
+                  ),
+                  Text(_.getMaxSelect(y)),
+                  IconButton(
+                    icon: const Icon(Icons.chevron_right),
+                    onPressed: () {
+                      _.addMaxSelect(y, 1);
+                    },
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
     );
   }
 }
@@ -127,7 +131,8 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
     );
 
     if (isEditable) {
-      Future dialog() => Get.defaultDialog(
+      Future dialog() =>
+          Get.defaultDialog(
             title: '최대 선택지 개수 설정',
             content: NodeDividerDialog(y),
           );
@@ -177,32 +182,108 @@ class NestedMap extends StatelessWidget {
     var controller = Get.put(VMDraggableNestedMap());
     if (isEditable) {
       return GetBuilder<VMDraggableNestedMap>(
-        builder: (_) => LayoutBuilder(builder: (context, constrains) {
-          _.constrain = constrains;
-          return Container(
-            decoration: BoxDecoration(color: _.backgroundColor),
-            child: ListView.builder(
-              controller: _.scroller,
-              itemCount: (getPlatform.lineSettings.length + 1) * 2,
-              itemBuilder: (BuildContext context, int index) {
-                return _.widgetList(index);
-              },
-            ),
-          );
-        }),
+        builder: (_) =>
+            LayoutBuilder(builder: (context, constrains) {
+              _.constrain = constrains;
+              return Container(
+                decoration: BoxDecoration(color: _.backgroundColor),
+                child: ListView.builder(
+                  controller: _.scroller,
+                  itemCount: (getPlatform.lineSettings.length + 1) * 2,
+                  itemBuilder: (BuildContext context, int index) {
+                    return _.widgetList(index);
+                  },
+                  cacheExtent: 400,
+                ),
+              );
+            }),
       );
     } else {
       return Container(
         decoration: BoxDecoration(color: controller.backgroundColor),
         child: ListView.builder(
           controller: controller.scroller,
-          itemCount: getPlatform.lineSettings.length * 2,
+          itemCount: getPlatform.lineSettings.length,
           itemBuilder: (BuildContext context, int index) {
-            return controller.getWidget(index);
+            return ChoiceLine(index);
           },
-          cacheExtent: 400,
+          cacheExtent: 300,
         ),
       );
     }
   }
 }
+
+class ChoiceLine extends StatelessWidget {
+  final int y;
+
+  const ChoiceLine(this.y, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var choiceNodeList = getPlatform.lineSettings;
+    if(y >= choiceNodeList.length){
+      return Visibility(
+        visible: Get.find<VMDraggableNestedMap>().drag != null,
+        child: Column(
+          children: [
+            NodeDivider(y),
+            NodeDragTarget(
+              [y, 0],
+              isHorizontal: true,
+            ),
+          ],
+        ),
+      );
+    }
+    if(isEditable){
+      if (y >= choiceNodeList[y].children.length || choiceNodeList[y].children.isEmpty) {
+        return Visibility(
+          visible: Get.find<VMDraggableNestedMap>().drag != null,
+          child: Column(
+            children: [
+              NodeDivider(y),
+              NodeDragTarget(
+                [y, 0],
+                isHorizontal: true,
+              ),
+            ],
+          ),
+        );
+      }
+      var xList = choiceNodeList[y].children;
+      return Column(
+        children: [
+          NodeDivider(y),
+          ViewWrapCustom(
+            xList,
+                (child) => isEditable
+                ? NodeDraggable(child)
+                : ViewChoiceNode(child.currentPos, y),
+            builderDraggable:
+            isEditable ? (i) => NodeDragTarget([y, i]) : null,
+            isAllVisible: true,
+          ),
+        ],
+      );
+    }
+    return Column(
+        children: [
+          NodeDivider(y),
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 12,
+              bottom: 12,
+            ),
+            child: GetBuilder<VMDraggableNestedMap>(
+              builder: (_) {
+                return ViewWrapCustom(
+                    choiceNodeList[y].children, (child) => ViewChoiceNode(child.currentPos, y));
+              },
+            ),
+          ),
+        ]
+    );
+  }
+}
+

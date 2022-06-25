@@ -44,28 +44,6 @@ class VMDraggableNestedMap extends GetxController {
     isChanged = true;
   }
 
-  Widget getWidget(int index) {
-    var choiceNodeList = getPlatform.lineSettings;
-    var j = index ~/ 2;
-    if (index.isOdd) {
-      var xList = choiceNodeList[j].children;
-      return Padding(
-        padding: const EdgeInsets.only(
-          top: 12,
-          bottom: 12,
-        ),
-        child: GetBuilder<VMDraggableNestedMap>(
-          builder: (_) {
-            return ViewWrapCustom(
-                xList, (child) => ViewChoiceNode(child.currentPos, j));
-          },
-        ),
-      );
-    } else {
-      return NodeDivider(j);
-    }
-  }
-
   Widget widgetList(int y) {
     var choiceNodeList = getPlatform.lineSettings;
     var j = y ~/ 2;
