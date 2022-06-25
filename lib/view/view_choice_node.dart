@@ -79,7 +79,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
           children: [
             ViewChoiceNodeContent(
                 node!, nodeController, controller, layoutController),
-            if (controller.isVisibleOnlyEdit()) ...[
+            if (isEditable) ...[
               Positioned(
                 top: 0,
                 right: 0,

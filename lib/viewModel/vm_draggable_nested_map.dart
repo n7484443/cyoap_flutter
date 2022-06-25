@@ -18,13 +18,10 @@ const int maxWidthSize = 12;
 class VMDraggableNestedMap extends GetxController {
   List<int>? drag;
 
+  ScrollController scroller = ScrollController();
   GlobalKey captureKey = GlobalKey();
 
-  ScrollController scroller = ScrollController();
-
   bool isChanged = false;
-
-  bool isCapture = false;
 
   BoxConstraints? constrain;
 
@@ -34,10 +31,6 @@ class VMDraggableNestedMap extends GetxController {
   void onClose() {
     ImageDB().clearImageCache();
     super.onClose();
-  }
-
-  bool isVisibleOnlyEdit() {
-    return !isCapture && isEditable;
   }
 
   bool isVisibleDragTarget(int x, int y) {
@@ -73,66 +66,61 @@ class VMDraggableNestedMap extends GetxController {
     }
   }
 
-  Widget widgetList() {
+  Widget widgetList(int y) {
     var choiceNodeList = getPlatform.lineSettings;
-    return Column(
-        children: List<Widget>.generate(
-            (getPlatform.lineSettings.length + 1) * 2, (y) {
-      var j = y ~/ 2;
-      if (y < choiceNodeList.length * 2) {
-        if (y.isOdd) {
-          var xList = choiceNodeList[j].children;
-          return Padding(
-            padding: const EdgeInsets.only(
-              top: 12,
-              bottom: 12,
-            ),
-            child: GetBuilder<VMDraggableNestedMap>(builder: (_) {
-              if (xList.isEmpty) {
-                return Row(
-                  children: [
-                    Expanded(
-                      child: NodeDragTarget(
-                        [j, 0],
-                        isHorizontal: true,
-                      ),
-                    )
-                  ],
-                );
-              }
-              return ViewWrapCustom(
-                xList,
-                (child) => _.isVisibleOnlyEdit()
-                    ? NodeDraggable(child)
-                    : ViewChoiceNode(child.currentPos, j),
-                builderDraggable: _.isVisibleOnlyEdit()
-                    ? (i) => NodeDragTarget([j, i])
-                    : null,
-                isAllVisible: true,
+    var j = y ~/ 2;
+    if (y < choiceNodeList.length * 2) {
+      if (y.isOdd) {
+        var xList = choiceNodeList[j].children;
+        return Padding(
+          padding: const EdgeInsets.only(
+            top: 12,
+            bottom: 12,
+          ),
+          child: GetBuilder<VMDraggableNestedMap>(builder: (_) {
+            if (xList.isEmpty) {
+              return Row(
+                children: [
+                  Expanded(
+                    child: NodeDragTarget(
+                      [j, 0],
+                      isHorizontal: true,
+                    ),
+                  )
+                ],
               );
-            }),
-          );
-        } else {
-          return NodeDivider(j);
-        }
-      } else if (y.isOdd) {
-        return Row(
-          children: [
-            Expanded(
-              child: NodeDragTarget(
-                [choiceNodeList.length, 0],
-                isHorizontal: true,
-              ),
-            )
-          ],
+            }
+            return ViewWrapCustom(
+              xList,
+              (child) => isEditable
+                  ? NodeDraggable(child)
+                  : ViewChoiceNode(child.currentPos, j),
+              builderDraggable:
+                  isEditable ? (i) => NodeDragTarget([j, i]) : null,
+              isAllVisible: true,
+            );
+          }),
         );
       } else {
-        return Visibility(
-          visible: drag != null,
-          child: NodeDivider(j),
-        );
+        return NodeDivider(j);
       }
-    }));
+    } else if (y.isOdd) {
+      return Row(
+        children: [
+          Expanded(
+            child: NodeDragTarget(
+              [choiceNodeList.length, 0],
+              isHorizontal: true,
+            ),
+          )
+        ],
+      );
+    } else {
+      return Visibility(
+        visible: drag != null,
+        child: NodeDivider(j),
+      );
+    }
   }
 
   void removeData(List<int> data) {
@@ -205,7 +193,7 @@ class VMDraggableNestedMap extends GetxController {
     }
   }
 
-  double get maxWidth => captureKey.currentContext!.width;
+  double get maxWidth => constrain!.maxWidth;
 
   void dragUpdate(DragUpdateDetails details, BuildContext context) {
     double topY = 0;

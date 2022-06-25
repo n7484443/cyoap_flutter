@@ -1,14 +1,7 @@
 import 'dart:async';
-import 'dart:math';
-import 'dart:typed_data';
-import 'dart:ui';
-
-import 'package:cyoap_flutter/model/opening_file_folder.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
-import 'package:tuple/tuple.dart';
 
 import '../main.dart';
 import '../model/platform_system.dart';
@@ -45,79 +38,6 @@ class VMPlatform extends GetxController {
     });
 
     Get.find<VMDraggableNestedMap>().isChanged = false;
-  }
-
-  void exportAsImage() async {
-    stopwatch.update((val) => val?.reset());
-    stopwatch.update((val) => val?.start());
-    var vmDraggable = Get.find<VMDraggableNestedMap>();
-    vmDraggable.isCapture = true;
-    vmDraggable.update();
-
-    var timer = Timer.periodic(const Duration(milliseconds: 10), (Timer timer) {
-      stopwatch.update((val) {});
-    });
-
-    Timer(const Duration(seconds: 1), () async {
-      var boundary = vmDraggable.captureKey.currentContext?.findRenderObject()
-          as RenderRepaintBoundary;
-      var imageOutput = await boundary.toImage(pixelRatio: 1);
-      var width = imageOutput.width;
-      var height = imageOutput.height;
-      var maxed = max<int>(width, height) + 1;
-      var ratio = 16383 / maxed;
-      var isWebp = true;
-      if (ratio < 1.2) {
-        ratio = 1.2;
-        isWebp = false;
-      }
-
-      imageOutput = await boundary.toImage(pixelRatio: ratio);
-      var byteData =
-          (await imageOutput.toByteData(format: ImageByteFormat.png))!
-              .buffer
-              .asUint8List();
-
-      if (isWebp) {
-        Future<Tuple2<String, Uint8List>> output =
-            compute(getPlatformFileSystem.saveCapture, byteData);
-        output.then((value) {
-          if (ConstList.isWeb()) {
-            PlatformSpecified()
-                .saveProject!
-                .downloadCapture(value.item1, value.item2);
-          } else if (ConstList.isMobile()) {
-            PlatformSpecified().saveProject!.downloadCapture(
-                '${ProjectPath.getDownloadFolder()}/${value.item1}',
-                value.item2);
-          } else {
-            PlatformSpecified().saveProject!.downloadCapture(
-                '${getPlatformFileSystem.path}/${value.item1}', value.item2);
-          }
-
-          stopwatch.update((val) => val?.stop());
-          timer.cancel();
-          Get.back();
-        });
-      } else {
-        if (ConstList.isWeb()) {
-          PlatformSpecified()
-              .saveProject!
-              .downloadCapture('exported.png', byteData);
-        } else if (ConstList.isMobile()) {
-          PlatformSpecified().saveProject!.downloadCapture(
-              '${ProjectPath.getDownloadFolder()}/exported.png', byteData);
-        } else {
-          PlatformSpecified().saveProject!.downloadCapture(
-              '${getPlatformFileSystem.path}/exported.png', byteData);
-        }
-
-        stopwatch.update((val) => val?.stop());
-        timer.cancel();
-        Get.back();
-      }
-      vmDraggable.isCapture = false;
-    });
   }
 
   void loadVariable() {

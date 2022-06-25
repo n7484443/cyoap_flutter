@@ -126,7 +126,7 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
           : Colors.white30,
     );
 
-    if (controller.isVisibleOnlyEdit()) {
+    if (isEditable) {
       Future dialog() => Get.defaultDialog(
             title: '최대 선택지 개수 설정',
             content: NodeDividerDialog(y),
@@ -179,14 +179,14 @@ class NestedMap extends StatelessWidget {
       return GetBuilder<VMDraggableNestedMap>(
         builder: (_) => LayoutBuilder(builder: (context, constrains) {
           _.constrain = constrains;
-          return SingleChildScrollView(
-            controller: _.scroller,
-            child: RepaintBoundary(
-              key: _.captureKey,
-              child: Container(
-                decoration: BoxDecoration(color: _.backgroundColor),
-                child: _.widgetList(),
-              ),
+          return Container(
+            decoration: BoxDecoration(color: _.backgroundColor),
+            child: ListView.builder(
+              controller: _.scroller,
+              itemCount: (getPlatform.lineSettings.length + 1) * 2,
+              itemBuilder: (BuildContext context, int index) {
+                return _.widgetList(index);
+              },
             ),
           );
         }),

@@ -123,9 +123,7 @@ class ViewMake extends StatelessWidget {
               barrierDismissible: false,
               title: selected == 0
                   ? '저장중...'
-                  : selected == 1
-                      ? '압축중...'
-                      : '이미지로 추출중...',
+                  : '압축중...',
               content: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -144,9 +142,6 @@ class ViewMake extends StatelessWidget {
               case 1:
                 vmPlatform.save(true);
                 break;
-              case 2:
-                vmPlatform.exportAsImage();
-                break;
             }
           },
           itemBuilder: (BuildContext context) {
@@ -161,11 +156,6 @@ class ViewMake extends StatelessWidget {
                 child: Text(
                     '${ConstList.isMobile() ? 'download 폴더에 ' : ''}zip 파일로 추출'),
               ),
-              if (ConstList.isDesktop())
-                const PopupMenuItem(
-                  value: 2,
-                  child: Text('이미지로 추출'),
-                ),
             ];
           },
         )
