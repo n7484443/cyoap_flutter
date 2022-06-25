@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,8 +9,6 @@ import '../model/choiceNode/choice_node.dart';
 import '../model/editor.dart';
 import '../model/image_db.dart';
 import '../model/platform_system.dart';
-import '../view/view_choice_node.dart';
-import '../view/view_draggable_nested_map.dart';
 
 const int maxWidthSize = 12;
 
@@ -44,62 +41,6 @@ class VMDraggableNestedMap extends GetxController {
     isChanged = true;
   }
 
-  Widget widgetList(int y) {
-    var choiceNodeList = getPlatform.lineSettings;
-    var j = y ~/ 2;
-    if (y < choiceNodeList.length * 2) {
-      if (y.isOdd) {
-        var xList = choiceNodeList[j].children;
-        return Padding(
-          padding: const EdgeInsets.only(
-            top: 12,
-            bottom: 12,
-          ),
-          child: GetBuilder<VMDraggableNestedMap>(builder: (_) {
-            if (xList.isEmpty) {
-              return Row(
-                children: [
-                  Expanded(
-                    child: NodeDragTarget(
-                      [j, 0],
-                      isHorizontal: true,
-                    ),
-                  )
-                ],
-              );
-            }
-            return ViewWrapCustom(
-              xList,
-              (child) => isEditable
-                  ? NodeDraggable(child)
-                  : ViewChoiceNode(child.currentPos, j),
-              builderDraggable:
-                  isEditable ? (i) => NodeDragTarget([j, i]) : null,
-              isAllVisible: true,
-            );
-          }),
-        );
-      } else {
-        return NodeDivider(j);
-      }
-    } else if (y.isOdd) {
-      return Row(
-        children: [
-          Expanded(
-            child: NodeDragTarget(
-              [choiceNodeList.length, 0],
-              isHorizontal: true,
-            ),
-          )
-        ],
-      );
-    } else {
-      return Visibility(
-        visible: drag != null,
-        child: NodeDivider(j),
-      );
-    }
-  }
 
   void removeData(List<int> data) {
     var choiceNode = getPlatform.removeData(data);
