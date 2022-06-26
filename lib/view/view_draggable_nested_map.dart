@@ -187,7 +187,7 @@ class NestedMap extends StatelessWidget {
               controller: _.scroller,
               itemCount: getPlatform.lineSettings.length + 1,
               itemBuilder: (BuildContext context, int index) {
-                return ChoiceLine(index);
+                return ChoiceLine(index, Colors.transparent);
               },
               cacheExtent: 400,
             ),
@@ -201,7 +201,7 @@ class NestedMap extends StatelessWidget {
           controller: controller.scroller,
           itemCount: getPlatform.lineSettings.length,
           itemBuilder: (BuildContext context, int index) {
-            return ChoiceLine(index);
+            return ChoiceLine(index, Colors.transparent);
           },
           cacheExtent: 300,
         ),
@@ -212,16 +212,34 @@ class NestedMap extends StatelessWidget {
 
 class ChoiceLine extends StatelessWidget {
   final int y;
+  final Color color;
 
-  const ChoiceLine(this.y, {Key? key}) : super(key: key);
+  const ChoiceLine(this.y, this.color, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var choiceNodeList = getPlatform.lineSettings;
     if (isEditable) {
       if (y >= choiceNodeList.length) {
-        return Visibility(
-          visible: Get.find<VMDraggableNestedMap>().drag != null,
+        return ColoredBox(
+          color: color,
+          child: Visibility(
+            visible: Get.find<VMDraggableNestedMap>().drag != null,
+            child: Column(
+              children: [
+                NodeDivider(y),
+                NodeDragTarget(
+                  [y, 0],
+                  isHorizontal: true,
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+      if (choiceNodeList[y].children.isEmpty) {
+        return ColoredBox(
+          color: color,
           child: Column(
             children: [
               NodeDivider(y),
@@ -233,44 +251,39 @@ class ChoiceLine extends StatelessWidget {
           ),
         );
       }
-      if (choiceNodeList[y].children.isEmpty) {
-        return Column(
+      var xList = choiceNodeList[y].children;
+      return ColoredBox(
+        color: color,
+        child: Column(
           children: [
             NodeDivider(y),
-            NodeDragTarget(
-              [y, 0],
-              isHorizontal: true,
+            ViewWrapCustom(
+              xList,
+              (child) => NodeDraggable(child),
+              builderDraggable: (i) => NodeDragTarget([y, i]),
+              isAllVisible: true,
             ),
           ],
-        );
-      }
-      var xList = choiceNodeList[y].children;
-      return Column(
-        children: [
-          NodeDivider(y),
-          ViewWrapCustom(
-            xList,
-            (child) => NodeDraggable(child),
-            builderDraggable: (i) => NodeDragTarget([y, i]),
-            isAllVisible: true,
-          ),
-        ],
+        ),
       );
     }
-    return Column(children: [
-      NodeDivider(y),
-      Padding(
-        padding: const EdgeInsets.only(
-          top: 12,
-          bottom: 12,
+    return ColoredBox(
+      color: color,
+      child: Column(children: [
+        NodeDivider(y),
+        Padding(
+          padding: const EdgeInsets.only(
+            top: 12,
+            bottom: 12,
+          ),
+          child: GetBuilder<VMDraggableNestedMap>(
+            builder: (_) {
+              return ViewWrapCustom(choiceNodeList[y].children,
+                  (child) => ViewChoiceNode(child.currentPos, y));
+            },
+          ),
         ),
-        child: GetBuilder<VMDraggableNestedMap>(
-          builder: (_) {
-            return ViewWrapCustom(choiceNodeList[y].children,
-                (child) => ViewChoiceNode(child.currentPos, y));
-          },
-        ),
-      ),
-    ]);
+      ]),
+    );
   }
 }
