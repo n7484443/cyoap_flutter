@@ -1,11 +1,7 @@
 import 'dart:typed_data';
 
-import 'package:cyoap_flutter/main.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:idb_shim/idb.dart';
-import 'package:idb_shim/idb_browser.dart';
-
-import '../util/platform_specified_util/platform_specified.dart';
 
 class ImageDB {
   static final ImageDB _instance = ImageDB._init();
@@ -16,59 +12,27 @@ class ImageDB {
 
   ImageDB._init();
 
-  Future<void> init() async {
-    database ??= await getIdbFactory()!.open(
-      databaseName,
-      version: 100,
-      onUpgradeNeeded: (VersionChangeEvent event) {
-        var database = event.database;
-        if (database.objectStoreNames.contains(objectStore)) {
-          database.deleteObjectStore(objectStore);
-        }
-        database.createObjectStore(objectStore, autoIncrement: true);
-      },
-    );
-  }
-
   final Map<String, Uint8List?> _dirImageUint8Map = {};
+  final Map<String, Size> _dirImageSizeMap = {};
 
   List<String> get imageList => _dirImageUint8Map.keys.toList();
 
   Future<Map<String, String>> get imageMap async {
     Map<String, String> output = {};
     for (var key in _dirImageUint8Map.keys) {
-      output[key] = await getImageAsString(key) ?? "";
+      output[key] = getImageAsString(key) ?? "";
     }
     return output;
   }
 
   static const String databaseName = "cyoap_image.db";
   static const String objectStore = "image";
-  Database? database;
-
-  ObjectStore get notesWritableTxn {
-    var txn = database!.transaction(objectStore, idbModeReadWrite);
-    var store = txn.objectStore(objectStore);
-    return store;
-  }
-
-  ObjectStore get notesReadableTxn {
-    var txn = database!.transaction(objectStore, idbModeReadOnly);
-    var store = txn.objectStore(objectStore);
-    return store;
-  }
 
   Future<void> uploadImages(String name, Uint8List data) async {
     if (_dirImageUint8Map.containsKey(name)) {
       return;
     }
-    _dirImageUint8Map[name] = null;
-    if (ConstList.isWeb()) {
-      await init();
-      await notesWritableTxn.put(data, name);
-    } else {
-      _dirImageUint8Map[name] = data;
-    }
+    _dirImageUint8Map[name] = data;
   }
 
   Future<void> uploadImagesFuture(String name, Future<Uint8List> data) async {
@@ -77,46 +41,16 @@ class ImageDB {
     }
     _dirImageUint8Map[name] = null;
     data.then((value) async {
-      if (ConstList.isWeb()) {
-        await init();
-        await notesWritableTxn.put(value, name);
-      } else {
-        _dirImageUint8Map[name] = value;
-      }
+      _dirImageUint8Map[name] = value;
     });
   }
 
-  Future<Uint8List?> _getImage(String name) async {
-    if (ConstList.isDistributed) {
-      await init();
-      if (!_dirImageUint8Map.containsKey(name)) {
-        _dirImageUint8Map[name] = null;
-        return PlatformSpecified().distribute!.getFileAsUint8('images/$name')
-          ..then((value) async {
-            await notesWritableTxn.put(value, name);
-          });
-      } else {
-        return await notesReadableTxn.getObject(name) as Uint8List?;
-      }
-    } else if (ConstList.isWeb()) {
-      await init();
-      return await notesReadableTxn.getObject(name) as Uint8List?;
-    } else {
-      return _dirImageUint8Map[name];
-    }
+  Uint8List? _getImage(String name){
+    return _dirImageUint8Map[name];
   }
 
-  Future<String?> getImageAsString(String name) async {
-    if (ConstList.isWeb()) {
-      await init();
-      var value = await notesReadableTxn.getObject(name) as Uint8List?;
-      if(value == null){
-        return null;
-      }
-      return String.fromCharCodes(value);
-    } else {
-      return String.fromCharCodes(_dirImageUint8Map[name]!);
-    }
+  String? getImageAsString(String name){
+    return String.fromCharCodes(_getImage(name)!);
   }
 
   String getImageName(int index) {
@@ -140,22 +74,28 @@ class ImageDB {
   Image noImage = Image.asset('images/noImage.png');
 
   Future<void> removeImage(String name) async {
-    if (ConstList.isWeb()) {
-      await init();
-      await notesWritableTxn.delete(name);
-    } else {
-      _dirImageUint8Map.remove(name);
-    }
+    _dirImageUint8Map.remove(name);
   }
 
-  Future<Image> getImage(String name) async {
-    Uint8List? image = await _getImage(name);
+  Size getSize(String name) {
+    return _dirImageSizeMap[name] ?? const Size(100, 100);
+  }
+
+  void setSize(String name, Size size) {
+    _dirImageSizeMap[name] = size;
+  }
+
+  Widget getImage(String name) {
+    Uint8List? image = _getImage(name);
     if (image != null) {
-      var output = Image.memory(
+      var output = ExtendedImage.memory(
         image,
         filterQuality: FilterQuality.high,
         isAntiAlias: true,
         fit: BoxFit.scaleDown,
+        afterPaintImage: (canvas, rect, image, paint){
+          setSize(name, rect.size);
+        },
       );
       return output;
     }

@@ -48,7 +48,6 @@ dependencies:
   ffi: ^1.2.1
   device_info_plus: ^3.2.4
   isolated_worker: ^0.1.1
-  idb_shim: ^2.0.1+1
   animated_flip_counter: ^0.2.4
   url_strategy: ^0.2.0
   path_provider: ^2.0.11

@@ -1,25 +1,22 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import '../../main.dart';
 import '../../model/image_db.dart';
 
 class ViewImageLoading extends StatelessWidget {
   final String name;
-  const ViewImageLoading(this.name, {Key? key}) : super(key: key);
+  ViewImageLoading(this.name) : super(key: GlobalKey());
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(future: ImageDB().getImage(name), builder: (buildContext, snapshot){
-      if(!snapshot.hasData){
-        return SizedBox.fromSize(
-          size: const Size(100, 100),
-          child: const Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
-      }
-      if(snapshot.data == null){
-        return ImageDB().noImage;
-      }
-      return snapshot.data as Widget;
-    });
+    if(ConstList.isDistributed){
+      return ExtendedImage.network(
+        '/dist/images/$name',
+        filterQuality: FilterQuality.high,
+        isAntiAlias: true,
+        fit: BoxFit.scaleDown,
+      );
+    }
+    return ImageDB().getImage(name);
   }
 }
