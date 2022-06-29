@@ -25,9 +25,6 @@ class ImageDB {
     return output;
   }
 
-  static const String databaseName = "cyoap_image.db";
-  static const String objectStore = "image";
-
   Future<void> uploadImages(String name, Uint8List data) async {
     if (_dirImageUint8Map.containsKey(name)) {
       return;
