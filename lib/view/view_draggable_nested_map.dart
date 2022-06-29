@@ -231,29 +231,29 @@ class NestedMap extends StatelessWidget {
       return GetBuilder<VMDraggableNestedMap>(
         builder: (_) => LayoutBuilder(builder: (context, constrains) {
           _.constrain = constrains;
-          return Container(
-            decoration: BoxDecoration(color: _.backgroundColor),
+          return ColoredBox(
+            color: _.backgroundColor,
             child: ListView.builder(
               controller: _.scroller,
               itemCount: getPlatform.lineSettings.length + 1,
               itemBuilder: (BuildContext context, int index) {
                 return ChoiceLine(index, Colors.transparent);
               },
-              cacheExtent: 400,
+              cacheExtent: 200,
             ),
           );
         }),
       );
     } else {
-      return Container(
-        decoration: BoxDecoration(color: controller.backgroundColor),
+      return ColoredBox(
+        color: controller.backgroundColor,
         child: ListView.builder(
           controller: controller.scroller,
           itemCount: getPlatform.lineSettings.length,
           itemBuilder: (BuildContext context, int index) {
             return ChoiceLine(index, Colors.transparent);
           },
-          cacheExtent: 300,
+          cacheExtent: 200,
         ),
       );
     }
