@@ -8,8 +8,10 @@ import 'generable_parser.dart';
 
 class LineSetting extends GenerableParserAndPosition {
   int maxSelect;
+  bool alwaysVisible;
 
-  LineSetting(int currentPos, {this.maxSelect = -1}) {
+  LineSetting(int currentPos,
+      {this.alwaysVisible = true, this.maxSelect = -1}) {
     super.currentPos = currentPos;
     recursiveStatus = RecursiveStatus();
   }
@@ -19,12 +21,14 @@ class LineSetting extends GenerableParserAndPosition {
     Map<String, dynamic> map = super.toJson();
     map.addAll({
       'maxSelect': maxSelect,
+      'alwaysVisible': alwaysVisible,
     });
     return map;
   }
 
   LineSetting.fromJson(Map<String, dynamic> json)
-      : maxSelect = json['maxSelect'] ?? -1 {
+      : maxSelect = json['maxSelect'] ?? -1,
+        alwaysVisible = json['alwaysVisible'] ?? true {
     super.currentPos = json['y'] ?? json['pos'];
     if (json.containsKey('children')) {
       children.addAll((json['children'] as List)
@@ -32,7 +36,6 @@ class LineSetting extends GenerableParserAndPosition {
           .toList());
     }
     recursiveStatus = RecursiveStatus.fromJson(json);
-
     for (var element in children) {
       element.parent = this;
     }

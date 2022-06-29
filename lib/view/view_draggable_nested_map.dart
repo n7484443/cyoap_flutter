@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cyoap_flutter/model/platform_system.dart';
+import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/view/util/view_text_outline.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
@@ -101,6 +102,11 @@ class NodeDividerDialog extends StatelessWidget {
               ),
             ],
           ),
+          ViewSwitchLabel(
+            () => _.updateLineAlwaysVisible(y),
+            _.lineAlwaysVisible(y),
+            label: '항상 보임',
+          ),
         ],
       ),
     );
@@ -113,9 +119,13 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
   const NodeDivider(this.y, {Key? key}) : super(key: key);
 
   Color getColorLine() {
-    return getPlatform.designSetting.colorBackground.computeLuminance() > 0.5
-        ? Colors.black45
-        : Colors.white30;
+    if(!getPlatform.getLineSetting(y)!.alwaysVisible){
+      return Colors.blueAccent;
+    }
+    if(getPlatform.designSetting.colorBackground.computeLuminance() > 0.5){
+      return Colors.black45;
+    }
+    return Colors.white54;
   }
 
   Color getColorButton() {
@@ -126,13 +136,18 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
 
   @override
   Widget build(BuildContext context) {
+    if (!getPlatform.lineSettings[y].alwaysVisible && !isEditable) {
+      return const Divider(
+        thickness: 4,
+        color: Colors.transparent,
+      );
+    }
     var maxSelectText = Visibility(
       visible: controller.getMaxSelect(y) != '무한',
       child: TextOutline(
           '최대 ${controller.getMaxSelect(y)}개만큼 선택 가능', 18.0, titleFont,
           strokeWidth: 5.0),
     );
-
     var divider = Divider(
       thickness: 4,
       color: getColorLine(),
@@ -140,7 +155,7 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
 
     if (isEditable) {
       Future dialog() => Get.defaultDialog(
-            title: '최대 선택지 개수 설정',
+            title: '변수명 : lineSetting_$y',
             content: NodeDividerDialog(y),
           );
       return Stack(

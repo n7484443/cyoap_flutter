@@ -144,6 +144,16 @@ class VMDraggableNestedMap extends GetxController {
     isChanged = true;
   }
 
+  void updateLineAlwaysVisible(int y) {
+    getPlatform.getLineSetting(y)!.alwaysVisible = !getPlatform.getLineSetting(y)!.alwaysVisible;
+    update();
+    isChanged = true;
+  }
+
+  bool lineAlwaysVisible(int y){
+    return getPlatform.getLineSetting(y)!.alwaysVisible;
+  }
+
   set editNode(ChoiceNode node) => NodeEditor().target = node;
 
   String getMaxSelect(int y) {
