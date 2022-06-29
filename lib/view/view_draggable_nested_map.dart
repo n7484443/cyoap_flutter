@@ -119,7 +119,7 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
   const NodeDivider(this.y, {Key? key}) : super(key: key);
 
   Color getColorLine() {
-    if(!getPlatform.getLineSetting(y)!.alwaysVisible){
+    if(y < getPlatform.lineSettings.length && !getPlatform.getLineSetting(y)!.alwaysVisible){
       return Colors.blueAccent;
     }
     if(getPlatform.designSetting.colorBackground.computeLuminance() > 0.5){
@@ -136,6 +136,12 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
 
   @override
   Widget build(BuildContext context) {
+    if(y >= getPlatform.lineSettings.length){
+      return Divider(
+        thickness: 4,
+        color: getColorLine(),
+      );
+    }
     if (!getPlatform.lineSettings[y].alwaysVisible && !isEditable) {
       return const Divider(
         thickness: 4,

@@ -11,8 +11,8 @@ class ViewImageLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var controller = Get.put(VMImageLoading(name), tag: name);
-    return Obx(() {
-      switch (controller.imageLoaded.value) {
+    return GetBuilder<VMImageLoading>(builder: (_) {
+      switch (controller.imageLoaded) {
         case 0:
           return SizedBox.fromSize(
             size: const Size(100, 100),
@@ -30,7 +30,7 @@ class ViewImageLoading extends StatelessWidget {
 }
 
 class VMImageLoading extends GetxController {
-  var imageLoaded = 0.obs; // 0 = unloaded 1 = loaded 2 = no data
+  var imageLoaded = 0; // 0 = unloaded 1 = loaded 2 = no data
   String name;
 
   VMImageLoading(this.name);
@@ -38,7 +38,8 @@ class VMImageLoading extends GetxController {
   @override
   void onInit() {
     ImageDB().getImage(name).then((value) {
-      imageLoaded.value = 1;
+      imageLoaded = 1;
+      update();
     });
     super.onInit();
   }
@@ -49,7 +50,8 @@ class VMImageLoading extends GetxController {
 
   void checkNeedRemove() {
     if (!ImageDB().isInCache(name) && !ImageDB().isInData(name)) {
-      imageLoaded.value = 2;
+      imageLoaded = 2;
+      update();
     }
   }
 }
