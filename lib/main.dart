@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart'
     deferred as platform_specified;
@@ -68,21 +69,21 @@ class ConstList {
     );
   }
 
-  static TextStyle defaultFont = GoogleFonts.notoSans(color: Colors.black);
+  static TextStyle defaultFont = GoogleFonts.notoSans(color: Colors.black, fontFeatures: const [FontFeature.proportionalFigures()]);
 
   static Map<String, TextStyle> textFontList = {
-    "jua": GoogleFonts.jua(color: Colors.black),
-    "notoSans": GoogleFonts.notoSans(color: Colors.black),
-    "notoSerif": GoogleFonts.notoSerif(color: Colors.black),
-    "나눔고딕": GoogleFonts.nanumGothic(color: Colors.black),
-    "나눔손글씨 붓": GoogleFonts.nanumBrushScript(color: Colors.black),
-    "나눔손글씨 펜": GoogleFonts.nanumPenScript(color: Colors.black),
-    "Poor Story": GoogleFonts.poorStory(color: Colors.black),
-    "East Sea Dokdo": GoogleFonts.eastSeaDokdo(color: Colors.black),
-    "메이플스토리체": const TextStyle(fontFamily: 'MapleStory', color: Colors.black),
+    "jua": GoogleFonts.jua(color: Colors.black, fontFeatures: const [FontFeature.proportionalFigures()]),
+    "notoSans": GoogleFonts.notoSans(color: Colors.black, fontFeatures: const [FontFeature.proportionalFigures()]),
+    "notoSerif": GoogleFonts.notoSerif(color: Colors.black, fontFeatures: const [FontFeature.proportionalFigures()]),
+    "나눔고딕": GoogleFonts.nanumGothic(color: Colors.black, fontFeatures: const [FontFeature.proportionalFigures()]),
+    "나눔손글씨 붓": GoogleFonts.nanumBrushScript(color: Colors.black, fontFeatures: const [FontFeature.proportionalFigures()]),
+    "나눔손글씨 펜": GoogleFonts.nanumPenScript(color: Colors.black, fontFeatures: const [FontFeature.proportionalFigures()]),
+    "Poor Story": GoogleFonts.poorStory(color: Colors.black, fontFeatures: const [FontFeature.proportionalFigures()]),
+    "East Sea Dokdo": GoogleFonts.eastSeaDokdo(color: Colors.black, fontFeatures: const [FontFeature.proportionalFigures()]),
+    "메이플스토리체": const TextStyle(fontFamily: 'MapleStory', color: Colors.black, fontFeatures: [FontFeature.proportionalFigures()]),
     "넥슨 Lv2 고딕":
-        const TextStyle(fontFamily: 'NexonLv2Gothic', color: Colors.black),
-    "Neo 둥근모": const TextStyle(fontFamily: 'NeoDGM', color: Colors.black),
+        const TextStyle(fontFamily: 'NexonLv2Gothic', color: Colors.black, fontFeatures: [FontFeature.proportionalFigures()]),
+    "Neo 둥근모": const TextStyle(fontFamily: 'NeoDGM', color: Colors.black, fontFeatures: [FontFeature.proportionalFigures()]),
   };
 
   static TextStyle getFont(String font) {
