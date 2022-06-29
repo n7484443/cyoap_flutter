@@ -112,6 +112,18 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
 
   const NodeDivider(this.y, {Key? key}) : super(key: key);
 
+  Color getColorLine() {
+    return getPlatform.designSetting.colorBackground.computeLuminance() > 0.5
+        ? Colors.black45
+        : Colors.white30;
+  }
+
+  Color getColorButton() {
+    return getPlatform.designSetting.colorBackground.computeLuminance() > 0.5
+        ? Colors.black
+        : Colors.white;
+  }
+
   @override
   Widget build(BuildContext context) {
     var maxSelectText = Visibility(
@@ -123,9 +135,7 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
 
     var divider = Divider(
       thickness: 4,
-      color: getPlatform.designSetting.colorBackground.computeLuminance() > 0.5
-          ? Colors.black45
-          : Colors.white30,
+      color: getColorLine(),
     );
 
     if (isEditable) {
@@ -151,12 +161,31 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
                 return [
                   const PopupMenuItem(
                     value: 0,
-                    child: Text('최대 선택 설정'),
+                    child: Text('라인 설정'),
                   ),
                 ];
               },
             ),
           ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Row(
+              children: [
+                IconButton(
+                  icon: Icon(Icons.arrow_upward, color: getColorButton()),
+                  onPressed: () {
+                    controller.moveLine(y, y - 1);
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.arrow_downward, color: getColorButton()),
+                  onPressed: () {
+                    controller.moveLine(y, y + 1);
+                  },
+                ),
+              ],
+            ),
+          )
         ],
       );
     } else {

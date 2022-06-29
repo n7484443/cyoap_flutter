@@ -60,11 +60,12 @@ class VMDraggableNestedMap extends GetxController {
     var node = VMChoiceNode.getNode(tag);
     if (node == null) return;
     var parentNode = (node as ChoiceNode).getParentLast()!;
-    var y = parentNode.parent!.currentPos;
-
+    updateVMChoiceNodeLine(parentNode.parent!.currentPos);
+  }
+  void updateVMChoiceNodeLine(int pos) {
     var lineSetting = getPlatform.lineSettings;
-    if (y >= lineSetting.length) return;
-    for (var node in lineSetting[y].children) {
+    if (pos >= lineSetting.length) return;
+    for (var node in lineSetting[pos].children) {
       VMChoiceNode.getVMChoiceNodeFromTag(node.tag)?.updateFromNode();
     }
   }
@@ -149,5 +150,21 @@ class VMDraggableNestedMap extends GetxController {
     var line = getPlatform.getLineSetting(y);
     var max = line == null ? -1 : line.maxSelect;
     return max == -1 ? '무한' : '$max';
+  }
+
+  void moveLine(int before, int after) {
+    if(after >= getPlatform.lineSettings.length){
+      return;
+    }
+    if(after < 0){
+      return;
+    }
+    var temp = getPlatform.lineSettings[before];
+    getPlatform.lineSettings[before] = getPlatform.lineSettings[after];
+    getPlatform.lineSettings[after] = temp;
+    getPlatform.checkDataCorrect();
+    updateVMChoiceNodeLine(before);
+    updateVMChoiceNodeLine(after);
+    update();
   }
 }

@@ -21,7 +21,7 @@ class AbstractPlatform {
   PlatformDesignSetting designSetting = PlatformDesignSetting();
 
   void init() {
-    checkDataCollect();
+    checkDataCorrect();
     if (getPlatformFileSystem.isEditable) {
       generateRecursiveParser();
     }
@@ -71,7 +71,7 @@ class AbstractPlatform {
     }
     var parent = VMChoiceNode.getNode(List.from(pos)..removeLast())!;
     parent.addChildren(node, pos: pos.last);
-    checkDataCollect();
+    checkDataCorrect();
   }
 
   void insertData(ChoiceNode nodeA, ChoiceNode nodeB) {
@@ -81,7 +81,7 @@ class AbstractPlatform {
 
     parentA.removeChildren(nodeA);
     parentB.addChildren(nodeA, pos: posB);
-    checkDataCollect();
+    checkDataCorrect();
   }
 
   void insertDataWithParent(
@@ -90,20 +90,20 @@ class AbstractPlatform {
 
     parentA.removeChildren(nodeA);
     parentB.addChildren(nodeA);
-    checkDataCollect();
+    checkDataCorrect();
   }
 
   void addDataAll(List<LineSetting> lineList) {
     for (var lineSetting in lineList) {
       addLineSettingData(lineSetting);
     }
-    checkDataCollect();
+    checkDataCorrect();
   }
 
   ChoiceNode removeData(List<int> pos) {
     var node = getChoiceNode(pos)!;
     node.parent!.removeChildren(node);
-    checkDataCollect();
+    checkDataCorrect();
     return node;
   }
 
@@ -132,10 +132,10 @@ class AbstractPlatform {
 
   void compress() {
     lineSettings.removeWhere((item) => item.children.isEmpty);
-    checkDataCollect();
+    checkDataCorrect();
   }
 
-  void checkDataCollect() {
+  void checkDataCorrect() {
     for (int i = 0; i < lineSettings.length; i++) {
       var line = lineSettings[i];
       line.currentPos = i;
