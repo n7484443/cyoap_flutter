@@ -52,6 +52,7 @@ dependencies:
   url_strategy: ^0.2.0
   path_provider: ^2.0.11
   path: ^1.8.1
+  web_smooth_scroll: ^1.0.0
 
 dev_dependencies:
   flutter_test:

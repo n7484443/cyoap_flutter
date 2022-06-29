@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/view/util/view_text_outline.dart';
@@ -7,6 +8,7 @@ import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 
 import '../model/design_setting.dart';
 import '../viewModel/vm_choice_node.dart';
@@ -119,10 +121,11 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
   const NodeDivider(this.y, {Key? key}) : super(key: key);
 
   Color getColorLine() {
-    if(y < getPlatform.lineSettings.length && !getPlatform.getLineSetting(y)!.alwaysVisible){
+    if (y < getPlatform.lineSettings.length &&
+        !getPlatform.getLineSetting(y)!.alwaysVisible) {
       return Colors.blueAccent;
     }
-    if(getPlatform.designSetting.colorBackground.computeLuminance() > 0.5){
+    if (getPlatform.designSetting.colorBackground.computeLuminance() > 0.5) {
       return Colors.black45;
     }
     return Colors.white54;
@@ -136,7 +139,7 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
 
   @override
   Widget build(BuildContext context) {
-    if(y >= getPlatform.lineSettings.length){
+    if (y >= getPlatform.lineSettings.length) {
       return Divider(
         thickness: 4,
         color: getColorLine(),
@@ -227,6 +230,51 @@ class NestedMap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var controller = Get.put(VMDraggableNestedMap());
+    if (ConstList.isWeb()) {
+      if (isEditable) {
+        return GetBuilder<VMDraggableNestedMap>(
+          builder: (_) => LayoutBuilder(builder: (context, constrains) {
+            _.constrain = constrains;
+            return ColoredBox(
+              color: _.backgroundColor,
+              child: WebSmoothScroll(
+                controller: _.scroller,
+                scrollOffset: 100,
+                animationDuration: 150,
+                child: ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  controller: _.scroller,
+                  itemCount: getPlatform.lineSettings.length + 1,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ChoiceLine(index, Colors.transparent);
+                  },
+                  cacheExtent: 200,
+                ),
+              ),
+            );
+          }),
+        );
+      } else {
+        return ColoredBox(
+          color: controller.backgroundColor,
+          child: WebSmoothScroll(
+            controller: controller.scroller,
+            scrollOffset: 100,
+            animationDuration: 150,
+            child: ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              controller: controller.scroller,
+              itemCount: getPlatform.lineSettings.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ChoiceLine(index, Colors.transparent);
+              },
+              cacheExtent: 200,
+            ),
+          ),
+        );
+      }
+    }
+
     if (isEditable) {
       return GetBuilder<VMDraggableNestedMap>(
         builder: (_) => LayoutBuilder(builder: (context, constrains) {
