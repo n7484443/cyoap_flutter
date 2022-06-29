@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -56,6 +57,14 @@ class VMChoiceNode extends GetxController {
     maximizingImage.value = node.maximizingImage;
     randomValue.value = -1;
     status.value = node.status;
+  }
+
+  void updateImage(){
+    if(!ImageDB().contains(imageString.value) && node.imageString.isNotEmpty){
+      print(node.imageString);
+      node.imageString = "";
+      imageString.value = node.imageString;
+    }
   }
 
   QuillController initQuillController() {

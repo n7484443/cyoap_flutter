@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:typed_data';
 
 import 'package:cyoap_flutter/main.dart';
@@ -30,9 +29,6 @@ class ImageDB {
       },
     );
   }
-
-  Queue<String> temp = Queue();
-  HashMap<String, Image> tempData = HashMap();
 
   final Map<String, Uint8List?> _dirImageUint8Map = {};
 
@@ -100,11 +96,11 @@ class ImageDB {
             await notesWritableTxn.put(value, name);
           });
       } else {
-        return await notesReadableTxn.getObject(name) as Uint8List;
+        return await notesReadableTxn.getObject(name) as Uint8List?;
       }
     } else if (ConstList.isWeb()) {
       await init();
-      return await notesReadableTxn.getObject(name) as Uint8List;
+      return await notesReadableTxn.getObject(name) as Uint8List?;
     } else {
       return _dirImageUint8Map[name];
     }
@@ -113,7 +109,10 @@ class ImageDB {
   Future<String?> getImageAsString(String name) async {
     if (ConstList.isWeb()) {
       await init();
-      var value = await notesReadableTxn.getObject(name) as Uint8List;
+      var value = await notesReadableTxn.getObject(name) as Uint8List?;
+      if(value == null){
+        return null;
+      }
       return String.fromCharCodes(value);
     } else {
       return String.fromCharCodes(_dirImageUint8Map[name]!);
@@ -147,32 +146,9 @@ class ImageDB {
     } else {
       _dirImageUint8Map.remove(name);
     }
-    checkCache();
-  }
-
-  void checkCache() {
-    temp = Queue.from(_dirImageUint8Map.keys);
-  }
-
-  bool isInCache(String name) {
-    return temp.contains(name);
-  }
-
-  bool isInData(String name) {
-    return _dirImageUint8Map.keys.contains(name);
-  }
-
-  Image getImageFromCache(String name) {
-    return tempData[name] ?? ImageDB().noImage;
   }
 
   Future<Image> getImage(String name) async {
-    if (isInCache(name)) {
-      var tmp = tempData[name] ?? noImage;
-      temp.remove(name);
-      temp.add(name);
-      return tmp;
-    }
     Uint8List? image = await _getImage(name);
     if (image != null) {
       var output = Image.memory(
@@ -181,11 +157,12 @@ class ImageDB {
         isAntiAlias: true,
         fit: BoxFit.scaleDown,
       );
-      temp.add(name);
-      tempData[name] = output;
       return output;
     }
-
     return noImage;
+  }
+
+  bool contains(String name) {
+    return imageList.contains(name.trim());
   }
 }

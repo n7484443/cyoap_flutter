@@ -62,6 +62,7 @@ class VMDraggableNestedMap extends GetxController {
     var parentNode = (node as ChoiceNode).getParentLast()!;
     updateVMChoiceNodeLine(parentNode.parent!.currentPos);
   }
+
   void updateVMChoiceNodeLine(int pos) {
     var lineSetting = getPlatform.lineSettings;
     if (pos >= lineSetting.length) return;
