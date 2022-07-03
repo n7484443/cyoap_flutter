@@ -397,10 +397,10 @@ class ViewChoiceNodeContent extends StatelessWidget {
             if (title != null) title,
             Row(
               children: [
-                Expanded(
+                Flexible(
                   child: contents,
                 ),
-                if (image != null) image,
+                if (image != null) Expanded(child: image),
               ],
             ),
             child,
@@ -413,8 +413,8 @@ class ViewChoiceNodeContent extends StatelessWidget {
             if (title != null) title,
             Row(
               children: [
-                if (image != null) image,
-                Expanded(
+                if (image != null) Expanded(child: image),
+                Flexible(
                   child: contents,
                 ),
               ],
