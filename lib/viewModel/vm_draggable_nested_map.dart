@@ -92,11 +92,10 @@ class VMDraggableNestedMap extends GetxController {
         } else {
           getPlatform.insertDataWithParent(inputNode, generableParser);
         }
-        updateVMChoiceNode(input);
       } else {
         getPlatform.insertData(inputNode, targetNode);
-        updateVMChoiceNode(input);
       }
+      updateVMChoiceNode(input);
     }
     updateVMChoiceNode(target);
     update();

@@ -1,6 +1,7 @@
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../viewModel/vm_code_editor.dart';
@@ -61,6 +62,15 @@ class ViewCodeEditor extends StatelessWidget {
                   ),
                   Expanded(
                     child: TextField(
+                      focusNode: FocusNode()..onKey = (FocusNode node, RawKeyEvent event){
+                        if(!event.isKeyPressed(LogicalKeyboardKey.tab)){
+                          return KeyEventResult.ignored;
+                        }
+                        var selection = vmCodeEditor.controllerExecute.selection;
+                        vmCodeEditor.controllerExecute.text = vmCodeEditor.controllerExecute.text.replaceRange(selection.start, selection.end, "    ");
+                        vmCodeEditor.controllerExecute.selection = TextSelection.collapsed(offset: selection.start + 4);
+                        return KeyEventResult.handled;
+                      },
                       controller: vmCodeEditor.controllerExecute,
                       textAlign: TextAlign.left,
                       scrollController: ScrollController(),
