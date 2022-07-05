@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../main.dart';
-import '../util/check_update.dart';
 import '../model/opening_file_folder.dart';
 import '../model/platform_system.dart';
+import '../util/check_update.dart';
 
 class VMStartPlatform extends GetxController {
   ProjectPath frequentlyUsedPath = ProjectPath();

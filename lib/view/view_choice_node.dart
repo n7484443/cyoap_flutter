@@ -6,8 +6,8 @@ import 'package:cyoap_flutter/view/util/view_text_outline.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
-import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_design_setting.dart';
+import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
@@ -84,7 +84,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                 child: PopupMenuButton<int>(
                   icon: const Icon(Icons.more_vert),
                   onSelected: (result) {
-                    switch(result){
+                    switch (result) {
                       case 0:
                         showDialog(
                           context: context,

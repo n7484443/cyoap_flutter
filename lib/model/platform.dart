@@ -9,8 +9,8 @@ import '../util/version.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
 import 'choiceNode/choice_line.dart';
 import 'choiceNode/generable_parser.dart';
-import 'grammar/value_type.dart';
 import 'design_setting.dart';
+import 'grammar/value_type.dart';
 
 class AbstractPlatform {
   String stringImageName;

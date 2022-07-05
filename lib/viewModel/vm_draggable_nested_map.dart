@@ -40,7 +40,7 @@ class VMDraggableNestedMap extends GetxController {
     isChanged = true;
   }
 
-  void copyData(ChoiceNode choiceNode){
+  void copyData(ChoiceNode choiceNode) {
     removedData.value = choiceNode;
     removedData.refresh();
   }
@@ -147,12 +147,13 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   void updateLineAlwaysVisible(int y) {
-    getPlatform.getLineSetting(y)!.alwaysVisible = !getPlatform.getLineSetting(y)!.alwaysVisible;
+    getPlatform.getLineSetting(y)!.alwaysVisible =
+        !getPlatform.getLineSetting(y)!.alwaysVisible;
     update();
     isChanged = true;
   }
 
-  bool lineAlwaysVisible(int y){
+  bool lineAlwaysVisible(int y) {
     return getPlatform.getLineSetting(y)!.alwaysVisible;
   }
 
@@ -165,10 +166,10 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   void moveLine(int before, int after) {
-    if(after >= getPlatform.lineSettings.length){
+    if (after >= getPlatform.lineSettings.length) {
       return;
     }
-    if(after < 0){
+    if (after < 0) {
       return;
     }
     var temp = getPlatform.lineSettings[before];

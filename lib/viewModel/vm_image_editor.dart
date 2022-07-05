@@ -1,6 +1,6 @@
 import 'dart:typed_data';
-import 'package:extended_image/extended_image.dart';
 
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart' show GlobalKey;
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:image/image.dart';

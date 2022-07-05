@@ -5,8 +5,8 @@ import 'package:archive/archive.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/webp_converter.dart';
 import 'package:flutter/foundation.dart';
-import 'package:tuple/tuple.dart';
 import 'package:path/path.dart';
+import 'package:tuple/tuple.dart';
 
 class SaveProjectImp extends SaveProject {
   @override

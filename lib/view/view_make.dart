@@ -121,9 +121,7 @@ class ViewMake extends StatelessWidget {
           onSelected: (selected) {
             Get.defaultDialog(
               barrierDismissible: false,
-              title: selected == 0
-                  ? '저장중...'
-                  : '압축중...',
+              title: selected == 0 ? '저장중...' : '압축중...',
               content: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,

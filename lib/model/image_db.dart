@@ -41,11 +41,11 @@ class ImageDB {
     });
   }
 
-  Uint8List? getImage(String name){
+  Uint8List? getImage(String name) {
     return _dirImageUint8Map[name];
   }
 
-  String? getImageAsString(String name){
+  String? getImageAsString(String name) {
     return String.fromCharCodes(getImage(name)!);
   }
 

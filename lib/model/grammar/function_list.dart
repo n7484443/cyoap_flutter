@@ -36,7 +36,7 @@ class Functions {
       var data0 = input[0].unzip();
       if (data0.data is bool && data0.data) {
         input[1].unzip();
-      } else if(input.length == 3){
+      } else if (input.length == 3) {
         input[2].unzip();
       }
     };

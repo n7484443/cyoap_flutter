@@ -62,15 +62,21 @@ class ViewCodeEditor extends StatelessWidget {
                   ),
                   Expanded(
                     child: TextField(
-                      focusNode: FocusNode()..onKey = (FocusNode node, RawKeyEvent event){
-                        if(!event.isKeyPressed(LogicalKeyboardKey.tab)){
-                          return KeyEventResult.ignored;
-                        }
-                        var selection = vmCodeEditor.controllerExecute.selection;
-                        vmCodeEditor.controllerExecute.text = vmCodeEditor.controllerExecute.text.replaceRange(selection.start, selection.end, "    ");
-                        vmCodeEditor.controllerExecute.selection = TextSelection.collapsed(offset: selection.start + 4);
-                        return KeyEventResult.handled;
-                      },
+                      focusNode: FocusNode()
+                        ..onKey = (FocusNode node, RawKeyEvent event) {
+                          if (!event.isKeyPressed(LogicalKeyboardKey.tab)) {
+                            return KeyEventResult.ignored;
+                          }
+                          var selection =
+                              vmCodeEditor.controllerExecute.selection;
+                          vmCodeEditor.controllerExecute.text =
+                              vmCodeEditor.controllerExecute.text.replaceRange(
+                                  selection.start, selection.end, "    ");
+                          vmCodeEditor.controllerExecute.selection =
+                              TextSelection.collapsed(
+                                  offset: selection.start + 4);
+                          return KeyEventResult.handled;
+                        },
                       controller: vmCodeEditor.controllerExecute,
                       textAlign: TextAlign.left,
                       scrollController: ScrollController(),

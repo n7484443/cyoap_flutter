@@ -59,8 +59,8 @@ class VMChoiceNode extends GetxController {
     status.value = node.status;
   }
 
-  void updateImage(){
-    if(!ImageDB().contains(imageString.value) && node.imageString.isNotEmpty){
+  void updateImage() {
+    if (!ImageDB().contains(imageString.value) && node.imageString.isNotEmpty) {
       print(node.imageString);
       node.imageString = "";
       imageString.value = node.imageString;

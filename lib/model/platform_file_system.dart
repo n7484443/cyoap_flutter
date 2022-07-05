@@ -14,8 +14,8 @@ import '../main.dart';
 import '../util/json_file_parsing.dart';
 import '../util/platform_specified_util/platform_specified.dart';
 import '../util/platform_specified_util/webp_converter.dart';
-import 'platform.dart';
 import 'choiceNode/choice_line.dart';
+import 'platform.dart';
 
 class PlatformFileSystem {
   AbstractPlatform? platform;

@@ -9,8 +9,8 @@ import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:get/get.dart';
 
 import '../main.dart';
-import '../model/image_db.dart';
 import '../model/design_setting.dart';
+import '../model/image_db.dart';
 import '../viewModel/vm_editor.dart';
 
 class ViewEditor extends StatelessWidget {
