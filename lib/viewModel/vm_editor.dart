@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/editor.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
@@ -14,7 +15,7 @@ import 'package:get/get.dart';
 class VMEditor extends GetxController {
   final TextEditingController controllerTitle = TextEditingController();
   final TextEditingController controllerSource = TextEditingController();
-  final TextEditingController controllerRandom = TextEditingController();
+  final TextEditingController controllerMaximum = TextEditingController();
   late final QuillController quillController;
   final FocusNode focusBody = FocusNode();
 
@@ -24,7 +25,7 @@ class VMEditor extends GetxController {
   var isCard = NodeEditor().target.isCard.obs;
   var isRound = NodeEditor().target.isRound.obs;
   var isSelectable = NodeEditor().target.isSelectable.obs;
-  var isRandom = NodeEditor().target.isRandom.obs;
+  var nodeMode = NodeEditor().target.choiceNodeMode.obs;
   var imagePosition = NodeEditor().target.imagePosition.obs;
   var maximizingImage = NodeEditor().target.maximizingImage.obs;
   var hideTitle = NodeEditor().target.hideTitle.obs;
@@ -37,13 +38,15 @@ class VMEditor extends GetxController {
     isCard.listen((value) => isChanged = true);
     isRound.listen((value) => isChanged = true);
     isSelectable.listen((value) => isChanged = true);
-    isRandom.listen((value) => isChanged = true);
+    nodeMode.listen((value) => isChanged = true);
     imagePosition.listen((value) => isChanged = true);
     maximizingImage.listen((value) => isChanged = true);
     hideTitle.listen((value) => isChanged = true);
-    controllerRandom.addListener(() => isChanged = true);
+    controllerMaximum.addListener(() => isChanged = true);
 
-    controllerRandom.text = NodeEditor().target.maxRandom.toString();
+    if (NodeEditor().target.choiceNodeMode != ChoiceNodeMode.defaultMode) {
+      controllerMaximum.text = NodeEditor().target.maximumStatus.toString();
+    }
 
     controllerTitle.text = title.value;
     contents.value = quillController.document.toPlainText();
@@ -67,21 +70,27 @@ class VMEditor extends GetxController {
     NodeEditor().target.contentsString =
         jsonEncode(quillController.document.toDelta().toJson());
     NodeEditor().target.imageString = ImageDB().getImageName(index);
-    NodeEditor().target.maxRandom = int.parse(controllerRandom.text);
+    try {
+      NodeEditor().target.maximumStatus = int.parse(controllerMaximum.text);
+    } catch (e){
+      NodeEditor().target.maximumStatus = 0;
+    }
     NodeEditor().target.maximizingImage = maximizingImage.value;
-    NodeEditor().target.maxRandom = isRandom.value ? 2 : 0;
     NodeEditor().target.isSelectable = isSelectable.value;
     NodeEditor().target.isRound = isRound.value;
     NodeEditor().target.isCard = isCard.value;
     NodeEditor().target.imagePosition = imagePosition.value;
     NodeEditor().target.hideTitle = hideTitle.value;
+    NodeEditor().target.choiceNodeMode = nodeMode.value;
 
     quillController.updateSelection(
         const TextSelection.collapsed(offset: 0), ChangeSource.REMOTE);
     VMChoiceNode.getVMChoiceNodeFromNode(NodeEditor().target)
         ?.updateFromEditor();
     Get.find<VMDraggableNestedMap>().update();
-    Get.find<VMDraggableNestedMap>().isChanged = true;
+    Get
+        .find<VMDraggableNestedMap>()
+        .isChanged = true;
     isChanged = false;
   }
 
@@ -120,7 +129,9 @@ class VMEditor extends GetxController {
     ImageDB().uploadImages(name!, data);
     NodeEditor().target.imageString = name!;
     index = ImageDB().getImageIndex(name!);
-    Get.find<VMDraggableNestedMap>().isChanged = true;
+    Get
+        .find<VMDraggableNestedMap>()
+        .isChanged = true;
     isChanged = true;
     name = null;
     imageLast = null;

@@ -29,11 +29,12 @@ class VMChoiceNode extends GetxController {
   var hideTitle = false.obs;
   var imagePosition = 0.obs;
   var status = SelectableStatus.open.obs;
+  var nodeMode = ChoiceNodeMode.defaultMode.obs;
 
-  var isRandom = false.obs;
   var maximizingImage = false.obs;
   var randomValue = (-1).obs;
   var randomProcess = false.obs;
+  var selectedMultiple = 0.obs;
 
   VMChoiceNode({int x = nonPositioned, int y = nonPositioned})
       : pos = [y, x],
@@ -47,16 +48,20 @@ class VMChoiceNode extends GetxController {
     quillController = initQuillController();
     size.value = node.width;
     size.listen((value) => Get.find<VMDraggableNestedMap>().update());
+    randomValue.value = -1;
+    status.value = node.status;
+    updateFromEditor();
+  }
+
+  void updateFromEditor() {
     titleString.value = node.title;
     imageString.value = node.imageString;
     isCard.value = node.isCard;
+    imagePosition.value = node.imagePosition;
     isRound.value = node.isRound;
     hideTitle.value = node.hideTitle;
-    imagePosition.value = node.imagePosition;
-    isRandom.value = node.isRandom;
     maximizingImage.value = node.maximizingImage;
-    randomValue.value = -1;
-    status.value = node.status;
+    nodeMode.value = node.choiceNodeMode;
   }
 
   void updateImage() {
@@ -96,15 +101,6 @@ class VMChoiceNode extends GetxController {
     }
   }
 
-  void updateFromEditor() {
-    titleString.value = node.title;
-    imageString.value = node.imageString;
-    isCard.value = node.isCard;
-    imagePosition.value = node.imagePosition;
-    isRound.value = node.isRound;
-    hideTitle.value = node.hideTitle;
-    maximizingImage.value = node.maximizingImage;
-  }
 
   void updateFromNode() {
     node = getNode(pos)! as ChoiceNode;
@@ -178,14 +174,14 @@ class VMChoiceNode extends GetxController {
 
   void startRandom() {
     randomProcess.value = true;
-    randomValue.value = node.maxRandom * 10;
+    randomValue.value = node.maximumStatus * 10;
     var timer =
         Timer.periodic(const Duration(milliseconds: 500), (Timer timer) {
       randomValue.value = randomValue.value ~/ 2;
     });
     Timer(const Duration(milliseconds: 2000), () {
       timer.cancel();
-      randomValue.value = Random().nextInt(node.maxRandom);
+      randomValue.value = Random().nextInt(node.maximumStatus);
       node.random = randomValue.value;
       randomProcess.value = false;
     });
@@ -198,5 +194,12 @@ class VMChoiceNode extends GetxController {
         action(vm);
       }
     });
+  }
+
+  void setSelectedMultiple(int input){
+    selectedMultiple.value += input;
+    selectedMultiple.value = selectedMultiple.value.clamp(0, node.maximumStatus);
+    node.multiSelect = selectedMultiple.value;
+    VMChoiceNode.updateStatusAll();
   }
 }

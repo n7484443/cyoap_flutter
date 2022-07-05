@@ -21,6 +21,7 @@ class ConstList {
   static const double appBarSize = 40.0;
   static const double elevation = 6.0;
   static const double padding = 8.0;
+  static const double paddingSmall = 4.0;
   static late final PlatformType actualPlatformType;
 
   static bool isWeb() {

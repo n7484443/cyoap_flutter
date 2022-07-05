@@ -7,14 +7,18 @@ import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.da
 import '../../view/util/view_wrap_custom.dart';
 import '../grammar/value_type.dart';
 import 'generable_parser.dart';
-
+enum ChoiceNodeMode{
+  defaultMode,
+  randomMode,
+  multiSelect
+}
 class ChoiceNode extends GenerableParserAndPosition {
   //grid 단위로 설정
   bool isCard;
   bool isRound = true;
-  int maxRandom = 0;
-  int random = -1;
   int imagePosition = 0; //0:default, 1:left 2:right
+  ChoiceNodeMode choiceNodeMode = ChoiceNodeMode.defaultMode;
+
   String title;
   String contentsString;
   String imageString;
@@ -26,7 +30,9 @@ class ChoiceNode extends GenerableParserAndPosition {
   bool maximizingImage = false;
   bool hideTitle = false;
 
-  bool get isRandom => maxRandom > 0;
+  int maximumStatus = 0;
+  int random = -1;
+  int multiSelect = -1;
 
   ChoiceNode(int width, this.isCard, this.title, this.contentsString,
       this.imageString) {
@@ -53,13 +59,14 @@ class ChoiceNode extends GenerableParserAndPosition {
         isRound = json['isRound'] ?? true,
         isOccupySpace = json['isOccupySpace'] ?? true,
         maximizingImage = json['maximizingImage'] ?? false,
-        maxRandom = json['maxRandom'] ?? 0,
+        maximumStatus = json['maximumStatus'] ?? 0,
         isSelectable = json['isSelectable'],
         imagePosition = json['imagePosition'] ?? 0,
         title = json['title'] ?? '',
         contentsString = json['contentsString'],
         imageString = json['imageString'] ?? json['image'],
-        hideTitle = json['hideTitle'] ?? false {
+        hideTitle = json['hideTitle'] ?? false,
+        choiceNodeMode = json['choiceNodeMode'] == null ? ChoiceNodeMode.defaultMode : ChoiceNodeMode.values.byName(json['choiceNodeMode']){
     width = json['width'] ?? 2;
     currentPos = json['x'] ?? json['pos'];
     recursiveStatus = RecursiveStatus.fromJson(json);
@@ -80,11 +87,12 @@ class ChoiceNode extends GenerableParserAndPosition {
       'isSelectable': isSelectable,
       'imagePosition': imagePosition,
       'hideTitle': hideTitle,
-      'maxRandom': maxRandom,
+      'maximumStatus': maximumStatus,
       'title': title,
       'contentsString': contentsString,
       'image': convertToWebp(imageString),
       'maximizingImage': maximizingImage,
+      'choiceNodeMode': choiceNodeMode.name,
     });
     return map;
   }
@@ -100,14 +108,19 @@ class ChoiceNode extends GenerableParserAndPosition {
       child.generateParser();
     }
   }
+  bool isSelected(){
+    return status.isSelected() || (choiceNodeMode == ChoiceNodeMode.multiSelect && multiSelect > 0);
+  }
 
   @override
   void initValueTypeWrapper() {
     var titleWhitespaceRemoved = title.replaceAll(" ", "");
     VariableDataBase().setValue(titleWhitespaceRemoved,
-        ValueTypeWrapper(ValueType(status.isSelected()), false));
+        ValueTypeWrapper(ValueType(isSelected()), false));
     VariableDataBase().setValue('$titleWhitespaceRemoved:random',
         ValueTypeWrapper(ValueType(random), false));
+    VariableDataBase().setValue('$titleWhitespaceRemoved:multi',
+        ValueTypeWrapper(ValueType(multiSelect), false));
     if (status.isNotSelected()) {
       status = isSelectable ? SelectableStatus.open : SelectableStatus.selected;
     }

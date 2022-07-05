@@ -1,6 +1,5 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
-import 'package:cyoap_flutter/model/choiceNode/generable_parser.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_text_outline.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
@@ -54,10 +53,11 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                 Get.toNamed('/viewEditor', id: 1);
               }
             : null,
-        onTap: !isEditable
+        onTap: !isEditable && nodeController.nodeMode.value != ChoiceNodeMode.multiSelect
             ? () async {
                 nodeController.select();
-                if (nodeController.isRandom.value) {
+                if (nodeController.nodeMode.value ==
+                    ChoiceNodeMode.randomMode) {
                   if (nodeController.isSelect) {
                     nodeController.startRandom();
                     await showDialog(
@@ -139,8 +139,9 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
 
     return Obx(
       () {
-        var isSelectedCheck = nodeController.status.value.isSelected() &&
-            nodeController.node.isSelectable;
+        var isSelectedCheck =
+                nodeController.node.isSelected() &&
+                nodeController.node.isSelectable;
         return Opacity(
           opacity: nodeController.opacity,
           child: Card(
@@ -387,6 +388,40 @@ class ViewChoiceNodeContent extends StatelessWidget {
           ),
         ),
       );
+      if (node.choiceNodeMode == ChoiceNodeMode.multiSelect) {
+        contents = Column(children: [
+          contents,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: IconButton(
+                  icon: const Icon(Icons.chevron_left, size: 30),
+                  onPressed: () {
+                    controller.setSelectedMultiple(-1);
+                  },
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  controller.selectedMultiple.toString(),
+                  style: ConstList.defaultFont.copyWith(fontSize: 30),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Expanded(
+                child: IconButton(
+                  icon: const Icon(Icons.chevron_right, size: 30),
+                  onPressed: () {
+                    controller.setSelectedMultiple(1);
+                  },
+                ),
+              ),
+            ],
+          ),
+        ]);
+      }
       Widget child = ViewWrapCustom(
         node.children,
         (child) =>

@@ -9,6 +9,7 @@ import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:get/get.dart';
 
 import '../main.dart';
+import '../model/choiceNode/choice_node.dart';
 import '../model/design_setting.dart';
 import '../model/image_db.dart';
 import '../viewModel/vm_editor.dart';
@@ -49,11 +50,79 @@ class ViewEditor extends StatelessWidget {
         ),
       ],
     );
-
+    var highlightStyle = Theme.of(context)
+        .textTheme
+        .bodyText1
+        ?.copyWith(color: Colors.blueAccent);
     var editingNodeValues = Obx(
       () => Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
+          DropdownButton<ChoiceNodeMode>(
+            value: controller.nodeMode.value,
+            items: [
+              DropdownMenuItem(
+                  value: ChoiceNodeMode.defaultMode,
+                  child: Text('기본', style: highlightStyle)),
+              DropdownMenuItem(
+                  value: ChoiceNodeMode.randomMode,
+                  child: Text('랜덤 선택', style: highlightStyle)),
+              DropdownMenuItem(
+                  value: ChoiceNodeMode.multiSelect,
+                  child: Text('다중 선택', style: highlightStyle)),
+            ],
+            onChanged: (ChoiceNodeMode? value) {
+              controller.nodeMode.value = value!;
+            },
+          ),
+          Visibility(
+            visible: controller.nodeMode.value == ChoiceNodeMode.randomMode,
+            child: SizedBox(
+              width: 120,
+              child: Column(children: [
+                Text('변수명',
+                    style: ConstList.defaultFont.copyWith(fontSize: 20)),
+                Text('${controller.title.replaceAll(" ", "")}:random',
+                    softWrap: true,
+                    style: ConstList.defaultFont.copyWith(fontSize: 10)),
+                TextField(
+                  textAlign: TextAlign.end,
+                  maxLength: 3,
+                  minLines: 1,
+                  maxLines: 1,
+                  keyboardType: TextInputType.number,
+                  controller: controller.controllerMaximum,
+                  decoration: const InputDecoration(
+                    label: Text('최대 랜덤값'),
+                  ),
+                ),
+              ]),
+            ),
+          ),
+          Visibility(
+            visible: controller.nodeMode.value == ChoiceNodeMode.multiSelect,
+            child: SizedBox(
+              width: 120,
+              child: Column(children: [
+                Text('변수명',
+                    style: ConstList.defaultFont.copyWith(fontSize: 20)),
+                Text('${controller.title.replaceAll(" ", "")}:multi',
+                    softWrap: true,
+                    style: ConstList.defaultFont.copyWith(fontSize: 10)),
+                TextField(
+                  textAlign: TextAlign.end,
+                  maxLength: 3,
+                  minLines: 1,
+                  maxLines: 1,
+                  keyboardType: TextInputType.number,
+                  controller: controller.controllerMaximum,
+                  decoration: const InputDecoration(
+                    label: Text('최대 선택'),
+                  ),
+                ),
+              ]),
+            ),
+          ),
           ViewSwitchLabel(
             () => controller.isCard.value = !controller.isCard.value,
             controller.isCard.value,
@@ -69,28 +138,6 @@ class ViewEditor extends StatelessWidget {
                 controller.isSelectable.value = !controller.isSelectable.value,
             controller.isSelectable.value,
             label: '선택 가능',
-          ),
-          ViewSwitchLabel(
-            () => controller.isRandom.value = !controller.isRandom.value,
-            controller.isRandom.value,
-            label: '랜덤 기능',
-          ),
-          Visibility(
-            visible: controller.isRandom.value,
-            child: SizedBox(
-              width: 80,
-              child: TextField(
-                textAlign: TextAlign.end,
-                maxLength: 3,
-                minLines: 1,
-                maxLines: 1,
-                keyboardType: TextInputType.number,
-                controller: controller.controllerRandom,
-                decoration: const InputDecoration(
-                  label: Text('랜덤 범위'),
-                ),
-              ),
-            ),
           ),
           ViewSwitchLabel(
             () => controller.maximizingImage.value =
@@ -167,7 +214,10 @@ class ViewEditor extends StatelessWidget {
                       child: ViewEditorTyping(),
                     ),
                   ),
-                  editingNodeValues,
+                  Padding(
+                    padding: const EdgeInsets.all(ConstList.paddingSmall),
+                    child: editingNodeValues,
+                  ),
                 ],
               ),
             ),
