@@ -15,7 +15,6 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../main.dart';
-import '../model/design_setting.dart';
 import '../model/platform_system.dart';
 import '../viewModel/vm_variable_table.dart';
 
@@ -46,9 +45,8 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
     var nodeController = Get.put(VMChoiceNode.fromNode(node!), tag: node!.tag);
     var layoutController = Get.find<VMDesignSetting>();
 
-    var baseColor = node!.isCard ? Colors.white : baseNodeColor;
     var mainNode = Ink(
-      color: baseColor,
+      color: Colors.white,
       child: InkWell(
         onDoubleTap: isEditable
             ? () {
@@ -86,11 +84,16 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                 child: PopupMenuButton<int>(
                   icon: const Icon(Icons.more_vert),
                   onSelected: (result) {
-                    if (result == 0) {
-                      showDialog(
-                        context: context,
-                        builder: (builder) => SizeDialog(node),
-                      );
+                    switch(result){
+                      case 0:
+                        showDialog(
+                          context: context,
+                          builder: (builder) => SizeDialog(node),
+                        );
+                        break;
+                      case 1:
+                        Get.find<VMDraggableNestedMap>().copyData(node!);
+                        break;
                     }
                   },
                   itemBuilder: (context) {
@@ -98,6 +101,10 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                       const PopupMenuItem(
                         value: 0,
                         child: Text('크기 수정'),
+                      ),
+                      const PopupMenuItem(
+                        value: 1,
+                        child: Text('복사'),
                       ),
                     ];
                   },
@@ -155,7 +162,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                       width: ConstList.isSmallDisplay(context) ? 2 : 4,
                     ),
                   ),
-            color: baseColor,
+            color: Colors.white,
             clipBehavior: Clip.antiAlias,
             margin: ConstList.isSmallDisplay(context)
                 ? const EdgeInsets.all(1.4)

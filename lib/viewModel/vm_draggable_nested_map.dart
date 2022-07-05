@@ -40,11 +40,14 @@ class VMDraggableNestedMap extends GetxController {
     isChanged = true;
   }
 
+  void copyData(ChoiceNode choiceNode){
+    removedData.value = choiceNode;
+    removedData.refresh();
+  }
 
   void removeData(List<int> data) {
     var choiceNode = getPlatform.removeData(data);
-    removedData.value = choiceNode;
-    removedData.refresh();
+    copyData(choiceNode);
     updateVMChoiceNode(data);
     update();
   }

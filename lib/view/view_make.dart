@@ -100,7 +100,7 @@ class ViewMake extends StatelessWidget {
                 },
                 child: const Tooltip(
                   message: '최근 삭제된 선택지 생성',
-                  child: Icon(Icons.auto_delete),
+                  child: Icon(Icons.paste),
                 ),
               ),
             ),
