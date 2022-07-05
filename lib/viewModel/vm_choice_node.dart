@@ -197,9 +197,11 @@ class VMChoiceNode extends GetxController {
   }
 
   void setSelectedMultiple(int input){
-    selectedMultiple.value += input;
-    selectedMultiple.value = selectedMultiple.value.clamp(0, node.maximumStatus);
-    node.multiSelect = selectedMultiple.value;
-    VMChoiceNode.updateStatusAll();
+    if(!isEditable){
+      selectedMultiple.value += input;
+      selectedMultiple.value = selectedMultiple.value.clamp(0, node.maximumStatus);
+      node.multiSelect = selectedMultiple.value;
+      VMChoiceNode.updateStatusAll();
+    }
   }
 }
