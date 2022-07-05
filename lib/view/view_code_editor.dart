@@ -50,19 +50,19 @@ class ViewCodeEditor extends StatelessWidget {
                 children: [
                   TextField(
                     controller: vmCodeEditor.controllerClickable,
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.left,
                     decoration: const InputDecoration(hintText: '실행 조건'),
                   ),
                   TextField(
                     controller: vmCodeEditor.controllerVisible,
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.left,
                     decoration:
                         const InputDecoration(hintText: '숨김 조건(비어있을 시 항상 보임)'),
                   ),
                   Expanded(
                     child: TextField(
                       controller: vmCodeEditor.controllerExecute,
-                      textAlign: TextAlign.center,
+                      textAlign: TextAlign.left,
                       scrollController: ScrollController(),
                       maxLines: null,
                       expands: true,

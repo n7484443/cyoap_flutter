@@ -16,7 +16,6 @@ class VMDraggableNestedMap extends GetxController {
   List<int>? drag;
 
   ScrollController scroller = ScrollController();
-  GlobalKey captureKey = GlobalKey();
 
   bool isChanged = false;
 
