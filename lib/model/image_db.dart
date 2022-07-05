@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
 class ImageDB {
@@ -42,12 +41,12 @@ class ImageDB {
     });
   }
 
-  Uint8List? _getImage(String name){
+  Uint8List? getImage(String name){
     return _dirImageUint8Map[name];
   }
 
   String? getImageAsString(String name){
-    return String.fromCharCodes(_getImage(name)!);
+    return String.fromCharCodes(getImage(name)!);
   }
 
   String getImageName(int index) {
@@ -80,23 +79,6 @@ class ImageDB {
 
   void setSize(String name, Size size) {
     _dirImageSizeMap[name] = size;
-  }
-
-  Widget getImage(String name) {
-    Uint8List? image = _getImage(name);
-    if (image != null) {
-      var output = ExtendedImage.memory(
-        image,
-        filterQuality: FilterQuality.high,
-        isAntiAlias: true,
-        fit: BoxFit.scaleDown,
-        afterPaintImage: (canvas, rect, image, paint){
-          setSize(name, rect.size);
-        },
-      );
-      return output;
-    }
-    return noImage;
   }
 
   bool contains(String name) {

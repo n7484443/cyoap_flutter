@@ -17,6 +17,16 @@ class ViewImageLoading extends StatelessWidget {
         fit: BoxFit.scaleDown,
       );
     }
-    return ImageDB().getImage(name);
+    var image = ImageDB().getImage(name);
+    if (image != null) {
+      var output = ExtendedImage.memory(
+        image,
+        filterQuality: FilterQuality.high,
+        isAntiAlias: true,
+        fit: BoxFit.scaleDown,
+      );
+      return output;
+    }
+    return ImageDB().noImage;
   }
 }
