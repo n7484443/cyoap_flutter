@@ -29,8 +29,13 @@ class ViewStart extends StatelessWidget {
                         visible: vmStart.needUpdate.value,
                         child: TextButton(
                           onPressed: () {
-                            launchUrlString(
-                                'https://github.com/n7484443/FlutterCyoap/releases');
+                            if(ConstList.isMobile()){
+                              launchUrlString(
+                                  'https://play.google.com/store/apps/details?id=com.clearApple.cyoap_flutter');
+                            }else{
+                              launchUrlString(
+                                  'https://github.com/n7484443/FlutterCyoap/releases');
+                            }
                           },
                           child: const Text('새로운 버전이 나왔습니다!',
                               style: TextStyle(color: Colors.redAccent)),
