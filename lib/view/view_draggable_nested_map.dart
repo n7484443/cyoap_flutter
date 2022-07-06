@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 
-import '../model/choiceNode/choice_node.dart';
 import '../model/design_setting.dart';
 import '../viewModel/vm_choice_node.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
@@ -60,7 +59,7 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
           if (drag[drag.length - 1] == nonPositioned) {
             controller.changeData(drag, pos);
           } else if (drag[drag.length - 1] == removedPositioned) {
-            controller.addData(pos, ChoiceNode.clone(controller.removedData.value!));
+            controller.addData(pos, controller.removedData.value!.clone());
             controller.updateVMChoiceNodeAll();
           } else if (listEqualExceptLast(pos, drag) &&
               (pos.last - 1) >= drag.last) {

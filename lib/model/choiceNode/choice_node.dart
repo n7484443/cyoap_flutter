@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:cyoap_flutter/model/choiceNode/recursive_status.dart';
@@ -51,29 +52,6 @@ class ChoiceNode extends GenerableParserAndPosition {
     title = "선택지 ${Random().nextInt(99)}";
     this.width = width;
   } //랜덤 문자로 제목 중복 방지
-
-  ChoiceNode.clone(ChoiceNode node)
-      : isCard = node.isCard,
-        isRound = node.isRound,
-        imagePosition = node.imagePosition,
-        choiceNodeMode = node.choiceNodeMode,
-        title = node.title,
-        contentsString = node.contentsString,
-        imageString = node.imageString,
-        isSelectable = node.isSelectable,
-        isOccupySpace = node.isOccupySpace,
-        maximizingImage = node.maximizingImage,
-        hideTitle = node.hideTitle,
-        maximumStatus = node.maximumStatus,
-        random = node.random,
-        multiSelect = node.multiSelect{
-    currentPos = node.currentPos;
-    width = node.width;
-    for(var child in node.children){
-      children.add(ChoiceNode.clone(child as ChoiceNode));
-    }
-    recursiveStatus = node.recursiveStatus;
-  }
 
   ChoiceNode.fromJson(Map<String, dynamic> json)
       : isCard = json['isCard'] ?? true,
@@ -196,5 +174,10 @@ class ChoiceNode extends GenerableParserAndPosition {
       }
     }
     return out;
+  }
+
+  ChoiceNode clone(){
+    var json = jsonDecode(jsonEncode(toJson()));
+    return ChoiceNode.fromJson(json);
   }
 }

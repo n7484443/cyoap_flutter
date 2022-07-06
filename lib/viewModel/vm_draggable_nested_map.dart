@@ -41,7 +41,7 @@ class VMDraggableNestedMap extends GetxController {
   }
 
   void copyData(ChoiceNode choiceNode) {
-    removedData.value = ChoiceNode.clone(choiceNode);
+    removedData.value = choiceNode.clone();
     removedData.refresh();
   }
 
