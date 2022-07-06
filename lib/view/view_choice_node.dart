@@ -198,32 +198,27 @@ class SizeDialog extends StatelessWidget {
     return AlertDialog(
       scrollable: true,
       alignment: Alignment.center,
-      title: const Text('크기 수정'),
-      content: Obx(
-        () => Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text('길이'),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.chevron_left),
-                  onPressed: () {
-                    controller.sizeChange(-1);
-                  },
-                ),
-                Text(
-                    '${controller.size.value == 0 ? 'max' : controller.size.value}'),
-                IconButton(
-                  icon: const Icon(Icons.chevron_right),
-                  onPressed: () {
-                    controller.sizeChange(1);
-                  },
-                ),
-              ],
-            ),
-          ],
+      title: const Text('크기 수정', textAlign: TextAlign.center),
+      content: SizedBox(
+        width: 400,
+        height: 100,
+        child: Obx(
+          () => Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('길이 : ${controller.size.value == 0 ? 'max' : controller.size.value.toString()}', style: const TextStyle(fontSize: 16)),
+              Slider(
+                onChanged: (double value) {
+                  controller.sizeChange(value.round());
+                },
+                value: controller.size.value.toDouble(),
+                divisions: defaultMaxSize,
+                max: defaultMaxSize.toDouble(),
+                min: 0,
+                label: controller.size.value == 0 ? 'max' : controller.size.value.toString(),
+              ),
+            ],
+          ),
         ),
       ),
     );
