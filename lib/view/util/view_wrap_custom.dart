@@ -6,17 +6,16 @@ import '../../model/choiceNode/generable_parser.dart';
 
 const int defaultMaxSize = 12;
 
-class ViewWrapCustom extends StatelessWidget {
+class ViewWrapCustomReorderable extends StatelessWidget {
   final List<GenerableParserAndPosition> children = List.empty(growable: true);
   final Widget Function(ChoiceNode) builder;
   final Widget Function(int)? builderDraggable;
   final int maxSize;
-  final bool isAllVisible;
   final bool setCenter;
 
-  ViewWrapCustom(List<GenerableParserAndPosition> children, this.builder,
-      {this.isAllVisible = false,
-      this.maxSize = defaultMaxSize,
+  ViewWrapCustomReorderable(
+      List<GenerableParserAndPosition> children, this.builder,
+      {this.maxSize = defaultMaxSize,
       this.builderDraggable,
       this.setCenter = false,
       Key? key})
@@ -74,9 +73,6 @@ class ViewWrapCustom extends StatelessWidget {
       int size = 0;
       for (int i = 0; i < children.length; i++) {
         var child = children[i] as ChoiceNode;
-        if (!isAllVisible && !child.isOccupySpace && child.status.isHide()) {
-          continue;
-        }
         size = child.width == 0 ? maxSize : child.width;
         if (size == maxSize) {
           if (inner != 0) {
@@ -120,6 +116,109 @@ class ViewWrapCustom extends StatelessWidget {
               child: Row(
                 children: e,
               ),
+            );
+          }
+          return Padding(
+            padding: const EdgeInsets.only(top: 2, bottom: 2),
+            child: IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: e,
+              ),
+            ),
+          );
+        },
+      ).toList(),
+    );
+  }
+}
+
+class ViewWrapCustom extends StatelessWidget {
+  final List<GenerableParserAndPosition> children = List.empty(growable: true);
+  final Widget Function(ChoiceNode) builder;
+  final int maxSize;
+  final bool setCenter;
+
+  ViewWrapCustom(List<GenerableParserAndPosition> children, this.builder,
+      {this.maxSize = defaultMaxSize, this.setCenter = false, Key? key})
+      : super(key: key) {
+    this.children.addAll(children);
+  }
+
+  final int mul = 4;
+
+  void setEmptyFlexible(List<List<Widget>> widget, int innerPos) {
+    if (innerPos < maxSize) {
+      var leftOver = (maxSize - innerPos);
+      if (setCenter) {
+        var d = leftOver;
+        widget.last
+            .insert(0, Expanded(flex: d, child: const SizedBox.shrink()));
+        widget.last.add(Expanded(flex: d, child: const SizedBox.shrink()));
+      } else {
+        widget.last.add(
+          Expanded(
+            flex: leftOver * mul,
+            child: const SizedBox(
+              width: double.infinity,
+              height: 0,
+            ),
+          ),
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<List<Widget>> widget =
+        List.filled(1, List<Widget>.empty(growable: true), growable: true);
+
+    if (children.isNotEmpty) {
+      int inner = 0;
+      int size = 0;
+      for (int i = 0; i < children.length; i++) {
+        var child = children[i] as ChoiceNode;
+        if (!child.isOccupySpace && child.status.isHide()) {
+          continue;
+        }
+        size = child.width == 0 ? maxSize : child.width;
+        if (size == maxSize) {
+          if (inner != 0) {
+            setEmptyFlexible(widget, inner);
+          }
+          widget.add(List<Widget>.empty(growable: true));
+          widget.last.add(builder(child));
+          widget.add(List<Widget>.empty(growable: true));
+          inner = 0;
+        } else {
+          if (inner + size > maxSize) {
+            setEmptyFlexible(widget, inner);
+            inner = size;
+            widget.add(List<Widget>.empty(growable: true));
+          } else {
+            inner += size;
+          }
+          widget.last.add(Expanded(flex: size * mul, child: builder(child)));
+        }
+      }
+      if (size != maxSize) {
+        setEmptyFlexible(widget, inner);
+      }
+    }
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: widget.where((value) => value.isNotEmpty).map(
+        (e) {
+          if (e.length == 1) {
+            return Padding(
+              padding: const EdgeInsets.only(top: 2, bottom: 2),
+              child: e is Expanded
+                  ? Row(
+                      children: e,
+                    )
+                  : e.first,
             );
           }
           return Padding(

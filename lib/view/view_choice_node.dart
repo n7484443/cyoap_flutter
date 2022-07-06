@@ -417,17 +417,22 @@ class ViewChoiceNodeContent extends StatelessWidget {
           ),
         ]);
       }
-      Widget child = ViewWrapCustom(
-        node.children,
-        (child) =>
-            isEditable ? NodeDraggable(child) : ViewChoiceNode.fromNode(child),
-        maxSize: node.getMaxSize(true),
-        builderDraggable: isEditable
-            ? (i) =>
-                NodeDragTarget(List.from(node.pos(), growable: true)..add(i))
-            : null,
-        isAllVisible: isEditable,
-      );
+      Widget child;
+      if(isEditable){
+        child = ViewWrapCustomReorderable(
+          node.children,
+              (child) => NodeDraggable(child),
+          maxSize: node.getMaxSize(true),
+          builderDraggable: (i) =>
+              NodeDragTarget(List.from(node.pos(), growable: true)..add(i)),
+        );
+      }else{
+        child = ViewWrapCustom(
+          node.children,
+              (child) => ViewChoiceNode.fromNode(child),
+          maxSize: node.getMaxSize(true),
+        );
+      }
       if (node.imagePosition == 1) {
         return Column(
           children: [

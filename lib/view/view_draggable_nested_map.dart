@@ -354,11 +354,10 @@ class ChoiceLine extends StatelessWidget {
         child: Column(
           children: [
             NodeDivider(y),
-            ViewWrapCustom(
+            ViewWrapCustomReorderable(
               xList,
               (child) => NodeDraggable(child),
               builderDraggable: (i) => NodeDragTarget([y, i]),
-              isAllVisible: true,
             ),
           ],
         ),
