@@ -145,90 +145,81 @@ class ViewWrapCustom extends StatelessWidget {
     this.children.addAll(children);
   }
 
-  final int mul = 4;
-
-  void setEmptyFlexible(List<List<Widget>> widget, int innerPos) {
-    if (innerPos < maxSize) {
-      var leftOver = (maxSize - innerPos);
-      if (setCenter) {
-        var d = leftOver;
-        widget.last
-            .insert(0, Expanded(flex: d, child: const SizedBox.shrink()));
-        widget.last.add(Expanded(flex: d, child: const SizedBox.shrink()));
-      } else {
-        widget.last.add(
-          Expanded(
-            flex: leftOver * mul,
-            child: const SizedBox(
-              width: double.infinity,
-              height: 0,
-            ),
-          ),
-        );
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    List<List<Widget>> widget =
-        List.filled(1, List<Widget>.empty(growable: true), growable: true);
-
+    List<Widget> outputWidget = List<Widget>.empty(growable: true);
     if (children.isNotEmpty) {
-      int inner = 0;
-      int size = 0;
+      int stack = 0;
+      List<Widget> subWidget = List<Widget>.empty(growable: true);
       for (int i = 0; i < children.length; i++) {
         var child = children[i] as ChoiceNode;
         if (!child.isOccupySpace && child.status.isHide()) {
           continue;
         }
-        size = child.width == 0 ? maxSize : child.width;
-        if (size == maxSize) {
-          if (inner != 0) {
-            setEmptyFlexible(widget, inner);
-          }
-          widget.add(List<Widget>.empty(growable: true));
-          widget.last.add(builder(child));
-          widget.add(List<Widget>.empty(growable: true));
-          inner = 0;
-        } else {
-          if (inner + size > maxSize) {
-            setEmptyFlexible(widget, inner);
-            inner = size;
-            widget.add(List<Widget>.empty(growable: true));
+        int size = child.width == 0 ? maxSize : child.width;
+        if (stack + size > maxSize) {
+          subWidget.add(
+            Expanded(
+              flex: maxSize - stack,
+              child: const SizedBox.shrink(),
+            ),
+          );
+          outputWidget.add(
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: subWidget,
+              ),
+            ),
+          );
+          if (size == maxSize) {
+            outputWidget.add(builder(child));
+            subWidget = List.empty(growable: true);
+            stack = 0;
           } else {
-            inner += size;
+            subWidget = List.from([Expanded(flex: size, child: builder(child))],
+                growable: true);
+            stack = size;
           }
-          widget.last.add(Expanded(flex: size * mul, child: builder(child)));
+        } else {
+          subWidget.add(Expanded(flex: size, child: builder(child)));
+          if (stack + size == maxSize) {
+            outputWidget.add(IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: subWidget,
+              ),
+            ));
+            subWidget = List.empty(growable: true);
+            stack = 0;
+          } else {
+            stack += size;
+          }
         }
       }
-      if (size != maxSize) {
-        setEmptyFlexible(widget, inner);
+      if (0 < stack && stack < maxSize) {
+        subWidget.add(
+            Expanded(flex: maxSize - stack, child: const SizedBox.shrink()));
+      }
+      if (subWidget.isNotEmpty) {
+        outputWidget.add(
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: subWidget,
+            ),
+          ),
+        );
       }
     }
 
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: widget.where((value) => value.isNotEmpty).map(
+      children: outputWidget.map(
         (e) {
-          if (e.length == 1) {
-            return Padding(
-              padding: const EdgeInsets.only(top: 2, bottom: 2),
-              child: e is Expanded
-                  ? Row(
-                      children: e,
-                    )
-                  : e.first,
-            );
-          }
           return Padding(
             padding: const EdgeInsets.only(top: 2, bottom: 2),
-            child: IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: e,
-              ),
-            ),
+            child: e,
           );
         },
       ).toList(),
