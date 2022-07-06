@@ -104,7 +104,7 @@ class VMChoiceNode extends GetxController {
 
   void updateFromNode() {
     node = getNode(pos)! as ChoiceNode;
-    updateFromEditor();
+    onInit();
     for (var child in node.children) {
       getVMChoiceNodeFromList(child.pos())?.updateFromNode();
     }
@@ -141,8 +141,8 @@ class VMChoiceNode extends GetxController {
   bool get isIgnorePointer =>
       status.value.isPointerInteractive(node.isSelectable);
 
-  void select() {
-    getPlatform.setSelect(node.pos());
+  void select(int n) {
+    getPlatform.setSelect(node.pos(), n);
   }
 
   static void updateStatusAll() {
@@ -200,7 +200,7 @@ class VMChoiceNode extends GetxController {
     if(!isEditable){
       selectedMultiple.value += input;
       selectedMultiple.value = selectedMultiple.value.clamp(0, node.maximumStatus);
-      node.multiSelect = selectedMultiple.value;
+      node.selectNode(selectedMultiple.value);
       VMChoiceNode.updateStatusAll();
     }
   }

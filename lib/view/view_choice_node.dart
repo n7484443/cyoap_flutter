@@ -55,7 +55,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
             : null,
         onTap: !isEditable && nodeController.nodeMode.value != ChoiceNodeMode.multiSelect
             ? () async {
-                nodeController.select();
+                nodeController.select(0);
                 if (nodeController.nodeMode.value ==
                     ChoiceNodeMode.randomMode) {
                   if (nodeController.isSelect) {

@@ -120,8 +120,18 @@ class ChoiceNode extends GenerableParserAndPosition {
     return map;
   }
 
-  void selectNode() {
-    status = status.reverseSelected(isSelectable);
+  void selectNode(int n) {
+    if(choiceNodeMode == ChoiceNodeMode.multiSelect){
+      multiSelect = n;
+      if(n > 0){
+        status = SelectableStatus.selected;
+      }else{
+        status = SelectableStatus.open;
+      }
+    }else{
+      multiSelect = -1;
+      status = status.reverseSelected(isSelectable);
+    }
   }
 
   @override
