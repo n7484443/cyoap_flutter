@@ -53,7 +53,8 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                 Get.toNamed('/viewEditor', id: 1);
               }
             : null,
-        onTap: !isEditable && nodeController.nodeMode.value != ChoiceNodeMode.multiSelect
+        onTap: !isEditable &&
+                nodeController.nodeMode.value != ChoiceNodeMode.multiSelect
             ? () async {
                 nodeController.select(0);
                 if (nodeController.nodeMode.value ==
@@ -139,9 +140,8 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
 
     return Obx(
       () {
-        var isSelectedCheck =
-                nodeController.node.isSelected() &&
-                nodeController.node.isSelectable;
+        var isSelectedCheck = nodeController.node.isSelected() &&
+            nodeController.node.isSelectable;
         return Opacity(
           opacity: nodeController.opacity,
           child: Card(
@@ -206,7 +206,9 @@ class SizeDialog extends StatelessWidget {
           () => Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('길이 : ${controller.size.value == 0 ? 'max' : controller.size.value.toString()}', style: const TextStyle(fontSize: 16)),
+              Text(
+                  '길이 : ${controller.size.value == 0 ? 'max' : controller.size.value.toString()}',
+                  style: const TextStyle(fontSize: 16)),
               Slider(
                 onChanged: (double value) {
                   controller.sizeChange(value.round());
@@ -215,7 +217,9 @@ class SizeDialog extends StatelessWidget {
                 divisions: defaultMaxSize,
                 max: defaultMaxSize.toDouble(),
                 min: 0,
-                label: controller.size.value == 0 ? 'max' : controller.size.value.toString(),
+                label: controller.size.value == 0
+                    ? 'max'
+                    : controller.size.value.toString(),
               ),
             ],
           ),
@@ -286,10 +290,12 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
         onDragStarted: () {
           controller.dragStart(pos);
         },
-        child: Opacity(
-          opacity: listEquals(controller.drag, pos) ? 0.2 : 1.0,
-          child: widget,
-        ),
+        child: listEquals(controller.drag, pos)
+            ? Opacity(
+                opacity: 0.2,
+                child: widget,
+              )
+            : widget,
         onDragEnd: (DraggableDetails data) {
           controller.dragEnd();
         },
@@ -418,18 +424,18 @@ class ViewChoiceNodeContent extends StatelessWidget {
         ]);
       }
       Widget child;
-      if(isEditable){
+      if (isEditable) {
         child = ViewWrapCustomReorderable(
           node.children,
-              (child) => NodeDraggable(child),
+          (child) => NodeDraggable(child),
           maxSize: node.getMaxSize(true),
           builderDraggable: (i) =>
               NodeDragTarget(List.from(node.pos(), growable: true)..add(i)),
         );
-      }else{
+      } else {
         child = ViewWrapCustom(
           node.children,
-              (child) => ViewChoiceNode.fromNode(child),
+          (child) => ViewChoiceNode.fromNode(child),
           maxSize: node.getMaxSize(true),
         );
       }

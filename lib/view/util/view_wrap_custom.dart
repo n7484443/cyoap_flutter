@@ -52,16 +52,18 @@ class ViewWrapCustomReorderable extends StatelessWidget {
           continue;
         }
         int size = child.width == 0 ? maxSize : child.width;
-        if(stack == 0 && i == 0){
+        if (stack == 0 && i == 0) {
           addBuildDraggable(outputWidget, i, horizontal: true);
         }
         if (stack + size > maxSize) {
-          subWidget.add(
-            Expanded(
-              flex: (maxSize - stack) * mul,
-              child: const SizedBox.shrink(),
-            ),
-          );
+          if (maxSize > stack) {
+            subWidget.add(
+              Expanded(
+                flex: (maxSize - stack) * mul,
+                child: const SizedBox.shrink(),
+              ),
+            );
+          }
           outputWidget.add(
             IntrinsicHeight(
               child: Row(
@@ -86,8 +88,8 @@ class ViewWrapCustomReorderable extends StatelessWidget {
         }
       }
       if (0 < stack && stack < maxSize) {
-        subWidget.add(
-            Expanded(flex: (maxSize - stack) * mul, child: const SizedBox.shrink()));
+        subWidget.add(Expanded(
+            flex: (maxSize - stack) * mul, child: const SizedBox.shrink()));
       }
       if (subWidget.isNotEmpty) {
         outputWidget.add(
@@ -105,14 +107,7 @@ class ViewWrapCustomReorderable extends StatelessWidget {
 
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: outputWidget.map(
-        (e) {
-          return Padding(
-            padding: const EdgeInsets.only(top: 2, bottom: 2),
-            child: e,
-          );
-        },
-      ).toList(),
+      children: outputWidget,
     );
   }
 }
@@ -143,12 +138,14 @@ class ViewWrapCustom extends StatelessWidget {
         int size = child.width == 0 ? maxSize : child.width;
 
         if (stack + size > maxSize) {
-          subWidget.add(
-            Expanded(
-              flex: maxSize - stack,
-              child: const SizedBox.shrink(),
-            ),
-          );
+          if (maxSize > stack) {
+            subWidget.add(
+              Expanded(
+                flex: maxSize - stack,
+                child: const SizedBox.shrink(),
+              ),
+            );
+          }
           outputWidget.add(
             IntrinsicHeight(
               child: Row(
@@ -187,14 +184,7 @@ class ViewWrapCustom extends StatelessWidget {
 
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: outputWidget.map(
-        (e) {
-          return Padding(
-            padding: const EdgeInsets.only(top: 2, bottom: 2),
-            child: e,
-          );
-        },
-      ).toList(),
+      children: outputWidget,
     );
   }
 }
