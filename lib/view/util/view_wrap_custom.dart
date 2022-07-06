@@ -23,109 +23,93 @@ class ViewWrapCustomReorderable extends StatelessWidget {
     this.children.addAll(children);
   }
 
-  final int mul = 4;
+  final int mul = 3;
 
-  void setEmptyFlexible(List<List<Widget>> widget, int innerPos) {
-    if (innerPos < maxSize) {
-      var leftOver = (maxSize - innerPos);
-      if (setCenter) {
-        var d = leftOver;
-        widget.last
-            .insert(0, Expanded(flex: d, child: const SizedBox.shrink()));
-        widget.last.add(Expanded(flex: d, child: const SizedBox.shrink()));
-      } else {
-        widget.last.add(
-          Expanded(
-            flex: leftOver * mul,
-            child: const SizedBox(
-              width: double.infinity,
-              height: 0,
-            ),
-          ),
-        );
-      }
-    }
-  }
-
-  void addBuildDraggable(List<List<Widget>> widget, int pos,
+  void addBuildDraggable(List<Widget> widget, int pos,
       {bool horizontal = false}) {
     if (builderDraggable != null) {
-      widget.last.add(Expanded(
-          flex: 1,
-          child: horizontal
-              ? SizedBox(
-                  height: nodeBaseHeight / 6,
-                  child: builderDraggable!(pos),
-                )
-              : builderDraggable!(pos)));
+      if (horizontal) {
+        widget.add(Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+              height: nodeBaseHeight / 6, child: builderDraggable!(pos)),
+        ));
+      } else {
+        widget.add(Expanded(child: builderDraggable!(pos)));
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    List<List<Widget>> widget =
-        List.filled(1, List<Widget>.empty(growable: true), growable: true);
-
-    if (children.isEmpty) {
-      addBuildDraggable(widget, children.length, horizontal: true);
-    } else {
-      int inner = 0;
-      int size = 0;
+    List<Widget> outputWidget = List<Widget>.empty(growable: true);
+    if (children.isNotEmpty) {
+      int stack = 0;
+      List<Widget> subWidget = List<Widget>.empty(growable: true);
       for (int i = 0; i < children.length; i++) {
         var child = children[i] as ChoiceNode;
-        size = child.width == 0 ? maxSize : child.width;
-        if (size == maxSize) {
-          if (inner != 0) {
-            addBuildDraggable(widget, i);
-            setEmptyFlexible(widget, inner);
-          }
-          widget.add(List<Widget>.empty(growable: true));
-          addBuildDraggable(widget, i, horizontal: true);
-          widget.add(List<Widget>.empty(growable: true));
-          widget.last.add(Expanded(flex: size * mul, child: builder(child)));
-          widget.add(List<Widget>.empty(growable: true));
-          inner = 0;
+        if (!child.isOccupySpace && child.status.isHide()) {
+          continue;
+        }
+        int size = child.width == 0 ? maxSize : child.width;
+        if(stack == 0 && i == 0){
+          addBuildDraggable(outputWidget, i, horizontal: true);
+        }
+        if (stack + size > maxSize) {
+          subWidget.add(
+            Expanded(
+              flex: (maxSize - stack) * mul,
+              child: const SizedBox.shrink(),
+            ),
+          );
+          outputWidget.add(
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: subWidget,
+              ),
+            ),
+          );
+          subWidget = List.empty(growable: true);
+          stack = 0;
+          i -= 1;
+          continue;
+        } else if (size == maxSize) {
+          addBuildDraggable(outputWidget, i, horizontal: true);
+          outputWidget.add(builder(child));
+          subWidget = List.empty(growable: true);
+          addBuildDraggable(outputWidget, i + 1, horizontal: true);
         } else {
-          addBuildDraggable(widget, i);
-          if (inner + size > maxSize) {
-            setEmptyFlexible(widget, inner);
-            inner = size;
-            widget.add(List<Widget>.empty(growable: true));
-          } else {
-            inner += size;
-          }
-          widget.last.add(Expanded(flex: size * mul, child: builder(child)));
+          subWidget.add(Expanded(flex: size * mul, child: builder(child)));
+          addBuildDraggable(subWidget, i + 1);
+          stack += size;
         }
       }
-      if (size == maxSize) {
-        widget.add(List<Widget>.empty(growable: true));
-        addBuildDraggable(widget, children.length, horizontal: true);
-      } else {
-        addBuildDraggable(widget, children.length);
-        setEmptyFlexible(widget, inner);
+      if (0 < stack && stack < maxSize) {
+        subWidget.add(
+            Expanded(flex: (maxSize - stack) * mul, child: const SizedBox.shrink()));
       }
+      if (subWidget.isNotEmpty) {
+        outputWidget.add(
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: subWidget,
+            ),
+          ),
+        );
+      }
+    } else {
+      addBuildDraggable(outputWidget, children.length, horizontal: true);
     }
 
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: widget.where((value) => value.isNotEmpty).map(
+      children: outputWidget.map(
         (e) {
-          if (e.length == 1) {
-            return Padding(
-              padding: const EdgeInsets.only(top: 2, bottom: 2),
-              child: Row(
-                children: e,
-              ),
-            );
-          }
           return Padding(
             padding: const EdgeInsets.only(top: 2, bottom: 2),
-            child: IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: e,
-              ),
-            ),
+            child: e,
           );
         },
       ).toList(),
@@ -157,6 +141,7 @@ class ViewWrapCustom extends StatelessWidget {
           continue;
         }
         int size = child.width == 0 ? maxSize : child.width;
+
         if (stack + size > maxSize) {
           subWidget.add(
             Expanded(
@@ -172,29 +157,16 @@ class ViewWrapCustom extends StatelessWidget {
               ),
             ),
           );
-          if (size == maxSize) {
-            outputWidget.add(builder(child));
-            subWidget = List.empty(growable: true);
-            stack = 0;
-          } else {
-            subWidget = List.from([Expanded(flex: size, child: builder(child))],
-                growable: true);
-            stack = size;
-          }
+          subWidget = List.empty(growable: true);
+          stack = 0;
+          i -= 1;
+          continue;
+        } else if (size == maxSize) {
+          outputWidget.add(builder(child));
+          subWidget = List.empty(growable: true);
         } else {
           subWidget.add(Expanded(flex: size, child: builder(child)));
-          if (stack + size == maxSize) {
-            outputWidget.add(IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: subWidget,
-              ),
-            ));
-            subWidget = List.empty(growable: true);
-            stack = 0;
-          } else {
-            stack += size;
-          }
+          stack += size;
         }
       }
       if (0 < stack && stack < maxSize) {
