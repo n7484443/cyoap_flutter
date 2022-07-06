@@ -217,7 +217,7 @@ akl:function akl(d){this.a=d},
 akm:function akm(){},
 apu:function apu(){},
 bdz(d){var x,w,v,u=new A.cY("")
-if(d.a!==0&&!d.gaW(d).Bh(0,new B.aJs()))u.a=""+"?"
+if(d.a!==0&&!d.gaV(d).Bh(0,new B.aJs()))u.a=""+"?"
 for(x=A.f0(d,d.r),w=0;x.v();){v=x.d;++w
 if(d.h(0,v)==null)continue
 v=u.a+=v+"="+A.N9(D.Qt,J.cT(d.h(0,v)),C.a0,!1)
@@ -226,7 +226,7 @@ return x.charCodeAt(0)==0?x:x},
 aJs:function aJs(){},
 Wf(){var x=0,w=A.C(y.C),v,u=2,t,s=[],r,q,p,o,n,m,l
 var $async$Wf=A.y(function(d,e){if(d===1){t=e
-x=u}while(true)switch(x){case 0:m=$.aOk
+x=u}while(true)switch(x){case 0:m=$.aOl
 x=m==null?3:4
 break
 case 3:r=new A.aE(new A.a7($.ag,y.w),y.d)
@@ -234,7 +234,7 @@ u=6
 x=9
 return A.w(B.apC(),$async$Wf)
 case 9:q=e
-J.aRA(r,new B.zb(q))
+J.aRB(r,new B.zb(q))
 u=2
 x=8
 break
@@ -244,7 +244,7 @@ m=A.ap(l)
 if(y.L.b(m)){p=m
 r.iB(p)
 o=r.a
-$.aOk=null
+$.aOl=null
 v=o
 x=1
 break}else throw l
@@ -252,7 +252,7 @@ x=8
 break
 case 5:x=2
 break
-case 8:m=$.aOk=r
+case 8:m=$.aOl=r
 case 4:v=m.a
 x=1
 break
@@ -262,7 +262,7 @@ return A.B($async$Wf,w)},
 apC(){var x=0,w=A.C(y.R),v,u,t,s,r,q,p
 var $async$apC=A.y(function(d,e){if(d===1)return A.z(e,w)
 while(true)switch(x){case 0:x=3
-return A.w($.aQy().h7(0),$async$apC)
+return A.w($.aQz().h7(0),$async$apC)
 case 3:q=e
 p=A.q(y.N,y.K)
 for(u=J.e(q),t=J.aq(u.gbQ(q));t.v();){s=t.gL(t)
@@ -300,7 +300,7 @@ case 1:return A.A(v,w)}})
 return A.B($async$a8m,w)},
 aK1(){var x=0,w=A.C(y.Z),v,u
 var $async$aK1=A.y(function(d,e){if(d===1)return A.z(e,w)
-while(true)switch(x){case 0:$.aQt()
+while(true)switch(x){case 0:$.aQu()
 $.pk()
 A.Y(A.S("Functionality only available on Android"))
 x=3
@@ -339,7 +339,7 @@ case 7:x=10
 return A.w(t.iE(0),$async$gmm)
 case 10:case 8:J.aLp(u.a)
 for(A.h0(!1,"recursive"),A.h0(!0,"followLinks"),s=A.b([],y.t),r=A.aDp(),A.b5k(void 1),A.baq(r,s,void 1,!1,!0),r=null.length,q=0;q<null.length;null.length===r||(0,A.O)(null),++q){p=null[q]
-J.dv(u.a,p.gdK(p))}x=4
+J.dv(u.a,p.gdJ(p))}x=4
 break
 case 5:x=11
 return A.w(B.Wf(),$async$gmm)
@@ -366,7 +366,7 @@ A.h0(d,"value")
 u=s.a
 if(y.a.b(d)){t=A.b(d.slice(0),A.ak(d))
 J.cS(u,"cyoap_frequent_path",t)}else J.cS(u,"cyoap_frequent_path",d)
-v=$.aQy().oA("StringList","flutter.cyoap_frequent_path",d)
+v=$.aQz().oA("StringList","flutter.cyoap_frequent_path",d)
 x=1
 break
 case 1:return A.A(v,w)}})
@@ -425,7 +425,7 @@ while(true)switch(x){case 0:if($.fG.bj()===C.c0){t=u.ch
 t.scj(0,"")
 s=$.ah()
 t=F.ls(!1,null,t,H.NC,null,null,!1,null,null,null,null,null,1,null,null,null,!1,null,null,C.aN,G.bD,null)
-E.aNg(s,E.rA(A.b([F.tc(H.om,new B.atI()),F.tc(D.a9v,new B.atJ(u))],y.p),null,null,null,null,t,G.cV,!1,null,D.a9g,null),!1,null,y.z)
+E.aNh(s,E.rA(A.b([F.tc(H.om,new B.atI()),F.tc(D.a9v,new B.atJ(u))],y.p),null,null,null,null,t,G.cV,!1,null,D.a9g,null),!1,null,y.z)
 v=0
 x=1
 break}x=3
@@ -437,10 +437,10 @@ s=u.cy
 s.sp(0,0)
 t=t.a
 J.nn(A.a(s.di$,"_value"),t)
-t=s.dG$
+t=s.dR$
 s=s.gj(s)
 t.r=s
-t.f6(s)
+t.ft(s)
 v=0
 x=1
 break}v=-1
@@ -461,10 +461,10 @@ if(t){u.ay.push($.rv().Cd(r.gaJ(s)))
 t=u.cy
 s=r.gaJ(s).b
 J.dv(A.a(t.di$,"_value"),s)
-s=t.dG$
+s=t.dR$
 t=t.gj(t)
 s.r=t
-s.f6(t)}else{t=u.ax
+s.ft(t)}else{t=u.ax
 s=r.gaJ(s)
 A.Y("      On web `path` is always `null`,\n      You should access `bytes` property instead,\n      Read more about it [here](https://github.com/miguelpruivo/flutter_file_picker/wiki/FAQ)\n      ")
 s=s.a
@@ -474,10 +474,10 @@ s=u.cy
 s.sp(0,0)
 t=t.a
 J.nn(A.a(s.di$,"_value"),t)
-t=s.dG$
+t=s.dR$
 s=s.gj(s)
 t.r=s
-t.f6(s)}v=0
+t.ft(s)}v=0
 x=1
 break}v=-1
 x=1
@@ -579,15 +579,15 @@ case 5:t=v.cy
 t.sp(0,0)
 u=u.a
 J.nn(A.a(t.di$,"_value"),u)
-u=t.dG$
+u=t.dR$
 t=t.gj(t)
 u.r=t
-u.f6(t)
+u.ft(t)
 x=6
 return A.w(v.xm(),$async$hr)
 case 6:x=3
 break
-case 4:E.aNg($.ah(),new B.Y6(new B.atM(v,d),null),!0,null,y.z)
+case 4:E.aNh($.ah(),new B.Y6(new B.atM(v,d),null),!0,null,y.z)
 case 3:return A.A(null,w)}})
 return A.B($async$hr,w)},
 xm(){var x=0,w=A.C(y.H),v=this,u,t
@@ -598,10 +598,10 @@ x=2
 return A.w(v.ax.gmm(),$async$xm)
 case 2:u=e
 J.nn(A.a(t.di$,"_value"),u)
-u=t.dG$
+u=t.dR$
 t=t.gj(t)
 u.r=t
-u.f6(t)
+u.ft(t)
 return A.A(null,w)}})
 return A.B($async$xm,w)}}
 B.aeH.prototype={
@@ -614,7 +614,7 @@ break
 case 3:p=Date.now()
 t=u.ch
 x=5
-return A.w(A.nL(A.c0(0,(t==null?null:A.aMR(t*1000,!0)).a-p),null,y.z),$async$tK)
+return A.w(A.nL(A.c0(0,(t==null?null:A.aMS(t*1000,!0)).a-p),null,y.z),$async$tK)
 case 5:case 4:u.a.toString
 if(e==="PUT"&&!0)h.bT(0,"Content-Length",new B.aeI())
 s=B.bdz(i)
@@ -765,7 +765,7 @@ case 5:x=2
 break
 case 8:x=14
 v=[1]
-return A.kw(A.aOV(p),$async$rM,w)
+return A.kw(A.aOW(p),$async$rM,w)
 case 14:++l
 j=p.e.h(0,"link")
 if(j==null){x=4
@@ -777,8 +777,8 @@ x=3
 break
 case 4:case 1:return A.kw(null,0,w)
 case 2:return A.kw(t,1,w)}})
-var x=0,w=A.aPB($async$rM,y.q),v,u=2,t,s=[],r=this,q,p,o,n,m,l,k,j,i,h
-return A.aPF(w)},
+var x=0,w=A.aPC($async$rM,y.q),v,u=2,t,s=[],r=this,q,p,o,n,m,l,k,j,i,h
+return A.aPG(w)},
 ta(d,e,f,g,h,i,j,k,l,m){return this.azd(d,e,f,g,h,i,j,k,l,m,m)},
 azd(d,e,f,g,h,a0,a1,a2,a3,a4,a5){var $async$ta=A.y(function(a6,a7){switch(a6){case 2:s=v
 x=s.pop()
@@ -804,7 +804,7 @@ i=m.a(o)
 i.toString
 x=11
 v=[1,4]
-return A.kw(A.aOV(i),$async$ta,w)
+return A.kw(A.aOW(i),$async$ta,w)
 case 11:x=9
 break
 case 10:x=6
@@ -820,8 +820,8 @@ case 12:x=s.pop()
 break
 case 5:case 1:return A.kw(null,0,w)
 case 2:return A.kw(t,1,w)}})
-var x=0,w=A.aPB($async$ta,a5),v,u=2,t,s=[],r=this,q,p,o,n,m,l,k,j,i
-return A.aPF(w)}}
+var x=0,w=A.aPC($async$ta,a5),v,u=2,t,s=[],r=this,q,p,o,n,m,l,k,j,i
+return A.aPG(w)}}
 B.apu.prototype={}
 B.zb.prototype={}
 var z=a.updateTypes(["fF()","r2()","k_()","me(N,m)","yi()","yK(@)","yJ(ay<k,@>)"])
@@ -869,7 +869,7 @@ $S:z+3}
 B.awF.prototype={
 $0(){var x=null,w=this.a,v=w.cy,u=this.b,t=A.bn(J.Z(v.gj(v),u),x,x,x,x,x,x,x)
 v=w.db
-v=v.gj(v)===u?F.aNW(x,x,C.c_,x,x,x,x,x,x,x,x,C.m,x,x,x,x,x,x,x):F.aNW(x,x,x,x,x,x,x,x,x,x,x,C.P,x,x,x,x,x,x,x)
+v=v.gj(v)===u?F.aNX(x,x,C.c_,x,x,x,x,x,x,x,x,C.m,x,x,x,x,x,x,x):F.aNX(x,x,x,x,x,x,x,x,x,x,x,C.P,x,x,x,x,x,x,x)
 return F.aXg(t,new B.awD(w,u),v)},
 $S:z+4}
 B.awD.prototype={
@@ -906,24 +906,24 @@ $S:19}
 B.ap_.prototype={
 $0(){var x=this.a,w=$.T
 if(w==null)w=$.T=C.o
-w.aV(0,null,A.l(x).i("bq.T")).hN().b1(0,new B.aoZ(x),y.b)},
+w.aX(0,null,A.l(x).i("bq.T")).hN().b1(0,new B.aoZ(x),y.b)},
 $S:0}
 B.aoZ.prototype={
 $1(d){var x=$.T
 if(x==null)x=$.T=C.o
-x.aV(0,null,A.l(this.a).i("bq.T")).toString
+x.aX(0,null,A.l(this.a).i("bq.T")).toString
 $.cJ().d=!1
 E.pQ($.ah(),"/viewPlay",null,y.z)},
 $S:36}
 B.ap0.prototype={
 $0(){var x=this.a,w=$.T
 if(w==null)w=$.T=C.o
-w.aV(0,null,A.l(x).i("bq.T")).hN().b1(0,new B.aoY(x),y.b)},
+w.aX(0,null,A.l(x).i("bq.T")).hN().b1(0,new B.aoY(x),y.b)},
 $S:0}
 B.aoY.prototype={
 $1(d){var x=$.T
 if(x==null)x=$.T=C.o
-x.aV(0,null,A.l(this.a).i("bq.T")).toString
+x.aX(0,null,A.l(this.a).i("bq.T")).toString
 $.cJ().d=!0
 E.pQ($.ah(),"/viewMake",null,y.z)},
 $S:36}
@@ -938,10 +938,10 @@ B.atL.prototype={
 $1(d){var x,w=this.a.cy
 w.sp(0,0)
 J.nn(A.a(w.di$,"_value"),d)
-x=w.dG$
+x=w.dR$
 w=w.gj(w)
 x.r=w
-x.f6(w)},
+x.ft(w)},
 $S:517}
 B.atI.prototype={
 $0(){E.di($.ah(),null)},
@@ -1029,6 +1029,6 @@ D.a9n=new A.ba("\ud30c\uc77c \ucd94\uac00",null,null,null,null,null,null,null,nu
 D.a5A=new A.t(!0,G.d3,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
 D.a9q=new A.ba("\uc0c8\ub85c\uc6b4 \ubc84\uc804\uc774 \ub098\uc654\uc2b5\ub2c8\ub2e4!",null,D.a5A,null,null,null,null,null,null,null)
 D.a9r=new A.ba("\uc774\uac83\uc740 \uc120\ud0dd\ub41c \ud504\ub85c\uc81d\ud2b8\ub97c \uc644\uc804\ud788 \uc0ad\uc81c\ud558\ub294 \uac83\uc774\uba70, \ubcf5\uad6c\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4. \uc0ad\uc81c\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?",null,null,null,null,null,null,null,null,null)
-D.a9v=new A.ba("\uc0dd\uc131",null,null,null,null,null,null,null,null,null)})();(function staticFields(){$.aOk=null})();(function lazyInitializers(){var x=a.lazyFinal
+D.a9v=new A.ba("\uc0dd\uc131",null,null,null,null,null,null,null,null,null)})();(function staticFields(){$.aOl=null})();(function lazyInitializers(){var x=a.lazyFinal
 x($,"bhj","b0S",()=>A.bT("^([+-]?\\d{4,6})-?(\\d\\d)-?(\\d\\d)(?:[ T](\\d\\d)(?::?(\\d\\d)(?::?(\\d\\d)(?:[.,](\\d+))?)?)?( ?[zZ]| ?([-+])(\\d\\d)(?::?(\\d\\d))?)?)?$",!0))})()}
-$__dart_deferred_initializers__["JUqtA6D97eZS3nXt3PXmKVlN/6A="] = $__dart_deferred_initializers__.current
+$__dart_deferred_initializers__["2kSAKNDPjHkgKx8vHuTTTEawmFU="] = $__dart_deferred_initializers__.current
