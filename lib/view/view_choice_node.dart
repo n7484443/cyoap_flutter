@@ -274,7 +274,7 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
   Widget build(BuildContext context) {
     var widget = ViewChoiceNode.fromNode(node);
     var pos = node.pos();
-    if (ConstList.isSmallDisplay(context)) {
+    if (ConstList.isMobile()) {
       return LongPressDraggable<List<int>>(
         onDragUpdate: (details) => controller.dragUpdate(details, context),
         data: pos,

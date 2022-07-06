@@ -7,11 +7,9 @@ import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.da
 import '../../view/util/view_wrap_custom.dart';
 import '../grammar/value_type.dart';
 import 'generable_parser.dart';
-enum ChoiceNodeMode{
-  defaultMode,
-  randomMode,
-  multiSelect
-}
+
+enum ChoiceNodeMode { defaultMode, randomMode, multiSelect }
+
 class ChoiceNode extends GenerableParserAndPosition {
   //grid 단위로 설정
   bool isCard;
@@ -54,6 +52,29 @@ class ChoiceNode extends GenerableParserAndPosition {
     this.width = width;
   } //랜덤 문자로 제목 중복 방지
 
+  ChoiceNode.clone(ChoiceNode node)
+      : isCard = node.isCard,
+        isRound = node.isRound,
+        imagePosition = node.imagePosition,
+        choiceNodeMode = node.choiceNodeMode,
+        title = node.title,
+        contentsString = node.contentsString,
+        imageString = node.imageString,
+        isSelectable = node.isSelectable,
+        isOccupySpace = node.isOccupySpace,
+        maximizingImage = node.maximizingImage,
+        hideTitle = node.hideTitle,
+        maximumStatus = node.maximumStatus,
+        random = node.random,
+        multiSelect = node.multiSelect{
+    currentPos = node.currentPos;
+    width = node.width;
+    for(var child in node.children){
+      children.add(ChoiceNode.clone(child as ChoiceNode));
+    }
+    recursiveStatus = node.recursiveStatus;
+  }
+
   ChoiceNode.fromJson(Map<String, dynamic> json)
       : isCard = json['isCard'] ?? true,
         isRound = json['isRound'] ?? true,
@@ -66,7 +87,9 @@ class ChoiceNode extends GenerableParserAndPosition {
         contentsString = json['contentsString'],
         imageString = json['imageString'] ?? json['image'],
         hideTitle = json['hideTitle'] ?? false,
-        choiceNodeMode = json['choiceNodeMode'] == null ? ChoiceNodeMode.defaultMode : ChoiceNodeMode.values.byName(json['choiceNodeMode']){
+        choiceNodeMode = json['choiceNodeMode'] == null
+            ? ChoiceNodeMode.defaultMode
+            : ChoiceNodeMode.values.byName(json['choiceNodeMode']) {
     width = json['width'] ?? 2;
     currentPos = json['x'] ?? json['pos'];
     recursiveStatus = RecursiveStatus.fromJson(json);
@@ -108,8 +131,10 @@ class ChoiceNode extends GenerableParserAndPosition {
       child.generateParser();
     }
   }
-  bool isSelected(){
-    return status.isSelected() || (choiceNodeMode == ChoiceNodeMode.multiSelect && multiSelect > 0);
+
+  bool isSelected() {
+    return status.isSelected() ||
+        (choiceNodeMode == ChoiceNodeMode.multiSelect && multiSelect > 0);
   }
 
   @override

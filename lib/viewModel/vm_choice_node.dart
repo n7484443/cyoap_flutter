@@ -104,7 +104,7 @@ class VMChoiceNode extends GetxController {
 
   void updateFromNode() {
     node = getNode(pos)! as ChoiceNode;
-    onInit();
+    updateFromEditor();
     for (var child in node.children) {
       getVMChoiceNodeFromList(child.pos())?.updateFromNode();
     }
