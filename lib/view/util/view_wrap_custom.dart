@@ -23,7 +23,7 @@ class ViewWrapCustomReorderable extends StatelessWidget {
     this.children.addAll(children);
   }
 
-  final int mul = 3;
+  final int mul = 5;
 
   void addBuildDraggable(List<Widget> widget, int pos,
       {bool horizontal = false}) {
@@ -35,7 +35,7 @@ class ViewWrapCustomReorderable extends StatelessWidget {
               height: nodeBaseHeight / 6, child: builderDraggable!(pos)),
         ));
       } else {
-        widget.add(Expanded(child: builderDraggable!(pos)));
+        widget.add(Expanded(flex: 2, child: builderDraggable!(pos)));
       }
     }
   }
@@ -77,7 +77,12 @@ class ViewWrapCustomReorderable extends StatelessWidget {
           i -= 1;
           continue;
         } else if (size == maxSize) {
-          addBuildDraggable(outputWidget, i, horizontal: true);
+          if(i != 0){
+            var before = (children[i - 1] as ChoiceNode).width;
+            if(before != 0 && before != maxSize){
+              addBuildDraggable(outputWidget, i, horizontal: true);
+            }
+          }
           outputWidget.add(builder(child));
           subWidget = List.empty(growable: true);
           addBuildDraggable(outputWidget, i + 1, horizontal: true);
