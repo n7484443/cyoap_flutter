@@ -1,6 +1,7 @@
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:flutter/material.dart';
+import 'package:tuple/tuple.dart';
 
 import '../../model/choiceNode/choice_node.dart';
 import '../../model/choiceNode/generable_parser.dart';
@@ -23,16 +24,13 @@ class ViewWrapCustomReorderable extends StatelessWidget {
       : super(key: key) {
     this.children.addAll(children);
     if(ConstList.isMobile()){
-      mul = 7;
-      buildMul = 4;
+      mul = const Tuple2(7, 4);
     }else{
-      mul = 5;
-      buildMul = 2;
+      mul = const Tuple2(5, 2);
     }
   }
 
-  late final int mul;
-  late final int buildMul;
+  late final Tuple2<int, int> mul;
 
   void addBuildDraggable(List<Widget> widget, int pos,
       {bool horizontal = false}) {
@@ -44,7 +42,7 @@ class ViewWrapCustomReorderable extends StatelessWidget {
               height: nodeBaseHeight / 6, child: builderDraggable!(pos)),
         ));
       } else {
-        widget.add(Expanded(flex: buildMul, child: builderDraggable!(pos)));
+        widget.add(Expanded(flex: mul.item2, child: builderDraggable!(pos)));
       }
     }
   }
@@ -68,7 +66,7 @@ class ViewWrapCustomReorderable extends StatelessWidget {
           if (maxSize > stack) {
             subWidget.add(
               Expanded(
-                flex: (maxSize - stack) * mul,
+                flex: (maxSize - stack) * mul.item1,
                 child: const SizedBox.shrink(),
               ),
             );
@@ -96,14 +94,14 @@ class ViewWrapCustomReorderable extends StatelessWidget {
           subWidget = List.empty(growable: true);
           addBuildDraggable(outputWidget, i + 1, horizontal: true);
         } else {
-          subWidget.add(Expanded(flex: size * mul, child: builder(child)));
+          subWidget.add(Expanded(flex: size * mul.item1, child: builder(child)));
           addBuildDraggable(subWidget, i + 1);
           stack += size;
         }
       }
       if (0 < stack && stack < maxSize) {
         subWidget.add(Expanded(
-            flex: (maxSize - stack) * mul, child: const SizedBox.shrink()));
+            flex: (maxSize - stack) * mul.item1, child: const SizedBox.shrink()));
       }
       if (subWidget.isNotEmpty) {
         outputWidget.add(
