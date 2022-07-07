@@ -40,7 +40,7 @@ dependencies:
   archive: ^3.3.0
   flutter_quill: ^5.0.3
   package_info_plus: ^1.4.2
-  github: ^9.3.0
+  github: ^9.4.0
   flex_color_picker: ^2.5.0
   tuple: ^2.0.0
   flutter_image_compress: ^1.1.0

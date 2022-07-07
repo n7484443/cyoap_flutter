@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:flutter/material.dart';
 
@@ -21,9 +22,17 @@ class ViewWrapCustomReorderable extends StatelessWidget {
       Key? key})
       : super(key: key) {
     this.children.addAll(children);
+    if(ConstList.isMobile()){
+      mul = 7;
+      buildMul = 4;
+    }else{
+      mul = 5;
+      buildMul = 2;
+    }
   }
 
-  final int mul = 5;
+  late final int mul;
+  late final int buildMul;
 
   void addBuildDraggable(List<Widget> widget, int pos,
       {bool horizontal = false}) {
@@ -35,7 +44,7 @@ class ViewWrapCustomReorderable extends StatelessWidget {
               height: nodeBaseHeight / 6, child: builderDraggable!(pos)),
         ));
       } else {
-        widget.add(Expanded(flex: 2, child: builderDraggable!(pos)));
+        widget.add(Expanded(flex: buildMul, child: builderDraggable!(pos)));
       }
     }
   }
