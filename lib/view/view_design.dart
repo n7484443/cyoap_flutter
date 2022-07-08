@@ -13,65 +13,94 @@ class ViewDesignSetting extends GetView<VMDesignSetting> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(ConstList.padding),
-        child: ListView(
-          children: [
-            Obx(
-              () => Wrap(
-                children: [
-                  Row(
-                    children: [
-                      ViewSwitchLabel(
-                        label: "제목을 이미지 위에 겹치기",
-                        () {
-                          controller.titleOverlap.value =
-                              !controller.titleOverlap.value;
-                        },
-                        controller.titleOverlap.value,
-                      ),
-                      ViewSwitchLabel(
-                        label: "제목을 위로",
-                        () {
-                          controller.titlePosition.value =
-                              !controller.titlePosition.value;
-                        },
-                        controller.titlePosition.value,
-                      ),
-                    ],
-                  ),
-                ],
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const TabBar(
+            indicatorColor: Colors.blueAccent,
+            labelColor: Colors.blueAccent,
+            unselectedLabelColor: Colors.grey,
+            tabs: [
+              Tab(
+                text: '색상',
               ),
-            ),
-            Obx(
-              () => Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: ColorPicker(
-                      color: controller.colorBackground.value,
-                      heading: const Text('배경색 설정'),
-                      subheading: const Text('색조 설정'),
-                      onColorChanged: (Color value) {
-                        controller.updateColor(value);
-                      },
-                      pickersEnabled: {
-                        ColorPickerType.wheel: true,
-                        ColorPickerType.accent: false
-                      },
-                      pickerTypeLabels: {
-                        ColorPickerType.primary: "배경색",
-                        ColorPickerType.wheel: "색상 선택"
-                      },
-                      width: 22,
-                      height: 22,
-                      borderRadius: 22,
+              Tab(
+                text: '위치',
+              ),
+              Tab(
+                text: '폰트',
+              ),
+            ],
+          ),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(ConstList.padding),
+          child: Column(
+            children: [
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    ListView(
+                      controller: ScrollController(),
+                      children: [
+                        Obx(
+                          () => Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: ColorPicker(
+                                  color: controller.colorBackground.value,
+                                  heading: const Text('배경색 설정'),
+                                  subheading: const Text('색조 설정'),
+                                  onColorChanged: (Color value) {
+                                    controller.updateColor(value);
+                                  },
+                                  pickersEnabled: {
+                                    ColorPickerType.wheel: true,
+                                    ColorPickerType.accent: false
+                                  },
+                                  pickerTypeLabels: {
+                                    ColorPickerType.primary: "배경색",
+                                    ColorPickerType.wheel: "색상 선택"
+                                  },
+                                  width: 22,
+                                  height: 22,
+                                  borderRadius: 22,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  Expanded(
-                    child: Column(
+                    Obx(
+                      () => Wrap(
+                        children: [
+                          Row(
+                            children: [
+                              ViewSwitchLabel(
+                                label: "제목을 이미지 위에 겹치기",
+                                () {
+                                  controller.titleOverlap.value =
+                                      !controller.titleOverlap.value;
+                                },
+                                controller.titleOverlap.value,
+                              ),
+                              ViewSwitchLabel(
+                                label: "제목을 위로",
+                                () {
+                                  controller.titlePosition.value =
+                                      !controller.titlePosition.value;
+                                },
+                                controller.titlePosition.value,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Column(
                       children: [
                         DropdownButtonFormField<String>(
                           decoration: const InputDecoration(labelText: '제목 폰트'),
@@ -103,54 +132,59 @@ class ViewDesignSetting extends GetView<VMDesignSetting> {
                         ),
                       ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Obx(
-              () => ColoredBox(
-                color: controller.colorBackground.value,
-                child: Padding(
-                  padding: const EdgeInsets.all(ConstList.padding),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: IgnorePointer(
-                          child: ViewChoiceNode.fromNode(
-                            ChoiceNode(
-                              1,
-                              true,
-                              "디자인",
-                              "[{\"insert\":\"레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.\\n\"}]",
-                              "noImage",
-                            )..currentPos = -1,
-                          ),
+              Expanded(
+                child: SingleChildScrollView(
+                  controller: ScrollController(),
+                  child: Obx(
+                    () => ColoredBox(
+                      color: controller.colorBackground.value,
+                      child: Padding(
+                        padding: const EdgeInsets.all(ConstList.padding),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: IgnorePointer(
+                                child: ViewChoiceNode.fromNode(
+                                  ChoiceNode(
+                                    1,
+                                    true,
+                                    "디자인",
+                                    "[{\"insert\":\"레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.\\n\"}]",
+                                    "noImage",
+                                  )..currentPos = -1,
+                                ),
+                              ),
+                            ),
+                            const Spacer(),
+                            Expanded(
+                              flex: 3,
+                              child: IgnorePointer(
+                                child: ViewChoiceNode.fromNode(
+                                  ChoiceNode(
+                                    1,
+                                    false,
+                                    "디자인(바깥 라운드 X, 카드 모드 X)",
+                                    "[{\"insert\":\"레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.\\n\"}]",
+                                    "noImage",
+                                  )
+                                    ..isRound = false
+                                    ..currentPos = -2,
+                                ),
+                              ),
+                            )
+                          ],
                         ),
                       ),
-                      const Spacer(),
-                      Expanded(
-                        flex: 3,
-                        child: IgnorePointer(
-                          child: ViewChoiceNode.fromNode(
-                            ChoiceNode(
-                              1,
-                              false,
-                              "디자인(바깥 라운드 X, 카드 모드 X)",
-                              "[{\"insert\":\"레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.\\n\"}]",
-                              "noImage",
-                            )
-                              ..isRound = false
-                              ..currentPos = -2,
-                          ),
-                        ),
-                      )
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
