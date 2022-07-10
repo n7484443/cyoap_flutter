@@ -229,7 +229,7 @@ class NestedMap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var controller = Get.put(VMDraggableNestedMap());
-    if (ConstList.isWeb()) {
+    if (ConstList.isWeb() && !ConstList.isSmallDisplay(context)) {
       if (isEditable) {
         return GetBuilder<VMDraggableNestedMap>(
           builder: (_) => LayoutBuilder(builder: (context, constrains) {

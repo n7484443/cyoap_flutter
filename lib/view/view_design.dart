@@ -22,15 +22,9 @@ class ViewDesignSetting extends GetView<VMDesignSetting> {
             labelColor: Colors.blueAccent,
             unselectedLabelColor: Colors.grey,
             tabs: [
-              Tab(
-                text: '색상',
-              ),
-              Tab(
-                text: '위치',
-              ),
-              Tab(
-                text: '폰트',
-              ),
+              Tab(text: '색상'),
+              Tab(text: '위치'),
+              Tab(text: '폰트'),
             ],
           ),
         ),
