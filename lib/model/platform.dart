@@ -145,10 +145,6 @@ class AbstractPlatform {
     }
   }
 
-  void setSelect(List<int> pos, int n) {
-    getChoiceNode(pos)?.selectNode(n);
-  }
-
   bool isSelect(List<int> pos) {
     return getChoiceNode(pos)?.status.isSelected() ?? false;
   }

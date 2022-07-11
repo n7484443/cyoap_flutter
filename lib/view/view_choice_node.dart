@@ -55,86 +55,10 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
             : null,
         onTap: !isEditable &&
                 nodeController.nodeMode.value != ChoiceNodeMode.multiSelect
-            ? () async {
-                nodeController.select(0);
-                if (nodeController.nodeMode.value ==
-                    ChoiceNodeMode.randomMode) {
-                  if (nodeController.isSelect) {
-                    nodeController.startRandom();
-                    await showDialog(
-                      context: context,
-                      builder: (builder) => RandomDialog(node),
-                      barrierDismissible: false,
-                    );
-                  } else {
-                    node!.random = -1;
-                  }
-                }
-                VMChoiceNode.updateStatusAll();
-              }
+            ? () => nodeController.select(0, context)
             : null,
-        child: Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            ViewChoiceNodeContent(
-                node!, nodeController, controller, layoutController),
-            if (isEditable) ...[
-              Positioned(
-                top: 0,
-                right: 0,
-                child: PopupMenuButton<int>(
-                  icon: const Icon(Icons.more_vert),
-                  onSelected: (result) {
-                    switch (result) {
-                      case 0:
-                        showDialog(
-                          context: context,
-                          builder: (builder) => SizeDialog(node),
-                        );
-                        break;
-                      case 1:
-                        Get.find<VMDraggableNestedMap>().copyData(node!);
-                        break;
-                    }
-                  },
-                  itemBuilder: (context) {
-                    return [
-                      const PopupMenuItem(
-                        value: 0,
-                        child: Text('크기 수정'),
-                      ),
-                      const PopupMenuItem(
-                        value: 1,
-                        child: Text('복사'),
-                      ),
-                    ];
-                  },
-                ),
-              )
-            ] else if (getPlatformFileSystem
-                    .hasSource(nodeController.imageString.value) &&
-                Get.find<VMVariableTable>().isVisibleSource) ...[
-              Positioned(
-                bottom: 0,
-                left: 0,
-                child: TextButton(
-                  child: const Text(
-                    '출처',
-                    style: TextStyle(
-                        color: Colors.blue, fontWeight: FontWeight.w800),
-                  ),
-                  onPressed: () {
-                    var url = getPlatformFileSystem
-                        .getSource(nodeController.imageString.value);
-                    if (url != null && url.isNotEmpty) {
-                      launchUrlString(url);
-                    }
-                  },
-                ),
-              ),
-            ],
-          ],
-        ),
+        child: ViewChoiceNodeContent(
+            node!, nodeController, controller, layoutController),
       ),
     );
 
@@ -371,9 +295,48 @@ class ViewChoiceNodeContent extends StatelessWidget {
           ConstList.getFont(layoutSetting.titleFont.value),
         );
       }
-      Widget contents = Visibility(
-        visible: !controller.quillController.document.isEmpty(),
-        child: IgnorePointer(
+      if (isEditable) {
+        title = Stack(
+          alignment: Alignment.center,
+          children: [
+            if (title != null) title,
+            Align(
+              alignment: Alignment.centerRight,
+              child: PopupMenuButton<int>(
+                icon: const Icon(Icons.more_vert),
+                onSelected: (result) {
+                  switch (result) {
+                    case 0:
+                      showDialog(
+                        context: context,
+                        builder: (builder) => SizeDialog(node),
+                      );
+                      break;
+                    case 1:
+                      Get.find<VMDraggableNestedMap>().copyData(node);
+                      break;
+                  }
+                },
+                itemBuilder: (context) {
+                  return [
+                    const PopupMenuItem(
+                      value: 0,
+                      child: Text('크기 수정'),
+                    ),
+                    const PopupMenuItem(
+                      value: 1,
+                      child: Text('복사'),
+                    ),
+                  ];
+                },
+              ),
+            ),
+          ],
+        );
+      }
+      Widget? contents;
+      if (!controller.quillController.document.isEmpty()) {
+        contents = IgnorePointer(
           child: QuillEditor(
             controller: controller.quillController,
             focusNode: FocusNode(),
@@ -387,11 +350,12 @@ class ViewChoiceNodeContent extends StatelessWidget {
                 context, draggableController.scale(context),
                 fontStyle: ConstList.getFont(layoutSetting.mainFont.value)),
           ),
-        ),
-      );
+        );
+      }
+
       if (node.choiceNodeMode == ChoiceNodeMode.multiSelect) {
         contents = Column(children: [
-          contents,
+          if (contents != null) contents,
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -400,7 +364,9 @@ class ViewChoiceNodeContent extends StatelessWidget {
                 child: IconButton(
                   icon: const Icon(Icons.chevron_left, size: 30),
                   onPressed: () {
-                    controller.setSelectedMultiple(-1);
+                    if (!isEditable) {
+                      controller.select(-1, contents);
+                    }
                   },
                 ),
               ),
@@ -415,7 +381,9 @@ class ViewChoiceNodeContent extends StatelessWidget {
                 child: IconButton(
                   icon: const Icon(Icons.chevron_right, size: 30),
                   onPressed: () {
-                    controller.setSelectedMultiple(1);
+                    if (!isEditable) {
+                      controller.select(1, contents);
+                    }
                   },
                 ),
               ),
@@ -423,7 +391,7 @@ class ViewChoiceNodeContent extends StatelessWidget {
           ),
         ]);
       }
-      Widget child;
+      Widget? child;
       if (isEditable) {
         child = ViewWrapCustomReorderable(
           node.children,
@@ -432,7 +400,7 @@ class ViewChoiceNodeContent extends StatelessWidget {
           builderDraggable: (i) =>
               NodeDragTarget(List.from(node.pos(), growable: true)..add(i)),
         );
-      } else {
+      } else if (node.children.isNotEmpty) {
         child = ViewWrapCustom(
           node.children,
           (child) => ViewChoiceNode.fromNode(child),
@@ -445,13 +413,14 @@ class ViewChoiceNodeContent extends StatelessWidget {
             if (title != null) title,
             Row(
               children: [
-                Flexible(
-                  child: contents,
-                ),
+                if (contents != null)
+                  Flexible(
+                    child: contents,
+                  ),
                 if (image != null) Expanded(child: image),
               ],
             ),
-            child,
+            if (child != null) child,
           ],
         );
       }
@@ -462,16 +431,16 @@ class ViewChoiceNodeContent extends StatelessWidget {
             Row(
               children: [
                 if (image != null) Expanded(child: image),
-                Flexible(
-                  child: contents,
-                ),
+                if (contents != null)
+                  Flexible(
+                    child: contents,
+                  ),
               ],
             ),
-            child,
+            if (child != null) child,
           ],
         );
       }
-
       List<Widget> subWidget;
       if (layoutSetting.titleOverlap.value) {
         subWidget = [
@@ -497,7 +466,30 @@ class ViewChoiceNodeContent extends StatelessWidget {
         ];
       }
 
-      subWidget.addAll([contents, child]);
+      subWidget.addAll([
+        if (contents != null) contents,
+        if (child != null) child,
+      ]);
+
+      if (!isEditable &&
+          getPlatformFileSystem.hasSource(controller.imageString.value) &&
+          Get.find<VMVariableTable>().isVisibleSource) {
+        subWidget.add(
+          TextButton(
+            child: const Text(
+              '출처',
+              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w800),
+            ),
+            onPressed: () {
+              var url =
+                  getPlatformFileSystem.getSource(controller.imageString.value);
+              if (url != null && url.isNotEmpty) {
+                launchUrlString(url);
+              }
+            },
+          ),
+        );
+      }
       return Column(
         children: subWidget,
       );

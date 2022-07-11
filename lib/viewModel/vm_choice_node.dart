@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import '../model/choiceNode/choice_node.dart';
 import '../model/choiceNode/generable_parser.dart';
 import '../model/platform_system.dart';
+import '../view/view_choice_node.dart';
 
 const double nodeBaseHeight = 200;
 const int nonPositioned = -1;
@@ -100,7 +101,6 @@ class VMChoiceNode extends GetxController {
     }
   }
 
-
   void updateFromNode() {
     node = getNode(pos)! as ChoiceNode;
     onInit();
@@ -140,8 +140,26 @@ class VMChoiceNode extends GetxController {
   bool get isIgnorePointer =>
       status.value.isPointerInteractive(node.isSelectable);
 
-  void select(int n) {
-    getPlatform.setSelect(node.pos(), n);
+  Future<void> select(int n, context) async {
+    if (nodeMode.value == ChoiceNodeMode.randomMode) {
+      if (isSelect) {
+        startRandom();
+        await showDialog(
+          context: context,
+          builder: (builder) => RandomDialog(node),
+          barrierDismissible: false,
+        );
+      } else {
+        node.random = -1;
+      }
+    }else if(nodeMode.value == ChoiceNodeMode.multiSelect){
+      selectedMultiple.value += n;
+      selectedMultiple.value = selectedMultiple.value.clamp(0, node.maximumStatus);
+      node.selectNode(selectedMultiple.value);
+    }else{
+      node.selectNode(selectedMultiple.value);
+    }
+    VMChoiceNode.updateStatusAll();
   }
 
   static void updateStatusAll() {
@@ -193,14 +211,5 @@ class VMChoiceNode extends GetxController {
         action(vm);
       }
     });
-  }
-
-  void setSelectedMultiple(int input){
-    if(!isEditable){
-      selectedMultiple.value += input;
-      selectedMultiple.value = selectedMultiple.value.clamp(0, node.maximumStatus);
-      node.selectNode(selectedMultiple.value);
-      VMChoiceNode.updateStatusAll();
-    }
   }
 }

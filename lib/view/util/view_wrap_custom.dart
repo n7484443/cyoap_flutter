@@ -185,14 +185,18 @@ class ViewWrapCustom extends StatelessWidget {
             Expanded(flex: maxSize - stack, child: const SizedBox.shrink()));
       }
       if (subWidget.isNotEmpty) {
-        outputWidget.add(
-          IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: subWidget,
+        if (subWidget.length == 1) {
+          outputWidget.add(subWidget.first);
+        } else {
+          outputWidget.add(
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: subWidget,
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
     }
 
