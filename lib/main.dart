@@ -154,35 +154,30 @@ void main() {
       GetMaterialApp(
         title: 'CYOAP',
         initialRoute: '/',
-        getPages: List.generate(ConstList.isDistributed ? 1 : 3, (index) {
-          if (ConstList.isDistributed) {
-            return GetPage(
-              name: '/',
-              binding: BindingsBuilder.put(() => VMDesignSetting()),
-              page: () => v_play.ViewPlay(),
-            );
-          } else {
-            switch (index) {
-              case 0:
-                return GetPage(
+        getPages: ConstList.isDistributed
+            ? [
+                GetPage(
+                  name: '/',
+                  binding: BindingsBuilder.put(() => VMDesignSetting()),
+                  page: () => v_play.ViewPlay(),
+                )
+              ]
+            : [
+                GetPage(
                   name: '/',
                   page: () => v_start.ViewStart(),
-                );
-              case 1:
-                return GetPage(
+                ),
+                GetPage(
                   name: '/viewPlay',
                   page: () => v_play.ViewPlay(),
                   binding: BindingsBuilder.put(() => VMDesignSetting()),
-                );
-              default:
-                return GetPage(
+                ),
+                GetPage(
                   name: '/viewMake',
                   page: () => v_make.ViewMakePlatform(),
                   binding: BindingsBuilder.put(() => VMDesignSetting()),
-                );
-            }
-          }
-        }),
+                )
+              ],
         theme: appThemeData,
         defaultTransition: Transition.fade,
         debugShowCheckedModeBanner: false,

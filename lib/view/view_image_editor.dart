@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../viewModel/vm_editor.dart';
+import '../viewModel/vm_make_platform.dart';
 
 class ViewImageEditor extends StatelessWidget {
   const ViewImageEditor({Key? key}) : super(key: key);
@@ -36,7 +37,7 @@ class ViewImageEditor extends StatelessWidget {
           onPressed: () async {
             controllerEditor.imageLast = null;
             controllerEditor.addImageCrop(await controller.cropImage());
-            Get.back(id: 1);
+            makePlatform.back();
           },
         ),
       ],

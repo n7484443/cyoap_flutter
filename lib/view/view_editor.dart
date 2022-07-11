@@ -13,6 +13,7 @@ import '../model/choiceNode/choice_node.dart';
 import '../model/design_setting.dart';
 import '../model/image_db.dart';
 import '../viewModel/vm_editor.dart';
+import '../viewModel/vm_make_platform.dart';
 
 class ViewEditor extends StatelessWidget {
   const ViewEditor({Key? key}) : super(key: key);
@@ -31,12 +32,12 @@ class ViewEditor extends StatelessWidget {
                 context: context,
                 builder: (_) => ViewBackDialog(
                   () => controller.save(),
-                  () => Get.back(id: 1),
+                  () => makePlatform.back(),
                   cancelFunction: () => controller.isChanged = false,
                 ),
               );
             } else {
-              Get.back(id: 1);
+              makePlatform.back();
             }
           }
         },
@@ -174,7 +175,7 @@ class ViewEditor extends StatelessWidget {
             child: OutlinedButton(
               child: const Text('코드 수정'),
               onPressed: () {
-                Get.toNamed('/viewCodeEditor', id: 1);
+                makePlatform.changePageString("viewCodeEditor");
               },
             ),
           ),
@@ -230,7 +231,7 @@ class ViewEditor extends StatelessWidget {
             context: context,
             builder: (_) => ViewBackDialog(
               () => controller.save(),
-              () => Get.back(id: 1),
+              () => makePlatform.back(),
               cancelFunction: () => controller.isChanged = false,
             ),
           );
@@ -396,7 +397,7 @@ class ViewEditorTyping extends StatelessWidget {
                             context: context,
                           );
                           if (controller.imageLast != null) {
-                            Get.toNamed('/viewImageEditor', id: 1);
+                            makePlatform.changePageString('viewImageEditor');
                           }
                         }
                       },

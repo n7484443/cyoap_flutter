@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import '../main.dart';
 import '../model/image_db.dart';
+import '../viewModel/vm_make_platform.dart';
 import '../viewModel/vm_source.dart';
 
 class ViewSource extends StatelessWidget {
@@ -77,7 +78,7 @@ class ViewSource extends StatelessWidget {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              Get.back(id: 1);
+              makePlatform.back();
             },
           ),
           title: Obx(() {

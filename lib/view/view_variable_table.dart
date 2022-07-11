@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../model/platform_system.dart';
+import '../viewModel/vm_make_platform.dart';
 
 class ViewVariable extends StatelessWidget {
   const ViewVariable({Key? key}) : super(key: key);
@@ -16,7 +17,7 @@ class ViewVariable extends StatelessWidget {
       widgetList = [
         ListTile(
           onTap: () {
-            Get.toNamed('/viewLayoutSetting', id: 1);
+            makePlatform.changePageString('viewDesignSetting');
           },
           leading: const Icon(Icons.settings),
           title: const Text('디자인 설정'),
@@ -24,11 +25,11 @@ class ViewVariable extends StatelessWidget {
         ListTile(
           leading: const Icon(Icons.settings),
           title: const Text('이미지 설정'),
-          onTap: () => Get.toNamed("/viewSource", id: 1),
+          onTap: () => makePlatform.changePageString("viewSource"),
         ),
         ListTile(
           onTap: () {
-            Get.toNamed('/viewGlobalSetting', id: 1);
+            makePlatform.changePageString('viewGlobalSetting');
           },
           leading: const Icon(Icons.settings),
           title: const Text('전역 설정'),

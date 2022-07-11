@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import '../main.dart';
 import '../model/choiceNode/choice_node.dart';
 import '../viewModel/vm_design_setting.dart';
+import '../viewModel/vm_make_platform.dart';
 
 class ViewDesignSetting extends GetView<VMDesignSetting> {
   const ViewDesignSetting({Key? key}) : super(key: key);
@@ -17,6 +18,10 @@ class ViewDesignSetting extends GetView<VMDesignSetting> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => makePlatform.back(),
+          ),
           title: const TabBar(
             indicatorColor: Colors.blueAccent,
             labelColor: Colors.blueAccent,

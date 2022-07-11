@@ -1,13 +1,17 @@
 import 'package:cyoap_flutter/model/editor.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class VMCodeEditor extends GetxController {
   final TextEditingController controllerClickable = TextEditingController();
   final TextEditingController controllerVisible = TextEditingController();
   final TextEditingController controllerExecute = TextEditingController();
-  final FocusNode focusBody = FocusNode();
+  final FocusNode focusClickable = FocusNode();
+  final FocusNode focusVisible = FocusNode();
+  final FocusNode focusExecute = FocusNode();
+  TextEditingController? lastFocus;
 
   var conditionClickable = ''.obs;
   var conditionVisible = ''.obs;
@@ -17,8 +21,33 @@ class VMCodeEditor extends GetxController {
 
   bool isChanged = false;
 
+  void insertText(TextEditingController controller, String text) {
+    var selection = controller.selection;
+    controller.text =
+        controller.text.replaceRange(selection.start, selection.end, text);
+    controller.selection =
+        TextSelection.collapsed(offset: selection.start + text.length);
+  }
+
   @override
   void onInit() {
+    focusExecute.onKey = (FocusNode node, RawKeyEvent event) {
+      if (!event.isKeyPressed(LogicalKeyboardKey.tab)) {
+        return KeyEventResult.ignored;
+      }
+      insertText(controllerExecute, "    ");
+      return KeyEventResult.handled;
+    };
+    focusClickable.addListener(() {
+      lastFocus = controllerClickable;
+    });
+    focusVisible.addListener(() {
+      lastFocus = controllerVisible;
+    });
+    focusExecute.addListener(() {
+      lastFocus = controllerExecute;
+    });
+
     controllerClickable.text =
         NodeEditor().target.recursiveStatus.conditionClickableString;
     controllerVisible.text =

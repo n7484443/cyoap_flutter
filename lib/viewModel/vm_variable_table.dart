@@ -1,7 +1,9 @@
 import 'package:cyoap_flutter/model/choiceNode/generable_parser.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
+import 'package:cyoap_flutter/viewModel/vm_code_editor.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
+import 'package:cyoap_flutter/viewModel/vm_make_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -22,6 +24,15 @@ class VMVariableTable extends GetxController {
       if (isEditable) {
         nodeList.add(ListTile(
           title: Text(node.title),
+          onTap: (){
+            if(makePlatform.currentIndex.value == 2){
+              var vmCodeEditor = Get.find<VMCodeEditor>();
+              if(vmCodeEditor.lastFocus != null) {
+                vmCodeEditor.insertText(
+                    vmCodeEditor.lastFocus!, node.title.replaceAll(" ", ""));
+              }
+            }
+          },
         ));
       } else if (!node.isVisible()) {
         return;
@@ -38,8 +49,7 @@ class VMVariableTable extends GetxController {
   List<Widget> get variableList {
     var variableList = List<Widget>.empty(growable: true);
     for (var key in VariableDataBase().varMap.keys) {
-      var values = VariableDataBase().varMap[key];
-      if (values == null) continue;
+      var values = VariableDataBase().varMap[key]!;
       if (values.visible) {
         if (isEditable) {
           if (values.displayName.isEmpty) {

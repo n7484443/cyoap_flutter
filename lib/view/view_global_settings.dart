@@ -8,6 +8,8 @@ import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 
+import '../viewModel/vm_make_platform.dart';
+
 class ViewGlobalSetting extends StatelessWidget {
   const ViewGlobalSetting({Key? key}) : super(key: key);
 
@@ -24,12 +26,12 @@ class ViewGlobalSetting extends StatelessWidget {
               context: context,
               builder: (_) => ViewBackDialog(
                 () => vmGlobalSetting.save(),
-                () => Get.back(id: 1),
+                () => makePlatform.back(),
                 cancelFunction: () => vmGlobalSetting.isChanged = false,
               ),
             );
           } else {
-            Get.back(id: 1);
+            makePlatform.back();
           }
         },
       ),
@@ -37,7 +39,7 @@ class ViewGlobalSetting extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.settings),
           onPressed: () {
-            Get.toNamed('/viewFontSource', id: 1);
+            makePlatform.changePageString('viewFontSource');
           },
         ),
         IconButton(

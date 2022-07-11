@@ -1,10 +1,10 @@
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../viewModel/vm_code_editor.dart';
+import '../viewModel/vm_make_platform.dart';
 
 class ViewCodeEditor extends StatelessWidget {
   const ViewCodeEditor({Key? key}) : super(key: key);
@@ -21,12 +21,12 @@ class ViewCodeEditor extends StatelessWidget {
             context: context,
             builder: (_) => ViewBackDialog(
               () => vmCodeEditor.save(),
-              () => Get.back(id: 1),
+              () => makePlatform.back(),
               cancelFunction: () => vmCodeEditor.isChanged = false,
             ),
           );
         } else {
-          Get.back(id: 1);
+          makePlatform.back();
         }
       },
     );
@@ -53,30 +53,18 @@ class ViewCodeEditor extends StatelessWidget {
                     controller: vmCodeEditor.controllerClickable,
                     textAlign: TextAlign.left,
                     decoration: const InputDecoration(hintText: '실행 조건'),
+                    focusNode: vmCodeEditor.focusClickable,
                   ),
                   TextField(
                     controller: vmCodeEditor.controllerVisible,
                     textAlign: TextAlign.left,
                     decoration:
                         const InputDecoration(hintText: '숨김 조건(비어있을 시 항상 보임)'),
+                    focusNode: vmCodeEditor.focusVisible,
                   ),
                   Expanded(
                     child: TextField(
-                      focusNode: FocusNode()
-                        ..onKey = (FocusNode node, RawKeyEvent event) {
-                          if (!event.isKeyPressed(LogicalKeyboardKey.tab)) {
-                            return KeyEventResult.ignored;
-                          }
-                          var selection =
-                              vmCodeEditor.controllerExecute.selection;
-                          vmCodeEditor.controllerExecute.text =
-                              vmCodeEditor.controllerExecute.text.replaceRange(
-                                  selection.start, selection.end, "    ");
-                          vmCodeEditor.controllerExecute.selection =
-                              TextSelection.collapsed(
-                                  offset: selection.start + 4);
-                          return KeyEventResult.handled;
-                        },
+                      focusNode: vmCodeEditor.focusExecute,
                       controller: vmCodeEditor.controllerExecute,
                       textAlign: TextAlign.left,
                       scrollController: ScrollController(),
@@ -113,7 +101,7 @@ class ViewCodeEditor extends StatelessWidget {
           context: context,
           builder: (_) => ViewBackDialog(
             () => vmCodeEditor.save(),
-            () => Get.back(id: 1),
+            () => makePlatform.back(),
             cancelFunction: () => vmCodeEditor.isChanged = false,
           ),
         ) as Future<bool>;
