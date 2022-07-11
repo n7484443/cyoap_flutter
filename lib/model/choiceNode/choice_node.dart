@@ -146,6 +146,13 @@ class ChoiceNode extends GenerableParserAndPosition {
     return PlatformSpecified().saveProject!.convertImageName(name);
   }
 
+  void doAllChild(void Function(ChoiceNode) choiceNodeFunc){
+    choiceNodeFunc(this);
+    for(var child in children){
+      (child as ChoiceNode).doAllChild(choiceNodeFunc);
+    }
+  }
+
   ChoiceNode? getParentLast() {
     ChoiceNode parent = this;
     while (true) {

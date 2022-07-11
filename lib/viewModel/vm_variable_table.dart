@@ -7,6 +7,8 @@ import 'package:cyoap_flutter/viewModel/vm_make_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../model/choiceNode/choice_node.dart';
+
 class VMVariableTable extends GetxController {
   bool isVisibleSource = false;
 
@@ -20,29 +22,45 @@ class VMVariableTable extends GetxController {
     var nodeList = List<Widget>.empty(growable: true);
     var iconCheckBox = const Icon(Icons.check_box);
     var iconCheckBoxBlank = const Icon(Icons.check_box_outline_blank);
-    getPlatform.doAllChoiceNode((node) {
-      if (isEditable) {
-        nodeList.add(ListTile(
-          title: Text(node.title),
-          onTap: (){
-            if(makePlatform.currentIndex.value == 2){
-              var vmCodeEditor = Get.find<VMCodeEditor>();
-              if(vmCodeEditor.lastFocus != null) {
-                vmCodeEditor.insertText(
-                    vmCodeEditor.lastFocus!, node.title.replaceAll(" ", ""));
-              }
-            }
-          },
-        ));
-      } else if (!node.isVisible()) {
-        return;
-      } else if (node.isSelectable) {
-        nodeList.add(ListTile(
-          title: Text(node.title),
-          trailing: node.status.isSelected() ? iconCheckBox : iconCheckBoxBlank,
+    if (isEditable) {
+      for (var line in getPlatform.lineSettings) {
+        List<Widget> subWidgetList = List.empty(growable: true);
+        for (var child in line.children) {
+          (child as ChoiceNode).doAllChild((node) {
+            subWidgetList.add(
+              ListTile(
+                title: Text(node.title),
+                onTap: () {
+                  if (makePlatform.currentIndex.value == 2) {
+                    var vmCodeEditor = Get.find<VMCodeEditor>();
+                    if (vmCodeEditor.lastFocus != null) {
+                      vmCodeEditor.insertText(vmCodeEditor.lastFocus!,
+                          node.title.replaceAll(" ", ""));
+                    }
+                  }
+                },
+              ),
+            );
+          });
+        }
+        nodeList.add(ExpansionTile(
+          title: Text("lineSetting_${line.currentPos}"),
+          children: subWidgetList,
         ));
       }
-    });
+    } else {
+      getPlatform.doAllChoiceNode((node) {
+        if (!node.isVisible()) {
+          return;
+        } else if (node.isSelectable) {
+          nodeList.add(ListTile(
+            title: Text(node.title),
+            trailing:
+                node.status.isSelected() ? iconCheckBox : iconCheckBoxBlank,
+          ));
+        }
+      });
+    }
     return nodeList;
   }
 
