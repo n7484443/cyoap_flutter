@@ -23,9 +23,9 @@ class ViewWrapCustomReorderable extends StatelessWidget {
       Key? key})
       : super(key: key) {
     this.children.addAll(children);
-    if(ConstList.isMobile()){
+    if (ConstList.isMobile()) {
       mul = const Tuple2(7, 4);
-    }else{
+    } else {
       mul = const Tuple2(5, 2);
     }
   }
@@ -84,9 +84,9 @@ class ViewWrapCustomReorderable extends StatelessWidget {
           i -= 1;
           continue;
         } else if (size == maxSize) {
-          if(i != 0){
+          if (i != 0) {
             var before = (children[i - 1] as ChoiceNode).width;
-            if(before != 0 && before != maxSize){
+            if (before != 0 && before != maxSize) {
               addBuildDraggable(outputWidget, i, horizontal: true);
             }
           }
@@ -94,14 +94,16 @@ class ViewWrapCustomReorderable extends StatelessWidget {
           subWidget = List.empty(growable: true);
           addBuildDraggable(outputWidget, i + 1, horizontal: true);
         } else {
-          subWidget.add(Expanded(flex: size * mul.item1, child: builder(child)));
+          subWidget
+              .add(Expanded(flex: size * mul.item1, child: builder(child)));
           addBuildDraggable(subWidget, i + 1);
           stack += size;
         }
       }
       if (0 < stack && stack < maxSize) {
         subWidget.add(Expanded(
-            flex: (maxSize - stack) * mul.item1, child: const SizedBox.shrink()));
+            flex: (maxSize - stack) * mul.item1,
+            child: const SizedBox.shrink()));
       }
       if (subWidget.isNotEmpty) {
         outputWidget.add(
@@ -128,10 +130,10 @@ class ViewWrapCustom extends StatelessWidget {
   final List<GenerableParserAndPosition> children = List.empty(growable: true);
   final Widget Function(ChoiceNode) builder;
   final int maxSize;
-  final bool setCenter;
+  final bool isInner;
 
   ViewWrapCustom(List<GenerableParserAndPosition> children, this.builder,
-      {this.maxSize = defaultMaxSize, this.setCenter = false, Key? key})
+      {this.isInner = true, this.maxSize = defaultMaxSize, Key? key})
       : super(key: key) {
     this.children.addAll(children);
   }

@@ -375,7 +375,7 @@ class ChoiceLine extends StatelessWidget {
           child: GetBuilder<VMDraggableNestedMap>(
             builder: (_) {
               return ViewWrapCustom(choiceNodeList[y].children,
-                  (child) => ViewChoiceNode(child.currentPos, y));
+                  (child) => ViewChoiceNode(child.currentPos, y), isInner: false,);
             },
           ),
         ),
