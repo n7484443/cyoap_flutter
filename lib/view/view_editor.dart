@@ -196,13 +196,11 @@ class ViewEditor extends StatelessWidget {
                         : null,
                     hintText: '제목',
                     hintStyle: titleFont.copyWith(
-                        fontWeight: FontWeight.bold,
                         fontSize: 24,
                         color: Colors.white),
                     filled: true,
                   ),
                   style: titleFont.copyWith(
-                    fontWeight: FontWeight.bold,
                     fontSize: 24,
                   ),
                 )),
