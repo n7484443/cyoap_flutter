@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/grammar/value_type.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
@@ -143,45 +144,43 @@ class ViewGlobalSetting extends StatelessWidget {
                 decoration: BoxDecoration(
                   border: Border.all(width: 2, color: Colors.lightBlueAccent),
                 ),
-                child: ListView.separated(
-                  itemCount: vmGlobalSetting.initialValueList.length,
-                  itemBuilder: (context, index) {
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 4,
+                    crossAxisSpacing: 2,
+                    mainAxisExtent: 60,
+                    mainAxisSpacing: 2,
+                  ),
+                  itemBuilder: (BuildContext context, int index) {
                     return ListTile(
-                      title: Row(
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              vmGlobalSetting.loadInitialValue(index);
-                              editDialog(index);
-                            },
-                            child: Text(
-                              '${vmGlobalSetting.getKey(index)}  |  ${vmGlobalSetting.getValue(index)?.valueType.data}',
-                            ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () {
-                              vmGlobalSetting.deleteInitialValue(index);
-                            },
-                          )
-                        ],
+                      onTap: () {
+                        vmGlobalSetting.loadInitialValue(index);
+                        editDialog(index);
+                      },
+                      title: Text(vmGlobalSetting.getKey(index)),
+                      subtitle: Text(vmGlobalSetting
+                          .getValue(index)!
+                          .valueType
+                          .data
+                          .toString()),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {
+                          vmGlobalSetting.deleteInitialValue(index);
+                        },
                       ),
                     );
                   },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return const Divider();
-                  },
+                  itemCount: vmGlobalSetting.initialValueList.length,
                 ),
               ),
             ),
-            Expanded(
-              child: TextButton(
-                child: const Text('초기값 추가'),
-                onPressed: () {
-                  vmGlobalSetting.addInitialValue(
-                      'point', ValueTypeWrapper(ValueType(0), true));
-                },
-              ),
+            TextButton(
+              child: const Text('초기값 추가'),
+              onPressed: () {
+                vmGlobalSetting.addInitialValue(
+                    'point', ValueTypeWrapper(ValueType(0), true));
+              },
             )
           ],
         ),
