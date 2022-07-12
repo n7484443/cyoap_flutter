@@ -51,9 +51,28 @@ class ViewDesignSetting extends GetView<VMDesignSetting> {
                                 child: ColorPicker(
                                   color: controller.colorBackground.value,
                                   heading: const Text('배경색 설정'),
-                                  subheading: const Text('색조 설정'),
                                   onColorChanged: (Color value) {
-                                    controller.updateColor(value);
+                                    controller.colorBackground.value = value;
+                                  },
+                                  pickersEnabled: {
+                                    ColorPickerType.wheel: true,
+                                    ColorPickerType.accent: false
+                                  },
+                                  pickerTypeLabels: {
+                                    ColorPickerType.primary: "배경색",
+                                    ColorPickerType.wheel: "색상 선택"
+                                  },
+                                  width: 22,
+                                  height: 22,
+                                  borderRadius: 22,
+                                ),
+                              ),
+                              Expanded(
+                                child: ColorPicker(
+                                  color: controller.colorNode.value,
+                                  heading: const Text('선택지 색 설정'),
+                                  onColorChanged: (Color value) {
+                                    controller.colorNode.value = value;
                                   },
                                   pickersEnabled: {
                                     ColorPickerType.wheel: true,

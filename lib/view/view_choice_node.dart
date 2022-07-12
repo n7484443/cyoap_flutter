@@ -43,25 +43,6 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
       );
     }
     var nodeController = Get.put(VMChoiceNode.fromNode(node!), tag: node!.tag);
-    var layoutController = Get.find<VMDesignSetting>();
-
-    var mainNode = Ink(
-      color: Colors.white,
-      child: InkWell(
-        onDoubleTap: isEditable
-            ? () {
-                controller.editNode = node!;
-                makePlatform.changePageString("viewEditor");
-              }
-            : null,
-        onTap: !isEditable &&
-                nodeController.nodeMode.value != ChoiceNodeMode.multiSelect
-            ? () => nodeController.select(0, context)
-            : null,
-        child: ViewChoiceNodeContent(
-            node!, nodeController, controller, layoutController),
-      ),
-    );
 
     return Obx(
       () {
@@ -72,11 +53,11 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
           child: Card(
             shape: nodeController.isRound.value
                 ? RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
+                    borderRadius: BorderRadius.circular(4.0),
                     side: BorderSide(
                       color: isSelectedCheck
                           ? Colors.lightBlueAccent
-                          : Colors.white,
+                          : getPlatform.designSetting.colorNode.value,
                       width: ConstList.isSmallDisplay(context) ? 2 : 4,
                     ),
                   )
@@ -84,26 +65,39 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                     BorderSide(
                       color: isSelectedCheck
                           ? Colors.lightBlueAccent
-                          : Colors.white,
+                          : getPlatform.designSetting.colorNode.value,
                       width: ConstList.isSmallDisplay(context) ? 2 : 4,
                     ),
                   ),
-            color: Colors.white,
-            clipBehavior: Clip.antiAlias,
+            clipBehavior: Clip.antiAliasWithSaveLayer,
             margin: ConstList.isSmallDisplay(context)
                 ? const EdgeInsets.all(1.4)
                 : null,
             elevation: nodeController.isCard.value ? ConstList.elevation : 0,
-            child: Padding(
-              padding: ConstList.isSmallDisplay(context)
-                  ? const EdgeInsets.all(2.0)
-                  : const EdgeInsets.all(4.0),
-              child: isEditable
-                  ? mainNode
-                  : IgnorePointer(
-                      ignoring: !nodeController.isIgnorePointer,
-                      child: mainNode,
-                    ),
+            color: getPlatform.designSetting.colorNode.value,
+            child: Ink(
+              color: getPlatform.designSetting.colorNode.value,
+              child: Padding(
+                padding: ConstList.isSmallDisplay(context)
+                    ? const EdgeInsets.all(2.0)
+                    : const EdgeInsets.all(4.0),
+                child: InkWell(
+                  onDoubleTap: isEditable || nodeController.isIgnorePointer
+                      ? () {
+                          controller.editNode = node!;
+                          makePlatform.changePageString("viewEditor");
+                        }
+                      : null,
+                  onTap: !isEditable &&
+                          (nodeController.nodeMode.value !=
+                                  ChoiceNodeMode.multiSelect ||
+                              nodeController.isIgnorePointer)
+                      ? () => nodeController.select(0, context)
+                      : null,
+                  child:
+                      ViewChoiceNodeContent(node!, nodeController, controller),
+                ),
+              ),
             ),
           ),
         );
@@ -264,15 +258,15 @@ class ViewChoiceNodeContent extends StatelessWidget {
   final ChoiceNode node;
   final VMChoiceNode controller;
   final VMDraggableNestedMap draggableController;
-  final VMDesignSetting layoutSetting;
 
   const ViewChoiceNodeContent(
-      this.node, this.controller, this.draggableController, this.layoutSetting,
+      this.node, this.controller, this.draggableController,
       {Key? key})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final layoutSetting = Get.find<VMDesignSetting>();
     return Obx(() {
       Widget? image;
       Widget? title;

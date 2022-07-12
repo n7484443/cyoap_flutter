@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:get/get.dart';
@@ -10,6 +8,7 @@ class VMDesignSetting extends GetxController {
   var titleFont = getPlatform.designSetting.titleFont.obs;
   var mainFont = getPlatform.designSetting.mainFont.obs;
   var colorBackground = getPlatform.designSetting.colorBackground.obs;
+  var colorNode = getPlatform.designSetting.colorNode.value.obs;
 
   @override
   void onInit() {
@@ -34,6 +33,10 @@ class VMDesignSetting extends GetxController {
       Get.find<VMDraggableNestedMap>().isChanged = true;
       Get.find<VMDraggableNestedMap>().update();
     });
+    colorNode.listen((value) {
+      getPlatform.designSetting.colorNode.value = value;
+      Get.find<VMDraggableNestedMap>().isChanged = true;
+    });
     super.onInit();
   }
 
@@ -43,9 +46,5 @@ class VMDesignSetting extends GetxController {
 
   void setMainFont(String font) {
     mainFont.value = font;
-  }
-
-  void updateColor(Color color) {
-    colorBackground.value = color;
   }
 }

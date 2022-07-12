@@ -1,6 +1,6 @@
 import 'package:cyoap_flutter/model/platform_system.dart';
-import 'package:cyoap_flutter/util/color_util.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../main.dart';
 
@@ -10,6 +10,7 @@ class PlatformDesignSetting {
   String titleFont = "notoSans";
   String mainFont = "notoSans";
   Color colorBackground = Colors.white;
+  Rx<Color> colorNode = Colors.white.obs;
 
   PlatformDesignSetting();
 
@@ -21,7 +22,11 @@ class PlatformDesignSetting {
         colorBackground =
             (json['colorBackground'] != null && json['colorBackground'] is int)
                 ? Color(json['colorBackground'])
-                : Colors.white;
+                : Colors.white {
+    colorNode.value = (json['colorNode'] != null && json['colorNode'] is int)
+        ? Color(json['colorNode'])
+        : Colors.white;
+  }
 
   Map<String, dynamic> toJson() => {
         'titleFont': titleFont,
@@ -29,6 +34,7 @@ class PlatformDesignSetting {
         'titleOverlap': titleOverlap,
         'titlePosition': titlePosition,
         'colorBackground': colorBackground.value,
+        'colorNode': colorNode.value.value,
       };
 }
 
@@ -36,5 +42,3 @@ TextStyle get titleFont =>
     ConstList.getFont(getPlatform.designSetting.titleFont);
 
 TextStyle get mainFont => ConstList.getFont(getPlatform.designSetting.mainFont);
-
-Color get baseNodeColor => getPlatform.designSetting.colorBackground.lighten();

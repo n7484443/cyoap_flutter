@@ -178,7 +178,7 @@ class VMChoiceNode extends GetxController {
       } else if (status.value == SelectableStatus.hide) {
         return 0;
       } else {
-        return 0.5;
+        return 0.4;
       }
     } else {
       if (status.value == SelectableStatus.selected) {
