@@ -1,3 +1,8 @@
+import 'package:cyoap_flutter/viewModel/vm_code_editor.dart';
+import 'package:cyoap_flutter/viewModel/vm_editor.dart';
+import 'package:cyoap_flutter/viewModel/vm_global_setting.dart';
+import 'package:cyoap_flutter/viewModel/vm_image_editor.dart';
+import 'package:cyoap_flutter/viewModel/vm_source.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,38 +20,50 @@ VMMakePlatform get makePlatform => Get.find<VMMakePlatform>();
 class VMMakePlatform extends GetxController {
   final currentIndex = 0.obs;
   List<int> stack = List.empty(growable: true);
-  List<Widget> pages = [
-    const ViewMake(),
-    const ViewEditor(),
-    const ViewCodeEditor(),
-    const ViewGlobalSetting(),
-    const ViewSource(),
-    const ViewFontSource(),
-    const ViewImageEditor(),
-    const ViewDesignSetting(),
+  List<void Function()> removeFunction = [
+    () {},
+    () => Get.delete<VMEditor>(),
+    () => Get.delete<VMCodeEditor>(),
+    () => Get.delete<VMGlobalSetting>(),
+    () => Get.delete<VMSource>(),
+    () {},
+    () => Get.delete<VMImageEditor>(),
+    () {},
+  ];
+  List<Widget Function()> pages = [
+    () => const ViewMake(),
+    () => const ViewEditor(),
+    () => const ViewCodeEditor(),
+    () => const ViewGlobalSetting(),
+    () => const ViewSource(),
+    () => const ViewFontSource(),
+    () => const ViewImageEditor(),
+    () => const ViewDesignSetting(),
   ];
 
-  Widget get currentPage => pages[currentIndex.value];
+  Widget get currentPage => pages[currentIndex.value]();
 
-  void changePage(int index){
+  void changePage(int index) {
+    removeFunction[currentIndex.value]();
     currentIndex.value = index;
-    if(stack.isEmpty || stack.last != index){
+    if (stack.isEmpty || stack.last != index) {
       stack.add(index);
     }
   }
 
-  void back(){
-    if(stack.length <= 1){
+  void back() {
+    if (stack.length <= 1) {
       changePage(0);
       stack.clear();
-    }else{
+    } else {
+      removeFunction[currentIndex.value]();
       stack.removeLast();
       currentIndex.value = stack.last;
     }
   }
 
-  void changePageString(String index){
-    switch(index){
+  void changePageString(String index) {
+    switch (index) {
       case "viewMake":
         return changePage(0);
       case "viewEditor":
