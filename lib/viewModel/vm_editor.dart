@@ -114,7 +114,8 @@ class VMEditor extends GetxController {
   Future<String> addImage() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       withData: true,
-      type: FileType.image,
+      allowedExtensions: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp'],
+      type: FileType.custom,
     );
     String name = '';
     if (result != null) {

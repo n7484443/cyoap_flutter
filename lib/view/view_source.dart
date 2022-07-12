@@ -1,4 +1,3 @@
-import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -42,10 +41,9 @@ class ViewSource extends StatelessWidget {
                         children: [
                           Text(name),
                           TextField(
-                            textAlign: TextAlign.center,
-                            decoration: InputDecoration(
-                              hintText: getPlatformFileSystem.getSource(name) ??
-                                  '출처를 여기에 적어주세요!',
+                            textAlign: TextAlign.start,
+                            decoration: const InputDecoration(
+                              hintText:  '출처를 여기에 적어주세요!',
                               alignLabelWithHint: true,
                             ),
                             controller: controller.getTextEditor(name),
