@@ -241,6 +241,7 @@ class NestedMap extends StatelessWidget {
                 scrollOffset: 100,
                 animationDuration: 150,
                 child: ListView.builder(
+                  key: const PageStorageKey(0),
                   physics: const NeverScrollableScrollPhysics(),
                   controller: _.scroller,
                   itemCount: getPlatform.lineSettings.length + 1,
@@ -261,6 +262,7 @@ class NestedMap extends StatelessWidget {
             scrollOffset: 100,
             animationDuration: 150,
             child: ListView.builder(
+              key: const PageStorageKey(0),
               physics: const NeverScrollableScrollPhysics(),
               controller: controller.scroller,
               itemCount: getPlatform.lineSettings.length,
@@ -281,6 +283,7 @@ class NestedMap extends StatelessWidget {
           return ColoredBox(
             color: _.backgroundColor,
             child: ListView.builder(
+              key: const PageStorageKey(0),
               controller: _.scroller,
               itemCount: getPlatform.lineSettings.length + 1,
               itemBuilder: (BuildContext context, int index) {
@@ -295,6 +298,7 @@ class NestedMap extends StatelessWidget {
       return ColoredBox(
         color: controller.backgroundColor,
         child: ListView.builder(
+          key: const PageStorageKey(0),
           controller: controller.scroller,
           itemCount: getPlatform.lineSettings.length,
           itemBuilder: (BuildContext context, int index) {

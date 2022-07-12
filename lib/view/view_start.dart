@@ -48,82 +48,68 @@ class ViewStart extends StatelessWidget {
             ),
             Expanded(
               flex: 9,
-              child: Container(
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: Colors.lightBlue),
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    Expanded(
-                      flex: 12,
-                      child: Obx(
-                        () => ListView.builder(
-                          itemCount: vmStart.pathList.length,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              title: Obx(
-                                () {
-                                  var text = Text(vmStart.pathList[index]);
-                                  return OutlinedButton(
-                                    onPressed: () => vmStart.select = index,
-                                    style: vmStart.select == index
-                                        ? OutlinedButton.styleFrom(
-                                            primary: Colors.white,
-                                            backgroundColor: Colors.blue)
-                                        : OutlinedButton.styleFrom(
-                                            primary: Colors.black54),
-                                    child: text,
-                                  );
-                                },
-                              ),
-                              trailing: IconButton(
-                                icon: const Icon(Icons.delete),
-                                onPressed: () {
-                                  vmStart.removeFrequentPath(index);
-                                },
-                              ),
-                            );
-                          },
-                        ),
+              child: Obx(
+                () => ListView.builder(
+                  itemCount: vmStart.pathList.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Obx(
+                        () {
+                          var text = Text(vmStart.pathList[index]);
+                          return OutlinedButton(
+                            onPressed: () => vmStart.select = index,
+                            style: vmStart.select == index
+                                ? OutlinedButton.styleFrom(
+                                    primary: Colors.white,
+                                    backgroundColor: Colors.blue)
+                                : OutlinedButton.styleFrom(
+                                    primary: Colors.black54),
+                            child: text,
+                          );
+                        },
                       ),
-                    ),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          TextButton(
-                            child: const Text('파일 추가'),
-                            onPressed: () async {
-                              if (await vmStart.addFile() == 0) {
-                                vmStart.selected.value = 0;
-                              }
-                            },
-                          ),
-                          Visibility(
-                            visible: !ConstList.isWeb(),
-                            child: TextButton(
-                              child: const Text('폴더 추가'),
-                              onPressed: () async {
-                                if (await vmStart.addDirectory() == 0) {
-                                  vmStart.selected.value = 0;
-                                }
-                              },
-                            ),
-                          ),
-                        ],
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {
+                          vmStart.removeFrequentPath(index);
+                        },
                       ),
-                    )
-                  ],
+                    );
+                  },
                 ),
               ),
             ),
-            const Expanded(
-              flex: 2,
-              child: SelectMode(),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  TextButton(
+                    child: const Text('파일 추가'),
+                    onPressed: () async {
+                      if (await vmStart.addFile() == 0) {
+                        vmStart.selected.value = 0;
+                      }
+                    },
+                  ),
+                  Visibility(
+                    visible: !ConstList.isWeb(),
+                    child: TextButton(
+                      child: const Text('폴더 추가'),
+                      onPressed: () async {
+                        if (await vmStart.addDirectory() == 0) {
+                          vmStart.selected.value = 0;
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
+            const Divider(
+              thickness: 2,
+              color: Colors.blue,
+            ),
+            const SelectMode(),
           ],
         ),
       ),

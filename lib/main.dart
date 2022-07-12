@@ -18,7 +18,7 @@ import 'package:tuple/tuple.dart';
 class ConstList {
   static const bool isDistributed =
       bool.fromEnvironment("isDistributed", defaultValue: false);
-  static const double appBarSize = 40.0;
+  static const double appBarSize = 38.0;
   static const double elevation = 6.0;
   static const double padding = 8.0;
   static const double paddingSmall = 4.0;
@@ -36,9 +36,16 @@ class ConstList {
     return actualPlatformType == PlatformType.desktop;
   }
 
+  static double getScreenWidth(BuildContext context){
+    return MediaQuery.of(context).size.width;
+  }
+  static double getScreenHeight(BuildContext context){
+    return MediaQuery.of(context).size.height;
+  }
+
   static bool isSmallDisplay(BuildContext context) {
     if (isMobile()) return true;
-    if (MediaQuery.of(context).size.width < 1000) return true;
+    if (getScreenWidth(context) < 1000) return true;
     return false;
   }
 
@@ -133,6 +140,7 @@ class ConstList {
     platform_specified.PlatformSpecified().preInit();
     return;
   }
+
 }
 
 enum PlatformType {
