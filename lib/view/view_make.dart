@@ -7,6 +7,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:get/get_utils/src/platform/platform.dart';
 
 import '../main.dart';
 import '../model/platform_system.dart';
@@ -152,7 +153,7 @@ class ViewMake extends StatelessWidget {
               PopupMenuItem(
                 value: 1,
                 child: Text(
-                    '${ConstList.isMobile() ? 'download 폴더에 ' : ''}zip 파일로 추출'),
+                    '${GetPlatform.isMobile ? 'download 폴더에 ' : ''}zip 파일로 추출'),
               ),
             ];
           },

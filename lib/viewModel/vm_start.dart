@@ -35,7 +35,7 @@ class VMStartPlatform extends GetxController {
   }
 
   Future<int> addDirectory() async {
-    if (ConstList.isMobile()) {
+    if (GetPlatform.isMobile) {
       textInputController.text = "";
       Get.dialog(
         AlertDialog(
@@ -147,7 +147,7 @@ class VMStartPlatform extends GetxController {
   int get select => selected.value;
 
   Future<void> removeFrequentPath(int index) async {
-    if (!ConstList.isMobile()) {
+    if (!GetPlatform.isMobile) {
       await frequentlyUsedPath.removeFrequentPath(index);
       pathList.clear();
       pathList.addAll(frequentlyUsedPath.pathList);

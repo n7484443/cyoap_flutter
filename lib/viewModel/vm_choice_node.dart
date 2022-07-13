@@ -152,11 +152,12 @@ class VMChoiceNode extends GetxController {
       } else {
         node.random = -1;
       }
-    }else if(nodeMode.value == ChoiceNodeMode.multiSelect){
+    } else if (nodeMode.value == ChoiceNodeMode.multiSelect) {
       selectedMultiple.value += n;
-      selectedMultiple.value = selectedMultiple.value.clamp(0, node.maximumStatus);
+      selectedMultiple.value =
+          selectedMultiple.value.clamp(0, node.maximumStatus);
       node.selectNode(selectedMultiple.value);
-    }else{
+    } else {
       node.selectNode(selectedMultiple.value);
     }
     VMChoiceNode.updateStatusAll();

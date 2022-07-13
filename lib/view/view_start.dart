@@ -29,7 +29,7 @@ class ViewStart extends StatelessWidget {
                         visible: vmStart.needUpdate.value,
                         child: TextButton(
                           onPressed: () {
-                            if (ConstList.isMobile()) {
+                            if (GetPlatform.isMobile) {
                               launchUrlString(
                                   'https://play.google.com/store/apps/details?id=com.clearApple.cyoap_flutter');
                             } else {

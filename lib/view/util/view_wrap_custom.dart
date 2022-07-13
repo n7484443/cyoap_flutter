@@ -1,6 +1,6 @@
-import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/platform/platform.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../model/choiceNode/choice_node.dart';
@@ -23,7 +23,7 @@ class ViewWrapCustomReorderable extends StatelessWidget {
       Key? key})
       : super(key: key) {
     this.children.addAll(children);
-    if (ConstList.isMobile()) {
+    if (GetPlatform.isMobile) {
       mul = const Tuple2(7, 4);
     } else {
       mul = const Tuple2(5, 2);

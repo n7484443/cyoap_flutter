@@ -72,7 +72,7 @@ class VMEditor extends GetxController {
     NodeEditor().target.imageString = ImageDB().getImageName(index);
     try {
       NodeEditor().target.maximumStatus = int.parse(controllerMaximum.text);
-    } catch (e){
+    } catch (e) {
       NodeEditor().target.maximumStatus = 0;
     }
     NodeEditor().target.maximizingImage = maximizingImage.value;
@@ -88,9 +88,7 @@ class VMEditor extends GetxController {
     VMChoiceNode.getVMChoiceNodeFromNode(NodeEditor().target)
         ?.updateFromEditor();
     Get.find<VMDraggableNestedMap>().update();
-    Get
-        .find<VMDraggableNestedMap>()
-        .isChanged = true;
+    Get.find<VMDraggableNestedMap>().isChanged = true;
     isChanged = false;
   }
 
@@ -130,9 +128,7 @@ class VMEditor extends GetxController {
     ImageDB().uploadImages(name!, data);
     NodeEditor().target.imageString = name!;
     index = ImageDB().getImageIndex(name!);
-    Get
-        .find<VMDraggableNestedMap>()
-        .isChanged = true;
+    Get.find<VMDraggableNestedMap>().isChanged = true;
     isChanged = true;
     name = null;
     imageLast = null;

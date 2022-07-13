@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:cyoap_flutter/main.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:get/get_utils/src/platform/platform.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,7 +15,7 @@ class ProjectPath {
   }
 
   static Future<String> getProjectFolder(String? name) async {
-    if (ConstList.isMobile()) {
+    if (GetPlatform.isMobile) {
       var dir = (await getExternalStorageDirectory())!;
       if (name == null) {
         return "${dir.path}/project";
@@ -30,7 +30,7 @@ class ProjectPath {
   }
 
   Future<List<String>> get frequentPathFromData async {
-    if (ConstList.isMobile()) {
+    if (GetPlatform.isMobile) {
       var dir = await getProjectFolder(null);
       var directory = Directory(dir);
       if (!await directory.exists()) {
@@ -58,7 +58,7 @@ class ProjectPath {
   }
 
   Future<void> removeFrequentPath(int index) async {
-    if (ConstList.isMobile()) {
+    if (GetPlatform.isMobile) {
       var dir = Directory(pathList[index]);
       await dir.delete(recursive: true);
       pathList = await frequentPathFromData;

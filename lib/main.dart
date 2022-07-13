@@ -25,26 +25,19 @@ class ConstList {
   static late final PlatformType actualPlatformType;
 
   static bool isWeb() {
-    return isDistributed || actualPlatformType == PlatformType.web;
+    return isDistributed || GetPlatform.isWeb;
   }
 
-  static bool isMobile() {
-    return actualPlatformType == PlatformType.mobile;
-  }
-
-  static bool isDesktop() {
-    return actualPlatformType == PlatformType.desktop;
-  }
-
-  static double getScreenWidth(BuildContext context){
+  static double getScreenWidth(BuildContext context) {
     return MediaQuery.of(context).size.width;
   }
-  static double getScreenHeight(BuildContext context){
+
+  static double getScreenHeight(BuildContext context) {
     return MediaQuery.of(context).size.height;
   }
 
   static bool isSmallDisplay(BuildContext context) {
-    if (isMobile()) return true;
+    if (GetPlatform.isMobile) return true;
     if (getScreenWidth(context) < 1000) return true;
     return false;
   }
@@ -140,7 +133,6 @@ class ConstList {
     platform_specified.PlatformSpecified().preInit();
     return;
   }
-
 }
 
 enum PlatformType {

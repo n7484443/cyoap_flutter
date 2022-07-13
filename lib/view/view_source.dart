@@ -43,7 +43,7 @@ class ViewSource extends StatelessWidget {
                           TextField(
                             textAlign: TextAlign.start,
                             decoration: const InputDecoration(
-                              hintText:  '출처를 여기에 적어주세요!',
+                              hintText: '출처를 여기에 적어주세요!',
                               alignLabelWithHint: true,
                             ),
                             controller: controller.getTextEditor(name),

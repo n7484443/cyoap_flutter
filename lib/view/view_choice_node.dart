@@ -94,8 +94,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                               nodeController.isIgnorePointer)
                       ? () => nodeController.select(0, context)
                       : null,
-                  child:
-                      ViewChoiceNodeContent(node!, nodeController, controller),
+                  child: ViewChoiceNodeContent(node!, controller),
                 ),
               ),
             ),
@@ -192,7 +191,7 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
   Widget build(BuildContext context) {
     var widget = ViewChoiceNode.fromNode(node);
     var pos = node.pos();
-    if (ConstList.isMobile()) {
+    if (GetPlatform.isMobile) {
       return LongPressDraggable<List<int>>(
         onDragUpdate: (details) => controller.dragUpdate(details, context),
         data: pos,
@@ -254,14 +253,14 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
   }
 }
 
-class ViewChoiceNodeContent extends StatelessWidget {
+class ViewChoiceNodeContent extends GetView<VMChoiceNode> {
   final ChoiceNode node;
-  final VMChoiceNode controller;
   final VMDraggableNestedMap draggableController;
 
-  const ViewChoiceNodeContent(
-      this.node, this.controller, this.draggableController,
-      {Key? key})
+  @override
+  String? get tag => node.tag;
+
+  const ViewChoiceNodeContent(this.node, this.draggableController, {Key? key})
       : super(key: key);
 
   @override

@@ -99,14 +99,14 @@ class ChoiceNode extends GenerableParserAndPosition {
   }
 
   void selectNode(int n) {
-    if(choiceNodeMode == ChoiceNodeMode.multiSelect){
+    if (choiceNodeMode == ChoiceNodeMode.multiSelect) {
       multiSelect = n;
-      if(n > 0){
+      if (n > 0) {
         status = SelectableStatus.selected;
-      }else{
+      } else {
         status = SelectableStatus.open;
       }
-    }else{
+    } else {
       multiSelect = -1;
       status = status.reverseSelected(isSelectable);
     }
@@ -146,9 +146,9 @@ class ChoiceNode extends GenerableParserAndPosition {
     return PlatformSpecified().saveProject!.convertImageName(name);
   }
 
-  void doAllChild(void Function(ChoiceNode) choiceNodeFunc){
+  void doAllChild(void Function(ChoiceNode) choiceNodeFunc) {
     choiceNodeFunc(this);
-    for(var child in children){
+    for (var child in children) {
       (child as ChoiceNode).doAllChild(choiceNodeFunc);
     }
   }
@@ -183,7 +183,7 @@ class ChoiceNode extends GenerableParserAndPosition {
     return out;
   }
 
-  ChoiceNode clone(){
+  ChoiceNode clone() {
     var json = jsonDecode(jsonEncode(toJson()));
     return ChoiceNode.fromJson(json);
   }
