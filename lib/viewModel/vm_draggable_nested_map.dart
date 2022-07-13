@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
+import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -37,6 +38,7 @@ class VMDraggableNestedMap extends GetxController {
   @override
   void update([List<Object>? ids, bool condition = true]) {
     super.update();
+    Get.find<VMVariableTable>().update();
     isChanged = true;
   }
 
