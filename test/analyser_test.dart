@@ -61,7 +61,7 @@ void main() {
 
   test('compTest', () {
     String strTest = """
-    var comp1 = numberTest0 == -5.5
+    var comp1 = numberTest0==-5.5
     var comp2 = numberTest0 >= -5.5
     var comp3 = numberTest0 > -5.5
     """;

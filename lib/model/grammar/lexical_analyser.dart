@@ -61,24 +61,22 @@ class LexicalAnalyser {
           tokenAdded = Token(AnalyserConst.functionUnspecified, dataString: c);
           break;
         case '=':
-          if (tokenAdded != null) {
-            if (tokenAdded.type == AnalyserConst.functionUnspecified) {
-              if (tokenAdded.dataString == '+' ||
-                  tokenAdded.dataString == '-' ||
-                  tokenAdded.dataString == '*' ||
-                  tokenAdded.dataString == '/') {
-                tokenList.add(
-                    Token(AnalyserConst.functionUnspecified, dataString: '='));
-                tokenList.add(tokenList[tokenList.length - 2]);
-                tokenList.add(tokenAdded);
-                tokenAdded = null;
-              } else {
-                tokenAdded.addUnitData(c);
-              }
+          if (tokenAdded != null &&
+              tokenAdded.type == AnalyserConst.functionUnspecified) {
+            tokenAdded.addUnitData(c);
+            if (tokenAdded.dataString == '+=' ||
+                tokenAdded.dataString == '-=' ||
+                tokenAdded.dataString == '*=' ||
+                tokenAdded.dataString == '/=') {
+              tokenList.add(
+                  Token(AnalyserConst.functionUnspecified, dataString: '='));
+              tokenList.add(tokenList[tokenList.length - 2]);
+              tokenList.add(Token(AnalyserConst.functionUnspecified,
+                  dataString: tokenAdded.dataString.replaceAll("=", "")));
+              tokenAdded = null;
             }
-            addToken();
-            tokenAdded = null;
           } else {
+            addToken();
             tokenAdded =
                 Token(AnalyserConst.functionUnspecified, dataString: c);
           }
