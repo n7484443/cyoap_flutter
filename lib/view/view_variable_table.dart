@@ -2,6 +2,7 @@ import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../model/platform_system.dart';
@@ -50,6 +51,41 @@ class ViewVariable extends StatelessWidget {
             ),
           ),
         ),
+        if (ConstList.isSmallDisplay(context))
+          Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+            IconButton(
+              onPressed: () {
+                if (MediaQuery.of(context).orientation ==
+                    Orientation.portrait) {
+                  SystemChrome.setPreferredOrientations(
+                      [DeviceOrientation.landscapeLeft]);
+                } else {
+                  SystemChrome.setPreferredOrientations([
+                    DeviceOrientation.portraitUp,
+                    DeviceOrientation.landscapeRight,
+                    DeviceOrientation.landscapeLeft
+                  ]);
+                }
+              },
+              icon: const Icon(Icons.rotate_right),
+            ),
+            IconButton(
+              onPressed: () {
+                if (MediaQuery.of(context).orientation ==
+                    Orientation.portrait) {
+                  SystemChrome.setPreferredOrientations(
+                      [DeviceOrientation.landscapeRight]);
+                } else {
+                  SystemChrome.setPreferredOrientations([
+                    DeviceOrientation.portraitUp,
+                    DeviceOrientation.landscapeRight,
+                    DeviceOrientation.landscapeLeft
+                  ]);
+                }
+              },
+              icon: const Icon(Icons.rotate_left),
+            ),
+          ]),
       ];
     }
 

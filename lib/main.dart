@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart'
@@ -9,7 +8,6 @@ import 'package:cyoap_flutter/view/view_start.dart' deferred as v_start;
 import 'package:cyoap_flutter/viewModel/vm_design_setting.dart';
 import 'package:cyoap_flutter/viewModel/vm_make_platform.dart';
 import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
@@ -24,7 +22,6 @@ class ConstList {
   static const double elevation = 6.0;
   static const double padding = 8.0;
   static const double paddingSmall = 4.0;
-  static late final PlatformType actualPlatformType;
 
   static bool isWeb() {
     return isDistributed || GetPlatform.isWeb;
@@ -120,17 +117,6 @@ class ConstList {
   }
 
   static Future<void> preInit() async {
-    if (isDistributed) {
-      ConstList.actualPlatformType = PlatformType.web;
-    } else {
-      if (kIsWeb) {
-        ConstList.actualPlatformType = PlatformType.web;
-      } else if (Platform.isAndroid) {
-        ConstList.actualPlatformType = PlatformType.mobile;
-      } else if (Platform.isWindows) {
-        ConstList.actualPlatformType = PlatformType.desktop;
-      }
-    }
     await platform_specified.loadLibrary();
     platform_specified.PlatformSpecified().preInit();
     return;
@@ -145,7 +131,6 @@ enum PlatformType {
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
   ConstList.preInit().then((value) async {
     await v_play.loadLibrary();
     if (!ConstList.isDistributed) {
@@ -188,7 +173,7 @@ void main() {
   }).then((value) => ConstList.init());
 }
 
-class PlatformBinding extends Bindings{
+class PlatformBinding extends Bindings {
   @override
   void dependencies() {
     Get.put(VMDesignSetting());
@@ -196,7 +181,7 @@ class PlatformBinding extends Bindings{
   }
 }
 
-class MakePlatformBinding extends Bindings{
+class MakePlatformBinding extends Bindings {
   @override
   void dependencies() {
     Get.put(VMDesignSetting());
