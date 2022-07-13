@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 class VMDesignSetting extends GetxController {
   var titleOverlap = getPlatform.designSetting.titleOverlap.obs;
   var titlePosition = getPlatform.designSetting.titlePosition.obs;
+  var titleOutline = getPlatform.designSetting.titleOutline.obs;
   var titleFont = getPlatform.designSetting.titleFont.obs;
   var mainFont = getPlatform.designSetting.mainFont.obs;
   var colorBackground = getPlatform.designSetting.colorBackground.obs;
@@ -18,6 +19,10 @@ class VMDesignSetting extends GetxController {
     });
     titlePosition.listen((value) {
       getPlatform.designSetting.titlePosition = value;
+      Get.find<VMDraggableNestedMap>().isChanged = true;
+    });
+    titleOutline.listen((value) {
+      getPlatform.designSetting.titleOutline = value;
       Get.find<VMDraggableNestedMap>().isChanged = true;
     });
     titleFont.listen((value) {

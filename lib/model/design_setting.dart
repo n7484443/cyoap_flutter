@@ -6,6 +6,7 @@ import '../main.dart';
 class PlatformDesignSetting {
   bool titleOverlap = true;
   bool titlePosition = true;
+  bool titleOutline = true;
   String titleFont = "notoSans";
   String mainFont = "notoSans";
   Color colorBackground = Colors.white;
@@ -18,6 +19,7 @@ class PlatformDesignSetting {
         mainFont = json['mainFont'] ?? 'notoSans',
         titleOverlap = json['titleOverlap'] ?? true,
         titlePosition = json['titlePosition'] ?? true,
+        titleOutline = json['titleOutline'] ?? true,
         colorBackground =
             (json['colorBackground'] != null && json['colorBackground'] is int)
                 ? Color(json['colorBackground'])
@@ -32,6 +34,7 @@ class PlatformDesignSetting {
         'mainFont': mainFont,
         'titleOverlap': titleOverlap,
         'titlePosition': titlePosition,
+        'titleOutline': titleOutline,
         'colorBackground': colorBackground.value,
         'colorNode': colorNode.value,
       };

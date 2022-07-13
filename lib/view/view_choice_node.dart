@@ -271,10 +271,19 @@ class ViewTitleWithEdit extends GetView<VMChoiceNode> {
     final layoutSetting = Get.find<VMDesignSetting>();
     Widget title = Obx(() {
       if (!controller.hideTitle.value) {
-        return TextOutline(
+        if(layoutSetting.titleOutline.value){
+          return TextOutline(
+            controller.titleString.value,
+            20 * draggableController.scale(context),
+            ConstList.getFont(layoutSetting.titleFont.value),
+          );
+        }
+        return Text(
           controller.titleString.value,
-          18 * draggableController.scale(context),
-          ConstList.getFont(layoutSetting.titleFont.value),
+          style: ConstList.getFont(layoutSetting.titleFont.value).copyWith(
+            fontSize: 20 * draggableController.scale(context),
+            color: layoutSetting.colorNode.value.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+          ),
         );
       }
       return const SizedBox.shrink();
