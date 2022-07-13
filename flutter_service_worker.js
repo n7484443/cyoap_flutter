@@ -30,16 +30,14 @@ const RESOURCES = {
 "index.html": "142447007b11498f32c9d63e1a7f2ae0",
 "/": "142447007b11498f32c9d63e1a7f2ae0",
 "jszip.js": "418ea325c68eb099ef2ccc8823771a63",
-"main.dart.js": "eb758ed580155add19b5d4d426eb193e",
-"main.dart.js_1.part.js": "ac2d4ac335ea08e720c2580ff63fddc6",
-"main.dart.js_2.part.js": "3e1dd1b95c6deaf50e13aef185adf22d",
-"main.dart.js_3.part.js": "9875e8a5bcaad113d2118ea870bdb395",
-"main.dart.js_4.part.js": "7db2285fc7dd521dfaccee097cf9ac0b",
-"main.dart.js_5.part.js": "520b8893dfee8a55af810fe65f6fcd37",
-"main.dart.js_6.part.js": "c7ac215edaeab864ca35581c56a6269e",
+"main.dart.js": "e55808a90f99973cfb1eb0d1efeccddd",
+"main.dart.js_1.part.js": "6956e3e864ee20162104fc28a13c83b4",
+"main.dart.js_2.part.js": "d305ab92e0b18c6c229805fb1565b80b",
+"main.dart.js_3.part.js": "f35d375853a871231abd37f5d585de2f",
+"main.dart.js_4.part.js": "f3972226323455bb16fb398a9575efc9",
 "manifest.json": "ebc04e4594e86d4e5763ccf0df7285b3",
 "save_web.js": "6d7f19b0443d2ca2a960f0532299e5d7",
-"version.json": "099ecaf4ff838a00f80e360e0574b728",
+"version.json": "d1d90ae9618c72392cab9bd803183962",
 "worker.js": "55118d4a43a00cedd42f65ca3b0b0d2a"
 };
 
