@@ -2,7 +2,6 @@ import 'package:cyoap_flutter/model/choiceNode/generable_parser.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/viewModel/vm_code_editor.dart';
-import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_make_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -70,16 +69,26 @@ class VMVariableTable extends GetxController {
       var values = VariableDataBase().varMap[key]!;
       if (values.visible) {
         if (isEditable) {
+          void addName(String name) {
+            if (makePlatform.currentIndex.value == 2) {
+              var vmCodeEditor = Get.find<VMCodeEditor>();
+              if (vmCodeEditor.lastFocus != null) {
+                vmCodeEditor.insertText(vmCodeEditor.lastFocus!, name.trim());
+              }
+            }
+          }
           if (values.displayName.isEmpty) {
             variableList.add(ListTile(
               title: Text(key),
               trailing: Text(values.valueType.data.runtimeType.toString()),
+              onTap: () => addName(key),
             ));
           } else {
             variableList.add(ListTile(
               title: Text(key),
               subtitle: Text(values.displayName),
               trailing: Text(values.valueType.data.runtimeType.toString()),
+              onTap: () => addName(key),
             ));
           }
         } else {
@@ -92,11 +101,5 @@ class VMVariableTable extends GetxController {
       }
     }
     return variableList;
-  }
-
-  void setSourceVisible() {
-    isVisibleSource.toggle();
-    Get.find<VMDraggableNestedMap>().update();
-    update();
   }
 }

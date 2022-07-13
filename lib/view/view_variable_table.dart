@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import '../model/platform_system.dart';
 import '../viewModel/vm_make_platform.dart';
 
-class ViewVariable extends StatelessWidget {
+class ViewVariable extends GetView<VMVariableTable> {
   const ViewVariable({Key? key}) : super(key: key);
 
   @override
@@ -43,10 +43,10 @@ class ViewVariable extends StatelessWidget {
           title: Text(ConstList.version),
         ),
         ListTile(
-          title: GetBuilder<VMVariableTable>(
-            builder: (_) => ViewSwitchLabel(
-              _.setSourceVisible,
-              _.isVisibleSource.value,
+          title: Obx(
+            () => ViewSwitchLabel(
+              () => controller.isVisibleSource.toggle(),
+              controller.isVisibleSource.value,
               label: '출처 보기',
             ),
           ),
@@ -89,12 +89,12 @@ class ViewVariable extends StatelessWidget {
       ];
     }
 
-    return GetBuilder<VMVariableTable>(
-      builder: (_) => Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Flexible(
-            child: ListView(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Flexible(
+          child: GetBuilder<VMVariableTable>(
+            builder: (_) => ListView(
               controller: ScrollController(),
               shrinkWrap: true,
               children: [
@@ -110,11 +110,11 @@ class ViewVariable extends StatelessWidget {
               ],
             ),
           ),
-          Column(
-            children: widgetList,
-          ),
-        ],
-      ),
+        ),
+        Column(
+          children: widgetList,
+        ),
+      ],
     );
   }
 }
