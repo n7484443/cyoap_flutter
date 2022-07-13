@@ -16,7 +16,14 @@ class VMVariableTable extends GetxController {
     VariableDataBase().viewModel = this;
     super.onInit();
   }
-
+  void addStringToEditor(String input){
+    if (makePlatform.currentIndex.value == 2) {
+      var vmCodeEditor = Get.find<VMCodeEditor>();
+      if (vmCodeEditor.lastFocus != null) {
+        vmCodeEditor.insertText(vmCodeEditor.lastFocus!, input.trim());
+      }
+    }
+  }
   List<Widget> get nodeList {
     var nodeList = List<Widget>.empty(growable: true);
     var iconCheckBox = const Icon(Icons.check_box);
@@ -29,15 +36,7 @@ class VMVariableTable extends GetxController {
             subWidgetList.add(
               ListTile(
                 title: Text(node.title),
-                onTap: () {
-                  if (makePlatform.currentIndex.value == 2) {
-                    var vmCodeEditor = Get.find<VMCodeEditor>();
-                    if (vmCodeEditor.lastFocus != null) {
-                      vmCodeEditor.insertText(vmCodeEditor.lastFocus!,
-                          node.title.replaceAll(" ", ""));
-                    }
-                  }
-                },
+                onTap: () => addStringToEditor(node.title.replaceAll(" ", "")),
               ),
             );
           });
@@ -69,26 +68,18 @@ class VMVariableTable extends GetxController {
       var values = VariableDataBase().varMap[key]!;
       if (values.visible) {
         if (isEditable) {
-          void addName(String name) {
-            if (makePlatform.currentIndex.value == 2) {
-              var vmCodeEditor = Get.find<VMCodeEditor>();
-              if (vmCodeEditor.lastFocus != null) {
-                vmCodeEditor.insertText(vmCodeEditor.lastFocus!, name.trim());
-              }
-            }
-          }
           if (values.displayName.isEmpty) {
             variableList.add(ListTile(
               title: Text(key),
               trailing: Text(values.valueType.data.runtimeType.toString()),
-              onTap: () => addName(key),
+              onTap: () => addStringToEditor(key),
             ));
           } else {
             variableList.add(ListTile(
               title: Text(key),
               subtitle: Text(values.displayName),
               trailing: Text(values.valueType.data.runtimeType.toString()),
-              onTap: () => addName(key),
+              onTap: () => addStringToEditor(key),
             ));
           }
         } else {
