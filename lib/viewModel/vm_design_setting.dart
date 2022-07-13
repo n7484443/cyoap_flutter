@@ -8,7 +8,7 @@ class VMDesignSetting extends GetxController {
   var titleFont = getPlatform.designSetting.titleFont.obs;
   var mainFont = getPlatform.designSetting.mainFont.obs;
   var colorBackground = getPlatform.designSetting.colorBackground.obs;
-  var colorNode = getPlatform.designSetting.colorNode.value.obs;
+  var colorNode = getPlatform.designSetting.colorNode.obs;
 
   @override
   void onInit() {
@@ -34,7 +34,7 @@ class VMDesignSetting extends GetxController {
       Get.find<VMDraggableNestedMap>().update();
     });
     colorNode.listen((value) {
-      getPlatform.designSetting.colorNode.value = value;
+      getPlatform.designSetting.colorNode = value;
       Get.find<VMDraggableNestedMap>().isChanged = true;
     });
     super.onInit();

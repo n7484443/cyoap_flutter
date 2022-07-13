@@ -57,7 +57,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                     side: BorderSide(
                       color: isSelectedCheck
                           ? Colors.lightBlueAccent
-                          : getPlatform.designSetting.colorNode.value,
+                          : Get.find<VMDesignSetting>().colorNode.value,
                       width: ConstList.isSmallDisplay(context) ? 2 : 4,
                     ),
                   )
@@ -65,7 +65,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                     BorderSide(
                       color: isSelectedCheck
                           ? Colors.lightBlueAccent
-                          : getPlatform.designSetting.colorNode.value,
+                          : Get.find<VMDesignSetting>().colorNode.value,
                       width: ConstList.isSmallDisplay(context) ? 2 : 4,
                     ),
                   ),
@@ -74,9 +74,9 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                 ? const EdgeInsets.all(1.4)
                 : null,
             elevation: nodeController.isCard.value ? ConstList.elevation : 0,
-            color: getPlatform.designSetting.colorNode.value,
+            color: Get.find<VMDesignSetting>().colorNode.value,
             child: Ink(
-              color: getPlatform.designSetting.colorNode.value,
+              color: Get.find<VMDesignSetting>().colorNode.value,
               child: Padding(
                 padding: ConstList.isSmallDisplay(context)
                     ? const EdgeInsets.all(2.0)
@@ -105,14 +105,16 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
   }
 }
 
-class SizeDialog extends StatelessWidget {
-  final ChoiceNode? node;
+class SizeDialog extends GetView<VMChoiceNode> {
+  final String _tag;
 
-  const SizeDialog(this.node, {Key? key}) : super(key: key);
+  @override
+  get tag => _tag;
+
+  const SizeDialog(this._tag, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var controller = VMChoiceNode.getVMChoiceNodeFromNode(node!)!;
     return AlertDialog(
       scrollable: true,
       alignment: Alignment.center,
@@ -253,6 +255,72 @@ class NodeDraggable extends GetView<VMDraggableNestedMap> {
   }
 }
 
+class ViewTitleWithEdit extends GetView<VMChoiceNode> {
+  final String _tag;
+  final VMDraggableNestedMap draggableController;
+
+  @override
+  String? get tag => _tag;
+
+  const ViewTitleWithEdit(this._tag, this.draggableController, {Key? key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final layoutSetting = Get.find<VMDesignSetting>();
+    Widget title = Obx(() {
+      if (!controller.hideTitle.value) {
+        return TextOutline(
+          controller.titleString.value,
+          18 * draggableController.scale(context),
+          ConstList.getFont(layoutSetting.titleFont.value),
+        );
+      }
+      return const SizedBox.shrink();
+    });
+    if (!isEditable) {
+      return title;
+    }
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        title,
+        Align(
+          alignment: Alignment.centerRight,
+          child: PopupMenuButton<int>(
+            icon: const Icon(Icons.more_vert),
+            onSelected: (result) {
+              switch (result) {
+                case 0:
+                  showDialog(
+                    context: context,
+                    builder: (builder) => SizeDialog(_tag),
+                  );
+                  break;
+                case 1:
+                  Get.find<VMDraggableNestedMap>().copyData(controller.node);
+                  break;
+              }
+            },
+            itemBuilder: (context) {
+              return [
+                const PopupMenuItem(
+                  value: 0,
+                  child: Text('크기 수정'),
+                ),
+                const PopupMenuItem(
+                  value: 1,
+                  child: Text('복사'),
+                ),
+              ];
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class ViewChoiceNodeContent extends GetView<VMChoiceNode> {
   final ChoiceNode node;
   final VMDraggableNestedMap draggableController;
@@ -266,11 +334,9 @@ class ViewChoiceNodeContent extends GetView<VMChoiceNode> {
   @override
   Widget build(BuildContext context) {
     final layoutSetting = Get.find<VMDesignSetting>();
-    return Obx(() {
-      Widget? image;
-      Widget? title;
+    Widget image = Obx(() {
       if (controller.imageString.value.isNotEmpty) {
-        image = ConstrainedBox(
+        return ConstrainedBox(
           constraints: BoxConstraints(
             maxHeight: controller.maximizingImage.value
                 ? double.infinity
@@ -282,52 +348,12 @@ class ViewChoiceNodeContent extends GetView<VMChoiceNode> {
           ),
         );
       }
-      if (!controller.hideTitle.value) {
-        title = TextOutline(
-          controller.titleString.value,
-          18 * draggableController.scale(context),
-          ConstList.getFont(layoutSetting.titleFont.value),
-        );
-      }
-      if (isEditable) {
-        title = Stack(
-          alignment: Alignment.center,
-          children: [
-            if (title != null) title,
-            Align(
-              alignment: Alignment.centerRight,
-              child: PopupMenuButton<int>(
-                icon: const Icon(Icons.more_vert),
-                onSelected: (result) {
-                  switch (result) {
-                    case 0:
-                      showDialog(
-                        context: context,
-                        builder: (builder) => SizeDialog(node),
-                      );
-                      break;
-                    case 1:
-                      Get.find<VMDraggableNestedMap>().copyData(node);
-                      break;
-                  }
-                },
-                itemBuilder: (context) {
-                  return [
-                    const PopupMenuItem(
-                      value: 0,
-                      child: Text('크기 수정'),
-                    ),
-                    const PopupMenuItem(
-                      value: 1,
-                      child: Text('복사'),
-                    ),
-                  ];
-                },
-              ),
-            ),
-          ],
-        );
-      }
+      return const SizedBox.shrink();
+    });
+
+    Widget title = ViewTitleWithEdit(node.tag, draggableController);
+
+    Widget out = Obx(() {
       Widget? contents;
       if (!controller.quillController.document.isEmpty()) {
         contents = IgnorePointer(
@@ -404,14 +430,14 @@ class ViewChoiceNodeContent extends GetView<VMChoiceNode> {
       if (node.imagePosition == 1) {
         return Column(
           children: [
-            if (title != null) title,
+            title,
             Row(
               children: [
                 if (contents != null)
                   Flexible(
                     child: contents,
                   ),
-                if (image != null) Expanded(child: image),
+                Expanded(child: image),
               ],
             ),
             if (child != null) child,
@@ -421,10 +447,10 @@ class ViewChoiceNodeContent extends GetView<VMChoiceNode> {
       if (node.imagePosition == 2) {
         return Column(
           children: [
-            if (title != null) title,
+            title,
             Row(
               children: [
-                if (image != null) Expanded(child: image),
+                Expanded(child: image),
                 if (contents != null)
                   Flexible(
                     child: contents,
@@ -443,20 +469,20 @@ class ViewChoiceNodeContent extends GetView<VMChoiceNode> {
                 ? Alignment.topCenter
                 : Alignment.bottomCenter,
             children: [
-              if (image != null) image,
-              if (title != null) title,
+              image,
+              title,
             ],
           ),
         ];
       } else if (layoutSetting.titlePosition.value) {
         subWidget = [
-          if (title != null) title,
-          if (image != null) image,
+          title,
+          image,
         ];
       } else {
         subWidget = [
-          if (image != null) image,
-          if (title != null) title,
+          image,
+          title,
         ];
       }
 
@@ -488,5 +514,6 @@ class ViewChoiceNodeContent extends GetView<VMChoiceNode> {
         children: subWidget,
       );
     });
+    return out;
   }
 }

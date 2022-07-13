@@ -1,6 +1,5 @@
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../main.dart';
 
@@ -10,7 +9,7 @@ class PlatformDesignSetting {
   String titleFont = "notoSans";
   String mainFont = "notoSans";
   Color colorBackground = Colors.white;
-  Rx<Color> colorNode = Colors.white.obs;
+  Color colorNode = Colors.white;
 
   PlatformDesignSetting();
 
@@ -23,7 +22,7 @@ class PlatformDesignSetting {
             (json['colorBackground'] != null && json['colorBackground'] is int)
                 ? Color(json['colorBackground'])
                 : Colors.white {
-    colorNode.value = (json['colorNode'] != null && json['colorNode'] is int)
+    colorNode = (json['colorNode'] != null && json['colorNode'] is int)
         ? Color(json['colorNode'])
         : Colors.white;
   }
@@ -34,7 +33,7 @@ class PlatformDesignSetting {
         'titleOverlap': titleOverlap,
         'titlePosition': titlePosition,
         'colorBackground': colorBackground.value,
-        'colorNode': colorNode.value.value,
+        'colorNode': colorNode.value,
       };
 }
 
