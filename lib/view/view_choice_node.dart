@@ -82,7 +82,8 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                     ? const EdgeInsets.all(2.0)
                     : const EdgeInsets.all(4.0),
                 child: InkWell(
-                  onDoubleTap: isEditable || nodeController.isIgnorePointer
+                  onDoubleTap: isEditable ||
+                          (!isEditable && nodeController.isIgnorePointer)
                       ? () {
                           controller.editNode = node!;
                           makePlatform.changePageString("viewEditor");
@@ -94,7 +95,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                               nodeController.isIgnorePointer)
                       ? () => nodeController.select(0, context)
                       : null,
-                  child: ViewChoiceNodeContent(node!, controller),
+                  child: ViewChoiceNodeContent(node!.tag, controller),
                 ),
               ),
             ),
@@ -321,14 +322,62 @@ class ViewTitleWithEdit extends GetView<VMChoiceNode> {
   }
 }
 
-class ViewChoiceNodeContent extends GetView<VMChoiceNode> {
-  final ChoiceNode node;
-  final VMDraggableNestedMap draggableController;
+class ViewChoiceNodeMultiSelect extends GetView<VMChoiceNode> {
+  final String _tag;
 
   @override
-  String? get tag => node.tag;
+  String? get tag => _tag;
 
-  const ViewChoiceNodeContent(this.node, this.draggableController, {Key? key})
+  const ViewChoiceNodeMultiSelect(this._tag, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          child: IconButton(
+            icon: const Icon(Icons.chevron_left, size: 30),
+            onPressed: () {
+              if (!isEditable) {
+                controller.select(-1, context);
+              }
+            },
+          ),
+        ),
+        Expanded(
+          child: Obx(
+            () => Text(
+              controller.selectedMultiple.toString(),
+              style: ConstList.defaultFont.copyWith(fontSize: 30),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        Expanded(
+          child: IconButton(
+            icon: const Icon(Icons.chevron_right, size: 30),
+            onPressed: () {
+              if (!isEditable) {
+                controller.select(1, context);
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class ViewChoiceNodeContent extends GetView<VMChoiceNode> {
+  final VMDraggableNestedMap draggableController;
+  final String _tag;
+
+  @override
+  String? get tag => _tag;
+
+  const ViewChoiceNodeContent(this._tag, this.draggableController, {Key? key})
       : super(key: key);
 
   @override
@@ -351,92 +400,67 @@ class ViewChoiceNodeContent extends GetView<VMChoiceNode> {
       return const SizedBox.shrink();
     });
 
-    Widget title = ViewTitleWithEdit(node.tag, draggableController);
+    Widget title = ViewTitleWithEdit(_tag, draggableController);
+
+    Widget contents;
+    if (controller.quillController.document.isEmpty()) {
+      if (controller.node.choiceNodeMode == ChoiceNodeMode.multiSelect) {
+        contents = ViewChoiceNodeMultiSelect(_tag);
+      } else {
+        contents = const SizedBox.shrink();
+      }
+    } else {
+      Widget contentText = IgnorePointer(
+        child: QuillEditor(
+          controller: controller.quillController,
+          focusNode: FocusNode(),
+          readOnly: true,
+          autoFocus: false,
+          expands: false,
+          padding: const EdgeInsets.only(top: 4),
+          scrollController: ScrollController(),
+          scrollable: false,
+          customStyles: ConstList.getDefaultThemeData(
+              context, draggableController.scale(context),
+              fontStyle: ConstList.getFont(layoutSetting.mainFont.value)),
+        ),
+      );
+      if (controller.node.choiceNodeMode == ChoiceNodeMode.multiSelect) {
+        contents = Column(children: [
+          contentText,
+          ViewChoiceNodeMultiSelect(_tag),
+        ]);
+      } else {
+        contents = contentText;
+      }
+    }
 
     Widget out = Obx(() {
-      Widget? contents;
-      if (!controller.quillController.document.isEmpty()) {
-        contents = IgnorePointer(
-          child: QuillEditor(
-            controller: controller.quillController,
-            focusNode: FocusNode(),
-            readOnly: true,
-            autoFocus: false,
-            expands: false,
-            padding: const EdgeInsets.only(top: 4),
-            scrollController: ScrollController(),
-            scrollable: false,
-            customStyles: ConstList.getDefaultThemeData(
-                context, draggableController.scale(context),
-                fontStyle: ConstList.getFont(layoutSetting.mainFont.value)),
-          ),
-        );
-      }
-
-      if (node.choiceNodeMode == ChoiceNodeMode.multiSelect) {
-        contents = Column(children: [
-          if (contents != null) contents,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: IconButton(
-                  icon: const Icon(Icons.chevron_left, size: 30),
-                  onPressed: () {
-                    if (!isEditable) {
-                      controller.select(-1, contents);
-                    }
-                  },
-                ),
-              ),
-              Expanded(
-                child: Text(
-                  controller.selectedMultiple.toString(),
-                  style: ConstList.defaultFont.copyWith(fontSize: 30),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Expanded(
-                child: IconButton(
-                  icon: const Icon(Icons.chevron_right, size: 30),
-                  onPressed: () {
-                    if (!isEditable) {
-                      controller.select(1, contents);
-                    }
-                  },
-                ),
-              ),
-            ],
-          ),
-        ]);
-      }
       Widget? child;
       if (isEditable) {
         child = ViewWrapCustomReorderable(
-          node.children,
+          controller.node.children,
           (child) => NodeDraggable(child),
-          maxSize: node.getMaxSize(true),
-          builderDraggable: (i) =>
-              NodeDragTarget(List.from(node.pos(), growable: true)..add(i)),
+          maxSize: controller.node.getMaxSize(true),
+          builderDraggable: (i) => NodeDragTarget(
+              List.from(controller.node.pos(), growable: true)..add(i)),
         );
-      } else if (node.children.isNotEmpty) {
+      } else if (controller.node.children.isNotEmpty) {
         child = ViewWrapCustom(
-          node.children,
+          controller.node.children,
           (child) => ViewChoiceNode.fromNode(child),
-          maxSize: node.getMaxSize(true),
+          maxSize: controller.node.getMaxSize(true),
         );
       }
-      if (node.imagePosition == 1) {
+      if (controller.imagePosition.value == 1) {
         return Column(
           children: [
             title,
             Row(
               children: [
-                if (contents != null)
-                  Flexible(
-                    child: contents,
-                  ),
+                Flexible(
+                  child: contents,
+                ),
                 Expanded(child: image),
               ],
             ),
@@ -444,17 +468,16 @@ class ViewChoiceNodeContent extends GetView<VMChoiceNode> {
           ],
         );
       }
-      if (node.imagePosition == 2) {
+      if (controller.imagePosition.value == 2) {
         return Column(
           children: [
             title,
             Row(
               children: [
                 Expanded(child: image),
-                if (contents != null)
-                  Flexible(
-                    child: contents,
-                  ),
+                Flexible(
+                  child: contents,
+                ),
               ],
             ),
             if (child != null) child,
@@ -487,13 +510,13 @@ class ViewChoiceNodeContent extends GetView<VMChoiceNode> {
       }
 
       subWidget.addAll([
-        if (contents != null) contents,
+        contents,
         if (child != null) child,
       ]);
 
       if (!isEditable &&
           getPlatformFileSystem.hasSource(controller.imageString.value) &&
-          Get.find<VMVariableTable>().isVisibleSource) {
+          Get.find<VMVariableTable>().isVisibleSource.value) {
         subWidget.add(
           TextButton(
             child: const Text(

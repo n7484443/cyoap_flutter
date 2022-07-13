@@ -7,6 +7,8 @@ import 'package:cyoap_flutter/view/view_make_platform.dart' deferred as v_make;
 import 'package:cyoap_flutter/view/view_play.dart' deferred as v_play;
 import 'package:cyoap_flutter/view/view_start.dart' deferred as v_start;
 import 'package:cyoap_flutter/viewModel/vm_design_setting.dart';
+import 'package:cyoap_flutter/viewModel/vm_make_platform.dart';
+import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -158,7 +160,7 @@ void main() {
             ? [
                 GetPage(
                   name: '/',
-                  binding: BindingsBuilder.put(() => VMDesignSetting()),
+                  binding: PlatformBinding(),
                   page: () => v_play.ViewPlay(),
                 )
               ]
@@ -170,12 +172,12 @@ void main() {
                 GetPage(
                   name: '/viewPlay',
                   page: () => v_play.ViewPlay(),
-                  binding: BindingsBuilder.put(() => VMDesignSetting()),
+                  binding: PlatformBinding(),
                 ),
                 GetPage(
                   name: '/viewMake',
                   page: () => v_make.ViewMakePlatform(),
-                  binding: BindingsBuilder.put(() => VMDesignSetting()),
+                  binding: MakePlatformBinding(),
                 )
               ],
         theme: appThemeData,
@@ -184,6 +186,23 @@ void main() {
       ),
     );
   }).then((value) => ConstList.init());
+}
+
+class PlatformBinding extends Bindings{
+  @override
+  void dependencies() {
+    Get.put(VMDesignSetting());
+    Get.put(VMVariableTable());
+  }
+}
+
+class MakePlatformBinding extends Bindings{
+  @override
+  void dependencies() {
+    Get.put(VMDesignSetting());
+    Get.put(VMVariableTable());
+    Get.put(VMMakePlatform());
+  }
 }
 
 final ThemeData appThemeData = ThemeData(

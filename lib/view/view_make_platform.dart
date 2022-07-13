@@ -4,15 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../main.dart';
-import '../viewModel/vm_variable_table.dart';
 
-class ViewMakePlatform extends StatelessWidget {
+class ViewMakePlatform extends GetView<VMMakePlatform> {
   const ViewMakePlatform({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var controller = Get.put(VMMakePlatform());
-    Get.put(VMVariableTable());
     if (ConstList.isSmallDisplay(context)) {
       return WillPopScope(
         onWillPop: () async {

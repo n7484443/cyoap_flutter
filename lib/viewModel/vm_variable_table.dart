@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 import '../model/choiceNode/choice_node.dart';
 
 class VMVariableTable extends GetxController {
-  bool isVisibleSource = false;
+  var isVisibleSource = false.obs;
 
   @override
   void onInit() {
@@ -95,10 +95,8 @@ class VMVariableTable extends GetxController {
   }
 
   void setSourceVisible() {
-    isVisibleSource = !isVisibleSource;
+    isVisibleSource.toggle();
     Get.find<VMDraggableNestedMap>().update();
     update();
   }
-
-  bool get sourceVisible => isVisibleSource;
 }
