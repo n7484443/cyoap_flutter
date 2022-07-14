@@ -1,4 +1,3 @@
-import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,20 +14,7 @@ class ViewCodeEditor extends StatelessWidget {
 
     var leadingWidget = IconButton(
       icon: const Icon(Icons.arrow_back),
-      onPressed: () {
-        if (vmCodeEditor.isChanged) {
-          showDialog(
-            context: context,
-            builder: (_) => ViewBackDialog(
-              () => vmCodeEditor.save(),
-              () => makePlatform.back(),
-              cancelFunction: () => vmCodeEditor.isChanged = false,
-            ),
-          );
-        } else {
-          makePlatform.back();
-        }
-      },
+      onPressed: () => makePlatform.back(),
     );
 
     return WillPopScope(
@@ -96,15 +82,9 @@ class ViewCodeEditor extends StatelessWidget {
           ],
         ),
       ),
-      onWillPop: () {
-        return showDialog(
-          context: context,
-          builder: (_) => ViewBackDialog(
-            () => vmCodeEditor.save(),
-            () => makePlatform.back(),
-            cancelFunction: () => vmCodeEditor.isChanged = false,
-          ),
-        ) as Future<bool>;
+      onWillPop: () async{
+        makePlatform.back();
+        return false;
       },
     );
   }

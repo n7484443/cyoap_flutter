@@ -5,19 +5,24 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class VMCodeEditor extends GetxController {
-  final TextEditingController controllerClickable = TextEditingController();
-  final TextEditingController controllerVisible = TextEditingController();
-  final TextEditingController controllerExecute = TextEditingController();
+  final TextEditingController controllerClickable = TextEditingController(
+      text: NodeEditor().targetRecursive.conditionClickableString);
+  final TextEditingController controllerVisible = TextEditingController(
+      text: NodeEditor().targetRecursive.conditionVisibleString);
+  final TextEditingController controllerExecute = TextEditingController(
+      text: NodeEditor().targetRecursive.executeCodeString);
   final FocusNode focusClickable = FocusNode();
   final FocusNode focusVisible = FocusNode();
   final FocusNode focusExecute = FocusNode();
   TextEditingController? lastFocus;
 
-  var conditionClickable = ''.obs;
-  var conditionVisible = ''.obs;
-  var executeCode = ''.obs;
+  var conditionClickable =
+      NodeEditor().targetRecursive.conditionClickableString.obs;
+  var conditionVisible =
+      NodeEditor().targetRecursive.conditionVisibleString.obs;
+  var executeCode = NodeEditor().targetRecursive.executeCodeString.obs;
 
-  var isOccupySpace = true.obs;
+  var isOccupySpace = NodeEditor().target.isOccupySpace.obs;
 
   bool isChanged = false;
 
@@ -47,17 +52,6 @@ class VMCodeEditor extends GetxController {
     focusExecute.addListener(() {
       lastFocus = controllerExecute;
     });
-
-    controllerClickable.text =
-        NodeEditor().target.recursiveStatus.conditionClickableString;
-    controllerVisible.text =
-        NodeEditor().target.recursiveStatus.conditionVisibleString;
-    controllerExecute.text =
-        NodeEditor().target.recursiveStatus.executeCodeString;
-    conditionClickable.value = controllerClickable.text;
-    conditionVisible.value = controllerVisible.text;
-    executeCode.value = controllerExecute.text;
-    isOccupySpace.value = NodeEditor().target.isOccupySpace;
 
     controllerClickable.addListener(() {
       isChanged = true;

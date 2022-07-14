@@ -2,6 +2,7 @@ import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 
 import 'choiceNode/choice_node.dart';
+import 'choiceNode/recursive_status.dart';
 
 class NodeEditor {
   static final NodeEditor? _instance =
@@ -15,6 +16,8 @@ class NodeEditor {
   ChoiceNode? _target;
 
   ChoiceNode get target => _target!;
+
+  RecursiveStatus get targetRecursive => target.recursiveStatus;
 
   set target(ChoiceNode node) => _target = node;
 

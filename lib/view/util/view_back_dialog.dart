@@ -18,7 +18,7 @@ class ViewBackDialog extends StatelessWidget {
       actions: [
         ElevatedButton(
           onPressed: () {
-            Get.back();
+            Get.back(result: false);
           },
           child: const Text('취소'),
         ),
@@ -27,7 +27,7 @@ class ViewBackDialog extends StatelessWidget {
             if (cancelFunction != null) {
               cancelFunction!();
             }
-            Get.back();
+            Get.back(result: true);
             backFunction();
           },
           child: const Text('아니오'),
@@ -35,7 +35,7 @@ class ViewBackDialog extends StatelessWidget {
         ElevatedButton(
           onPressed: () {
             saveFunction();
-            Get.back();
+            Get.back(result: true);
             backFunction();
           },
           child: const Text('예'),

@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
@@ -26,19 +25,8 @@ class ViewEditor extends StatelessWidget {
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () {
-          if (controller.title.value.trim().isNotEmpty) {
-            if (controller.isChanged) {
-              showDialog(
-                context: context,
-                builder: (_) => ViewBackDialog(
-                  () => controller.save(),
-                  () => makePlatform.back(),
-                  cancelFunction: () => controller.isChanged = false,
-                ),
-              );
-            } else {
-              makePlatform.back();
-            }
+          if (!controller.controllerTitle.text.isBlank!) {
+            makePlatform.back();
           }
         },
       ),
@@ -83,7 +71,8 @@ class ViewEditor extends StatelessWidget {
               child: Column(children: [
                 Text('변수명',
                     style: ConstList.defaultFont.copyWith(fontSize: 20)),
-                Text('${controller.title.replaceAll(" ", "")}:random',
+                Text(
+                    '${controller.controllerTitle.text.replaceAll(" ", "")}:random',
                     softWrap: true,
                     style: ConstList.defaultFont.copyWith(fontSize: 10)),
                 TextField(
@@ -107,7 +96,8 @@ class ViewEditor extends StatelessWidget {
               child: Column(children: [
                 Text('변수명',
                     style: ConstList.defaultFont.copyWith(fontSize: 20)),
-                Text('${controller.title.replaceAll(" ", "")}:multi',
+                Text(
+                    '${controller.controllerTitle.text.replaceAll(" ", "")}:multi',
                     softWrap: true,
                     style: ConstList.defaultFont.copyWith(fontSize: 10)),
                 TextField(
@@ -187,22 +177,18 @@ class ViewEditor extends StatelessWidget {
         appBar: appbarWidget,
         body: Column(
           children: [
-            Obx(() => TextField(
-                  controller: controller.controllerTitle,
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    fillColor: controller.title.value.trim().isEmpty
-                        ? Colors.redAccent
-                        : null,
-                    hintText: '제목',
-                    hintStyle:
-                        titleFont.copyWith(fontSize: 24, color: Colors.white),
-                    filled: true,
-                  ),
-                  style: titleFont.copyWith(
-                    fontSize: 24,
-                  ),
-                )),
+            TextField(
+              controller: controller.controllerTitle,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                hintText: '제목',
+                hintStyle: titleFont.copyWith(fontSize: 24, color: Colors.red),
+                filled: true,
+              ),
+              style: titleFont.copyWith(
+                fontSize: 24,
+              ),
+            ),
             Expanded(
               child: Row(
                 children: [
@@ -223,16 +209,7 @@ class ViewEditor extends StatelessWidget {
         ),
       ),
       onWillPop: () async {
-        if (controller.title.value.trim().isNotEmpty) {
-          return await showDialog(
-            context: context,
-            builder: (_) => ViewBackDialog(
-              () => controller.save(),
-              () => makePlatform.back(),
-              cancelFunction: () => controller.isChanged = false,
-            ),
-          );
-        }
+        makePlatform.back();
         return false;
       },
     );

@@ -1,6 +1,5 @@
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/grammar/value_type.dart';
-import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/viewModel/vm_global_setting.dart';
 import 'package:flutter/material.dart';
@@ -22,18 +21,7 @@ class ViewGlobalSetting extends StatelessWidget {
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () {
-          if (vmGlobalSetting.isChanged) {
-            showDialog(
-              context: context,
-              builder: (_) => ViewBackDialog(
-                () => vmGlobalSetting.save(),
-                () => makePlatform.back(),
-                cancelFunction: () => vmGlobalSetting.isChanged = false,
-              ),
-            );
-          } else {
-            makePlatform.back();
-          }
+          makePlatform.back();
         },
       ),
       actions: [
