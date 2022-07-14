@@ -145,10 +145,6 @@ class AbstractPlatform {
     }
   }
 
-  bool isSelect(List<int> pos) {
-    return getChoiceNode(pos)?.status.isSelected() ?? false;
-  }
-
   void updateStatusAll() {
     VariableDataBase().clear();
     VariableDataBase().varMap.addAll(globalSetting);

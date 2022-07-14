@@ -132,34 +132,36 @@ class VMChoiceNode extends GetxController {
     return tagOut;
   }
 
-  bool get isSelect {
-    if (pos[pos.length - 1] == nonPositioned) return false;
-    return getPlatform.isSelect(node.pos());
-  }
-
   bool get isIgnorePointer =>
       status.value.isPointerInteractive(node.isSelectable);
 
   Future<void> select(int n, context) async {
+    if (node.isSelected() && nodeMode.value != ChoiceNodeMode.multiSelect) {
+      node.selectNode(n);
+      VMChoiceNode.updateStatusAll();
+      return;
+    }
+    if (!node.isClickable()) {
+      return;
+    }
+
     if (nodeMode.value == ChoiceNodeMode.randomMode) {
-      if (isSelect) {
-        startRandom();
-        await showDialog(
-          context: context,
-          builder: (builder) => RandomDialog(node),
-          barrierDismissible: false,
-        );
-      } else {
-        node.random = -1;
-      }
+      node.selectNode(n);
+      startRandom();
+      await showDialog(
+        context: context,
+        builder: (builder) => RandomDialog(node),
+        barrierDismissible: false,
+      );
     } else if (nodeMode.value == ChoiceNodeMode.multiSelect) {
       selectedMultiple.value += n;
       selectedMultiple.value =
           selectedMultiple.value.clamp(0, node.maximumStatus);
       node.selectNode(selectedMultiple.value);
     } else {
-      node.selectNode(selectedMultiple.value);
+      node.selectNode(n);
     }
+
     VMChoiceNode.updateStatusAll();
   }
 

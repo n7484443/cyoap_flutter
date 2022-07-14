@@ -107,6 +107,7 @@ class ChoiceNode extends GenerableParserAndPosition {
         status = SelectableStatus.open;
       }
     } else {
+      random = -1;
       multiSelect = -1;
       status = status.reverseSelected(isSelectable);
     }
