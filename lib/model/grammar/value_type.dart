@@ -23,7 +23,7 @@ class ValueType {
 
   @override
   String toString() {
-    if (data is String && Analyser().functionList.getFunction(data) != null) {
+    if (data is String && Analyser().functionList.hasFunction(data)) {
       return data;
     }
     return 'ValueType|$data';

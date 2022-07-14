@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cyoap_flutter/model/grammar/analyser.dart';
 
 import 'value_type.dart';
@@ -20,6 +22,11 @@ abstract class RecursiveUnit {
   List<RecursiveUnit> get child => [];
 
   ValueType unzip();
+
+  @override
+  String toString() {
+    return jsonEncode(toJson());
+  }
 }
 
 RecursiveUnit getClassFromJson(Map<String, dynamic> json) {
@@ -56,14 +63,9 @@ class RecursiveFunction extends RecursiveUnit {
   }
 
   @override
-  String toString() {
-    return '$body $childNode';
-  }
-
-  @override
   ValueType unzip() {
     if (body.data == null) return ValueType.none();
-    if (Analyser().functionList.getFunction(body.data) != null) {
+    if (Analyser().functionList.hasFunction(body.data)) {
       var functionValueType =
           Analyser().functionList.getFunctionValueType(body.data);
       if (functionValueType != null) {
@@ -96,10 +98,5 @@ class RecursiveData extends RecursiveUnit {
   @override
   ValueType unzip() {
     return body;
-  }
-
-  @override
-  String toString() {
-    return body.toString();
   }
 }

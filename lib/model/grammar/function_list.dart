@@ -5,23 +5,25 @@ import 'package:cyoap_flutter/model/grammar/value_type.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 
 class Functions {
+  Map<String, ValueType Function(List<ValueType> input)> functionUnspecifiedFunction = {};
   Map<String, ValueType Function(List<ValueType> input)> functionValueType = {};
   Map<String, void Function(List<RecursiveUnit> input)> functionVoid = {};
 
   void init() {
+    functionUnspecifiedFunction['+'] = funcPlus;
+    functionUnspecifiedFunction['-'] = funcMinus;
+    functionUnspecifiedFunction['*'] = funcMulti;
+    functionUnspecifiedFunction['/'] = funcDiv;
+    functionUnspecifiedFunction['=='] = funcEqual;
+    functionUnspecifiedFunction['!='] = funcNotEqual;
+    functionUnspecifiedFunction['>'] = funcBigger;
+    functionUnspecifiedFunction['<'] = funcSmaller;
+    functionUnspecifiedFunction['>='] = funcBiggerEqual;
+    functionUnspecifiedFunction['<='] = funcSmallerEqual;
+
     functionValueType['floor'] = funcFloor;
     functionValueType['round'] = funcRound;
     functionValueType['ceil'] = funcCeil;
-    functionValueType['+'] = funcPlus;
-    functionValueType['-'] = funcMinus;
-    functionValueType['*'] = funcMulti;
-    functionValueType['/'] = funcDiv;
-    functionValueType['=='] = funcEqual;
-    functionValueType['!='] = funcNotEqual;
-    functionValueType['>'] = funcBigger;
-    functionValueType['<'] = funcSmaller;
-    functionValueType['>='] = funcBiggerEqual;
-    functionValueType['<='] = funcSmallerEqual;
     functionValueType['and'] = funcAnd;
     functionValueType['or'] = funcOr;
     functionValueType['not'] = funcNot;
@@ -76,11 +78,20 @@ class Functions {
   }
 
   Function? getFunction(String name) {
-    return functionValueType[name] ?? functionVoid[name];
+    return functionUnspecifiedFunction[name] ?? functionValueType[name] ?? functionVoid[name];
   }
 
+  bool isUnspecifiedFunction(String name) {
+    return functionUnspecifiedFunction[name] != null;
+  }
+
+  bool hasFunction(String name) {
+    return getFunction(name) != null;
+  }
+
+
   ValueType Function(List<ValueType> input)? getFunctionValueType(String name) {
-    return functionValueType[name];
+    return functionUnspecifiedFunction[name] ?? functionValueType[name];
   }
 
   void Function(List<RecursiveUnit> input)? getFunctionVoid(String name) {
@@ -88,6 +99,11 @@ class Functions {
   }
 
   String getFunctionName(Function function) {
+    for (var key in functionUnspecifiedFunction.keys) {
+      if (functionUnspecifiedFunction[key] == function) {
+        return key;
+      }
+    }
     for (var key in functionValueType.keys) {
       if (functionValueType[key] == function) {
         return key;

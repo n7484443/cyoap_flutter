@@ -3,6 +3,8 @@ import 'package:cyoap_flutter/model/grammar/recursive_parser.dart';
 import 'package:cyoap_flutter/model/grammar/token.dart';
 import 'package:cyoap_flutter/model/grammar/value_type.dart';
 
+import 'analyser.dart';
+
 class SemanticAnalyser {
   static const int blockEndSign = -1;
   static const int functionEndSign = -2;
@@ -58,6 +60,9 @@ class SemanticAnalyser {
           pointer = pointer.parent!;
           break;
         case AnalyserConst.functionComma:
+          while (!Analyser().functionList.hasFunction(pointer.body.data) || Analyser().functionList.isUnspecifiedFunction(pointer.body.data)) {
+            pointer = pointer.parent!;
+          }
           break;
         case AnalyserConst.variableName:
           RecursiveUnit out = RecursiveFunction(ValueType("loadVariable"));
@@ -75,11 +80,6 @@ class SemanticAnalyser {
           pointer.add(sub);
           break;
       }
-
-      // print("mother : $mother");
-      // print("pointer : $pointer");
-      // print("token : $token");
-      // print("");
     }
   }
 
