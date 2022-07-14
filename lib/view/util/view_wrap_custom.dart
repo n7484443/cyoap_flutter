@@ -55,9 +55,6 @@ class ViewWrapCustomReorderable extends StatelessWidget {
       List<Widget> subWidget = List<Widget>.empty(growable: true);
       for (int i = 0; i < children.length; i++) {
         var child = children[i] as ChoiceNode;
-        if (!child.isOccupySpace && child.status.isHide()) {
-          continue;
-        }
         int size = child.width == 0 ? maxSize : child.width;
         if (stack == 0 && i == 0) {
           addBuildDraggable(outputWidget, i, horizontal: true);

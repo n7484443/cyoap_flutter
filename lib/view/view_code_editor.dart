@@ -70,8 +70,7 @@ class ViewCodeEditor extends StatelessWidget {
                 () => Column(
                   children: [
                     ViewSwitchLabel(
-                      () => vmCodeEditor.isOccupySpace.value =
-                          !vmCodeEditor.isOccupySpace.value,
+                      () => vmCodeEditor.isOccupySpace.toggle(),
                       vmCodeEditor.isOccupySpace.value,
                       label: '숨김 시 공간 차지',
                     ),
