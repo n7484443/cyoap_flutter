@@ -141,7 +141,7 @@ class VMChoiceNode extends GetxController {
       VMChoiceNode.updateStatusAll();
       return;
     }
-    if (!node.isClickable()) {
+    if (!isIgnorePointer) {
       return;
     }
 
