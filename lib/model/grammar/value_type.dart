@@ -9,8 +9,6 @@ class ValueType {
     }
   }
 
-  ValueType.none() : data = null;
-
   dynamic dataUnzip() {
     if (data == null) return null;
     return data;

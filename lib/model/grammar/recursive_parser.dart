@@ -9,7 +9,7 @@ abstract class RecursiveUnit {
   ValueType body;
 
   // 함수 or 값
-  RecursiveUnit() : body = ValueType.none();
+  RecursiveUnit() : body = ValueType(null);
 
   RecursiveUnit.fromValue(this.body);
 
@@ -64,7 +64,7 @@ class RecursiveFunction extends RecursiveUnit {
 
   @override
   ValueType unzip() {
-    if (body.data == null) return ValueType.none();
+    if (body.data == null) return ValueType(null);
     if (Analyser().functionList.hasFunction(body.data)) {
       var functionValueType =
           Analyser().functionList.getFunctionValueType(body.data);
@@ -77,7 +77,7 @@ class RecursiveFunction extends RecursiveUnit {
         functionVoid(child);
       }
     }
-    return ValueType.none();
+    return ValueType(null);
   }
 }
 
