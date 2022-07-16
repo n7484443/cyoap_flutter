@@ -170,7 +170,8 @@ class ViewWrapCustom extends StatelessWidget {
           i -= 1;
           continue;
         } else if (size == maxSize) {
-          outputWidget.add(SizedBox(width: double.infinity, child: builder(child)));
+          outputWidget
+              .add(SizedBox(width: double.infinity, child: builder(child)));
           subWidget = List.empty(growable: true);
         } else {
           subWidget.add(Expanded(flex: size, child: builder(child)));

@@ -16,7 +16,8 @@ class VMVariableTable extends GetxController {
     VariableDataBase().viewModel = this;
     super.onInit();
   }
-  void addStringToEditor(String input){
+
+  void addStringToEditor(String input) {
     if (makePlatform.currentIndex.value == 2) {
       var vmCodeEditor = Get.find<VMCodeEditor>();
       if (vmCodeEditor.lastFocus != null) {
@@ -24,6 +25,7 @@ class VMVariableTable extends GetxController {
       }
     }
   }
+
   List<Widget> get nodeList {
     var nodeList = List<Widget>.empty(growable: true);
     var iconCheckBox = const Icon(Icons.check_box);

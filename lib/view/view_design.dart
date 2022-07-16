@@ -113,7 +113,7 @@ class ViewDesignSetting extends GetView<VMDesignSetting> {
                               ),
                               ViewSwitchLabel(
                                 label: "제목 테두리",
-                                    () {
+                                () {
                                   controller.titleOutline.toggle();
                                 },
                                 controller.titleOutline.value,

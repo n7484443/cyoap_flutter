@@ -271,7 +271,7 @@ class ViewTitleWithEdit extends GetView<VMChoiceNode> {
     final layoutSetting = Get.find<VMDesignSetting>();
     Widget title = Obx(() {
       if (!controller.hideTitle.value) {
-        if(layoutSetting.titleOutline.value){
+        if (layoutSetting.titleOutline.value) {
           return TextOutline(
             controller.titleString.value,
             20 * draggableController.scale(context),
@@ -282,7 +282,9 @@ class ViewTitleWithEdit extends GetView<VMChoiceNode> {
           controller.titleString.value,
           style: ConstList.getFont(layoutSetting.titleFont.value).copyWith(
             fontSize: 20 * draggableController.scale(context),
-            color: layoutSetting.colorNode.value.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+            color: layoutSetting.colorNode.value.computeLuminance() > 0.5
+                ? Colors.black
+                : Colors.white,
           ),
         );
       }
@@ -397,8 +399,8 @@ class ViewChoiceNodeContent extends GetView<VMChoiceNode> {
         return ConstrainedBox(
           constraints: BoxConstraints(
             maxHeight: controller.maximizingImage.value
-                ? double.infinity
-                : MediaQuery.of(context).size.height / 3.5,
+                ? MediaQuery.of(context).size.height
+                : MediaQuery.of(context).size.height / 2,
           ),
           child: ClipRRect(
             borderRadius: const BorderRadius.all(Radius.circular(5)),

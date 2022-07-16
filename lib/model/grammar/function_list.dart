@@ -5,7 +5,8 @@ import 'package:cyoap_flutter/model/grammar/value_type.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 
 class Functions {
-  Map<String, ValueType Function(List<ValueType> input)> functionUnspecifiedFunction = {};
+  Map<String, ValueType Function(List<ValueType> input)>
+      functionUnspecifiedFunction = {};
   Map<String, ValueType Function(List<ValueType> input)> functionValueType = {};
   Map<String, void Function(List<RecursiveUnit> input)> functionVoid = {};
 
@@ -78,7 +79,9 @@ class Functions {
   }
 
   Function? getFunction(String name) {
-    return functionUnspecifiedFunction[name] ?? functionValueType[name] ?? functionVoid[name];
+    return functionUnspecifiedFunction[name] ??
+        functionValueType[name] ??
+        functionVoid[name];
   }
 
   bool isUnspecifiedFunction(String name) {
@@ -88,7 +91,6 @@ class Functions {
   bool hasFunction(String name) {
     return getFunction(name) != null;
   }
-
 
   ValueType Function(List<ValueType> input)? getFunctionValueType(String name) {
     return functionUnspecifiedFunction[name] ?? functionValueType[name];

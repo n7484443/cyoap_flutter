@@ -12,9 +12,11 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
 
 class VMEditor extends GetxController {
-  final TextEditingController controllerTitle = TextEditingController(text: NodeEditor().target.title);
+  final TextEditingController controllerTitle =
+      TextEditingController(text: NodeEditor().target.title);
   final TextEditingController controllerSource = TextEditingController();
-  final TextEditingController controllerMaximum = TextEditingController(text: NodeEditor().target.maximumStatus.toString());
+  final TextEditingController controllerMaximum =
+      TextEditingController(text: NodeEditor().target.maximumStatus.toString());
   late final QuillController quillController;
   final FocusNode focusBody = FocusNode();
 
@@ -43,10 +45,11 @@ class VMEditor extends GetxController {
     controllerMaximum.addListener(() => isChanged = true);
     contents.listen((value) => isChanged = true);
 
-    controllerTitle.addListener((){
+    controllerTitle.addListener(() {
       isChanged = true;
     });
-    quillController.addListener(() => contents.value = quillController.document.toPlainText());
+    quillController.addListener(
+        () => contents.value = quillController.document.toPlainText());
     index = ImageDB().getImageIndex(NodeEditor().target.imageString);
 
     super.onInit();

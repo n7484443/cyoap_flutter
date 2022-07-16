@@ -60,7 +60,10 @@ class SemanticAnalyser {
           pointer = pointer.parent!;
           break;
         case AnalyserConst.functionComma:
-          while (!Analyser().functionList.hasFunction(pointer.body.data) || Analyser().functionList.isUnspecifiedFunction(pointer.body.data)) {
+          while (!Analyser().functionList.hasFunction(pointer.body.data) ||
+              Analyser()
+                  .functionList
+                  .isUnspecifiedFunction(pointer.body.data)) {
             pointer = pointer.parent!;
           }
           break;

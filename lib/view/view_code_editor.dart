@@ -81,7 +81,7 @@ class ViewCodeEditor extends StatelessWidget {
           ],
         ),
       ),
-      onWillPop: () async{
+      onWillPop: () async {
         makePlatform.back();
         return false;
       },
