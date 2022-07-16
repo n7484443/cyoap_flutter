@@ -9,16 +9,11 @@ class ValueType {
     }
   }
 
-  ValueType.none() : data = ValueTypeData.none;
-
-  ValueType.comma() : data = ValueTypeData.comma;
+  ValueType.none() : data = null;
 
   dynamic dataUnzip() {
     if (data == null) return null;
-    if (data != ValueTypeData.none) {
-      return data;
-    }
-    return null;
+    return data;
   }
 
   @override
@@ -50,11 +45,6 @@ class ValueType {
         'data': data.toString(),
         'type': data.runtimeType.toString(),
       };
-}
-
-enum ValueTypeData {
-  none,
-  comma,
 }
 
 class ValueTypeWrapper {

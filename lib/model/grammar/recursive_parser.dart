@@ -9,7 +9,7 @@ abstract class RecursiveUnit {
   ValueType body;
 
   // 함수 or 값
-  RecursiveUnit() : body = ValueType(ValueTypeData.none);
+  RecursiveUnit() : body = ValueType.none();
 
   RecursiveUnit.fromValue(this.body);
 
