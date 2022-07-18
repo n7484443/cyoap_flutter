@@ -1,5 +1,3 @@
-import 'analyser.dart';
-
 class ValueType {
   dynamic data;
 
@@ -16,10 +14,7 @@ class ValueType {
 
   @override
   String toString() {
-    if (data is String && Analyser().functionList.hasFunction(data)) {
-      return data;
-    }
-    return 'ValueType|$data';
+    return data;
   }
 
   ValueType.fromJson(Map<String, dynamic> json) {

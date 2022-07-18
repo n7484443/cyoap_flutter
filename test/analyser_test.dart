@@ -171,4 +171,12 @@ void main() {
     expect(ins.getValueType('beta')?.data, null);
     expect(ins.getValueType('gamma')?.data, 12);
   });
+
+  test('oneLineTest', () {
+    String strTest = """
+    var numberTest0 = true
+    """;
+    Analyser().run(Analyser().analyseCodes(strTest));
+    expect(ins.getValueType('numberTest0')?.data, true);
+  });
 }

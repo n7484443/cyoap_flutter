@@ -27,12 +27,8 @@ class Token {
         return double.tryParse(dataString);
       case AnalyserConst.bools:
         return dataString == 'true';
-      case AnalyserConst.functionUnspecified:
-      case AnalyserConst.function:
-      case AnalyserConst.strings:
-        return dataString;
       default:
-        return;
+        return dataString;
     }
   }
 }
