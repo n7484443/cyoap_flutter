@@ -141,7 +141,7 @@ void main() {
     expect(ins.getValueType('existTest')?.data, true);
     expect(ins.getValueType('existTest2')?.data, false);
   });
-  test('comment test', (){
+  test('comment test', () {
     String strTest = """
       var commentTest = 123
       //이건 해석하면 안되는 문장. var asb = 0
@@ -172,11 +172,14 @@ void main() {
     expect(ins.getValueType('gamma')?.data, 12);
   });
 
-  test('oneLineTest', () {
+  test('oneLineOptimizeTest', () {
     String strTest = """
-    var numberTest0 = true
+    var test = true
     """;
-    Analyser().run(Analyser().analyseCodes(strTest));
-    expect(ins.getValueType('numberTest0')?.data, true);
+    var out = Analyser().analyseCodes(strTest);
+    Analyser().run(out);
+    expect(ins.getValueType('test')?.data, true);
+    expect(out.toString().trim(),
+        """{"class":"RecursiveParser","childNode":[{"class":"RecursiveData","value":{"data":"test","type":"String"}},{"class":"RecursiveData","value":{"data":"true","type":"bool"}}],"value":{"data":"setLocal","type":"String"}}""");
   });
 }
