@@ -159,7 +159,7 @@ class Functions {
     if (input[0].data is num && input[1].data is num) {
       return ValueType(input[0].data - input[1].data);
     } else {
-      return input[0];
+      return ValueType(null);
     }
   }
 
