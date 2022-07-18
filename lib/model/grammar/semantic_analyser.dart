@@ -86,11 +86,39 @@ class SemanticAnalyser {
     }
   }
 
+  RecursiveUnit optimizeTree(RecursiveUnit mother){
+    RecursiveUnit output = mother;
+    List<RecursiveUnit> needVisit = List.from([mother], growable: true);
+    while(needVisit.isNotEmpty){
+      var pointer = needVisit.removeAt(0);
+      if(pointer.body.data == "doLines" && pointer.child.length == 1){
+        var replace = pointer.child.first;
+        if(pointer.parent != null){
+          var parentChildList = pointer.parent!.child;
+          var pos = parentChildList.indexOf(pointer);
+          if(pos != -1){
+            parentChildList[pos] = replace;
+            replace.parent = pointer.parent;
+            needVisit.add(replace);
+          }
+        }else{
+          output = replace;
+          replace.parent = null;
+        }
+      }else{
+        for(var child in pointer.child){
+          needVisit.add(child);
+        }
+      }
+    }
+    return output;
+  }
+
   RecursiveUnit? analyseLines(List<Token> analysedData) {
     if (analysedData.isEmpty) return null;
     RecursiveUnit mother = RecursiveFunction(ValueType("doLines"));
     abstractSyntaxTreeAnalyse(mother, analysedData);
-    return mother;
+    return optimizeTree(mother);
   }
 
   RecursiveUnit? analyseLine(List<Token> analysedData) {

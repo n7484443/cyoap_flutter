@@ -66,8 +66,7 @@ class RecursiveFunction extends RecursiveUnit {
   ValueType unzip() {
     if (body.data == null) return ValueType(null);
     if (Analyser().functionList.hasFunction(body.data)) {
-      var functionValueType =
-          Analyser().functionList.getFunctionValueType(body.data);
+      var functionValueType = Analyser().functionList.getFunctionValueType(body.data);
       if (functionValueType != null) {
         var input = childNode.map((e) => e.unzip()).toList();
         return functionValueType(input);
