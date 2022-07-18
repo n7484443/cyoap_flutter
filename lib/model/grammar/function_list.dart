@@ -44,30 +44,22 @@ class Functions {
       }
     };
     functionVoid['setLocal'] = (input) {
-      var data0 = input[0].unzip();
-      var data1 = input[1].unzip();
+      var varName = input[0].unzip().data as String;
       VariableDataBase().setValue(
-          data0.data, ValueTypeWrapper(data1, false, isGlobal: false));
+          varName, ValueTypeWrapper(input[1].unzip(), false, isGlobal: false));
     };
     functionVoid['setGlobal'] = (input) {
-      var data0 = input[0].unzip();
-      var data1 = input[1].unzip();
-      VariableDataBase()
-          .setValue(data0.data, ValueTypeWrapper(data1, false, isGlobal: true));
+      var varName = input[0].unzip().data as String;
+      VariableDataBase().setValue(
+          varName, ValueTypeWrapper(input[1].unzip(), false, isGlobal: true));
     };
     functionVoid['setVariable'] = (input) {
-      var data0 = input[0].unzip();
-      var data1 = input[1].unzip();
-      if (data0.data is! String) {
-        return;
-      }
-      var original = VariableDataBase().getValueTypeWrapper(data0.data);
+      var varName = input[0].unzip().data as String;
+      var original = VariableDataBase().getValueTypeWrapper(varName);
       if (original != null) {
-        var copy = ValueTypeWrapper.copy(original)..valueType = data1;
-        VariableDataBase().setValue(data0.data, copy);
-      } else {
-        VariableDataBase().setValue(
-            data0.data, ValueTypeWrapper.normal(ValueType(data0.data), false));
+        var copy = ValueTypeWrapper.copy(original)
+          ..valueType = input[1].unzip();
+        VariableDataBase().setValue(varName, copy);
       }
     };
     functionVoid['doLines'] = (input) {
@@ -119,32 +111,25 @@ class Functions {
     return 'none';
   }
 
-  ValueType funcNone(List<ValueType> input) {
-    return input[0];
-  }
-
   ValueType funcFloor(List<ValueType> input) {
     if (input[0].data is num) {
       return ValueType((input[0].data as num).floor());
-    } else {
-      return input[0];
     }
+    return ValueType(null);
   }
 
   ValueType funcRound(List<ValueType> input) {
     if (input[0].data is num) {
       return ValueType((input[0].data as num).round());
-    } else {
-      return input[0];
     }
+    return ValueType(null);
   }
 
   ValueType funcCeil(List<ValueType> input) {
     if (input[0].data is num) {
       return ValueType((input[0].data as num).ceil());
-    } else {
-      return input[0];
     }
+    return ValueType(null);
   }
 
   ValueType funcPlus(List<ValueType> input) {
@@ -158,25 +143,22 @@ class Functions {
   ValueType funcMinus(List<ValueType> input) {
     if (input[0].data is num && input[1].data is num) {
       return ValueType(input[0].data - input[1].data);
-    } else {
-      return ValueType(null);
     }
+    return ValueType(null);
   }
 
   ValueType funcMulti(List<ValueType> input) {
     if (input[0].data is num && input[1].data is num) {
       return ValueType(input[0].data * input[1].data);
-    } else {
-      return input[0];
     }
+    return ValueType(null);
   }
 
   ValueType funcDiv(List<ValueType> input) {
     if (input[0].data is num && input[1].data is num) {
       return ValueType(input[0].data / input[1].data);
-    } else {
-      return input[0];
     }
+    return ValueType(null);
   }
 
   var epsilon = 0.000001;
@@ -196,17 +178,15 @@ class Functions {
   ValueType funcBigger(List<ValueType> input) {
     if (input[0].data is num && input[1].data is num) {
       return ValueType(input[0].data > input[1].data);
-    } else {
-      return ValueType(false);
     }
+    return ValueType(false);
   }
 
   ValueType funcSmaller(List<ValueType> input) {
     if (input[0].data is num && input[1].data is num) {
       return ValueType(input[0].data < input[1].data);
-    } else {
-      return ValueType(false);
     }
+    return ValueType(false);
   }
 
   ValueType funcBiggerEqual(List<ValueType> input) {
@@ -220,9 +200,8 @@ class Functions {
   ValueType funcRandom(List<ValueType> input) {
     if (input[0].data is int) {
       return ValueType(Random().nextInt(input[0].data as int));
-    } else {
-      return ValueType(Random().nextBool());
     }
+    return ValueType(Random().nextBool());
   }
 
   ValueType funcAnd(List<ValueType> input) {
@@ -246,8 +225,7 @@ class Functions {
   ValueType funcNot(List<ValueType> input) {
     if (input[0].data is bool) {
       return ValueType(!input[0].data);
-    } else {
-      return ValueType(false);
     }
+    return ValueType(false);
   }
 }

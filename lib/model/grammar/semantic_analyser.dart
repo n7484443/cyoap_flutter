@@ -86,27 +86,27 @@ class SemanticAnalyser {
     }
   }
 
-  RecursiveUnit optimizeTree(RecursiveUnit mother){
+  RecursiveUnit optimizeTree(RecursiveUnit mother) {
     RecursiveUnit output = mother;
     List<RecursiveUnit> needVisit = List.from([mother], growable: true);
-    while(needVisit.isNotEmpty){
+    while (needVisit.isNotEmpty) {
       var pointer = needVisit.removeAt(0);
-      if(pointer.body.data == "doLines" && pointer.child.length == 1){
+      if (pointer.body.data == "doLines" && pointer.child.length == 1) {
         var replace = pointer.child.first;
-        if(pointer.parent != null){
+        if (pointer.parent != null) {
           var parentChildList = pointer.parent!.child;
           var pos = parentChildList.indexOf(pointer);
-          if(pos != -1){
+          if (pos != -1) {
             parentChildList[pos] = replace;
             replace.parent = pointer.parent;
             needVisit.add(replace);
           }
-        }else{
+        } else {
           output = replace;
           replace.parent = null;
         }
-      }else{
-        for(var child in pointer.child){
+      } else {
+        for (var child in pointer.child) {
           needVisit.add(child);
         }
       }
