@@ -31,7 +31,7 @@ class ViewStart extends StatelessWidget {
                           onPressed: () {
                             if (GetPlatform.isMobile) {
                               launchUrlString(
-                                  'https://play.google.com/store/apps/details?id=com.clearApple.cyoap_flutter');
+                                  'market://details?id=com.clearApple.cyoap_flutter');
                             } else {
                               launchUrlString(
                                   'https://github.com/n7484443/FlutterCyoap/releases');
