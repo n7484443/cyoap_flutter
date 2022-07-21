@@ -95,7 +95,5 @@ class RecursiveData extends RecursiveUnit {
       };
 
   @override
-  ValueType unzip() {
-    return body;
-  }
+  ValueType unzip() => body;
 }

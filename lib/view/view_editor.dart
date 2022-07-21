@@ -83,7 +83,7 @@ class ViewEditor extends StatelessWidget {
                   keyboardType: TextInputType.number,
                   controller: controller.controllerMaximum,
                   decoration: const InputDecoration(
-                    label: Text('최대 랜덤값'),
+                    label: Text('랜덤 수, 0 ~ n-1'),
                   ),
                 ),
               ]),
