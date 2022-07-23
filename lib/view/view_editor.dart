@@ -293,14 +293,14 @@ class ViewEditorTyping extends StatelessWidget {
             showAlignmentButtons: true,
             showColorButton: false,
             showBackgroundColorButton: false,
-            customIcons: [
-              QuillCustomIcon(
+            customButtons: [
+              QuillCustomButton(
                 icon: Icons.color_lens,
                 onTap: () {
                   colorIconDialog(false);
                 },
               ),
-              QuillCustomIcon(
+              QuillCustomButton(
                 icon: Icons.format_color_fill,
                 onTap: () {
                   colorIconDialog(true);

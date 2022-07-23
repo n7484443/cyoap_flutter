@@ -38,7 +38,7 @@ dependencies:
   get: ^4.6.5
   google_fonts: ^3.0.1
   archive: ^3.3.1
-  flutter_quill: ^5.1.0
+  flutter_quill: ^5.2.1
   package_info_plus: ^1.4.2
   github: ^9.4.0
   flex_color_picker: ^2.5.0
