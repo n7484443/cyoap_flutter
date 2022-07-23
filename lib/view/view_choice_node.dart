@@ -82,8 +82,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                     ? const EdgeInsets.all(2.0)
                     : const EdgeInsets.all(4.0),
                 child: InkWell(
-                  onDoubleTap: isEditable ||
-                          (!isEditable && nodeController.isIgnorePointer)
+                  onDoubleTap: isEditable
                       ? () {
                           controller.editNode = node!;
                           makePlatform.changePageString("viewEditor");
