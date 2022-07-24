@@ -3,7 +3,7 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "assets/AssetManifest.json": "7380e2ba4c900c9af8cd54d665bf2caa",
+  "assets/AssetManifest.json": "92d07245c9b71a26aa8cef1c66810a9c",
 "assets/FontManifest.json": "2096aff69d23e174b6ac9101516246bd",
 "assets/fonts/MapleStory/MaplestoryBold.otf": "72eef940aa8a20d053708b12057a7a09",
 "assets/fonts/MapleStory/MaplestoryLight.otf": "843488aa25de79c2ea60a4ae25171c21",
@@ -12,11 +12,11 @@ const RESOURCES = {
 "assets/fonts/NexonLv2Gothic/NexonLv2Gothic.otf": "a4dbe4178ecb2cc480eae9fed8a1169b",
 "assets/fonts/NexonLv2Gothic/NexonLv2GothicBold.otf": "9dfa861ef0caeec8567d0ca624870c60",
 "assets/images/noImage.png": "7d87716e9a2c7f81e959d63a09776608",
-"assets/NOTICES": "84f72f0a2f593e1978a6f689f39aafe9",
+"assets/NOTICES": "d477a3e6bd4f91439d64862174191146",
 "assets/packages/flex_color_picker/assets/opacity.png": "49c4f3bcb1b25364bb4c255edcaaf5b2",
-"assets/packages/flutter_inappwebview/assets/t_rex_runner/t-rex.css": "5a8d0222407e388155d7d1395a75d5b9",
-"assets/packages/flutter_inappwebview/assets/t_rex_runner/t-rex.html": "16911fcc170c8af1c5457940bd0bf055",
-"assets/packages/youtube_player_flutter/assets/speedometer.webp": "50448630e948b5b3998ae5a5d112622b",
+"assets/packages/flutter_inappwebview_quill/assets/t_rex_runner/t-rex.css": "5a8d0222407e388155d7d1395a75d5b9",
+"assets/packages/flutter_inappwebview_quill/assets/t_rex_runner/t-rex.html": "16911fcc170c8af1c5457940bd0bf055",
+"assets/packages/youtube_player_flutter_quill/assets/speedometer.webp": "50448630e948b5b3998ae5a5d112622b",
 "assets/shaders/ink_sparkle.frag": "a0ac16fe885e771c602d0bdb9a88a429",
 "canvaskit/canvaskit.js": "c2b4e5f3d7a3d82aed024e7249a78487",
 "canvaskit/canvaskit.wasm": "4b83d89d9fecbea8ca46f2f760c5a9ba",
@@ -31,14 +31,14 @@ const RESOURCES = {
 "index.html": "142447007b11498f32c9d63e1a7f2ae0",
 "/": "142447007b11498f32c9d63e1a7f2ae0",
 "jszip.js": "418ea325c68eb099ef2ccc8823771a63",
-"main.dart.js": "f6af1e58cb46cfbe2aed8b34ff75089b",
-"main.dart.js_1.part.js": "7b919bd3f1daf9d7c68ce38e1110f334",
-"main.dart.js_2.part.js": "9902388bc757ea938e49b532541dd57a",
-"main.dart.js_3.part.js": "1b2c81168621bea603d7ff13b543e780",
-"main.dart.js_4.part.js": "5e04b4695540300b9cb7471e9cb3a448",
+"main.dart.js": "9f1ff3f2cbb7513f47154d3ba9e8c534",
+"main.dart.js_1.part.js": "1da79317fcf11a7c3633c1b8370c5cb9",
+"main.dart.js_2.part.js": "a96344611e97a651b380e4801dd8cc65",
+"main.dart.js_3.part.js": "d25d837b5eff246329cfc6fddd87b39d",
+"main.dart.js_4.part.js": "e155bde20235ed014f01b05f625fd480",
 "manifest.json": "ebc04e4594e86d4e5763ccf0df7285b3",
 "save_web.js": "6d7f19b0443d2ca2a960f0532299e5d7",
-"version.json": "d73a7b5fd08b6b6199c613ffcdd62e36",
+"version.json": "32ef22e87df7bd904b80c4547fed2c2f",
 "worker.js": "55118d4a43a00cedd42f65ca3b0b0d2a"
 };
 
