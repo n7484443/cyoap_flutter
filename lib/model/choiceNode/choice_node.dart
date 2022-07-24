@@ -23,7 +23,7 @@ class ChoiceNode extends GenerableParserAndPosition {
   String imageString;
 
   @override
-  bool get isSelectableCheck => choiceNodeMode != ChoiceNodeMode.unSelectableMode;
+  bool get isSelectableMode => choiceNodeMode != ChoiceNodeMode.unSelectableMode;
   bool isOccupySpace = true;
   bool maximizingImage = false;
   bool hideTitle = false;
@@ -106,7 +106,7 @@ class ChoiceNode extends GenerableParserAndPosition {
     } else {
       random = -1;
       multiSelect = -1;
-      status = status.reverseSelected(isSelectableCheck);
+      status = status.reverseSelected(isSelectableMode);
     }
   }
 
@@ -133,7 +133,7 @@ class ChoiceNode extends GenerableParserAndPosition {
     VariableDataBase().setValue('$titleWhitespaceRemoved:multi',
         ValueTypeWrapper(ValueType(multiSelect), false));
     if (status.isNotSelected()) {
-      status = isSelectableCheck ? SelectableStatus.open : SelectableStatus.selected;
+      status = isSelectableMode ? SelectableStatus.open : SelectableStatus.selected;
     }
     for (var child in children) {
       child.initValueTypeWrapper();

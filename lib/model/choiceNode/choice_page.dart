@@ -25,5 +25,5 @@ class ChoicePage extends GenerableParserAndPosition {
   }
 
   @override
-  bool get isSelectableCheck => true;
+  bool get isSelectableMode => true;
 }

@@ -70,7 +70,7 @@ abstract class GenerableParserAndPosition {
   GenerableParserAndPosition? parent;
   late RecursiveStatus recursiveStatus;
 
-  bool get isSelectableCheck => true;
+  bool get isSelectableMode => true;
 
   void execute() {
     if (status.isSelected()) {
@@ -94,13 +94,10 @@ abstract class GenerableParserAndPosition {
   }
 
   void checkVisible(bool parent) {
-    if (!parent) {
+    if (!parent || !isVisible()) {
       status = SelectableStatus.hide;
-    } else if (status != SelectableStatus.selected) {
-      if (!isVisible()) {
-        status = SelectableStatus.hide;
-      }
     }
+
     for (var child in children) {
       child.checkVisible(!status.isHide());
     }
@@ -123,14 +120,12 @@ abstract class GenerableParserAndPosition {
       status = isVisible() ? SelectableStatus.closed : SelectableStatus.hide;
     } else {
       var selectable = isClickable();
-      if (isSelectableCheck) {
+      if (isSelectableMode) {
         if (status != SelectableStatus.selected &&
             status != SelectableStatus.hide) {
           selectable &= parentClickable;
           status = selectable ? SelectableStatus.open : SelectableStatus.closed;
         }
-      } else {
-        status = SelectableStatus.selected;
       }
     }
     for (var child in children) {

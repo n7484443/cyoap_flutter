@@ -154,7 +154,7 @@ class AbstractPlatform {
 
       for (var node in lineSetting.children) {
         node.execute();
-        if (node.status.isSelected() && node.isSelectableCheck) {
+        if (node.status.isSelected() && node.isSelectableMode) {
           lineSetting.execute();
         }
       }

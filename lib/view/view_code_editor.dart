@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/model/editor.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -35,11 +36,14 @@ class ViewCodeEditor extends StatelessWidget {
             Expanded(
               child: Column(
                 children: [
-                  TextField(
-                    controller: vmCodeEditor.controllerClickable,
-                    textAlign: TextAlign.left,
-                    decoration: const InputDecoration(hintText: '실행 조건'),
-                    focusNode: vmCodeEditor.focusClickable,
+                  Visibility(
+                    visible: NodeEditor().target.isSelectableMode,
+                    child: TextField(
+                      controller: vmCodeEditor.controllerClickable,
+                      textAlign: TextAlign.left,
+                      decoration: const InputDecoration(hintText: '실행 조건'),
+                      focusNode: vmCodeEditor.focusClickable,
+                    ),
                   ),
                   TextField(
                     controller: vmCodeEditor.controllerVisible,

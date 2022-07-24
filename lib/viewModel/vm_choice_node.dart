@@ -133,7 +133,7 @@ class VMChoiceNode extends GetxController {
   }
 
   bool get isIgnorePointer =>
-      status.value.isPointerInteractive(node.isSelectableCheck);
+      status.value.isPointerInteractive(node.isSelectableMode);
 
   Future<void> select(int n, context) async {
     if (node.isSelected() && nodeMode.value != ChoiceNodeMode.multiSelect) {
@@ -175,7 +175,7 @@ class VMChoiceNode extends GetxController {
   double get opacity {
     if (isEditable) return 1;
 
-    if (node.isSelectableCheck) {
+    if (node.isSelectableMode) {
       if (isIgnorePointer) {
         return 1;
       } else if (status.value == SelectableStatus.hide) {
