@@ -91,7 +91,7 @@ jobs:
           Remove-Item ./build/web/assets/NOTICES
           Remove-Item ./build/web/save_web.js
           Remove-Item ./build/web/jszip.js
-          Remove-Item ./build/web/assets/packages/flutter_inappwebview -Recurse | Remove-Item
+          Remove-Item ./build/web/assets/shaders -Recurse | Remove-Item
           Remove-Item ./build/web/assets/packages/youtube_player_flutter -Recurse | Remove-Item
 
       - name: modify index.html
@@ -156,8 +156,6 @@ jobs:
           Remove-Item ./build/web/assets/NOTICES
           Remove-Item ./build/web/save_web.js
           Remove-Item ./build/web/jszip.js
-          Remove-Item ./build/web/assets/packages/flutter_inappwebview -Recurse | Remove-Item
-          Remove-Item ./build/web/assets/packages/youtube_player_flutter -Recurse | Remove-Item
 
       - name: modify index.html
         run: |
