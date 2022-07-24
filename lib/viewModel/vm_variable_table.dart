@@ -52,7 +52,7 @@ class VMVariableTable extends GetxController {
       getPlatform.doAllChoiceNode((node) {
         if (!node.isVisible()) {
           return;
-        } else if (node.isSelectable) {
+        } else if (node.isSelectableCheck) {
           nodeList.add(ListTile(
             title: Text(node.title),
             trailing:

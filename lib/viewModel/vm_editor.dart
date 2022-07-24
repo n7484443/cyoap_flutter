@@ -24,7 +24,6 @@ class VMEditor extends GetxController {
   var index = -1;
   var isCard = NodeEditor().target.isCard.obs;
   var isRound = NodeEditor().target.isRound.obs;
-  var isSelectable = NodeEditor().target.isSelectable.obs;
   var nodeMode = NodeEditor().target.choiceNodeMode.obs;
   var imagePosition = NodeEditor().target.imagePosition.obs;
   var maximizingImage = NodeEditor().target.maximizingImage.obs;
@@ -37,7 +36,6 @@ class VMEditor extends GetxController {
     quillController = NodeEditor().getVMChoiceNode()!.quillController;
     isCard.listen((value) => isChanged = true);
     isRound.listen((value) => isChanged = true);
-    isSelectable.listen((value) => isChanged = true);
     nodeMode.listen((value) => isChanged = true);
     imagePosition.listen((value) => isChanged = true);
     maximizingImage.listen((value) => isChanged = true);
@@ -66,7 +64,6 @@ class VMEditor extends GetxController {
       NodeEditor().target.maximumStatus = 0;
     }
     NodeEditor().target.maximizingImage = maximizingImage.value;
-    NodeEditor().target.isSelectable = isSelectable.value;
     NodeEditor().target.isRound = isRound.value;
     NodeEditor().target.isCard = isCard.value;
     NodeEditor().target.imagePosition = imagePosition.value;

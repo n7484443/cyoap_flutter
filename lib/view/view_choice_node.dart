@@ -47,7 +47,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
     return Obx(
       () {
         var isSelectedCheck = nodeController.node.isSelected() &&
-            nodeController.node.isSelectable;
+            nodeController.node.isSelectableCheck;
         return Opacity(
           opacity: nodeController.opacity,
           child: Card(

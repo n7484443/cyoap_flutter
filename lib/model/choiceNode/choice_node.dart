@@ -9,7 +9,7 @@ import '../../view/util/view_wrap_custom.dart';
 import '../grammar/value_type.dart';
 import 'generable_parser.dart';
 
-enum ChoiceNodeMode { defaultMode, randomMode, multiSelect }
+enum ChoiceNodeMode { defaultMode, randomMode, multiSelect, unSelectableMode }
 
 class ChoiceNode extends GenerableParserAndPosition {
   //grid 단위로 설정
@@ -23,8 +23,7 @@ class ChoiceNode extends GenerableParserAndPosition {
   String imageString;
 
   @override
-  bool get isSelectableCheck => isSelectable;
-  bool isSelectable = true;
+  bool get isSelectableCheck => choiceNodeMode != ChoiceNodeMode.unSelectableMode;
   bool isOccupySpace = true;
   bool maximizingImage = false;
   bool hideTitle = false;
@@ -59,7 +58,6 @@ class ChoiceNode extends GenerableParserAndPosition {
         isOccupySpace = json['isOccupySpace'] ?? true,
         maximizingImage = json['maximizingImage'] ?? false,
         maximumStatus = json['maximumStatus'] ?? 0,
-        isSelectable = json['isSelectable'],
         imagePosition = json['imagePosition'] ?? 0,
         title = json['title'] ?? '',
         contentsString = json['contentsString'],
@@ -67,7 +65,7 @@ class ChoiceNode extends GenerableParserAndPosition {
         hideTitle = json['hideTitle'] ?? false,
         choiceNodeMode = json['choiceNodeMode'] == null
             ? ChoiceNodeMode.defaultMode
-            : ChoiceNodeMode.values.byName(json['choiceNodeMode']) {
+            : ((json['isSelectable'] ?? true) ? ChoiceNodeMode.values.byName(json['choiceNodeMode']) : ChoiceNodeMode.unSelectableMode) {
     width = json['width'] ?? 2;
     currentPos = json['x'] ?? json['pos'];
     recursiveStatus = RecursiveStatus.fromJson(json);
@@ -85,7 +83,6 @@ class ChoiceNode extends GenerableParserAndPosition {
       'isCard': isCard,
       'isRound': isRound,
       'isOccupySpace': isOccupySpace,
-      'isSelectable': isSelectable,
       'imagePosition': imagePosition,
       'hideTitle': hideTitle,
       'maximumStatus': maximumStatus,
@@ -109,7 +106,7 @@ class ChoiceNode extends GenerableParserAndPosition {
     } else {
       random = -1;
       multiSelect = -1;
-      status = status.reverseSelected(isSelectable);
+      status = status.reverseSelected(isSelectableCheck);
     }
   }
 
@@ -136,7 +133,7 @@ class ChoiceNode extends GenerableParserAndPosition {
     VariableDataBase().setValue('$titleWhitespaceRemoved:multi',
         ValueTypeWrapper(ValueType(multiSelect), false));
     if (status.isNotSelected()) {
-      status = isSelectable ? SelectableStatus.open : SelectableStatus.selected;
+      status = isSelectableCheck ? SelectableStatus.open : SelectableStatus.selected;
     }
     for (var child in children) {
       child.initValueTypeWrapper();

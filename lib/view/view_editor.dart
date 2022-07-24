@@ -59,6 +59,9 @@ class ViewEditor extends StatelessWidget {
               DropdownMenuItem(
                   value: ChoiceNodeMode.multiSelect,
                   child: Text('다중 선택', style: highlightStyle)),
+              DropdownMenuItem(
+                  value: ChoiceNodeMode.unSelectableMode,
+                  child: Text('선택 불가', style: highlightStyle)),
             ],
             onChanged: (ChoiceNodeMode? value) {
               controller.nodeMode.value = value!;
@@ -123,12 +126,6 @@ class ViewEditor extends StatelessWidget {
             () => controller.isRound.value = !controller.isRound.value,
             controller.isRound.value,
             label: '외곽선 둥글게',
-          ),
-          ViewSwitchLabel(
-            () =>
-                controller.isSelectable.value = !controller.isSelectable.value,
-            controller.isSelectable.value,
-            label: '선택 가능',
           ),
           ViewSwitchLabel(
             () => controller.maximizingImage.value =
