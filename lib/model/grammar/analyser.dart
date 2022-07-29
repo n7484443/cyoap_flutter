@@ -56,12 +56,20 @@ class Analyser {
 
   void run(RecursiveUnit? unitList) {
     if (unitList == null) return;
-    unitList.unzip();
+    try {
+      unitList.unzip();
+    } catch (e) {
+      print(e);
+    }
   }
 
   dynamic check(RecursiveUnit? unitList) {
     if (unitList == null) return null;
-    return unitList.unzip().dataUnzip();
+    try {
+      return unitList.unzip().dataUnzip();
+    } catch (e) {
+      print(e);
+    }
   }
 
   RecursiveUnit? analyseCodes(String codeInput) {
