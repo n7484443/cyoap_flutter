@@ -36,13 +36,6 @@ class VMCodeEditor extends GetxController {
 
   @override
   void onInit() {
-    focusExecute.onKey = (FocusNode node, RawKeyEvent event) {
-      if (!event.isKeyPressed(LogicalKeyboardKey.tab)) {
-        return KeyEventResult.ignored;
-      }
-      insertText(controllerExecute, "    ");
-      return KeyEventResult.handled;
-    };
     focusClickable.addListener(() {
       lastFocus = controllerClickable;
     });
