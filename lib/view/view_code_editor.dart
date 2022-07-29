@@ -39,30 +39,36 @@ class ViewCodeEditor extends StatelessWidget {
                 children: [
                   Visibility(
                     visible: NodeEditor().target.isSelectableMode,
-                    child: TextField(
-                      controller: vmCodeEditor.controllerClickable,
-                      textAlign: TextAlign.left,
-                      decoration: const InputDecoration(hintText: '실행 조건'),
-                      focusNode: vmCodeEditor.focusClickable,
+                    child: Focus(
+                      onFocusChange: (bool hasFocus) => vmCodeEditor.lastFocus = vmCodeEditor.controllerClickable,
+                      child: TextField(
+                        controller: vmCodeEditor.controllerClickable,
+                        textAlign: TextAlign.left,
+                        decoration: const InputDecoration(hintText: '실행 조건'),
+                      ),
                     ),
                   ),
-                  TextField(
-                    controller: vmCodeEditor.controllerVisible,
-                    textAlign: TextAlign.left,
-                    decoration:
-                        const InputDecoration(hintText: '보이는 조건(true일 때 보임, 비어있을 시 true)'),
-                    focusNode: vmCodeEditor.focusVisible,
+                  Focus(
+                    onFocusChange: (bool hasFocus) => vmCodeEditor.lastFocus = vmCodeEditor.controllerVisible,
+                    child: TextField(
+                      controller: vmCodeEditor.controllerVisible,
+                      textAlign: TextAlign.left,
+                      decoration:
+                          const InputDecoration(hintText: '보이는 조건(true일 때 보임, 비어있을 시 true)'),
+                    ),
                   ),
                   Expanded(
-                    child: TextField(
-                      focusNode: vmCodeEditor.focusExecute,
-                      controller: vmCodeEditor.controllerExecute,
-                      textAlign: TextAlign.left,
-                      scrollController: ScrollController(),
-                      maxLines: null,
-                      expands: true,
-                      decoration: const InputDecoration(
-                        hintText: '선택 시 시행 코드',
+                    child: Focus(
+                      onFocusChange: (bool hasFocus) => vmCodeEditor.lastFocus = vmCodeEditor.controllerExecute,
+                      child: TextField(
+                        controller: vmCodeEditor.controllerExecute,
+                        textAlign: TextAlign.left,
+                        scrollController: ScrollController(),
+                        maxLines: null,
+                        expands: true,
+                        decoration: const InputDecoration(
+                          hintText: '선택 시 시행 코드',
+                        ),
                       ),
                     ),
                   ),

@@ -11,9 +11,6 @@ class VMCodeEditor extends GetxController {
       text: NodeEditor().targetRecursive.conditionVisibleString);
   final TextEditingController controllerExecute = TextEditingController(
       text: NodeEditor().targetRecursive.executeCodeString);
-  final FocusNode focusClickable = FocusNode();
-  final FocusNode focusVisible = FocusNode();
-  final FocusNode focusExecute = FocusNode();
   TextEditingController? lastFocus;
 
   var conditionClickable =
@@ -36,16 +33,6 @@ class VMCodeEditor extends GetxController {
 
   @override
   void onInit() {
-    focusClickable.addListener(() {
-      lastFocus = controllerClickable;
-    });
-    focusVisible.addListener(() {
-      lastFocus = controllerVisible;
-    });
-    focusExecute.addListener(() {
-      lastFocus = controllerExecute;
-    });
-
     controllerClickable.addListener(() {
       isChanged = true;
       conditionClickable.value = controllerClickable.text;
