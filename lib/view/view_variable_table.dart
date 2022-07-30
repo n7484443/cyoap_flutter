@@ -14,7 +14,7 @@ class ViewVariable extends GetView<VMVariableTable> {
   @override
   Widget build(BuildContext context) {
     List<Widget> widgetList;
-    if (!ConstList.isDistributed && isEditable) {
+    if (isEditable) {
       widgetList = [
         ListTile(
           onTap: () {
@@ -48,6 +48,15 @@ class ViewVariable extends GetView<VMVariableTable> {
               () => controller.isVisibleSource.toggle(),
               controller.isVisibleSource.value,
               label: '출처 보기',
+            ),
+          ),
+        ),
+        ListTile(
+          title: Obx(
+                () => ViewSwitchLabel(
+                  () => controller.isDebugMode.toggle(),
+              controller.isDebugMode.value,
+              label: '디버그 모드 활성화',
             ),
           ),
         ),
@@ -100,6 +109,17 @@ class ViewVariable extends GetView<VMVariableTable> {
               children: [
                 ExpansionTile(
                   title: const Text('변수'),
+                  subtitle: isEditable
+                      ? ViewSwitchLabel(
+                          () {
+                            controller.isVisibleHideVariable =
+                                !controller.isVisibleHideVariable;
+                            controller.update();
+                          },
+                          controller.isVisibleHideVariable,
+                          label: '숨겨진 변수 보기',
+                        )
+                      : null,
                   initiallyExpanded: true,
                   children: _.variableList,
                 ),

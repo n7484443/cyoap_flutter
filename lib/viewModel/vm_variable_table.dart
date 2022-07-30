@@ -10,11 +10,16 @@ import '../model/choiceNode/choice_node.dart';
 
 class VMVariableTable extends GetxController {
   var isVisibleSource = false.obs;
+  var isDebugMode = false.obs;
+  var isVisibleHideVariable = false;
 
   @override
   void onInit() {
     VariableDataBase().viewModel = this;
     super.onInit();
+    isDebugMode.listen((p0) {
+      update();
+    });
   }
 
   void addStringToEditor(String input) {
@@ -68,29 +73,22 @@ class VMVariableTable extends GetxController {
     var variableList = List<Widget>.empty(growable: true);
     for (var key in VariableDataBase().varMap.keys) {
       var values = VariableDataBase().varMap[key]!;
-      if (values.visible) {
-        if (isEditable) {
-          if (values.displayName.isEmpty) {
-            variableList.add(ListTile(
-              title: Text(key),
-              trailing: Text(values.valueType.data.runtimeType.toString()),
-              onTap: () => addStringToEditor(key),
-            ));
-          } else {
-            variableList.add(ListTile(
-              title: Text(key),
-              subtitle: Text(values.displayName),
-              trailing: Text(values.valueType.data.runtimeType.toString()),
-              onTap: () => addStringToEditor(key),
-            ));
-          }
-        } else {
-          var name = values.displayName.isEmpty ? key : values.displayName;
+
+      if (isEditable) {
+        if (isVisibleHideVariable || (!isVisibleHideVariable && values.visible)) {
           variableList.add(ListTile(
-            title: Text(name),
-            trailing: Text(values.valueType.data.toString()),
+            title: Text(key),
+            subtitle: values.displayName.isEmpty ? null : Text(values.displayName),
+            trailing: Text(values.valueType.data.runtimeType.toString()),
+            onTap: () => addStringToEditor(key),
           ));
         }
+      } else if (isDebugMode.value || values.visible) {
+        var name = values.displayName.isEmpty ? key : values.displayName;
+        variableList.add(ListTile(
+          title: Text(name),
+          trailing: Text(values.valueType.data.toString()),
+        ));
       }
     }
     return variableList;
