@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 
+import '../viewModel/vm_make_platform.dart';
+
 class ViewFontSource extends StatelessWidget {
   const ViewFontSource({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            makePlatform.back();
+          },
+        ),
+      ),
       body: ListView(
         controller: ScrollController(),
         children: [
