@@ -88,7 +88,6 @@ jobs:
           Remove-Item ./build/web/assets/NOTICES
           Remove-Item ./build/web/save_web.js
           Remove-Item ./build/web/jszip.js
-          Remove-Item ./build/web/assets/shaders -Recurse | Remove-Item
 
       - name: modify index.html
         run: |
