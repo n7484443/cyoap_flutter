@@ -1,7 +1,7 @@
+import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/editor.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../viewModel/vm_code_editor.dart';
@@ -48,13 +48,16 @@ class ViewCodeEditor extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Focus(
-                    onFocusChange: (bool hasFocus) => vmCodeEditor.lastFocus = vmCodeEditor.controllerVisible,
-                    child: TextField(
-                      controller: vmCodeEditor.controllerVisible,
-                      textAlign: TextAlign.left,
-                      decoration:
-                          const InputDecoration(hintText: '보이는 조건(true일 때 보임, 비어있을 시 true)'),
+                  Visibility(
+                    visible: NodeEditor().target.choiceNodeMode != ChoiceNodeMode.onlyCode,
+                    child: Focus(
+                      onFocusChange: (bool hasFocus) => vmCodeEditor.lastFocus = vmCodeEditor.controllerVisible,
+                      child: TextField(
+                        controller: vmCodeEditor.controllerVisible,
+                        textAlign: TextAlign.left,
+                        decoration:
+                            const InputDecoration(hintText: '보이는 조건(true일 때 보임, 비어있을 시 true)'),
+                      ),
                     ),
                   ),
                   Expanded(

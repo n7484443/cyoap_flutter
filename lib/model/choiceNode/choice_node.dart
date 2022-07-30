@@ -6,10 +6,17 @@ import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
 
 import '../../view/util/view_wrap_custom.dart';
+import '../grammar/analyser.dart';
 import '../grammar/value_type.dart';
 import 'generable_parser.dart';
 
-enum ChoiceNodeMode { defaultMode, randomMode, multiSelect, unSelectableMode }
+enum ChoiceNodeMode {
+  defaultMode,
+  randomMode,
+  multiSelect,
+  unSelectableMode,
+  onlyCode
+}
 
 class ChoiceNode extends GenerableParserAndPosition {
   //grid 단위로 설정
@@ -23,7 +30,8 @@ class ChoiceNode extends GenerableParserAndPosition {
   String imageString;
 
   @override
-  bool get isSelectableMode => choiceNodeMode != ChoiceNodeMode.unSelectableMode;
+  bool get isSelectableMode =>
+      choiceNodeMode != ChoiceNodeMode.unSelectableMode && choiceNodeMode != ChoiceNodeMode.onlyCode;
   bool isOccupySpace = true;
   bool maximizingImage = false;
   bool hideTitle = false;
@@ -65,7 +73,9 @@ class ChoiceNode extends GenerableParserAndPosition {
         hideTitle = json['hideTitle'] ?? false,
         choiceNodeMode = json['choiceNodeMode'] == null
             ? ChoiceNodeMode.defaultMode
-            : ((json['isSelectable'] ?? true) ? ChoiceNodeMode.values.byName(json['choiceNodeMode']) : ChoiceNodeMode.unSelectableMode) {
+            : ((json['isSelectable'] ?? true)
+                ? ChoiceNodeMode.values.byName(json['choiceNodeMode'])
+                : ChoiceNodeMode.unSelectableMode) {
     width = json['width'] ?? 2;
     currentPos = json['x'] ?? json['pos'];
     recursiveStatus = RecursiveStatus.fromJson(json);
@@ -128,12 +138,17 @@ class ChoiceNode extends GenerableParserAndPosition {
     var titleWhitespaceRemoved = title.replaceAll(" ", "");
     VariableDataBase().setValue(titleWhitespaceRemoved,
         ValueTypeWrapper(ValueType(isSelected()), false));
-    VariableDataBase().setValue('$titleWhitespaceRemoved:random',
-        ValueTypeWrapper(ValueType(random), false));
-    VariableDataBase().setValue('$titleWhitespaceRemoved:multi',
-        ValueTypeWrapper(ValueType(multiSelect), false));
+    if(choiceNodeMode == ChoiceNodeMode.randomMode && random != -1){
+      VariableDataBase().setValue('$titleWhitespaceRemoved:random',
+          ValueTypeWrapper(ValueType(random), false));
+    }
+    if(choiceNodeMode == ChoiceNodeMode.multiSelect){
+      VariableDataBase().setValue('$titleWhitespaceRemoved:multi',
+          ValueTypeWrapper(ValueType(multiSelect), false));
+    }
     if (status.isNotSelected()) {
-      status = isSelectableMode ? SelectableStatus.open : SelectableStatus.selected;
+      status =
+          isSelectableMode ? SelectableStatus.open : SelectableStatus.selected;
     }
     for (var child in children) {
       child.initValueTypeWrapper();
@@ -184,5 +199,31 @@ class ChoiceNode extends GenerableParserAndPosition {
   ChoiceNode clone() {
     var json = jsonDecode(jsonEncode(toJson()));
     return ChoiceNode.fromJson(json);
+  }
+
+  @override
+  bool isVisible() {
+    if(choiceNodeMode == ChoiceNodeMode.onlyCode){
+      return false;
+    }
+    return super.isVisible();
+  }
+
+  @override
+  bool isClickable() {
+    if(choiceNodeMode == ChoiceNodeMode.onlyCode){
+      return false;
+    }
+    return super.isClickable();
+  }
+
+  @override
+  void execute() {
+    if(status.isSelected() || choiceNodeMode == ChoiceNodeMode.onlyCode){
+      Analyser().run(recursiveStatus.executeCodeRecursive);
+      for (var child in children) {
+        child.execute();
+      }
+    }
   }
 }

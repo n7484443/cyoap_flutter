@@ -62,6 +62,9 @@ class ViewEditor extends StatelessWidget {
               DropdownMenuItem(
                   value: ChoiceNodeMode.unSelectableMode,
                   child: Text('선택 불가', style: highlightStyle)),
+              DropdownMenuItem(
+                  value: ChoiceNodeMode.onlyCode,
+                  child: Text('코드만 사용', style: highlightStyle)),
             ],
             onChanged: (ChoiceNodeMode? value) {
               controller.nodeMode.value = value!;
@@ -117,44 +120,62 @@ class ViewEditor extends StatelessWidget {
               ]),
             ),
           ),
-          ViewSwitchLabel(
-            () => controller.isCard.value = !controller.isCard.value,
-            controller.isCard.value,
-            label: '카드 모드',
+          Visibility(
+            visible: controller.nodeMode.value != ChoiceNodeMode.onlyCode,
+            child: ViewSwitchLabel(
+              () => controller.isCard.value = !controller.isCard.value,
+              controller.isCard.value,
+              label: '카드 모드',
+            ),
           ),
-          ViewSwitchLabel(
-            () => controller.isRound.value = !controller.isRound.value,
-            controller.isRound.value,
-            label: '외곽선 둥글게',
+          Visibility(
+            visible: controller.nodeMode.value != ChoiceNodeMode.onlyCode,
+            child: ViewSwitchLabel(
+              () => controller.isRound.value = !controller.isRound.value,
+              controller.isRound.value,
+              label: '외곽선 둥글게',
+            ),
           ),
-          ViewSwitchLabel(
-            () => controller.maximizingImage.value =
-                !controller.maximizingImage.value,
-            controller.maximizingImage.value,
-            label: '이미지 최대화',
+          Visibility(
+            visible: controller.nodeMode.value != ChoiceNodeMode.onlyCode,
+            child: ViewSwitchLabel(
+              () => controller.maximizingImage.value =
+                  !controller.maximizingImage.value,
+              controller.maximizingImage.value,
+              label: '이미지 최대화',
+            ),
           ),
-          ViewSwitchLabel(
-            () => controller.hideTitle.value = !controller.hideTitle.value,
-            controller.hideTitle.value,
-            label: '제목 숨기기',
+          Visibility(
+            visible: controller.nodeMode.value != ChoiceNodeMode.onlyCode,
+            child: ViewSwitchLabel(
+              () => controller.hideTitle.value = !controller.hideTitle.value,
+              controller.hideTitle.value,
+              label: '제목 숨기기',
+            ),
           ),
-          ViewSwitchLabel(
-            () => controller.imagePosition.value =
-                (controller.imagePosition.value == 0) ? 1 : 0,
-            controller.imagePosition.value != 0,
-            label: '가로 모드',
+          Visibility(
+            visible: controller.nodeMode.value != ChoiceNodeMode.onlyCode,
+            child: ViewSwitchLabel(
+              () => controller.imagePosition.value =
+                  (controller.imagePosition.value == 0) ? 1 : 0,
+              controller.imagePosition.value != 0,
+              label: '가로 모드',
+            ),
           ),
-          ViewSwitchLabel(
-            () {
-              if (controller.imagePosition.value == 1) {
-                controller.imagePosition.value = 2;
-              } else if (controller.imagePosition.value == 2) {
-                controller.imagePosition.value = 1;
-              }
-            },
-            controller.imagePosition.value == 2,
-            disable: controller.imagePosition.value == 0,
-            label: '이미지 왼쪽으로',
+          Visibility(
+            visible: controller.nodeMode.value != ChoiceNodeMode.onlyCode,
+            child: ViewSwitchLabel(
+              () {
+                if (controller.imagePosition.value == 1) {
+                  controller.imagePosition.value = 2;
+                } else if (controller.imagePosition.value == 2) {
+                  controller.imagePosition.value = 1;
+                }
+              },
+              controller.imagePosition.value == 2,
+              disable: controller.imagePosition.value == 0,
+              label: '이미지 왼쪽으로',
+            ),
           ),
           const Spacer(),
           Padding(
@@ -189,10 +210,16 @@ class ViewEditor extends StatelessWidget {
             Expanded(
               child: Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: ViewEditorTyping(),
+                      padding: const EdgeInsets.all(8.0),
+                      child: Obx(
+                        () => Visibility(
+                          visible: controller.nodeMode.value !=
+                              ChoiceNodeMode.onlyCode,
+                          child: const ViewEditorTyping(),
+                        ),
+                      ),
                     ),
                   ),
                   Padding(

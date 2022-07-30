@@ -43,7 +43,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
       );
     }
     var nodeController = Get.put(VMChoiceNode.fromNode(node!), tag: node!.tag);
-
+    var designController = Get.find<VMDesignSetting>();
     return Obx(
       () {
         var isSelectedCheck = nodeController.node.isSelected() &&
@@ -57,7 +57,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                     side: BorderSide(
                       color: isSelectedCheck
                           ? Colors.lightBlueAccent
-                          : Get.find<VMDesignSetting>().colorNode.value,
+                          : designController.colorNode.value,
                       width: ConstList.isSmallDisplay(context) ? 2 : 4,
                     ),
                   )
@@ -65,7 +65,7 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                     BorderSide(
                       color: isSelectedCheck
                           ? Colors.lightBlueAccent
-                          : Get.find<VMDesignSetting>().colorNode.value,
+                          : designController.colorNode.value,
                       width: ConstList.isSmallDisplay(context) ? 2 : 4,
                     ),
                   ),
@@ -74,27 +74,30 @@ class ViewChoiceNode extends GetView<VMDraggableNestedMap> {
                 ? const EdgeInsets.all(1.4)
                 : null,
             elevation: nodeController.isCard.value ? ConstList.elevation : 0,
-            color: Get.find<VMDesignSetting>().colorNode.value,
-            child: Ink(
-              color: Get.find<VMDesignSetting>().colorNode.value,
-              child: Padding(
-                padding: ConstList.isSmallDisplay(context)
-                    ? const EdgeInsets.all(2.0)
-                    : const EdgeInsets.all(4.0),
-                child: InkWell(
-                  onDoubleTap: isEditable
-                      ? () {
-                          controller.editNode = node!;
-                          makePlatform.changePageString("viewEditor");
-                        }
-                      : null,
-                  onTap: !isEditable &&
-                          (nodeController.nodeMode.value !=
-                                  ChoiceNodeMode.multiSelect ||
-                              nodeController.isIgnorePointer)
-                      ? () => nodeController.select(0, context)
-                      : null,
-                  child: ViewChoiceNodeContent(node!.tag, controller),
+            color: designController.colorNode.value,
+            child: Visibility(
+              visible: isEditable || nodeController.node.isVisible(),
+              child: Ink(
+                color: designController.colorNode.value,
+                child: Padding(
+                  padding: ConstList.isSmallDisplay(context)
+                      ? const EdgeInsets.all(2.0)
+                      : const EdgeInsets.all(4.0),
+                  child: InkWell(
+                    onDoubleTap: isEditable
+                        ? () {
+                            controller.editNode = node!;
+                            makePlatform.changePageString("viewEditor");
+                          }
+                        : null,
+                    onTap: !isEditable &&
+                            (nodeController.nodeMode.value !=
+                                    ChoiceNodeMode.multiSelect ||
+                                nodeController.isIgnorePointer)
+                        ? () => nodeController.select(0, context)
+                        : null,
+                    child: ViewChoiceNodeContent(node!.tag, controller),
+                  ),
                 ),
               ),
             ),
