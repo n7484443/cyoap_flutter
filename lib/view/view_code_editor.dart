@@ -40,7 +40,8 @@ class ViewCodeEditor extends StatelessWidget {
                   Visibility(
                     visible: NodeEditor().target.isSelectableMode,
                     child: Focus(
-                      onFocusChange: (bool hasFocus) => vmCodeEditor.lastFocus = vmCodeEditor.controllerClickable,
+                      onFocusChange: (bool hasFocus) => vmCodeEditor.lastFocus =
+                          vmCodeEditor.controllerClickable,
                       child: TextField(
                         controller: vmCodeEditor.controllerClickable,
                         textAlign: TextAlign.left,
@@ -49,20 +50,23 @@ class ViewCodeEditor extends StatelessWidget {
                     ),
                   ),
                   Visibility(
-                    visible: NodeEditor().target.choiceNodeMode != ChoiceNodeMode.onlyCode,
+                    visible: NodeEditor().target.choiceNodeMode !=
+                        ChoiceNodeMode.onlyCode,
                     child: Focus(
-                      onFocusChange: (bool hasFocus) => vmCodeEditor.lastFocus = vmCodeEditor.controllerVisible,
+                      onFocusChange: (bool hasFocus) => vmCodeEditor.lastFocus =
+                          vmCodeEditor.controllerVisible,
                       child: TextField(
                         controller: vmCodeEditor.controllerVisible,
                         textAlign: TextAlign.left,
-                        decoration:
-                            const InputDecoration(hintText: '보이는 조건(true일 때 보임, 비어있을 시 true)'),
+                        decoration: const InputDecoration(
+                            hintText: '보이는 조건(true일 때 보임, 비어있을 시 true)'),
                       ),
                     ),
                   ),
                   Expanded(
                     child: Focus(
-                      onFocusChange: (bool hasFocus) => vmCodeEditor.lastFocus = vmCodeEditor.controllerExecute,
+                      onFocusChange: (bool hasFocus) => vmCodeEditor.lastFocus =
+                          vmCodeEditor.controllerExecute,
                       child: TextField(
                         controller: vmCodeEditor.controllerExecute,
                         textAlign: TextAlign.left,

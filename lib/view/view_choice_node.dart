@@ -424,20 +424,20 @@ class ViewChoiceNodeContent extends GetView<VMChoiceNode> {
       }
     } else {
       Widget contentText = Obx(() => IgnorePointer(
-        child: QuillEditor(
-          controller: controller.quillController,
-          focusNode: FocusNode(),
-          readOnly: true,
-          autoFocus: false,
-          expands: false,
-          padding: const EdgeInsets.only(top: 4),
-          scrollController: ScrollController(),
-          scrollable: false,
-          customStyles: ConstList.getDefaultThemeData(
-              context, draggableController.scale(context),
-              fontStyle: ConstList.getFont(layoutSetting.mainFont.value)),
-        ),
-      ));
+            child: QuillEditor(
+              controller: controller.quillController,
+              focusNode: FocusNode(),
+              readOnly: true,
+              autoFocus: false,
+              expands: false,
+              padding: const EdgeInsets.only(top: 4),
+              scrollController: ScrollController(),
+              scrollable: false,
+              customStyles: ConstList.getDefaultThemeData(
+                  context, draggableController.scale(context),
+                  fontStyle: ConstList.getFont(layoutSetting.mainFont.value)),
+            ),
+          ));
       if (controller.node.choiceNodeMode == ChoiceNodeMode.multiSelect) {
         contents = Column(children: [
           contentText,

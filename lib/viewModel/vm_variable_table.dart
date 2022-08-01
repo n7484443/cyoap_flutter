@@ -75,10 +75,12 @@ class VMVariableTable extends GetxController {
       var values = VariableDataBase().varMap[key]!;
 
       if (isEditable) {
-        if (isVisibleHideVariable || (!isVisibleHideVariable && values.visible)) {
+        if (isVisibleHideVariable ||
+            (!isVisibleHideVariable && values.visible)) {
           variableList.add(ListTile(
             title: Text(key),
-            subtitle: values.displayName.isEmpty ? null : Text(values.displayName),
+            subtitle:
+                values.displayName.isEmpty ? null : Text(values.displayName),
             trailing: Text(values.valueType.data.runtimeType.toString()),
             onTap: () => addStringToEditor(key),
           ));

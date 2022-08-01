@@ -81,11 +81,12 @@ class LineSetting extends GenerableParserAndPosition {
       node.initValueTypeWrapper();
     }
   }
+
   @override
   void checkVisible(bool parent) {
     if (!parent || !isVisible()) {
       status = SelectableStatus.hide;
-    }else{
+    } else {
       status = SelectableStatus.open;
     }
 

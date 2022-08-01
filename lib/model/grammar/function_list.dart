@@ -171,7 +171,8 @@ class Functions {
     }
   }
 
-  ValueType funcNotEqual(List<ValueType> input) => ValueType(!funcEqual(input).data);
+  ValueType funcNotEqual(List<ValueType> input) =>
+      ValueType(!funcEqual(input).data);
 
   ValueType funcBigger(List<ValueType> input) {
     if (input[0].data is num && input[1].data is num) {
@@ -187,8 +188,10 @@ class Functions {
     return ValueType(false);
   }
 
-  ValueType funcBiggerEqual(List<ValueType> input) => ValueType(!funcSmaller(input).data);
-  ValueType funcSmallerEqual(List<ValueType> input) => ValueType(!funcBigger(input).data);
+  ValueType funcBiggerEqual(List<ValueType> input) =>
+      ValueType(!funcSmaller(input).data);
+  ValueType funcSmallerEqual(List<ValueType> input) =>
+      ValueType(!funcBigger(input).data);
 
   ValueType funcRandom(List<ValueType> input) {
     if (input[0].data is int) {

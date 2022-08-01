@@ -53,8 +53,8 @@ class ViewVariable extends GetView<VMVariableTable> {
         ),
         ListTile(
           title: Obx(
-                () => ViewSwitchLabel(
-                  () => controller.isDebugMode.toggle(),
+            () => ViewSwitchLabel(
+              () => controller.isDebugMode.toggle(),
               controller.isDebugMode.value,
               label: '디버그 모드 활성화',
             ),

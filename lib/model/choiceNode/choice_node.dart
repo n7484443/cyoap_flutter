@@ -31,7 +31,8 @@ class ChoiceNode extends GenerableParserAndPosition {
 
   @override
   bool get isSelectableMode =>
-      choiceNodeMode != ChoiceNodeMode.unSelectableMode && choiceNodeMode != ChoiceNodeMode.onlyCode;
+      choiceNodeMode != ChoiceNodeMode.unSelectableMode &&
+      choiceNodeMode != ChoiceNodeMode.onlyCode;
   bool isOccupySpace = true;
   bool maximizingImage = false;
   bool hideTitle = false;
@@ -130,11 +131,11 @@ class ChoiceNode extends GenerableParserAndPosition {
     var titleWhitespaceRemoved = title.replaceAll(" ", "");
     VariableDataBase().setValue(titleWhitespaceRemoved,
         ValueTypeWrapper(ValueType(isSelected()), false));
-    if(choiceNodeMode == ChoiceNodeMode.randomMode && random != -1){
+    if (choiceNodeMode == ChoiceNodeMode.randomMode && random != -1) {
       VariableDataBase().setValue('$titleWhitespaceRemoved:random',
           ValueTypeWrapper(ValueType(random), false));
     }
-    if(choiceNodeMode == ChoiceNodeMode.multiSelect){
+    if (choiceNodeMode == ChoiceNodeMode.multiSelect) {
       VariableDataBase().setValue('$titleWhitespaceRemoved:multi',
           ValueTypeWrapper(ValueType(multiSelect), false));
     }
@@ -195,7 +196,7 @@ class ChoiceNode extends GenerableParserAndPosition {
 
   @override
   bool isVisible() {
-    if(choiceNodeMode == ChoiceNodeMode.onlyCode){
+    if (choiceNodeMode == ChoiceNodeMode.onlyCode) {
       return false;
     }
     return super.isVisible();
@@ -203,7 +204,7 @@ class ChoiceNode extends GenerableParserAndPosition {
 
   @override
   bool isClickable() {
-    if(choiceNodeMode == ChoiceNodeMode.onlyCode){
+    if (choiceNodeMode == ChoiceNodeMode.onlyCode) {
       return false;
     }
     return super.isClickable();
@@ -211,7 +212,7 @@ class ChoiceNode extends GenerableParserAndPosition {
 
   @override
   void execute() {
-    if(status.isSelected() || choiceNodeMode == ChoiceNodeMode.onlyCode){
+    if (status.isSelected() || choiceNodeMode == ChoiceNodeMode.onlyCode) {
       Analyser().run(recursiveStatus.executeCodeRecursive);
       for (var child in children) {
         child.execute();

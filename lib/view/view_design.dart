@@ -97,21 +97,21 @@ class ViewDesignSetting extends GetView<VMDesignSetting> {
                         children: [
                           ViewSwitchLabel(
                             label: "제목을 이미지 위에 겹치기",
-                                () {
+                            () {
                               controller.titleOverlap.toggle();
                             },
                             controller.titleOverlap.value,
                           ),
                           ViewSwitchLabel(
                             label: "제목을 위로",
-                                () {
+                            () {
                               controller.titlePosition.toggle();
                             },
                             controller.titlePosition.value,
                           ),
                           ViewSwitchLabel(
                             label: "제목 테두리",
-                                () {
+                            () {
                               controller.titleOutline.toggle();
                             },
                             controller.titleOutline.value,
