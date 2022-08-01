@@ -423,7 +423,7 @@ class ViewChoiceNodeContent extends GetView<VMChoiceNode> {
         contents = const SizedBox.shrink();
       }
     } else {
-      Widget contentText = IgnorePointer(
+      Widget contentText = Obx(() => IgnorePointer(
         child: QuillEditor(
           controller: controller.quillController,
           focusNode: FocusNode(),
@@ -437,7 +437,7 @@ class ViewChoiceNodeContent extends GetView<VMChoiceNode> {
               context, draggableController.scale(context),
               fontStyle: ConstList.getFont(layoutSetting.mainFont.value)),
         ),
-      );
+      ));
       if (controller.node.choiceNodeMode == ChoiceNodeMode.multiSelect) {
         contents = Column(children: [
           contentText,
