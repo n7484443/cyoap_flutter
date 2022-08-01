@@ -63,7 +63,8 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
             controller.updateVMChoiceNodeAll();
           } else if (listEqualExceptLast(pos, drag) &&
               (pos.last - 1) >= drag.last) {
-            controller.changeData(drag, List.from(pos)..last -= 1);
+            controller.changeData(drag, List.from(pos)
+              ..last -= 1);
           } else {
             controller.changeData(drag, pos);
           }
@@ -83,40 +84,41 @@ class NodeDividerDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<VMDraggableNestedMap>(
-      builder: (_) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
+      builder: (_) =>
+          Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('선택 가능'),
-              const Spacer(),
-              IconButton(
-                icon: const Icon(Icons.chevron_left),
-                onPressed: () {
-                  _.addMaxSelect(y, -1);
-                },
+              Row(
+                children: [
+                  const Text('선택 가능'),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Icons.chevron_left),
+                    onPressed: () {
+                      _.addMaxSelect(y, -1);
+                    },
+                  ),
+                  Text(_.getMaxSelect(y)),
+                  IconButton(
+                    icon: const Icon(Icons.chevron_right),
+                    onPressed: () {
+                      _.addMaxSelect(y, 1);
+                    },
+                  ),
+                ],
               ),
-              Text(_.getMaxSelect(y)),
-              IconButton(
-                icon: const Icon(Icons.chevron_right),
-                onPressed: () {
-                  _.addMaxSelect(y, 1);
-                },
+              ViewSwitchLabel(
+                    () => _.updateLineAlwaysVisible(y),
+                _.lineAlwaysVisible(y),
+                label: '항상 보임',
+              ),
+              TextField(
+                controller: textFieldController,
+                decoration: const InputDecoration(
+                    hintText: '보이는 조건(true일 때 보임, 비어있을 시 true)'),
               ),
             ],
           ),
-          ViewSwitchLabel(
-            () => _.updateLineAlwaysVisible(y),
-            _.lineAlwaysVisible(y),
-            label: '항상 보임',
-          ),
-          TextField(
-            controller: textFieldController,
-            decoration: const InputDecoration(
-                hintText: '보이는 조건(true일 때 보임, 비어있을 시 true)'),
-          ),
-        ],
-      ),
     );
   }
 }
@@ -174,13 +176,22 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
           .getLineSetting(y)
           ?.recursiveStatus
           .conditionVisibleString ?? "";
-      Future dialog() => Get.defaultDialog(
+      Future dialog() =>
+          Get.defaultDialog(
             title: '변수명 : lineSetting_$y',
             content: NodeDividerDialog(y, textFieldController),
-          ).then((value) => getPlatform
-              .getLineSetting(y)
-              ?.recursiveStatus
-              .conditionVisibleString = textFieldController.text);
+          ).then((value) {
+            if(getPlatform
+                .getLineSetting(y)
+                ?.recursiveStatus
+                .conditionVisibleString != textFieldController.text){
+              getPlatform
+                  .getLineSetting(y)
+                  ?.recursiveStatus
+                  .conditionVisibleString = textFieldController.text;
+              controller.isChanged = true;
+            }
+          });
       return Stack(
         alignment: Alignment.center,
         children: [
@@ -247,27 +258,28 @@ class NestedMap extends StatelessWidget {
     if (ConstList.isWeb() && !ConstList.isSmallDisplay(context)) {
       if (isEditable) {
         return GetBuilder<VMDraggableNestedMap>(
-          builder: (_) => LayoutBuilder(builder: (context, constrains) {
-            _.constrain = constrains;
-            return ColoredBox(
-              color: _.backgroundColor,
-              child: WebSmoothScroll(
-                controller: _.scroller,
-                scrollOffset: 100,
-                animationDuration: 150,
-                child: ListView.builder(
-                  key: const PageStorageKey(0),
-                  physics: const NeverScrollableScrollPhysics(),
-                  controller: _.scroller,
-                  itemCount: getPlatform.lineSettings.length + 1,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ChoiceLine(index, Colors.transparent);
-                  },
-                  cacheExtent: 200,
-                ),
-              ),
-            );
-          }),
+          builder: (_) =>
+              LayoutBuilder(builder: (context, constrains) {
+                _.constrain = constrains;
+                return ColoredBox(
+                  color: _.backgroundColor,
+                  child: WebSmoothScroll(
+                    controller: _.scroller,
+                    scrollOffset: 100,
+                    animationDuration: 150,
+                    child: ListView.builder(
+                      key: const PageStorageKey(0),
+                      physics: const NeverScrollableScrollPhysics(),
+                      controller: _.scroller,
+                      itemCount: getPlatform.lineSettings.length + 1,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ChoiceLine(index, Colors.transparent);
+                      },
+                      cacheExtent: 200,
+                    ),
+                  ),
+                );
+              }),
         );
       } else {
         return ColoredBox(
@@ -293,21 +305,22 @@ class NestedMap extends StatelessWidget {
 
     if (isEditable) {
       return GetBuilder<VMDraggableNestedMap>(
-        builder: (_) => LayoutBuilder(builder: (context, constrains) {
-          _.constrain = constrains;
-          return ColoredBox(
-            color: _.backgroundColor,
-            child: ListView.builder(
-              key: const PageStorageKey(0),
-              controller: _.scroller,
-              itemCount: getPlatform.lineSettings.length + 1,
-              itemBuilder: (BuildContext context, int index) {
-                return ChoiceLine(index, Colors.transparent);
-              },
-              cacheExtent: 200,
-            ),
-          );
-        }),
+        builder: (_) =>
+            LayoutBuilder(builder: (context, constrains) {
+              _.constrain = constrains;
+              return ColoredBox(
+                color: _.backgroundColor,
+                child: ListView.builder(
+                  key: const PageStorageKey(0),
+                  controller: _.scroller,
+                  itemCount: getPlatform.lineSettings.length + 1,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ChoiceLine(index, Colors.transparent);
+                  },
+                  cacheExtent: 200,
+                ),
+              );
+            }),
       );
     } else {
       return ColoredBox(
@@ -340,7 +353,9 @@ class ChoiceLine extends StatelessWidget {
         return ColoredBox(
           color: color,
           child: Visibility(
-            visible: Get.find<VMDraggableNestedMap>().drag != null,
+            visible: Get
+                .find<VMDraggableNestedMap>()
+                .drag != null,
             child: Column(
               children: [
                 NodeDivider(y),
@@ -375,7 +390,7 @@ class ChoiceLine extends StatelessWidget {
             NodeDivider(y),
             ViewWrapCustomReorderable(
               xList,
-              (child) => NodeDraggable(child),
+                  (child) => NodeDraggable(child),
               builderDraggable: (i) => NodeDragTarget([y, i]),
             ),
           ],
@@ -395,7 +410,7 @@ class ChoiceLine extends StatelessWidget {
             builder: (_) {
               return ViewWrapCustom(
                 choiceNodeList[y].children,
-                (child) => ViewChoiceNode(child.currentPos, y),
+                    (child) => ViewChoiceNode(child.currentPos, y),
                 isInner: false,
               );
             },
