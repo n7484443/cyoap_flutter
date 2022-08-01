@@ -111,7 +111,9 @@ abstract class GenerableParserAndPosition {
   bool isClickable() {
     var data = Analyser().check(recursiveStatus.conditionClickableRecursive);
     if (data != null) {
-      if (data is ValueTypeWrapper) {
+      if (data is bool) {
+        return data;
+      }else if (data is ValueTypeWrapper) {
         return data.valueType.data is bool ? data.valueType.data : true;
       }
     }

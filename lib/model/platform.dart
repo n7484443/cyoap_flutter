@@ -151,13 +151,7 @@ class AbstractPlatform {
 
     for (var lineSetting in lineSettings) {
       lineSetting.initValueTypeWrapper();
-
-      for (var node in lineSetting.children) {
-        node.execute();
-        if (node.status.isSelected() && node.isSelectableMode) {
-          lineSetting.execute();
-        }
-      }
+      lineSetting.execute();
       lineSetting.checkVisible(true);
       lineSetting.checkClickable(true, true);
       VariableDataBase().clearLocalVariable();

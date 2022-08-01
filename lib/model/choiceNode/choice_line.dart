@@ -56,12 +56,13 @@ class LineSetting extends GenerableParserAndPosition {
     return children[x] as ChoiceNode?;
   }
 
-  String getClickableString() {
-    return 'lineSetting_$currentPos < $maxSelect';
-  }
+  String get valName => 'lineSetting_$currentPos';
 
-  String getExecuteString() {
-    return 'lineSetting_$currentPos += 1';
+  @override
+  void generateParser() {
+    recursiveStatus.executeCodeString = '$valName += 1';
+    recursiveStatus.conditionClickableString = '$valName < $maxSelect';
+    super.generateParser();
   }
 
   bool isNeedToCheck() {
@@ -71,10 +72,10 @@ class LineSetting extends GenerableParserAndPosition {
   @override
   void initValueTypeWrapper() {
     if (isNeedToCheck()) {
-      VariableDataBase().setValue(
-          'lineSetting_$currentPos', ValueTypeWrapper(ValueType(0), false));
+      VariableDataBase()
+          .setValue(valName, ValueTypeWrapper(ValueType(0), false));
     } else {
-      VariableDataBase().deleteValue('lineSetting_$currentPos');
+      VariableDataBase().deleteValue(valName);
     }
 
     for (var node in children) {
@@ -98,12 +99,17 @@ class LineSetting extends GenerableParserAndPosition {
   @override
   void checkClickable(bool parentClickable, bool onlyWorkLine) {
     for (var child in children) {
-      child.checkClickable(isVisible(), true);
+      child.checkClickable(isClickable(), true);
     }
   }
 
   @override
   void execute() {
-    Analyser().run(recursiveStatus.executeCodeRecursive);
+    for (var node in children) {
+      node.execute();
+      if (node.status.isSelected() && node.isSelectableMode) {
+        Analyser().run(recursiveStatus.executeCodeRecursive);
+      }
+    }
   }
 }
