@@ -45,7 +45,12 @@ extension SelectableStatusExtension on SelectableStatus {
 }
 
 abstract class GenerableParserAndPosition {
-  void generateParser();
+  void generateParser() {
+    recursiveStatus.generateParser();
+    for (var child in children) {
+      child.generateParser();
+    }
+  }
 
   void initValueTypeWrapper();
 

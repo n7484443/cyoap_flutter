@@ -158,13 +158,8 @@ class AbstractPlatform {
           lineSetting.execute();
         }
       }
-      for (var node in lineSetting.children) {
-        node.checkVisible(true);
-      }
-      bool clickableLineTest = lineSetting.isClickable();
-      for (var node in lineSetting.children) {
-        node.checkClickable(clickableLineTest, true);
-      }
+      lineSetting.checkVisible(true);
+      lineSetting.checkClickable(true, true);
       VariableDataBase().clearLocalVariable();
     }
     if (Get.isRegistered<VMDraggableNestedMap>()) {

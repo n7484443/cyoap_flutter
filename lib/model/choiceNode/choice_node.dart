@@ -38,7 +38,7 @@ class ChoiceNode extends GenerableParserAndPosition {
 
   int maximumStatus = 0;
   int random = -1;
-  int multiSelect = -1;
+  int multiSelect = 0;
 
   ChoiceNode(int width, this.isCard, this.title, this.contentsString,
       this.imageString) {
@@ -117,14 +117,6 @@ class ChoiceNode extends GenerableParserAndPosition {
       random = -1;
       multiSelect = -1;
       status = status.reverseSelected(isSelectableMode);
-    }
-  }
-
-  @override
-  void generateParser() {
-    recursiveStatus.generateParser();
-    for (var child in children) {
-      child.generateParser();
     }
   }
 

@@ -75,8 +75,10 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
 
 class NodeDividerDialog extends StatelessWidget {
   final int y;
+  final TextEditingController textFieldController;
 
-  const NodeDividerDialog(this.y, {Key? key}) : super(key: key);
+  const NodeDividerDialog(this.y, this.textFieldController, {Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +109,11 @@ class NodeDividerDialog extends StatelessWidget {
             () => _.updateLineAlwaysVisible(y),
             _.lineAlwaysVisible(y),
             label: '항상 보임',
+          ),
+          TextField(
+            controller: textFieldController,
+            decoration: const InputDecoration(
+                hintText: '보이는 조건(true일 때 보임, 비어있을 시 true)'),
           ),
         ],
       ),
@@ -162,10 +169,18 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
     );
 
     if (isEditable) {
+      var textFieldController = TextEditingController();
+      textFieldController.text = getPlatform
+          .getLineSetting(y)
+          ?.recursiveStatus
+          .conditionVisibleString ?? "";
       Future dialog() => Get.defaultDialog(
             title: '변수명 : lineSetting_$y',
-            content: NodeDividerDialog(y),
-          );
+            content: NodeDividerDialog(y, textFieldController),
+          ).then((value) => getPlatform
+              .getLineSetting(y)
+              ?.recursiveStatus
+              .conditionVisibleString = textFieldController.text);
       return Stack(
         alignment: Alignment.center,
         children: [

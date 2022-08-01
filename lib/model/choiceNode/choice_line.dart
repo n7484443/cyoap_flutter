@@ -69,26 +69,6 @@ class LineSetting extends GenerableParserAndPosition {
   }
 
   @override
-  void generateParser() {
-    if (isNeedToCheck()) {
-      var conditionClickableRecursiveParsed =
-          Analyser().analyseSingleLine(getClickableString());
-      var executeCodeRecursiveParsed =
-          Analyser().analyseCodes(getExecuteString());
-      recursiveStatus.conditionClickableRecursive =
-          conditionClickableRecursiveParsed;
-      recursiveStatus.executeCodeRecursive = executeCodeRecursiveParsed;
-    } else {
-      recursiveStatus.conditionClickableRecursive = null;
-      recursiveStatus.executeCodeRecursive = null;
-    }
-
-    for (var node in children) {
-      node.generateParser();
-    }
-  }
-
-  @override
   void initValueTypeWrapper() {
     if (isNeedToCheck()) {
       VariableDataBase().setValue(
@@ -99,6 +79,25 @@ class LineSetting extends GenerableParserAndPosition {
 
     for (var node in children) {
       node.initValueTypeWrapper();
+    }
+  }
+  @override
+  void checkVisible(bool parent) {
+    if (!parent || !isVisible()) {
+      status = SelectableStatus.hide;
+    }else{
+      status = SelectableStatus.open;
+    }
+
+    for (var child in children) {
+      child.checkVisible(!status.isHide());
+    }
+  }
+
+  @override
+  void checkClickable(bool parentClickable, bool onlyWorkLine) {
+    for (var child in children) {
+      child.checkClickable(isVisible(), true);
     }
   }
 
