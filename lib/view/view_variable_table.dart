@@ -105,7 +105,6 @@ class ViewVariable extends GetView<VMVariableTable> {
           child: GetBuilder<VMVariableTable>(
             builder: (_) => ListView(
               controller: ScrollController(),
-              shrinkWrap: true,
               children: [
                 ExpansionTile(
                   title: const Text('변수'),
