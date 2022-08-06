@@ -1,7 +1,6 @@
 import 'package:cyoap_flutter/model/editor.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class VMCodeEditor extends GetxController {
@@ -12,12 +11,6 @@ class VMCodeEditor extends GetxController {
   final TextEditingController controllerExecute = TextEditingController(
       text: NodeEditor().targetRecursive.executeCodeString);
   TextEditingController? lastFocus;
-
-  var conditionClickable =
-      NodeEditor().targetRecursive.conditionClickableString.obs;
-  var conditionVisible =
-      NodeEditor().targetRecursive.conditionVisibleString.obs;
-  var executeCode = NodeEditor().targetRecursive.executeCodeString.obs;
 
   var isOccupySpace = NodeEditor().target.isOccupySpace.obs;
 
@@ -35,15 +28,12 @@ class VMCodeEditor extends GetxController {
   void onInit() {
     controllerClickable.addListener(() {
       isChanged = true;
-      conditionClickable.value = controllerClickable.text;
     });
     controllerVisible.addListener(() {
       isChanged = true;
-      conditionVisible.value = controllerVisible.text;
     });
     controllerExecute.addListener(() {
       isChanged = true;
-      executeCode.value = controllerExecute.text;
     });
     isOccupySpace.listen((value) {
       isChanged = true;
@@ -55,10 +45,11 @@ class VMCodeEditor extends GetxController {
 
   void save() {
     NodeEditor().target.recursiveStatus.conditionClickableString =
-        conditionClickable.value;
+        controllerClickable.text;
     NodeEditor().target.recursiveStatus.conditionVisibleString =
-        conditionVisible.value;
-    NodeEditor().target.recursiveStatus.executeCodeString = executeCode.value;
+        controllerVisible.text;
+    NodeEditor().target.recursiveStatus.executeCodeString =
+        controllerExecute.text;
 
     isChanged = false;
     Get.find<VMDraggableNestedMap>().isChanged = true;
