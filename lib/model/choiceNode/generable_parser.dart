@@ -113,7 +113,7 @@ abstract class GenerableParserAndPosition {
     if (data != null) {
       if (data is bool) {
         return data;
-      }else if (data is ValueTypeWrapper) {
+      } else if (data is ValueTypeWrapper) {
         return data.valueType.data is bool ? data.valueType.data : true;
       }
     }

@@ -61,7 +61,11 @@ class LineSetting extends GenerableParserAndPosition {
   @override
   void generateParser() {
     recursiveStatus.executeCodeString = '$valName += 1';
-    recursiveStatus.conditionClickableString = '$valName < $maxSelect';
+    if(isNeedToCheck()){
+      recursiveStatus.conditionClickableString = '$valName < $maxSelect';
+    }else{
+      recursiveStatus.conditionClickableString = 'true';
+    }
     super.generateParser();
   }
 
