@@ -88,7 +88,7 @@ class __$$_PosCopyWithImpl<$Res> extends _$PosCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_Pos extends _Pos {
-  _$_Pos({required final List<int> data})
+  _$_Pos({final List<int> data = const []})
       : _data = data,
         super._();
 
@@ -96,6 +96,7 @@ class _$_Pos extends _Pos {
 
   final List<int> _data;
   @override
+  @JsonKey()
   List<int> get data {
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_data);
@@ -133,7 +134,7 @@ class _$_Pos extends _Pos {
 }
 
 abstract class _Pos extends Pos {
-  factory _Pos({required final List<int> data}) = _$_Pos;
+  factory _Pos({final List<int> data}) = _$_Pos;
   _Pos._() : super._();
 
   factory _Pos.fromJson(Map<String, dynamic> json) = _$_Pos.fromJson;
