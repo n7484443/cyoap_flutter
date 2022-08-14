@@ -8,7 +8,6 @@ import '../util/version.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
 import 'choiceNode/choice_line.dart';
 import 'choiceNode/generable_parser.dart';
-import 'choiceNode/pos.dart';
 import 'design_setting.dart';
 import 'grammar/value_type.dart';
 
@@ -65,11 +64,11 @@ class AbstractPlatform {
     lineSettings[lineSetting.currentPos] = lineSetting;
   }
 
-  void addData(Pos pos, ChoiceNode node) {
+  void addData(List<int> pos, ChoiceNode node) {
     while (lineSettings.length <= pos.first) {
       lineSettings.add(LineSetting(lineSettings.length));
     }
-    var parent = getNode(pos.removeLast())!;
+    var parent = getNode(List.from(pos)..removeLast())!;
     parent.addChildren(node, pos: pos.last);
     checkDataCorrect();
   }
@@ -100,7 +99,7 @@ class AbstractPlatform {
     checkDataCorrect();
   }
 
-  GenerableParserAndPosition? getNode(Pos pos) {
+  GenerableParserAndPosition? getNode(List<int> pos) {
     if (pos.first == -100) {
       return ChoiceNode(
         1,
@@ -128,28 +127,28 @@ class AbstractPlatform {
     return getChoiceNode(pos);
   }
 
-  ChoiceNode removeData(Pos pos) {
+  ChoiceNode removeData(List<int> pos) {
     var node = getChoiceNode(pos)!;
     node.parent!.removeChildren(node);
     checkDataCorrect();
     return node;
   }
 
-  GenerableParserAndPosition? getGenerableParserAndPosition(Pos pos) {
+  GenerableParserAndPosition? getGenerableParserAndPosition(List<int> pos) {
     if (pos.first >= lineSettings.length) return null;
     GenerableParserAndPosition child = lineSettings[pos.first];
     for (var i = 1; i < pos.length; i++) {
-      if (child.children.length <= pos.data[i]) {
+      if (child.children.length <= pos[i]) {
         return null;
-      } else if (pos.data[i] < 0) {
+      } else if (pos[i] < 0) {
         return null;
       }
-      child = child.children[pos.data[i]];
+      child = child.children[pos[i]];
     }
     return child;
   }
 
-  ChoiceNode? getChoiceNode(Pos pos) {
+  ChoiceNode? getChoiceNode(List<int> pos) {
     return getGenerableParserAndPosition(pos) as ChoiceNode?;
   }
 

@@ -23,6 +23,21 @@ class NodeDragTarget extends ConsumerWidget {
   const NodeDragTarget(this.pos, {this.isHorizontal = false, Key? key})
       : super(key: key);
 
+  bool listEqualExceptLast(List<int> A, List<int> B) {
+    if (A.length != B.length) return false;
+    for (int i = 0; i < A.length - 1; i++) {
+      if (A[i] != B[i]) return false;
+    }
+    return true;
+  }
+
+  bool listContain(List<int> A, List<int> B) {
+    for (int i = 0; i < min(A.length, B.length); i++) {
+      if (A[i] != B[i]) return false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Visibility(
@@ -30,7 +45,7 @@ class NodeDragTarget extends ConsumerWidget {
       maintainSize: true,
       maintainAnimation: true,
       maintainState: true,
-      child: DragTarget<Pos>(
+      child: DragTarget<List<int>>(
         builder: (BuildContext context, List<dynamic> accepted,
             List<dynamic> rejected) {
           return Container(
@@ -38,27 +53,27 @@ class NodeDragTarget extends ConsumerWidget {
             height: isHorizontal ? 200 : null,
           );
         },
-        onWillAccept: (Pos? drag) {
-          return drag != null && !drag.contain(pos);
+        onWillAccept: (List<int>? drag) {
+          return drag != null && !listContain(drag, pos.data);
         },
-        onAccept: (Pos drag) {
-          if (drag.last == nonPositioned) {
+        onAccept: (List<int> drag) {
+          if (drag[drag.length - 1] == nonPositioned) {
             ref
                 .read(vmDraggableNestedMapProvider)
-                .changeData(ref, drag, pos);
-          } else if (drag.last == removedPositioned) {
+                .changeData(ref, drag, pos.data);
+          } else if (drag[drag.length - 1] == removedPositioned) {
             ref
                 .read(vmDraggableNestedMapProvider)
-                .addData(ref, pos, ref.read(removedChoiceNode)!.clone());
-          } else if (pos.equalExceptLast(drag) &&
+                .addData(ref, pos.data, ref.read(removedChoiceNode)!.clone());
+          } else if (listEqualExceptLast(pos.data, drag) &&
               (pos.data.last - 1) >= drag.last) {
             ref
                 .read(vmDraggableNestedMapProvider)
-                .changeData(ref, drag, Pos(data: List.from(pos.data)..last -= 1));
+                .changeData(ref, drag, List.from(pos.data)..last -= 1);
           } else {
             ref
                 .read(vmDraggableNestedMapProvider)
-                .changeData(ref, drag, pos);
+                .changeData(ref, drag, pos.data);
           }
         },
       ),
@@ -445,7 +460,7 @@ class ChoiceLine extends ConsumerWidget {
           children: [
             NodeDivider(y),
             ViewWrapCustomReorderable(
-              line.pos(), (i) => NodeDragTarget(Pos(data: [y, i]))
+              line.pos(),(i) => NodeDragTarget(Pos(data: [y, i]))
             ),
           ],
         ),
