@@ -87,8 +87,10 @@ class __$$_PosCopyWithImpl<$Res> extends _$PosCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Pos implements _Pos {
-  _$_Pos({required final List<int> data}) : _data = data;
+class _$_Pos extends _Pos {
+  _$_Pos({required final List<int> data})
+      : _data = data,
+        super._();
 
   factory _$_Pos.fromJson(Map<String, dynamic> json) => _$$_PosFromJson(json);
 
@@ -130,8 +132,9 @@ class _$_Pos implements _Pos {
   }
 }
 
-abstract class _Pos implements Pos {
+abstract class _Pos extends Pos {
   factory _Pos({required final List<int> data}) = _$_Pos;
+  _Pos._() : super._();
 
   factory _Pos.fromJson(Map<String, dynamic> json) = _$_Pos.fromJson;
 

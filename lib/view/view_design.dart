@@ -202,14 +202,14 @@ class ViewDesignSetting extends ConsumerWidget {
                           Expanded(
                             flex: 3,
                             child: IgnorePointer(
-                              child: ViewChoiceNode(Pos(data: [-1])),
+                              child: ViewChoiceNode(Pos(data: [-100])),
                             ),
                           ),
                           const Spacer(),
                           Expanded(
                             flex: 3,
                             child: IgnorePointer(
-                              child: ViewChoiceNode(Pos(data: [-1])),
+                              child: ViewChoiceNode(Pos(data: [-101])),
                             ),
                           )
                         ],

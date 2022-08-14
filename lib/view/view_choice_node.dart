@@ -474,18 +474,22 @@ class ViewChoiceNodeContent extends ConsumerWidget {
     Widget title = ViewTitleWithEdit(pos);
 
     Widget? child;
-    if (isEditable) {
-      child = ViewWrapCustomReorderable(
-        pos,(i) => NodeDragTarget(Pos(data: [...pos.data, i])),
-        maxSize: node.getMaxSize(true),
-      );
-    } else if (node.children.isNotEmpty) {
-      child = ViewWrapCustom(
-        pos,
-        (child) => ViewChoiceNode(child.pos()),
-        maxSize: node.getMaxSize(true),
-      );
+    if(pos.isValid){
+      if (isEditable) {
+        child = ViewWrapCustomReorderable(
+          pos, (i) => NodeDragTarget(Pos(data: [...pos.data, i])),
+          maxSize: node.getMaxSize(true),
+        );
+      } else if (node.children.isNotEmpty) {
+        child = ViewWrapCustom(
+          pos,
+              (child) => ViewChoiceNode(child.pos()),
+          maxSize: node.getMaxSize(true),
+        );
+      }
     }
+
+    child ??= const SizedBox.shrink();
     if (ref.watch(imagePositionProvider(pos)) == 1) {
       return Column(
         children: [

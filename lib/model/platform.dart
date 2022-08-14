@@ -100,7 +100,7 @@ class AbstractPlatform {
   }
 
   GenerableParserAndPosition? getNode(List<int> pos) {
-    if (pos.first == -1) {
+    if (pos.first == -100) {
       return ChoiceNode(
         1,
         true,
@@ -109,7 +109,7 @@ class AbstractPlatform {
         "noImage",
       )..currentPos = -1;
     }
-    if (pos.first == -2) {
+    if (pos.first == -101) {
       return ChoiceNode(
         1,
         false,
