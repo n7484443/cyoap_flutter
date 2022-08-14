@@ -68,18 +68,18 @@ class ViewMake extends ConsumerWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          DragTarget<List<int>>(
+          DragTarget<Pos>(
             builder: (BuildContext context, List<dynamic> accepted,
                 List<dynamic> rejected) {
               return const Tooltip(
                   message: '드래그&드랍으로 선택지 삭제', child: Icon(Icons.delete));
             },
-            onAccept: (List<int> data) {
+            onAccept: (Pos data) {
               ref.read(vmDraggableNestedMapProvider).removeData(ref, data);
             },
           ),
-          Draggable<List<int>>(
-            data: [nonPositioned, nonPositioned],
+          Draggable<Pos>(
+            data: Pos(data: [nonPositioned, nonPositioned]),
             feedback: Transform.scale(
               scale: 0.9,
               child: Opacity(
@@ -105,8 +105,8 @@ class ViewMake extends ConsumerWidget {
           ),
           Visibility(
             visible: ref.watch(removedChoiceNode) != null,
-            child: Draggable<List<int>>(
-              data: [removedPositioned, removedPositioned],
+            child: Draggable<Pos>(
+              data: Pos(data: [nonPositioned, nonPositioned]),
               feedback: Transform.scale(
                 scale: 0.9,
                 child: Opacity(

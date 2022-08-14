@@ -190,11 +190,11 @@ class NodeDraggable extends ConsumerWidget {
     }
     var widget = ViewChoiceNode(pos);
     if (Platform.isAndroid) {
-      return LongPressDraggable<List<int>>(
+      return LongPressDraggable<Pos>(
         onDragUpdate: (details) => ref
             .read(dragPositionProvider.notifier)
             .state = details.localPosition.dy,
-        data: pos.data,
+        data: pos,
         feedback: Opacity(
           opacity: 0.5,
           child: SizedBox(
@@ -220,11 +220,11 @@ class NodeDraggable extends ConsumerWidget {
         },
       );
     } else {
-      return Draggable<List<int>>(
+      return Draggable<Pos>(
         onDragUpdate: (details) => ref
             .read(dragPositionProvider.notifier)
             .state = details.localPosition.dy,
-        data: pos.data,
+        data: pos,
         feedback: Opacity(
           opacity: 0.5,
           child: SizedBox(
