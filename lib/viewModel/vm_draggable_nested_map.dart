@@ -53,7 +53,7 @@ class VMDraggableNestedMap {
     refreshPage(ref);
   }
 
-  void removeData(WidgetRef ref, List<int> data) {
+  void removeData(WidgetRef ref, Pos data) {
     var choiceNode = getPlatform.removeData(data);
     copyData(ref, choiceNode);
     VariableDataBase().updateCheckList();
@@ -61,7 +61,7 @@ class VMDraggableNestedMap {
     refreshPage(ref);
   }
 
-  void addData(WidgetRef ref, List<int> data, ChoiceNode choiceNode) {
+  void addData(WidgetRef ref, Pos data, ChoiceNode choiceNode) {
     getPlatform.addData(data, choiceNode);
     VariableDataBase().updateCheckList();
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
@@ -72,7 +72,7 @@ class VMDraggableNestedMap {
     return ChoiceNode.noTitle(3, true, '', '');
   }
 
-  void changeData(WidgetRef ref, List<int> input, List<int> target) {
+  void changeData(WidgetRef ref, Pos input, Pos target) {
     if (input.last == nonPositioned) {
       getPlatform.addData(target, createNodeForTemp());
     } else {
@@ -80,7 +80,7 @@ class VMDraggableNestedMap {
       var targetNode = getPlatform.getChoiceNode(target);
       if (targetNode == null) {
         var generableParser = getPlatform
-            .getGenerableParserAndPosition(List.from(target)..removeLast());
+            .getGenerableParserAndPosition(target.removeLast());
         if (generableParser == null) {
           getPlatform.removeData(input);
           getPlatform.addData(target, inputNode);
