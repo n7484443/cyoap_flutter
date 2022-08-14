@@ -471,6 +471,8 @@ class ViewChoiceNodeContent extends ConsumerWidget {
       image = const SizedBox.shrink();
     }
 
+    Widget title = ViewTitleWithEdit(pos);
+
     Widget? child;
     if(pos.isValid){
       if (isEditable) {
@@ -486,12 +488,12 @@ class ViewChoiceNodeContent extends ConsumerWidget {
         );
       }
     }
-    child ??= const SizedBox.shrink();
 
+    child ??= const SizedBox.shrink();
     if (ref.watch(imagePositionProvider(pos)) == 1) {
       return Column(
         children: [
-          ViewTitleWithEdit(pos),
+          title,
           Row(
             children: [
               Flexible(
@@ -500,14 +502,14 @@ class ViewChoiceNodeContent extends ConsumerWidget {
               Expanded(child: image),
             ],
           ),
-          child,
+          if (child != null) child,
         ],
       );
     }
     if (ref.watch(imagePositionProvider(pos)) == 2) {
       return Column(
         children: [
-          ViewTitleWithEdit(pos),
+          title,
           Row(
             children: [
               Expanded(child: image),
@@ -516,7 +518,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
               ),
             ],
           ),
-          child,
+          if (child != null) child,
         ],
       );
     }
@@ -529,25 +531,25 @@ class ViewChoiceNodeContent extends ConsumerWidget {
               : Alignment.bottomCenter,
           children: [
             image,
-            ViewTitleWithEdit(pos),
+            title,
           ],
         ),
       ];
     } else if (ref.watch(titlePositionProvider)) {
       subWidget = [
-        ViewTitleWithEdit(pos),
+        title,
         image,
       ];
     } else {
       subWidget = [
         image,
-        ViewTitleWithEdit(pos),
+        title,
       ];
     }
 
     subWidget.addAll([
       ViewContents(pos),
-      child,
+      if (child != null) child,
     ]);
 
     if (!isEditable &&

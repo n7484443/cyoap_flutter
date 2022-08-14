@@ -7,8 +7,7 @@ part of 'pos.dart';
 // **************************************************************************
 
 _$_Pos _$$_PosFromJson(Map<String, dynamic> json) => _$_Pos(
-      data: (json['data'] as List<dynamic>?)?.map((e) => e as int).toList() ??
-          const [],
+      data: (json['data'] as List<dynamic>).map((e) => e as int).toList(),
     );
 
 Map<String, dynamic> _$$_PosToJson(_$_Pos instance) => <String, dynamic>{

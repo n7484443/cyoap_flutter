@@ -139,11 +139,17 @@ abstract class GenerableParserAndPosition {
     }
   }
 
-  Pos pos({Pos? posList}) {
-    posList = parent?.pos(posList: posList);
-    posList ??= Pos();
-    posList.addLast(currentPos);
-    return posList;
+  Pos pos({List<int>? posList}) {
+    if (posList == null) {
+      posList = List.empty(growable: true);
+    } else {
+      posList = List.from(posList);
+    }
+    if (parent != null) {
+      posList.addAll(parent!.pos(posList: posList).data);
+    }
+    posList.add(currentPos);
+    return Pos(data: posList);
   }
 
   void addChildren(GenerableParserAndPosition childNode, {int? pos}) {
