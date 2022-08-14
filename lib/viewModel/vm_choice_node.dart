@@ -17,8 +17,8 @@ const int nonPositioned = -1;
 const int removedPositioned = -2;
 
 void refreshChild(WidgetRef ref, GenerableParserAndPosition node) {
-  ref.invalidate(choiceNodeProvider(node.pos()));
-  ref.read(childrenChangeProvider(node.pos()).notifier).update();
+  ref.invalidate(choiceNodeProvider(node.pos));
+  ref.read(childrenChangeProvider(node.pos).notifier).update();
   for (var child in node.children) {
     refreshChild(ref, child);
   }
@@ -182,7 +182,7 @@ class ChoiceNodeSizeNotifier extends StateNotifier<int> {
     state = width.clamp(0, node.getMaxSize(false));
     node.width = state;
     for (var child in node.children) {
-      ref.read(choiceNodeSizeProvider(child.pos()).notifier).sizeChange(0);
+      ref.read(choiceNodeSizeProvider(child.pos).notifier).sizeChange(0);
     }
   }
 }
@@ -191,7 +191,7 @@ void updateStatusAll(Ref ref) {
   getPlatform.updateStatusAll();
   for (var lineSetting in getPlatform.lineSettings) {
     for (var node in lineSetting.children) {
-      ref.refresh(choiceNodeStatusProvider(node.pos()));
+      ref.refresh(choiceNodeStatusProvider(node.pos));
     }
   }
 }
@@ -200,7 +200,7 @@ void updateImageAll(Ref ref) {
   getPlatform.updateStatusAll();
   for (var lineSetting in getPlatform.lineSettings) {
     for (var node in lineSetting.children) {
-      ref.refresh(imageStringProvider(node.pos()));
+      ref.refresh(imageStringProvider(node.pos));
     }
   }
 }

@@ -87,12 +87,12 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
               addBuildDraggable(outputWidget, i, horizontal: true);
             }
           }
-          outputWidget.add(NodeDraggable(child.pos()));
+          outputWidget.add(NodeDraggable(child.pos));
           subWidget = List.empty(growable: true);
           addBuildDraggable(outputWidget, i + 1, horizontal: true);
         } else {
           subWidget
-              .add(Expanded(flex: size * mul.item1, child: NodeDraggable(child.pos())));
+              .add(Expanded(flex: size * mul.item1, child: NodeDraggable(child.pos)));
           addBuildDraggable(subWidget, i + 1);
           stack += size;
         }

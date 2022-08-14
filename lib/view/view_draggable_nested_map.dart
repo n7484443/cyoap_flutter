@@ -445,7 +445,7 @@ class ChoiceLine extends ConsumerWidget {
           children: [
             NodeDivider(y),
             ViewWrapCustomReorderable(
-              line.pos(), (i) => NodeDragTarget(Pos(data: [y, i]))
+              line.pos, (i) => NodeDragTarget(Pos(data: [y, i]))
             ),
           ],
         ),
@@ -462,8 +462,8 @@ class ChoiceLine extends ConsumerWidget {
             bottom: 12,
           ),
           child: ViewWrapCustom(
-            line.pos(),
-            (child) => ViewChoiceNode(child.pos()),
+            line.pos,
+            (child) => ViewChoiceNode(child.pos),
             isInner: false,
           ),
         ),

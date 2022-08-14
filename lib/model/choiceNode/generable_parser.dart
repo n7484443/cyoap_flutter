@@ -139,8 +139,8 @@ abstract class GenerableParserAndPosition {
     }
   }
 
-  Pos pos() {
-    var posList = parent?.pos() ?? Pos();
+  Pos get pos {
+    var posList = parent?.pos ?? Pos();
     return posList.addLast(currentPos);
   }
 

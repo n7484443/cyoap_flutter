@@ -414,7 +414,7 @@ class _ViewContentsState extends ConsumerState<ViewContents> {
     var node = ref.watch(choiceNodeProvider(widget.pos))!;
     if (_quillController!.document.isEmpty()) {
       if (node.choiceNodeMode == ChoiceNodeMode.multiSelect) {
-        return ViewChoiceNodeMultiSelect(node.pos());
+        return ViewChoiceNodeMultiSelect(node.pos);
       } else {
         return const SizedBox.shrink();
       }
@@ -437,7 +437,7 @@ class _ViewContentsState extends ConsumerState<ViewContents> {
       if (node.choiceNodeMode == ChoiceNodeMode.multiSelect) {
         return Column(children: [
           contentText,
-          ViewChoiceNodeMultiSelect(node.pos()),
+          ViewChoiceNodeMultiSelect(node.pos),
         ]);
       } else {
         return contentText;
@@ -481,7 +481,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
       } else if (node.children.isNotEmpty) {
         child = ViewWrapCustom(
           pos,
-              (child) => ViewChoiceNode(child.pos()),
+              (child) => ViewChoiceNode(child.pos),
           maxSize: node.getMaxSize(true),
         );
       }
