@@ -1,91 +1,78 @@
-import 'dart:math';
-
+import 'package:cyoap_flutter/model/choiceNode/choice_line.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
-import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../main.dart';
 import '../model/choiceNode/choice_node.dart';
-import '../model/editor.dart';
+import '../model/choiceNode/generable_parser.dart';
+import '../model/choiceNode/pos.dart';
 import '../model/image_db.dart';
 import '../model/platform_system.dart';
+import '../model/variable_db.dart';
 
 const int maxWidthSize = 12;
 
-class VMDraggableNestedMap extends GetxController {
-  List<int>? drag;
+final draggableNestedMapChangedProvider = StateProvider<bool>((ref) => false);
 
-  ScrollController scroller = ScrollController();
+final vmDraggableNestedMapProvider =
+    Provider.autoDispose((ref) => VMDraggableNestedMap(ref));
 
-  bool isChanged = false;
+final removedChoiceNode = StateProvider.autoDispose<ChoiceNode?>((ref) => null);
+final dragPositionProvider = StateProvider.autoDispose<double?>((ref) => null);
+final backgroundColorProvider = Provider.autoDispose<Color>(
+    (ref) => getPlatform.designSetting.colorBackground);
 
-  BoxConstraints? constrain;
+final dragChoiceNodeProvider =
+    StateNotifierProvider.autoDispose<DragChoiceNodeNotifier, Pos?>(
+        (ref) => DragChoiceNodeNotifier(ref));
 
-  Rx<ChoiceNode?> removedData = Rx(null);
+class DragChoiceNodeNotifier extends StateNotifier<Pos?> {
+  Ref ref;
 
-  @override
-  void onClose() {
+  DragChoiceNodeNotifier(this.ref) : super(null);
+
+  void dragStart(Pos pos) {
+    state = pos.copyWith();
+  }
+
+  void dragEnd() {
+    state = null;
+  }
+}
+
+class VMDraggableNestedMap {
+  Ref ref;
+
+  VMDraggableNestedMap(this.ref) {
     ImageDB().clearImageCache();
-    super.onClose();
   }
 
-  bool isVisibleDragTarget(int x, int y) {
-    if (drag == null) return false;
-    return drag![drag!.length - 1] != x - 1 || drag![drag!.length - 2] != y;
+  void copyData(WidgetRef ref, ChoiceNode choiceNode) {
+    ref.read(removedChoiceNode.notifier).state = choiceNode.clone();
+    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+    refreshPage(ref);
   }
 
-  @override
-  void update([List<Object>? ids, bool condition = true]) {
-    super.update();
-    Get.find<VMVariableTable>().update();
-    isChanged = true;
-  }
-
-  void copyData(ChoiceNode choiceNode) {
-    removedData.value = choiceNode.clone();
-    removedData.refresh();
-  }
-
-  void removeData(List<int> data) {
+  void removeData(WidgetRef ref, List<int> data) {
     var choiceNode = getPlatform.removeData(data);
-    copyData(choiceNode);
-    updateVMChoiceNode(data);
-    update();
+    copyData(ref, choiceNode);
+    VariableDataBase().updateCheckList();
+    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+    refreshPage(ref);
   }
 
-  void addData(List<int> data, ChoiceNode choiceNode) {
+  void addData(WidgetRef ref, List<int> data, ChoiceNode choiceNode) {
     getPlatform.addData(data, choiceNode);
-    updateVMChoiceNode(data);
-    update();
-  }
-
-  void updateVMChoiceNodeAll() {
-    for (var i = 0; i < getPlatform.lineSettings.length; i++) {
-      updateVMChoiceNodeLine(i);
-    }
-  }
-
-  void updateVMChoiceNode(List<int> tag) {
-    var node = VMChoiceNode.getNode(tag);
-    if (node == null) return;
-    var parentNode = (node as ChoiceNode).getParentLast()!;
-    updateVMChoiceNodeLine(parentNode.parent!.currentPos);
-  }
-
-  void updateVMChoiceNodeLine(int pos) {
-    var lineSetting = getPlatform.lineSettings;
-    if (pos >= lineSetting.length) return;
-    for (var node in lineSetting[pos].children) {
-      VMChoiceNode.getVMChoiceNodeFromTag(node.tag)?.updateFromNode();
-    }
+    VariableDataBase().updateCheckList();
+    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+    refreshPage(ref);
   }
 
   static ChoiceNode createNodeForTemp() {
     return ChoiceNode.noTitle(3, true, '', '');
   }
 
-  void changeData(List<int> input, List<int> target) {
+  void changeData(WidgetRef ref, List<int> input, List<int> target) {
     if (input.last == nonPositioned) {
       getPlatform.addData(target, createNodeForTemp());
     } else {
@@ -103,89 +90,70 @@ class VMDraggableNestedMap extends GetxController {
       } else {
         getPlatform.insertData(inputNode, targetNode);
       }
-      updateVMChoiceNode(input);
     }
-    updateVMChoiceNode(target);
-    update();
-  }
-
-  void dragStart(List<int> pos) {
-    drag = List.from(pos);
-    VMChoiceNode.getVMChoiceNodeFromList(drag!)?.isDrag.value = true;
-    update();
-  }
-
-  void dragEnd() {
-    if (drag != null) {
-      VMChoiceNode.getVMChoiceNodeFromList(drag!)?.isDrag.value = false;
-      drag = null;
-      update();
-    }
-  }
-
-  double get maxWidth => constrain!.maxWidth;
-
-  void dragUpdate(DragUpdateDetails details, BuildContext context) {
-    double topY = 0;
-    double bottomY = topY + constrain!.maxHeight;
-
-    var detectedRange = constrain!.maxHeight * 0.06;
-    var moveDistance = ConstList.isSmallDisplay(context) ? 0.8 : 1;
-    if (details.localPosition.dy < topY + detectedRange) {
-      scroller.jumpTo(max(scroller.offset - moveDistance, 0));
-    }
-    if (details.localPosition.dy > bottomY - detectedRange) {
-      scroller.jumpTo(scroller.offset + moveDistance);
-    }
-  }
-
-  Color get backgroundColor => getPlatform.designSetting.colorBackground;
-
-  double scale(BuildContext context) {
-    var sizeMultiply = ConstList.isSmallDisplay(context) ? 0.85 : 1.0;
-    return sizeMultiply;
-  }
-
-  void addMaxSelect(int y, int max) {
-    if ((getPlatform.getLineSetting(y)!.maxSelect + max) >= -1) {
-      getPlatform.getLineSetting(y)?.maxSelect += max;
-    }
-    update();
-    isChanged = true;
-  }
-
-  void updateLineAlwaysVisible(int y) {
-    getPlatform.getLineSetting(y)!.alwaysVisible =
-        !getPlatform.getLineSetting(y)!.alwaysVisible;
-    update();
-    isChanged = true;
-  }
-
-  bool lineAlwaysVisible(int y) {
-    return getPlatform.getLineSetting(y)!.alwaysVisible;
-  }
-
-  set editNode(ChoiceNode node) => NodeEditor().target = node;
-
-  String getMaxSelect(int y) {
-    var line = getPlatform.getLineSetting(y);
-    var max = line == null ? -1 : line.maxSelect;
-    return max == -1 ? '무한' : '$max';
-  }
-
-  void moveLine(int before, int after) {
-    if (after >= getPlatform.lineSettings.length) {
-      return;
-    }
-    if (after < 0) {
-      return;
-    }
-    var temp = getPlatform.lineSettings[before];
-    getPlatform.lineSettings[before] = getPlatform.lineSettings[after];
-    getPlatform.lineSettings[after] = temp;
-    getPlatform.checkDataCorrect();
-    updateVMChoiceNodeLine(before);
-    updateVMChoiceNodeLine(after);
-    update();
+    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+    refreshPage(ref);
   }
 }
+
+void moveLine(WidgetRef ref, int before, int after) {
+  if (after >= getPlatform.lineSettings.length) {
+    return;
+  }
+  if (after < 0) {
+    return;
+  }
+  var temp = getPlatform.lineSettings[before];
+  getPlatform.lineSettings[before] = getPlatform.lineSettings[after];
+  getPlatform.lineSettings[after] = temp;
+  getPlatform.checkDataCorrect();
+  refreshLine(ref, before);
+  refreshLine(ref, after);
+}
+
+void refreshPage(WidgetRef ref) {
+  for (var pos = 0; pos < getPlatform.lineSettings.length; pos++) {
+    refreshLine(ref, pos);
+  }
+}
+
+void refreshLine(WidgetRef ref, int pos) {
+  ref.invalidate(lineProvider(pos));
+  ref.read(childrenChangeProvider(Pos(data: [pos])).notifier).update();
+  for (var child in ref.read(lineProvider(pos))!.children) {
+    refreshChild(ref, child);
+  }
+}
+
+final lineProvider = Provider.autoDispose
+    .family<LineSetting?, int>((ref, pos) => getPlatform.getLineSetting(pos));
+
+final childrenProvider = Provider.autoDispose
+    .family<List<GenerableParserAndPosition>, Pos>((ref, pos) {
+  if (pos.data.length == 1) {
+    return ref.watch(lineProvider(pos.data.first))!.children;
+  } else {
+    return ref.watch(choiceNodeProvider(pos))!.children;
+  }
+});
+
+final childrenChangeProvider = StateNotifierProvider.autoDispose
+    .family<ChildrenNotifier, List<GenerableParserAndPosition>, Pos>(
+        (ref, pos) => ChildrenNotifier(ref, pos));
+
+class ChildrenNotifier extends StateNotifier<List<GenerableParserAndPosition>> {
+  Ref ref;
+  Pos pos;
+
+  ChildrenNotifier(this.ref, this.pos) : super([...ref.read(childrenProvider(pos))]);
+
+  void update() {
+    state = [...ref.read(childrenProvider(pos))];
+  }
+}
+
+final lineAlwaysVisibleProvider = StateProvider.autoDispose.family<bool, int>(
+    (ref, pos) => ref.watch(lineProvider(pos))!.alwaysVisible);
+
+final lineMaxSelectProvider = StateProvider.autoDispose
+    .family<int, int>((ref, pos) => ref.watch(lineProvider(pos))!.maxSelect);

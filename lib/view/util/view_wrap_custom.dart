@@ -1,29 +1,30 @@
+import 'dart:io';
+
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
+import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_utils/src/platform/platform.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../model/choiceNode/choice_node.dart';
 import '../../model/choiceNode/generable_parser.dart';
+import '../../model/choiceNode/pos.dart';
+import '../view_choice_node.dart';
 
 const int defaultMaxSize = 12;
 
-class ViewWrapCustomReorderable extends StatelessWidget {
-  final List<GenerableParserAndPosition> children = List.empty(growable: true);
-  final Widget Function(ChoiceNode) builder;
-  final Widget Function(int)? builderDraggable;
+class ViewWrapCustomReorderable extends ConsumerWidget {
+  final Pos parentPos;
+  final Widget Function(int) builderDraggable;
   final int maxSize;
   final bool setCenter;
 
-  ViewWrapCustomReorderable(
-      List<GenerableParserAndPosition> children, this.builder,
+  ViewWrapCustomReorderable(this.parentPos, this.builderDraggable,
       {this.maxSize = defaultMaxSize,
-      this.builderDraggable,
       this.setCenter = false,
       Key? key})
       : super(key: key) {
-    this.children.addAll(children);
-    if (GetPlatform.isMobile) {
+    if (Platform.isAndroid) {
       mul = const Tuple2(7, 4);
     } else {
       mul = const Tuple2(5, 2);
@@ -34,22 +35,21 @@ class ViewWrapCustomReorderable extends StatelessWidget {
 
   void addBuildDraggable(List<Widget> widget, int pos,
       {bool horizontal = false}) {
-    if (builderDraggable != null) {
-      if (horizontal) {
-        widget.add(Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-              height: nodeBaseHeight / 6, child: builderDraggable!(pos)),
-        ));
-      } else {
-        widget.add(Expanded(flex: mul.item2, child: builderDraggable!(pos)));
-      }
+    if (horizontal) {
+      widget.add(Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+            height: nodeBaseHeight / 6, child: builderDraggable(pos)),
+      ));
+    } else {
+      widget.add(Expanded(flex: mul.item2, child: builderDraggable(pos)));
     }
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     List<Widget> outputWidget = List<Widget>.empty(growable: true);
+    var children = ref.watch(childrenChangeProvider(parentPos));
     if (children.isNotEmpty) {
       int stack = 0;
       List<Widget> subWidget = List<Widget>.empty(growable: true);
@@ -87,12 +87,12 @@ class ViewWrapCustomReorderable extends StatelessWidget {
               addBuildDraggable(outputWidget, i, horizontal: true);
             }
           }
-          outputWidget.add(builder(child));
+          outputWidget.add(NodeDraggable(child.pos()));
           subWidget = List.empty(growable: true);
           addBuildDraggable(outputWidget, i + 1, horizontal: true);
         } else {
           subWidget
-              .add(Expanded(flex: size * mul.item1, child: builder(child)));
+              .add(Expanded(flex: size * mul.item1, child: NodeDraggable(child.pos())));
           addBuildDraggable(subWidget, i + 1);
           stack += size;
         }
@@ -113,7 +113,8 @@ class ViewWrapCustomReorderable extends StatelessWidget {
         );
       }
     } else {
-      addBuildDraggable(outputWidget, children.length, horizontal: true);
+      addBuildDraggable(outputWidget, children.length,
+          horizontal: true);
     }
 
     return Column(
@@ -123,21 +124,20 @@ class ViewWrapCustomReorderable extends StatelessWidget {
   }
 }
 
-class ViewWrapCustom extends StatelessWidget {
-  final List<GenerableParserAndPosition> children = List.empty(growable: true);
+class ViewWrapCustom extends ConsumerWidget {
+  final Pos parentPos;
   final Widget Function(ChoiceNode) builder;
   final int maxSize;
   final bool isInner;
 
-  ViewWrapCustom(List<GenerableParserAndPosition> children, this.builder,
+  const ViewWrapCustom(this.parentPos, this.builder,
       {this.isInner = true, this.maxSize = defaultMaxSize, Key? key})
-      : super(key: key) {
-    this.children.addAll(children);
-  }
+      : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     List<Widget> outputWidget = List<Widget>.empty(growable: true);
+    var children = ref.watch(childrenProvider(parentPos));
     if (children.isNotEmpty) {
       int stack = 0;
       List<Widget> subWidget = List<Widget>.empty(growable: true);

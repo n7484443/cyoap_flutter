@@ -7,15 +7,16 @@ import 'package:cyoap_flutter/view/util/view_text_outline.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 
+import '../model/choiceNode/pos.dart';
 import '../model/design_setting.dart';
 import '../viewModel/vm_choice_node.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
 
-class NodeDragTarget extends GetView<VMDraggableNestedMap> {
-  final List<int> pos;
+class NodeDragTarget extends ConsumerWidget {
+  final Pos pos;
   final Color baseColor = Colors.black12;
   final bool isHorizontal;
 
@@ -38,9 +39,9 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Visibility(
-      visible: controller.drag != null,
+      visible: ref.watch(dragChoiceNodeProvider) != null,
       maintainSize: true,
       maintainAnimation: true,
       maintainState: true,
@@ -53,19 +54,26 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
           );
         },
         onWillAccept: (List<int>? drag) {
-          return drag != null && !listContain(drag, pos);
+          return drag != null && !listContain(drag, pos.data);
         },
         onAccept: (List<int> drag) {
           if (drag[drag.length - 1] == nonPositioned) {
-            controller.changeData(drag, pos);
+            ref
+                .read(vmDraggableNestedMapProvider)
+                .changeData(ref, drag, pos.data);
           } else if (drag[drag.length - 1] == removedPositioned) {
-            controller.addData(pos, controller.removedData.value!.clone());
-            controller.updateVMChoiceNodeAll();
-          } else if (listEqualExceptLast(pos, drag) &&
-              (pos.last - 1) >= drag.last) {
-            controller.changeData(drag, List.from(pos)..last -= 1);
+            ref
+                .read(vmDraggableNestedMapProvider)
+                .addData(ref, pos.data, ref.read(removedChoiceNode)!.clone());
+          } else if (listEqualExceptLast(pos.data, drag) &&
+              (pos.data.last - 1) >= drag.last) {
+            ref
+                .read(vmDraggableNestedMapProvider)
+                .changeData(ref, drag, List.from(pos.data)..last -= 1);
           } else {
-            controller.changeData(drag, pos);
+            ref
+                .read(vmDraggableNestedMapProvider)
+                .changeData(ref, drag, pos.data);
           }
         },
       ),
@@ -73,17 +81,52 @@ class NodeDragTarget extends GetView<VMDraggableNestedMap> {
   }
 }
 
-class NodeDividerDialog extends StatelessWidget {
+class NodeDividerDialog extends ConsumerStatefulWidget {
   final int y;
-  final TextEditingController textFieldController;
 
-  const NodeDividerDialog(this.y, this.textFieldController, {Key? key})
-      : super(key: key);
+  const NodeDividerDialog(
+    this.y, {
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  ConsumerState createState() => _NodeDividerDialogState();
+}
+
+class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
+  TextEditingController? _textFieldController;
+
+  @override
+  void initState() {
+    _textFieldController = TextEditingController(
+        text: ref.read(lineProvider(widget.y))
+                ?.recursiveStatus
+                .conditionVisibleString ??
+            "");
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _textFieldController?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<VMDraggableNestedMap>(
-      builder: (_) => Column(
+    ref.listen(lineAlwaysVisibleProvider(widget.y), (previous, bool next) {
+      getPlatform.getLineSetting(widget.y)!.alwaysVisible = next;
+      ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+    });
+    ref.listen(lineMaxSelectProvider(widget.y), (previous, int next) {
+      getPlatform.getLineSetting(widget.y)!.maxSelect = next;
+      ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+    });
+    var maxSelect = ref.watch(lineMaxSelectProvider(widget.y));
+    var maxSelectString = maxSelect == -1 ? "max" : maxSelect.toString();
+    return AlertDialog(
+      title: Text('변수명 : lineSetting_${widget.y}'),
+      content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Row(
@@ -93,42 +136,54 @@ class NodeDividerDialog extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.chevron_left),
                 onPressed: () {
-                  _.addMaxSelect(y, -1);
+                  ref
+                      .read(lineMaxSelectProvider(widget.y).notifier)
+                      .update((state) => state >= 0 ? state - 1 : state);
                 },
               ),
-              Text(_.getMaxSelect(y)),
+              Text(maxSelectString),
               IconButton(
                 icon: const Icon(Icons.chevron_right),
                 onPressed: () {
-                  _.addMaxSelect(y, 1);
+                  ref
+                      .read(lineMaxSelectProvider(widget.y).notifier)
+                      .update((state) => state += 1);
                 },
               ),
             ],
           ),
           ViewSwitchLabel(
-            () => _.updateLineAlwaysVisible(y),
-            _.lineAlwaysVisible(y),
+            () => ref
+                .read(lineAlwaysVisibleProvider(widget.y).notifier)
+                .update((state) => !state),
+            ref.watch(lineAlwaysVisibleProvider(widget.y)),
             label: '항상 보임',
           ),
           TextField(
-            controller: textFieldController,
+            controller: _textFieldController,
             decoration: const InputDecoration(
-                hintText: '보이는 조건(true일 때 보임, 비어있을 시 true)'),
+                hintText: '보이는 조건(true 일 때 보임, 비어있을 시 true)'),
           ),
         ],
       ),
+      actions: [
+        TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(_textFieldController!.text);
+            },
+            child: const Text("확인"))
+      ],
     );
   }
 }
 
-class NodeDivider extends GetView<VMDraggableNestedMap> {
+class NodeDivider extends ConsumerWidget {
   final int y;
 
   const NodeDivider(this.y, {Key? key}) : super(key: key);
 
-  Color getColorLine() {
-    if (y < getPlatform.lineSettings.length &&
-        !getPlatform.getLineSetting(y)!.alwaysVisible) {
+  Color getColorLine(bool alwaysVisible) {
+    if (y < getPlatform.lineSettings.length && !alwaysVisible) {
       return Colors.blueAccent;
     }
     if (getPlatform.designSetting.colorBackground.computeLuminance() > 0.5) {
@@ -144,58 +199,46 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     if (y >= getPlatform.lineSettings.length) {
       return Divider(
         thickness: 4,
-        color: getColorLine(),
+        color: getColorLine(ref.watch(lineAlwaysVisibleProvider(y))),
       );
     }
-    if (!getPlatform.lineSettings[y].alwaysVisible && !isEditable) {
+    if (!ref.watch(lineAlwaysVisibleProvider(y)) && !isEditable) {
       return const Divider(
         thickness: 4,
         color: Colors.transparent,
       );
     }
-    var maxSelectText = Visibility(
-      visible: controller.getMaxSelect(y) != '무한',
-      child: TextOutline(
-          '최대 ${controller.getMaxSelect(y)}개만큼 선택 가능', 18.0, titleFont,
-          strokeWidth: 5.0),
-    );
+    var maxSelect = ref.watch(lineMaxSelectProvider(y));
     var divider = Divider(
       thickness: 4,
-      color: getColorLine(),
+      color: getColorLine(ref.watch(lineAlwaysVisibleProvider(y))),
     );
 
     if (isEditable) {
-      var textFieldController = TextEditingController();
-      textFieldController.text = getPlatform
-              .getLineSetting(y)
-              ?.recursiveStatus
-              .conditionVisibleString ??
-          "";
-      Future dialog() => Get.defaultDialog(
-            title: '변수명 : lineSetting_$y',
-            content: NodeDividerDialog(y, textFieldController),
-          ).then((value) {
-            if (getPlatform
-                    .getLineSetting(y)
-                    ?.recursiveStatus
-                    .conditionVisibleString !=
-                textFieldController.text) {
-              getPlatform
-                  .getLineSetting(y)
-                  ?.recursiveStatus
-                  .conditionVisibleString = textFieldController.text;
-              controller.isChanged = true;
-            }
+      Future dialog() => showDialog<String>(
+                  context: context,
+                  builder: (_) => NodeDividerDialog(y),
+                  barrierDismissible: false)
+              .then((value) {
+            getPlatform
+                .getLineSetting(y)
+                ?.recursiveStatus
+                .conditionVisibleString = value!;
+            ref.read(draggableNestedMapChangedProvider.notifier).state = true;
           });
       return Stack(
         alignment: Alignment.center,
         children: [
           divider,
-          maxSelectText,
+          Visibility(
+            visible: maxSelect != -1,
+            child: TextOutline('최대 $maxSelect개만큼 선택 가능', 18.0, titleFont,
+                strokeWidth: 5.0),
+          ),
           Align(
             alignment: Alignment.centerRight,
             child: PopupMenuButton<int>(
@@ -222,13 +265,13 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
                 IconButton(
                   icon: Icon(Icons.arrow_upward, color: getColorButton()),
                   onPressed: () {
-                    controller.moveLine(y, y - 1);
+                    moveLine(ref, y, y - 1);
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.arrow_downward, color: getColorButton()),
                   onPressed: () {
-                    controller.moveLine(y, y + 1);
+                    moveLine(ref, y, y + 1);
                   },
                 ),
               ],
@@ -241,55 +284,93 @@ class NodeDivider extends GetView<VMDraggableNestedMap> {
         alignment: Alignment.center,
         children: [
           divider,
-          maxSelectText,
+          Visibility(
+            visible: maxSelect != -1,
+            child: TextOutline('최대 $maxSelect개만큼 선택 가능', 18.0, titleFont,
+                strokeWidth: 5.0),
+          ),
         ],
       );
     }
   }
 }
 
-class NestedMap extends StatelessWidget {
-  const NestedMap({Key? key}) : super(key: key);
+class NestedMap extends ConsumerStatefulWidget {
+  const NestedMap({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  ConsumerState createState() => _NestedMapState();
+}
+
+class _NestedMapState extends ConsumerState<NestedMap> {
+  ScrollController? _scrollController;
+
+  void dragUpdate(double? pos) {
+    if (pos == null) return;
+    var maxHeight = MediaQuery.of(context).size.height;
+    double topY = 0;
+    double bottomY = topY + maxHeight;
+
+    var detectedRange = maxHeight * 0.06;
+    var moveDistance = ConstList.isSmallDisplay(context) ? 0.8 : 1;
+    if (pos < topY + detectedRange) {
+      _scrollController!
+          .jumpTo(max(_scrollController!.offset - moveDistance, 0));
+    }
+    if (pos > bottomY - detectedRange) {
+      _scrollController!.jumpTo(_scrollController!.offset + moveDistance);
+    }
+  }
+
+  @override
+  void initState() {
+    _scrollController = ScrollController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    var controller = Get.put(VMDraggableNestedMap());
+    ref.listen<double?>(
+        dragPositionProvider, (previous, next) => dragUpdate(next));
     if (ConstList.isWeb() && !ConstList.isSmallDisplay(context)) {
       if (isEditable) {
-        return GetBuilder<VMDraggableNestedMap>(
-          builder: (_) => LayoutBuilder(builder: (context, constrains) {
-            _.constrain = constrains;
-            return ColoredBox(
-              color: _.backgroundColor,
-              child: WebSmoothScroll(
-                controller: _.scroller,
-                scrollOffset: 100,
-                animationDuration: 150,
-                child: ListView.builder(
-                  key: const PageStorageKey(0),
-                  physics: const NeverScrollableScrollPhysics(),
-                  controller: _.scroller,
-                  itemCount: getPlatform.lineSettings.length + 1,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ChoiceLine(index, Colors.transparent);
-                  },
-                  cacheExtent: 200,
-                ),
-              ),
-            );
-          }),
-        );
-      } else {
         return ColoredBox(
-          color: controller.backgroundColor,
+          color: ref.watch(backgroundColorProvider),
           child: WebSmoothScroll(
-            controller: controller.scroller,
+            controller: _scrollController!,
             scrollOffset: 100,
             animationDuration: 150,
             child: ListView.builder(
               key: const PageStorageKey(0),
               physics: const NeverScrollableScrollPhysics(),
-              controller: controller.scroller,
+              controller: _scrollController,
+              itemCount: getPlatform.lineSettings.length + 1,
+              itemBuilder: (BuildContext context, int index) {
+                return ChoiceLine(index, Colors.transparent);
+              },
+              cacheExtent: 200,
+            ),
+          ),
+        );
+      } else {
+        return ColoredBox(
+          color: ref.watch(backgroundColorProvider),
+          child: WebSmoothScroll(
+            controller: _scrollController!,
+            scrollOffset: 100,
+            animationDuration: 150,
+            child: ListView.builder(
+              key: const PageStorageKey(0),
+              physics: const NeverScrollableScrollPhysics(),
+              controller: _scrollController,
               itemCount: getPlatform.lineSettings.length,
               itemBuilder: (BuildContext context, int index) {
                 return ChoiceLine(index, Colors.transparent);
@@ -302,29 +383,24 @@ class NestedMap extends StatelessWidget {
     }
 
     if (isEditable) {
-      return GetBuilder<VMDraggableNestedMap>(
-        builder: (_) => LayoutBuilder(builder: (context, constrains) {
-          _.constrain = constrains;
-          return ColoredBox(
-            color: _.backgroundColor,
-            child: ListView.builder(
-              key: const PageStorageKey(0),
-              controller: _.scroller,
-              itemCount: getPlatform.lineSettings.length + 1,
-              itemBuilder: (BuildContext context, int index) {
-                return ChoiceLine(index, Colors.transparent);
-              },
-              cacheExtent: 200,
-            ),
-          );
-        }),
+      return ColoredBox(
+        color: ref.watch(backgroundColorProvider),
+        child: ListView.builder(
+          key: const PageStorageKey(0),
+          controller: _scrollController,
+          itemCount: getPlatform.lineSettings.length + 1,
+          itemBuilder: (BuildContext context, int index) {
+            return ChoiceLine(index, Colors.transparent);
+          },
+          cacheExtent: 200,
+        ),
       );
     } else {
       return ColoredBox(
-        color: controller.backgroundColor,
+        color: ref.watch(backgroundColorProvider),
         child: ListView.builder(
           key: const PageStorageKey(0),
-          controller: controller.scroller,
+          controller: _scrollController,
           itemCount: getPlatform.lineSettings.length,
           itemBuilder: (BuildContext context, int index) {
             return ChoiceLine(index, Colors.transparent);
@@ -336,26 +412,26 @@ class NestedMap extends StatelessWidget {
   }
 }
 
-class ChoiceLine extends StatelessWidget {
+class ChoiceLine extends ConsumerWidget {
   final int y;
   final Color color;
 
   const ChoiceLine(this.y, this.color, {Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     var choiceNodeList = getPlatform.lineSettings;
     if (isEditable) {
       if (y >= choiceNodeList.length) {
         return ColoredBox(
           color: color,
           child: Visibility(
-            visible: Get.find<VMDraggableNestedMap>().drag != null,
+            visible: ref.watch(dragChoiceNodeProvider) != null,
             child: Column(
               children: [
                 NodeDivider(y),
                 NodeDragTarget(
-                  [y, 0],
+                  Pos(data: [y, 0]),
                   isHorizontal: true,
                 ),
               ],
@@ -363,35 +439,34 @@ class ChoiceLine extends StatelessWidget {
           ),
         );
       }
-      if (choiceNodeList[y].children.isEmpty) {
+      var line = ref.watch(lineProvider(y))!;
+      if (line.children.isEmpty) {
         return ColoredBox(
           color: color,
           child: Column(
             children: [
               NodeDivider(y),
               NodeDragTarget(
-                [y, 0],
+                Pos(data: [y, 0]),
                 isHorizontal: true,
               ),
             ],
           ),
         );
       }
-      var xList = choiceNodeList[y].children;
       return ColoredBox(
         color: color,
         child: Column(
           children: [
             NodeDivider(y),
             ViewWrapCustomReorderable(
-              xList,
-              (child) => NodeDraggable(child),
-              builderDraggable: (i) => NodeDragTarget([y, i]),
+              line.pos(),(i) => NodeDragTarget(Pos(data: [y, i]))
             ),
           ],
         ),
       );
     }
+    var line = ref.watch(lineProvider(y))!;
     return ColoredBox(
       color: color,
       child: Column(children: [
@@ -401,14 +476,10 @@ class ChoiceLine extends StatelessWidget {
             top: 12,
             bottom: 12,
           ),
-          child: GetBuilder<VMDraggableNestedMap>(
-            builder: (_) {
-              return ViewWrapCustom(
-                choiceNodeList[y].children,
-                (child) => ViewChoiceNode(child.currentPos, y),
-                isInner: false,
-              );
-            },
+          child: ViewWrapCustom(
+            line.pos(),
+            (child) => ViewChoiceNode(child.pos()),
+            isInner: false,
           ),
         ),
       ]),

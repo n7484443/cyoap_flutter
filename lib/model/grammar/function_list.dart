@@ -46,19 +46,18 @@ class Functions {
     functionVoid['setLocal'] = (input) {
       var varName = input[0].unzip().data as String;
       VariableDataBase().setValue(
-          varName, ValueTypeWrapper(input[1].unzip(), false, isGlobal: false));
+          varName, ValueTypeWrapper(input[1].unzip(), isGlobal: false));
     };
     functionVoid['setGlobal'] = (input) {
       var varName = input[0].unzip().data as String;
       VariableDataBase().setValue(
-          varName, ValueTypeWrapper(input[1].unzip(), false, isGlobal: true));
+          varName, ValueTypeWrapper(input[1].unzip(), isGlobal: true));
     };
     functionVoid['setVariable'] = (input) {
       var varName = input[0].unzip().data as String;
       var original = VariableDataBase().getValueTypeWrapper(varName);
       if (original != null) {
-        var copy = ValueTypeWrapper.copy(original)
-          ..valueType = input[1].unzip();
+        var copy = original.copyWith(valueType: input[1].unzip());
         VariableDataBase().setValue(varName, copy);
       }
     };
@@ -190,6 +189,7 @@ class Functions {
 
   ValueType funcBiggerEqual(List<ValueType> input) =>
       ValueType(!funcSmaller(input).data);
+
   ValueType funcSmallerEqual(List<ValueType> input) =>
       ValueType(!funcBigger(input).data);
 

@@ -2,98 +2,85 @@ import 'dart:async';
 
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../main.dart';
 import '../model/platform_system.dart';
 import '../util/platform_specified_util/platform_specified.dart';
 
-class VMPlatform extends GetxController {
-  @override
-  void onInit() {
-    if (ConstList.isDistributed) {
-      doDistributeMode();
-    }
-    super.onInit();
-  }
+final stopWatchProvider =
+    StateNotifierProvider<SaveStopWatch, String>((ref) => SaveStopWatch());
 
-  var stopwatch = Stopwatch().obs;
+class SaveStopWatch extends StateNotifier<String> {
+  SaveStopWatch() : super("");
+  Stopwatch stopwatch = Stopwatch();
+  Timer? timer;
 
-  void save(bool asZip) async {
-    stopwatch.update((val) => val?.reset());
-    stopwatch.update((val) => val?.start());
-
-    var timer = Timer.periodic(const Duration(milliseconds: 10), (Timer timer) {
-      stopwatch.update((val) {});
+  void start() {
+    stopwatch.reset();
+    stopwatch.start();
+    timer = Timer.periodic(const Duration(milliseconds: 10), (Timer timer) {
+      state = stopwatch.elapsed.toString();
     });
-
-    getPlatform.compress();
-    getPlatform.generateRecursiveParser();
-
-    Future output = getPlatformFileSystem.save(asZip);
-
-    output.then((value) {
-      stopwatch.update((val) => val?.stop());
-      timer.cancel();
-      Get.back();
-    });
-
-    Get.find<VMDraggableNestedMap>().isChanged = false;
   }
 
-  void loadVariable() {
-    getPlatform.generateRecursiveParser();
-    getPlatform.updateStatusAll();
+  void stop() {
+    timer?.cancel();
+    stopwatch.stop();
+  }
+}
+
+final loadStringProvider = StateProvider<String>((ref) => '');
+final loadedProvider = StateProvider<bool>((ref) => false);
+
+Future<void> doDistributeMode(WidgetRef ref) async {
+  ref.read(stopWatchProvider.notifier).start();
+
+  if (kDebugMode) {
+    print('web is Distribute mode');
   }
 
-  var loadString = '';
-  var loaded = false;
-  var stopwatchLoad = Stopwatch();
-
-  Future<void> doDistributeMode() async {
-    stopwatchLoad.start();
-    var timer = Timer.periodic(const Duration(milliseconds: 10), (Timer timer) {
-      update();
-    });
-
-    if (kDebugMode) {
-      print('web is Distribute mode');
-    }
-
-    loadString = '[ 로드 시작 ]';
-    var nodeList = await PlatformSpecified().distribute!.getNodeList();
-    if (kDebugMode) {
-      print('load start');
-    }
-    loadString = '[ 선택지 로드중 ]';
-    List<Future> futureMap = List.empty(growable: true);
-    Map<String, String> nodeMap = {};
-    for (var name in nodeList) {
-      var future = PlatformSpecified().distribute!.getFileAsJson('nodes/$name');
-      future.then((value) => nodeMap[name] = value);
-      futureMap.add(future);
-    }
-    await Future.wait(futureMap);
-
-    loadString = '[ 구조 생성중 ]';
-    if (kDebugMode) {
-      print('node loaded');
-    }
-
-    String imageSource =
-        await PlatformSpecified().distribute!.getFileAsJson('imageSource.json');
-    String platformData =
-        await PlatformSpecified().distribute!.getFileAsJson('platform.json');
-    loadString = '[ 로드 완료 ]';
-    if (kDebugMode) {
-      print('load end');
-    }
-    stopwatchLoad.stop();
-    timer.cancel();
-
-    await PlatformSystem().openPlatformList(nodeMap, imageSource, platformData);
-    getPlatformFileSystem.isEditable = false;
-    loaded = true;
-    update();
+  ref.read(loadStringProvider.notifier).state = '[ 로드 시작 ]';
+  var nodeList = await PlatformSpecified().distribute!.getNodeList();
+  if (kDebugMode) {
+    print('load start');
   }
+  ref.read(loadStringProvider.notifier).state = '[ 선택지 로드중 ]';
+  List<Future> futureMap = List.empty(growable: true);
+  Map<String, String> nodeMap = {};
+  for (var name in nodeList) {
+    var future = PlatformSpecified().distribute!.getFileAsJson('nodes/$name');
+    future.then((value) => nodeMap[name] = value);
+    futureMap.add(future);
+  }
+  await Future.wait(futureMap);
+
+  ref.read(loadStringProvider.notifier).state = '[ 구조 생성중 ]';
+  if (kDebugMode) {
+    print('node loaded');
+  }
+
+  String imageSource =
+      await PlatformSpecified().distribute!.getFileAsJson('imageSource.json');
+  String platformData =
+      await PlatformSpecified().distribute!.getFileAsJson('platform.json');
+  ref.read(loadStringProvider.notifier).state = '[ 로드 완료 ]';
+  if (kDebugMode) {
+    print('load end');
+  }
+  ref.read(stopWatchProvider.notifier).stop();
+
+  await PlatformSystem().openPlatformList(nodeMap, imageSource, platformData);
+  getPlatformFileSystem.isEditable = false;
+  ref.read(loadedProvider.notifier).state = true;
+}
+
+Future<void> savePlatform(WidgetRef ref, bool asZip) async {
+  ref.read(stopWatchProvider.notifier).start();
+
+  getPlatform.compress();
+  getPlatform.generateRecursiveParser();
+
+  await getPlatformFileSystem.save(asZip);
+  ref.read(stopWatchProvider.notifier).stop();
+  ref.read(draggableNestedMapChangedProvider.notifier).state = false;
 }

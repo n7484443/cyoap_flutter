@@ -3,7 +3,6 @@ import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
-import 'package:get/get.dart';
 
 import '../util/version.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
@@ -69,7 +68,7 @@ class AbstractPlatform {
     while (lineSettings.length <= pos.first) {
       lineSettings.add(LineSetting(lineSettings.length));
     }
-    var parent = VMChoiceNode.getNode(List.from(pos)..removeLast())!;
+    var parent = getNode(List.from(pos)..removeLast())!;
     parent.addChildren(node, pos: pos.last);
     checkDataCorrect();
   }
@@ -98,6 +97,34 @@ class AbstractPlatform {
       addLineSettingData(lineSetting);
     }
     checkDataCorrect();
+  }
+
+  GenerableParserAndPosition? getNode(List<int> pos) {
+    if (pos.first == -1) {
+      return ChoiceNode(
+        1,
+        true,
+        "디자인",
+        "[{\"insert\":\"레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.\\n\"}]",
+        "noImage",
+      )..currentPos = -1;
+    }
+    if (pos.first == -2) {
+      return ChoiceNode(
+        1,
+        false,
+        "디자인(바깥 라운드 X, 카드 모드 X)",
+        "[{\"insert\":\"레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.\\n\"}]",
+        "noImage",
+      )
+        ..isRound = false
+        ..currentPos = -2;
+    }
+    if (pos.last == nonPositioned) {
+      return VMDraggableNestedMap.createNodeForTemp();
+    }
+    if (pos.length == 1) return lineSettings[pos.first];
+    return getChoiceNode(pos);
   }
 
   ChoiceNode removeData(List<int> pos) {
@@ -156,9 +183,6 @@ class AbstractPlatform {
       lineSetting.checkClickable(true, true);
       VariableDataBase().clearLocalVariable();
     }
-    if (Get.isRegistered<VMDraggableNestedMap>()) {
-      Get.find<VMDraggableNestedMap>().update();
-    }
   }
 
   void generateRecursiveParser() {
@@ -168,27 +192,8 @@ class AbstractPlatform {
   }
 
   void setGlobalSetting(Map<String, ValueTypeWrapper> units) {
-    globalSetting.clear();
-    globalSetting.addAll(units);
+    globalSetting = Map.from(units);
     generateRecursiveParser();
     updateStatusAll();
-  }
-
-  void doAllChoiceNode(void Function(ChoiceNode node) action) {
-    for (var lineSetting in lineSettings) {
-      for (var node in lineSetting.children) {
-        doAllChoiceNodeInner(node as ChoiceNode, action);
-      }
-    }
-  }
-
-  void doAllChoiceNodeInner(
-      ChoiceNode nodeParent, void Function(ChoiceNode node) action) {
-    action(nodeParent);
-    if (nodeParent.children.isNotEmpty) {
-      for (var node in nodeParent.children) {
-        doAllChoiceNodeInner(node as ChoiceNode, action);
-      }
-    }
   }
 }

@@ -1,11 +1,17 @@
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:get/get_utils/src/platform/platform.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProjectPath {
+  static final ProjectPath _projectPath = ProjectPath._init();
+  factory ProjectPath() {
+    return _projectPath;
+  }
+
+  ProjectPath._init();
+
   List<String> pathList = List.empty(growable: true);
 
   Future<bool> get androidVersion async {
@@ -15,7 +21,7 @@ class ProjectPath {
   }
 
   static Future<String> getProjectFolder(String? name) async {
-    if (GetPlatform.isMobile) {
+    if (Platform.isAndroid) {
       var dir = (await getExternalStorageDirectory())!;
       if (name == null) {
         return "${dir.path}/project";
@@ -30,7 +36,7 @@ class ProjectPath {
   }
 
   Future<List<String>> get frequentPathFromData async {
-    if (GetPlatform.isMobile) {
+    if (Platform.isAndroid) {
       var dir = await getProjectFolder(null);
       var directory = Directory(dir);
       if (!await directory.exists()) {
@@ -58,7 +64,7 @@ class ProjectPath {
   }
 
   Future<void> removeFrequentPath(int index) async {
-    if (GetPlatform.isMobile) {
+    if (Platform.isAndroid) {
       var dir = Directory(pathList[index]);
       await dir.delete(recursive: true);
       pathList = await frequentPathFromData;

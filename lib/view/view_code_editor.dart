@@ -2,21 +2,22 @@ import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/editor.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../viewModel/vm_code_editor.dart';
 import '../viewModel/vm_make_platform.dart';
 
-class ViewCodeEditor extends StatelessWidget {
+class ViewCodeEditor extends ConsumerWidget {
   const ViewCodeEditor({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final VMCodeEditor vmCodeEditor = Get.put(VMCodeEditor());
+  Widget build(BuildContext context, WidgetRef ref) {
+    final vmCodeEditor = ref.watch(vmCodeEditorProvider);
+    final isOccupySpaceButton = ref.watch(isOccupySpaceButtonProvider);
 
     var leadingWidget = IconButton(
       icon: const Icon(Icons.arrow_back),
-      onPressed: () => makePlatform.back(),
+      onPressed: () => ref.read(vmMakePlatformProvider.notifier).back(context),
     );
 
     return WillPopScope(
@@ -41,9 +42,9 @@ class ViewCodeEditor extends StatelessWidget {
                     visible: NodeEditor().target.isSelectableMode,
                     child: Focus(
                       onFocusChange: (bool hasFocus) => vmCodeEditor.lastFocus =
-                          vmCodeEditor.controllerClickable,
+                          ref.watch(controllerClickableProvider),
                       child: TextField(
-                        controller: vmCodeEditor.controllerClickable,
+                        controller: ref.watch(controllerClickableProvider),
                         textAlign: TextAlign.left,
                         decoration: const InputDecoration(hintText: '실행 조건'),
                       ),
@@ -54,9 +55,9 @@ class ViewCodeEditor extends StatelessWidget {
                         ChoiceNodeMode.onlyCode,
                     child: Focus(
                       onFocusChange: (bool hasFocus) => vmCodeEditor.lastFocus =
-                          vmCodeEditor.controllerVisible,
+                          ref.watch(controllerVisibleProvider),
                       child: TextField(
-                        controller: vmCodeEditor.controllerVisible,
+                        controller: ref.watch(controllerVisibleProvider),
                         textAlign: TextAlign.left,
                         decoration: const InputDecoration(
                             hintText: '보이는 조건(true일 때 보임, 비어있을 시 true)'),
@@ -66,9 +67,9 @@ class ViewCodeEditor extends StatelessWidget {
                   Expanded(
                     child: Focus(
                       onFocusChange: (bool hasFocus) => vmCodeEditor.lastFocus =
-                          vmCodeEditor.controllerExecute,
+                          ref.watch(controllerExecuteProvider),
                       child: TextField(
-                        controller: vmCodeEditor.controllerExecute,
+                        controller: ref.watch(controllerExecuteProvider),
                         textAlign: TextAlign.left,
                         scrollController: ScrollController(),
                         maxLines: null,
@@ -84,23 +85,26 @@ class ViewCodeEditor extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(2.0),
-              child: Obx(
-                () => Column(
-                  children: [
-                    ViewSwitchLabel(
-                      () => vmCodeEditor.isOccupySpace.toggle(),
-                      vmCodeEditor.isOccupySpace.value,
-                      label: '숨김 시 공간 차지',
-                    ),
-                  ],
-                ),
+              child: Column(
+                children: [
+                  ViewSwitchLabel(
+                    () {
+                      NodeEditor().target.isOccupySpace = !isOccupySpaceButton;
+                      ref
+                          .read(isOccupySpaceButtonProvider.notifier)
+                          .update((value) => value = !value);
+                    },
+                    isOccupySpaceButton,
+                    label: '숨김 시 공간 차지',
+                  ),
+                ],
               ),
             ),
           ],
         ),
       ),
       onWillPop: () async {
-        makePlatform.back();
+        ref.read(vmMakePlatformProvider.notifier).back(context);
         return false;
       },
     );

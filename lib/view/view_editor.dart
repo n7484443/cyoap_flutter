@@ -2,10 +2,12 @@ import 'dart:ui';
 
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
+import 'package:cyoap_flutter/viewModel/vm_image_editor.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tuple/tuple.dart';
 
 import '../main.dart';
 import '../model/choiceNode/choice_node.dart';
@@ -14,19 +16,61 @@ import '../model/image_db.dart';
 import '../viewModel/vm_editor.dart';
 import '../viewModel/vm_make_platform.dart';
 
-class ViewEditor extends StatelessWidget {
-  const ViewEditor({Key? key}) : super(key: key);
+class ViewEditor extends ConsumerStatefulWidget {
+  const ViewEditor({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  ConsumerState createState() => _ViewEditorState();
+}
+
+class _ViewEditorState extends ConsumerState<ViewEditor> {
+  TextEditingController? _controllerTitle;
+  TextEditingController? _controllerMaximum;
+
+  @override
+  void initState() {
+    _controllerTitle = TextEditingController(text: ref.read(titleProvider));
+    _controllerTitle?.addListener(() {
+      ref.read(changeProvider.notifier).setUpdated();
+      ref.read(titleProvider.notifier).state = _controllerTitle!.text;
+    });
+    _controllerMaximum = TextEditingController(text: ref.read(maximumProvider));
+    _controllerTitle?.addListener(() {
+      ref.read(changeProvider.notifier).setUpdated();
+      ref.read(maximumProvider.notifier).state = _controllerTitle!.text;
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controllerTitle?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final VMEditor controller = Get.put(VMEditor());
+    ref.listen(isCardSwitchProvider,
+        (previous, next) => ref.read(changeProvider.notifier).setUpdated());
+    ref.listen(isRoundSwitchProvider,
+        (previous, next) => ref.read(changeProvider.notifier).setUpdated());
+    ref.listen(hideTitleProvider,
+        (previous, next) => ref.read(changeProvider.notifier).setUpdated());
+    ref.listen(maximizingImageSwitchProvider,
+        (previous, next) => ref.read(changeProvider.notifier).setUpdated());
+    ref.listen(imagePositionProvider,
+        (previous, next) => ref.read(changeProvider.notifier).setUpdated());
+    ref.listen(nodeModeProvider,
+        (previous, next) => ref.read(changeProvider.notifier).setUpdated());
 
     var appbarWidget = AppBar(
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () {
-          if (!controller.controllerTitle.text.isBlank!) {
-            makePlatform.back();
+          if (_controllerTitle!.text.isNotEmpty) {
+            ref.read(vmMakePlatformProvider.notifier).back(context);
           }
         },
       ),
@@ -34,7 +78,7 @@ class ViewEditor extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.save),
           onPressed: () {
-            Get.find<VMEditor>().save();
+            ref.read(changeProvider.notifier).save();
           },
         ),
       ],
@@ -43,152 +87,155 @@ class ViewEditor extends StatelessWidget {
         .textTheme
         .bodyText1
         ?.copyWith(color: Colors.blueAccent);
-    var editingNodeValues = Obx(
-      () => Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          DropdownButton<ChoiceNodeMode>(
-            value: controller.nodeMode.value,
-            items: [
-              DropdownMenuItem(
-                  value: ChoiceNodeMode.defaultMode,
-                  child: Text('기본', style: highlightStyle)),
-              DropdownMenuItem(
-                  value: ChoiceNodeMode.randomMode,
-                  child: Text('랜덤 선택', style: highlightStyle)),
-              DropdownMenuItem(
-                  value: ChoiceNodeMode.multiSelect,
-                  child: Text('다중 선택', style: highlightStyle)),
-              DropdownMenuItem(
-                  value: ChoiceNodeMode.unSelectableMode,
-                  child: Text('선택 불가', style: highlightStyle)),
-              DropdownMenuItem(
-                  value: ChoiceNodeMode.onlyCode,
-                  child: Text('코드만 사용', style: highlightStyle)),
-            ],
-            onChanged: (ChoiceNodeMode? value) {
-              controller.nodeMode.value = value!;
+    var editingNodeValues = Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        DropdownButton<ChoiceNodeMode>(
+          value: ref.watch(nodeModeProvider),
+          items: [
+            DropdownMenuItem(
+                value: ChoiceNodeMode.defaultMode,
+                child: Text('기본', style: highlightStyle)),
+            DropdownMenuItem(
+                value: ChoiceNodeMode.randomMode,
+                child: Text('랜덤 선택', style: highlightStyle)),
+            DropdownMenuItem(
+                value: ChoiceNodeMode.multiSelect,
+                child: Text('다중 선택', style: highlightStyle)),
+            DropdownMenuItem(
+                value: ChoiceNodeMode.unSelectableMode,
+                child: Text('선택 불가', style: highlightStyle)),
+            DropdownMenuItem(
+                value: ChoiceNodeMode.onlyCode,
+                child: Text('코드만 사용', style: highlightStyle)),
+          ],
+          onChanged: (ChoiceNodeMode? value) {
+            ref.read(nodeModeProvider.notifier).update((state) => value!);
+          },
+        ),
+        Visibility(
+          visible: ref.watch(nodeModeProvider) == ChoiceNodeMode.randomMode,
+          child: SizedBox(
+            width: 120,
+            child: Column(children: [
+              Text('변수명', style: ConstList.defaultFont.copyWith(fontSize: 20)),
+              Text('${_controllerTitle?.text.replaceAll(" ", "")}:random',
+                  softWrap: true,
+                  style: ConstList.defaultFont.copyWith(fontSize: 10)),
+              TextField(
+                textAlign: TextAlign.end,
+                maxLength: 3,
+                minLines: 1,
+                maxLines: 1,
+                keyboardType: TextInputType.number,
+                controller: _controllerMaximum,
+                decoration: const InputDecoration(
+                  label: Text('랜덤 수, 0 ~ n-1'),
+                ),
+              ),
+            ]),
+          ),
+        ),
+        Visibility(
+          visible: ref.watch(nodeModeProvider) == ChoiceNodeMode.multiSelect,
+          child: SizedBox(
+            width: 120,
+            child: Column(children: [
+              Text('변수명', style: ConstList.defaultFont.copyWith(fontSize: 20)),
+              Text('${_controllerTitle?.text.replaceAll(" ", "")}:multi',
+                  softWrap: true,
+                  style: ConstList.defaultFont.copyWith(fontSize: 10)),
+              TextField(
+                textAlign: TextAlign.end,
+                maxLength: 3,
+                minLines: 1,
+                maxLines: 1,
+                keyboardType: TextInputType.number,
+                controller: _controllerMaximum,
+                decoration: const InputDecoration(
+                  label: Text('최대 선택'),
+                ),
+              ),
+            ]),
+          ),
+        ),
+        Visibility(
+          visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
+          child: ViewSwitchLabel(
+            () => ref
+                .read(isCardSwitchProvider.notifier)
+                .update((state) => !state),
+            ref.watch(isCardSwitchProvider),
+            label: '카드 모드',
+          ),
+        ),
+        Visibility(
+          visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
+          child: ViewSwitchLabel(
+            () => ref
+                .read(isRoundSwitchProvider.notifier)
+                .update((state) => !state),
+            ref.watch(isRoundSwitchProvider),
+            label: '외곽선 둥글게',
+          ),
+        ),
+        Visibility(
+          visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
+          child: ViewSwitchLabel(
+            () => ref
+                .read(maximizingImageSwitchProvider.notifier)
+                .update((state) => !state),
+            ref.watch(maximizingImageSwitchProvider),
+            label: '이미지 최대화',
+          ),
+        ),
+        Visibility(
+          visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
+          child: ViewSwitchLabel(
+            () =>
+                ref.read(hideTitleProvider.notifier).update((state) => !state),
+            ref.watch(hideTitleProvider),
+            label: '제목 숨기기',
+          ),
+        ),
+        Visibility(
+          visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
+          child: ViewSwitchLabel(
+            () => ref
+                .read(imagePositionProvider.notifier)
+                .update((state) => state == 0 ? 1 : 0),
+            ref.watch(imagePositionProvider) != 0,
+            label: '가로 모드',
+          ),
+        ),
+        Visibility(
+          visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
+          child: ViewSwitchLabel(
+            () {
+              if (ref.watch(imagePositionProvider) == 1) {
+                ref.read(imagePositionProvider.notifier).update((state) => 2);
+              } else if (ref.watch(imagePositionProvider) == 2) {
+                ref.read(imagePositionProvider.notifier).update((state) => 1);
+              }
+            },
+            ref.watch(imagePositionProvider) == 2,
+            disable: ref.watch(imagePositionProvider) == 0,
+            label: '이미지 왼쪽으로',
+          ),
+        ),
+        const Spacer(),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10.0),
+          child: OutlinedButton(
+            child: const Text('코드 수정'),
+            onPressed: () {
+              ref
+                  .read(vmMakePlatformProvider.notifier)
+                  .changePageString("viewCodeEditor", context);
             },
           ),
-          Visibility(
-            visible: controller.nodeMode.value == ChoiceNodeMode.randomMode,
-            child: SizedBox(
-              width: 120,
-              child: Column(children: [
-                Text('변수명',
-                    style: ConstList.defaultFont.copyWith(fontSize: 20)),
-                Text(
-                    '${controller.controllerTitle.text.replaceAll(" ", "")}:random',
-                    softWrap: true,
-                    style: ConstList.defaultFont.copyWith(fontSize: 10)),
-                TextField(
-                  textAlign: TextAlign.end,
-                  maxLength: 3,
-                  minLines: 1,
-                  maxLines: 1,
-                  keyboardType: TextInputType.number,
-                  controller: controller.controllerMaximum,
-                  decoration: const InputDecoration(
-                    label: Text('랜덤 수, 0 ~ n-1'),
-                  ),
-                ),
-              ]),
-            ),
-          ),
-          Visibility(
-            visible: controller.nodeMode.value == ChoiceNodeMode.multiSelect,
-            child: SizedBox(
-              width: 120,
-              child: Column(children: [
-                Text('변수명',
-                    style: ConstList.defaultFont.copyWith(fontSize: 20)),
-                Text(
-                    '${controller.controllerTitle.text.replaceAll(" ", "")}:multi',
-                    softWrap: true,
-                    style: ConstList.defaultFont.copyWith(fontSize: 10)),
-                TextField(
-                  textAlign: TextAlign.end,
-                  maxLength: 3,
-                  minLines: 1,
-                  maxLines: 1,
-                  keyboardType: TextInputType.number,
-                  controller: controller.controllerMaximum,
-                  decoration: const InputDecoration(
-                    label: Text('최대 선택'),
-                  ),
-                ),
-              ]),
-            ),
-          ),
-          Visibility(
-            visible: controller.nodeMode.value != ChoiceNodeMode.onlyCode,
-            child: ViewSwitchLabel(
-              () => controller.isCard.value = !controller.isCard.value,
-              controller.isCard.value,
-              label: '카드 모드',
-            ),
-          ),
-          Visibility(
-            visible: controller.nodeMode.value != ChoiceNodeMode.onlyCode,
-            child: ViewSwitchLabel(
-              () => controller.isRound.value = !controller.isRound.value,
-              controller.isRound.value,
-              label: '외곽선 둥글게',
-            ),
-          ),
-          Visibility(
-            visible: controller.nodeMode.value != ChoiceNodeMode.onlyCode,
-            child: ViewSwitchLabel(
-              () => controller.maximizingImage.value =
-                  !controller.maximizingImage.value,
-              controller.maximizingImage.value,
-              label: '이미지 최대화',
-            ),
-          ),
-          Visibility(
-            visible: controller.nodeMode.value != ChoiceNodeMode.onlyCode,
-            child: ViewSwitchLabel(
-              () => controller.hideTitle.value = !controller.hideTitle.value,
-              controller.hideTitle.value,
-              label: '제목 숨기기',
-            ),
-          ),
-          Visibility(
-            visible: controller.nodeMode.value != ChoiceNodeMode.onlyCode,
-            child: ViewSwitchLabel(
-              () => controller.imagePosition.value =
-                  (controller.imagePosition.value == 0) ? 1 : 0,
-              controller.imagePosition.value != 0,
-              label: '가로 모드',
-            ),
-          ),
-          Visibility(
-            visible: controller.nodeMode.value != ChoiceNodeMode.onlyCode,
-            child: ViewSwitchLabel(
-              () {
-                if (controller.imagePosition.value == 1) {
-                  controller.imagePosition.value = 2;
-                } else if (controller.imagePosition.value == 2) {
-                  controller.imagePosition.value = 1;
-                }
-              },
-              controller.imagePosition.value == 2,
-              disable: controller.imagePosition.value == 0,
-              label: '이미지 왼쪽으로',
-            ),
-          ),
-          const Spacer(),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10.0),
-            child: OutlinedButton(
-              child: const Text('코드 수정'),
-              onPressed: () {
-                makePlatform.changePageString("viewCodeEditor");
-              },
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
     return WillPopScope(
       child: Scaffold(
@@ -196,7 +243,7 @@ class ViewEditor extends StatelessWidget {
         body: Column(
           children: [
             TextField(
-              controller: controller.controllerTitle,
+              controller: _controllerTitle!,
               textAlign: TextAlign.center,
               decoration: InputDecoration(
                 hintText: '제목',
@@ -213,12 +260,10 @@ class ViewEditor extends StatelessWidget {
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Obx(
-                        () => Visibility(
-                          visible: controller.nodeMode.value !=
-                              ChoiceNodeMode.onlyCode,
-                          child: const ViewEditorTyping(),
-                        ),
+                      child: Visibility(
+                        visible: ref.watch(nodeModeProvider) !=
+                            ChoiceNodeMode.onlyCode,
+                        child: const ViewContentsEditor(),
                       ),
                     ),
                   ),
@@ -233,20 +278,20 @@ class ViewEditor extends StatelessWidget {
         ),
       ),
       onWillPop: () async {
-        makePlatform.back();
+        ref.read(vmMakePlatformProvider.notifier).back(context);
         return false;
       },
     );
   }
 }
 
-class ViewEditorTyping extends StatelessWidget {
-  const ViewEditorTyping({Key? key}) : super(key: key);
+class ViewContentsEditor extends ConsumerWidget {
+  const ViewContentsEditor({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final VMEditor controller = Get.put(VMEditor());
-
+  Widget build(BuildContext context, WidgetRef ref) {
     void changeColor(QuillController controller, Color color, bool background) {
       var hex = color.value.toRadixString(16);
       if (hex.startsWith('ff')) {
@@ -285,14 +330,15 @@ class ViewEditorTyping extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.close),
               onPressed: () {
-                Get.back();
+                Navigator.pop(context);
               },
             ),
             IconButton(
               icon: const Icon(Icons.check),
               onPressed: () {
-                changeColor(controller.quillController, newColor, background);
-                Get.back();
+                changeColor(
+                    ref.watch(contentEditProvider), newColor, background);
+                Navigator.pop(context);
               },
             ),
           ],
@@ -305,7 +351,7 @@ class ViewEditorTyping extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: QuillToolbar.basic(
-            controller: controller.quillController,
+            controller: ref.watch(contentEditProvider),
             showListCheck: false,
             showInlineCode: false,
             showVideoButton: false,
@@ -339,7 +385,7 @@ class ViewEditorTyping extends StatelessWidget {
             elevation: ConstList.elevation,
             child: QuillEditor(
               padding: const EdgeInsets.all(3),
-              controller: controller.quillController,
+              controller: ref.watch(contentEditProvider),
               focusNode: FocusNode(),
               expands: true,
               scrollable: true,
@@ -352,101 +398,152 @@ class ViewEditorTyping extends StatelessWidget {
             ),
           ),
         ),
+        const Expanded(
+          child: ViewNodeImageEditor(),
+        ),
+      ],
+    );
+  }
+}
+
+class ViewNodeImageEditor extends ConsumerWidget {
+  const ViewNodeImageEditor({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Row(
+      children: [
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            IconButton(
+                onPressed: () async {
+                  var name =
+                      await ref.read(imageStateProvider.notifier).addImage();
+                  if (name != '') {
+                    showDialog<bool>(
+                      builder: (_) => ImageSourceDialog(name),
+                      context: context,
+                    ).then((value) {
+                      if (value ?? false) {
+                        ref.read(imageProvider.notifier).update((state) =>
+                            Tuple2(name, ref.watch(lastImageProvider)!));
+                        ref
+                            .read(vmMakePlatformProvider.notifier)
+                            .changePageString('viewImageEditor', context);
+                      }
+                    });
+                  }
+                },
+                icon: const Icon(Icons.add)),
+          ],
+        ),
         Expanded(
-          child: Row(
-            children: [
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  IconButton(
-                      onPressed: () async {
-                        var name = await controller.addImage();
-                        if (name != '') {
-                          controller.name = name;
-                          await showDialog(
-                            builder: (_) => AlertDialog(
-                              title: const Text('출처'),
-                              content: TextField(
-                                controller: controller.controllerSource,
-                                decoration: const InputDecoration(
-                                  hintText: '출처를 모르거나 없을 경우 비워두세요.',
-                                ),
-                              ),
-                              actionsAlignment: MainAxisAlignment.spaceBetween,
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    controller.addImageSource(name);
-                                    Get.back();
-                                  },
-                                  child: const Text('자르기'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    controller.addImageSource(name);
-                                    controller
-                                        .addImageCrop(controller.imageLast!);
-                                    Get.back();
-                                  },
-                                  child: const Text('저장하기'),
-                                ),
-                              ],
-                            ),
-                            context: context,
-                          );
-                          if (controller.imageLast != null) {
-                            makePlatform.changePageString('viewImageEditor');
-                          }
-                        }
-                      },
-                      icon: const Icon(Icons.add)),
-                ],
-              ),
-              Expanded(
-                child: Card(
-                  elevation: ConstList.elevation,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: ScrollConfiguration(
-                      behavior: ScrollConfiguration.of(context)
-                          .copyWith(dragDevices: {
-                        PointerDeviceKind.touch,
-                        PointerDeviceKind.mouse,
-                      }),
-                      child: GetBuilder<VMEditor>(
-                        builder: (_) => ListView.builder(
-                          shrinkWrap: true,
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          scrollDirection: Axis.horizontal,
-                          controller: ScrollController(),
-                          itemCount: controller.getImageLength(),
-                          itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  width: 3,
-                                  color: index == controller.index
-                                      ? Colors.redAccent
-                                      : Colors.white,
-                                ),
-                              ),
-                              child: GestureDetector(
-                                child: ViewImageLoading(
-                                    ImageDB().getImageName(index)),
-                                onDoubleTap: () {
-                                  controller.setIndex(index);
-                                },
-                              ),
-                            );
-                          },
+          child: Card(
+            elevation: ConstList.elevation,
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: ScrollConfiguration(
+                behavior:
+                    ScrollConfiguration.of(context).copyWith(dragDevices: {
+                  PointerDeviceKind.touch,
+                  PointerDeviceKind.mouse,
+                }),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  controller: ScrollController(),
+                  itemCount:
+                      ref.watch(imageStateProvider.notifier).getImageLength(),
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 3,
+                          color: index == ref.watch(imageStateProvider)
+                              ? Colors.redAccent
+                              : Colors.white,
                         ),
                       ),
-                    ),
-                  ),
+                      child: GestureDetector(
+                        child: ViewImageLoading(ImageDB().getImageName(index)),
+                        onDoubleTap: () {
+                          ref.read(imageStateProvider.notifier).setIndex(index);
+                        },
+                      ),
+                    );
+                  },
                 ),
               ),
-            ],
+            ),
           ),
+        ),
+      ],
+    );
+  }
+}
+
+class ImageSourceDialog extends ConsumerStatefulWidget {
+  final String name;
+
+  const ImageSourceDialog(
+    this.name, {
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  ConsumerState createState() => _ImageSourceDialogState();
+}
+
+class _ImageSourceDialogState extends ConsumerState<ImageSourceDialog> {
+  TextEditingController? _sourceController;
+
+  @override
+  void initState() {
+    _sourceController = TextEditingController();
+    _sourceController!.addListener(() {
+      ref.read(imageSourceProvider.notifier).state = _sourceController!.text;
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _sourceController?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('출처'),
+      content: TextField(
+        controller: _sourceController,
+        decoration: const InputDecoration(
+          hintText: '출처를 모르거나 없을 경우 비워두세요.',
+        ),
+      ),
+      actionsAlignment: MainAxisAlignment.spaceBetween,
+      actions: [
+        TextButton(
+          onPressed: () {
+            ref.read(imageStateProvider.notifier).addImageSource(widget.name);
+            Navigator.pop(context, true);
+          },
+          child: const Text('자르기'),
+        ),
+        TextButton(
+          onPressed: () {
+            ref.read(imageStateProvider.notifier).addImageSource(widget.name);
+            ref
+                .read(imageStateProvider.notifier)
+                .addImageCrop(widget.name, ref.watch(lastImageProvider)!);
+            Navigator.pop(context, false);
+          },
+          child: const Text('저장하기'),
         ),
       ],
     );

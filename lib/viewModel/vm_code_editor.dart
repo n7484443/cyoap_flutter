@@ -1,20 +1,64 @@
 import 'package:cyoap_flutter/model/editor.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class VMCodeEditor extends GetxController {
-  final TextEditingController controllerClickable = TextEditingController(
-      text: NodeEditor().targetRecursive.conditionClickableString);
-  final TextEditingController controllerVisible = TextEditingController(
-      text: NodeEditor().targetRecursive.conditionVisibleString);
-  final TextEditingController controllerExecute = TextEditingController(
-      text: NodeEditor().targetRecursive.executeCodeString);
+import '../model/choiceNode/choice_node.dart';
+
+final choiceNodeProvider = Provider.autoDispose<ChoiceNode>((ref) {
+  return NodeEditor().target;
+});
+
+final isOccupySpaceButtonProvider = StateProvider.autoDispose<bool>((ref) {
+  return ref.watch(choiceNodeProvider).isOccupySpace;
+});
+
+final vmCodeEditorProvider = Provider((ref) => VMCodeEditor(ref));
+
+final controllerClickableProvider =
+    Provider.autoDispose<TextEditingController>((ref) {
+  var controller = TextEditingController(
+      text: ref
+          .watch(choiceNodeProvider)
+          .recursiveStatus
+          .conditionClickableString)
+    ..addListener(() {
+      ref.read(codeEditorChanged.notifier).update((state) => true);
+    });
+  ref.onDispose(() => controller.dispose());
+  return controller;
+});
+
+final controllerVisibleProvider =
+    Provider.autoDispose<TextEditingController>((ref) {
+  var controller = TextEditingController(
+      text:
+          ref.watch(choiceNodeProvider).recursiveStatus.conditionVisibleString)
+    ..addListener(() {
+      ref.read(codeEditorChanged.notifier).update((state) => true);
+    });
+  ref.onDispose(() => controller.dispose());
+  return controller;
+});
+
+final controllerExecuteProvider =
+    Provider.autoDispose<TextEditingController>((ref) {
+  var controller = TextEditingController(
+      text: ref.watch(choiceNodeProvider).recursiveStatus.executeCodeString)
+    ..addListener(() {
+      ref.read(codeEditorChanged.notifier).update((state) => true);
+    });
+  ref.onDispose(() => controller.dispose());
+  return controller;
+});
+
+final codeEditorChanged = StateProvider<bool>((ref) => false);
+
+class VMCodeEditor {
+  final Ref ref;
+
+  VMCodeEditor(this.ref);
   TextEditingController? lastFocus;
-
-  var isOccupySpace = NodeEditor().target.isOccupySpace.obs;
-
-  bool isChanged = false;
 
   void insertText(TextEditingController controller, String text) {
     var selection = controller.selection;
@@ -24,34 +68,14 @@ class VMCodeEditor extends GetxController {
         TextSelection.collapsed(offset: selection.start + text.length);
   }
 
-  @override
-  void onInit() {
-    controllerClickable.addListener(() {
-      isChanged = true;
-    });
-    controllerVisible.addListener(() {
-      isChanged = true;
-    });
-    controllerExecute.addListener(() {
-      isChanged = true;
-    });
-    isOccupySpace.listen((value) {
-      isChanged = true;
-      NodeEditor().target.isOccupySpace = value;
-    });
-
-    super.onInit();
-  }
-
   void save() {
-    NodeEditor().target.recursiveStatus.conditionClickableString =
-        controllerClickable.text;
-    NodeEditor().target.recursiveStatus.conditionVisibleString =
-        controllerVisible.text;
-    NodeEditor().target.recursiveStatus.executeCodeString =
-        controllerExecute.text;
-
-    isChanged = false;
-    Get.find<VMDraggableNestedMap>().isChanged = true;
+    ref.read(choiceNodeProvider).recursiveStatus.conditionClickableString =
+        ref.read(controllerClickableProvider).text;
+    ref.read(choiceNodeProvider).recursiveStatus.conditionVisibleString =
+        ref.read(controllerVisibleProvider).text;
+    ref.read(choiceNodeProvider).recursiveStatus.executeCodeString =
+        ref.read(controllerExecuteProvider).text;
+    ref.read(codeEditorChanged.notifier).update((state) => false);
+    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
   }
 }

@@ -2,35 +2,46 @@ import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/platform_system.dart';
 
-class VMSource extends GetxController {
-  var deleteMode = false.obs;
-  var deleteList = List<String>.empty(growable: true).obs;
+final deleteModeProvider = StateProvider.autoDispose<bool>((ref) => false);
+final deleteImageListProvider =
+    StateProvider.autoDispose<List<String>>((ref) => []);
 
-  TextEditingController getTextEditor(String name) {
-    var textEditingController = TextEditingController();
-    if (getPlatformFileSystem.hasSource(name)) {
-      textEditingController.text = getPlatformFileSystem.getSource(name)!;
-    }
-    textEditingController.addListener(() {
-      getPlatformFileSystem.addSource(name, textEditingController.text);
-    });
-    return textEditingController;
+final vmSourceProvider = StateNotifierProvider<VMSource, List<String>>(
+    (ref) => VMSource(ref, List<String>.from(ImageDB().imageList)));
+
+final textEditingControllerProvider =
+    Provider.autoDispose.family<TextEditingController, String>((ref, name) {
+  var textEditingController = TextEditingController();
+  if (getPlatformFileSystem.hasSource(name)) {
+    textEditingController.text = getPlatformFileSystem.getSource(name)!;
   }
+  textEditingController.addListener(() {
+    getPlatformFileSystem.addSource(name, textEditingController.text);
+  });
+  return textEditingController;
+});
+
+class VMSource extends StateNotifier<List<String>> {
+  final Ref ref;
+
+  VMSource(this.ref, super.state);
 
   void checkRemove(String name) {
-    deleteList.add(name);
+    ref
+        .read(deleteImageListProvider.notifier)
+        .update((state) => [...state, name]);
   }
 
   void remove() {
-    for (var name in deleteList) {
+    for (var name in ref.read(deleteImageListProvider)) {
       ImageDB().removeImage(name);
     }
-    update();
-    VMChoiceNode.doAllVMChoiceNode((vm) => vm.updateImage());
-    Get.find<VMDraggableNestedMap>().isChanged = true;
+    state = List<String>.from(ImageDB().imageList);
+    updateImageAll(ref);
+    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
   }
 }

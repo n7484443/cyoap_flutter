@@ -1,27 +1,24 @@
+import 'package:cyoap_flutter/viewModel/vm_editor.dart';
 import 'package:cyoap_flutter/viewModel/vm_image_editor.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../viewModel/vm_editor.dart';
 import '../viewModel/vm_make_platform.dart';
 
-class ViewImageEditor extends StatelessWidget {
+class ViewImageEditor extends ConsumerWidget {
   const ViewImageEditor({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    var controller = Get.put(VMImageEditor(), permanent: true);
-    var controllerEditor = Get.find<VMEditor>();
-    controller.data = controllerEditor.imageLast;
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         Flexible(
           child: ExtendedImage.memory(
-            controller.data!,
+            ref.watch(imageProvider)!.item2,
             fit: BoxFit.contain,
             mode: ExtendedImageMode.editor,
-            extendedImageEditorKey: controller.globalEditorKey,
+            extendedImageEditorKey: ref.watch(globalEditorKeyProvider),
             initEditorConfigHandler: (ExtendedImageState? state) {
               return EditorConfig(
                   maxScale: 4.0,
@@ -35,9 +32,11 @@ class ViewImageEditor extends StatelessWidget {
         FloatingActionButton(
           child: const Icon(Icons.crop),
           onPressed: () async {
-            controllerEditor.imageLast = null;
-            controllerEditor.addImageCrop(await controller.cropImage());
-            makePlatform.back();
+            ref.read(lastImageProvider.notifier).update((state) => null);
+            ref.read(imageStateProvider.notifier).addImageCrop(
+                ref.read(imageProvider)!.item1,
+                await ref.read(cropImageProvider.future));
+            ref.read(vmMakePlatformProvider.notifier).back(context);
           },
         ),
       ],

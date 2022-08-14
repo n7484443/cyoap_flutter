@@ -4,97 +4,73 @@ import 'dart:typed_data';
 import 'package:cyoap_flutter/model/editor.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
-import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class VMEditor extends GetxController {
-  final TextEditingController controllerTitle =
-      TextEditingController(text: NodeEditor().target.title);
-  final TextEditingController controllerSource = TextEditingController();
-  final TextEditingController controllerMaximum =
-      TextEditingController(text: NodeEditor().target.maximumStatus.toString());
-  late final QuillController quillController;
-  final FocusNode focusBody = FocusNode();
+import '../model/choiceNode/choice_node.dart';
 
-  var contents = ''.obs;
-  var index = -1;
-  var isCard = NodeEditor().target.isCard.obs;
-  var isRound = NodeEditor().target.isRound.obs;
-  var nodeMode = NodeEditor().target.choiceNodeMode.obs;
-  var imagePosition = NodeEditor().target.imagePosition.obs;
-  var maximizingImage = NodeEditor().target.maximizingImage.obs;
-  var hideTitle = NodeEditor().target.hideTitle.obs;
+final nodeEditorTargetProvider =
+    StateProvider.autoDispose<ChoiceNode>((ref) => NodeEditor().target);
 
-  bool isChanged = false;
+final isCardSwitchProvider = StateProvider.autoDispose<bool>(
+    (ref) => ref.watch(nodeEditorTargetProvider).isCard);
+final isRoundSwitchProvider = StateProvider.autoDispose<bool>(
+    (ref) => ref.watch(nodeEditorTargetProvider).isRound);
+final hideTitleProvider = StateProvider.autoDispose<bool>(
+    (ref) => ref.watch(nodeEditorTargetProvider).hideTitle);
+final maximizingImageSwitchProvider = StateProvider.autoDispose<bool>(
+    (ref) => ref.watch(nodeEditorTargetProvider).maximizingImage);
+final imagePositionProvider = StateProvider.autoDispose<int>(
+    (ref) => ref.watch(nodeEditorTargetProvider).imagePosition);
+final nodeModeProvider = StateProvider.autoDispose<ChoiceNodeMode>(
+    (ref) => ref.watch(nodeEditorTargetProvider).choiceNodeMode);
 
-  @override
-  void onInit() {
-    quillController = NodeEditor().getVMChoiceNode()!.quillController;
-    isCard.listen((value) => isChanged = true);
-    isRound.listen((value) => isChanged = true);
-    nodeMode.listen((value) => isChanged = true);
-    imagePosition.listen((value) => isChanged = true);
-    maximizingImage.listen((value) => isChanged = true);
-    hideTitle.listen((value) => isChanged = true);
-    controllerMaximum.addListener(() => isChanged = true);
-    contents.listen((value) => isChanged = true);
+final contentEditProvider = Provider.autoDispose<QuillController>((ref) {
+  var controller = QuillController(
+      document: Document.fromJson(
+          jsonDecode(ref.read(nodeEditorTargetProvider).contentsString)),
+      selection: const TextSelection.collapsed(offset: 0));
+  controller.addListener(() {
+    ref.read(changeProvider.notifier).setUpdated();
+  });
+  ref.onDispose(() {
+    controller.dispose();
+  });
+  return controller;
+});
 
-    controllerTitle.addListener(() {
-      isChanged = true;
-    });
-    quillController.addListener(
-        () => contents.value = quillController.document.toPlainText());
-    index = ImageDB().getImageIndex(NodeEditor().target.imageString);
+final titleProvider = StateProvider.autoDispose<String>(
+    (ref) => ref.watch(nodeEditorTargetProvider).title);
+final maximumProvider = StateProvider.autoDispose<String>(
+    (ref) => ref.watch(nodeEditorTargetProvider).maximumStatus.toString());
+final imageSourceProvider = StateProvider.autoDispose<String>((ref) => "");
 
-    super.onInit();
-  }
+final imageStateProvider =
+    StateNotifierProvider.autoDispose<ImageStateNotifier, int>(
+        (ref) => ImageStateNotifier(ref));
 
-  void save() {
-    NodeEditor().target.title = controllerTitle.text;
-    NodeEditor().target.contentsString =
-        jsonEncode(quillController.document.toDelta().toJson());
-    NodeEditor().target.imageString = ImageDB().getImageName(index);
-    try {
-      NodeEditor().target.maximumStatus = int.parse(controllerMaximum.text);
-    } catch (e) {
-      NodeEditor().target.maximumStatus = 0;
-    }
-    NodeEditor().target.maximizingImage = maximizingImage.value;
-    NodeEditor().target.isRound = isRound.value;
-    NodeEditor().target.isCard = isCard.value;
-    NodeEditor().target.imagePosition = imagePosition.value;
-    NodeEditor().target.hideTitle = hideTitle.value;
-    NodeEditor().target.choiceNodeMode = nodeMode.value;
+class ImageStateNotifier extends StateNotifier<int> {
+  Ref ref;
 
-    quillController.updateSelection(
-        const TextSelection.collapsed(offset: 0), ChangeSource.REMOTE);
-    VMChoiceNode.getVMChoiceNodeFromNode(NodeEditor().target)
-        ?.updateFromEditor();
-    Get.find<VMDraggableNestedMap>().update();
-    Get.find<VMDraggableNestedMap>().isChanged = true;
-    isChanged = false;
-  }
+  ImageStateNotifier(this.ref)
+      : super(ImageDB()
+            .getImageIndex(ref.read(nodeEditorTargetProvider).imageString));
 
   void setIndex(int index) {
-    if (this.index == index) {
-      this.index = -1;
+    if (state == index) {
+      state = -1;
     } else {
-      this.index = index;
+      state = index;
     }
-    isChanged = true;
-    update();
+    ref.read(changeProvider.notifier).state = true;
   }
 
   int getImageLength() {
     return ImageDB().imageList.length;
   }
-
-  Uint8List? imageLast;
-  String? name;
 
   Future<String> addImage() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -105,24 +81,65 @@ class VMEditor extends GetxController {
     String name = '';
     if (result != null) {
       name = result.files.single.name;
-      imageLast = result.files.single.bytes!;
-      isChanged = true;
+      ref
+          .read(lastImageProvider.notifier)
+          .update((state) => result.files.single.bytes);
+      ref.read(changeProvider.notifier).state = true;
     }
     return name;
   }
 
-  Future<void> addImageCrop(Uint8List data) async {
-    ImageDB().uploadImages(name!, data);
-    NodeEditor().target.imageString = name!;
-    index = ImageDB().getImageIndex(name!);
-    Get.find<VMDraggableNestedMap>().isChanged = true;
-    isChanged = true;
-    name = null;
-    imageLast = null;
-    update();
+  Future<void> addImageCrop(String name, Uint8List data) async {
+    ImageDB().uploadImages(name, data);
+    NodeEditor().target.imageString = name;
+    state = ImageDB().getImageIndex(name);
+    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+    ref.read(changeProvider.notifier).state = true;
+    ref.read(lastImageProvider.notifier).update((state) => null);
   }
 
   void addImageSource(String name) {
-    getPlatformFileSystem.addSource(name, controllerSource.text);
+    getPlatformFileSystem.addSource(name, ref.read(imageSourceProvider));
   }
 }
+
+final changeProvider =
+    StateNotifierProvider<ChangeNotifier, bool>((ref) => ChangeNotifier(ref));
+
+class ChangeNotifier extends StateNotifier<bool> {
+  Ref ref;
+  ChangeNotifier(this.ref) : super(false);
+
+  void setUpdated() {
+    state = true;
+  }
+
+  void update() {
+    state = false;
+  }
+
+  void save() {
+    NodeEditor().target.title = ref.read(titleProvider);
+    NodeEditor().target.contentsString =
+        jsonEncode(ref.read(contentEditProvider).document.toDelta().toJson());
+    NodeEditor().target.imageString =
+        ImageDB().getImageName(ref.read(imageStateProvider));
+    try {
+      NodeEditor().target.maximumStatus = int.parse(ref.read(maximumProvider));
+    } catch (e) {
+      NodeEditor().target.maximumStatus = 0;
+    }
+    NodeEditor().target.maximizingImage =
+        ref.read(maximizingImageSwitchProvider);
+    NodeEditor().target.isRound = ref.read(isRoundSwitchProvider);
+    NodeEditor().target.isCard = ref.read(isCardSwitchProvider);
+    NodeEditor().target.imagePosition = ref.read(imagePositionProvider);
+    NodeEditor().target.hideTitle = ref.read(hideTitleProvider);
+    NodeEditor().target.choiceNodeMode = ref.read(nodeModeProvider);
+
+    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+    state = false;
+  }
+}
+
+final lastImageProvider = StateProvider<Uint8List?>((ref) => null);

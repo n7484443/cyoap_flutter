@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../viewModel/vm_make_platform.dart';
 
-class ViewFontSource extends StatelessWidget {
+class ViewFontSource extends ConsumerWidget {
   const ViewFontSource({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            makePlatform.back();
+            ref.read(vmMakePlatformProvider.notifier).back(context);
           },
         ),
       ),

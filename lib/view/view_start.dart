@@ -1,16 +1,20 @@
+import 'dart:io';
+
 import 'package:cyoap_flutter/main.dart';
+import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+import '../model/opening_file_folder.dart';
+import '../model/platform_system.dart';
 import '../viewModel/vm_start.dart';
 
-class ViewStart extends StatelessWidget {
+class ViewStart extends ConsumerWidget {
   const ViewStart({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final vmStart = Get.put(VMStartPlatform());
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -19,65 +23,32 @@ class ViewStart extends StatelessWidget {
           children: [
             Align(
               alignment: Alignment.topRight,
-              child: Obx(
-                () => Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text('version : ${vmStart.version.value}'),
-                    Obx(
-                      () => Visibility(
-                        visible: vmStart.needUpdate.value,
-                        child: TextButton(
-                          onPressed: () {
-                            if (GetPlatform.isMobile) {
-                              launchUrlString(
-                                  'market://details?id=com.clearApple.cyoap_flutter');
-                            } else {
-                              launchUrlString(
-                                  'https://github.com/n7484443/FlutterCyoap/releases');
-                            }
-                          },
-                          child: const Text('새로운 버전이 나왔습니다!',
-                              style: TextStyle(color: Colors.redAccent)),
-                        ),
-                      ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text('version : ${ref.watch(versionProvider).value ?? ""}'),
+                  Visibility(
+                    visible: ref.watch(needUpdateStateProvider),
+                    child: TextButton(
+                      onPressed: () {
+                        if (Platform.isAndroid) {
+                          launchUrlString(
+                              'market://details?id=com.clearApple.cyoap_flutter');
+                        } else {
+                          launchUrlString(
+                              'https://github.com/n7484443/FlutterCyoap/releases');
+                        }
+                      },
+                      child: const Text('새로운 버전이 나왔습니다!',
+                          style: TextStyle(color: Colors.redAccent)),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-            Expanded(
+            const Expanded(
               flex: 9,
-              child: Obx(
-                () => ListView.builder(
-                  itemCount: vmStart.pathList.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Obx(
-                        () {
-                          var text = Text(vmStart.pathList[index]);
-                          return OutlinedButton(
-                            onPressed: () => vmStart.select = index,
-                            style: vmStart.select == index
-                                ? OutlinedButton.styleFrom(
-                                    primary: Colors.white,
-                                    backgroundColor: Colors.blue)
-                                : OutlinedButton.styleFrom(
-                                    primary: Colors.black54),
-                            child: text,
-                          );
-                        },
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          vmStart.removeFrequentPath(index);
-                        },
-                      ),
-                    );
-                  },
-                ),
-              ),
+              child: ViewProjectList(),
             ),
             Expanded(
               child: Row(
@@ -86,8 +57,9 @@ class ViewStart extends StatelessWidget {
                   TextButton(
                     child: const Text('파일 추가'),
                     onPressed: () async {
-                      if (await vmStart.addFile() == 0) {
-                        vmStart.selected.value = 0;
+                      if (await ref.read(pathListProvider.notifier).addFile() ==
+                          0) {
+                        ref.read(pathListSelectedProvider.notifier).state = 0;
                       }
                     },
                   ),
@@ -96,8 +68,19 @@ class ViewStart extends StatelessWidget {
                     child: TextButton(
                       child: const Text('폴더 추가'),
                       onPressed: () async {
-                        if (await vmStart.addDirectory() == 0) {
-                          vmStart.selected.value = 0;
+                        if (Platform.isAndroid) {
+                          showDialog(
+                            context: context,
+                            builder: (context) => const ViewAddProjectDialog(),
+                            barrierDismissible: false,
+                          );
+                        } else {
+                          if (await ref
+                              .read(pathListProvider.notifier)
+                              .addDirectory()) {
+                            ref.read(pathListSelectedProvider.notifier).state =
+                                0;
+                          }
                         }
                       },
                     ),
@@ -117,19 +100,75 @@ class ViewStart extends StatelessWidget {
   }
 }
 
-class SelectMode extends GetView<VMStartPlatform> {
-  const SelectMode({Key? key}) : super(key: key);
+class ViewProjectList extends ConsumerStatefulWidget {
+  const ViewProjectList({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  ConsumerState createState() => _ViewProjectListState();
+}
+
+class _ViewProjectListState extends ConsumerState<ViewProjectList> {
+  @override
+  void initState() {
+    super.initState();
+    ref.read(pathListProvider.notifier).updatePathList().then(
+        (value) => ref.read(isLoadingStateProvider.notifier).state = false);
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (ref.watch(isLoadingStateProvider)) {
+      return const SizedBox.square(
+          dimension: 100, child: CircularProgressIndicator());
+    }
+    return ListView.builder(
+      itemCount: ref.watch(pathListProvider).length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: OutlinedButton(
+            onPressed: () =>
+                ref.read(pathListSelectedProvider.notifier).state = index,
+            style: ref.watch(pathListSelectedProvider) == index
+                ? OutlinedButton.styleFrom(
+                    primary: Colors.white, backgroundColor: Colors.blue)
+                : OutlinedButton.styleFrom(primary: Colors.black54),
+            child: Text(ref.watch(pathListProvider)[index]),
+          ),
+          trailing: IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () {
+              ref.read(pathListProvider.notifier).removeFrequentPath(
+                    index,
+                    () async => await showDialog<bool?>(
+                      context: context,
+                      builder: (_) => ViewWarningDialog(
+                        acceptFunction: () => Navigator.of(context).pop(true),
+                      ),
+                    ),
+                  );
+            },
+          ),
+        );
+      },
+    );
+  }
+}
+
+class SelectMode extends ConsumerWidget {
+  const SelectMode({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       children: [
         Expanded(
           child: InkWell(
             onTap: () {
-              controller.openProject().then((value) {
-                controller.editable = false;
-                Get.toNamed('/viewPlay');
+              ref.read(pathListProvider.notifier).openProject().then((value) {
+                getPlatformFileSystem.isEditable = false;
+                Navigator.of(context).pushNamed('/viewPlay');
               });
             },
             child: const Center(
@@ -147,9 +186,9 @@ class SelectMode extends GetView<VMStartPlatform> {
         Expanded(
           child: InkWell(
             onTap: () {
-              controller.openProject().then((value) {
-                controller.editable = true;
-                Get.toNamed('/viewMake');
+              ref.read(pathListProvider.notifier).openProject().then((value) {
+                getPlatformFileSystem.isEditable = true;
+                Navigator.of(context).pushNamed('/viewMake');
               });
             },
             child: const Center(
@@ -163,6 +202,59 @@ class SelectMode extends GetView<VMStartPlatform> {
               ),
             ),
           ),
+        ),
+      ],
+    );
+  }
+}
+
+class ViewAddProjectDialog extends ConsumerStatefulWidget {
+  const ViewAddProjectDialog({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  ConsumerState createState() => _ViewAddProjectDialogState();
+}
+
+class _ViewAddProjectDialogState extends ConsumerState<ViewAddProjectDialog> {
+  TextEditingController? _textEditingController;
+
+  @override
+  void initState() {
+    _textEditingController = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _textEditingController?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text("프로젝트명"),
+      content: TextField(
+        controller: _textEditingController,
+      ),
+      actions: [
+        ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('취소'),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            Navigator.of(context).pop();
+            var path = await ProjectPath.getProjectFolder(
+                _textEditingController?.text);
+            await Directory(path).create(recursive: true);
+            await ref.read(pathListProvider.notifier).updatePathList();
+          },
+          child: const Text('생성'),
         ),
       ],
     );

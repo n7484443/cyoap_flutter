@@ -14,15 +14,25 @@ class VariableDataBase {
   VariableDataBase._init();
 
   var varMap = HashMap<String, ValueTypeWrapper>();
-  VMVariableTable? viewModel;
+  VariableTilesStateNotifier? variableTilesStateNotifier;
+  CheckListNotifier? checkListNotifier;
+
+  void updateVariableTiles() {
+    variableTilesStateNotifier?.update();
+  }
+
+  void updateCheckList() {
+    checkListNotifier?.update();
+  }
 
   void setValue(String name, ValueTypeWrapper value) {
     varMap[name] = value;
-    viewModel?.update();
+    updateVariableTiles();
   }
 
   void deleteValue(String name) {
     varMap.remove(name);
+    updateVariableTiles();
   }
 
   bool hasValue(String name) {
@@ -44,7 +54,8 @@ class VariableDataBase {
 
   void clear() {
     varMap.clear();
-    viewModel?.update();
+    updateVariableTiles();
+    updateCheckList();
   }
 
   void clearLocalVariable() {

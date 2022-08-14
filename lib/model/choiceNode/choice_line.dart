@@ -61,9 +61,9 @@ class LineSetting extends GenerableParserAndPosition {
   @override
   void generateParser() {
     recursiveStatus.executeCodeString = '$valName += 1';
-    if(isNeedToCheck()){
+    if (isNeedToCheck()) {
       recursiveStatus.conditionClickableString = '$valName < $maxSelect';
-    }else{
+    } else {
       recursiveStatus.conditionClickableString = 'true';
     }
     super.generateParser();
@@ -76,8 +76,7 @@ class LineSetting extends GenerableParserAndPosition {
   @override
   void initValueTypeWrapper() {
     if (isNeedToCheck()) {
-      VariableDataBase()
-          .setValue(valName, ValueTypeWrapper(ValueType(0), false));
+      VariableDataBase().setValue(valName, ValueTypeWrapper(ValueType(0)));
     } else {
       VariableDataBase().deleteValue(valName);
     }

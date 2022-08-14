@@ -7,7 +7,6 @@ import 'package:archive/archive.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/model/opening_file_folder.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
-import 'package:get/get_utils/src/platform/platform.dart';
 import 'package:path/path.dart';
 import 'package:tuple/tuple.dart';
 
@@ -213,7 +212,7 @@ class PlatformFileSystem {
     if (asFile) {
       if (ConstList.isWeb()) {
         await PlatformSpecified().saveProject!.saveZip('exported.zip', data);
-      } else if (GetPlatform.isMobile) {
+      } else if (Platform.isAndroid) {
         await PlatformSpecified()
             .saveProject!
             .saveZip(await ProjectPath.getDownloadFolder(), data);

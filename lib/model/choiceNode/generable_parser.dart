@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/model/choiceNode/pos.dart';
 import 'package:cyoap_flutter/model/choiceNode/recursive_status.dart';
 
 import '../grammar/analyser.dart';
@@ -138,20 +139,17 @@ abstract class GenerableParserAndPosition {
     }
   }
 
-  String get tag =>
-      parent == null ? "$currentPos" : "${parent!.tag}:$currentPos";
-
-  List<int> pos({List<int>? posList}) {
+  Pos pos({List<int>? posList}) {
     if (posList == null) {
       posList = List.empty(growable: true);
     } else {
       posList = List.from(posList);
     }
     if (parent != null) {
-      posList.addAll(parent!.pos(posList: posList));
+      posList.addAll(parent!.pos(posList: posList).data);
     }
     posList.add(currentPos);
-    return posList;
+    return Pos(data: posList);
   }
 
   void addChildren(GenerableParserAndPosition childNode, {int? pos}) {

@@ -1,79 +1,44 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../main.dart';
 import '../model/opening_file_folder.dart';
 import '../model/platform_system.dart';
 import '../util/check_update.dart';
 
-class VMStartPlatform extends GetxController {
-  ProjectPath frequentlyUsedPath = ProjectPath();
+final needUpdateStateProvider = StateProvider<bool>((ref) {
+  return false;
+});
+
+final versionProvider = FutureProvider<String>((ref) async {
+  var needUpdate = await CheckUpdate.needUpdateCheck();
+  ref.read(needUpdateStateProvider.notifier).update((state) => needUpdate);
+  return ConstList.version;
+});
+
+final pathListProvider = StateNotifierProvider<PathListNotifier, List<String>>(
+    (ref) => PathListNotifier(ref));
+
+final pathListSelectedProvider = StateProvider<int>((ref) => -1);
+
+final isLoadingStateProvider = StateProvider<bool>((ref) => true);
+
+class PathListNotifier extends StateNotifier<List<String>> {
+  Ref ref;
   List<Future<void>> isAdded = List.empty(growable: true);
-  TextEditingController textInputController = TextEditingController();
+  PathListNotifier(this.ref) : super([]);
 
-  var needUpdate = false.obs;
-  var version = ''.obs;
-  var pathList = <String>[].obs;
-  var selected = (-1).obs;
-
-  @override
-  void onInit() {
-    CheckUpdate.needUpdateCheck().then((value) {
-      needUpdate.value = value;
-      version.value = ConstList.version;
-    });
-    frequentlyUsedPath.frequentPathFromData.then((value) {
-      pathList.clear();
-      pathList.addAll(value);
-    });
-    super.onInit();
-  }
-
-  Future<int> addDirectory() async {
-    if (GetPlatform.isMobile) {
-      textInputController.text = "";
-      Get.dialog(
-        AlertDialog(
-          title: const Text("프로젝트명"),
-          content: TextField(
-            controller: textInputController,
-          ),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                Get.back();
-              },
-              child: const Text('취소'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                var path = await ProjectPath.getProjectFolder(
-                    textInputController.text);
-                await Directory(path).create(recursive: true);
-                await updatePathList();
-                Get.back();
-              },
-              child: const Text('생성'),
-            ),
-          ],
-        ),
-        barrierDismissible: false,
-      );
-      return 0;
-    }
+  Future<bool> addDirectory() async {
     String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
     if (selectedDirectory != null) {
-      frequentlyUsedPath.addFrequentPath(selectedDirectory);
-      pathList.clear();
-      pathList.addAll(frequentlyUsedPath.pathList);
-      return 0;
+      ProjectPath().addFrequentPath(selectedDirectory);
+      state = List.from(ProjectPath().pathList);
+      return true;
     }
-    return -1;
+    return false;
   }
 
   Future<int> addFile() async {
@@ -85,11 +50,10 @@ class VMStartPlatform extends GetxController {
       if (ConstList.isWeb()) {
         isAdded
             .add(PlatformSystem().openPlatformZipForWeb(result.files.single));
-        pathList.add(result.files.single.name);
+        state = [...state, result.files.single.name];
       } else {
-        frequentlyUsedPath.addFrequentPath(result.files.single.path!);
-        pathList.clear();
-        pathList.addAll(frequentlyUsedPath.pathList);
+        ProjectPath().addFrequentPath(result.files.single.path!);
+        state = [...ProjectPath().pathList];
       }
       return 0;
     }
@@ -97,32 +61,30 @@ class VMStartPlatform extends GetxController {
   }
 
   Future<bool> openProject() async {
-    if (selected.value >= 0) {
+    var selected = ref.read(pathListSelectedProvider);
+    if (selected >= 0) {
       await Future.wait(isAdded);
 
       isAdded.clear();
-      var path = pathList[selected.value];
+      var path = state[selected];
       if (ConstList.isWeb()) {
         return true;
       } else if (path.isNotEmpty) {
         if (path.endsWith('.zip')) {
           var file = File(path);
           if (!await file.exists()) {
-            await removeFrequentPath(selected.value);
             return false;
           }
           await PlatformSystem().openPlatformZip(file);
         } else if (path.endsWith('.json')) {
           var file = File(path);
           if (!await file.exists()) {
-            await removeFrequentPath(selected.value);
             return false;
           }
           await PlatformSystem().openPlatformJson(file);
         } else {
           var dir = Directory(path);
           if (!await dir.exists()) {
-            await removeFrequentPath(selected.value);
             return false;
           }
           await PlatformSystem().openPlatformFolder(path);
@@ -136,36 +98,29 @@ class VMStartPlatform extends GetxController {
     return false;
   }
 
-  set select(int index) {
-    if (index == selected.value) {
-      selected.value = -1;
-    } else {
-      selected.value = index;
-    }
-  }
-
-  int get select => selected.value;
-
-  Future<void> removeFrequentPath(int index) async {
-    if (!GetPlatform.isMobile) {
-      await frequentlyUsedPath.removeFrequentPath(index);
-      pathList.clear();
-      pathList.addAll(frequentlyUsedPath.pathList);
+  Future<void> removeFrequentPath(
+      int index, Future<bool?> Function() dialog) async {
+    if (!Platform.isAndroid) {
+      await ProjectPath().removeFrequentPath(index);
+      state = List.from(ProjectPath().pathList);
       await updatePathList();
     } else {
-      Get.dialog(ViewWarningDialog(
-        acceptFunction: () async {
-          await frequentlyUsedPath.removeFrequentPath(index);
-          await updatePathList();
-        },
-      ));
+      if (await dialog() ?? false) {
+        await ProjectPath().removeFrequentPath(index);
+        await updatePathList();
+      }
     }
   }
 
-  set editable(bool b) => getPlatformFileSystem.isEditable = b;
-
   Future<void> updatePathList() async {
-    pathList.clear();
-    pathList.addAll(await frequentlyUsedPath.frequentPathFromData);
+    state = List.from(await ProjectPath().frequentPathFromData);
+  }
+
+  set select(int index) {
+    if (index == ref.read(pathListSelectedProvider)) {
+      ref.read(pathListSelectedProvider.notifier).state = -1;
+    } else {
+      ref.read(pathListSelectedProvider.notifier).state = index;
+    }
   }
 }

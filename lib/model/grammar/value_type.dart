@@ -1,5 +1,8 @@
+import 'package:flutter/material.dart';
+
+@immutable
 class ValueType {
-  dynamic data;
+  final dynamic data;
 
   ValueType(this.data) {
     if (data is ValueType) {
@@ -14,25 +17,17 @@ class ValueType {
 
   @override
   String toString() {
-    return data;
+    return data.toString();
   }
 
-  ValueType.fromJson(Map<String, dynamic> json) {
-    switch (json['type']) {
-      case 'int':
-        data = int.tryParse(json['data']);
-        break;
-      case 'double':
-        data = double.tryParse(json['data']);
-        break;
-      case 'bool':
-        data = json['data'] == 'true';
-        break;
-      case 'String':
-        data = json['data'] as String;
-        break;
-    }
-  }
+  ValueType.fromJson(Map<String, dynamic> json)
+      : data = json['type'] == 'int'
+            ? int.tryParse(json['data'])
+            : json['type'] == 'double'
+                ? double.tryParse(json['data'])
+                : json['type'] == 'bool'
+                    ? json['data'] == true
+                    : json['data'] as String;
 
   Map<String, dynamic> toJson() => {
         'data': data.toString(),
@@ -40,24 +35,15 @@ class ValueType {
       };
 }
 
+@immutable
 class ValueTypeWrapper {
-  ValueType valueType;
-  bool visible;
-  bool isGlobal;
-  String displayName;
+  final ValueType valueType;
+  final bool visible;
+  final bool isGlobal;
+  final String displayName;
 
-  ValueTypeWrapper(this.valueType, this.visible,
-      {this.displayName = '', this.isGlobal = true});
-
-  ValueTypeWrapper.normal(this.valueType, this.isGlobal)
-      : visible = false,
-        displayName = '';
-
-  ValueTypeWrapper.copy(ValueTypeWrapper other)
-      : visible = other.visible,
-        isGlobal = other.isGlobal,
-        displayName = other.displayName,
-        valueType = other.valueType;
+  const ValueTypeWrapper(this.valueType,
+      {this.visible = false, this.displayName = '', this.isGlobal = true});
 
   ValueTypeWrapper.fromJson(Map<String, dynamic> json)
       : valueType = ValueType.fromJson(json['valueType']),
@@ -75,5 +61,16 @@ class ValueTypeWrapper {
   @override
   String toString() {
     return '( $valueType |{$visible : $isGlobal} )';
+  }
+
+  ValueTypeWrapper copyWith(
+      {ValueType? valueType,
+      bool? visible,
+      String? displayName,
+      bool? isGlobal}) {
+    return ValueTypeWrapper(valueType ?? this.valueType,
+        visible: visible ?? this.visible,
+        displayName: displayName ?? this.displayName,
+        isGlobal: isGlobal ?? this.isGlobal);
   }
 }

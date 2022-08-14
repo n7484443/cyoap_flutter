@@ -1,74 +1,82 @@
 import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
 import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../main.dart';
 import '../viewModel/vm_platform.dart';
-import '../viewModel/vm_variable_table.dart';
 
-class ViewPlay extends StatelessWidget {
-  const ViewPlay({Key? key}) : super(key: key);
+class ViewPlay extends ConsumerStatefulWidget {
+  const ViewPlay({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  ConsumerState createState() => _ViewPlayState();
+}
+
+class _ViewPlayState extends ConsumerState<ViewPlay> {
+  @override
+  void initState() {
+    if (ConstList.isDistributed) {
+      doDistributeMode(ref);
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<VMPlatform>(
-      init: VMPlatform(),
-      builder: (_) {
-        if (ConstList.isDistributed && !_.loaded) {
-          return Scaffold(
-            body: Center(
-              child: Column(
-                children: [
-                  const CircularProgressIndicator(),
-                  const Text('로딩중입니다. 잠시만 기다려주세요.'),
-                  Text(_.loadString),
-                  Text(_.stopwatchLoad.elapsed.toString()),
-                ],
-              ),
+    if (ConstList.isDistributed && !ref.watch(loadedProvider)) {
+      return Scaffold(
+        body: Center(
+          child: Column(
+            children: [
+              const CircularProgressIndicator(),
+              const Text('로딩중입니다. 잠시만 기다려주세요.'),
+              Text(ref.watch(loadStringProvider)),
+              Text(ref.watch(stopWatchProvider)),
+            ],
+          ),
+        ),
+      );
+    }
+
+    var appbar = ConstList.isDistributed
+        ? null
+        : AppBar(
+            leading: IconButton(
+              tooltip: '뒤로가기',
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
             ),
           );
-        }
-
-        Get.put(VMVariableTable());
-        var appbar = ConstList.isDistributed
-            ? null
-            : AppBar(
-                leading: IconButton(
-                  tooltip: '뒤로가기',
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () {
-                    Get.back();
-                  },
-                ),
-              );
-        if (ConstList.isSmallDisplay(context)) {
-          return Scaffold(
-            appBar: appbar,
-            drawer: const Drawer(
+    if (ConstList.isSmallDisplay(context)) {
+      return Scaffold(
+        appBar: appbar,
+        drawer: const Drawer(
+          child: ViewVariable(),
+        ),
+        body: const NestedMap(),
+      );
+    } else {
+      return Scaffold(
+        body: Row(
+          children: [
+            const LimitedBox(
+              maxWidth: 250,
               child: ViewVariable(),
             ),
-            body: const NestedMap(),
-          );
-        } else {
-          return Scaffold(
-            body: Row(
-              children: [
-                const LimitedBox(
-                  maxWidth: 250,
-                  child: ViewVariable(),
-                ),
-                Flexible(
-                  child: Scaffold(
-                    appBar: appbar,
-                    body: const NestedMap(),
-                  ),
-                ),
-              ],
+            Flexible(
+              child: Scaffold(
+                appBar: appbar,
+                body: const NestedMap(),
+              ),
             ),
-          );
-        }
-      },
-    );
+          ],
+        ),
+      );
+    }
   }
 }
