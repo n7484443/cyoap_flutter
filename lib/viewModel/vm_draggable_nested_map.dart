@@ -157,3 +157,6 @@ final lineAlwaysVisibleProvider = StateProvider.autoDispose.family<bool, int>(
 
 final lineMaxSelectProvider = StateProvider.autoDispose
     .family<int, int>((ref, pos) => ref.watch(lineProvider(pos))!.maxSelect);
+
+final lineBackgroundColorProvider = StateProvider.autoDispose
+    .family<Color?, int>((ref, pos) => ref.watch(lineProvider(pos))!.backgroundColor);

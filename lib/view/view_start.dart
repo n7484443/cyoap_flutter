@@ -113,15 +113,17 @@ class _ViewProjectListState extends ConsumerState<ViewProjectList> {
   @override
   void initState() {
     super.initState();
-    ref.read(pathListProvider.notifier).updatePathList().then(
-        (value) => ref.read(isLoadingStateProvider.notifier).state = false);
+    if(!ConstList.isWeb()){
+      ref.read(pathListProvider.notifier).updatePathList().then(
+              (value) => ref.read(isLoadingStateProvider.notifier).state = false);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     if (ref.watch(isLoadingStateProvider)) {
       return const SizedBox.square(
-          dimension: 100, child: CircularProgressIndicator());
+          dimension: 50, child: CircularProgressIndicator());
     }
     return ListView.builder(
       itemCount: ref.watch(pathListProvider).length,

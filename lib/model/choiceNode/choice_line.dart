@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cyoap_flutter/model/choiceNode/recursive_status.dart';
 
 import '../grammar/analyser.dart';
@@ -9,6 +11,7 @@ import 'generable_parser.dart';
 class LineSetting extends GenerableParserAndPosition {
   int maxSelect;
   bool alwaysVisible;
+  Color? backgroundColor;
 
   LineSetting(int currentPos,
       {this.alwaysVisible = true, this.maxSelect = -1}) {
@@ -22,13 +25,17 @@ class LineSetting extends GenerableParserAndPosition {
     map.addAll({
       'maxSelect': maxSelect,
       'alwaysVisible': alwaysVisible,
+      'backgroundColor': backgroundColor?.value,
     });
     return map;
   }
 
   LineSetting.fromJson(Map<String, dynamic> json)
       : maxSelect = json['maxSelect'] ?? -1,
-        alwaysVisible = json['alwaysVisible'] ?? true {
+        alwaysVisible = json['alwaysVisible'] ?? true,
+        backgroundColor = json['backgroundColor'] == null
+            ? null
+            : Color(json['backgroundColor']) {
     super.currentPos = json['y'] ?? json['pos'];
     if (json.containsKey('children')) {
       children.addAll((json['children'] as List)
