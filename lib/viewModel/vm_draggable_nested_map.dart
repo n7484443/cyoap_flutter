@@ -127,8 +127,8 @@ final lineProvider = Provider.autoDispose
 
 final childrenProvider = Provider.autoDispose
     .family<List<GenerableParserAndPosition>, Pos>((ref, pos) {
-  if (pos.data.length == 1) {
-    return ref.watch(lineProvider(pos.data.first))!.children;
+  if (pos.length == 1) {
+    return ref.watch(lineProvider(pos.first))!.children;
   } else {
     return ref.watch(choiceNodeProvider(pos))!.children;
   }

@@ -13,6 +13,8 @@ import '../model/platform_system.dart';
 import '../view/view_choice_node.dart';
 
 const double nodeBaseHeight = 200;
+const int designSamplePosition0 = -100;
+const int designSamplePosition1 = -101;
 const int nonPositioned = -1;
 const int removedPositioned = -2;
 

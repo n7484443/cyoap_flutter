@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../main.dart';
 import '../model/choiceNode/pos.dart';
 import '../model/platform_system.dart';
+import '../viewModel/vm_choice_node.dart';
 import '../viewModel/vm_design_setting.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
 import '../viewModel/vm_make_platform.dart';
@@ -197,22 +198,24 @@ class ViewDesignSetting extends ConsumerWidget {
                     color: ref.watch(colorBackgroundProvider),
                     child: Padding(
                       padding: const EdgeInsets.all(ConstList.padding),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 3,
-                            child: IgnorePointer(
-                              child: ViewChoiceNode(Pos(data: [-100])),
+                      child: IgnorePointer(
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: ViewChoiceNode(
+                                Pos(data: [designSamplePosition0]),
+                              ),
                             ),
-                          ),
-                          const Spacer(),
-                          Expanded(
-                            flex: 3,
-                            child: IgnorePointer(
-                              child: ViewChoiceNode(Pos(data: [-101])),
-                            ),
-                          )
-                        ],
+                            const Spacer(),
+                            Expanded(
+                              flex: 3,
+                              child: ViewChoiceNode(
+                                Pos(data: [designSamplePosition1]),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
