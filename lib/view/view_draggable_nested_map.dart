@@ -206,9 +206,8 @@ class NodeDivider extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (y >= getPlatform.lineSettings.length) {
-      return Divider(
+      return const Divider(
         thickness: 4,
-        color: getColorLine(ref.watch(lineAlwaysVisibleProvider(y))),
       );
     }
     if (!ref.watch(lineAlwaysVisibleProvider(y)) && !isEditable) {
@@ -425,25 +424,22 @@ class ChoiceLine extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var choiceNodeList = getPlatform.lineSettings;
+    if(y >= choiceNodeList.length){
+      return Visibility(
+        visible: ref.watch(dragChoiceNodeProvider) != null,
+        child: Column(
+          children: [
+            NodeDivider(y),
+            NodeDragTarget(
+              Pos(data: [y, 0]),
+              isHorizontal: true,
+            ),
+          ],
+        ),
+      );
+    }
     var color = ref.watch(lineBackgroundColorProvider(y)) ?? Colors.transparent;
     if (isEditable) {
-      if (y >= choiceNodeList.length) {
-        return ColoredBox(
-          color: color,
-          child: Visibility(
-            visible: ref.watch(dragChoiceNodeProvider) != null,
-            child: Column(
-              children: [
-                NodeDivider(y),
-                NodeDragTarget(
-                  Pos(data: [y, 0]),
-                  isHorizontal: true,
-                ),
-              ],
-            ),
-          ),
-        );
-      }
       var line = ref.watch(lineProvider(y))!;
       if (line.children.isEmpty) {
         return ColoredBox(
