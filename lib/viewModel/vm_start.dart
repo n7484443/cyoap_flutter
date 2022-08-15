@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../main.dart';
+import '../model/image_db.dart';
 import '../model/opening_file_folder.dart';
 import '../model/platform_system.dart';
 import '../util/check_update.dart';
@@ -61,6 +62,7 @@ class PathListNotifier extends StateNotifier<List<String>> {
   }
 
   Future<bool> openProject() async {
+    ImageDB().clearImageCache();
     var selected = ref.read(pathListSelectedProvider);
     if (selected >= 0) {
       await Future.wait(isAdded);

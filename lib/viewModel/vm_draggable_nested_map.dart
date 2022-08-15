@@ -43,9 +43,7 @@ class DragChoiceNodeNotifier extends StateNotifier<Pos?> {
 class VMDraggableNestedMap {
   Ref ref;
 
-  VMDraggableNestedMap(this.ref) {
-    ImageDB().clearImageCache();
-  }
+  VMDraggableNestedMap(this.ref);
 
   void copyData(WidgetRef ref, ChoiceNode choiceNode) {
     ref.read(removedChoiceNode.notifier).state = choiceNode.clone();
