@@ -6,6 +6,7 @@ import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/view/util/view_text_outline.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:web_smooth_scroll/web_smooth_scroll.dart';
@@ -107,6 +108,10 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
       getPlatform.getLineSetting(widget.y)!.maxSelect = next;
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
+    ref.listen<Color?>(lineBackgroundColorProvider(widget.y), (previous, next) {
+      getPlatform.getLineSetting(widget.y)!.backgroundColor = next;
+      ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+    });
     var maxSelect = ref.watch(lineMaxSelectProvider(widget.y));
     var maxSelectString = maxSelect == -1 ? "max" : maxSelect.toString();
     return AlertDialog(
@@ -143,6 +148,23 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
                 .update((state) => !state),
             ref.watch(lineAlwaysVisibleProvider(widget.y)),
             label: '항상 보임',
+          ),
+          ColorPicker(
+            pickersEnabled: {
+              ColorPickerType.both: true,
+              ColorPickerType.primary: false,
+              ColorPickerType.accent: false
+            },
+            color: const Color(0x00000000),
+            onColorChanged: (color) {
+              ref.read(lineBackgroundColorProvider(widget.y).notifier).state = color;
+            },
+          ),
+          IconButton(
+            onPressed: (){
+              ref.read(lineBackgroundColorProvider(widget.y).notifier).state = null;
+            },
+            icon: const Icon(Icons.format_color_reset),
           ),
           TextField(
             controller: _textFieldController,
@@ -204,17 +226,6 @@ class NodeDivider extends ConsumerWidget {
     );
 
     if (isEditable) {
-      Future dialog() => showDialog<String>(
-                  context: context,
-                  builder: (_) => NodeDividerDialog(y),
-                  barrierDismissible: false)
-              .then((value) {
-            getPlatform
-                .getLineSetting(y)
-                ?.recursiveStatus
-                .conditionVisibleString = value!;
-            ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-          });
       return Stack(
         alignment: Alignment.center,
         children: [
@@ -230,7 +241,17 @@ class NodeDivider extends ConsumerWidget {
               icon: const Icon(Icons.more_vert),
               onSelected: (result) {
                 if (result == 0) {
-                  dialog();
+                  showDialog<String>(
+                      context: context,
+                      builder: (_) => NodeDividerDialog(y),
+                      barrierDismissible: false)
+                      .then((value) {
+                    getPlatform
+                        .getLineSetting(y)
+                        ?.recursiveStatus
+                        .conditionVisibleString = value!;
+                    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+                  });
                 }
               },
               itemBuilder: (BuildContext context) {
@@ -339,7 +360,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
               controller: _scrollController,
               itemCount: getPlatform.lineSettings.length + 1,
               itemBuilder: (BuildContext context, int index) {
-                return ChoiceLine(index, Colors.transparent);
+                return ChoiceLine(index);
               },
               cacheExtent: 200,
             ),
@@ -358,7 +379,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
               controller: _scrollController,
               itemCount: getPlatform.lineSettings.length,
               itemBuilder: (BuildContext context, int index) {
-                return ChoiceLine(index, Colors.transparent);
+                return ChoiceLine(index);
               },
               cacheExtent: 200,
             ),
@@ -375,7 +396,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
           controller: _scrollController,
           itemCount: getPlatform.lineSettings.length + 1,
           itemBuilder: (BuildContext context, int index) {
-            return ChoiceLine(index, Colors.transparent);
+            return ChoiceLine(index);
           },
           cacheExtent: 200,
         ),
@@ -388,7 +409,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
           controller: _scrollController,
           itemCount: getPlatform.lineSettings.length,
           itemBuilder: (BuildContext context, int index) {
-            return ChoiceLine(index, Colors.transparent);
+            return ChoiceLine(index);
           },
           cacheExtent: 200,
         ),
@@ -399,13 +420,13 @@ class _NestedMapState extends ConsumerState<NestedMap> {
 
 class ChoiceLine extends ConsumerWidget {
   final int y;
-  final Color color;
 
-  const ChoiceLine(this.y, this.color, {Key? key}) : super(key: key);
+  const ChoiceLine(this.y, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var choiceNodeList = getPlatform.lineSettings;
+    var color = ref.watch(lineBackgroundColorProvider(y)) ?? Colors.transparent;
     if (isEditable) {
       if (y >= choiceNodeList.length) {
         return ColoredBox(
