@@ -4,6 +4,8 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../main.dart';
+
 class ProjectPath {
   static final ProjectPath _projectPath = ProjectPath._init();
   factory ProjectPath() {
@@ -21,7 +23,7 @@ class ProjectPath {
   }
 
   static Future<String> getProjectFolder(String? name) async {
-    if (Platform.isAndroid) {
+    if (ConstList.isMobile()) {
       var dir = (await getExternalStorageDirectory())!;
       if (name == null) {
         return "${dir.path}/project";
@@ -36,7 +38,7 @@ class ProjectPath {
   }
 
   Future<List<String>> get frequentPathFromData async {
-    if (Platform.isAndroid) {
+    if (ConstList.isMobile()) {
       var dir = await getProjectFolder(null);
       var directory = Directory(dir);
       if (!await directory.exists()) {
@@ -64,7 +66,7 @@ class ProjectPath {
   }
 
   Future<void> removeFrequentPath(int index) async {
-    if (Platform.isAndroid) {
+    if (ConstList.isMobile()) {
       var dir = Directory(pathList[index]);
       await dir.delete(recursive: true);
       pathList = await frequentPathFromData;

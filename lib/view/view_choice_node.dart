@@ -189,7 +189,7 @@ class NodeDraggable extends ConsumerWidget {
       return const SizedBox.shrink();
     }
     var widget = ViewChoiceNode(pos);
-    if (Platform.isAndroid) {
+    if (ConstList.isMobile()) {
       return LongPressDraggable<Pos>(
         onDragUpdate: (details) => ref
             .read(dragPositionProvider.notifier)

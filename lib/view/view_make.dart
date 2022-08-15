@@ -170,7 +170,7 @@ class ViewMake extends ConsumerWidget {
               PopupMenuItem(
                 value: 1,
                 child: Text(
-                    '${Platform.isAndroid ? 'download 폴더에 ' : ''}zip 파일로 추출'),
+                    '${ConstList.isMobile() ? 'download 폴더에 ' : ''}zip 파일로 추출'),
               ),
             ];
           },

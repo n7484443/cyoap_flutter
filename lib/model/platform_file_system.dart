@@ -212,7 +212,7 @@ class PlatformFileSystem {
     if (asFile) {
       if (ConstList.isWeb()) {
         await PlatformSpecified().saveProject!.saveZip('exported.zip', data);
-      } else if (Platform.isAndroid) {
+      } else if (ConstList.isMobile()) {
         await PlatformSpecified()
             .saveProject!
             .saveZip(await ProjectPath.getDownloadFolder(), data);

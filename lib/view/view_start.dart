@@ -31,7 +31,7 @@ class ViewStart extends ConsumerWidget {
                     visible: ref.watch(needUpdateStateProvider),
                     child: TextButton(
                       onPressed: () {
-                        if (Platform.isAndroid) {
+                        if (ConstList.isMobile()) {
                           launchUrlString(
                               'market://details?id=com.clearApple.cyoap_flutter');
                         } else {
@@ -68,7 +68,7 @@ class ViewStart extends ConsumerWidget {
                     child: TextButton(
                       child: const Text('폴더 추가'),
                       onPressed: () async {
-                        if (Platform.isAndroid) {
+                        if (ConstList.isMobile()) {
                           showDialog(
                             context: context,
                             builder: (context) => const ViewAddProjectDialog(),
@@ -138,7 +138,7 @@ class _ViewProjectListState extends ConsumerState<ViewProjectList> {
                 : OutlinedButton.styleFrom(primary: Colors.black54),
             child: Text(ref.watch(pathListProvider)[index]),
           ),
-          trailing: IconButton(
+          trailing: ConstList.isWeb() ? null : IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () {
               ref.read(pathListProvider.notifier).removeFrequentPath(

@@ -26,6 +26,14 @@ class ConstList {
     return isDistributed || kIsWeb;
   }
 
+  static bool isMobile(){
+    return !isWeb() && Platform.isAndroid;
+  }
+
+  static bool isDesktop(){
+    return !isWeb() && Platform.isWindows;
+  }
+
   static double getScreenWidth(BuildContext context) {
     return MediaQuery.of(context).size.width;
   }
@@ -35,7 +43,7 @@ class ConstList {
   }
 
   static bool isSmallDisplay(BuildContext context) {
-    if (Platform.isAndroid) return true;
+    if (isMobile()) return true;
     if (getScreenWidth(context) < 1000) return true;
     return false;
   }

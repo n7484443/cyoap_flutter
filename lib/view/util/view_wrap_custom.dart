@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
@@ -20,11 +21,9 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
   final bool setCenter;
 
   ViewWrapCustomReorderable(this.parentPos, this.builderDraggable,
-      {this.maxSize = defaultMaxSize,
-      this.setCenter = false,
-      Key? key})
+      {this.maxSize = defaultMaxSize, this.setCenter = false, Key? key})
       : super(key: key) {
-    if (Platform.isAndroid) {
+    if (ConstList.isMobile()) {
       mul = const Tuple2(7, 4);
     } else {
       mul = const Tuple2(5, 2);
@@ -38,8 +37,8 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
     if (horizontal) {
       widget.add(Padding(
         padding: const EdgeInsets.all(8.0),
-        child: SizedBox(
-            height: nodeBaseHeight / 6, child: builderDraggable(pos)),
+        child:
+            SizedBox(height: nodeBaseHeight / 6, child: builderDraggable(pos)),
       ));
     } else {
       widget.add(Expanded(flex: mul.item2, child: builderDraggable(pos)));
@@ -91,8 +90,8 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
           subWidget = List.empty(growable: true);
           addBuildDraggable(outputWidget, i + 1, horizontal: true);
         } else {
-          subWidget
-              .add(Expanded(flex: size * mul.item1, child: NodeDraggable(child.pos)));
+          subWidget.add(Expanded(
+              flex: size * mul.item1, child: NodeDraggable(child.pos)));
           addBuildDraggable(subWidget, i + 1);
           stack += size;
         }
@@ -113,8 +112,7 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
         );
       }
     } else {
-      addBuildDraggable(outputWidget, children.length,
-          horizontal: true);
+      addBuildDraggable(outputWidget, children.length, horizontal: true);
     }
 
     return Column(

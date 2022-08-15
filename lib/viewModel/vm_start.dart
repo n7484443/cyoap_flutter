@@ -66,10 +66,11 @@ class PathListNotifier extends StateNotifier<List<String>> {
       await Future.wait(isAdded);
 
       isAdded.clear();
-      var path = state[selected];
       if (ConstList.isWeb()) {
         return true;
-      } else if (path.isNotEmpty) {
+      }
+      var path = state[selected];
+      if (path.isNotEmpty) {
         if (path.endsWith('.zip')) {
           var file = File(path);
           if (!await file.exists()) {
@@ -100,7 +101,7 @@ class PathListNotifier extends StateNotifier<List<String>> {
 
   Future<void> removeFrequentPath(
       int index, Future<bool?> Function() dialog) async {
-    if (!Platform.isAndroid) {
+    if (!ConstList.isMobile()) {
       await ProjectPath().removeFrequentPath(index);
       state = List.from(ProjectPath().pathList);
       await updatePathList();

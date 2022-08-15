@@ -8,9 +8,11 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image/image.dart';
 import 'package:tuple/tuple.dart';
 
+import '../../main.dart';
+
 class WebpConverterImp extends WebpConverter {
   factory WebpConverterImp() {
-    if (Platform.isWindows) {
+    if (ConstList.isDesktop()) {
       return WebpConverterImpWindows();
     }
     return WebpConverterImpAndroid();
