@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
@@ -283,13 +284,48 @@ class _ViewEditorState extends ConsumerState<ViewEditor> {
   }
 }
 
-class ViewContentsEditor extends ConsumerWidget {
+class ViewContentsEditor extends ConsumerStatefulWidget {
   const ViewContentsEditor({
     Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState createState() => _ViewContentsEditorState();
+}
+
+class _ViewContentsEditorState extends ConsumerState<ViewContentsEditor> {
+  FocusNode? _focusNode;
+  QuillController? _quillController;
+  ScrollController? _scrollController;
+
+  @override
+  void initState() {
+    _focusNode = FocusNode();
+    if(ref.read(nodeEditorTargetProvider).contentsString.isEmpty){
+      _quillController = QuillController.basic();
+    }else{
+      _quillController = QuillController(
+          document: Document.fromJson(
+              jsonDecode(ref.read(nodeEditorTargetProvider).contentsString)),
+          selection: const TextSelection.collapsed(offset: 0));
+    }
+    ref.read(changeProvider.notifier).document = _quillController?.document;
+    _quillController?.addListener(() {
+      ref.read(changeProvider.notifier).setUpdated();
+    });
+    _scrollController = ScrollController();
+    super.initState();
+  }
+  @override
+  void dispose() {
+    _focusNode?.dispose();
+    _quillController?.dispose();
+    _scrollController?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     void changeColor(QuillController controller, Color color, bool background) {
       var hex = color.value.toRadixString(16);
       if (hex.startsWith('ff')) {
@@ -334,8 +370,7 @@ class ViewContentsEditor extends ConsumerWidget {
             IconButton(
               icon: const Icon(Icons.check),
               onPressed: () {
-                changeColor(
-                    ref.watch(contentEditProvider), newColor, background);
+                changeColor(_quillController!, newColor, background);
                 Navigator.pop(context);
               },
             ),
@@ -349,7 +384,7 @@ class ViewContentsEditor extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: QuillToolbar.basic(
-            controller: ref.watch(contentEditProvider),
+            controller: _quillController!,
             showListCheck: false,
             showInlineCode: false,
             showVideoButton: false,
@@ -383,14 +418,14 @@ class ViewContentsEditor extends ConsumerWidget {
             elevation: ConstList.elevation,
             child: QuillEditor(
               padding: const EdgeInsets.all(3),
-              controller: ref.watch(contentEditProvider),
-              focusNode: FocusNode(),
+              controller: _quillController!,
+              focusNode: _focusNode!,
               expands: true,
               scrollable: true,
               autoFocus: true,
               readOnly: false,
               showCursor: true,
-              scrollController: ScrollController(),
+              scrollController: _scrollController!,
               customStyles: ConstList.getDefaultThemeData(context, 1,
                   fontStyle: mainFont),
             ),

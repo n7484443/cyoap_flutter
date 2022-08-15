@@ -123,12 +123,13 @@ class SizeDialog extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('길이 : $str', style: const TextStyle(fontSize: 16)),
+            Text('길이 : $str', style: Theme.of(context).textTheme.titleMedium),
             Slider(
               onChanged: (double value) {
                 ref
                     .read(choiceNodeSizeProvider(pos).notifier)
                     .sizeChange(value.toInt());
+                refreshLine(ref, pos.first);
               },
               value: width.toDouble(),
               divisions: defaultMaxSize,

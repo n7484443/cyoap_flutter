@@ -6,7 +6,6 @@ import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -27,20 +26,6 @@ final imagePositionProvider = StateProvider.autoDispose<int>(
     (ref) => ref.watch(nodeEditorTargetProvider).imagePosition);
 final nodeModeProvider = StateProvider.autoDispose<ChoiceNodeMode>(
     (ref) => ref.watch(nodeEditorTargetProvider).choiceNodeMode);
-
-final contentEditProvider = Provider.autoDispose<QuillController>((ref) {
-  var controller = QuillController(
-      document: Document.fromJson(
-          jsonDecode(ref.read(nodeEditorTargetProvider).contentsString)),
-      selection: const TextSelection.collapsed(offset: 0));
-  controller.addListener(() {
-    ref.read(changeProvider.notifier).setUpdated();
-  });
-  ref.onDispose(() {
-    controller.dispose();
-  });
-  return controller;
-});
 
 final titleProvider = StateProvider.autoDispose<String>(
     (ref) => ref.watch(nodeEditorTargetProvider).title);
@@ -107,6 +92,7 @@ final changeProvider =
     StateNotifierProvider<ChangeNotifier, bool>((ref) => ChangeNotifier(ref));
 
 class ChangeNotifier extends StateNotifier<bool> {
+  Document? document;
   Ref ref;
   ChangeNotifier(this.ref) : super(false);
 
@@ -121,7 +107,7 @@ class ChangeNotifier extends StateNotifier<bool> {
   void save() {
     NodeEditor().target.title = ref.read(titleProvider);
     NodeEditor().target.contentsString =
-        jsonEncode(ref.read(contentEditProvider).document.toDelta().toJson());
+        jsonEncode(document!.toDelta().toJson());
     NodeEditor().target.imageString =
         ImageDB().getImageName(ref.read(imageStateProvider));
     try {
