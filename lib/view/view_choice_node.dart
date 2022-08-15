@@ -82,7 +82,7 @@ class ViewChoiceNode extends ConsumerWidget {
                     ? () {
                         NodeEditor().target = node;
                         ref
-                            .read(vmMakePlatformProvider.notifier)
+                            .read(changeTabProvider.notifier)
                             .changePageString("viewEditor", context);
                       }
                     : null,

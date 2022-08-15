@@ -14,13 +14,13 @@ import '../view/view_image_editor.dart';
 import '../view/view_make.dart';
 import '../view/view_source.dart';
 
-final vmMakePlatformProvider =
-    StateNotifierProvider<VMMakePlatform, int>((ref) {
-  return VMMakePlatform(ref);
+final changeTabProvider =
+    StateNotifierProvider<ChangeTabNotifier, int>((ref) {
+  return ChangeTabNotifier(ref);
 });
 
-final makePlatformWidget = Provider<Widget>((ref) {
-  var page = ref.watch(vmMakePlatformProvider);
+final tabWidgetProvider = Provider<Widget>((ref) {
+  var page = ref.watch(changeTabProvider);
   switch (page) {
     case 1:
       return const ViewEditor();
@@ -41,9 +41,9 @@ final makePlatformWidget = Provider<Widget>((ref) {
   }
 });
 
-class VMMakePlatform extends StateNotifier<int> {
+class ChangeTabNotifier extends StateNotifier<int> {
   final Ref ref;
-  VMMakePlatform(this.ref) : super(0);
+  ChangeTabNotifier(this.ref) : super(0);
   List<int> stack = List.empty(growable: true);
 
   Future<bool> removeFunction(int index, BuildContext context) async {

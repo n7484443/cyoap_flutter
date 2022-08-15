@@ -71,7 +71,7 @@ class _ViewEditorState extends ConsumerState<ViewEditor> {
         icon: const Icon(Icons.arrow_back),
         onPressed: () {
           if (_controllerTitle!.text.isNotEmpty) {
-            ref.read(vmMakePlatformProvider.notifier).back(context);
+            ref.read(changeTabProvider.notifier).back(context);
           }
         },
       ),
@@ -229,7 +229,7 @@ class _ViewEditorState extends ConsumerState<ViewEditor> {
             child: const Text('코드 수정'),
             onPressed: () {
               ref
-                  .read(vmMakePlatformProvider.notifier)
+                  .read(changeTabProvider.notifier)
                   .changePageString("viewCodeEditor", context);
             },
           ),
@@ -277,7 +277,7 @@ class _ViewEditorState extends ConsumerState<ViewEditor> {
         ),
       ),
       onWillPop: () async {
-        ref.read(vmMakePlatformProvider.notifier).back(context);
+        ref.read(changeTabProvider.notifier).back(context);
         return false;
       },
     );
@@ -466,7 +466,7 @@ class ViewNodeImageEditor extends ConsumerWidget {
                         ref.read(imageProvider.notifier).update((state) =>
                             Tuple2(name, ref.watch(lastImageProvider)!));
                         ref
-                            .read(vmMakePlatformProvider.notifier)
+                            .read(changeTabProvider.notifier)
                             .changePageString('viewImageEditor', context);
                       }
                     });

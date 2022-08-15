@@ -20,7 +20,7 @@ class ViewVariable extends ConsumerWidget {
         ListTile(
           onTap: () {
             ref
-                .read(vmMakePlatformProvider.notifier)
+                .read(changeTabProvider.notifier)
                 .changePageString('viewDesignSetting', context);
           },
           leading: const Icon(Icons.settings),
@@ -30,13 +30,13 @@ class ViewVariable extends ConsumerWidget {
           leading: const Icon(Icons.settings),
           title: const Text('이미지 설정'),
           onTap: () => ref
-              .read(vmMakePlatformProvider.notifier)
+              .read(changeTabProvider.notifier)
               .changePageString("viewSource", context),
         ),
         ListTile(
           onTap: () {
             ref
-                .read(vmMakePlatformProvider.notifier)
+                .read(changeTabProvider.notifier)
                 .changePageString('viewGlobalSetting', context);
           },
           leading: const Icon(Icons.settings),
@@ -153,7 +153,7 @@ class VariableTiles extends ConsumerWidget {
                 values.displayName.isEmpty ? null : Text(values.displayName),
             trailing: Text(values.valueType.data.runtimeType.toString()),
             onTap: () {
-              if (ref.watch(vmMakePlatformProvider) == 2) {
+              if (ref.watch(changeTabProvider) == 2) {
                 var vmCodeEditor = ref.read(vmCodeEditorProvider);
                 if (vmCodeEditor.lastFocus != null) {
                   vmCodeEditor.insertText(vmCodeEditor.lastFocus!, key.trim());
@@ -210,7 +210,7 @@ class NodeTiles extends ConsumerWidget {
                   .map((e) => ListTile(
                         title: Text(e.name),
                         onTap: () {
-                          if (ref.watch(vmMakePlatformProvider) == 2) {
+                          if (ref.watch(changeTabProvider) == 2) {
                             var vmCodeEditor = ref.read(vmCodeEditorProvider);
                             if (vmCodeEditor.lastFocus != null) {
                               vmCodeEditor.insertText(vmCodeEditor.lastFocus!,

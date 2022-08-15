@@ -17,7 +17,7 @@ class ViewCodeEditor extends ConsumerWidget {
 
     var leadingWidget = IconButton(
       icon: const Icon(Icons.arrow_back),
-      onPressed: () => ref.read(vmMakePlatformProvider.notifier).back(context),
+      onPressed: () => ref.read(changeTabProvider.notifier).back(context),
     );
 
     return WillPopScope(
@@ -104,7 +104,7 @@ class ViewCodeEditor extends ConsumerWidget {
         ),
       ),
       onWillPop: () async {
-        ref.read(vmMakePlatformProvider.notifier).back(context);
+        ref.read(changeTabProvider.notifier).back(context);
         return false;
       },
     );

@@ -53,7 +53,7 @@ class ViewDesignSetting extends ConsumerWidget {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () =>
-                ref.read(vmMakePlatformProvider.notifier).back(context),
+                ref.read(changeTabProvider.notifier).back(context),
           ),
           title: const TabBar(
             indicatorColor: Colors.blueAccent,

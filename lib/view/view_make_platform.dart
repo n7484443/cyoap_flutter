@@ -19,7 +19,7 @@ class ViewMakePlatform extends ConsumerWidget {
           drawer: const Drawer(
             child: ViewVariable(),
           ),
-          body: ref.watch(makePlatformWidget),
+          body: ref.watch(tabWidgetProvider),
         ),
       );
     }
@@ -35,7 +35,7 @@ class ViewMakePlatform extends ConsumerWidget {
               child: ViewVariable(),
             ),
             Flexible(
-              child: ref.watch(makePlatformWidget),
+              child: ref.watch(tabWidgetProvider),
             ),
           ],
         ),

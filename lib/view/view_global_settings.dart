@@ -110,7 +110,7 @@ class ViewGlobalSetting extends ConsumerWidget {
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () {
-          ref.read(vmMakePlatformProvider.notifier).back(context);
+          ref.read(changeTabProvider.notifier).back(context);
         },
       ),
       actions: [
@@ -118,7 +118,7 @@ class ViewGlobalSetting extends ConsumerWidget {
           icon: const Icon(Icons.settings),
           onPressed: () {
             ref
-                .read(vmMakePlatformProvider.notifier)
+                .read(changeTabProvider.notifier)
                 .changePageString('viewFontSource', context);
           },
         ),
