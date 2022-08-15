@@ -33,10 +33,11 @@ class ViewImageEditor extends ConsumerWidget {
           child: const Icon(Icons.crop),
           onPressed: () async {
             ref.read(lastImageProvider.notifier).update((state) => null);
-            ref.read(imageStateProvider.notifier).addImageCrop(
-                ref.read(imageProvider)!.item1,
-                await ref.read(cropImageProvider.future));
-            ref.read(vmMakePlatformProvider.notifier).back(context);
+            ref.read(imageStateProvider.notifier)
+                .addImageCrop(ref.read(imageProvider)!.item1,
+                    await ref.read(cropImageProvider.future))
+                .then((value) =>
+                    ref.read(vmMakePlatformProvider.notifier).back(context));
           },
         ),
       ],

@@ -12,9 +12,12 @@ class LineSetting extends GenerableParserAndPosition {
   int maxSelect;
   bool alwaysVisible;
   Color? backgroundColor;
+  String? backgroundImageString;
 
   LineSetting(int currentPos,
-      {this.alwaysVisible = true, this.maxSelect = -1}) {
+      {this.alwaysVisible = true,
+      this.maxSelect = -1,
+      this.backgroundImageString}) {
     super.currentPos = currentPos;
     recursiveStatus = RecursiveStatus();
   }
@@ -26,6 +29,7 @@ class LineSetting extends GenerableParserAndPosition {
       'maxSelect': maxSelect,
       'alwaysVisible': alwaysVisible,
       'backgroundColor': backgroundColor?.value,
+      'backgroundImageString': convertToWebp(backgroundImageString) ,
     });
     return map;
   }
@@ -35,7 +39,8 @@ class LineSetting extends GenerableParserAndPosition {
         alwaysVisible = json['alwaysVisible'] ?? true,
         backgroundColor = json['backgroundColor'] == null
             ? null
-            : Color(json['backgroundColor']) {
+            : Color(json['backgroundColor']),
+        backgroundImageString = json['backgroundImageString'] {
     super.currentPos = json['y'] ?? json['pos'];
     if (json.containsKey('children')) {
       children.addAll((json['children'] as List)

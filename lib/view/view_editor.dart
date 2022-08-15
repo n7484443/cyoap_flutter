@@ -301,9 +301,9 @@ class _ViewContentsEditorState extends ConsumerState<ViewContentsEditor> {
   @override
   void initState() {
     _focusNode = FocusNode();
-    if(ref.read(nodeEditorTargetProvider).contentsString.isEmpty){
+    if (ref.read(nodeEditorTargetProvider).contentsString.isEmpty) {
       _quillController = QuillController.basic();
-    }else{
+    } else {
       _quillController = QuillController(
           document: Document.fromJson(
               jsonDecode(ref.read(nodeEditorTargetProvider).contentsString)),
@@ -316,6 +316,7 @@ class _ViewContentsEditorState extends ConsumerState<ViewContentsEditor> {
     _scrollController = ScrollController();
     super.initState();
   }
+
   @override
   void dispose() {
     _focusNode?.dispose();
@@ -396,6 +397,7 @@ class _ViewContentsEditorState extends ConsumerState<ViewContentsEditor> {
             showAlignmentButtons: true,
             showColorButton: false,
             showBackgroundColorButton: false,
+            showFontFamily: false,
             customButtons: [
               QuillCustomButton(
                 icon: Icons.color_lens,

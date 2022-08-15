@@ -43,6 +43,14 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
     }
   }
 
+  int calculateFlex(int size){
+    return size * mul.item1 + (size - 1) * mul.item2;
+  }
+
+  int calculateFlexReverse(int size){
+    return size * mul.item2 + size * mul.item1;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<Widget> outputWidget = List<Widget>.empty(growable: true);
@@ -60,7 +68,7 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
           if (maxSize > stack) {
             subWidget.add(
               Expanded(
-                flex: (maxSize - stack) * mul.item1,
+                flex: calculateFlexReverse(maxSize - stack),
                 child: const SizedBox.shrink(),
               ),
             );
@@ -89,14 +97,14 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
           addBuildDraggable(outputWidget, i + 1, horizontal: true);
         } else {
           subWidget.add(Expanded(
-              flex: size * mul.item1, child: NodeDraggable(child.pos)));
+              flex: calculateFlex(size), child: NodeDraggable(child.pos)));
           addBuildDraggable(subWidget, i + 1);
           stack += size;
         }
       }
       if (0 < stack && stack < maxSize) {
         subWidget.add(Expanded(
-            flex: (maxSize - stack) * mul.item1,
+            flex: calculateFlexReverse(maxSize - stack),
             child: const SizedBox.shrink()));
       }
       if (subWidget.isNotEmpty) {

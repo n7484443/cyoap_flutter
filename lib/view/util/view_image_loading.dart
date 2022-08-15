@@ -6,7 +6,8 @@ import '../../model/image_db.dart';
 
 class ViewImageLoading extends StatelessWidget {
   final String name;
-  ViewImageLoading(this.name) : super(key: GlobalKey());
+  final BoxFit boxFit;
+  ViewImageLoading(this.name, {this.boxFit = BoxFit.scaleDown}) : super(key: GlobalKey());
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class ViewImageLoading extends StatelessWidget {
         '/dist/images/$name',
         filterQuality: FilterQuality.high,
         isAntiAlias: true,
-        fit: BoxFit.scaleDown,
+        fit: boxFit,
       );
     }
     var image = ImageDB().getImage(name);
@@ -24,7 +25,7 @@ class ViewImageLoading extends StatelessWidget {
         image,
         filterQuality: FilterQuality.high,
         isAntiAlias: true,
-        fit: BoxFit.scaleDown,
+        fit: boxFit,
       );
       return output;
     }

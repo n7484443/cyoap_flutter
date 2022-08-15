@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:cyoap_flutter/model/choiceNode/recursive_status.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
-import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
 
 import '../../view/util/view_wrap_custom.dart';
 import '../grammar/analyser.dart';
@@ -148,9 +147,6 @@ class ChoiceNode extends GenerableParserAndPosition {
     }
   }
 
-  String convertToWebp(String name) {
-    return PlatformSpecified().saveProject!.convertImageName(name);
-  }
 
   void doAllChild(void Function(ChoiceNode) choiceNodeFunc) {
     choiceNodeFunc(this);
