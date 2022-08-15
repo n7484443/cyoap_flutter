@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';

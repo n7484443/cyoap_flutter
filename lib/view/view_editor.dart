@@ -118,10 +118,10 @@ class _ViewEditorState extends ConsumerState<ViewEditor> {
           child: SizedBox(
             width: 120,
             child: Column(children: [
-              Text('변수명', style: ConstList.defaultFont.copyWith(fontSize: 20)),
+              Text('변수명', style: Theme.of(context).textTheme.labelLarge),
               Text('${_controllerTitle?.text.replaceAll(" ", "")}:random',
                   softWrap: true,
-                  style: ConstList.defaultFont.copyWith(fontSize: 10)),
+                  style: Theme.of(context).textTheme.bodySmall),
               TextField(
                 textAlign: TextAlign.end,
                 maxLength: 3,
@@ -141,10 +141,10 @@ class _ViewEditorState extends ConsumerState<ViewEditor> {
           child: SizedBox(
             width: 120,
             child: Column(children: [
-              Text('변수명', style: ConstList.defaultFont.copyWith(fontSize: 20)),
+              Text('변수명', style: Theme.of(context).textTheme.labelLarge),
               Text('${_controllerTitle?.text.replaceAll(" ", "")}:multi',
                   softWrap: true,
-                  style: ConstList.defaultFont.copyWith(fontSize: 10)),
+                  style: Theme.of(context).textTheme.bodySmall),
               TextField(
                 textAlign: TextAlign.end,
                 maxLength: 3,

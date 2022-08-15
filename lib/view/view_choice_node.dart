@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
@@ -352,7 +351,7 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
         Expanded(
           child: Text(
             ref.watch(choiceNodeSelectProvider(pos)).toString(),
-            style: ConstList.defaultFont.copyWith(fontSize: 30),
+            style: Theme.of(context).textTheme.headline4,
             textAlign: TextAlign.center,
           ),
         ),

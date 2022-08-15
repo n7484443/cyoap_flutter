@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
