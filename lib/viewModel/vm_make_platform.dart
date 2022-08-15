@@ -65,7 +65,7 @@ class ChangeTabNotifier extends StateNotifier<int> {
         break;
       case 2:
         var controller = ref.watch(vmCodeEditorProvider);
-        if (ref.watch(codeEditorChanged)) {
+        if (ref.read(codeEditorChanged)) {
           var out = await showDialog(
             context: context,
             builder: (_) => ViewBackDialog(
