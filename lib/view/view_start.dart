@@ -50,46 +50,43 @@ class ViewStart extends ConsumerWidget {
               flex: 9,
               child: ViewProjectList(),
             ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  TextButton(
-                    child: const Text('파일 추가'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                TextButton(
+                  child: const Text('파일 추가'),
+                  onPressed: () async {
+                    if (await ref.read(pathListProvider.notifier).addFile() ==
+                        0) {
+                      ref.read(pathListSelectedProvider.notifier).state = 0;
+                    }
+                  },
+                ),
+                Visibility(
+                  visible: !ConstList.isWeb(),
+                  child: TextButton(
+                    child: const Text('폴더 추가'),
                     onPressed: () async {
-                      if (await ref.read(pathListProvider.notifier).addFile() ==
-                          0) {
-                        ref.read(pathListSelectedProvider.notifier).state = 0;
+                      if (ConstList.isMobile()) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => const ViewAddProjectDialog(),
+                          barrierDismissible: false,
+                        );
+                      } else {
+                        if (await ref
+                            .read(pathListProvider.notifier)
+                            .addDirectory()) {
+                          ref.read(pathListSelectedProvider.notifier).state = 0;
+                        }
                       }
                     },
                   ),
-                  Visibility(
-                    visible: !ConstList.isWeb(),
-                    child: TextButton(
-                      child: const Text('폴더 추가'),
-                      onPressed: () async {
-                        if (ConstList.isMobile()) {
-                          showDialog(
-                            context: context,
-                            builder: (context) => const ViewAddProjectDialog(),
-                            barrierDismissible: false,
-                          );
-                        } else {
-                          if (await ref
-                              .read(pathListProvider.notifier)
-                              .addDirectory()) {
-                            ref.read(pathListSelectedProvider.notifier).state =
-                                0;
-                          }
-                        }
-                      },
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
             const Divider(
-              thickness: 2,
+              thickness: 1.5,
               color: Colors.blue,
             ),
             const SelectMode(),
@@ -113,9 +110,9 @@ class _ViewProjectListState extends ConsumerState<ViewProjectList> {
   @override
   void initState() {
     super.initState();
-    if(!ConstList.isWeb()){
+    if (!ConstList.isWeb()) {
       ref.read(pathListProvider.notifier).updatePathList().then(
-              (value) => ref.read(isLoadingStateProvider.notifier).state = false);
+          (value) => ref.read(isLoadingStateProvider.notifier).state = false);
     }
   }
 
@@ -138,20 +135,23 @@ class _ViewProjectListState extends ConsumerState<ViewProjectList> {
                 : OutlinedButton.styleFrom(primary: Colors.black54),
             child: Text(ref.watch(pathListProvider)[index]),
           ),
-          trailing: ConstList.isWeb() ? null : IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () {
-              ref.read(pathListProvider.notifier).removeFrequentPath(
-                    index,
-                    () async => await showDialog<bool?>(
-                      context: context,
-                      builder: (_) => ViewWarningDialog(
-                        acceptFunction: () => Navigator.of(context).pop(true),
-                      ),
-                    ),
-                  );
-            },
-          ),
+          trailing: ConstList.isWeb()
+              ? null
+              : IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    ref.read(pathListProvider.notifier).removeFrequentPath(
+                          index,
+                          () async => await showDialog<bool?>(
+                            context: context,
+                            builder: (_) => ViewWarningDialog(
+                              acceptFunction: () =>
+                                  Navigator.of(context).pop(true),
+                            ),
+                          ),
+                        );
+                  },
+                ),
         );
       },
     );
@@ -173,14 +173,11 @@ class SelectMode extends ConsumerWidget {
                 Navigator.of(context).pushNamed('/viewPlay');
               });
             },
-            child: const Center(
+            child: Center(
               child: Text(
                 'Play',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 56,
-                ),
+                style: Theme.of(context).textTheme.headline1,
               ),
             ),
           ),
@@ -193,14 +190,11 @@ class SelectMode extends ConsumerWidget {
                 Navigator.of(context).pushNamed('/viewMake');
               });
             },
-            child: const Center(
+            child: Center(
               child: Text(
                 'Make',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 56,
-                ),
+                style: Theme.of(context).textTheme.headline1,
               ),
             ),
           ),

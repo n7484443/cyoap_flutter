@@ -26,11 +26,11 @@ class ConstList {
     return isDistributed || kIsWeb;
   }
 
-  static bool isMobile(){
+  static bool isMobile() {
     return !isWeb() && Platform.isAndroid;
   }
 
-  static bool isDesktop(){
+  static bool isDesktop() {
     return !isWeb() && Platform.isWindows;
   }
 

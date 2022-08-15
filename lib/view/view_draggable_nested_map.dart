@@ -44,22 +44,17 @@ class NodeDragTarget extends ConsumerWidget {
         },
         onAccept: (Pos drag) {
           if (drag.last == nonPositioned) {
-            ref
-                .read(vmDraggableNestedMapProvider)
-                .changeData(ref, drag, pos);
+            ref.read(vmDraggableNestedMapProvider).changeData(ref, drag, pos);
           } else if (drag.last == removedPositioned) {
             ref
                 .read(vmDraggableNestedMapProvider)
                 .addData(ref, pos, ref.read(removedChoiceNode)!.clone());
           } else if (pos.equalExceptLast(drag) &&
               (pos.data.last - 1) >= drag.last) {
-            ref
-                .read(vmDraggableNestedMapProvider)
-                .changeData(ref, drag, Pos(data: List.from(pos.data)..last -= 1));
+            ref.read(vmDraggableNestedMapProvider).changeData(
+                ref, drag, Pos(data: List.from(pos.data)..last -= 1));
           } else {
-            ref
-                .read(vmDraggableNestedMapProvider)
-                .changeData(ref, drag, pos);
+            ref.read(vmDraggableNestedMapProvider).changeData(ref, drag, pos);
           }
         },
       ),
@@ -85,7 +80,8 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
   @override
   void initState() {
     _textFieldController = TextEditingController(
-        text: ref.read(lineProvider(widget.y))
+        text: ref
+                .read(lineProvider(widget.y))
                 ?.recursiveStatus
                 .conditionVisibleString ??
             "");
@@ -157,12 +153,14 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
             },
             color: const Color(0x00000000),
             onColorChanged: (color) {
-              ref.read(lineBackgroundColorProvider(widget.y).notifier).state = color;
+              ref.read(lineBackgroundColorProvider(widget.y).notifier).state =
+                  color;
             },
           ),
           IconButton(
-            onPressed: (){
-              ref.read(lineBackgroundColorProvider(widget.y).notifier).state = null;
+            onPressed: () {
+              ref.read(lineBackgroundColorProvider(widget.y).notifier).state =
+                  null;
             },
             icon: const Icon(Icons.format_color_reset),
           ),
@@ -242,15 +240,16 @@ class NodeDivider extends ConsumerWidget {
               onSelected: (result) {
                 if (result == 0) {
                   showDialog<String>(
-                      context: context,
-                      builder: (_) => NodeDividerDialog(y),
-                      barrierDismissible: false)
+                          context: context,
+                          builder: (_) => NodeDividerDialog(y),
+                          barrierDismissible: false)
                       .then((value) {
                     getPlatform
                         .getLineSetting(y)
                         ?.recursiveStatus
                         .conditionVisibleString = value!;
-                    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+                    ref.read(draggableNestedMapChangedProvider.notifier).state =
+                        true;
                   });
                 }
               },
@@ -466,8 +465,7 @@ class ChoiceLine extends ConsumerWidget {
           children: [
             NodeDivider(y),
             ViewWrapCustomReorderable(
-              line.pos, (i) => NodeDragTarget(Pos(data: [y, i]))
-            ),
+                line.pos, (i) => NodeDragTarget(Pos(data: [y, i]))),
           ],
         ),
       );

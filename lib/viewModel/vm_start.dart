@@ -25,7 +25,8 @@ final pathListProvider = StateNotifierProvider<PathListNotifier, List<String>>(
 
 final pathListSelectedProvider = StateProvider<int>((ref) => -1);
 
-final isLoadingStateProvider = StateProvider<bool>((ref) => ConstList.isWeb() ? false : true);
+final isLoadingStateProvider =
+    StateProvider<bool>((ref) => ConstList.isWeb() ? false : true);
 
 class PathListNotifier extends StateNotifier<List<String>> {
   Ref ref;

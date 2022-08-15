@@ -24,8 +24,7 @@ import '../viewModel/vm_variable_table.dart';
 class ViewChoiceNode extends ConsumerWidget {
   final Pos pos;
 
-  const ViewChoiceNode(this.pos, {Key? key})
-      : super(key: key);
+  const ViewChoiceNode(this.pos, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -471,16 +470,17 @@ class ViewChoiceNodeContent extends ConsumerWidget {
     }
 
     Widget? child;
-    if(pos.isValid){
+    if (pos.isValid) {
       if (isEditable) {
         child = ViewWrapCustomReorderable(
-          pos, (i) => NodeDragTarget(Pos(data: [...pos.data, i])),
+          pos,
+          (i) => NodeDragTarget(Pos(data: [...pos.data, i])),
           maxSize: node.getMaxSize(true),
         );
       } else if (node.children.isNotEmpty) {
         child = ViewWrapCustom(
           pos,
-              (child) => ViewChoiceNode(child.pos),
+          (child) => ViewChoiceNode(child.pos),
           maxSize: node.getMaxSize(true),
         );
       }

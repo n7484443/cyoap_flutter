@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'pos.g.dart';
 part 'pos.freezed.dart';
+part 'pos.g.dart';
 
 @freezed
 class Pos with _$Pos {
@@ -21,7 +21,7 @@ class Pos with _$Pos {
 
   get length => data.length;
 
-  Pos addLast(int last){
+  Pos addLast(int last) {
     return Pos(data: [...data, last]);
   }
 

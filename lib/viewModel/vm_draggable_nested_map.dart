@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../model/choiceNode/choice_node.dart';
 import '../model/choiceNode/generable_parser.dart';
 import '../model/choiceNode/pos.dart';
-import '../model/image_db.dart';
 import '../model/platform_system.dart';
 import '../model/variable_db.dart';
 
@@ -77,8 +76,8 @@ class VMDraggableNestedMap {
       var inputNode = getPlatform.getChoiceNode(input)!;
       var targetNode = getPlatform.getChoiceNode(target);
       if (targetNode == null) {
-        var generableParser = getPlatform
-            .getGenerableParserAndPosition(target.removeLast());
+        var generableParser =
+            getPlatform.getGenerableParserAndPosition(target.removeLast());
         if (generableParser == null) {
           getPlatform.removeData(input);
           getPlatform.addData(target, inputNode);
@@ -143,7 +142,8 @@ class ChildrenNotifier extends StateNotifier<List<GenerableParserAndPosition>> {
   Ref ref;
   Pos pos;
 
-  ChildrenNotifier(this.ref, this.pos) : super([...ref.read(childrenProvider(pos))]);
+  ChildrenNotifier(this.ref, this.pos)
+      : super([...ref.read(childrenProvider(pos))]);
 
   void update() {
     state = [...ref.read(childrenProvider(pos))];
@@ -157,4 +157,5 @@ final lineMaxSelectProvider = StateProvider.autoDispose
     .family<int, int>((ref, pos) => ref.watch(lineProvider(pos))!.maxSelect);
 
 final lineBackgroundColorProvider = StateProvider.autoDispose
-    .family<Color?, int>((ref, pos) => ref.watch(lineProvider(pos))!.backgroundColor);
+    .family<Color?, int>(
+        (ref, pos) => ref.watch(lineProvider(pos))!.backgroundColor);

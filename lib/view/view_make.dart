@@ -82,7 +82,8 @@ class ViewMake extends ConsumerWidget {
               scale: 0.9,
               child: Opacity(
                 opacity: 0.6,
-                child: ViewChoiceNode(Pos(data: [nonPositioned, nonPositioned])),
+                child:
+                    ViewChoiceNode(Pos(data: [nonPositioned, nonPositioned])),
               ),
             ),
             onDragStarted: () {
@@ -109,7 +110,8 @@ class ViewMake extends ConsumerWidget {
                 scale: 0.9,
                 child: Opacity(
                   opacity: 0.6,
-                  child: ViewChoiceNode(Pos(data: [removedPositioned, removedPositioned])),
+                  child: ViewChoiceNode(
+                      Pos(data: [removedPositioned, removedPositioned])),
                 ),
               ),
               onDragStarted: () {

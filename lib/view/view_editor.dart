@@ -120,8 +120,7 @@ class _ViewEditorState extends ConsumerState<ViewEditor> {
             child: Column(children: [
               Text('변수명', style: Theme.of(context).textTheme.labelLarge),
               Text('${_controllerTitle?.text.replaceAll(" ", "")}:random',
-                  softWrap: true,
-                  style: Theme.of(context).textTheme.bodySmall),
+                  softWrap: true, style: Theme.of(context).textTheme.bodySmall),
               TextField(
                 textAlign: TextAlign.end,
                 maxLength: 3,
@@ -143,8 +142,7 @@ class _ViewEditorState extends ConsumerState<ViewEditor> {
             child: Column(children: [
               Text('변수명', style: Theme.of(context).textTheme.labelLarge),
               Text('${_controllerTitle?.text.replaceAll(" ", "")}:multi',
-                  softWrap: true,
-                  style: Theme.of(context).textTheme.bodySmall),
+                  softWrap: true, style: Theme.of(context).textTheme.bodySmall),
               TextField(
                 textAlign: TextAlign.end,
                 maxLength: 3,
