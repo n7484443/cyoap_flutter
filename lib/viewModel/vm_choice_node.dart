@@ -46,7 +46,9 @@ final imageStringProvider =
     Provider.family.autoDispose<String, Pos>((ref, pos) {
   var node = ref.watch(choiceNodeProvider(pos))!;
   if (!ImageDB().contains(node.imageString) && node.imageString.isNotEmpty) {
-    node.imageString = "";
+    if(node.imageString != "noImage"){
+      node.imageString = "";
+    }
   }
   return node.imageString;
 });

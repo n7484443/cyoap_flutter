@@ -67,8 +67,13 @@ class ViewVariable extends ConsumerWidget {
             label: '디버그 모드 활성화',
           ),
         ),
-        if (ConstList.isSmallDisplay(context))
-          Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+      ];
+    }
+    if (ConstList.isSmallDisplay(context)) {
+      widgetList.add(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
             IconButton(
               onPressed: () {
                 if (MediaQuery.of(context).orientation ==
@@ -101,8 +106,9 @@ class ViewVariable extends ConsumerWidget {
               },
               icon: const Icon(Icons.rotate_left),
             ),
-          ]),
-      ];
+          ],
+        ),
+      );
     }
 
     return Column(

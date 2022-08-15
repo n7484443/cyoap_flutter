@@ -28,7 +28,7 @@ class ViewChoiceNode extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (pos.data.last == nonPositioned) {
+    if (pos.last == nonPositioned) {
       return Card(
         child: SizedBox(
           width: MediaQuery.of(context).size.width /
