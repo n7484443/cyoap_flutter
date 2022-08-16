@@ -16,13 +16,13 @@ final draggableNestedMapChangedProvider = StateProvider<bool>((ref) => false);
 final vmDraggableNestedMapProvider =
     Provider.autoDispose((ref) => VMDraggableNestedMap(ref));
 
-final removedChoiceNode = StateProvider.autoDispose<ChoiceNode?>((ref) => null);
-final dragPositionProvider = StateProvider.autoDispose<double?>((ref) => null);
+final removedChoiceNode = StateProvider<ChoiceNode?>((ref) => null);
+final dragPositionProvider = StateProvider<double?>((ref) => null);
 final backgroundColorProvider = Provider.autoDispose<Color>(
     (ref) => getPlatform.designSetting.colorBackground);
 
 final dragChoiceNodeProvider =
-    StateNotifierProvider.autoDispose<DragChoiceNodeNotifier, Pos?>(
+    StateNotifierProvider<DragChoiceNodeNotifier, Pos?>(
         (ref) => DragChoiceNodeNotifier(ref));
 
 class DragChoiceNodeNotifier extends StateNotifier<Pos?> {
@@ -50,16 +50,16 @@ class VMDraggableNestedMap {
     refreshPage(ref);
   }
 
-  void removeData(WidgetRef ref, Pos data) {
-    var choiceNode = getPlatform.removeData(data);
+  void removeData(WidgetRef ref, Pos pos) {
+    var choiceNode = getPlatform.removeData(pos);
     copyData(ref, choiceNode);
     VariableDataBase().updateCheckList();
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     refreshPage(ref);
   }
 
-  void addData(WidgetRef ref, Pos data, ChoiceNode choiceNode) {
-    getPlatform.addData(data, choiceNode);
+  void addData(WidgetRef ref, Pos pos, ChoiceNode choiceNode) {
+    getPlatform.addData(pos, choiceNode);
     VariableDataBase().updateCheckList();
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     refreshPage(ref);
@@ -116,6 +116,7 @@ void refreshPage(WidgetRef ref) {
 
 void refreshLine(WidgetRef ref, int pos) {
   ref.invalidate(lineProvider(pos));
+  ref.invalidate(lineLengthProvider);
   ref.read(childrenChangeProvider(Pos(data: [pos])).notifier).update();
   for (var child in ref.read(lineProvider(pos))!.children) {
     refreshChild(ref, child);
@@ -159,3 +160,6 @@ final lineMaxSelectProvider = StateProvider.autoDispose
 final lineBackgroundColorProvider = StateProvider.autoDispose
     .family<Color?, int>(
         (ref, pos) => ref.watch(lineProvider(pos))!.backgroundColor);
+
+final lineLengthProvider =
+    Provider.autoDispose<int>((ref) => getPlatform.lineSettings.length);

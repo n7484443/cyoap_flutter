@@ -457,7 +457,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
       image = ConstrainedBox(
         constraints: BoxConstraints(
           maxHeight: ref.watch(maximizingImageProvider(pos))
-              ? MediaQuery.of(context).size.height
+              ? MediaQuery.of(context).size.height / 1.25
               : MediaQuery.of(context).size.height / 2,
         ),
         child: ClipRRect(

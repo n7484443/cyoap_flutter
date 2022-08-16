@@ -82,8 +82,12 @@ class ViewMake extends ConsumerWidget {
               scale: 0.9,
               child: Opacity(
                 opacity: 0.6,
-                child:
-                    ViewChoiceNode(Pos(data: [nonPositioned, nonPositioned])),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxWidth: 400,
+                  ),
+                    child: ViewChoiceNode(
+                        Pos(data: [nonPositioned, nonPositioned]))),
               ),
             ),
             onDragStarted: () {
@@ -105,13 +109,17 @@ class ViewMake extends ConsumerWidget {
           Visibility(
             visible: ref.watch(removedChoiceNode) != null,
             child: Draggable<Pos>(
-              data: Pos(data: [nonPositioned, nonPositioned]),
+              data: Pos(data: [removedPositioned, removedPositioned]),
               feedback: Transform.scale(
                 scale: 0.9,
                 child: Opacity(
                   opacity: 0.6,
-                  child: ViewChoiceNode(
-                      Pos(data: [removedPositioned, removedPositioned])),
+                  child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        maxWidth: 400,
+                      ),
+                      child: ViewChoiceNode(
+                          Pos(data: [removedPositioned, removedPositioned]))),
                 ),
               ),
               onDragStarted: () {

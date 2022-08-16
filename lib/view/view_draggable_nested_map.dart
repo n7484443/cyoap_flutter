@@ -46,6 +46,7 @@ class NodeDragTarget extends ConsumerWidget {
           if (drag.last == nonPositioned) {
             ref.read(vmDraggableNestedMapProvider).changeData(ref, drag, pos);
           } else if (drag.last == removedPositioned) {
+            print(ref.read(removedChoiceNode)!.clone().title);
             ref
                 .read(vmDraggableNestedMapProvider)
                 .addData(ref, pos, ref.read(removedChoiceNode)!.clone());
@@ -344,6 +345,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
   Widget build(BuildContext context) {
     ref.listen<double?>(
         dragPositionProvider, (previous, next) => dragUpdate(next));
+    var lineLength = ref.watch(lineLengthProvider);
     if (ConstList.isWeb() && !ConstList.isSmallDisplay(context)) {
       if (isEditable) {
         return ColoredBox(
@@ -356,7 +358,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
               key: const PageStorageKey(0),
               physics: const NeverScrollableScrollPhysics(),
               controller: _scrollController,
-              itemCount: getPlatform.lineSettings.length + 1,
+              itemCount: lineLength + 1,
               itemBuilder: (BuildContext context, int index) {
                 return ChoiceLine(index);
               },
@@ -375,7 +377,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
               key: const PageStorageKey(0),
               physics: const NeverScrollableScrollPhysics(),
               controller: _scrollController,
-              itemCount: getPlatform.lineSettings.length,
+              itemCount: lineLength,
               itemBuilder: (BuildContext context, int index) {
                 return ChoiceLine(index);
               },
@@ -392,7 +394,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
         child: ListView.builder(
           key: const PageStorageKey(0),
           controller: _scrollController,
-          itemCount: getPlatform.lineSettings.length + 1,
+          itemCount: lineLength + 1,
           itemBuilder: (BuildContext context, int index) {
             return ChoiceLine(index);
           },
@@ -405,7 +407,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
         child: ListView.builder(
           key: const PageStorageKey(0),
           controller: _scrollController,
-          itemCount: getPlatform.lineSettings.length,
+          itemCount: lineLength,
           itemBuilder: (BuildContext context, int index) {
             return ChoiceLine(index);
           },
@@ -423,8 +425,7 @@ class ChoiceLine extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var choiceNodeList = getPlatform.lineSettings;
-    if(y >= choiceNodeList.length){
+    if(y >= ref.watch(lineLengthProvider)){
       return Visibility(
         visible: ref.watch(dragChoiceNodeProvider) != null,
         child: Column(
