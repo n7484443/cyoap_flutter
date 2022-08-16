@@ -16,7 +16,7 @@ class DistributeImp extends Distribute {
 
   @override
   Future<Uint8List> getFileAsUint8(String f) async {
-    var src = '/dist/$f';
+    var src = '${Uri.base.origin}/dist/$f';
     http.Response response = await http.get(Uri.parse(src));
     return response.bodyBytes;
   }

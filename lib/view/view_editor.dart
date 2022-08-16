@@ -17,60 +17,31 @@ import '../model/image_db.dart';
 import '../viewModel/vm_editor.dart';
 import '../viewModel/vm_make_platform.dart';
 
-class ViewEditor extends ConsumerStatefulWidget {
+class ViewEditor extends ConsumerWidget {
   const ViewEditor({
     Key? key,
   }) : super(key: key);
 
   @override
-  ConsumerState createState() => _ViewEditorState();
-}
-
-class _ViewEditorState extends ConsumerState<ViewEditor> {
-  TextEditingController? _controllerTitle;
-  TextEditingController? _controllerMaximum;
-
-  @override
-  void initState() {
-    _controllerTitle = TextEditingController(text: ref.read(titleProvider));
-    _controllerTitle?.addListener(() {
-      ref.read(changeProvider.notifier).setUpdated();
-      ref.read(titleProvider.notifier).state = _controllerTitle!.text;
-    });
-    _controllerMaximum = TextEditingController(text: ref.read(maximumProvider));
-    _controllerTitle?.addListener(() {
-      ref.read(changeProvider.notifier).setUpdated();
-      ref.read(maximumProvider.notifier).state = _controllerTitle!.text;
-    });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controllerTitle?.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(isCardSwitchProvider,
-        (previous, next) => ref.read(changeProvider.notifier).setUpdated());
+            (previous, next) => ref.read(changeProvider.notifier).setUpdated());
     ref.listen(isRoundSwitchProvider,
-        (previous, next) => ref.read(changeProvider.notifier).setUpdated());
+            (previous, next) => ref.read(changeProvider.notifier).setUpdated());
     ref.listen(hideTitleProvider,
-        (previous, next) => ref.read(changeProvider.notifier).setUpdated());
+            (previous, next) => ref.read(changeProvider.notifier).setUpdated());
     ref.listen(maximizingImageSwitchProvider,
-        (previous, next) => ref.read(changeProvider.notifier).setUpdated());
+            (previous, next) => ref.read(changeProvider.notifier).setUpdated());
     ref.listen(imagePositionProvider,
-        (previous, next) => ref.read(changeProvider.notifier).setUpdated());
+            (previous, next) => ref.read(changeProvider.notifier).setUpdated());
     ref.listen(nodeModeProvider,
-        (previous, next) => ref.read(changeProvider.notifier).setUpdated());
+            (previous, next) => ref.read(changeProvider.notifier).setUpdated());
 
     var appbarWidget = AppBar(
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () {
-          if (_controllerTitle!.text.isNotEmpty) {
+          if (ref.watch(titleProvider).text.isNotEmpty) {
             ref.read(changeTabProvider.notifier).back(context);
           }
         },
@@ -120,7 +91,7 @@ class _ViewEditorState extends ConsumerState<ViewEditor> {
             width: 120,
             child: Column(children: [
               Text('변수명', style: Theme.of(context).textTheme.labelLarge),
-              Text('${_controllerTitle?.text.replaceAll(" ", "")}:random',
+              Text('${ref.watch(titleProvider).text.replaceAll(" ", "")}:random',
                   softWrap: true, style: Theme.of(context).textTheme.bodySmall),
               TextField(
                 textAlign: TextAlign.end,
@@ -128,7 +99,7 @@ class _ViewEditorState extends ConsumerState<ViewEditor> {
                 minLines: 1,
                 maxLines: 1,
                 keyboardType: TextInputType.number,
-                controller: _controllerMaximum,
+                controller: ref.watch(maximumProvider),
                 decoration: const InputDecoration(
                   label: Text('랜덤 수, 0 ~ n-1'),
                 ),
@@ -142,7 +113,7 @@ class _ViewEditorState extends ConsumerState<ViewEditor> {
             width: 120,
             child: Column(children: [
               Text('변수명', style: Theme.of(context).textTheme.labelLarge),
-              Text('${_controllerTitle?.text.replaceAll(" ", "")}:multi',
+              Text('${ref.watch(titleProvider).text.replaceAll(" ", "")}:multi',
                   softWrap: true, style: Theme.of(context).textTheme.bodySmall),
               TextField(
                 textAlign: TextAlign.end,
@@ -150,7 +121,7 @@ class _ViewEditorState extends ConsumerState<ViewEditor> {
                 minLines: 1,
                 maxLines: 1,
                 keyboardType: TextInputType.number,
-                controller: _controllerMaximum,
+                controller: ref.watch(maximumProvider),
                 decoration: const InputDecoration(
                   label: Text('최대 선택'),
                 ),
@@ -161,7 +132,7 @@ class _ViewEditorState extends ConsumerState<ViewEditor> {
         Visibility(
           visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
-            () => ref
+                () => ref
                 .read(isCardSwitchProvider.notifier)
                 .update((state) => !state),
             ref.watch(isCardSwitchProvider),
@@ -171,7 +142,7 @@ class _ViewEditorState extends ConsumerState<ViewEditor> {
         Visibility(
           visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
-            () => ref
+                () => ref
                 .read(isRoundSwitchProvider.notifier)
                 .update((state) => !state),
             ref.watch(isRoundSwitchProvider),
@@ -181,7 +152,7 @@ class _ViewEditorState extends ConsumerState<ViewEditor> {
         Visibility(
           visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
-            () => ref
+                () => ref
                 .read(maximizingImageSwitchProvider.notifier)
                 .update((state) => !state),
             ref.watch(maximizingImageSwitchProvider),
@@ -191,7 +162,7 @@ class _ViewEditorState extends ConsumerState<ViewEditor> {
         Visibility(
           visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
-            () =>
+                () =>
                 ref.read(hideTitleProvider.notifier).update((state) => !state),
             ref.watch(hideTitleProvider),
             label: '제목 숨기기',
@@ -200,7 +171,7 @@ class _ViewEditorState extends ConsumerState<ViewEditor> {
         Visibility(
           visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
-            () => ref
+                () => ref
                 .read(imagePositionProvider.notifier)
                 .update((state) => state == 0 ? 1 : 0),
             ref.watch(imagePositionProvider) != 0,
@@ -210,7 +181,7 @@ class _ViewEditorState extends ConsumerState<ViewEditor> {
         Visibility(
           visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
-            () {
+                () {
               if (ref.watch(imagePositionProvider) == 1) {
                 ref.read(imagePositionProvider.notifier).update((state) => 2);
               } else if (ref.watch(imagePositionProvider) == 2) {
@@ -242,7 +213,7 @@ class _ViewEditorState extends ConsumerState<ViewEditor> {
         body: Column(
           children: [
             TextField(
-              controller: _controllerTitle!,
+              controller: ref.watch(titleProvider),
               textAlign: TextAlign.center,
               decoration: InputDecoration(
                 hintText: '제목',

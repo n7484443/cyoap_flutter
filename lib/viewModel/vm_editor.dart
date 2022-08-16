@@ -6,6 +6,7 @@ import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -27,10 +28,24 @@ final imagePositionProvider = StateProvider.autoDispose<int>(
 final nodeModeProvider = StateProvider.autoDispose<ChoiceNodeMode>(
     (ref) => ref.watch(nodeEditorTargetProvider).choiceNodeMode);
 
-final titleProvider = StateProvider.autoDispose<String>(
-    (ref) => ref.watch(nodeEditorTargetProvider).title);
-final maximumProvider = StateProvider.autoDispose<String>(
-    (ref) => ref.watch(nodeEditorTargetProvider).maximumStatus.toString());
+final titleProvider = Provider.autoDispose<TextEditingController>(
+    (ref){
+      var controller = TextEditingController(text: ref.read(nodeEditorTargetProvider).title);
+      controller.addListener(() {
+        ref.read(changeProvider.notifier).setUpdated();
+      });
+      ref.onDispose(() => controller.dispose());
+      return controller;
+    });
+final maximumProvider = Provider.autoDispose<TextEditingController>(
+    (ref){
+      var controller = TextEditingController(text: ref.read(nodeEditorTargetProvider).maximumStatus.toString());
+      controller.addListener(() {
+        ref.read(changeProvider.notifier).setUpdated();
+      });
+      ref.onDispose(() => controller.dispose());
+      return controller;
+    });
 final imageSourceProvider = StateProvider.autoDispose<String>((ref) => "");
 
 final imageStateProvider =
@@ -105,13 +120,13 @@ class ChangeNotifier extends StateNotifier<bool> {
   }
 
   void save() {
-    NodeEditor().target.title = ref.read(titleProvider);
+    NodeEditor().target.title = ref.read(titleProvider).text;
     NodeEditor().target.contentsString =
         jsonEncode(document!.toDelta().toJson());
     NodeEditor().target.imageString =
         ImageDB().getImageName(ref.read(imageStateProvider));
     try {
-      NodeEditor().target.maximumStatus = int.parse(ref.read(maximumProvider));
+      NodeEditor().target.maximumStatus = int.parse(ref.read(maximumProvider).text);
     } catch (e) {
       NodeEditor().target.maximumStatus = 0;
     }
