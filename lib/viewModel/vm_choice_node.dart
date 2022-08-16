@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
@@ -44,9 +45,10 @@ final isChoiceNodeHideTitleProvider = Provider.family.autoDispose<bool, Pos>(
 
 final imageStringProvider =
     Provider.family.autoDispose<String, Pos>((ref, pos) {
-  var node = ref.watch(choiceNodeProvider(pos))!;
+      var node = ref.watch(choiceNodeProvider(pos))!;
+  if (ConstList.isDistributed) return node.imageString;
   if (!ImageDB().contains(node.imageString) && node.imageString.isNotEmpty) {
-    if(node.imageString != "noImage"){
+    if (node.imageString != "noImage") {
       node.imageString = "";
     }
   }
@@ -183,11 +185,11 @@ class ChoiceNodeSizeNotifier extends StateNotifier<int> {
         super(ref.read(choiceNodeProvider(pos))!.width);
 
   void sizeChange(int width) {
-    if(width == -1){
-      if(state > node.getMaxSize(false)){
+    if (width == -1) {
+      if (state > node.getMaxSize(false)) {
         state = node.getMaxSize(false);
       }
-    }else{
+    } else {
       state = width.clamp(0, node.getMaxSize(false));
     }
     node.width = state;
