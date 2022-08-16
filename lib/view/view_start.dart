@@ -87,7 +87,6 @@ class ViewStart extends ConsumerWidget {
             ),
             const Divider(
               thickness: 1.5,
-              color: Colors.blue,
             ),
             const SelectMode(),
           ],
@@ -131,7 +130,7 @@ class _ViewProjectListState extends ConsumerState<ViewProjectList> {
                 ref.read(pathListSelectedProvider.notifier).state = index,
             style: ref.watch(pathListSelectedProvider) == index
                 ? OutlinedButton.styleFrom(
-                    primary: Colors.white, backgroundColor: Colors.blue)
+                    primary: Colors.white, backgroundColor: Colors.lightBlueAccent)
                 : OutlinedButton.styleFrom(primary: Colors.black54),
             child: Text(ref.watch(pathListProvider)[index]),
           ),
@@ -169,8 +168,10 @@ class SelectMode extends ConsumerWidget {
           child: InkWell(
             onTap: () {
               ref.read(pathListProvider.notifier).openProject().then((value) {
-                getPlatformFileSystem.isEditable = false;
-                Navigator.of(context).pushNamed('/viewPlay');
+                if(value){
+                  getPlatformFileSystem.isEditable = false;
+                  Navigator.of(context).pushNamed('/viewPlay');
+                }
               });
             },
             child: Center(
@@ -186,8 +187,10 @@ class SelectMode extends ConsumerWidget {
           child: InkWell(
             onTap: () {
               ref.read(pathListProvider.notifier).openProject().then((value) {
-                getPlatformFileSystem.isEditable = true;
-                Navigator.of(context).pushNamed('/viewMake');
+                if(value){
+                  getPlatformFileSystem.isEditable = true;
+                  Navigator.of(context).pushNamed('/viewMake');
+                }
               });
             },
             child: Center(

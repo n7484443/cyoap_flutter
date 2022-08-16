@@ -55,6 +55,7 @@ dependencies:
   flutter_riverpod: ^2.0.0-dev.9
   freezed_annotation: any
   json_annotation: any
+  js: any
 
 analyzer:
   errors:

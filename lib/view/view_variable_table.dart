@@ -69,7 +69,10 @@ class ViewVariable extends ConsumerWidget {
         ),
       ];
     }
-    if (ConstList.isSmallDisplay(context)) {
+    if (ConstList.isMobile() ||
+        (ConstList.isWeb() &&
+            ConstList.isSmallDisplay(context) &&
+            !ConstList.isDistributed)) {
       widgetList.add(
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
