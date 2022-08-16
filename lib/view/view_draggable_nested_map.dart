@@ -46,7 +46,6 @@ class NodeDragTarget extends ConsumerWidget {
           if (drag.last == nonPositioned) {
             ref.read(vmDraggableNestedMapProvider).changeData(ref, drag, pos);
           } else if (drag.last == removedPositioned) {
-            print(ref.read(removedChoiceNode)!.clone().title);
             ref
                 .read(vmDraggableNestedMapProvider)
                 .addData(ref, pos, ref.read(removedChoiceNode)!.clone());
