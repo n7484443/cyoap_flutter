@@ -40,7 +40,6 @@ class ViewChoiceNode extends ConsumerWidget {
       );
     }
     var node = ref.watch(choiceNodeProvider(pos))!;
-    var isSelectedCheck = node.isSelected() && node.isSelectableMode;
     return Opacity(
       opacity: ref.watch(opacityProvider(pos)),
       child: Card(
@@ -48,7 +47,7 @@ class ViewChoiceNode extends ConsumerWidget {
             ? RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4.0),
                 side: BorderSide(
-                  color: isSelectedCheck
+                  color: ref.watch(isChoiceNodeSelectableProvider(pos))
                       ? Colors.lightBlueAccent
                       : ref.watch(colorNodeProvider),
                   width: ConstList.isSmallDisplay(context) ? 2 : 4,
@@ -56,7 +55,7 @@ class ViewChoiceNode extends ConsumerWidget {
               )
             : Border.fromBorderSide(
                 BorderSide(
-                  color: isSelectedCheck
+                  color: ref.watch(isChoiceNodeSelectableProvider(pos))
                       ? Colors.lightBlueAccent
                       : ref.watch(colorNodeProvider),
                   width: ConstList.isSmallDisplay(context) ? 2 : 4,

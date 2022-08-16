@@ -34,6 +34,12 @@ final choiceNodeProvider =
   return null;
 });
 
+final isChoiceNodeSelectableProvider =
+    Provider.family.autoDispose<bool, Pos>((ref, pos) {
+  var node = ref.watch(choiceNodeProvider(pos))!;
+  return node.isSelected() && node.isSelectableMode;
+});
+
 final isChoiceNodeCardProvider = Provider.family.autoDispose<bool, Pos>(
     (ref, pos) => ref.watch(choiceNodeProvider(pos))!.isCard);
 
@@ -45,7 +51,7 @@ final isChoiceNodeHideTitleProvider = Provider.family.autoDispose<bool, Pos>(
 
 final imageStringProvider =
     Provider.family.autoDispose<String, Pos>((ref, pos) {
-      var node = ref.watch(choiceNodeProvider(pos))!;
+  var node = ref.watch(choiceNodeProvider(pos))!;
   if (ConstList.isDistributed) return node.imageString;
   if (!ImageDB().contains(node.imageString) && node.imageString.isNotEmpty) {
     if (node.imageString != "noImage") {
@@ -90,18 +96,15 @@ class ChoiceNodeSelectNotifier extends StateNotifier<int> {
   ChoiceNodeSelectNotifier(this.ref, this.pos) : super(0);
 
   Future<void> select(int n, context) async {
-    var node = ref.read(choiceNodeProvider(pos))!;
-    if (node.isSelected() &&
-        ref.read(nodeModeProvider(pos)) != ChoiceNodeMode.multiSelect) {
-      node.selectNode(n);
-      updateStatusAll(ref);
-      return;
-    }
     if (!ref.read(isIgnorePointerProvider(pos))) {
       return;
     }
 
-    if (ref.read(nodeModeProvider(pos)) == ChoiceNodeMode.randomMode) {
+    var node = ref.read(choiceNodeProvider(pos))!;
+    if (node.isSelected() &&
+        ref.read(nodeModeProvider(pos)) != ChoiceNodeMode.multiSelect) {
+      node.selectNode(n);
+    } else if (ref.read(nodeModeProvider(pos)) == ChoiceNodeMode.randomMode) {
       node.selectNode(n);
       ref.read(randomStateNotifierProvider(pos).notifier).startRandom();
       await showDialog(
@@ -116,7 +119,6 @@ class ChoiceNodeSelectNotifier extends StateNotifier<int> {
     } else {
       node.selectNode(n);
     }
-
     updateStatusAll(ref);
   }
 }
@@ -203,7 +205,8 @@ void updateStatusAll(Ref ref) {
   getPlatform.updateStatusAll();
   for (var lineSetting in getPlatform.lineSettings) {
     for (var node in lineSetting.children) {
-      ref.refresh(choiceNodeStatusProvider(node.pos));
+      ref.invalidate(choiceNodeStatusProvider(node.pos));
+      ref.invalidate(isChoiceNodeSelectableProvider(node.pos));
     }
   }
 }
