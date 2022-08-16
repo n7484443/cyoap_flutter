@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
@@ -371,46 +369,16 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
   }
 }
 
-class ViewContents extends ConsumerStatefulWidget {
+class ViewContents extends ConsumerWidget {
   final Pos pos;
-
-  const ViewContents(
-    this.pos, {
+  const ViewContents(this.pos, {
     Key? key,
   }) : super(key: key);
 
   @override
-  ConsumerState createState() => _ViewContentsState();
-}
-
-class _ViewContentsState extends ConsumerState<ViewContents> {
-  QuillController? _quillController;
-
-  @override
-  void initState() {
-    if (ref.read(choiceNodeProvider(widget.pos))!.contentsString.isEmpty) {
-      _quillController = QuillController.basic();
-    } else {
-      var json =
-          jsonDecode(ref.read(choiceNodeProvider(widget.pos))!.contentsString);
-      var document = Document.fromJson(json);
-      _quillController = QuillController(
-          document: document,
-          selection: const TextSelection.collapsed(offset: 0));
-    }
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _quillController?.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var node = ref.watch(choiceNodeProvider(widget.pos))!;
-    if (_quillController!.document.isEmpty()) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    var node = ref.watch(choiceNodeProvider(pos))!;
+    if (ref.watch(contentsQuillProvider(pos)).document.isEmpty()) {
       if (node.choiceNodeMode == ChoiceNodeMode.multiSelect) {
         return ViewChoiceNodeMultiSelect(node.pos);
       } else {
@@ -419,7 +387,7 @@ class _ViewContentsState extends ConsumerState<ViewContents> {
     } else {
       Widget contentText = IgnorePointer(
         child: QuillEditor(
-          controller: _quillController!,
+          controller: ref.watch(contentsQuillProvider(pos)),
           focusNode: FocusNode(),
           readOnly: true,
           autoFocus: false,

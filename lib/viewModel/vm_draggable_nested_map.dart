@@ -104,8 +104,7 @@ void moveLine(WidgetRef ref, int before, int after) {
   getPlatform.lineSettings[before] = getPlatform.lineSettings[after];
   getPlatform.lineSettings[after] = temp;
   getPlatform.checkDataCorrect();
-  refreshLine(ref, before);
-  refreshLine(ref, after);
+  refreshPage(ref);
 }
 
 void refreshPage(WidgetRef ref) {

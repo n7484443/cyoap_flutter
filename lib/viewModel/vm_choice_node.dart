@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/choiceNode/choice_node.dart';
@@ -66,6 +68,24 @@ final imageStringProvider =
 
 final titleStringProvider = Provider.family.autoDispose<String, Pos>(
     (ref, pos) => ref.watch(choiceNodeProvider(pos))!.title);
+
+final contentsQuillProvider =
+    Provider.family.autoDispose<QuillController, Pos>((ref, pos) {
+  QuillController controller;
+  if (ref.watch(choiceNodeProvider(pos))!.contentsString.isEmpty) {
+    controller = QuillController.basic();
+  } else {
+    var json = jsonDecode(ref.watch(choiceNodeProvider(pos))!.contentsString);
+    var document = Document.fromJson(json);
+    controller = QuillController(
+        document: document,
+        selection: const TextSelection.collapsed(offset: 0));
+  }
+  ref.onDispose(() {
+    controller.dispose();
+  });
+  return controller;
+});
 
 final imagePositionProvider = Provider.family.autoDispose<int, Pos>(
     (ref, pos) => ref.watch(choiceNodeProvider(pos))!.imagePosition);
