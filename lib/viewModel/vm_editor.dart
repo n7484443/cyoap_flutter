@@ -28,24 +28,24 @@ final imagePositionProvider = StateProvider.autoDispose<int>(
 final nodeModeProvider = StateProvider.autoDispose<ChoiceNodeMode>(
     (ref) => ref.watch(nodeEditorTargetProvider).choiceNodeMode);
 
-final titleProvider = Provider.autoDispose<TextEditingController>(
-    (ref){
-      var controller = TextEditingController(text: ref.read(nodeEditorTargetProvider).title);
-      controller.addListener(() {
-        ref.read(changeProvider.notifier).setUpdated();
-      });
-      ref.onDispose(() => controller.dispose());
-      return controller;
-    });
-final maximumProvider = Provider.autoDispose<TextEditingController>(
-    (ref){
-      var controller = TextEditingController(text: ref.read(nodeEditorTargetProvider).maximumStatus.toString());
-      controller.addListener(() {
-        ref.read(changeProvider.notifier).setUpdated();
-      });
-      ref.onDispose(() => controller.dispose());
-      return controller;
-    });
+final titleProvider = Provider.autoDispose<TextEditingController>((ref) {
+  var controller =
+      TextEditingController(text: ref.read(nodeEditorTargetProvider).title);
+  controller.addListener(() {
+    ref.read(changeProvider.notifier).setUpdated();
+  });
+  ref.onDispose(() => controller.dispose());
+  return controller;
+});
+final maximumProvider = Provider.autoDispose<TextEditingController>((ref) {
+  var controller = TextEditingController(
+      text: ref.read(nodeEditorTargetProvider).maximumStatus.toString());
+  controller.addListener(() {
+    ref.read(changeProvider.notifier).setUpdated();
+  });
+  ref.onDispose(() => controller.dispose());
+  return controller;
+});
 final imageSourceProvider = StateProvider.autoDispose<String>((ref) => "");
 
 final imageStateProvider =
@@ -126,7 +126,8 @@ class ChangeNotifier extends StateNotifier<bool> {
     NodeEditor().target.imageString =
         ImageDB().getImageName(ref.read(imageStateProvider));
     try {
-      NodeEditor().target.maximumStatus = int.parse(ref.read(maximumProvider).text);
+      NodeEditor().target.maximumStatus =
+          int.parse(ref.read(maximumProvider).text);
     } catch (e) {
       NodeEditor().target.maximumStatus = 0;
     }

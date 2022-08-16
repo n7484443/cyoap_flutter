@@ -25,17 +25,17 @@ class ViewEditor extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(isCardSwitchProvider,
-            (previous, next) => ref.read(changeProvider.notifier).setUpdated());
+        (previous, next) => ref.read(changeProvider.notifier).setUpdated());
     ref.listen(isRoundSwitchProvider,
-            (previous, next) => ref.read(changeProvider.notifier).setUpdated());
+        (previous, next) => ref.read(changeProvider.notifier).setUpdated());
     ref.listen(hideTitleProvider,
-            (previous, next) => ref.read(changeProvider.notifier).setUpdated());
+        (previous, next) => ref.read(changeProvider.notifier).setUpdated());
     ref.listen(maximizingImageSwitchProvider,
-            (previous, next) => ref.read(changeProvider.notifier).setUpdated());
+        (previous, next) => ref.read(changeProvider.notifier).setUpdated());
     ref.listen(imagePositionProvider,
-            (previous, next) => ref.read(changeProvider.notifier).setUpdated());
+        (previous, next) => ref.read(changeProvider.notifier).setUpdated());
     ref.listen(nodeModeProvider,
-            (previous, next) => ref.read(changeProvider.notifier).setUpdated());
+        (previous, next) => ref.read(changeProvider.notifier).setUpdated());
 
     var appbarWidget = AppBar(
       leading: IconButton(
@@ -91,8 +91,10 @@ class ViewEditor extends ConsumerWidget {
             width: 120,
             child: Column(children: [
               Text('변수명', style: Theme.of(context).textTheme.labelLarge),
-              Text('${ref.watch(titleProvider).text.replaceAll(" ", "")}:random',
-                  softWrap: true, style: Theme.of(context).textTheme.bodySmall),
+              Text(
+                  '${ref.watch(titleProvider).text.replaceAll(" ", "")}:random',
+                  softWrap: true,
+                  style: Theme.of(context).textTheme.bodySmall),
               TextField(
                 textAlign: TextAlign.end,
                 maxLength: 3,
@@ -132,7 +134,7 @@ class ViewEditor extends ConsumerWidget {
         Visibility(
           visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
-                () => ref
+            () => ref
                 .read(isCardSwitchProvider.notifier)
                 .update((state) => !state),
             ref.watch(isCardSwitchProvider),
@@ -142,7 +144,7 @@ class ViewEditor extends ConsumerWidget {
         Visibility(
           visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
-                () => ref
+            () => ref
                 .read(isRoundSwitchProvider.notifier)
                 .update((state) => !state),
             ref.watch(isRoundSwitchProvider),
@@ -152,7 +154,7 @@ class ViewEditor extends ConsumerWidget {
         Visibility(
           visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
-                () => ref
+            () => ref
                 .read(maximizingImageSwitchProvider.notifier)
                 .update((state) => !state),
             ref.watch(maximizingImageSwitchProvider),
@@ -162,7 +164,7 @@ class ViewEditor extends ConsumerWidget {
         Visibility(
           visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
-                () =>
+            () =>
                 ref.read(hideTitleProvider.notifier).update((state) => !state),
             ref.watch(hideTitleProvider),
             label: '제목 숨기기',
@@ -171,7 +173,7 @@ class ViewEditor extends ConsumerWidget {
         Visibility(
           visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
-                () => ref
+            () => ref
                 .read(imagePositionProvider.notifier)
                 .update((state) => state == 0 ? 1 : 0),
             ref.watch(imagePositionProvider) != 0,
@@ -181,7 +183,7 @@ class ViewEditor extends ConsumerWidget {
         Visibility(
           visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
-                () {
+            () {
               if (ref.watch(imagePositionProvider) == 1) {
                 ref.read(imagePositionProvider.notifier).update((state) => 2);
               } else if (ref.watch(imagePositionProvider) == 2) {

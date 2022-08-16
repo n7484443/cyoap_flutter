@@ -147,7 +147,6 @@ class ChoiceNode extends GenerableParserAndPosition {
     }
   }
 
-
   void doAllChild(void Function(ChoiceNode) choiceNodeFunc) {
     choiceNodeFunc(this);
     for (var child in children) {

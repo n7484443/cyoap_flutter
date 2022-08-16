@@ -43,11 +43,11 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
     }
   }
 
-  int calculateFlex(int size){
+  int calculateFlex(int size) {
     return size * mul.item1 + (size - 1) * mul.item2;
   }
 
-  int calculateFlexReverse(int size){
+  int calculateFlexReverse(int size) {
     return size * mul.item2 + size * mul.item1;
   }
 

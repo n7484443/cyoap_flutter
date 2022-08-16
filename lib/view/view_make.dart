@@ -83,9 +83,9 @@ class ViewMake extends ConsumerWidget {
               child: Opacity(
                 opacity: 0.6,
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: 400,
-                  ),
+                    constraints: const BoxConstraints(
+                      maxWidth: 400,
+                    ),
                     child: ViewChoiceNode(
                         Pos(data: [nonPositioned, nonPositioned]))),
               ),

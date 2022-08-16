@@ -424,7 +424,7 @@ class ChoiceLine extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if(y >= ref.watch(lineLengthProvider)){
+    if (y >= ref.watch(lineLengthProvider)) {
       return Visibility(
         visible: ref.watch(dragChoiceNodeProvider) != null,
         child: Column(

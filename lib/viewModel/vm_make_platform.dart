@@ -14,8 +14,7 @@ import '../view/view_image_editor.dart';
 import '../view/view_make.dart';
 import '../view/view_source.dart';
 
-final changeTabProvider =
-    StateNotifierProvider<ChangeTabNotifier, int>((ref) {
+final changeTabProvider = StateNotifierProvider<ChangeTabNotifier, int>((ref) {
   return ChangeTabNotifier(ref);
 });
 

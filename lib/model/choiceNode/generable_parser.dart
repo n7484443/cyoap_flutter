@@ -167,7 +167,7 @@ abstract class GenerableParserAndPosition {
   }
 
   String? convertToWebp(String? name) {
-    if(name == null) return null;
+    if (name == null) return null;
     return PlatformSpecified().saveProject!.convertImageName(name);
   }
 }

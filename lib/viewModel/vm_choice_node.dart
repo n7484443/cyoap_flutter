@@ -29,9 +29,9 @@ void refreshChild(WidgetRef ref, GenerableParserAndPosition node) {
 
 final choiceNodeProvider =
     Provider.family.autoDispose<ChoiceNode?, Pos>((ref, pos) {
-      if(pos.last == removedPositioned){
-        return ref.read(removedChoiceNode);
-      }
+  if (pos.last == removedPositioned) {
+    return ref.read(removedChoiceNode);
+  }
   var node = getPlatform.getNode(pos);
   if (node is ChoiceNode) return node;
   return null;

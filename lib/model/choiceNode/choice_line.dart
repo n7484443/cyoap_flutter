@@ -29,7 +29,7 @@ class LineSetting extends GenerableParserAndPosition {
       'maxSelect': maxSelect,
       'alwaysVisible': alwaysVisible,
       'backgroundColor': backgroundColor?.value,
-      'backgroundImageString': convertToWebp(backgroundImageString) ,
+      'backgroundImageString': convertToWebp(backgroundImageString),
     });
     return map;
   }

@@ -52,8 +52,7 @@ class ViewDesignSetting extends ConsumerWidget {
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            onPressed: () =>
-                ref.read(changeTabProvider.notifier).back(context),
+            onPressed: () => ref.read(changeTabProvider.notifier).back(context),
           ),
           title: const TabBar(
             indicatorColor: Colors.blueAccent,
