@@ -124,6 +124,7 @@ void main() {
   test('global variable Test', () {
     String strTest = """
     let globalTest = 123
+    let globalTest_other = 123
     """;
     String strGlobalTest = """
     if(globalTest == 123){
@@ -133,6 +134,10 @@ void main() {
     }
     var existTest = exist("T")
     var existTest2 = exist("T2")
+    setVisible("globalTest", true)
+    setVisible("globalTest_other", false)
+    var visibleTest = isVisible("globalTest")
+    var visibleTest_other = isVisible("globalTest_other")
     """;
     Analyser().run(Analyser().analyseCodes(strTest));
     ins.clearLocalVariable();
@@ -140,6 +145,11 @@ void main() {
     expect(ins.getValueType('T')?.data, true);
     expect(ins.getValueType('existTest')?.data, true);
     expect(ins.getValueType('existTest2')?.data, false);
+
+    expect(ins.getValueTypeWrapper('globalTest')?.visible, true);
+    expect(ins.getValueTypeWrapper('globalTest_other')?.visible, false);
+    expect(ins.getValueType('visibleTest')?.data, true);
+    expect(ins.getValueType('visibleTest_other')?.data, false);
   });
   test('comment test', () {
     String strTest = """

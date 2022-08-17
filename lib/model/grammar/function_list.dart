@@ -31,6 +31,8 @@ class Functions {
     functionValueType['random'] = funcRandom;
     functionValueType['exist'] =
         (input) => ValueType(VariableDataBase().hasValue(input[0].data));
+    functionValueType['isVisible'] =
+        (input) => ValueType(VariableDataBase().getValueTypeWrapper(input[0].data)?.visible ?? false);
     functionValueType['loadVariable'] =
         (input) => VariableDataBase().getValueType(input[0].data) ?? input[0];
     functionValueType['condition'] = (input) => input[0];
@@ -59,6 +61,14 @@ class Functions {
       if (original != null) {
         var copy = original.copyWith(valueType: input[1].unzip());
         VariableDataBase().setValue(varName, copy);
+      }
+    };
+    functionVoid['setVisible'] = (input) {
+      var varName = input[0].unzip().data as String;
+      var value = input[1].unzip().data as bool;
+      var original = VariableDataBase().getValueTypeWrapper(varName);
+      if (original != null) {
+        VariableDataBase().setValue(varName, original.copyWith(visible: value));
       }
     };
     functionVoid['doLines'] = (input) {

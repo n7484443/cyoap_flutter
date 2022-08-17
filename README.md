@@ -4,6 +4,9 @@
 
 [web 버전](https://n7484443.github.io/FlutterCyoap/)
 
+## 목차
+1. [프로젝트 파일 형식](#프로젝트-파일-형식)
+
 ## 프로젝트 파일 형식
 * zip - 불러오기는 웹에서만 지원. 그 외는 모든 플랫폼이 지원.
 * 폴더 - 윈도우, 안드로이드에서만 지원. 보다 빠르고 관리가 쉬운 편집.
@@ -15,27 +18,6 @@
 |   directory read |    O    |    O    |  X  |
 |  directory write |    O    |    O    |  X  |
 | webp compression |    O    |    O    |  X  |
-
-## 연산자와 함수 리스트
-```python
-if(조건){
-    조건이 참일 경우 실행 문장
-}else{
-    조건이 거짓일 경우 실행 문장
-}
-floor(내릴 숫자)
-round(반올림 할 숫자)
-ceil(올릴 숫자)
-and(조건1, 조건2, true, false, 등등)
-or(조건1, 조건2, true, false, 등등)
-not(true, false 혹은 조건)
-exist("변수 이름") 혹은 exist('변수 이름')
-random(최대값)
-```
-그 외의 기본 연산
-* +, -, *, / 의 사칙연산
-* =
-* ==, !=, >, <, >=, <=
 
 ## 변수 정의 예제
 ```javascript
@@ -86,3 +68,46 @@ for(i = 0, i < 3, i += 1){
 }
 ```
 ### 문법 오류 표시기 추가
+
+## 함수 목록
+```python
+if(조건){
+    조건이 참일 경우 실행 문장
+}else{
+    조건이 거짓일 경우 실행 문장
+}
+```
+* ### and | bool → bool
+  * 모든 값이 참일 때 참을 내보냅니다.
+  * and(조건1, 조건2, true, false, 등등) → false
+* ### or | bool → bool
+  * 한개의 값이라도 참일 때 참을 내보냅니다.
+  * or(조건1, 조건2, true, false, 등등) → true
+* ### not | bool → bool
+  * 값을 반전합니다.
+  * not(false) → true
+* ### floor | double → int
+  * 값을 내림합니다.
+  * floor(3.6) → 3
+* ### round | double → int
+  * 값을 반올림합니다.
+  * round(3.6) → 4
+* ### ceil | double → int
+  * 값을 올림합니다.
+  * ceil(3.6) → 4
+* ### random | int → int
+  * 랜덤값을 반환합니다. 0 ~ 입력값-1 이 나옵니다.
+  * random(3) → 2
+* ### exist | string → bool
+  * 변수가 존재하는지 여부를 확인합니다. 
+  * exist("변수 이름") → true
+* ### isVisible | string → bool
+  * 변수가 숨겨져있는지 여부를 확인합니다.
+  * isVisible("변수 이름") → true
+* ### setVisible | string, bool
+  * 변수를 숨기거나 보이게 합니다.
+  * setVisible("변수 이름", false) → 변수가 숨겨짐
+* ### 그 외의 기본 연산
+  * +, -, *, / 의 사칙연산
+  * =
+  * ==, !=, >, <, >=, <=
