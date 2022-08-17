@@ -141,7 +141,7 @@ class ViewWrapCustom extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<Widget> outputWidget = List<Widget>.empty(growable: true);
-    var children = ref.watch(childrenProvider(parentPos));
+    var children = ref.watch(childrenChangeProvider(parentPos));
     if (children.isNotEmpty) {
       int stack = 0;
       List<Widget> subWidget = List<Widget>.empty(growable: true);

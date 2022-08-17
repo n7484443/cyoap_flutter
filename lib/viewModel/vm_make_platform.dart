@@ -84,7 +84,7 @@ class ChangeTabNotifier extends StateNotifier<int> {
           var out = await showDialog(
             context: context,
             builder: (_) => ViewBackDialog(
-              () => ref.read(vmGlobalSettingProvider.notifier).save(),
+              () => ref.read(valueTypeWrapperListProvider.notifier).save(),
               () => {},
               cancelFunction: () {},
             ),

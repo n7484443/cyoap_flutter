@@ -12,9 +12,9 @@ final initialValueWrapperProvider =
     Provider.autoDispose<Tuple2<String, ValueTypeWrapper>?>((ref) {
   if (ref.watch(editIndex) != -1) {
     var key = ref
-        .watch(vmGlobalSettingProvider.notifier)
+        .watch(valueTypeWrapperListProvider.notifier)
         .getKey(ref.watch(editIndex));
-    return Tuple2(key, ref.watch(vmGlobalSettingProvider)[key]!);
+    return Tuple2(key, ref.watch(valueTypeWrapperListProvider)[key]!);
   }
   return null;
 });
@@ -44,20 +44,20 @@ final globalSettingDisplayNameTextEditingProvider =
   return controller;
 });
 
-final vmGlobalSettingProvider = StateNotifierProvider.autoDispose<
-        VMGlobalSetting, Map<String, ValueTypeWrapper>>(
-    (ref) => VMGlobalSetting(ref.read, Map.from(getPlatform.globalSetting)));
+final valueTypeWrapperListProvider = StateNotifierProvider.autoDispose<
+        ValueTypeWrapperListNotifier, Map<String, ValueTypeWrapper>>(
+    (ref) => ValueTypeWrapperListNotifier(ref.read, Map.from(getPlatform.globalSetting)));
 
 final globalSettingChangedProvider =
-    StateProvider.autoDispose<bool>((ref) => false);
+    StateProvider<bool>((ref) => false);
 
 final globalSettingVisibleSwitchProvider = StateProvider.autoDispose<bool>(
     (ref) => ref.read(initialValueWrapperProvider)!.item2.visible);
 
-class VMGlobalSetting extends StateNotifier<Map<String, ValueTypeWrapper>> {
+class ValueTypeWrapperListNotifier extends StateNotifier<Map<String, ValueTypeWrapper>> {
   Reader read;
 
-  VMGlobalSetting(this.read, super.state);
+  ValueTypeWrapperListNotifier(this.read, super.state);
 
   ValueType getType(String input) {
     if (input.startsWith("\"") && input.endsWith("\"")) {
@@ -113,7 +113,6 @@ class VMGlobalSetting extends StateNotifier<Map<String, ValueTypeWrapper>> {
 
   void save() {
     getPlatform.setGlobalSetting(state);
-    print(getPlatform.globalSetting);
     VariableDataBase().updateVariableTiles();
     read(globalSettingChangedProvider.notifier).state = false;
   }

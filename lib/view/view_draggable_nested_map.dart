@@ -424,6 +424,7 @@ class ChoiceLine extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var pos = Pos(data: [y]);
     if (y >= ref.watch(lineLengthProvider)) {
       return Visibility(
         visible: ref.watch(dragChoiceNodeProvider) != null,
@@ -431,7 +432,7 @@ class ChoiceLine extends ConsumerWidget {
           children: [
             NodeDivider(y),
             NodeDragTarget(
-              Pos(data: [y, 0]),
+              pos.addLast(0),
               isHorizontal: true,
             ),
           ],
@@ -440,15 +441,14 @@ class ChoiceLine extends ConsumerWidget {
     }
     var color = ref.watch(lineBackgroundColorProvider(y)) ?? Colors.transparent;
     if (isEditable) {
-      var line = ref.watch(lineProvider(y))!;
-      if (line.children.isEmpty) {
+      if (ref.watch(childrenChangeProvider(pos)).isEmpty) {
         return ColoredBox(
           color: color,
           child: Column(
             children: [
               NodeDivider(y),
               NodeDragTarget(
-                Pos(data: [y, 0]),
+                pos.addLast(0),
                 isHorizontal: true,
               ),
             ],
@@ -458,15 +458,14 @@ class ChoiceLine extends ConsumerWidget {
       return ColoredBox(
         color: color,
         child: Column(
-          children: [
+          children: [ 
             NodeDivider(y),
             ViewWrapCustomReorderable(
-                line.pos, (i) => NodeDragTarget(Pos(data: [y, i]))),
+                pos, (i) => NodeDragTarget(pos.addLast(i))),
           ],
         ),
       );
     }
-    var line = ref.watch(lineProvider(y))!;
     return ColoredBox(
       color: color,
       child: Column(children: [
@@ -477,8 +476,8 @@ class ChoiceLine extends ConsumerWidget {
             bottom: 12,
           ),
           child: ViewWrapCustom(
-            line.pos,
-            (child) => ViewChoiceNode(child.pos),
+            pos,
+            (child) => ViewChoiceNode(pos),
             isInner: false,
           ),
         ),

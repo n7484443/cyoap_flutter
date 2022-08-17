@@ -125,7 +125,7 @@ void refreshLine(WidgetRef ref, int pos) {
 final lineProvider = Provider.autoDispose
     .family<LineSetting?, int>((ref, pos) => getPlatform.getLineSetting(pos));
 
-final childrenProvider = Provider.autoDispose
+final _childrenProvider = Provider.autoDispose
     .family<List<GenerableParserAndPosition>, Pos>((ref, pos) {
   if (pos.length == 1) {
     return ref.watch(lineProvider(pos.first))!.children;
@@ -143,10 +143,10 @@ class ChildrenNotifier extends StateNotifier<List<GenerableParserAndPosition>> {
   Pos pos;
 
   ChildrenNotifier(this.ref, this.pos)
-      : super([...ref.read(childrenProvider(pos))]);
+      : super([...ref.read(_childrenProvider(pos))]);
 
   void update() {
-    state = [...ref.read(childrenProvider(pos))];
+    state = [...ref.read(_childrenProvider(pos))];
   }
 }
 

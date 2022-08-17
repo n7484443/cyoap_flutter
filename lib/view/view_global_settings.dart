@@ -91,7 +91,7 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
         TextButton(
           child: const Text('저장'),
           onPressed: () {
-            ref.read(vmGlobalSettingProvider.notifier).editInitialValue(index);
+            ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(index);
             Navigator.pop(context);
           },
         )
@@ -125,7 +125,7 @@ class ViewGlobalSetting extends ConsumerWidget {
         IconButton(
           icon: const Icon(Icons.save),
           onPressed: () {
-            ref.read(vmGlobalSettingProvider.notifier).save();
+            ref.read(valueTypeWrapperListProvider.notifier).save();
           },
         )
       ],
@@ -150,7 +150,7 @@ class ViewGlobalSetting extends ConsumerWidget {
                 ),
                 itemBuilder: (BuildContext context, int index) {
                   var key =
-                      ref.watch(vmGlobalSettingProvider.notifier).getKey(index);
+                      ref.watch(valueTypeWrapperListProvider.notifier).getKey(index);
                   return ListTile(
                     onTap: () {
                       showDialog(
@@ -160,7 +160,7 @@ class ViewGlobalSetting extends ConsumerWidget {
                     },
                     title: Text(key),
                     subtitle: Text(ref
-                        .watch(vmGlobalSettingProvider)[key]!
+                        .watch(valueTypeWrapperListProvider)[key]!
                         .valueType
                         .data
                         .toString()),
@@ -168,20 +168,20 @@ class ViewGlobalSetting extends ConsumerWidget {
                       icon: const Icon(Icons.delete),
                       onPressed: () {
                         ref
-                            .read(vmGlobalSettingProvider.notifier)
+                            .read(valueTypeWrapperListProvider.notifier)
                             .deleteInitialValue(index);
                       },
                     ),
                   );
                 },
-                itemCount: ref.watch(vmGlobalSettingProvider).length,
+                itemCount: ref.watch(valueTypeWrapperListProvider).length,
               ),
             ),
           ),
           TextButton(
             child: const Text('초기값 추가'),
             onPressed: () {
-              ref.read(vmGlobalSettingProvider.notifier).addInitialValue(
+              ref.read(valueTypeWrapperListProvider.notifier).addInitialValue(
                   'point', ValueTypeWrapper(ValueType(0), visible: true));
             },
           )
