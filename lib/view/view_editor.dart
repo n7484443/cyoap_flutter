@@ -55,31 +55,27 @@ class ViewEditor extends ConsumerWidget {
         ),
       ],
     );
-    var highlightStyle = Theme.of(context)
-        .textTheme
-        .bodyText1
-        ?.copyWith(color: Colors.blueAccent);
     var editingNodeValues = Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         DropdownButton<ChoiceNodeMode>(
           value: ref.watch(nodeModeProvider),
-          items: [
+          items: const [
             DropdownMenuItem(
                 value: ChoiceNodeMode.defaultMode,
-                child: Text('기본', style: highlightStyle)),
+                child: Text('기본')),
             DropdownMenuItem(
                 value: ChoiceNodeMode.randomMode,
-                child: Text('랜덤 선택', style: highlightStyle)),
+                child: Text('랜덤 선택')),
             DropdownMenuItem(
                 value: ChoiceNodeMode.multiSelect,
-                child: Text('다중 선택', style: highlightStyle)),
+                child: Text('다중 선택')),
             DropdownMenuItem(
                 value: ChoiceNodeMode.unSelectableMode,
-                child: Text('선택 불가', style: highlightStyle)),
+                child: Text('선택 불가')),
             DropdownMenuItem(
                 value: ChoiceNodeMode.onlyCode,
-                child: Text('코드만 사용', style: highlightStyle)),
+                child: Text('코드만 사용')),
           ],
           onChanged: (ChoiceNodeMode? value) {
             ref.read(nodeModeProvider.notifier).update((state) => value!);
@@ -198,7 +194,7 @@ class ViewEditor extends ConsumerWidget {
         const Spacer(),
         Padding(
           padding: const EdgeInsets.only(bottom: 10.0),
-          child: OutlinedButton(
+          child: TextButton(
             child: const Text('코드 수정'),
             onPressed: () {
               ref
