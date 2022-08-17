@@ -36,7 +36,7 @@ class ViewImageEditor extends ConsumerWidget {
             ref
                 .read(imageStateProvider.notifier)
                 .addImageCrop(ref.read(imageProvider)!.item1,
-                    await ref.read(cropImageProvider.future))
+                    data: await ref.read(cropImageProvider.future))
                 .then((value) =>
                     ref.read(changeTabProvider.notifier).back(context));
           },

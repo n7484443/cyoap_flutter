@@ -54,14 +54,13 @@ class ViewDesignSetting extends ConsumerWidget {
             icon: const Icon(Icons.arrow_back),
             onPressed: () => ref.read(changeTabProvider.notifier).back(context),
           ),
-          title: const TabBar(
-            indicatorColor: Colors.blueAccent,
-            labelColor: Colors.blueAccent,
-            unselectedLabelColor: Colors.grey,
+          title: TabBar(
+            labelColor: Theme.of(context).colorScheme.secondary,
+            unselectedLabelColor: Theme.of(context).colorScheme.primary,
             tabs: [
-              Tab(text: '색상'),
-              Tab(text: '위치'),
-              Tab(text: '폰트'),
+              const Tab(text: '색상'),
+              const Tab(text: '위치'),
+              const Tab(text: '폰트'),
             ],
           ),
         ),

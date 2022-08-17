@@ -431,9 +431,11 @@ class ViewNodeImageEditor extends ConsumerWidget {
                   var name =
                       await ref.read(imageStateProvider.notifier).addImage();
                   if (name != '') {
+                    ref.read(imageStateProvider.notifier).addImageSource(name);
                     showDialog<bool>(
                       builder: (_) => ImageSourceDialog(name),
                       context: context,
+                      barrierDismissible: false,
                     ).then((value) {
                       if (value ?? false) {
                         ref.read(imageProvider.notifier).update((state) =>
@@ -441,6 +443,10 @@ class ViewNodeImageEditor extends ConsumerWidget {
                         ref
                             .read(changeTabProvider.notifier)
                             .changePageString('viewImageEditor', context);
+                      } else {
+                        ref
+                            .read(imageStateProvider.notifier)
+                            .addImageCrop(name);
                       }
                     });
                   }
@@ -538,17 +544,12 @@ class _ImageSourceDialogState extends ConsumerState<ImageSourceDialog> {
       actions: [
         TextButton(
           onPressed: () {
-            ref.read(imageStateProvider.notifier).addImageSource(widget.name);
             Navigator.pop(context, true);
           },
           child: const Text('자르기'),
         ),
         TextButton(
           onPressed: () {
-            ref.read(imageStateProvider.notifier).addImageSource(widget.name);
-            ref
-                .read(imageStateProvider.notifier)
-                .addImageCrop(widget.name, ref.watch(lastImageProvider)!);
             Navigator.pop(context, false);
           },
           child: const Text('저장하기'),

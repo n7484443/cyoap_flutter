@@ -5,6 +5,7 @@ import 'package:cyoap_flutter/model/editor.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
+import 'package:cyoap_flutter/viewModel/vm_source.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -89,13 +90,14 @@ class ImageStateNotifier extends StateNotifier<int> {
     return name;
   }
 
-  Future<void> addImageCrop(String name, Uint8List data) async {
-    ImageDB().uploadImages(name, data);
+  Future<void> addImageCrop(String name, {Uint8List? data}) async {
+    ImageDB().uploadImages(name, data ?? ref.read(lastImageProvider)!);
     NodeEditor().target.imageString = name;
     state = ImageDB().getImageIndex(name);
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     ref.read(changeProvider.notifier).state = true;
     ref.read(lastImageProvider.notifier).update((state) => null);
+    ref.invalidate(vmSourceProvider);
   }
 
   void addImageSource(String name) {

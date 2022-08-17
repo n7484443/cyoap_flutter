@@ -154,10 +154,8 @@ class RandomDialog extends ConsumerWidget {
         content: AnimatedFlipCounter(
             value: ref.watch(randomStateNotifierProvider(pos)),
             duration: const Duration(milliseconds: 500),
-            textStyle: const TextStyle(
-              fontSize: 40,
-              color: Colors.blue,
-              fontWeight: FontWeight.bold,
+            textStyle: Theme.of(context).textTheme.displayLarge?.copyWith(
+              color: Theme.of(context).colorScheme.secondary,
             )),
         actions: [
           Visibility(

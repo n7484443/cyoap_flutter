@@ -139,7 +139,7 @@ class ViewGlobalSetting extends ConsumerWidget {
             flex: 18,
             child: Container(
               decoration: BoxDecoration(
-                border: Border.all(width: 2, color: Colors.lightBlueAccent),
+                border: Border.all(width: 2),
               ),
               child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

@@ -163,7 +163,11 @@ void main() {
 }
 
 final ThemeData appThemeData = ThemeData(
-  colorSchemeSeed: Colors.blueAccent,
+  colorScheme: ColorScheme.fromSwatch(
+    primarySwatch: Colors.lightBlue,
+  ).copyWith(
+    secondary: Colors.indigo,
+  ),
   textTheme: GoogleFonts.notoSansTextTheme(),
   appBarTheme: const AppBarTheme(
     toolbarHeight: ConstList.appBarSize,
