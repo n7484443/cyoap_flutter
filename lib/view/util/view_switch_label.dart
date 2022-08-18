@@ -20,8 +20,7 @@ class ViewSwitchLabel extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(
-                color: disable ? Colors.black38 : Colors.black,
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
                 fontSize: labelSize),
           ),
           Switch(

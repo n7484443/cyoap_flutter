@@ -28,6 +28,7 @@ class ViewChoiceNode extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     if (pos.last == nonPositioned) {
       return Card(
+        color: ref.watch(colorNodeProvider),
         child: SizedBox(
           width: MediaQuery.of(context).size.width /
               defaultMaxSize *

@@ -14,6 +14,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:tuple/tuple.dart';
 
+import 'color_schemes.g.dart';
+
 class ConstList {
   static const bool isDistributed =
       bool.fromEnvironment("isDistributed", defaultValue: false);
@@ -76,10 +78,6 @@ class ConstList {
     );
   }
 
-  static TextStyle defaultFont = GoogleFonts.notoSans(
-      color: Colors.black,
-      fontFeatures: const [FontFeature.proportionalFigures()]);
-
   static Map<String, TextStyle> textFontList = {
     "jua": GoogleFonts.jua(
         color: Colors.black,
@@ -120,7 +118,7 @@ class ConstList {
   };
 
   static TextStyle getFont(String font) {
-    return textFontList[font] ?? defaultFont;
+    return textFontList[font] ?? textFontList["notoSans"]!;
   }
 
   static Future<void> preInit() async {
@@ -154,7 +152,9 @@ void main() {
                   '/viewPlay': (context) => v_play.ViewPlay(),
                   '/viewMake': (context) => v_make.ViewMakePlatform(),
                 },
-          theme: appThemeData,
+          theme: appThemeLight,
+          darkTheme: appThemeDark,
+          themeMode: ThemeMode.light,
           debugShowCheckedModeBanner: false,
         ),
       ),
@@ -162,15 +162,25 @@ void main() {
   }).then((value) => ConstList.init());
 }
 
-final ThemeData appThemeData = ThemeData(
-  colorScheme: ColorScheme.fromSwatch(
-    primarySwatch: Colors.lightBlue,
-  ).copyWith(
-    secondary: Colors.indigo,
-  ),
+final ThemeData appThemeLight = ThemeData.from(
+  colorScheme: lightColorScheme,
   textTheme: GoogleFonts.notoSansTextTheme(),
+  useMaterial3: true,
+).copyWith(
   appBarTheme: const AppBarTheme(
     toolbarHeight: ConstList.appBarSize,
   ),
+);
+
+final ThemeData appThemeDark = ThemeData.from(
+  colorScheme: darkColorScheme,
+  textTheme: GoogleFonts.notoSansTextTheme().apply(
+    bodyColor: darkColorScheme.onSurface,
+    displayColor: darkColorScheme.onSurface,
+  ),
   useMaterial3: true,
+).copyWith(
+  appBarTheme: const AppBarTheme(
+    toolbarHeight: ConstList.appBarSize,
+  ),
 );

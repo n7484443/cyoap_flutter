@@ -11,6 +11,50 @@ class ViewImageEditor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+      body: const ViewImageEditorContents(),
+      bottomNavigationBar: NavigationBar(
+        destinations: const[
+          NavigationDestination(icon: Icon(Icons.close), label: "자유"),
+          NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "4:3"),
+          NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "3:2"),
+          NavigationDestination(
+              icon: Icon(Icons.aspect_ratio), label: "16:9"),
+          NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "1:1"),
+        ],
+        selectedIndex: ref.watch(imageCropIndexProvider),
+        onDestinationSelected: (index) {
+          ref.read(imageCropIndexProvider.notifier).state = index;
+          switch (index) {
+            case 0:
+              ref.read(imageCropRatioProvider.notifier).state = null;
+              break;
+            case 1:
+              ref.read(imageCropRatioProvider.notifier).state = 4 / 3;
+              break;
+            case 2:
+              ref.read(imageCropRatioProvider.notifier).state = 3 / 2;
+              break;
+            case 3:
+              ref.read(imageCropRatioProvider.notifier).state = 16 / 9;
+              break;
+            case 4:
+              ref.read(imageCropRatioProvider.notifier).state = 1;
+              break;
+          }
+        },
+      ),
+    );
+  }
+}
+
+class ViewImageEditorContents extends ConsumerWidget {
+  const ViewImageEditorContents({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         Flexible(
@@ -24,6 +68,7 @@ class ViewImageEditor extends ConsumerWidget {
                   maxScale: 4.0,
                   hitTestSize: 20.0,
                   cropRectPadding: const EdgeInsets.all(10.0),
+                  cropAspectRatio: ref.watch(imageCropRatioProvider),
                   initCropRectType: InitCropRectType.imageRect,
                   editActionDetailsIsChanged: (EditActionDetails? details) {});
             },

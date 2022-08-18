@@ -131,7 +131,7 @@ class _ViewProjectListState extends ConsumerState<ViewProjectList> {
             style: ref.watch(pathListSelectedProvider) == index
                 ? OutlinedButton.styleFrom(
                     primary: Colors.white, backgroundColor: Colors.lightBlueAccent)
-                : OutlinedButton.styleFrom(primary: Colors.black54),
+                : null,
             child: Text(ref.watch(pathListProvider)[index]),
           ),
           trailing: ConstList.isWeb()
