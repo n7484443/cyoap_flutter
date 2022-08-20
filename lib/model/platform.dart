@@ -176,7 +176,6 @@ class AbstractPlatform {
   void updateStatusAll() {
     VariableDataBase().clear();
     VariableDataBase().varMap.addAll(globalSetting);
-
     for (var lineSetting in lineSettings) {
       lineSetting.initValueTypeWrapper();
       lineSetting.execute();

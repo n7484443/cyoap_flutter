@@ -67,38 +67,35 @@ class ViewChoiceNode extends ConsumerWidget {
         elevation:
             ref.watch(isChoiceNodeCardProvider(pos)) ? ConstList.elevation : 0,
         color: ref.watch(colorNodeProvider),
-        child: Visibility(
-          visible: isEditable || node.isVisible(),
-          child: Ink(
-            color: ref.watch(colorNodeProvider),
-            child: Padding(
-              padding: ConstList.isSmallDisplay(context)
-                  ? const EdgeInsets.all(2.0)
-                  : const EdgeInsets.all(4.0),
-              child: InkWell(
-                onDoubleTap: isEditable
-                    ? () {
-                        NodeEditor().target = node;
-                        ref
-                            .read(changeTabProvider.notifier)
-                            .changePageString("viewEditor", context);
-                      }
-                    : null,
-                onTap: !isEditable &&
-                        (ref.watch(nodeModeProvider(pos)) !=
-                                ChoiceNodeMode.multiSelect ||
-                            ref.watch(isIgnorePointerProvider(pos)))
-                    ? () => ref
-                        .read(choiceNodeSelectProvider(pos).notifier)
-                        .select(0,
-                            showDialogFunction: () => showDialog(
-                                  context: context,
-                                  builder: (builder) => RandomDialog(pos),
-                                  barrierDismissible: false,
-                                ))
-                    : null,
-                child: ViewChoiceNodeContent(pos),
-              ),
+        child: Ink(
+          color: ref.watch(colorNodeProvider),
+          child: Padding(
+            padding: ConstList.isSmallDisplay(context)
+                ? const EdgeInsets.all(2.0)
+                : const EdgeInsets.all(4.0),
+            child: InkWell(
+              onDoubleTap: isEditable
+                  ? () {
+                      NodeEditor().target = node;
+                      ref
+                          .read(changeTabProvider.notifier)
+                          .changePageString("viewEditor", context);
+                    }
+                  : null,
+              onTap: !isEditable &&
+                      (ref.watch(nodeModeProvider(pos)) !=
+                              ChoiceNodeMode.multiSelect ||
+                          ref.watch(isIgnorePointerProvider(pos)))
+                  ? () => ref
+                      .read(choiceNodeSelectProvider(pos).notifier)
+                      .select(0,
+                          showDialogFunction: () => showDialog(
+                                context: context,
+                                builder: (builder) => RandomDialog(pos),
+                                barrierDismissible: false,
+                              ))
+                  : null,
+              child: ViewChoiceNodeContent(pos),
             ),
           ),
         ),

@@ -99,20 +99,7 @@ class LineSetting extends GenerableParserAndPosition {
   }
 
   @override
-  void checkVisible(bool parent) {
-    if (!parent || !isVisible()) {
-      status = SelectableStatus.hide;
-    } else {
-      status = SelectableStatus.open;
-    }
-
-    for (var child in children) {
-      child.checkVisible(!status.isHide());
-    }
-  }
-
-  @override
-  void checkClickable(bool parentClickable, bool onlyWorkLine) {
+  void checkClickable(bool parent, bool onlyWorkLine) {
     for (var child in children) {
       child.checkClickable(isClickable(), true);
     }

@@ -47,6 +47,8 @@ extension SelectableStatusExtension on SelectableStatus {
 }
 
 abstract class GenerableParserAndPosition {
+  bool visible = true;
+
   void generateParser() {
     recursiveStatus.generateParser();
     for (var child in children) {
@@ -101,12 +103,14 @@ abstract class GenerableParserAndPosition {
   }
 
   void checkVisible(bool parent) {
-    if (!parent || !isVisible()) {
-      status = SelectableStatus.hide;
+    if(!parent){
+      visible = false;
+    }else{
+      visible = isVisible();
     }
 
     for (var child in children) {
-      child.checkVisible(!status.isHide());
+      child.checkVisible(visible);
     }
   }
 
@@ -122,15 +126,15 @@ abstract class GenerableParserAndPosition {
     return true;
   }
 
-  void checkClickable(bool parentClickable, bool onlyWorkLine) {
-    if (!onlyWorkLine && !parentClickable) {
+  void checkClickable(bool parent, bool onlyWorkLine) {
+    if (!onlyWorkLine && !parent) {
       status = isVisible() ? SelectableStatus.closed : SelectableStatus.hide;
     } else {
       var selectable = isClickable();
       if (isSelectableMode) {
         if (status != SelectableStatus.selected &&
             status != SelectableStatus.hide) {
-          selectable &= parentClickable;
+          selectable &= parent;
           status = selectable ? SelectableStatus.open : SelectableStatus.closed;
         }
       }
