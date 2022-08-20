@@ -22,9 +22,13 @@ extension SelectableStatusExtension on SelectableStatus {
     return this == SelectableStatus.hide;
   }
 
+  bool isOpen() {
+    return this == SelectableStatus.open;
+  }
+
   bool isPointerInteractive(bool isSelectable) {
     if (isSelectable) {
-      return this == SelectableStatus.selected || this == SelectableStatus.open;
+      return isSelected() || isOpen();
     }
     return false;
   }

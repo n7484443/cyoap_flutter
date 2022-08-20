@@ -24,6 +24,7 @@ void refreshChild(Ref ref, GenerableParserAndPosition node) {
   ref.invalidate(choiceNodeProvider(node.pos));
   ref.invalidate(choiceNodeStatusProvider(node.pos));
   ref.invalidate(opacityProvider(node.pos));
+  ref.invalidate(isIgnorePointerProvider(node.pos));
   ref.read(childrenChangeProvider(node.pos).notifier).update();
   for (var child in node.children) {
     refreshChild(ref, child);
@@ -98,13 +99,19 @@ final choiceNodeStatusProvider =
 
 final isIgnorePointerProvider =
     Provider.family.autoDispose<bool, Pos>((ref, pos) {
+  if (ref.watch(nodeModeProvider(pos)) == ChoiceNodeMode.onlyCode){
+    return false;
+  }
+  if (ref.watch(nodeModeProvider(pos)) == ChoiceNodeMode.unSelectableMode) {
+    return false;
+  }
   var status = ref.watch(choiceNodeStatusProvider(pos));
-  return status.isPointerInteractive(
-      ref.watch(choiceNodeProvider(pos))!.isSelectableMode);
+  var node = ref.watch(choiceNodeProvider(pos))!;
+  return node.visible && status.isPointerInteractive(node.isSelectableMode);
 });
 
 final isChoiceNodeSelectableProvider =
-Provider.family.autoDispose<bool, Pos>((ref, pos) {
+    Provider.family.autoDispose<bool, Pos>((ref, pos) {
   var status = ref.watch(choiceNodeStatusProvider(pos));
   return status.isSelected();
 });
@@ -151,13 +158,11 @@ final randomStateNotifierProvider =
 final opacityProvider = Provider.family.autoDispose<double, Pos>((ref, pos) {
   var node = ref.watch(choiceNodeProvider(pos))!;
   if (isEditable) return 1;
-  if(!node.visible) return 0;
+  if (!node.visible) return 0;
 
   if (node.isSelectableMode) {
-    if (ref.read(isIgnorePointerProvider(pos))) {
+    if (ref.watch(isIgnorePointerProvider(pos))) {
       return 1;
-    } else if (node.status == SelectableStatus.hide) {
-      return 0;
     } else {
       return 0.4;
     }
