@@ -13,7 +13,6 @@ import '../model/choiceNode/choice_node.dart';
 import '../model/choiceNode/generable_parser.dart';
 import '../model/choiceNode/pos.dart';
 import '../model/platform_system.dart';
-import '../view/view_choice_node.dart';
 
 const double nodeBaseHeight = 200;
 const int designSamplePosition0 = -100;
@@ -21,7 +20,7 @@ const int designSamplePosition1 = -101;
 const int nonPositioned = -1;
 const int removedPositioned = -2;
 
-void refreshChild(WidgetRef ref, GenerableParserAndPosition node) {
+void refreshChild(Ref ref, GenerableParserAndPosition node) {
   ref.invalidate(choiceNodeProvider(node.pos));
   ref.read(childrenChangeProvider(node.pos).notifier).update();
   for (var child in node.children) {
@@ -118,7 +117,7 @@ class ChoiceNodeSelectNotifier extends StateNotifier<int> {
 
   ChoiceNodeSelectNotifier(this.ref, this.pos) : super(0);
 
-  Future<void> select(int n, context) async {
+  Future<void> select(int n, {Future Function()? showDialogFunction}) async {
     if (!ref.read(isIgnorePointerProvider(pos))) {
       return;
     }
@@ -130,11 +129,7 @@ class ChoiceNodeSelectNotifier extends StateNotifier<int> {
     } else if (ref.read(nodeModeProvider(pos)) == ChoiceNodeMode.randomMode) {
       node.selectNode(n);
       ref.read(randomStateNotifierProvider(pos).notifier).startRandom();
-      await showDialog(
-        context: context,
-        builder: (builder) => RandomDialog(pos),
-        barrierDismissible: false,
-      );
+      await showDialogFunction!();
     } else if (ref.read(nodeModeProvider(pos)) == ChoiceNodeMode.multiSelect) {
       state += n;
       state = state.clamp(0, node.maximumStatus);
@@ -221,17 +216,13 @@ class ChoiceNodeSizeNotifier extends StateNotifier<int> {
     for (var child in node.children) {
       ref.read(choiceNodeSizeProvider(child.pos).notifier).sizeChange(-1);
     }
+    refreshLine(ref, pos.first);
   }
 }
 
 void updateStatusAll(Ref ref) {
   getPlatform.updateStatusAll();
-  for (var lineSetting in getPlatform.lineSettings) {
-    for (var node in lineSetting.children) {
-      ref.invalidate(choiceNodeStatusProvider(node.pos));
-      ref.invalidate(isChoiceNodeSelectableProvider(node.pos));
-    }
-  }
+  refreshPage(ref);
 }
 
 void updateImageAll(Ref ref) {

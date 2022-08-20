@@ -44,17 +44,17 @@ class NodeDragTarget extends ConsumerWidget {
         },
         onAccept: (Pos drag) {
           if (drag.last == nonPositioned) {
-            ref.read(vmDraggableNestedMapProvider).changeData(ref, drag, pos);
+            ref.read(vmDraggableNestedMapProvider).changeData(drag, pos);
           } else if (drag.last == removedPositioned) {
             ref
                 .read(vmDraggableNestedMapProvider)
-                .addData(ref, pos, ref.read(removedChoiceNode)!.clone());
+                .addData(pos, ref.read(removedChoiceNode)!.clone());
           } else if (pos.equalExceptLast(drag) &&
               (pos.data.last - 1) >= drag.last) {
             ref.read(vmDraggableNestedMapProvider).changeData(
-                ref, drag, Pos(data: List.from(pos.data)..last -= 1));
+                drag, Pos(data: List.from(pos.data)..last -= 1));
           } else {
-            ref.read(vmDraggableNestedMapProvider).changeData(ref, drag, pos);
+            ref.read(vmDraggableNestedMapProvider).changeData(drag, pos);
           }
         },
       ),
@@ -269,13 +269,13 @@ class NodeDivider extends ConsumerWidget {
                 IconButton(
                   icon: Icon(Icons.arrow_upward, color: getColorButton()),
                   onPressed: () {
-                    moveLine(ref, y, y - 1);
+                    ref.read(vmDraggableNestedMapProvider).moveLine(y, y - 1);
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.arrow_downward, color: getColorButton()),
                   onPressed: () {
-                    moveLine(ref, y, y + 1);
+                    ref.read(vmDraggableNestedMapProvider).moveLine(y, y + 1);
                   },
                 ),
               ],

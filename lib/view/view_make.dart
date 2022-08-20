@@ -73,7 +73,7 @@ class ViewMake extends ConsumerWidget {
                   message: '드래그&드랍으로 선택지 삭제', child: Icon(Icons.delete));
             },
             onAccept: (Pos data) {
-              ref.read(vmDraggableNestedMapProvider).removeData(ref, data);
+              ref.read(vmDraggableNestedMapProvider).removeData(data);
             },
           ),
           Draggable<Pos>(

@@ -90,7 +90,12 @@ class ViewChoiceNode extends ConsumerWidget {
                             ref.watch(isIgnorePointerProvider(pos)))
                     ? () => ref
                         .read(choiceNodeSelectProvider(pos).notifier)
-                        .select(0, context)
+                        .select(0,
+                            showDialogFunction: () => showDialog(
+                                  context: context,
+                                  builder: (builder) => RandomDialog(pos),
+                                  barrierDismissible: false,
+                                ))
                     : null,
                 child: ViewChoiceNodeContent(pos),
               ),
@@ -127,7 +132,6 @@ class SizeDialog extends ConsumerWidget {
                 ref
                     .read(choiceNodeSizeProvider(pos).notifier)
                     .sizeChange(value.toInt());
-                refreshLine(ref, pos.first);
               },
               value: width.toDouble(),
               divisions: defaultMaxSize,
@@ -156,8 +160,8 @@ class RandomDialog extends ConsumerWidget {
             value: ref.watch(randomStateNotifierProvider(pos)),
             duration: const Duration(milliseconds: 500),
             textStyle: Theme.of(context).textTheme.displayLarge?.copyWith(
-              color: Theme.of(context).colorScheme.secondary,
-            )),
+                  color: Theme.of(context).colorScheme.secondary,
+                )),
         actions: [
           Visibility(
             visible: !ref.watch(randomProcessExecutedProvider),
@@ -298,7 +302,7 @@ class ViewTitleWithEdit extends ConsumerWidget {
                 case 1:
                   ref
                       .read(vmDraggableNestedMapProvider)
-                      .copyData(ref, ref.watch(choiceNodeProvider(pos))!);
+                      .copyData(ref.watch(choiceNodeProvider(pos))!);
                   break;
               }
             },
@@ -337,9 +341,7 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
             icon: const Icon(Icons.chevron_left, size: 30),
             onPressed: () {
               if (!isEditable) {
-                ref
-                    .read(choiceNodeSelectProvider(pos).notifier)
-                    .select(-1, context);
+                ref.read(choiceNodeSelectProvider(pos).notifier).select(-1);
               }
             },
           ),
@@ -356,9 +358,7 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
             icon: const Icon(Icons.chevron_right, size: 30),
             onPressed: () {
               if (!isEditable) {
-                ref
-                    .read(choiceNodeSelectProvider(pos).notifier)
-                    .select(1, context);
+                ref.read(choiceNodeSelectProvider(pos).notifier).select(1);
               }
             },
           ),
@@ -370,7 +370,9 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
 
 class ViewContents extends ConsumerWidget {
   final Pos pos;
-  const ViewContents(this.pos, {
+
+  const ViewContents(
+    this.pos, {
     Key? key,
   }) : super(key: key);
 

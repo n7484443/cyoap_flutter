@@ -44,21 +44,21 @@ class VMDraggableNestedMap {
 
   VMDraggableNestedMap(this.ref);
 
-  void copyData(WidgetRef ref, ChoiceNode choiceNode) {
+  void copyData(ChoiceNode choiceNode) {
     ref.read(removedChoiceNode.notifier).state = choiceNode.clone();
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     refreshPage(ref);
   }
 
-  void removeData(WidgetRef ref, Pos pos) {
+  void removeData(Pos pos) {
     var choiceNode = getPlatform.removeData(pos);
-    copyData(ref, choiceNode);
+    copyData(choiceNode);
     VariableDataBase().updateCheckList();
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     refreshPage(ref);
   }
 
-  void addData(WidgetRef ref, Pos pos, ChoiceNode choiceNode) {
+  void addData(Pos pos, ChoiceNode choiceNode) {
     getPlatform.addData(pos, choiceNode);
     VariableDataBase().updateCheckList();
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
@@ -69,7 +69,7 @@ class VMDraggableNestedMap {
     return ChoiceNode.noTitle(3, true, '', '');
   }
 
-  void changeData(WidgetRef ref, Pos input, Pos target) {
+  void changeData(Pos input, Pos target) {
     if (input.last == nonPositioned) {
       getPlatform.addData(target, createNodeForTemp());
     } else {
@@ -91,29 +91,29 @@ class VMDraggableNestedMap {
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     refreshPage(ref);
   }
+
+  void moveLine(int before, int after) {
+    if (after >= getPlatform.lineSettings.length) {
+      return;
+    }
+    if (after < 0) {
+      return;
+    }
+    var temp = getPlatform.lineSettings[before];
+    getPlatform.lineSettings[before] = getPlatform.lineSettings[after];
+    getPlatform.lineSettings[after] = temp;
+    getPlatform.checkDataCorrect();
+    refreshPage(ref);
+  }
 }
 
-void moveLine(WidgetRef ref, int before, int after) {
-  if (after >= getPlatform.lineSettings.length) {
-    return;
-  }
-  if (after < 0) {
-    return;
-  }
-  var temp = getPlatform.lineSettings[before];
-  getPlatform.lineSettings[before] = getPlatform.lineSettings[after];
-  getPlatform.lineSettings[after] = temp;
-  getPlatform.checkDataCorrect();
-  refreshPage(ref);
-}
-
-void refreshPage(WidgetRef ref) {
+void refreshPage(Ref ref) {
   for (var pos = 0; pos < getPlatform.lineSettings.length; pos++) {
     refreshLine(ref, pos);
   }
 }
 
-void refreshLine(WidgetRef ref, int pos) {
+void refreshLine(Ref ref, int pos) {
   ref.invalidate(lineProvider(pos));
   ref.invalidate(lineLengthProvider);
   ref.read(childrenChangeProvider(Pos(data: [pos])).notifier).update();
