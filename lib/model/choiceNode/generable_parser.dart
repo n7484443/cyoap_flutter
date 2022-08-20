@@ -93,7 +93,7 @@ abstract class GenerableParserAndPosition {
         if (choiceStatus.status != SelectableStatus.selected &&
             choiceStatus.status != SelectableStatus.hide) {
           selectable &= parent;
-          choiceStatus.copyWith(status: selectable ? SelectableStatus.open : SelectableStatus.closed);
+          choiceStatus = choiceStatus.copyWith(status: selectable ? SelectableStatus.open : SelectableStatus.closed);
         }
       }
     }

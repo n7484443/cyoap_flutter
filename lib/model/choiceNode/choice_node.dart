@@ -110,14 +110,14 @@ class ChoiceNode extends GenerableParserAndPosition {
     if (choiceNodeMode == ChoiceNodeMode.multiSelect) {
       multiSelect = n;
       if (n > 0) {
-        choiceStatus.copyWith(status: SelectableStatus.selected);
+        choiceStatus = choiceStatus.copyWith(status: SelectableStatus.selected);
       } else {
-        choiceStatus.copyWith(status: SelectableStatus.open);
+        choiceStatus = choiceStatus.copyWith(status: SelectableStatus.open);
       }
     } else {
       random = -1;
       multiSelect = -1;
-      choiceStatus.copyWith(status: choiceStatus.reverseSelected(isSelectableMode));
+      choiceStatus = choiceStatus.copyWith(status: choiceStatus.reverseSelected(isSelectableMode));
     }
   }
 
@@ -140,7 +140,7 @@ class ChoiceNode extends GenerableParserAndPosition {
           ValueTypeWrapper(ValueType(multiSelect)));
     }
     if (choiceStatus.isNotSelected()) {
-      choiceStatus.copyWith(status: isSelectableMode ? SelectableStatus.open : SelectableStatus.selected);
+      choiceStatus = choiceStatus.copyWith(status: isSelectableMode ? SelectableStatus.open : SelectableStatus.selected);
     }
     for (var child in children) {
       child.initValueTypeWrapper();

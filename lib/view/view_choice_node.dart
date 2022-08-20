@@ -49,7 +49,7 @@ class ViewChoiceNode extends ConsumerWidget {
             ? RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4.0),
           side: BorderSide(
-            color: ref.watch(isChoiceNodeSelectableProvider(pos))
+            color: ref.watch(choiceNodePlayStatusProvider(pos)).isSelected()
                 ? Colors.lightBlueAccent
                 : ref.watch(colorNodeProvider),
             width: ConstList.isSmallDisplay(context) ? 2 : 4,
@@ -57,7 +57,7 @@ class ViewChoiceNode extends ConsumerWidget {
         )
             : Border.fromBorderSide(
           BorderSide(
-            color: ref.watch(isChoiceNodeSelectableProvider(pos))
+            color: ref.watch(choiceNodePlayStatusProvider(pos)).isSelected()
                 ? Colors.lightBlueAccent
                 : ref.watch(colorNodeProvider),
             width: ConstList.isSmallDisplay(context) ? 2 : 4,

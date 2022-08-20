@@ -21,7 +21,6 @@ class ChoiceStatus with _$ChoiceStatus {
 
   ChoiceStatus._();
 
-
   bool isSelected() {
     return status == SelectableStatus.selected;
   }

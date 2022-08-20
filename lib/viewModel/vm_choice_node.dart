@@ -110,12 +110,6 @@ final isIgnorePointerProvider =
   return choiceStatus.visible && choiceStatus.isPointerInteractive(node.isSelectableMode);
 });
 
-final isChoiceNodeSelectableProvider =
-    Provider.family.autoDispose<bool, Pos>((ref, pos) {
-  var status = ref.watch(choiceNodePlayStatusProvider(pos));
-  return status.isSelected();
-});
-
 final choiceNodeSelectProvider = StateNotifierProvider.family
     .autoDispose<ChoiceNodeSelectNotifier, int, Pos>(
         (ref, pos) => ChoiceNodeSelectNotifier(ref, pos));
