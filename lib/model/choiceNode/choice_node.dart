@@ -7,6 +7,7 @@ import 'package:cyoap_flutter/model/variable_db.dart';
 import '../../view/util/view_wrap_custom.dart';
 import '../grammar/analyser.dart';
 import '../grammar/value_type.dart';
+import 'choice_status.dart';
 import 'generable_parser.dart';
 
 enum ChoiceNodeMode {
@@ -109,19 +110,19 @@ class ChoiceNode extends GenerableParserAndPosition {
     if (choiceNodeMode == ChoiceNodeMode.multiSelect) {
       multiSelect = n;
       if (n > 0) {
-        status = SelectableStatus.selected;
+        choiceStatus.copyWith(status: SelectableStatus.selected);
       } else {
-        status = SelectableStatus.open;
+        choiceStatus.copyWith(status: SelectableStatus.open);
       }
     } else {
       random = -1;
       multiSelect = -1;
-      status = status.reverseSelected(isSelectableMode);
+      choiceStatus.copyWith(status: choiceStatus.reverseSelected(isSelectableMode));
     }
   }
 
   bool isSelected() {
-    return status.isSelected() ||
+    return choiceStatus.isSelected() ||
         (choiceNodeMode == ChoiceNodeMode.multiSelect && multiSelect > 0);
   }
 
@@ -138,9 +139,8 @@ class ChoiceNode extends GenerableParserAndPosition {
       VariableDataBase().setValue('$titleWhitespaceRemoved:multi',
           ValueTypeWrapper(ValueType(multiSelect)));
     }
-    if (status.isNotSelected()) {
-      status =
-          isSelectableMode ? SelectableStatus.open : SelectableStatus.selected;
+    if (choiceStatus.isNotSelected()) {
+      choiceStatus.copyWith(status: isSelectableMode ? SelectableStatus.open : SelectableStatus.selected);
     }
     for (var child in children) {
       child.initValueTypeWrapper();
@@ -207,7 +207,7 @@ class ChoiceNode extends GenerableParserAndPosition {
 
   @override
   void execute() {
-    if (status.isSelected() || choiceNodeMode == ChoiceNodeMode.onlyCode) {
+    if (choiceStatus.isSelected() || choiceNodeMode == ChoiceNodeMode.onlyCode) {
       Analyser().run(recursiveStatus.executeCodeRecursive);
       for (var child in children) {
         child.execute();

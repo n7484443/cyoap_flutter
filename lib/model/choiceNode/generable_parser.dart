@@ -4,54 +4,10 @@ import 'package:cyoap_flutter/model/choiceNode/recursive_status.dart';
 import '../../util/platform_specified_util/platform_specified.dart';
 import '../grammar/analyser.dart';
 import '../grammar/value_type.dart';
-
-enum SelectableStatus {
-  //isSelectable가 false 인 경우에는 selected와 hide 두가지로 사용
-  selected, //선택된 상태
-  hide, //숨긴 상태
-  open, //선택 가능한 상태
-  closed, //약간 흐릿하면서 선택 불가능한 상태
-}
-
-extension SelectableStatusExtension on SelectableStatus {
-  bool isSelected() {
-    return this == SelectableStatus.selected;
-  }
-
-  bool isHide() {
-    return this == SelectableStatus.hide;
-  }
-
-  bool isOpen() {
-    return this == SelectableStatus.open;
-  }
-
-  bool isPointerInteractive(bool isSelectable) {
-    if (isSelectable) {
-      return isSelected() || isOpen();
-    }
-    return false;
-  }
-
-  bool isNotSelected() {
-    return !isSelected();
-  }
-
-  SelectableStatus reverseSelected(bool isSelectable) {
-    if (isSelectable) {
-      return this == SelectableStatus.selected
-          ? SelectableStatus.open
-          : SelectableStatus.selected;
-    } else {
-      return this == SelectableStatus.selected
-          ? SelectableStatus.hide
-          : SelectableStatus.selected;
-    }
-  }
-}
+import 'choice_status.dart';
 
 abstract class GenerableParserAndPosition {
-  bool visible = true;
+  ChoiceStatus choiceStatus = ChoiceStatus();
 
   void generateParser() {
     recursiveStatus.generateParser();
@@ -73,8 +29,6 @@ abstract class GenerableParserAndPosition {
     return map;
   }
 
-  SelectableStatus status = SelectableStatus.open;
-
   int currentPos = 0;
   int width = 12;
 
@@ -86,7 +40,7 @@ abstract class GenerableParserAndPosition {
   bool get isSelectableMode => true;
 
   void execute() {
-    if (status.isSelected()) {
+    if (choiceStatus.isSelected()) {
       Analyser().run(recursiveStatus.executeCodeRecursive);
       for (var child in children) {
         child.execute();
@@ -108,13 +62,13 @@ abstract class GenerableParserAndPosition {
 
   void checkVisible(bool parent) {
     if(!parent){
-      visible = false;
+      choiceStatus = choiceStatus.copyWith(visible:false);
     }else{
-      visible = isVisible();
+      choiceStatus = choiceStatus.copyWith(visible:isVisible());
     }
 
     for (var child in children) {
-      child.checkVisible(visible);
+      child.checkVisible(choiceStatus.visible);
     }
   }
 
@@ -132,19 +86,19 @@ abstract class GenerableParserAndPosition {
 
   void checkClickable(bool parent, bool onlyWorkLine) {
     if (!onlyWorkLine && !parent) {
-      status = isVisible() ? SelectableStatus.closed : SelectableStatus.hide;
+      choiceStatus = choiceStatus.copyWith(status: isVisible() ? SelectableStatus.closed : SelectableStatus.hide);
     } else {
       var selectable = isClickable();
       if (isSelectableMode) {
-        if (status != SelectableStatus.selected &&
-            status != SelectableStatus.hide) {
+        if (choiceStatus.status != SelectableStatus.selected &&
+            choiceStatus.status != SelectableStatus.hide) {
           selectable &= parent;
-          status = selectable ? SelectableStatus.open : SelectableStatus.closed;
+          choiceStatus.copyWith(status: selectable ? SelectableStatus.open : SelectableStatus.closed);
         }
       }
     }
     for (var child in children) {
-      child.checkClickable(status.isSelected(), false);
+      child.checkClickable(choiceStatus.isSelected(), false);
     }
   }
 

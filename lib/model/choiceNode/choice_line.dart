@@ -109,7 +109,7 @@ class LineSetting extends GenerableParserAndPosition {
   void execute() {
     for (var node in children) {
       node.execute();
-      if (node.status.isSelected() && node.isSelectableMode) {
+      if (node.choiceStatus.isSelected() && node.isSelectableMode) {
         Analyser().run(recursiveStatus.executeCodeRecursive);
       }
     }

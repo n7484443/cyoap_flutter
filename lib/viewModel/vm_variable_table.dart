@@ -1,6 +1,5 @@
 import 'dart:collection';
 
-import 'package:cyoap_flutter/model/choiceNode/generable_parser.dart';
 import 'package:cyoap_flutter/model/grammar/value_type.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +80,7 @@ class CheckListNotifier extends StateNotifier<List<CheckList>> {
           (child as ChoiceNode).doAllChild((node) {
             if (node.isVisible()) {
               subWidgetList
-                  .add(CheckList(node.title, check: node.status.isSelected()));
+                  .add(CheckList(node.title, check: node.choiceStatus.isSelected()));
             }
           });
         }

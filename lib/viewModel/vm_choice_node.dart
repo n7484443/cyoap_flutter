@@ -10,6 +10,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/choiceNode/choice_node.dart';
+import '../model/choiceNode/choice_status.dart';
 import '../model/choiceNode/generable_parser.dart';
 import '../model/choiceNode/pos.dart';
 import '../model/platform_system.dart';
@@ -22,9 +23,9 @@ const int removedPositioned = -2;
 
 void refreshChild(Ref ref, GenerableParserAndPosition node) {
   ref.invalidate(choiceNodeProvider(node.pos));
-  ref.invalidate(choiceNodeStatusProvider(node.pos));
   ref.invalidate(opacityProvider(node.pos));
   ref.invalidate(isIgnorePointerProvider(node.pos));
+  ref.invalidate(choiceNodePlayStatusProvider(node.pos));
   ref.read(childrenChangeProvider(node.pos).notifier).update();
   for (var child in node.children) {
     refreshChild(ref, child);
@@ -92,9 +93,8 @@ final maximizingImageProvider = Provider.family.autoDispose<bool, Pos>(
 final nodeModeProvider = Provider.family.autoDispose<ChoiceNodeMode, Pos>(
     (ref, pos) => ref.watch(choiceNodeProvider(pos))!.choiceNodeMode);
 
-final choiceNodeStatusProvider =
-    Provider.family.autoDispose<SelectableStatus, Pos>((ref, pos) {
-  return ref.watch(choiceNodeProvider(pos))!.status;
+final choiceNodePlayStatusProvider = Provider.family.autoDispose<ChoiceStatus, Pos>((ref, pos) {
+  return ref.watch(choiceNodeProvider(pos))!.choiceStatus;
 });
 
 final isIgnorePointerProvider =
@@ -105,14 +105,14 @@ final isIgnorePointerProvider =
   if (ref.watch(nodeModeProvider(pos)) == ChoiceNodeMode.unSelectableMode) {
     return false;
   }
-  var status = ref.watch(choiceNodeStatusProvider(pos));
+  var choiceStatus = ref.watch(choiceNodePlayStatusProvider(pos));
   var node = ref.watch(choiceNodeProvider(pos))!;
-  return node.visible && status.isPointerInteractive(node.isSelectableMode);
+  return choiceStatus.visible && choiceStatus.isPointerInteractive(node.isSelectableMode);
 });
 
 final isChoiceNodeSelectableProvider =
     Provider.family.autoDispose<bool, Pos>((ref, pos) {
-  var status = ref.watch(choiceNodeStatusProvider(pos));
+  var status = ref.watch(choiceNodePlayStatusProvider(pos));
   return status.isSelected();
 });
 
@@ -158,7 +158,7 @@ final randomStateNotifierProvider =
 final opacityProvider = Provider.family.autoDispose<double, Pos>((ref, pos) {
   var node = ref.watch(choiceNodeProvider(pos))!;
   if (isEditable) return 1;
-  if (!node.visible) return 0;
+  if (!ref.watch(choiceNodePlayStatusProvider(pos)).visible) return 0;
 
   if (node.isSelectableMode) {
     if (ref.watch(isIgnorePointerProvider(pos))) {
@@ -167,7 +167,7 @@ final opacityProvider = Provider.family.autoDispose<double, Pos>((ref, pos) {
       return 0.4;
     }
   } else {
-    if (node.status == SelectableStatus.selected) {
+    if (ref.watch(choiceNodePlayStatusProvider(pos)).isSelected()) {
       return 1;
     } else {
       return 0;

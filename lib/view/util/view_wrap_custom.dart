@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../model/choiceNode/choice_node.dart';
-import '../../model/choiceNode/generable_parser.dart';
 import '../../model/choiceNode/pos.dart';
 import '../view_choice_node.dart';
 
@@ -147,7 +146,7 @@ class ViewWrapCustom extends ConsumerWidget {
       List<Widget> subWidget = List<Widget>.empty(growable: true);
       for (int i = 0; i < children.length; i++) {
         var child = children[i] as ChoiceNode;
-        if (!child.isOccupySpace && child.status.isHide()) {
+        if (!child.isOccupySpace && child.choiceStatus.isHide()) {
           continue;
         }
         int size = child.width == 0 ? maxSize : child.width;
