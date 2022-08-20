@@ -477,7 +477,7 @@ class ChoiceLine extends ConsumerWidget {
           ),
           child: ViewWrapCustom(
             pos,
-            (child) => ViewChoiceNode(pos),
+            (i) => ViewChoiceNode(pos.addLast(i)),
             isInner: false,
           ),
         ),

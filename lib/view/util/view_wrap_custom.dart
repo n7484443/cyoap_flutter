@@ -130,7 +130,7 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
 
 class ViewWrapCustom extends ConsumerWidget {
   final Pos parentPos;
-  final Widget Function(ChoiceNode) builder;
+  final Widget Function(int) builder;
   final int maxSize;
   final bool isInner;
 
@@ -175,10 +175,10 @@ class ViewWrapCustom extends ConsumerWidget {
           continue;
         } else if (size == maxSize) {
           outputWidget
-              .add(SizedBox(width: double.infinity, child: builder(child)));
+              .add(SizedBox(width: double.infinity, child: builder(i)));
           subWidget = List.empty(growable: true);
         } else {
-          subWidget.add(Expanded(flex: size, child: builder(child)));
+          subWidget.add(Expanded(flex: size, child: builder(i)));
           stack += size;
         }
       }

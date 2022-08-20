@@ -441,13 +441,13 @@ class ViewChoiceNodeContent extends ConsumerWidget {
       if (isEditable) {
         child = ViewWrapCustomReorderable(
           pos,
-          (i) => NodeDragTarget(Pos(data: [...pos.data, i])),
+          (i) => NodeDragTarget(pos.addLast(i)),
           maxSize: node.getMaxSize(true),
         );
       } else if (node.children.isNotEmpty) {
         child = ViewWrapCustom(
           pos,
-          (child) => ViewChoiceNode(child.pos),
+          (i) => ViewChoiceNode(pos.addLast(i)),
           maxSize: node.getMaxSize(true),
         );
       }
