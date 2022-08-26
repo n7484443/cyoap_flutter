@@ -8,8 +8,8 @@ import '../viewModel/vm_platform.dart';
 
 class ViewPlay extends ConsumerStatefulWidget {
   const ViewPlay({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   ConsumerState createState() => _ViewPlayState();

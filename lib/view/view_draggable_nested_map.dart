@@ -68,8 +68,8 @@ class NodeDividerDialog extends ConsumerStatefulWidget {
 
   const NodeDividerDialog(
     this.y, {
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   ConsumerState createState() => _NodeDividerDialogState();
@@ -186,7 +186,7 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
 class NodeDivider extends ConsumerWidget {
   final int y;
 
-  const NodeDivider(this.y, {Key? key}) : super(key: key);
+  const NodeDivider(this.y, {super.key});
 
   Color getColorLine(bool alwaysVisible) {
     if (y < getPlatform.lineSettings.length && !alwaysVisible) {
@@ -302,8 +302,8 @@ class NodeDivider extends ConsumerWidget {
 
 class NestedMap extends ConsumerStatefulWidget {
   const NestedMap({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   ConsumerState createState() => _NestedMapState();
@@ -421,7 +421,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
 class ChoiceLine extends ConsumerWidget {
   final int y;
 
-  const ChoiceLine(this.y, {Key? key}) : super(key: key);
+  const ChoiceLine(this.y, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

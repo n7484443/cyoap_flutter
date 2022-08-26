@@ -13,7 +13,7 @@ import '../viewModel/vm_draggable_nested_map.dart';
 import '../viewModel/vm_make_platform.dart';
 
 class ViewDesignSetting extends ConsumerWidget {
-  const ViewDesignSetting({Key? key}) : super(key: key);
+  const ViewDesignSetting({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

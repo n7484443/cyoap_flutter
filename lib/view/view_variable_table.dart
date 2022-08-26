@@ -10,7 +10,7 @@ import '../viewModel/vm_code_editor.dart';
 import '../viewModel/vm_make_platform.dart';
 
 class ViewVariable extends ConsumerWidget {
-  const ViewVariable({Key? key}) : super(key: key);
+  const ViewVariable({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -136,8 +136,8 @@ class ViewVariable extends ConsumerWidget {
 
 class VariableTiles extends ConsumerWidget {
   const VariableTiles({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -194,8 +194,8 @@ class VariableTiles extends ConsumerWidget {
 
 class NodeTiles extends ConsumerWidget {
   const NodeTiles({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

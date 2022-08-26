@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../viewModel/vm_make_platform.dart';
 
 class ViewFontSource extends ConsumerWidget {
-  const ViewFontSource({Key? key}) : super(key: key);
+  const ViewFontSource({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

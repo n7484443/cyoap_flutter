@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../viewModel/vm_make_platform.dart';
 
 class ViewImageEditor extends ConsumerWidget {
-  const ViewImageEditor({Key? key}) : super(key: key);
+  const ViewImageEditor({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -49,8 +49,8 @@ class ViewImageEditor extends ConsumerWidget {
 
 class ViewImageEditorContents extends ConsumerWidget {
   const ViewImageEditorContents({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

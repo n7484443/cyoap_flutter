@@ -5,8 +5,7 @@ class ViewBackDialog extends StatelessWidget {
   final void Function() backFunction;
   final void Function()? cancelFunction;
   const ViewBackDialog(this.saveFunction, this.backFunction,
-      {this.cancelFunction, Key? key})
-      : super(key: key);
+      {this.cancelFunction, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +46,7 @@ class ViewBackDialog extends StatelessWidget {
 class ViewWarningDialog extends StatelessWidget {
   final void Function()? cancelFunction;
   final void Function()? acceptFunction;
-  const ViewWarningDialog({this.acceptFunction, this.cancelFunction, Key? key})
-      : super(key: key);
+  const ViewWarningDialog({this.acceptFunction, this.cancelFunction, super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -6,7 +6,7 @@ import '../viewModel/vm_make_platform.dart';
 import '../viewModel/vm_source.dart';
 
 class ViewSource extends ConsumerWidget {
-  const ViewSource({Key? key}) : super(key: key);
+  const ViewSource({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

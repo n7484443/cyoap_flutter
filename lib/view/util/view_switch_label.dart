@@ -8,8 +8,7 @@ class ViewSwitchLabel extends StatelessWidget {
   final double labelSize;
 
   const ViewSwitchLabel(this.updateState, this.state,
-      {this.label = '', this.disable = false, this.labelSize = 14.0, Key? key})
-      : super(key: key);
+      {this.label = '', this.disable = false, this.labelSize = 14.0, super.key});
 
   @override
   Widget build(BuildContext context) {

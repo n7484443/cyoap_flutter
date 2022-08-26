@@ -31,10 +31,7 @@ class Pos with _$Pos {
 
   bool equalExceptLast(Pos other) {
     if (data.length != other.data.length) return false;
-    for (int i = 0; i < data.length - 1; i++) {
-      if (data[i] != other.data[i]) return false;
-    }
-    return true;
+    return removeLast() == other.removeLast();
   }
 
   bool contain(Pos other) {

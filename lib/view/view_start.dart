@@ -11,7 +11,7 @@ import '../model/platform_system.dart';
 import '../viewModel/vm_start.dart';
 
 class ViewStart extends ConsumerWidget {
-  const ViewStart({Key? key}) : super(key: key);
+  const ViewStart({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -98,8 +98,8 @@ class ViewStart extends ConsumerWidget {
 
 class ViewProjectList extends ConsumerStatefulWidget {
   const ViewProjectList({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   ConsumerState createState() => _ViewProjectListState();
@@ -159,7 +159,7 @@ class _ViewProjectListState extends ConsumerState<ViewProjectList> {
 }
 
 class SelectMode extends ConsumerWidget {
-  const SelectMode({Key? key}) : super(key: key);
+  const SelectMode({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -210,8 +210,8 @@ class SelectMode extends ConsumerWidget {
 
 class ViewAddProjectDialog extends ConsumerStatefulWidget {
   const ViewAddProjectDialog({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   ConsumerState createState() => _ViewAddProjectDialogState();

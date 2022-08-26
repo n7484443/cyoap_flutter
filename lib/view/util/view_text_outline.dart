@@ -14,8 +14,7 @@ class TextOutline extends StatelessWidget {
       this.outlineColor = Colors.white,
       this.strokeWidth = 4.0,
       this.fontWeight = FontWeight.normal,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   @override
   Widget build(BuildContext context) {

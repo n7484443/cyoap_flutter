@@ -12,8 +12,8 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
 
   const ViewInitialValueEditDialog(
     this.index, {
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -104,7 +104,7 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
 }
 
 class ViewGlobalSetting extends ConsumerWidget {
-  const ViewGlobalSetting({Key? key}) : super(key: key);
+  const ViewGlobalSetting({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

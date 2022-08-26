@@ -16,8 +16,8 @@ class ViewSaveDialog extends ConsumerWidget {
 
   const ViewSaveDialog(
     this.selected, {
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,7 +37,7 @@ class ViewSaveDialog extends ConsumerWidget {
 }
 
 class ViewMake extends ConsumerWidget {
-  const ViewMake({Key? key}) : super(key: key);
+  const ViewMake({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

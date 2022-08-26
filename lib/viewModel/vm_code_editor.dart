@@ -54,7 +54,7 @@ final controllerExecuteProvider =
 
 final codeEditorChanged = StateProvider<bool>((ref) => false);
 
-class VMCodeEditor {
+class VMCodeEditor{
   final Ref ref;
 
   VMCodeEditor(this.ref);

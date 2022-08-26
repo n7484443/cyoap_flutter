@@ -8,7 +8,7 @@ import '../viewModel/vm_code_editor.dart';
 import '../viewModel/vm_make_platform.dart';
 
 class ViewCodeEditor extends ConsumerWidget {
-  const ViewCodeEditor({Key? key}) : super(key: key);
+  const ViewCodeEditor({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

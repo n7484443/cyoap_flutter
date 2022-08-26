@@ -19,8 +19,8 @@ import '../viewModel/vm_make_platform.dart';
 
 class ViewEditor extends ConsumerWidget {
   const ViewEditor({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -250,8 +250,8 @@ class ViewEditor extends ConsumerWidget {
 
 class ViewContentsEditor extends ConsumerStatefulWidget {
   const ViewContentsEditor({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   ConsumerState createState() => _ViewContentsEditorState();
@@ -407,8 +407,8 @@ class _ViewContentsEditorState extends ConsumerState<ViewContentsEditor> {
 
 class ViewNodeImageEditor extends ConsumerWidget {
   const ViewNodeImageEditor({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -496,8 +496,8 @@ class ImageSourceDialog extends ConsumerStatefulWidget {
 
   const ImageSourceDialog(
     this.name, {
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   ConsumerState createState() => _ImageSourceDialogState();

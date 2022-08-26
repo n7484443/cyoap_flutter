@@ -18,8 +18,7 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
   final bool setCenter;
 
   ViewWrapCustomReorderable(this.parentPos, this.builderDraggable,
-      {this.maxSize = defaultMaxSize, this.setCenter = false, Key? key})
-      : super(key: key) {
+      {this.maxSize = defaultMaxSize, this.setCenter = false, super.key}) {
     if (ConstList.isMobile()) {
       mul = const Tuple2(7, 4);
     } else {
@@ -134,8 +133,7 @@ class ViewWrapCustom extends ConsumerWidget {
   final bool isInner;
 
   const ViewWrapCustom(this.parentPos, this.builder,
-      {this.isInner = true, this.maxSize = defaultMaxSize, Key? key})
-      : super(key: key);
+      {this.isInner = true, this.maxSize = defaultMaxSize, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
