@@ -46,15 +46,16 @@ final globalSettingDisplayNameTextEditingProvider =
 
 final valueTypeWrapperListProvider = StateNotifierProvider.autoDispose<
         ValueTypeWrapperListNotifier, Map<String, ValueTypeWrapper>>(
-    (ref) => ValueTypeWrapperListNotifier(ref.read, Map.from(getPlatform.globalSetting)));
+    (ref) => ValueTypeWrapperListNotifier(
+        ref.read, Map.from(getPlatform.globalSetting)));
 
-final globalSettingChangedProvider =
-    StateProvider<bool>((ref) => false);
+final globalSettingChangedProvider = StateProvider<bool>((ref) => false);
 
 final globalSettingVisibleSwitchProvider = StateProvider.autoDispose<bool>(
     (ref) => ref.read(initialValueWrapperProvider)!.item2.visible);
 
-class ValueTypeWrapperListNotifier extends StateNotifier<Map<String, ValueTypeWrapper>> {
+class ValueTypeWrapperListNotifier
+    extends StateNotifier<Map<String, ValueTypeWrapper>> {
   Reader read;
 
   ValueTypeWrapperListNotifier(this.read, super.state);

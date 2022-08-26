@@ -42,6 +42,10 @@ final choiceNodeProvider =
   return null;
 });
 
+final isChoiceNodeIsOccupySpaceProvider = Provider.family
+    .autoDispose<bool, Pos>(
+        (ref, pos) => ref.watch(choiceNodeProvider(pos))!.isOccupySpace);
+
 final isChoiceNodeCardProvider = Provider.family.autoDispose<bool, Pos>(
     (ref, pos) => ref.watch(choiceNodeProvider(pos))!.isCard);
 
@@ -93,13 +97,14 @@ final maximizingImageProvider = Provider.family.autoDispose<bool, Pos>(
 final nodeModeProvider = Provider.family.autoDispose<ChoiceNodeMode, Pos>(
     (ref, pos) => ref.watch(choiceNodeProvider(pos))!.choiceNodeMode);
 
-final choiceNodePlayStatusProvider = Provider.family.autoDispose<ChoiceStatus, Pos>((ref, pos) {
+final choiceNodePlayStatusProvider =
+    Provider.family.autoDispose<ChoiceStatus, Pos>((ref, pos) {
   return ref.watch(choiceNodeProvider(pos))!.choiceStatus;
 });
 
 final isIgnorePointerProvider =
     Provider.family.autoDispose<bool, Pos>((ref, pos) {
-  if (ref.watch(nodeModeProvider(pos)) == ChoiceNodeMode.onlyCode){
+  if (ref.watch(nodeModeProvider(pos)) == ChoiceNodeMode.onlyCode) {
     return false;
   }
   if (ref.watch(nodeModeProvider(pos)) == ChoiceNodeMode.unSelectableMode) {
@@ -107,7 +112,8 @@ final isIgnorePointerProvider =
   }
   var choiceStatus = ref.watch(choiceNodePlayStatusProvider(pos));
   var node = ref.watch(choiceNodeProvider(pos))!;
-  return choiceStatus.visible && choiceStatus.isPointerInteractive(node.isSelectableMode);
+  return choiceStatus.visible &&
+      choiceStatus.isPointerInteractive(node.isSelectableMode);
 });
 
 final choiceNodeSelectProvider = StateNotifierProvider.family

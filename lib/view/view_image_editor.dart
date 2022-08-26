@@ -14,12 +14,11 @@ class ViewImageEditor extends ConsumerWidget {
     return Scaffold(
       body: const ViewImageEditorContents(),
       bottomNavigationBar: NavigationBar(
-        destinations: const[
+        destinations: const [
           NavigationDestination(icon: Icon(Icons.close), label: "자유"),
           NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "4:3"),
           NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "3:2"),
-          NavigationDestination(
-              icon: Icon(Icons.aspect_ratio), label: "16:9"),
+          NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "16:9"),
           NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "1:1"),
         ],
         selectedIndex: ref.watch(imageCropIndexProvider),

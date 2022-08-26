@@ -173,8 +173,7 @@ class ViewWrapCustom extends ConsumerWidget {
           i -= 1;
           continue;
         } else if (size == maxSize) {
-          outputWidget
-              .add(SizedBox(width: double.infinity, child: builder(i)));
+          outputWidget.add(SizedBox(width: double.infinity, child: builder(i)));
           subWidget = List.empty(growable: true);
         } else {
           subWidget.add(Expanded(flex: size, child: builder(i)));

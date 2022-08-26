@@ -51,8 +51,9 @@ class NodeDragTarget extends ConsumerWidget {
                 .addData(pos, ref.read(removedChoiceNode)!.clone());
           } else if (pos.equalExceptLast(drag) &&
               (pos.data.last - 1) >= drag.last) {
-            ref.read(vmDraggableNestedMapProvider).changeData(
-                drag, Pos(data: List.from(pos.data)..last -= 1));
+            ref
+                .read(vmDraggableNestedMapProvider)
+                .changeData(drag, Pos(data: List.from(pos.data)..last -= 1));
           } else {
             ref.read(vmDraggableNestedMapProvider).changeData(drag, pos);
           }
@@ -458,7 +459,7 @@ class ChoiceLine extends ConsumerWidget {
       return ColoredBox(
         color: color,
         child: Column(
-          children: [ 
+          children: [
             NodeDivider(y),
             ViewWrapCustomReorderable(
                 pos, (i) => NodeDragTarget(pos.addLast(i))),

@@ -79,8 +79,8 @@ class CheckListNotifier extends StateNotifier<List<CheckList>> {
         for (var child in line.children) {
           (child as ChoiceNode).doAllChild((node) {
             if (node.isVisible()) {
-              subWidgetList
-                  .add(CheckList(node.title, check: node.choiceStatus.isSelected()));
+              subWidgetList.add(
+                  CheckList(node.title, check: node.choiceStatus.isSelected()));
             }
           });
         }

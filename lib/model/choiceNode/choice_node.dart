@@ -117,7 +117,8 @@ class ChoiceNode extends GenerableParserAndPosition {
     } else {
       random = -1;
       multiSelect = -1;
-      choiceStatus = choiceStatus.copyWith(status: choiceStatus.reverseSelected(isSelectableMode));
+      choiceStatus = choiceStatus.copyWith(
+          status: choiceStatus.reverseSelected(isSelectableMode));
     }
   }
 
@@ -140,7 +141,10 @@ class ChoiceNode extends GenerableParserAndPosition {
           ValueTypeWrapper(ValueType(multiSelect)));
     }
     if (choiceStatus.isNotSelected()) {
-      choiceStatus = choiceStatus.copyWith(status: isSelectableMode ? SelectableStatus.open : SelectableStatus.selected);
+      choiceStatus = choiceStatus.copyWith(
+          status: isSelectableMode
+              ? SelectableStatus.open
+              : SelectableStatus.selected);
     }
     for (var child in children) {
       child.initValueTypeWrapper();
@@ -207,7 +211,8 @@ class ChoiceNode extends GenerableParserAndPosition {
 
   @override
   void execute() {
-    if (choiceStatus.isSelected() || choiceNodeMode == ChoiceNodeMode.onlyCode) {
+    if (choiceStatus.isSelected() ||
+        choiceNodeMode == ChoiceNodeMode.onlyCode) {
       Analyser().run(recursiveStatus.executeCodeRecursive);
       for (var child in children) {
         child.execute();

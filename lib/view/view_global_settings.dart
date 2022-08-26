@@ -91,7 +91,9 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
         TextButton(
           child: const Text('저장'),
           onPressed: () {
-            ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(index);
+            ref
+                .read(valueTypeWrapperListProvider.notifier)
+                .editInitialValue(index);
             Navigator.pop(context);
           },
         )
@@ -149,8 +151,9 @@ class ViewGlobalSetting extends ConsumerWidget {
                   mainAxisSpacing: 2,
                 ),
                 itemBuilder: (BuildContext context, int index) {
-                  var key =
-                      ref.watch(valueTypeWrapperListProvider.notifier).getKey(index);
+                  var key = ref
+                      .watch(valueTypeWrapperListProvider.notifier)
+                      .getKey(index);
                   return ListTile(
                     onTap: () {
                       showDialog(

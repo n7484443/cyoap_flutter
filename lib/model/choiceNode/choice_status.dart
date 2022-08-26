@@ -45,7 +45,7 @@ class ChoiceStatus with _$ChoiceStatus {
   }
 
   SelectableStatus reverseSelected(bool isSelectable) {
-    if(!isSelected()){
+    if (!isSelected()) {
       return SelectableStatus.selected;
     }
     if (isSelectable) {

@@ -25,7 +25,9 @@ class ViewSource extends ConsumerWidget {
               ),
               borderRadius: const BorderRadius.all(Radius.circular(12)),
             ),
-            color: deleteList.contains(name) ? Theme.of(context).colorScheme.secondaryContainer : null,
+            color: deleteList.contains(name)
+                ? Theme.of(context).colorScheme.secondaryContainer
+                : null,
             child: Row(
               children: [
                 Expanded(

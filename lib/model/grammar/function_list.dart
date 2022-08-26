@@ -31,8 +31,9 @@ class Functions {
     functionValueType['random'] = funcRandom;
     functionValueType['exist'] =
         (input) => ValueType(VariableDataBase().hasValue(input[0].data));
-    functionValueType['isVisible'] =
-        (input) => ValueType(VariableDataBase().getValueTypeWrapper(input[0].data)?.visible ?? false);
+    functionValueType['isVisible'] = (input) => ValueType(
+        VariableDataBase().getValueTypeWrapper(input[0].data)?.visible ??
+            false);
     functionValueType['loadVariable'] =
         (input) => VariableDataBase().getValueType(input[0].data) ?? input[0];
     functionValueType['condition'] = (input) => input[0];

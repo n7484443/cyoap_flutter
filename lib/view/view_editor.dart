@@ -62,20 +62,15 @@ class ViewEditor extends ConsumerWidget {
           value: ref.watch(nodeModeProvider),
           items: const [
             DropdownMenuItem(
-                value: ChoiceNodeMode.defaultMode,
-                child: Text('기본')),
+                value: ChoiceNodeMode.defaultMode, child: Text('기본')),
             DropdownMenuItem(
-                value: ChoiceNodeMode.randomMode,
-                child: Text('랜덤 선택')),
+                value: ChoiceNodeMode.randomMode, child: Text('랜덤 선택')),
             DropdownMenuItem(
-                value: ChoiceNodeMode.multiSelect,
-                child: Text('다중 선택')),
+                value: ChoiceNodeMode.multiSelect, child: Text('다중 선택')),
             DropdownMenuItem(
-                value: ChoiceNodeMode.unSelectableMode,
-                child: Text('선택 불가')),
+                value: ChoiceNodeMode.unSelectableMode, child: Text('선택 불가')),
             DropdownMenuItem(
-                value: ChoiceNodeMode.onlyCode,
-                child: Text('코드만 사용')),
+                value: ChoiceNodeMode.onlyCode, child: Text('코드만 사용')),
           ],
           onChanged: (ChoiceNodeMode? value) {
             ref.read(nodeModeProvider.notifier).update((state) => value!);
