@@ -61,10 +61,10 @@ abstract class GenerableParserAndPosition {
   }
 
   void checkVisible(bool parent) {
-    if(!parent){
-      choiceStatus = choiceStatus.copyWith(visible:false);
-    }else{
-      choiceStatus = choiceStatus.copyWith(visible:isVisible());
+    if (!parent) {
+      choiceStatus = choiceStatus.copyWith(visible: false);
+    } else {
+      choiceStatus = choiceStatus.copyWith(visible: isVisible());
     }
 
     for (var child in children) {
@@ -86,14 +86,17 @@ abstract class GenerableParserAndPosition {
 
   void checkClickable(bool parent, bool onlyWorkLine) {
     if (!onlyWorkLine && !parent) {
-      choiceStatus = choiceStatus.copyWith(status: isVisible() ? SelectableStatus.closed : SelectableStatus.hide);
+      choiceStatus = choiceStatus.copyWith(
+          status:
+              isVisible() ? SelectableStatus.closed : SelectableStatus.hide);
     } else {
       var selectable = isClickable();
       if (isSelectableMode) {
-        if (choiceStatus.status != SelectableStatus.selected &&
-            choiceStatus.status != SelectableStatus.hide) {
+        if (choiceStatus.isNotSelected() && !choiceStatus.isHide()) {
           selectable &= parent;
-          choiceStatus = choiceStatus.copyWith(status: selectable ? SelectableStatus.open : SelectableStatus.closed);
+          choiceStatus = choiceStatus.copyWith(
+              status:
+                  selectable ? SelectableStatus.open : SelectableStatus.closed);
         }
       }
     }

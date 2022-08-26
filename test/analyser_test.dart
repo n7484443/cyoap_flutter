@@ -192,4 +192,13 @@ void main() {
     expect(out.toString().trim(),
         """{"class":"RecursiveParser","childNode":[{"class":"RecursiveData","value":{"data":"test","type":"String"}},{"class":"RecursiveData","value":{"data":"true","type":"bool"}}],"value":{"data":"setLocal","type":"String"}}""");
   });
+
+  test('simpleTest', (){
+    String strTest1 = "true";
+    var out = Analyser().check(Analyser().analyseSingleLine(strTest1));
+    expect(out, true);
+    String strTest2 = "false";
+    out = Analyser().check(Analyser().analyseSingleLine(strTest2));
+    expect(out, false);
+  });
 }

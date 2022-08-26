@@ -26,7 +26,7 @@ class ValueType {
             : json['type'] == 'double'
                 ? double.tryParse(json['data'])
                 : json['type'] == 'bool'
-                    ? json['data'] == true
+                    ? json['data'] == 'true'
                     : json['data'] as String;
 
   Map<String, dynamic> toJson() => {

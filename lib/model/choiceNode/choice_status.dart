@@ -9,8 +9,8 @@ enum SelectableStatus {
   open, //선택 가능한 상태
   closed, //약간 흐릿하면서 선택 불가능한 상태
 }
-extension SelectableStatusExtension on SelectableStatus {
-}
+
+extension SelectableStatusExtension on SelectableStatus {}
 
 @freezed
 class ChoiceStatus with _$ChoiceStatus {
@@ -45,14 +45,13 @@ class ChoiceStatus with _$ChoiceStatus {
   }
 
   SelectableStatus reverseSelected(bool isSelectable) {
+    if(!isSelected()){
+      return SelectableStatus.selected;
+    }
     if (isSelectable) {
-      return status == SelectableStatus.selected
-          ? SelectableStatus.open
-          : SelectableStatus.selected;
+      return SelectableStatus.open;
     } else {
-      return status == SelectableStatus.selected
-          ? SelectableStatus.hide
-          : SelectableStatus.selected;
+      return SelectableStatus.hide;
     }
   }
 }
