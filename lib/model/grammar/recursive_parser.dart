@@ -29,7 +29,8 @@ abstract class RecursiveUnit {
   }
 }
 
-RecursiveUnit getClassFromJson(Map<String, dynamic> json) {
+RecursiveUnit? getClassFromJson(Map<String, dynamic>? json) {
+  if(json == null)return null;
   return json['class'] == 'RecursiveParser'
       ? RecursiveFunction.fromJson(json)
       : RecursiveData.fromJson(json);
@@ -53,12 +54,12 @@ class RecursiveFunction extends RecursiveUnit {
         'childNode': childNode,
         'value': body,
       };
-  RecursiveFunction(ValueType value) : super.fromValue(value);
+  RecursiveFunction(super.value) : super.fromValue();
 
   RecursiveFunction.fromJson(Map<String, dynamic> json) {
     super.body = ValueType.fromJson(json['value']);
     childNode = json.containsKey('childNode')
-        ? (json['childNode'] as List).map((e) => getClassFromJson(e)).toList()
+        ? (json['childNode'] as List).map((e) => getClassFromJson(e)!).toList()
         : List.empty(growable: true);
   }
 
@@ -82,7 +83,7 @@ class RecursiveFunction extends RecursiveUnit {
 }
 
 class RecursiveData extends RecursiveUnit {
-  RecursiveData(ValueType value) : super.fromValue(value);
+  RecursiveData(super.value) : super.fromValue();
 
   @override
   RecursiveData.fromJson(Map<String, dynamic> json) {
