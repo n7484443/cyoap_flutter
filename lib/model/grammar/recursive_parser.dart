@@ -30,7 +30,7 @@ abstract class RecursiveUnit {
 }
 
 RecursiveUnit? getClassFromJson(Map<String, dynamic>? json) {
-  if(json == null)return null;
+  if (json == null) return null;
   return json['class'] == 'RecursiveParser'
       ? RecursiveFunction.fromJson(json)
       : RecursiveData.fromJson(json);

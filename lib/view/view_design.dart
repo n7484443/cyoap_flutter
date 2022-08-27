@@ -227,8 +227,9 @@ class ViewColorSelect extends ConsumerWidget {
             children: [
               ColorPicker(
                 color: ref.watch(providerList[check]),
-                onColorChanged: (Color value) =>
-                    ref.read(providerList[check].notifier).update((state) => value),
+                onColorChanged: (Color value) => ref
+                    .read(providerList[check].notifier)
+                    .update((state) => value),
                 pickersEnabled: {
                   ColorPickerType.wheel: true,
                   ColorPickerType.accent: false

@@ -26,9 +26,9 @@ class PlatformDesignSetting {
                 ? Color(json['colorBackground'])
                 : Colors.white,
         colorOutline =
-        (json['colorOutline'] != null && json['colorOutline'] is int)
-            ? Color(json['colorOutline'])
-            : Colors.lightBlueAccent{
+            (json['colorOutline'] != null && json['colorOutline'] is int)
+                ? Color(json['colorOutline'])
+                : Colors.lightBlueAccent {
     colorNode = (json['colorNode'] != null && json['colorNode'] is int)
         ? Color(json['colorNode'])
         : Colors.white;

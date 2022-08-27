@@ -14,7 +14,10 @@ class RecursiveStatus {
   String? conditionClickableString;
   String? conditionVisibleString;
   String? executeCodeString;
-  RecursiveStatus({this.conditionClickableString, this.conditionVisibleString, this.executeCodeString});
+  RecursiveStatus(
+      {this.conditionClickableString,
+      this.conditionVisibleString,
+      this.executeCodeString});
 
   RecursiveStatus.fromJson(Map<String, dynamic> json)
       : conditionClickableString = json['conditionClickableString'],
@@ -38,7 +41,7 @@ class RecursiveStatus {
 
   void generateParser() {
     conditionClickableRecursive =
-        Analyser().analyseSingleLine(conditionClickableString) ;
+        Analyser().analyseSingleLine(conditionClickableString);
     conditionVisibleRecursive =
         Analyser().analyseSingleLine(conditionVisibleString);
     executeCodeRecursive = Analyser().analyseCodes(executeCodeString);

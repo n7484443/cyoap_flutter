@@ -419,10 +419,12 @@ class ViewNodeImageEditor extends ConsumerWidget {
           children: [
             IconButton(
                 onPressed: () async {
-                  var name =
-                      await ref.read(imageListStateProvider.notifier).addImage();
+                  var name = await ref
+                      .read(imageListStateProvider.notifier)
+                      .addImage();
                   if (name != '') {
-                    getPlatformFileSystem.addSource(name, ref.read(imageSourceProvider));
+                    getPlatformFileSystem.addSource(
+                        name, ref.read(imageSourceProvider));
                     showDialog<bool>(
                       builder: (_) => ImageSourceDialog(name),
                       context: context,
@@ -473,9 +475,11 @@ class ViewNodeImageEditor extends ConsumerWidget {
                         ),
                       ),
                       child: GestureDetector(
-                        child: ViewImageLoading(ref.watch(imageListStateProvider)[index]),
+                        child: ViewImageLoading(
+                            ref.watch(imageListStateProvider)[index]),
                         onDoubleTap: () {
-                          if (ref.read(imageStateProvider.notifier).state == index) {
+                          if (ref.read(imageStateProvider.notifier).state ==
+                              index) {
                             ref.read(imageStateProvider.notifier).state = -1;
                           } else {
                             ref.read(imageStateProvider.notifier).state = index;

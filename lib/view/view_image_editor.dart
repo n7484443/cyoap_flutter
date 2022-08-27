@@ -25,7 +25,7 @@ class ViewImageEditor extends ConsumerWidget {
         ],
         selectedIndex: ref.watch(imageCropIndexProvider),
         onDestinationSelected: (index) {
-          if(index != 5){
+          if (index != 5) {
             ref.read(imageCropIndexProvider.notifier).state = index;
           }
           switch (index) {
@@ -33,21 +33,26 @@ class ViewImageEditor extends ConsumerWidget {
               ref.read(imageCropRatioProvider.notifier).state = null;
               break;
             case 1:
-              ref.read(imageCropRatioProvider.notifier).state = const Tuple2(4, 3);
+              ref.read(imageCropRatioProvider.notifier).state =
+                  const Tuple2(4, 3);
               break;
             case 2:
-              ref.read(imageCropRatioProvider.notifier).state = const Tuple2(3, 2);
+              ref.read(imageCropRatioProvider.notifier).state =
+                  const Tuple2(3, 2);
               break;
             case 3:
-              ref.read(imageCropRatioProvider.notifier).state = const Tuple2(16, 9);
+              ref.read(imageCropRatioProvider.notifier).state =
+                  const Tuple2(16, 9);
               break;
             case 4:
-              ref.read(imageCropRatioProvider.notifier).state = const Tuple2(1, 1);
+              ref.read(imageCropRatioProvider.notifier).state =
+                  const Tuple2(1, 1);
               break;
             case 5:
               var data = ref.read(imageCropRatioProvider);
-              if(data != null){
-                ref.read(imageCropRatioProvider.notifier).state = Tuple2(data.item2, data.item1);
+              if (data != null) {
+                ref.read(imageCropRatioProvider.notifier).state =
+                    Tuple2(data.item2, data.item1);
               }
               break;
           }
@@ -78,7 +83,8 @@ class ViewImageEditorContents extends ConsumerWidget {
                   maxScale: 4.0,
                   hitTestSize: 20.0,
                   cropRectPadding: const EdgeInsets.all(10.0),
-                  cropAspectRatio: data == null ? null : data.item1 / data.item2,
+                  cropAspectRatio:
+                      data == null ? null : data.item1 / data.item2,
                   initCropRectType: InitCropRectType.imageRect,
                   editActionDetailsIsChanged: (EditActionDetails? details) {});
             },

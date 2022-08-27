@@ -37,7 +37,7 @@ class Analyser {
   }
 
   RecursiveUnit? analyse(String? codeInput) {
-    if(codeInput == null)return null;
+    if (codeInput == null) return null;
     try {
       return semanticAnalyser.analyseLines(toTokenList(codeInput));
     } catch (e) {
@@ -47,7 +47,7 @@ class Analyser {
   }
 
   RecursiveUnit? analyseSingleLine(String? codeInput) {
-    if(codeInput == null)return null;
+    if (codeInput == null) return null;
     try {
       return semanticAnalyser.analyseLine(toTokenList(codeInput));
     } catch (e) {
