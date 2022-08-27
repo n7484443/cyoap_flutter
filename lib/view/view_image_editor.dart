@@ -78,8 +78,8 @@ class ViewImageEditorContents extends ConsumerWidget {
           onPressed: () async {
             ref.read(lastImageProvider.notifier).update((state) => null);
             ref
-                .read(imageStateProvider.notifier)
-                .addImageCrop(ref.read(imageProvider)!.item1,
+                .read(imageListStateProvider.notifier)
+                .addImageToList(ref.read(imageProvider)!.item1,
                     data: await ref.read(cropImageProvider.future))
                 .then((value) =>
                     ref.read(changeTabProvider.notifier).back(context));

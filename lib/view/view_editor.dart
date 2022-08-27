@@ -13,7 +13,7 @@ import 'package:tuple/tuple.dart';
 import '../main.dart';
 import '../model/choiceNode/choice_node.dart';
 import '../model/design_setting.dart';
-import '../model/image_db.dart';
+import '../model/platform_system.dart';
 import '../viewModel/vm_editor.dart';
 import '../viewModel/vm_make_platform.dart';
 
@@ -420,9 +420,9 @@ class ViewNodeImageEditor extends ConsumerWidget {
             IconButton(
                 onPressed: () async {
                   var name =
-                      await ref.read(imageStateProvider.notifier).addImage();
+                      await ref.read(imageListStateProvider.notifier).addImage();
                   if (name != '') {
-                    ref.read(imageStateProvider.notifier).addImageSource(name);
+                    getPlatformFileSystem.addSource(name, ref.read(imageSourceProvider));
                     showDialog<bool>(
                       builder: (_) => ImageSourceDialog(name),
                       context: context,
@@ -436,8 +436,8 @@ class ViewNodeImageEditor extends ConsumerWidget {
                             .changePageString('viewImageEditor', context);
                       } else {
                         ref
-                            .read(imageStateProvider.notifier)
-                            .addImageCrop(name);
+                            .read(imageListStateProvider.notifier)
+                            .addImageToList(name);
                       }
                     });
                   }
@@ -461,8 +461,7 @@ class ViewNodeImageEditor extends ConsumerWidget {
                   physics: const AlwaysScrollableScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   controller: ScrollController(),
-                  itemCount:
-                      ref.watch(imageStateProvider.notifier).getImageLength(),
+                  itemCount: ref.watch(imageListStateProvider).length,
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
                       decoration: BoxDecoration(
@@ -474,9 +473,14 @@ class ViewNodeImageEditor extends ConsumerWidget {
                         ),
                       ),
                       child: GestureDetector(
-                        child: ViewImageLoading(ImageDB().getImageName(index)),
+                        child: ViewImageLoading(ref.watch(imageListStateProvider)[index]),
                         onDoubleTap: () {
-                          ref.read(imageStateProvider.notifier).setIndex(index);
+                          if (ref.read(imageStateProvider.notifier).state == index) {
+                            ref.read(imageStateProvider.notifier).state = -1;
+                          } else {
+                            ref.read(imageStateProvider.notifier).state = index;
+                          }
+                          ref.read(changeProvider.notifier).setUpdated();
                         },
                       ),
                     );

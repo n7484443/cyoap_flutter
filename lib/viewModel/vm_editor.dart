@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:cyoap_flutter/model/editor.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
-import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_source.dart';
 import 'package:file_picker/file_picker.dart';
@@ -49,29 +48,14 @@ final maximumProvider = Provider.autoDispose<TextEditingController>((ref) {
 });
 final imageSourceProvider = StateProvider.autoDispose<String>((ref) => "");
 
-final imageStateProvider =
-    StateNotifierProvider.autoDispose<ImageStateNotifier, int>(
-        (ref) => ImageStateNotifier(ref));
+final imageListStateProvider =
+    StateNotifierProvider.autoDispose<ImageListStateNotifier, List<String>>(
+        (ref) => ImageListStateNotifier(ref));
 
-class ImageStateNotifier extends StateNotifier<int> {
+class ImageListStateNotifier extends StateNotifier<List<String>> {
   Ref ref;
 
-  ImageStateNotifier(this.ref)
-      : super(ImageDB()
-            .getImageIndex(ref.read(nodeEditorTargetProvider).imageString));
-
-  void setIndex(int index) {
-    if (state == index) {
-      state = -1;
-    } else {
-      state = index;
-    }
-    ref.read(changeProvider.notifier).state = true;
-  }
-
-  int getImageLength() {
-    return ImageDB().imageList.length;
-  }
+  ImageListStateNotifier(this.ref) : super(ImageDB().imageList);
 
   Future<String> addImage() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -90,20 +74,20 @@ class ImageStateNotifier extends StateNotifier<int> {
     return name;
   }
 
-  Future<void> addImageCrop(String name, {Uint8List? data}) async {
+  Future<void> addImageToList(String name, {Uint8List? data}) async {
     ImageDB().uploadImages(name, data ?? ref.read(lastImageProvider)!);
     NodeEditor().target.imageString = name;
-    state = ImageDB().getImageIndex(name);
+    ref.read(imageStateProvider.notifier).state = ImageDB().getImageIndex(name);
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     ref.read(changeProvider.notifier).state = true;
     ref.read(lastImageProvider.notifier).update((state) => null);
     ref.invalidate(vmSourceProvider);
-  }
-
-  void addImageSource(String name) {
-    getPlatformFileSystem.addSource(name, ref.read(imageSourceProvider));
+    state = [...ImageDB().imageList];
   }
 }
+
+final imageStateProvider = StateProvider.autoDispose<int>((ref) =>
+    ImageDB().getImageIndex(ref.read(nodeEditorTargetProvider).imageString));
 
 final changeProvider =
     StateNotifierProvider<ChangeNotifier, bool>((ref) => ChangeNotifier(ref));
@@ -111,6 +95,7 @@ final changeProvider =
 class ChangeNotifier extends StateNotifier<bool> {
   Document? document;
   Ref ref;
+
   ChangeNotifier(this.ref) : super(false);
 
   void setUpdated() {
