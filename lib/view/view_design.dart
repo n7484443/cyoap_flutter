@@ -71,55 +71,8 @@ class ViewDesignSetting extends ConsumerWidget {
               Expanded(
                 child: TabBarView(
                   children: [
-                    ListView(
-                      controller: ScrollController(),
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: ColorPicker(
-                                color: ref.watch(colorBackgroundProvider),
-                                heading: const Text('배경색 설정'),
-                                onColorChanged: (Color value) => ref
-                                    .read(colorBackgroundProvider.notifier)
-                                    .update((state) => value),
-                                pickersEnabled: {
-                                  ColorPickerType.wheel: true,
-                                  ColorPickerType.accent: false
-                                },
-                                pickerTypeLabels: {
-                                  ColorPickerType.primary: "배경색",
-                                  ColorPickerType.wheel: "색상 선택"
-                                },
-                                width: 22,
-                                height: 22,
-                                borderRadius: 22,
-                              ),
-                            ),
-                            Expanded(
-                              child: ColorPicker(
-                                color: ref.watch(colorNodeProvider),
-                                heading: const Text('선택지 색 설정'),
-                                onColorChanged: (Color value) => ref
-                                    .read(colorNodeProvider.notifier)
-                                    .update((state) => value),
-                                pickersEnabled: {
-                                  ColorPickerType.wheel: true,
-                                  ColorPickerType.accent: false
-                                },
-                                pickerTypeLabels: {
-                                  ColorPickerType.primary: "배경색",
-                                  ColorPickerType.wheel: "색상 선택"
-                                },
-                                width: 22,
-                                height: 22,
-                                borderRadius: 22,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                    SingleChildScrollView(
+                      child: ViewColorSelect(),
                     ),
                     Column(
                       children: [
@@ -223,6 +176,66 @@ class ViewDesignSetting extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class ViewColorSelect extends ConsumerWidget {
+  final textList = const [
+    "배경색",
+    "선택지 색",
+  ];
+  final providerList = [
+    colorBackgroundProvider,
+    colorNodeProvider,
+  ];
+
+  ViewColorSelect({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    var check = ref.watch(colorSelectProvider);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              ToggleButtons(
+                direction: Axis.vertical,
+                onPressed: (index) =>
+                    ref.read(colorSelectProvider.notifier).state = index,
+                isSelected: List.generate(textList.length,
+                    (index) => ref.watch(colorSelectProvider) == index),
+                children: List.generate(
+                    textList.length, (index) => Text(textList[index])),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: ColorPicker(
+            color: ref.watch(providerList[check]),
+            heading: Text(textList[ref.watch(colorSelectProvider)]),
+            onColorChanged: (Color value) =>
+                ref.read(providerList[check].notifier).update((state) => value),
+            pickersEnabled: {
+              ColorPickerType.wheel: true,
+              ColorPickerType.accent: false
+            },
+            pickerTypeLabels: {
+              ColorPickerType.primary: "색상 선택",
+              ColorPickerType.wheel: "직접 선택"
+            },
+            width: 22,
+            height: 22,
+            borderRadius: 22,
+          ),
+        ),
+      ],
     );
   }
 }
