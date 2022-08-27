@@ -7,6 +7,7 @@ import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import '../util/version.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
 import 'choiceNode/choice_line.dart';
+import 'choiceNode/choice_status.dart';
 import 'choiceNode/generable_parser.dart';
 import 'choiceNode/pos.dart';
 import 'design_setting.dart';
@@ -119,7 +120,9 @@ class AbstractPlatform {
         "noImage",
       )
         ..isRound = false
-        ..currentPos = -2;
+        ..currentPos = -2
+        ..choiceStatus =
+            ChoiceStatus(status: SelectableStatus.selected, visible: true);
     }
     if (pos.last == nonPositioned) {
       return VMDraggableNestedMap.createNodeForTemp();

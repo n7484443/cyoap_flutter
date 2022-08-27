@@ -45,6 +45,10 @@ class ViewDesignSetting extends ConsumerWidget {
       getPlatform.designSetting.colorNode = next;
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
+    ref.listen(colorOutlineProvider, (previous, Color next) {
+      getPlatform.designSetting.colorOutline = next;
+      ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+    });
 
     return DefaultTabController(
       length: 3,
@@ -182,12 +186,14 @@ class ViewDesignSetting extends ConsumerWidget {
 
 class ViewColorSelect extends ConsumerWidget {
   final textList = const [
-    "배경색",
-    "선택지 색",
+    "배경",
+    "선택지",
+    "외곽선",
   ];
   final providerList = [
     colorBackgroundProvider,
     colorNodeProvider,
+    colorOutlineProvider,
   ];
 
   ViewColorSelect({
@@ -217,22 +223,25 @@ class ViewColorSelect extends ConsumerWidget {
           ),
         ),
         Expanded(
-          child: ColorPicker(
-            color: ref.watch(providerList[check]),
-            heading: Text(textList[ref.watch(colorSelectProvider)]),
-            onColorChanged: (Color value) =>
-                ref.read(providerList[check].notifier).update((state) => value),
-            pickersEnabled: {
-              ColorPickerType.wheel: true,
-              ColorPickerType.accent: false
-            },
-            pickerTypeLabels: {
-              ColorPickerType.primary: "색상 선택",
-              ColorPickerType.wheel: "직접 선택"
-            },
-            width: 22,
-            height: 22,
-            borderRadius: 22,
+          child: Column(
+            children: [
+              ColorPicker(
+                color: ref.watch(providerList[check]),
+                onColorChanged: (Color value) =>
+                    ref.read(providerList[check].notifier).update((state) => value),
+                pickersEnabled: {
+                  ColorPickerType.wheel: true,
+                  ColorPickerType.accent: false
+                },
+                pickerTypeLabels: {
+                  ColorPickerType.primary: "색상 선택",
+                  ColorPickerType.wheel: "직접 선택"
+                },
+                width: 22,
+                height: 22,
+                borderRadius: 22,
+              ),
+            ],
           ),
         ),
       ],

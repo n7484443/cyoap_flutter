@@ -11,6 +11,7 @@ class PlatformDesignSetting {
   String mainFont = "notoSans";
   Color colorBackground = Colors.white;
   Color colorNode = Colors.white;
+  Color colorOutline = Colors.lightBlueAccent;
 
   PlatformDesignSetting();
 
@@ -23,7 +24,11 @@ class PlatformDesignSetting {
         colorBackground =
             (json['colorBackground'] != null && json['colorBackground'] is int)
                 ? Color(json['colorBackground'])
-                : Colors.white {
+                : Colors.white,
+        colorOutline =
+        (json['colorOutline'] != null && json['colorOutline'] is int)
+            ? Color(json['colorOutline'])
+            : Colors.lightBlueAccent{
     colorNode = (json['colorNode'] != null && json['colorNode'] is int)
         ? Color(json['colorNode'])
         : Colors.white;
@@ -37,6 +42,7 @@ class PlatformDesignSetting {
         'titleOutline': titleOutline,
         'colorBackground': colorBackground.value,
         'colorNode': colorNode.value,
+        'colorOutline': colorOutline.value,
       };
 }
 
