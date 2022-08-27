@@ -300,6 +300,36 @@ class NodeDivider extends ConsumerWidget {
   }
 }
 
+class NestedScroll extends ConsumerWidget {
+  const NestedScroll({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ShaderMask(
+      shaderCallback: (Rect bounds) {
+        return LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.white.withOpacity(0.01),
+            Colors.white,
+            Colors.white,
+            Colors.white.withOpacity(0.01),
+          ],
+          stops: [0, 0.08, 0.92, 1],
+          tileMode: TileMode.mirror,
+        ).createShader(bounds);
+      },
+      child: ColoredBox(
+        color: ref.watch(backgroundColorProvider),
+        child: const NestedMap(),
+      ),
+    );
+  }
+}
+
 class NestedMap extends ConsumerStatefulWidget {
   const NestedMap({
     super.key,
@@ -348,71 +378,59 @@ class _NestedMapState extends ConsumerState<NestedMap> {
     var lineLength = ref.watch(lineLengthProvider);
     if (ConstList.isWeb() && !ConstList.isSmallDisplay(context)) {
       if (isEditable) {
-        return ColoredBox(
-          color: ref.watch(backgroundColorProvider),
-          child: WebSmoothScroll(
-            controller: _scrollController!,
-            scrollOffset: 100,
-            animationDuration: 150,
-            child: ListView.builder(
-              key: const PageStorageKey(0),
-              physics: const NeverScrollableScrollPhysics(),
-              controller: _scrollController,
-              itemCount: lineLength + 1,
-              itemBuilder: (BuildContext context, int index) {
-                return ChoiceLine(index);
-              },
-              cacheExtent: 200,
-            ),
+        return WebSmoothScroll(
+          controller: _scrollController!,
+          scrollOffset: 100,
+          animationDuration: 150,
+          child: ListView.builder(
+            key: const PageStorageKey(0),
+            physics: const NeverScrollableScrollPhysics(),
+            controller: _scrollController,
+            itemCount: lineLength + 1,
+            itemBuilder: (BuildContext context, int index) {
+              return ChoiceLine(index);
+            },
+            cacheExtent: 200,
           ),
         );
       } else {
-        return ColoredBox(
-          color: ref.watch(backgroundColorProvider),
-          child: WebSmoothScroll(
-            controller: _scrollController!,
-            scrollOffset: 100,
-            animationDuration: 150,
-            child: ListView.builder(
-              key: const PageStorageKey(0),
-              physics: const NeverScrollableScrollPhysics(),
-              controller: _scrollController,
-              itemCount: lineLength,
-              itemBuilder: (BuildContext context, int index) {
-                return ChoiceLine(index);
-              },
-              cacheExtent: 200,
-            ),
+        return WebSmoothScroll(
+          controller: _scrollController!,
+          scrollOffset: 100,
+          animationDuration: 150,
+          child: ListView.builder(
+            key: const PageStorageKey(0),
+            physics: const NeverScrollableScrollPhysics(),
+            controller: _scrollController,
+            itemCount: lineLength,
+            itemBuilder: (BuildContext context, int index) {
+              return ChoiceLine(index);
+            },
+            cacheExtent: 200,
           ),
         );
       }
     }
 
     if (isEditable) {
-      return ColoredBox(
-        color: ref.watch(backgroundColorProvider),
-        child: ListView.builder(
-          key: const PageStorageKey(0),
-          controller: _scrollController,
-          itemCount: lineLength + 1,
-          itemBuilder: (BuildContext context, int index) {
-            return ChoiceLine(index);
-          },
-          cacheExtent: 200,
-        ),
+      return ListView.builder(
+        key: const PageStorageKey(0),
+        controller: _scrollController,
+        itemCount: lineLength + 1,
+        itemBuilder: (BuildContext context, int index) {
+          return ChoiceLine(index);
+        },
+        cacheExtent: 200,
       );
     } else {
-      return ColoredBox(
-        color: ref.watch(backgroundColorProvider),
-        child: ListView.builder(
-          key: const PageStorageKey(0),
-          controller: _scrollController,
-          itemCount: lineLength,
-          itemBuilder: (BuildContext context, int index) {
-            return ChoiceLine(index);
-          },
-          cacheExtent: 200,
-        ),
+      return ListView.builder(
+        key: const PageStorageKey(0),
+        controller: _scrollController,
+        itemCount: lineLength,
+        itemBuilder: (BuildContext context, int index) {
+          return ChoiceLine(index);
+        },
+        cacheExtent: 200,
       );
     }
   }

@@ -1,7 +1,7 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import '../grammar/analyser.dart';
 import '../grammar/recursive_parser.dart';
-
-import 'package:json_annotation/json_annotation.dart';
 
 part 'recursive_status.g.dart';
 

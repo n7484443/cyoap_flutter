@@ -58,7 +58,7 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
         drawer: const Drawer(
           child: ViewVariable(),
         ),
-        body: const NestedMap(),
+        body: const NestedScroll(),
       );
     } else {
       return Scaffold(
@@ -71,7 +71,7 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
             Flexible(
               child: Scaffold(
                 appBar: appbar,
-                body: const NestedMap(),
+                body: const NestedScroll(),
               ),
             ),
           ],

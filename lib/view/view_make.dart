@@ -198,7 +198,7 @@ class ViewMake extends ConsumerWidget {
       },
       child: Scaffold(
         appBar: appbarWidget,
-        body: const NestedMap(),
+        body: const NestedScroll(),
       ),
     );
   }
