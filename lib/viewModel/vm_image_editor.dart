@@ -21,5 +21,5 @@ final cropImageProvider = FutureProvider.autoDispose<Uint8List>((ref) async {
   return PngEncoder().encodeImage(output) as Uint8List;
 });
 
-final imageCropRatioProvider = StateProvider<double?>((ref) => null);
+final imageCropRatioProvider = StateProvider<Tuple2<double, double>?>((ref) => null);
 final imageCropIndexProvider = StateProvider<int>((ref) => 0);
