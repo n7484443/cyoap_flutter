@@ -208,18 +208,19 @@ class ViewColorSelect extends ConsumerWidget {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              ToggleButtons(
-                direction: Axis.vertical,
-                onPressed: (index) =>
-                    ref.read(colorSelectProvider.notifier).state = index,
-                isSelected: List.generate(textList.length,
-                    (index) => ref.watch(colorSelectProvider) == index),
-                children: List.generate(
-                    textList.length, (index) => Text(textList[index])),
+          child: SizedBox(
+            width: 100,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: List<Widget>.generate(
+                textList.length,
+                (index) => ChoiceChip(
+                    label: Text(textList[index]),
+                    selected: ref.watch(colorSelectProvider) == index,
+                    onSelected: (value) =>
+                        ref.read(colorSelectProvider.notifier).state = index),
               ),
-            ],
+            ),
           ),
         ),
         Expanded(

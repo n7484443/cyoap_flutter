@@ -313,10 +313,10 @@ class NestedScroll extends ConsumerWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Colors.white.withOpacity(0.01),
+            Colors.white.withOpacity(0.05),
             Colors.white,
             Colors.white,
-            Colors.white.withOpacity(0.01),
+            Colors.white.withOpacity(0.05),
           ],
           stops: [0, 0.08, 0.92, 1],
           tileMode: TileMode.mirror,
@@ -375,64 +375,34 @@ class _NestedMapState extends ConsumerState<NestedMap> {
   Widget build(BuildContext context) {
     ref.listen<double?>(
         dragPositionProvider, (previous, next) => dragUpdate(next));
-    var lineLength = ref.watch(lineLengthProvider);
+    var lineLength = ref.watch(lineLengthProvider) + (isEditable ? 1 : 0);
     if (ConstList.isWeb() && !ConstList.isSmallDisplay(context)) {
-      if (isEditable) {
-        return WebSmoothScroll(
-          controller: _scrollController!,
-          scrollOffset: 100,
-          animationDuration: 150,
-          child: ListView.builder(
-            key: const PageStorageKey(0),
-            physics: const NeverScrollableScrollPhysics(),
-            controller: _scrollController,
-            itemCount: lineLength + 1,
-            itemBuilder: (BuildContext context, int index) {
-              return ChoiceLine(index);
-            },
-            cacheExtent: 200,
-          ),
-        );
-      } else {
-        return WebSmoothScroll(
-          controller: _scrollController!,
-          scrollOffset: 100,
-          animationDuration: 150,
-          child: ListView.builder(
-            key: const PageStorageKey(0),
-            physics: const NeverScrollableScrollPhysics(),
-            controller: _scrollController,
-            itemCount: lineLength,
-            itemBuilder: (BuildContext context, int index) {
-              return ChoiceLine(index);
-            },
-            cacheExtent: 200,
-          ),
-        );
-      }
+      return WebSmoothScroll(
+        controller: _scrollController!,
+        scrollOffset: 100,
+        animationDuration: 150,
+        child: ListView.builder(
+          key: const PageStorageKey(0),
+          physics: const NeverScrollableScrollPhysics(),
+          controller: _scrollController,
+          itemCount: lineLength,
+          itemBuilder: (BuildContext context, int index) {
+            return ChoiceLine(index);
+          },
+          cacheExtent: 200,
+        ),
+      );
     }
 
-    if (isEditable) {
-      return ListView.builder(
-        key: const PageStorageKey(0),
-        controller: _scrollController,
-        itemCount: lineLength + 1,
-        itemBuilder: (BuildContext context, int index) {
-          return ChoiceLine(index);
-        },
-        cacheExtent: 200,
-      );
-    } else {
-      return ListView.builder(
-        key: const PageStorageKey(0),
-        controller: _scrollController,
-        itemCount: lineLength,
-        itemBuilder: (BuildContext context, int index) {
-          return ChoiceLine(index);
-        },
-        cacheExtent: 200,
-      );
-    }
+    return ListView.builder(
+      key: const PageStorageKey(0),
+      controller: _scrollController,
+      itemCount: lineLength,
+      itemBuilder: (BuildContext context, int index) {
+        return ChoiceLine(index);
+      },
+      cacheExtent: 200,
+    );
   }
 }
 
