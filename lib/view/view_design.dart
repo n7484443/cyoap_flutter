@@ -18,35 +18,39 @@ class ViewDesignSetting extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(titleFontProvider, (String? previous, String next) {
-      getPlatform.designSetting.titleFont = next;
+      getPlatform.designSetting = getPlatform.designSetting.copyWith(titleFont: next);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
     ref.listen(mainFontProvider, (String? previous, String next) {
-      getPlatform.designSetting.mainFont = next;
+      getPlatform.designSetting = getPlatform.designSetting.copyWith(mainFont: next);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
     ref.listen(titlePositionProvider, (bool? previous, bool next) {
-      getPlatform.designSetting.titlePosition = next;
+      getPlatform.designSetting = getPlatform.designSetting.copyWith(titlePosition: next);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
     ref.listen(titleOverlapProvider, (bool? previous, bool next) {
-      getPlatform.designSetting.titleOverlap = next;
+      getPlatform.designSetting = getPlatform.designSetting.copyWith(titleOverlap: next);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
     ref.listen(titleOutlineProvider, (bool? previous, bool next) {
-      getPlatform.designSetting.titleOutline = next;
+      getPlatform.designSetting = getPlatform.designSetting.copyWith(titleOutline: next);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
     ref.listen(colorBackgroundProvider, (previous, Color next) {
-      getPlatform.designSetting.colorBackground = next;
+      getPlatform.designSetting = getPlatform.designSetting.copyWith(colorBackground: next);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
     ref.listen(colorNodeProvider, (previous, Color next) {
-      getPlatform.designSetting.colorNode = next;
+      getPlatform.designSetting = getPlatform.designSetting.copyWith(colorNode: next);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
     ref.listen(colorOutlineProvider, (previous, Color next) {
-      getPlatform.designSetting.colorOutline = next;
+      getPlatform.designSetting = getPlatform.designSetting.copyWith(colorOutline: next);
+      ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+    });
+    ref.listen(colorTitleProvider, (previous, Color next) {
+      getPlatform.designSetting = getPlatform.designSetting.copyWith(colorTitle: next);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
 
@@ -189,11 +193,13 @@ class ViewColorSelect extends ConsumerWidget {
     "배경",
     "선택지",
     "외곽선",
+    "제목",
   ];
   final providerList = [
     colorBackgroundProvider,
     colorNodeProvider,
     colorOutlineProvider,
+    colorTitleProvider,
   ];
 
   ViewColorSelect({

@@ -286,16 +286,15 @@ class ViewTitleWithEdit extends ConsumerWidget {
         title = TextOutline(
           ref.watch(titleStringProvider(pos)),
           20 * ConstList.scale(context),
-          ConstList.getFont(ref.watch(titleFontProvider)),
+          ConstList.getFont(ref.watch(titleFontProvider),),
+          textColor: ref.watch(colorTitleProvider),
         );
       } else {
         title = Text(
           ref.watch(titleStringProvider(pos)),
           style: ConstList.getFont(ref.watch(titleFontProvider)).copyWith(
             fontSize: 20 * ConstList.scale(context),
-            color: ref.watch(colorNodeProvider).computeLuminance() > 0.5
-                ? Colors.black
-                : Colors.white,
+            color: ref.watch(colorTitleProvider),
           ),
         );
       }

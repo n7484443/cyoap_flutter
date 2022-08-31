@@ -18,8 +18,6 @@ final vmDraggableNestedMapProvider =
 
 final removedChoiceNode = StateProvider<ChoiceNode?>((ref) => null);
 final dragPositionProvider = StateProvider<double?>((ref) => null);
-final backgroundColorProvider = Provider.autoDispose<Color>(
-    (ref) => getPlatform.designSetting.colorBackground);
 
 final dragChoiceNodeProvider =
     StateNotifierProvider<DragChoiceNodeNotifier, Pos?>(

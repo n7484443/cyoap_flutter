@@ -57,10 +57,6 @@ dependencies:
   json_annotation: any
   js: any
 
-analyzer:
-  errors:
-    invalid_annotation_target: ignore
-
 dev_dependencies:
   flutter_test:
     sdk: flutter

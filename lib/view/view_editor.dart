@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
+import 'package:cyoap_flutter/viewModel/vm_design_setting.dart';
 import 'package:cyoap_flutter/viewModel/vm_image_editor.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,6 @@ import 'package:tuple/tuple.dart';
 
 import '../main.dart';
 import '../model/choiceNode/choice_node.dart';
-import '../model/design_setting.dart';
 import '../model/platform_system.dart';
 import '../viewModel/vm_editor.dart';
 import '../viewModel/vm_make_platform.dart';
@@ -210,10 +210,10 @@ class ViewEditor extends ConsumerWidget {
               textAlign: TextAlign.center,
               decoration: InputDecoration(
                 hintText: '제목',
-                hintStyle: titleFont.copyWith(fontSize: 24, color: Colors.red),
+                hintStyle: ConstList.getFont(ref.watch(titleFontProvider)).copyWith(fontSize: 24, color: Colors.red),
                 filled: true,
               ),
-              style: titleFont.copyWith(
+              style: ConstList.getFont(ref.watch(titleFontProvider)).copyWith(
                 fontSize: 24,
               ),
             ),
@@ -393,7 +393,7 @@ class _ViewContentsEditorState extends ConsumerState<ViewContentsEditor> {
               showCursor: true,
               scrollController: _scrollController!,
               customStyles: ConstList.getDefaultThemeData(context, 1,
-                  fontStyle: mainFont),
+                  fontStyle: ConstList.getFont(ref.watch(mainFontProvider))),
             ),
           ),
         ),

@@ -1,52 +1,33 @@
-import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../main.dart';
+part 'design_setting.freezed.dart';
+part 'design_setting.g.dart';
 
-class PlatformDesignSetting {
-  bool titleOverlap = true;
-  bool titlePosition = true;
-  bool titleOutline = true;
-  String titleFont = "notoSans";
-  String mainFont = "notoSans";
-  Color colorBackground = Colors.white;
-  Color colorNode = Colors.white;
-  Color colorOutline = Colors.lightBlueAccent;
+@freezed
+class PlatformDesignSetting with _$PlatformDesignSetting {
+  @JsonSerializable(explicitToJson: true, converters: [ColorConverter()])
+  factory PlatformDesignSetting({
+    @Default(true) bool titleOverlap,
+    @Default(true) bool titlePosition,
+    @Default(true) bool titleOutline,
+    @Default("notoSans") String titleFont,
+    @Default("notoSans") String mainFont,
+    @Default(Colors.white) Color colorBackground,
+    @Default(Colors.white) Color colorNode,
+    @Default(Colors.lightBlueAccent) Color colorOutline,
+    @Default(Colors.black) Color colorTitle,
+  }) = _PlatformDesignSetting;
 
-  PlatformDesignSetting();
-
-  PlatformDesignSetting.fromJson(Map<String, dynamic> json)
-      : titleFont = json['titleFont'] ?? 'notoSans',
-        mainFont = json['mainFont'] ?? 'notoSans',
-        titleOverlap = json['titleOverlap'] ?? true,
-        titlePosition = json['titlePosition'] ?? true,
-        titleOutline = json['titleOutline'] ?? true,
-        colorBackground =
-            (json['colorBackground'] != null && json['colorBackground'] is int)
-                ? Color(json['colorBackground'])
-                : Colors.white,
-        colorOutline =
-            (json['colorOutline'] != null && json['colorOutline'] is int)
-                ? Color(json['colorOutline'])
-                : Colors.lightBlueAccent {
-    colorNode = (json['colorNode'] != null && json['colorNode'] is int)
-        ? Color(json['colorNode'])
-        : Colors.white;
-  }
-
-  Map<String, dynamic> toJson() => {
-        'titleFont': titleFont,
-        'mainFont': mainFont,
-        'titleOverlap': titleOverlap,
-        'titlePosition': titlePosition,
-        'titleOutline': titleOutline,
-        'colorBackground': colorBackground.value,
-        'colorNode': colorNode.value,
-        'colorOutline': colorOutline.value,
-      };
+  factory PlatformDesignSetting.fromJson(Map<String, dynamic> json) =>
+      _$PlatformDesignSettingFromJson(json);
 }
 
-TextStyle get titleFont =>
-    ConstList.getFont(getPlatform.designSetting.titleFont);
+class ColorConverter implements JsonConverter<Color, int> {
+  const ColorConverter();
+  @override
+  Color fromJson(int json) => Color(json);
 
-TextStyle get mainFont => ConstList.getFont(getPlatform.designSetting.mainFont);
+  @override
+  int toJson(Color color) => color.value;
+}

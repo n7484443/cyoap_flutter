@@ -12,8 +12,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 
 import '../model/choiceNode/pos.dart';
-import '../model/design_setting.dart';
 import '../viewModel/vm_choice_node.dart';
+import '../viewModel/vm_design_setting.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
 
 class NodeDragTarget extends ConsumerWidget {
@@ -21,8 +21,7 @@ class NodeDragTarget extends ConsumerWidget {
   final Color baseColor = Colors.black12;
   final bool isHorizontal;
 
-  const NodeDragTarget(this.pos, {this.isHorizontal = false, Key? key})
-      : super(key: key);
+  const NodeDragTarget(this.pos, {this.isHorizontal = false, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -230,7 +229,7 @@ class NodeDivider extends ConsumerWidget {
           divider,
           Visibility(
             visible: maxSelect != -1,
-            child: TextOutline('최대 $maxSelect개만큼 선택 가능', 18.0, titleFont,
+            child: TextOutline('최대 $maxSelect개만큼 선택 가능', 18.0, ConstList.getFont(ref.watch(titleFontProvider)),
                 strokeWidth: 5.0),
           ),
           Align(
@@ -291,7 +290,7 @@ class NodeDivider extends ConsumerWidget {
           divider,
           Visibility(
             visible: maxSelect != -1,
-            child: TextOutline('최대 $maxSelect개만큼 선택 가능', 18.0, titleFont,
+            child: TextOutline('최대 $maxSelect개만큼 선택 가능', 18.0, ConstList.getFont(ref.watch(titleFontProvider)),
                 strokeWidth: 5.0),
           ),
         ],
@@ -323,7 +322,7 @@ class NestedScroll extends ConsumerWidget {
         ).createShader(bounds);
       },
       child: ColoredBox(
-        color: ref.watch(backgroundColorProvider),
+        color: ref.watch(colorBackgroundProvider),
         child: const NestedMap(),
       ),
     );

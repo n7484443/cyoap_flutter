@@ -19,4 +19,6 @@ final colorBackgroundProvider = StateProvider.autoDispose<Color>(
     (ref) => getPlatform.designSetting.colorBackground);
 final colorOutlineProvider = StateProvider.autoDispose<Color>(
     (ref) => getPlatform.designSetting.colorOutline);
+final colorTitleProvider = StateProvider.autoDispose<Color>(
+        (ref) => getPlatform.designSetting.colorTitle);
 final colorSelectProvider = StateProvider.autoDispose<int>((ref) => 0);
