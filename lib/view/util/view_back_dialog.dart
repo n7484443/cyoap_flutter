@@ -61,7 +61,7 @@ class ViewWarningDialog extends StatelessWidget {
             if (cancelFunction != null) {
               cancelFunction!();
             }
-            Navigator.pop(context);
+            Navigator.pop(context, false);
           },
           child: const Text('아니오'),
         ),
@@ -70,7 +70,7 @@ class ViewWarningDialog extends StatelessWidget {
             if (acceptFunction != null) {
               acceptFunction!();
             }
-            Navigator.pop(context);
+            Navigator.pop(context, true);
           },
           child: const Text('예'),
         ),

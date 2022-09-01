@@ -355,12 +355,13 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Expanded(
+        SizedBox(
+          width: 20,
           child: IconButton(
-            icon: const Icon(Icons.chevron_left, size: 30),
+            padding: EdgeInsets.zero,
+            icon: const Icon(Icons.chevron_left),
             onPressed: () {
               if (!isEditable) {
                 ref.read(choiceNodeSelectProvider(pos).notifier).select(-1);
@@ -368,16 +369,16 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
             },
           ),
         ),
-        Expanded(
-          child: Text(
-            ref.watch(choiceNodeSelectProvider(pos)).toString(),
-            style: Theme.of(context).textTheme.headline4,
-            textAlign: TextAlign.center,
-          ),
+        Text(
+          ref.watch(choiceNodeSelectProvider(pos)).toString(),
+          style: Theme.of(context).textTheme.headline5,
+          textAlign: TextAlign.center,
         ),
-        Expanded(
+        SizedBox(
+          width: 20,
           child: IconButton(
-            icon: const Icon(Icons.chevron_right, size: 30),
+            padding: EdgeInsets.zero,
+            icon: const Icon(Icons.chevron_right),
             onPressed: () {
               if (!isEditable) {
                 ref.read(choiceNodeSelectProvider(pos).notifier).select(1);
@@ -424,7 +425,8 @@ class ViewContents extends ConsumerWidget {
         ),
       );
       if (node.choiceNodeMode == ChoiceNodeMode.multiSelect) {
-        return Column(children: [
+        return Column(
+            children: [
           contentText,
           ViewChoiceNodeMultiSelect(node.pos),
         ]);

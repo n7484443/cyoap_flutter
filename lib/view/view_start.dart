@@ -144,10 +144,7 @@ class _ViewProjectListState extends ConsumerState<ViewProjectList> {
                           index,
                           () async => await showDialog<bool?>(
                             context: context,
-                            builder: (_) => ViewWarningDialog(
-                              acceptFunction: () =>
-                                  Navigator.of(context).pop(true),
-                            ),
+                            builder: (_) => const ViewWarningDialog(),
                           ),
                         );
                   },
