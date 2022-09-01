@@ -47,12 +47,6 @@ class ChoiceNode extends GenerableParserAndPosition {
     this.width = width;
   }
 
-  ChoiceNode.origin(int width, this.isCard, this.title, this.contentsString,
-      this.imageString) {
-    recursiveStatus = RecursiveStatus();
-    this.width = width;
-  }
-
   ChoiceNode.noTitle(
       int width, this.isCard, this.contentsString, this.imageString)
       : title = '' {
