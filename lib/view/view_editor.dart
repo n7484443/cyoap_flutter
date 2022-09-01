@@ -222,6 +222,7 @@ class ViewEditor extends ConsumerWidget {
             ),
             Expanded(
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                     child: Padding(
