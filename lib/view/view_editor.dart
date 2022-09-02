@@ -43,7 +43,7 @@ class ViewEditor extends ConsumerWidget {
           title: TabBar(
             labelColor: Theme.of(context).colorScheme.secondary,
             unselectedLabelColor: Theme.of(context).colorScheme.primary,
-            tabs: childrenText.map((String e) => Text(e)).toList(),
+            tabs: childrenText.map((String e) => Tab(text: e)).toList(),
           ),
           actions: [
             IconButton(
@@ -88,6 +88,7 @@ class ViewContentsEditor extends ConsumerWidget {
       ref.invalidate(controllerClickableProvider);
       ref.invalidate(controllerVisibleProvider);
       ref.invalidate(controllerExecuteProvider);
+      ref.invalidate(imageStateProvider);
     });
 
     var editingNodeValues = SingleChildScrollView(
