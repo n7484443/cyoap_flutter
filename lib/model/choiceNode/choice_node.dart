@@ -55,6 +55,14 @@ class ChoiceNode extends GenerableParserAndPosition {
     this.width = width;
   } //랜덤 문자로 제목 중복 방지
 
+  ChoiceNode.empty()
+      : isCard = true,
+        title = "선택지 ${Random().nextInt(99)}",
+        imageString = '',
+        contentsString = '' {
+    recursiveStatus = RecursiveStatus();
+  } //랜덤 문자로 제목 중복 방지
+
   ChoiceNode.fromJson(Map<String, dynamic> json)
       : isCard = json['isCard'] ?? true,
         isRound = json['isRound'] ?? true,

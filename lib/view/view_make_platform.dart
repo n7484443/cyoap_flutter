@@ -1,3 +1,10 @@
+import 'package:cyoap_flutter/view/view_design.dart';
+import 'package:cyoap_flutter/view/view_editor.dart';
+import 'package:cyoap_flutter/view/view_font_source.dart';
+import 'package:cyoap_flutter/view/view_global_settings.dart';
+import 'package:cyoap_flutter/view/view_image_editor.dart';
+import 'package:cyoap_flutter/view/view_make.dart';
+import 'package:cyoap_flutter/view/view_source.dart';
 import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:cyoap_flutter/viewModel/vm_make_platform.dart';
 import 'package:flutter/material.dart';
@@ -5,11 +12,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../main.dart';
 
-class ViewMakePlatform extends ConsumerWidget {
-  const ViewMakePlatform({super.key});
+class ViewMakePlatform extends ConsumerStatefulWidget {
+  const ViewMakePlatform({
+    super.key,
+  });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState createState() => _ViewMakePlatformState();
+}
+
+class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
+  @override
+  Widget build(BuildContext context) {
+    const children = [
+      ViewMake(),
+      ViewEditor(),
+      ViewGlobalSetting(),
+      ViewSource(),
+      ViewFontSource(),
+      ViewImageEditor(),
+      ViewDesignSetting(),
+    ];
     if (ConstList.isSmallDisplay(context)) {
       return WillPopScope(
         onWillPop: () async {
@@ -19,7 +42,10 @@ class ViewMakePlatform extends ConsumerWidget {
           drawer: const Drawer(
             child: ViewVariable(),
           ),
-          body: ref.watch(tabWidgetProvider),
+          body: IndexedStack(
+            index: ref.watch(changeTabProvider),
+            children: children,
+          ),
         ),
       );
     }
@@ -35,7 +61,10 @@ class ViewMakePlatform extends ConsumerWidget {
               child: ViewVariable(),
             ),
             Flexible(
-              child: ref.watch(tabWidgetProvider),
+              child: IndexedStack(
+                index: ref.watch(changeTabProvider),
+                children: children,
+              ),
             ),
           ],
         ),

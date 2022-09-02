@@ -70,11 +70,15 @@ class ViewImageEditorContents extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var data = ref.watch(imageCropRatioProvider);
+    var image = ref.watch(imageProvider);
+    if (image == null) {
+      return const SizedBox.shrink();
+    }
     return Column(
       children: [
         Flexible(
           child: ExtendedImage.memory(
-            ref.watch(imageProvider)!.item2,
+            image.item2,
             fit: BoxFit.contain,
             mode: ExtendedImageMode.editor,
             extendedImageEditorKey: ref.watch(globalEditorKeyProvider),
@@ -96,7 +100,7 @@ class ViewImageEditorContents extends ConsumerWidget {
             ref.read(lastImageProvider.notifier).update((state) => null);
             ref
                 .read(imageListStateProvider.notifier)
-                .addImageToList(ref.read(imageProvider)!.item1,
+                .addImageToList(image.item1,
                     data: await ref.read(cropImageProvider.future))
                 .then((value) =>
                     ref.read(changeTabProvider.notifier).back(context));

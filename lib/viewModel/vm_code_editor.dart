@@ -1,16 +1,10 @@
-import 'package:cyoap_flutter/model/editor.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
+import 'package:cyoap_flutter/viewModel/vm_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../model/choiceNode/choice_node.dart';
-
-final choiceNodeProvider = Provider.autoDispose<ChoiceNode>((ref) {
-  return NodeEditor().target;
-});
-
 final isOccupySpaceButtonProvider = StateProvider.autoDispose<bool>((ref) {
-  return ref.watch(choiceNodeProvider).isOccupySpace;
+  return ref.watch(nodeEditorTargetProvider).isOccupySpace;
 });
 
 final vmCodeEditorProvider = Provider((ref) => VMCodeEditor(ref));
@@ -19,11 +13,11 @@ final controllerClickableProvider =
     Provider.autoDispose<TextEditingController>((ref) {
   var controller = TextEditingController(
       text: ref
-          .watch(choiceNodeProvider)
+          .watch(nodeEditorTargetProvider)
           .recursiveStatus
           .conditionClickableString)
     ..addListener(() {
-      ref.read(codeEditorChanged.notifier).update((state) => true);
+      ref.read(changeProvider.notifier).needUpdate();
     });
   ref.onDispose(() => controller.dispose());
   return controller;
@@ -33,9 +27,9 @@ final controllerVisibleProvider =
     Provider.autoDispose<TextEditingController>((ref) {
   var controller = TextEditingController(
       text:
-          ref.watch(choiceNodeProvider).recursiveStatus.conditionVisibleString)
+          ref.watch(nodeEditorTargetProvider).recursiveStatus.conditionVisibleString)
     ..addListener(() {
-      ref.read(codeEditorChanged.notifier).update((state) => true);
+      ref.read(changeProvider.notifier).needUpdate();
     });
   ref.onDispose(() => controller.dispose());
   return controller;
@@ -44,15 +38,13 @@ final controllerVisibleProvider =
 final controllerExecuteProvider =
     Provider.autoDispose<TextEditingController>((ref) {
   var controller = TextEditingController(
-      text: ref.watch(choiceNodeProvider).recursiveStatus.executeCodeString)
+      text: ref.watch(nodeEditorTargetProvider).recursiveStatus.executeCodeString)
     ..addListener(() {
-      ref.read(codeEditorChanged.notifier).update((state) => true);
+      ref.read(changeProvider.notifier).needUpdate();
     });
   ref.onDispose(() => controller.dispose());
   return controller;
 });
-
-final codeEditorChanged = StateProvider<bool>((ref) => false);
 
 class VMCodeEditor {
   final Ref ref;
@@ -69,13 +61,12 @@ class VMCodeEditor {
   }
 
   void save() {
-    ref.read(choiceNodeProvider).recursiveStatus.conditionClickableString =
+    ref.read(nodeEditorTargetProvider).recursiveStatus.conditionClickableString =
         ref.read(controllerClickableProvider).text;
-    ref.read(choiceNodeProvider).recursiveStatus.conditionVisibleString =
+    ref.read(nodeEditorTargetProvider).recursiveStatus.conditionVisibleString =
         ref.read(controllerVisibleProvider).text;
-    ref.read(choiceNodeProvider).recursiveStatus.executeCodeString =
+    ref.read(nodeEditorTargetProvider).recursiveStatus.executeCodeString =
         ref.read(controllerExecuteProvider).text;
-    ref.read(codeEditorChanged.notifier).update((state) => false);
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
   }
 }

@@ -3,6 +3,8 @@ import 'dart:ui';
 
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
+import 'package:cyoap_flutter/view/view_code_editor.dart';
+import 'package:cyoap_flutter/viewModel/vm_code_editor.dart';
 import 'package:cyoap_flutter/viewModel/vm_design_setting.dart';
 import 'package:cyoap_flutter/viewModel/vm_image_editor.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
@@ -24,37 +26,64 @@ class ViewEditor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(isCardSwitchProvider,
-        (previous, next) => ref.read(changeProvider.notifier).setUpdated());
-    ref.listen(isRoundSwitchProvider,
-        (previous, next) => ref.read(changeProvider.notifier).setUpdated());
-    ref.listen(hideTitleProvider,
-        (previous, next) => ref.read(changeProvider.notifier).setUpdated());
-    ref.listen(maximizingImageSwitchProvider,
-        (previous, next) => ref.read(changeProvider.notifier).setUpdated());
-    ref.listen(imagePositionProvider,
-        (previous, next) => ref.read(changeProvider.notifier).setUpdated());
-    ref.listen(nodeModeProvider,
-        (previous, next) => ref.read(changeProvider.notifier).setUpdated());
-
-    var appbarWidget = AppBar(
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () {
-          if (ref.watch(titleProvider).text.isNotEmpty) {
-            ref.read(changeTabProvider.notifier).back(context);
-          }
-        },
-      ),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.save),
-          onPressed: () {
-            ref.read(changeProvider.notifier).save();
-          },
+    var children = const [ViewContentsEditor(), ViewCodeEditor()];
+    var childrenText = const ["내용 수정", "코드 수정"];
+    return DefaultTabController(
+      length: children.length,
+      initialIndex: 0,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              if (ref.watch(titleProvider).text.isNotEmpty) {
+                ref.read(changeTabProvider.notifier).back(context);
+              }
+            },
+          ),
+          title: TabBar(
+            labelColor: Theme.of(context).colorScheme.secondary,
+            unselectedLabelColor: Theme.of(context).colorScheme.primary,
+            tabs: childrenText.map((String e) => Text(e)).toList(),
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.save),
+              onPressed: () {
+                ref.read(changeProvider.notifier).save();
+                ref.read(vmCodeEditorProvider).save();
+              },
+            ),
+          ],
         ),
-      ],
-    ); 
+        body: TabBarView(
+          children: children,
+        ),
+      ),
+    );
+  }
+}
+
+class ViewContentsEditor extends ConsumerWidget {
+  const ViewContentsEditor({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(isCardSwitchProvider,
+        (previous, next) => ref.read(changeProvider.notifier).needUpdate());
+    ref.listen(isRoundSwitchProvider,
+        (previous, next) => ref.read(changeProvider.notifier).needUpdate());
+    ref.listen(hideTitleProvider,
+        (previous, next) => ref.read(changeProvider.notifier).needUpdate());
+    ref.listen(maximizingImageSwitchProvider,
+        (previous, next) => ref.read(changeProvider.notifier).needUpdate());
+    ref.listen(imagePositionProvider,
+        (previous, next) => ref.read(changeProvider.notifier).needUpdate());
+    ref.listen(nodeModeProvider,
+        (previous, next) => ref.read(changeProvider.notifier).needUpdate());
+
     var editingNodeValues = SingleChildScrollView(
       child: IntrinsicHeight(
         child: Column(
@@ -69,7 +98,8 @@ class ViewEditor extends ConsumerWidget {
                 DropdownMenuItem(
                     value: ChoiceNodeMode.multiSelect, child: Text('다중 선택')),
                 DropdownMenuItem(
-                    value: ChoiceNodeMode.unSelectableMode, child: Text('선택 불가')),
+                    value: ChoiceNodeMode.unSelectableMode,
+                    child: Text('선택 불가')),
                 DropdownMenuItem(
                     value: ChoiceNodeMode.onlyCode, child: Text('코드만 사용')),
               ],
@@ -102,13 +132,16 @@ class ViewEditor extends ConsumerWidget {
               ),
             ),
             Visibility(
-              visible: ref.watch(nodeModeProvider) == ChoiceNodeMode.multiSelect,
+              visible:
+                  ref.watch(nodeModeProvider) == ChoiceNodeMode.multiSelect,
               child: SizedBox(
                 width: 120,
                 child: Column(children: [
                   Text('변수명', style: Theme.of(context).textTheme.labelLarge),
-                  Text('${ref.watch(titleProvider).text.replaceAll(" ", "")}:multi',
-                      softWrap: true, style: Theme.of(context).textTheme.bodySmall),
+                  Text(
+                      '${ref.watch(titleProvider).text.replaceAll(" ", "")}:multi',
+                      softWrap: true,
+                      style: Theme.of(context).textTheme.bodySmall),
                   TextField(
                     textAlign: TextAlign.end,
                     maxLength: 3,
@@ -156,8 +189,9 @@ class ViewEditor extends ConsumerWidget {
             Visibility(
               visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
               child: ViewSwitchLabel(
-                () =>
-                    ref.read(hideTitleProvider.notifier).update((state) => !state),
+                () => ref
+                    .read(hideTitleProvider.notifier)
+                    .update((state) => !state),
                 ref.watch(hideTitleProvider),
                 label: '제목 숨기기',
               ),
@@ -177,9 +211,13 @@ class ViewEditor extends ConsumerWidget {
               child: ViewSwitchLabel(
                 () {
                   if (ref.watch(imagePositionProvider) == 1) {
-                    ref.read(imagePositionProvider.notifier).update((state) => 2);
+                    ref
+                        .read(imagePositionProvider.notifier)
+                        .update((state) => 2);
                   } else if (ref.watch(imagePositionProvider) == 2) {
-                    ref.read(imagePositionProvider.notifier).update((state) => 1);
+                    ref
+                        .read(imagePositionProvider.notifier)
+                        .update((state) => 1);
                   }
                 },
                 ref.watch(imagePositionProvider) == 2,
@@ -187,62 +225,48 @@ class ViewEditor extends ConsumerWidget {
                 label: '이미지 왼쪽으로',
               ),
             ),
-            const Spacer(),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10.0),
-              child: TextButton(
-                child: const Text('코드 수정'),
-                onPressed: () {
-                  ref
-                      .read(changeTabProvider.notifier)
-                      .changePageString("viewCodeEditor", context);
-                },
-              ),
-            ),
           ],
         ),
       ),
     );
     return WillPopScope(
-      child: Scaffold(
-        appBar: appbarWidget,
-        body: Column(
-          children: [
-            TextField(
-              controller: ref.watch(titleProvider),
-              textAlign: TextAlign.center,
-              decoration: InputDecoration(
-                hintText: '제목',
-                hintStyle: ConstList.getFont(ref.watch(titleFontProvider)).copyWith(fontSize: 24, color: Colors.red),
-                filled: true,
-              ),
-              style: ConstList.getFont(ref.watch(titleFontProvider)).copyWith(
-                fontSize: 24,
-              ),
+      child: Column(
+        children: [
+          TextField(
+            controller: ref.watch(titleProvider),
+            textAlign: TextAlign.center,
+            decoration: InputDecoration(
+              hintText: '제목',
+              hintStyle: ConstList.getFont(ref.watch(titleFontProvider))
+                  .copyWith(fontSize: 24, color: Colors.red),
+              filled: true,
             ),
-            Expanded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Visibility(
-                        visible: ref.watch(nodeModeProvider) !=
-                            ChoiceNodeMode.onlyCode,
-                        child: const ViewContentsEditor(),
-                      ),
+            style: ConstList.getFont(ref.watch(titleFontProvider)).copyWith(
+              fontSize: 24,
+            ),
+          ),
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Visibility(
+                      visible: ref.watch(nodeModeProvider) !=
+                          ChoiceNodeMode.onlyCode,
+                      child: const ViewTextContentsEditor(),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(ConstList.paddingSmall),
-                    child: editingNodeValues,
-                  ),
-                ],
-              ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(ConstList.paddingSmall),
+                  child: editingNodeValues,
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       onWillPop: () async {
         ref.read(changeTabProvider.notifier).back(context);
@@ -252,16 +276,17 @@ class ViewEditor extends ConsumerWidget {
   }
 }
 
-class ViewContentsEditor extends ConsumerStatefulWidget {
-  const ViewContentsEditor({
+class ViewTextContentsEditor extends ConsumerStatefulWidget {
+  const ViewTextContentsEditor({
     super.key,
   });
 
   @override
-  ConsumerState createState() => _ViewContentsEditorState();
+  ConsumerState createState() => _ViewTextContentsEditorState();
 }
 
-class _ViewContentsEditorState extends ConsumerState<ViewContentsEditor> {
+class _ViewTextContentsEditorState
+    extends ConsumerState<ViewTextContentsEditor> {
   FocusNode? _focusNode;
   QuillController? _quillController;
   ScrollController? _scrollController;
@@ -279,7 +304,7 @@ class _ViewContentsEditorState extends ConsumerState<ViewContentsEditor> {
     }
     ref.read(changeProvider.notifier).document = _quillController?.document;
     _quillController?.addListener(() {
-      ref.read(changeProvider.notifier).setUpdated();
+      ref.read(changeProvider.notifier).needUpdate();
     });
     _scrollController = ScrollController();
     super.initState();
@@ -488,7 +513,7 @@ class ViewNodeImageEditor extends ConsumerWidget {
                           } else {
                             ref.read(imageStateProvider.notifier).state = index;
                           }
-                          ref.read(changeProvider.notifier).setUpdated();
+                          ref.read(changeProvider.notifier).needUpdate();
                         },
                       ),
                     );

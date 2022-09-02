@@ -12,11 +12,7 @@ class NodeEditor {
   }
   NodeEditor._init();
 
-  ChoiceNode? _target;
+  ChoiceNode? target;
 
-  ChoiceNode get target => _target!;
-
-  RecursiveStatus get targetRecursive => target.recursiveStatus;
-
-  set target(ChoiceNode node) => _target = node;
+  RecursiveStatus get targetRecursive => target!.recursiveStatus;
 }
