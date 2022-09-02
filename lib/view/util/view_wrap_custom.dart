@@ -53,59 +53,27 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     List<Widget> outputWidget = List<Widget>.empty(growable: true);
     var children = ref.watch(childrenChangeProvider(parentPos));
-    if (children.isNotEmpty) {
-      int stack = 0;
-      List<Widget> subWidget = List<Widget>.empty(growable: true);
-      for (int i = 0; i < children.length; i++) {
-        var child = children[i] as ChoiceNode;
-        int size = child.width == 0 ? maxSize : child.width;
-        if (stack == 0 && i == 0) {
-          addBuildDraggable(outputWidget, i, horizontal: true);
-        }
-        if (stack + size > maxSize) {
-          if (maxSize > stack) {
-            subWidget.add(
-              Expanded(
-                flex: calculateFlexReverse(maxSize - stack),
-                child: const SizedBox.shrink(),
-              ),
-            );
-          }
-          outputWidget.add(
-            IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: subWidget,
-              ),
+    if (children.isEmpty) {
+      addBuildDraggable(outputWidget, children.length, horizontal: true);
+      return outputWidget.first;
+    }
+    int stack = 0;
+    List<Widget> subWidget = List<Widget>.empty(growable: true);
+    for (int i = 0; i < children.length; i++) {
+      var child = children[i] as ChoiceNode;
+      int size = child.width == 0 ? maxSize : child.width;
+      if (stack == 0 && i == 0) {
+        addBuildDraggable(outputWidget, i, horizontal: true);
+      }
+      if (stack + size > maxSize) {
+        if (maxSize > stack) {
+          subWidget.add(
+            Expanded(
+              flex: calculateFlexReverse(maxSize - stack),
+              child: const SizedBox.shrink(),
             ),
           );
-          subWidget = List.empty(growable: true);
-          stack = 0;
-          i -= 1;
-          continue;
-        } else if (size == maxSize) {
-          if (i != 0) {
-            var before = (children[i - 1] as ChoiceNode).width;
-            if (before != 0 && before != maxSize) {
-              addBuildDraggable(outputWidget, i, horizontal: true);
-            }
-          }
-          outputWidget.add(NodeDraggable(child.pos));
-          subWidget = List.empty(growable: true);
-          addBuildDraggable(outputWidget, i + 1, horizontal: true);
-        } else {
-          subWidget.add(Expanded(
-              flex: calculateFlex(size), child: NodeDraggable(child.pos)));
-          addBuildDraggable(subWidget, i + 1);
-          stack += size;
         }
-      }
-      if (0 < stack && stack < maxSize) {
-        subWidget.add(Expanded(
-            flex: calculateFlexReverse(maxSize - stack),
-            child: const SizedBox.shrink()));
-      }
-      if (subWidget.isNotEmpty) {
         outputWidget.add(
           IntrinsicHeight(
             child: Row(
@@ -114,9 +82,41 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
             ),
           ),
         );
+        subWidget = List.empty(growable: true);
+        stack = 0;
+        i -= 1;
+        continue;
+      } else if (size == maxSize) {
+        if (i != 0) {
+          var before = (children[i - 1] as ChoiceNode).width;
+          if (before != 0 && before != maxSize) {
+            addBuildDraggable(outputWidget, i, horizontal: true);
+          }
+        }
+        outputWidget.add(NodeDraggable(child.pos));
+        subWidget = List.empty(growable: true);
+        addBuildDraggable(outputWidget, i + 1, horizontal: true);
+      } else {
+        subWidget.add(Expanded(
+            flex: calculateFlex(size), child: NodeDraggable(child.pos)));
+        addBuildDraggable(subWidget, i + 1);
+        stack += size;
       }
-    } else {
-      addBuildDraggable(outputWidget, children.length, horizontal: true);
+    }
+    if (0 < stack && stack < maxSize) {
+      subWidget.add(Expanded(
+          flex: calculateFlexReverse(maxSize - stack),
+          child: const SizedBox.shrink()));
+    }
+    if (subWidget.isNotEmpty) {
+      outputWidget.add(
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: subWidget,
+          ),
+        ),
+      );
     }
 
     return Column(
@@ -139,62 +139,63 @@ class ViewWrapCustom extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     List<Widget> outputWidget = List<Widget>.empty(growable: true);
     var children = ref.watch(childrenChangeProvider(parentPos));
-    if (children.isNotEmpty) {
-      int stack = 0;
-      List<Widget> subWidget = List<Widget>.empty(growable: true);
-      for (int i = 0; i < children.length; i++) {
-        var child = children[i] as ChoiceNode;
-        if (!child.isOccupySpace && child.choiceStatus.isHide()) {
-          continue;
-        }
-        int size = child.width == 0 ? maxSize : child.width;
+    if (children.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    int stack = 0;
+    List<Widget> subWidget = List<Widget>.empty(growable: true);
+    for (int i = 0; i < children.length; i++) {
+      var child = children[i] as ChoiceNode;
+      if (!child.isOccupySpace && child.choiceStatus.isHide()) {
+        continue;
+      }
+      int size = child.width == 0 ? maxSize : child.width;
 
-        if (stack + size > maxSize) {
-          if (maxSize > stack) {
-            subWidget.add(
-              Expanded(
-                flex: maxSize - stack,
-                child: const SizedBox.shrink(),
-              ),
-            );
-          }
-          outputWidget.add(
-            IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: subWidget,
-              ),
-            ),
-          );
-          subWidget = List.empty(growable: true);
-          stack = 0;
-          i -= 1;
-          continue;
-        } else if (size == maxSize) {
-          outputWidget.add(SizedBox(width: double.infinity, child: builder(i)));
-          subWidget = List.empty(growable: true);
-        } else {
-          subWidget.add(Expanded(flex: size, child: builder(i)));
-          stack += size;
-        }
-      }
-      if (0 < stack && stack < maxSize) {
-        subWidget.add(
-            Expanded(flex: maxSize - stack, child: const SizedBox.shrink()));
-      }
-      if (subWidget.isNotEmpty) {
-        if (subWidget.length == 1) {
-          outputWidget.add(subWidget.first);
-        } else {
-          outputWidget.add(
-            IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: subWidget,
-              ),
+      if (stack + size > maxSize) {
+        if (maxSize > stack) {
+          subWidget.add(
+            Expanded(
+              flex: maxSize - stack,
+              child: const SizedBox.shrink(),
             ),
           );
         }
+        outputWidget.add(
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: subWidget,
+            ),
+          ),
+        );
+        subWidget = List.empty(growable: true);
+        stack = 0;
+        i -= 1;
+        continue;
+      } else if (size == maxSize) {
+        outputWidget.add(SizedBox(width: double.infinity, child: builder(i)));
+        subWidget = List.empty(growable: true);
+      } else {
+        subWidget.add(Expanded(flex: size, child: builder(i)));
+        stack += size;
+      }
+    }
+    if (0 < stack && stack < maxSize) {
+      subWidget
+          .add(Expanded(flex: maxSize - stack, child: const SizedBox.shrink()));
+    }
+    if (subWidget.isNotEmpty) {
+      if (subWidget.length == 1) {
+        outputWidget.add(subWidget.first);
+      } else {
+        outputWidget.add(
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: subWidget,
+            ),
+          ),
+        );
       }
     }
 

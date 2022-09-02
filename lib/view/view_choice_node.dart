@@ -286,7 +286,9 @@ class ViewTitleWithEdit extends ConsumerWidget {
         title = TextOutline(
           ref.watch(titleStringProvider(pos)),
           20 * ConstList.scale(context),
-          ConstList.getFont(ref.watch(titleFontProvider),),
+          ConstList.getFont(
+            ref.watch(titleFontProvider),
+          ),
           textColor: ref.watch(colorTitleProvider),
         );
       } else {
@@ -425,8 +427,7 @@ class ViewContents extends ConsumerWidget {
         ),
       );
       if (node.choiceNodeMode == ChoiceNodeMode.multiSelect) {
-        return Column(
-            children: [
+        return Column(children: [
           contentText,
           ViewChoiceNodeMultiSelect(node.pos),
         ]);
@@ -470,7 +471,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
           (i) => NodeDragTarget(pos.addLast(i)),
           maxSize: node.getMaxSize(true),
         );
-      } else if (node.children.isNotEmpty) {
+      } else {
         child = ViewWrapCustom(
           pos,
           (i) => ViewChoiceNode(pos.addLast(i)),

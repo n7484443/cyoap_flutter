@@ -103,6 +103,12 @@ class ConstList {
     "East Sea Dokdo": GoogleFonts.eastSeaDokdo(
         color: Colors.black,
         fontFeatures: const [FontFeature.proportionalFigures()]),
+    "Black Han Sans": GoogleFonts.blackHanSans(
+        color: Colors.black,
+        fontFeatures: const [FontFeature.proportionalFigures()]),
+    "Black And White Picture": GoogleFonts.blackAndWhitePicture(
+        color: Colors.black,
+        fontFeatures: const [FontFeature.proportionalFigures()]),
     "메이플스토리체": const TextStyle(
         fontFamily: 'MapleStory',
         color: Colors.black,
