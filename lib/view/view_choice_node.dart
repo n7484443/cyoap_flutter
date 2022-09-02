@@ -64,7 +64,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var node = ref.watch(choiceNodeProvider(pos))!;
+    var node = ref.watch(choiceNodeProvider(pos)).node!;
     return Card(
       shape: ref.watch(isChoiceNodeRoundProvider(pos))
           ? RoundedRectangleBorder(
@@ -222,7 +222,7 @@ class NodeDraggable extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var node = ref.watch(choiceNodeProvider(pos));
+    var node = ref.watch(choiceNodeProvider(pos)).node;
     if (node == null) {
       return const SizedBox.shrink();
     }
@@ -350,7 +350,7 @@ class ViewTitleWithEdit extends ConsumerWidget {
                 case 1:
                   ref
                       .read(vmDraggableNestedMapProvider)
-                      .copyData(ref.watch(choiceNodeProvider(pos))!);
+                      .copyData(ref.watch(choiceNodeProvider(pos)).node!);
                   break;
               }
             },
@@ -429,7 +429,7 @@ class ViewContents extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var node = ref.watch(choiceNodeProvider(pos))!;
+    var node = ref.watch(choiceNodeProvider(pos)).node!;
     if (ref
         .watch(contentsQuillProvider(pos))
         .document
@@ -474,7 +474,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var node = ref.watch(choiceNodeProvider(pos))!;
+    var node = ref.watch(choiceNodeProvider(pos)).node!;
     Widget image;
     if (ref
         .watch(imageStringProvider(pos))

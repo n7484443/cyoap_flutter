@@ -21,6 +21,18 @@ class LineSetting extends GenerableParserAndPosition {
     super.currentPos = currentPos;
     recursiveStatus = RecursiveStatus();
   }
+  @override
+  bool operator ==(Object other){
+    return other is LineSetting &&
+        super == other &&
+        maxSelect == other.maxSelect &&
+        alwaysVisible == other.alwaysVisible &&
+        backgroundColor == other.backgroundColor &&
+        backgroundImageString == other.backgroundImageString;
+  }
+
+  @override
+  int get hashCode => Object.hash(maxSelect, alwaysVisible, backgroundColor, backgroundImageString, super.hashCode);
 
   @override
   Map<String, dynamic> toJson() {
@@ -114,4 +126,6 @@ class LineSetting extends GenerableParserAndPosition {
       }
     }
   }
+
+
 }

@@ -9,6 +9,21 @@ import 'choice_status.dart';
 abstract class GenerableParserAndPosition {
   ChoiceStatus choiceStatus = ChoiceStatus();
 
+  @override
+  bool operator ==(Object other) {
+    return other is GenerableParserAndPosition &&
+        choiceStatus == other.choiceStatus &&
+        children == other.children &&
+        recursiveStatus == other.recursiveStatus &&
+        currentPos == other.currentPos &&
+        width == other.width &&
+        parent == other.parent;
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(choiceStatus, children, recursiveStatus, currentPos, width);
+
   void generateParser() {
     recursiveStatus.generateParser();
     for (var child in children) {

@@ -128,7 +128,7 @@ final _childrenProvider = Provider.autoDispose
   if (pos.length == 1) {
     return ref.watch(lineProvider(pos.first))!.children;
   } else {
-    return ref.watch(choiceNodeProvider(pos))!.children;
+    return ref.watch(choiceNodeProvider(pos)).node!.children;
   }
 });
 
