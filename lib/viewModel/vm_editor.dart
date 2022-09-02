@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:cyoap_flutter/model/editor.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/viewModel/vm_code_editor.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
@@ -13,8 +12,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/choiceNode/choice_node.dart';
 
-final nodeEditorTargetProvider =
-    StateProvider.autoDispose<ChoiceNode>((ref) => NodeEditor().target ?? ChoiceNode.empty());
+final nodeEditorTargetProvider = StateProvider.autoDispose<ChoiceNode>((ref) {
+  return ChoiceNode.empty();
+});
 
 final isCardSwitchProvider = StateProvider.autoDispose<bool>(
     (ref) => ref.watch(nodeEditorTargetProvider).isCard);
@@ -29,9 +29,10 @@ final imagePositionProvider = StateProvider.autoDispose<int>(
 final nodeModeProvider = StateProvider.autoDispose<ChoiceNodeMode>(
     (ref) => ref.watch(nodeEditorTargetProvider).choiceNodeMode);
 
-final titleProvider = Provider.autoDispose<TextEditingController>((ref) {
+final titleControllerProvider =
+    Provider.autoDispose<TextEditingController>((ref) {
   var controller =
-      TextEditingController(text: ref.read(nodeEditorTargetProvider).title);
+      TextEditingController(text: ref.watch(nodeEditorTargetProvider).title);
   controller.addListener(() {
     ref.read(changeProvider.notifier).needUpdate();
   });
@@ -47,6 +48,23 @@ final maximumProvider = Provider.autoDispose<TextEditingController>((ref) {
   ref.onDispose(() => controller.dispose());
   return controller;
 });
+final quillEditorProvider = Provider<QuillController>((ref) {
+  QuillController controller;
+  if (ref.read(nodeEditorTargetProvider).contentsString.isEmpty) {
+    controller = QuillController.basic();
+  } else {
+    controller = QuillController(
+        document: Document.fromJson(
+            jsonDecode(ref.read(nodeEditorTargetProvider).contentsString)),
+        selection: const TextSelection.collapsed(offset: 0));
+  }
+  controller.addListener(() {
+    ref.read(changeProvider.notifier).needUpdate();
+  });
+  ref.onDispose(() => controller.dispose());
+  return controller;
+});
+
 final imageSourceProvider = StateProvider.autoDispose<String>((ref) => "");
 
 final imageListStateProvider =
@@ -77,7 +95,7 @@ class ImageListStateNotifier extends StateNotifier<List<String>> {
 
   Future<void> addImageToList(String name, {Uint8List? data}) async {
     ImageDB().uploadImages(name, data ?? ref.read(lastImageProvider)!);
-    NodeEditor().target?.imageString = name;
+    ref.read(nodeEditorTargetProvider).imageString = name;
     ref.read(imageStateProvider.notifier).state = ImageDB().getImageIndex(name);
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     ref.read(changeProvider.notifier).state = true;
@@ -94,7 +112,6 @@ final changeProvider =
     StateNotifierProvider<ChangeNotifier, bool>((ref) => ChangeNotifier(ref));
 
 class ChangeNotifier extends StateNotifier<bool> {
-  Document? document;
   Ref ref;
 
   ChangeNotifier(this.ref) : super(false);
@@ -108,25 +125,34 @@ class ChangeNotifier extends StateNotifier<bool> {
   }
 
   void save() {
-    ref.watch(vmCodeEditorProvider).save();
-    NodeEditor().target?.title = ref.read(titleProvider).text;
-    NodeEditor().target?.contentsString =
-        jsonEncode(document!.toDelta().toJson());
-    NodeEditor().target?.imageString =
+    ref.read(nodeEditorTargetProvider).recursiveStatus.conditionClickableString =
+        ref.read(controllerClickableProvider).text;
+    ref.read(nodeEditorTargetProvider).recursiveStatus.conditionVisibleString =
+        ref.read(controllerVisibleProvider).text;
+    ref.read(nodeEditorTargetProvider).recursiveStatus.executeCodeString =
+        ref.read(controllerExecuteProvider).text;
+    ref.read(nodeEditorTargetProvider).title =
+        ref.read(titleControllerProvider).text;
+    ref.read(nodeEditorTargetProvider).contentsString =
+        jsonEncode(ref.read(quillEditorProvider).document.toDelta().toJson());
+    ref.read(nodeEditorTargetProvider).imageString =
         ImageDB().getImageName(ref.read(imageStateProvider));
     try {
-      NodeEditor().target?.maximumStatus =
+      ref.read(nodeEditorTargetProvider).maximumStatus =
           int.parse(ref.read(maximumProvider).text);
     } catch (e) {
-      NodeEditor().target?.maximumStatus = 0;
+      ref.read(nodeEditorTargetProvider).maximumStatus = 0;
     }
-    NodeEditor().target?.maximizingImage =
+    ref.read(nodeEditorTargetProvider).maximizingImage =
         ref.read(maximizingImageSwitchProvider);
-    NodeEditor().target?.isRound = ref.read(isRoundSwitchProvider);
-    NodeEditor().target?.isCard = ref.read(isCardSwitchProvider);
-    NodeEditor().target?.imagePosition = ref.read(imagePositionProvider);
-    NodeEditor().target?.hideTitle = ref.read(hideTitleProvider);
-    NodeEditor().target?.choiceNodeMode = ref.read(nodeModeProvider);
+    ref.read(nodeEditorTargetProvider).isRound =
+        ref.read(isRoundSwitchProvider);
+    ref.read(nodeEditorTargetProvider).isCard = ref.read(isCardSwitchProvider);
+    ref.read(nodeEditorTargetProvider).imagePosition =
+        ref.read(imagePositionProvider);
+    ref.read(nodeEditorTargetProvider).hideTitle = ref.read(hideTitleProvider);
+    ref.read(nodeEditorTargetProvider).choiceNodeMode =
+        ref.read(nodeModeProvider);
 
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     state = false;

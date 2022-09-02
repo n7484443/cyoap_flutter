@@ -7,6 +7,7 @@ import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_design_setting.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
+import 'package:cyoap_flutter/viewModel/vm_editor.dart' show nodeEditorTargetProvider;
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,7 +15,6 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import '../main.dart';
 import '../model/choiceNode/pos.dart';
-import '../model/editor.dart';
 import '../model/platform_system.dart';
 import '../viewModel/vm_make_platform.dart';
 import '../viewModel/vm_variable_table.dart';
@@ -30,7 +30,10 @@ class ViewChoiceNode extends ConsumerWidget {
       return Card(
         color: ref.watch(colorNodeProvider),
         child: SizedBox(
-          width: MediaQuery.of(context).size.width /
+          width: MediaQuery
+              .of(context)
+              .size
+              .width /
               defaultMaxSize *
               3 *
               ConstList.scale(context),
@@ -65,35 +68,35 @@ class ViewChoiceNodeMain extends ConsumerWidget {
     return Card(
       shape: ref.watch(isChoiceNodeRoundProvider(pos))
           ? RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4.0),
-              side: BorderSide(
-                color: ref.watch(nodeModeProvider(pos)) !=
-                            ChoiceNodeMode.unSelectableMode &&
-                        ref
-                            .watch(choiceNodePlayStatusProvider(pos))
-                            .isSelected()
-                    ? ref.watch(colorOutlineProvider)
-                    : ref.watch(colorNodeProvider),
-                width: ConstList.isSmallDisplay(context) ? 2 : 4,
-              ),
-            )
+        borderRadius: BorderRadius.circular(4.0),
+        side: BorderSide(
+          color: ref.watch(nodeModeProvider(pos)) !=
+              ChoiceNodeMode.unSelectableMode &&
+              ref
+                  .watch(choiceNodePlayStatusProvider(pos))
+                  .isSelected()
+              ? ref.watch(colorOutlineProvider)
+              : ref.watch(colorNodeProvider),
+          width: ConstList.isSmallDisplay(context) ? 2 : 4,
+        ),
+      )
           : Border.fromBorderSide(
-              BorderSide(
-                color: ref.watch(nodeModeProvider(pos)) !=
-                            ChoiceNodeMode.unSelectableMode &&
-                        ref
-                            .watch(choiceNodePlayStatusProvider(pos))
-                            .isSelected()
-                    ? ref.watch(colorOutlineProvider)
-                    : ref.watch(colorNodeProvider),
-                width: ConstList.isSmallDisplay(context) ? 2 : 4,
-              ),
-            ),
+        BorderSide(
+          color: ref.watch(nodeModeProvider(pos)) !=
+              ChoiceNodeMode.unSelectableMode &&
+              ref
+                  .watch(choiceNodePlayStatusProvider(pos))
+                  .isSelected()
+              ? ref.watch(colorOutlineProvider)
+              : ref.watch(colorNodeProvider),
+          width: ConstList.isSmallDisplay(context) ? 2 : 4,
+        ),
+      ),
       clipBehavior: Clip.antiAlias,
       margin:
-          ConstList.isSmallDisplay(context) ? const EdgeInsets.all(1.4) : null,
+      ConstList.isSmallDisplay(context) ? const EdgeInsets.all(1.4) : null,
       elevation:
-          ref.watch(isChoiceNodeCardProvider(pos)) ? ConstList.elevation : 0,
+      ref.watch(isChoiceNodeCardProvider(pos)) ? ConstList.elevation : 0,
       color: ref.watch(colorNodeProvider),
       child: Ink(
         color: ref.watch(colorNodeProvider),
@@ -104,23 +107,26 @@ class ViewChoiceNodeMain extends ConsumerWidget {
           child: InkWell(
             onDoubleTap: isEditable
                 ? () {
-                    NodeEditor().target = node;
-                    ref
-                        .read(changeTabProvider.notifier)
-                        .changePageString("viewEditor", context);
-                  }
+              ref
+                  .read(nodeEditorTargetProvider.notifier)
+                  .state = node;
+              ref
+                  .read(changeTabProvider.notifier)
+                  .changePageString("viewEditor", context);
+            }
                 : null,
             onTap: !isEditable && ref.watch(isIgnorePointerProvider(pos))
                 ? () {
-                    ref.read(choiceNodeSelectProvider(pos).notifier).select(
-                          0,
-                          showDialogFunction: () => showDialog(
-                            context: context,
-                            builder: (builder) => RandomDialog(pos),
-                            barrierDismissible: false,
-                          ),
-                        );
-                  }
+              ref.read(choiceNodeSelectProvider(pos).notifier).select(
+                0,
+                showDialogFunction: () =>
+                    showDialog(
+                      context: context,
+                      builder: (builder) => RandomDialog(pos),
+                      barrierDismissible: false,
+                    ),
+              );
+            }
                 : null,
             child: ViewChoiceNodeContent(pos),
           ),
@@ -149,7 +155,10 @@ class SizeDialog extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('길이 : $str', style: Theme.of(context).textTheme.titleMedium),
+            Text('길이 : $str', style: Theme
+                .of(context)
+                .textTheme
+                .titleMedium),
             Slider(
               onChanged: (double value) {
                 ref
@@ -182,9 +191,16 @@ class RandomDialog extends ConsumerWidget {
         content: AnimatedFlipCounter(
             value: ref.watch(randomStateNotifierProvider(pos)),
             duration: const Duration(milliseconds: 500),
-            textStyle: Theme.of(context).textTheme.displayLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.secondary,
-                )),
+            textStyle: Theme
+                .of(context)
+                .textTheme
+                .displayLarge
+                ?.copyWith(
+              color: Theme
+                  .of(context)
+                  .colorScheme
+                  .secondary,
+            )),
         actions: [
           Visibility(
             visible: !ref.watch(randomProcessExecutedProvider),
@@ -213,14 +229,18 @@ class NodeDraggable extends ConsumerWidget {
     var widget = ViewChoiceNode(pos);
     if (ConstList.isMobile()) {
       return LongPressDraggable<Pos>(
-        onDragUpdate: (details) => ref
+        onDragUpdate: (details) =>
+        ref
             .read(dragPositionProvider.notifier)
             .state = details.localPosition.dy,
         data: pos,
         feedback: Opacity(
           opacity: 0.5,
           child: SizedBox(
-              width: MediaQuery.of(context).size.width /
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width /
                   (defaultMaxSize + 3) *
                   (node.width == 0 ? defaultMaxSize : node.width),
               child: widget),
@@ -230,9 +250,9 @@ class NodeDraggable extends ConsumerWidget {
         },
         child: ref.watch(dragChoiceNodeProvider) == pos
             ? Opacity(
-                opacity: 0.2,
-                child: widget,
-              )
+          opacity: 0.2,
+          child: widget,
+        )
             : widget,
         onDragEnd: (DraggableDetails data) {
           ref.read(dragChoiceNodeProvider.notifier).dragEnd();
@@ -243,14 +263,18 @@ class NodeDraggable extends ConsumerWidget {
       );
     } else {
       return Draggable<Pos>(
-        onDragUpdate: (details) => ref
+        onDragUpdate: (details) =>
+        ref
             .read(dragPositionProvider.notifier)
             .state = details.localPosition.dy,
         data: pos,
         feedback: Opacity(
           opacity: 0.5,
           child: SizedBox(
-              width: MediaQuery.of(context).size.width /
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width /
                   (defaultMaxSize + 3) *
                   (node.width == 0 ? defaultMaxSize : node.width),
               child: widget),
@@ -373,7 +397,10 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
         ),
         Text(
           ref.watch(choiceNodeSelectProvider(pos)).toString(),
-          style: Theme.of(context).textTheme.headline5,
+          style: Theme
+              .of(context)
+              .textTheme
+              .headline5,
           textAlign: TextAlign.center,
         ),
         SizedBox(
@@ -396,15 +423,17 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
 class ViewContents extends ConsumerWidget {
   final Pos pos;
 
-  const ViewContents(
-    this.pos, {
+  const ViewContents(this.pos, {
     super.key,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var node = ref.watch(choiceNodeProvider(pos))!;
-    if (ref.watch(contentsQuillProvider(pos)).document.isEmpty()) {
+    if (ref
+        .watch(contentsQuillProvider(pos))
+        .document
+        .isEmpty()) {
       if (node.choiceNodeMode == ChoiceNodeMode.multiSelect) {
         return ViewChoiceNodeMultiSelect(node.pos);
       } else {
@@ -447,12 +476,20 @@ class ViewChoiceNodeContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var node = ref.watch(choiceNodeProvider(pos))!;
     Widget image;
-    if (ref.watch(imageStringProvider(pos)).isNotEmpty) {
+    if (ref
+        .watch(imageStringProvider(pos))
+        .isNotEmpty) {
       image = ConstrainedBox(
         constraints: BoxConstraints(
           maxHeight: ref.watch(maximizingImageProvider(pos))
-              ? MediaQuery.of(context).size.height / 1.25
-              : MediaQuery.of(context).size.height / 2,
+              ? MediaQuery
+              .of(context)
+              .size
+              .height / 1.25
+              : MediaQuery
+              .of(context)
+              .size
+              .height / 2,
         ),
         child: ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(5)),
@@ -468,13 +505,13 @@ class ViewChoiceNodeContent extends ConsumerWidget {
       if (isEditable) {
         child = ViewWrapCustomReorderable(
           pos,
-          (i) => NodeDragTarget(pos.addLast(i)),
+              (i) => NodeDragTarget(pos.addLast(i)),
           maxSize: node.getMaxSize(true),
         );
       } else {
         child = ViewWrapCustom(
           pos,
-          (i) => ViewChoiceNode(pos.addLast(i)),
+              (i) => ViewChoiceNode(pos.addLast(i)),
           maxSize: node.getMaxSize(true),
         );
       }

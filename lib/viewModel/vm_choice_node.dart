@@ -26,6 +26,8 @@ void refreshChild(Ref ref, GenerableParserAndPosition node) {
   ref.invalidate(opacityProvider(node.pos));
   ref.invalidate(isIgnorePointerProvider(node.pos));
   ref.invalidate(choiceNodePlayStatusProvider(node.pos));
+  ref.invalidate(contentsQuillProvider(node.pos));
+  ref.invalidate(imageStringProvider(node.pos));
   ref.read(childrenChangeProvider(node.pos).notifier).update();
   for (var child in node.children) {
     refreshChild(ref, child);

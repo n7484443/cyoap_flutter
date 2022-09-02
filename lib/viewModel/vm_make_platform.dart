@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_editor.dart';
 import 'package:cyoap_flutter/viewModel/vm_global_setting.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,7 @@ class ChangeTabNotifier extends StateNotifier<int> {
           if (!out) {
             return false;
           }
+          refreshChild(ref, ref.read(nodeEditorTargetProvider));
         }
         break;
       case 2:

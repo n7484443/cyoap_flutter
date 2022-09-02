@@ -1,4 +1,3 @@
-import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -58,15 +57,5 @@ class VMCodeEditor {
         controller.text.replaceRange(selection.start, selection.end, text);
     controller.selection =
         TextSelection.collapsed(offset: selection.start + text.length);
-  }
-
-  void save() {
-    ref.read(nodeEditorTargetProvider).recursiveStatus.conditionClickableString =
-        ref.read(controllerClickableProvider).text;
-    ref.read(nodeEditorTargetProvider).recursiveStatus.conditionVisibleString =
-        ref.read(controllerVisibleProvider).text;
-    ref.read(nodeEditorTargetProvider).recursiveStatus.executeCodeString =
-        ref.read(controllerExecuteProvider).text;
-    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
   }
 }
