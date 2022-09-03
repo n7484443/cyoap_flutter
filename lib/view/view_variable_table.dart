@@ -200,7 +200,8 @@ class VariableTiles extends ConsumerWidget {
         if (asBottom) {
           variableList.add(
             Chip(
-              label: Text("$name  ${values.valueType.data.toString()}", style: ConstList.getFont(ref.watch(variableFontProvider))),
+              label: Text("$name  ${values.valueType.data.toString()}",
+                  style: ConstList.getFont(ref.watch(variableFontProvider))),
             ),
           );
         } else {
@@ -261,12 +262,14 @@ class NodeTiles extends ConsumerWidget {
     var iconCheckBoxBlank = const Icon(Icons.check_box_outline_blank);
     for (var node in nodeList) {
       if (isEditable) {
-        widgetList.add(ExpansionTile(
-          title: Text(node.name),
-          children: node.children == null
-              ? []
-              : node.children!
-                  .map((e) => ListTile(
+        widgetList.add(
+          ExpansionTile(
+            title: Text(node.name),
+            children: node.children == null
+                ? []
+                : node.children!
+                    .map(
+                      (e) => ListTile(
                         title: Text(e.name),
                         onTap: () {
                           if (ref.watch(changeTabProvider) == 2) {
@@ -277,23 +280,27 @@ class NodeTiles extends ConsumerWidget {
                             }
                           }
                         },
-                      ))
-                  .toList(),
-        ));
+                      ),
+                    )
+                    .toList(),
+          ),
+        );
       } else {
-        widgetList.add(ExpansionTile(
-          title: Text(node.name),
-          children: node.children == null
-              ? []
-              : node.children!
-                  .map((e) => ListTile(
-                        title: Text(e.name),
-                        trailing: (e.check ?? false)
-                            ? iconCheckBox
-                            : iconCheckBoxBlank,
-                      ))
-                  .toList(),
-        ));
+        widgetList.add(
+          ExpansionTile(
+            title: Text(node.name),
+            children: node.children == null
+                ? []
+                : node.children!
+                    .map((e) => ListTile(
+                          title: Text(e.name),
+                          trailing: (e.check ?? false)
+                              ? iconCheckBox
+                              : iconCheckBoxBlank,
+                        ))
+                    .toList(),
+          ),
+        );
       }
     }
     return ExpansionTile(
