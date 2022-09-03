@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
@@ -6,12 +7,14 @@ import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.da
 import 'package:cyoap_flutter/view/view_make_platform.dart' deferred as v_make;
 import 'package:cyoap_flutter/view/view_play.dart' deferred as v_play;
 import 'package:cyoap_flutter/view/view_start.dart' deferred as v_start;
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:tuple/tuple.dart';
 
 import 'color_schemes.g.dart';
@@ -36,7 +39,7 @@ class ConstList {
     return !isWeb() && Platform.isWindows;
   }
 
-  static bool isRotatable(BuildContext context){
+  static bool isRotatable(BuildContext context) {
     return ConstList.isMobile() ||
         (ConstList.isWeb() &&
             ConstList.isSmallDisplay(context) &&
@@ -65,6 +68,15 @@ class ConstList {
     platform_specified.PlatformSpecified().init();
     var packageInfo = await PackageInfo.fromPlatform();
     _version = packageInfo.version;
+
+    var userInfo = {
+      'platform' : isWeb() ? 'web' : isMobile() ? 'mobile' : 'desktop',
+      'version' : _version,
+    };
+    if(isMobile()){
+      userInfo['androidVersion'] = (await DeviceInfoPlugin().androidInfo).version.sdkInt.toString();
+    }
+    Sentry.configureScope((scope) => scope.setContexts('USER_INFO', userInfo));
   }
 
   static DefaultStyles getDefaultThemeData(BuildContext context, double scale,
@@ -145,6 +157,8 @@ class ConstList {
   }
 }
 
+const String sentryDsn = 'https://300bedade0de419fb189b2c5634ca1d8@o1393272.ingest.sentry.io/6714767';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   ConstList.preInit().then((value) async {
@@ -153,25 +167,35 @@ void main() {
       await v_start.loadLibrary();
       await v_make.loadLibrary();
     }
-    runApp(
-      ProviderScope(
-        child: MaterialApp(
-          title: 'CYOAP',
-          initialRoute: '/',
-          routes: ConstList.isDistributed
-              ? {'/': (context) => v_play.ViewPlay()}
-              : {
-                  '/': (context) => v_start.ViewStart(),
-                  '/viewPlay': (context) => v_play.ViewPlay(),
-                  '/viewMake': (context) => v_make.ViewMakePlatform(),
-                },
-          theme: appThemeLight,
-          darkTheme: appThemeDark,
-          themeMode: ThemeMode.light,
-          debugShowCheckedModeBanner: false,
+    runZonedGuarded(() async {
+      await SentryFlutter.init(
+            (options) {
+          options.dsn = kDebugMode ? '' : sentryDsn;
+          options.attachStacktrace = true;
+        },
+        appRunner: () => runApp(
+          ProviderScope(
+            child: MaterialApp(
+              title: 'CYOAP',
+              initialRoute: '/',
+              routes: ConstList.isDistributed
+                  ? {'/': (context) => v_play.ViewPlay()}
+                  : {
+                '/': (context) => v_start.ViewStart(),
+                '/viewPlay': (context) => v_play.ViewPlay(),
+                '/viewMake': (context) => v_make.ViewMakePlatform(),
+              },
+              theme: appThemeLight,
+              darkTheme: appThemeDark,
+              themeMode: ThemeMode.light,
+              debugShowCheckedModeBanner: false,
+            ),
+          ),
         ),
-      ),
-    );
+      );
+    }, (error, stack) async {
+      await Sentry.captureException(error, stackTrace: stack);
+    });
   }).then((value) => ConstList.init());
 }
 
