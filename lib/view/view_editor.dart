@@ -151,6 +151,7 @@ class ViewControlPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         DropdownButton<ChoiceNodeMode>(
           value: ref.watch(nodeModeProvider),
