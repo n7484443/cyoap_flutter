@@ -40,7 +40,7 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
         },
         child: Scaffold(
           drawer: const Drawer(
-            child: ViewVariable(),
+            child: ViewEditDrawer(),
           ),
           body: IndexedStack(
             index: ref.watch(changeTabProvider),
@@ -58,7 +58,7 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
           children: [
             const LimitedBox(
               maxWidth: 250,
-              child: ViewVariable(),
+              child: ViewEditDrawer(),
             ),
             Flexible(
               child: IndexedStack(

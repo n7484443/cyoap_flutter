@@ -36,6 +36,13 @@ class ConstList {
     return !isWeb() && Platform.isWindows;
   }
 
+  static bool isRotatable(BuildContext context){
+    return ConstList.isMobile() ||
+        (ConstList.isWeb() &&
+            ConstList.isSmallDisplay(context) &&
+            !ConstList.isDistributed);
+  }
+
   static double getScreenWidth(BuildContext context) {
     return MediaQuery.of(context).size.width;
   }

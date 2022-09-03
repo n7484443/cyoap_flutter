@@ -41,42 +41,13 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
       );
     }
 
-    var appbar = ConstList.isDistributed
-        ? null
-        : AppBar(
-            leading: IconButton(
-              tooltip: '뒤로가기',
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          );
-    if (ConstList.isSmallDisplay(context)) {
-      return Scaffold(
-        appBar: appbar,
-        drawer: const Drawer(
-          child: ViewVariable(),
-        ),
-        body: const NestedScroll(),
-      );
-    } else {
-      return Scaffold(
-        body: Row(
-          children: [
-            const LimitedBox(
-              maxWidth: 250,
-              child: ViewVariable(),
-            ),
-            Flexible(
-              child: Scaffold(
-                appBar: appbar,
-                body: const NestedScroll(),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
+    return Scaffold(
+      appBar: ConstList.isDistributed ? null : AppBar(),
+      endDrawer: const Drawer(
+        child: ViewPlayDrawer(),
+      ),
+      bottomNavigationBar: const VariableTiles(asBottom: true),
+      body: const NestedScroll(),
+    );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
@@ -9,111 +11,59 @@ import '../model/platform_system.dart';
 import '../viewModel/vm_code_editor.dart';
 import '../viewModel/vm_make_platform.dart';
 
-class ViewVariable extends ConsumerWidget {
-  const ViewVariable({super.key});
+class ViewChangeRotation extends ConsumerWidget {
+  const ViewChangeRotation({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<Widget> widgetList;
-    if (isEditable) {
-      widgetList = [
-        ListTile(
-          onTap: () {
-            ref
-                .read(changeTabProvider.notifier)
-                .changePageString('viewDesignSetting', context);
+    if (!ConstList.isRotatable(context)) return const SizedBox.shrink();
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        IconButton(
+          onPressed: () {
+            if (MediaQuery.of(context).orientation == Orientation.portrait) {
+              SystemChrome.setPreferredOrientations(
+                  [DeviceOrientation.landscapeLeft]);
+            } else {
+              SystemChrome.setPreferredOrientations([
+                DeviceOrientation.portraitUp,
+                DeviceOrientation.landscapeRight,
+                DeviceOrientation.landscapeLeft
+              ]);
+            }
           },
-          leading: const Icon(Icons.settings),
-          title: const Text('디자인 설정'),
+          icon: const Icon(Icons.rotate_right),
         ),
-        ListTile(
-          leading: const Icon(Icons.settings),
-          title: const Text('이미지 설정'),
-          onTap: () => ref
-              .read(changeTabProvider.notifier)
-              .changePageString("viewSource", context),
-        ),
-        ListTile(
-          onTap: () {
-            ref
-                .read(changeTabProvider.notifier)
-                .changePageString('viewGlobalSetting', context);
+        IconButton(
+          onPressed: () {
+            if (MediaQuery.of(context).orientation == Orientation.portrait) {
+              SystemChrome.setPreferredOrientations(
+                  [DeviceOrientation.landscapeRight]);
+            } else {
+              SystemChrome.setPreferredOrientations([
+                DeviceOrientation.portraitUp,
+                DeviceOrientation.landscapeRight,
+                DeviceOrientation.landscapeLeft
+              ]);
+            }
           },
-          leading: const Icon(Icons.settings),
-          title: const Text('전역 설정'),
+          icon: const Icon(Icons.rotate_left),
         ),
-      ];
-    } else {
-      widgetList = [
-        ListTile(
-          leading: const Text('버전'),
-          title: Text(ConstList.version),
-        ),
-        ListTile(
-          title: ViewSwitchLabel(
-            () => ref
-                .read(isVisibleSourceProvider.notifier)
-                .update((state) => !state),
-            ref.watch(isVisibleSourceProvider),
-            label: '출처 보기',
-          ),
-        ),
-        ListTile(
-          title: ViewSwitchLabel(
-            () => ref
-                .read(isDebugModeProvider.notifier)
-                .update((state) => !state),
-            ref.watch(isDebugModeProvider),
-            label: '디버그 모드 활성화',
-          ),
-        ),
-      ];
-    }
-    if (ConstList.isMobile() ||
-        (ConstList.isWeb() &&
-            ConstList.isSmallDisplay(context) &&
-            !ConstList.isDistributed)) {
-      widgetList.add(
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(
-              onPressed: () {
-                if (MediaQuery.of(context).orientation ==
-                    Orientation.portrait) {
-                  SystemChrome.setPreferredOrientations(
-                      [DeviceOrientation.landscapeLeft]);
-                } else {
-                  SystemChrome.setPreferredOrientations([
-                    DeviceOrientation.portraitUp,
-                    DeviceOrientation.landscapeRight,
-                    DeviceOrientation.landscapeLeft
-                  ]);
-                }
-              },
-              icon: const Icon(Icons.rotate_right),
-            ),
-            IconButton(
-              onPressed: () {
-                if (MediaQuery.of(context).orientation ==
-                    Orientation.portrait) {
-                  SystemChrome.setPreferredOrientations(
-                      [DeviceOrientation.landscapeRight]);
-                } else {
-                  SystemChrome.setPreferredOrientations([
-                    DeviceOrientation.portraitUp,
-                    DeviceOrientation.landscapeRight,
-                    DeviceOrientation.landscapeLeft
-                  ]);
-                }
-              },
-              icon: const Icon(Icons.rotate_left),
-            ),
-          ],
-        ),
-      );
-    }
+      ],
+    );
+  }
+}
 
+class ViewEditDrawer extends ConsumerWidget {
+  const ViewEditDrawer({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -127,7 +77,83 @@ class ViewVariable extends ConsumerWidget {
           ),
         ),
         Column(
-          children: widgetList,
+          children: [
+            ListTile(
+              onTap: () {
+                ref
+                    .read(changeTabProvider.notifier)
+                    .changePageString('viewDesignSetting', context);
+              },
+              leading: const Icon(Icons.settings),
+              title: const Text('디자인 설정'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('이미지 설정'),
+              onTap: () => ref
+                  .read(changeTabProvider.notifier)
+                  .changePageString("viewSource", context),
+            ),
+            ListTile(
+              onTap: () {
+                ref
+                    .read(changeTabProvider.notifier)
+                    .changePageString('viewGlobalSetting', context);
+              },
+              leading: const Icon(Icons.settings),
+              title: const Text('전역 설정'),
+            ),
+            const ViewChangeRotation(),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class ViewPlayDrawer extends ConsumerWidget {
+  const ViewPlayDrawer({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Flexible(
+          child: ListView(
+            controller: ScrollController(),
+            children: [
+              const VariableTiles(),
+              const NodeTiles(),
+            ],
+          ),
+        ),
+        Column(
+          children: [
+            ListTile(
+              leading: const Text('버전'),
+              title: Text(ConstList.version),
+            ),
+            ListTile(
+              title: ViewSwitchLabel(
+                () => ref
+                    .read(isVisibleSourceProvider.notifier)
+                    .update((state) => !state),
+                ref.watch(isVisibleSourceProvider),
+                label: '출처 보기',
+              ),
+            ),
+            ListTile(
+              title: ViewSwitchLabel(
+                () => ref
+                    .read(isDebugModeProvider.notifier)
+                    .update((state) => !state),
+                ref.watch(isDebugModeProvider),
+                label: '디버그 모드 활성화',
+              ),
+            ),
+            const ViewChangeRotation()
+          ],
         ),
       ],
     );
@@ -135,7 +161,10 @@ class ViewVariable extends ConsumerWidget {
 }
 
 class VariableTiles extends ConsumerWidget {
+  final bool asBottom;
+
   const VariableTiles({
+    this.asBottom = false,
     super.key,
   });
 
@@ -167,11 +196,37 @@ class VariableTiles extends ConsumerWidget {
         }
       } else if (ref.watch(isDebugModeProvider) || values.visible) {
         var name = values.displayName.isEmpty ? key : values.displayName;
-        variableList.add(ListTile(
-          title: Text(name),
-          trailing: Text(values.valueType.data.toString()),
-        ));
+        if (asBottom) {
+          variableList.add(
+            Chip(
+              label: Text("$name   ${values.valueType.data.toString()}"),
+            ),
+          );
+        } else {
+          variableList.add(ListTile(
+            title: Text(name),
+            trailing: Text(values.valueType.data.toString()),
+          ));
+        }
       }
+    }
+    if (asBottom) {
+      return ScrollConfiguration(
+        behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
+          PointerDeviceKind.touch,
+          PointerDeviceKind.mouse,
+        }),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Wrap(
+              spacing: 10,
+              children: variableList,
+            ),
+          ),
+        ),
+      );
     }
     return ExpansionTile(
       title: const Text('변수'),
