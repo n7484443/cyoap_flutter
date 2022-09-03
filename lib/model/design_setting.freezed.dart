@@ -26,6 +26,7 @@ mixin _$PlatformDesignSetting {
   bool get titleOutline => throw _privateConstructorUsedError;
   String get titleFont => throw _privateConstructorUsedError;
   String get mainFont => throw _privateConstructorUsedError;
+  String get variableFont => throw _privateConstructorUsedError;
   Color get colorBackground => throw _privateConstructorUsedError;
   Color get colorNode => throw _privateConstructorUsedError;
   Color get colorOutline => throw _privateConstructorUsedError;
@@ -48,6 +49,7 @@ abstract class $PlatformDesignSettingCopyWith<$Res> {
       bool titleOutline,
       String titleFont,
       String mainFont,
+      String variableFont,
       Color colorBackground,
       Color colorNode,
       Color colorOutline,
@@ -70,6 +72,7 @@ class _$PlatformDesignSettingCopyWithImpl<$Res>
     Object? titleOutline = freezed,
     Object? titleFont = freezed,
     Object? mainFont = freezed,
+    Object? variableFont = freezed,
     Object? colorBackground = freezed,
     Object? colorNode = freezed,
     Object? colorOutline = freezed,
@@ -95,6 +98,10 @@ class _$PlatformDesignSettingCopyWithImpl<$Res>
       mainFont: mainFont == freezed
           ? _value.mainFont
           : mainFont // ignore: cast_nullable_to_non_nullable
+              as String,
+      variableFont: variableFont == freezed
+          ? _value.variableFont
+          : variableFont // ignore: cast_nullable_to_non_nullable
               as String,
       colorBackground: colorBackground == freezed
           ? _value.colorBackground
@@ -129,6 +136,7 @@ abstract class _$$_PlatformDesignSettingCopyWith<$Res>
       bool titleOutline,
       String titleFont,
       String mainFont,
+      String variableFont,
       Color colorBackground,
       Color colorNode,
       Color colorOutline,
@@ -154,6 +162,7 @@ class __$$_PlatformDesignSettingCopyWithImpl<$Res>
     Object? titleOutline = freezed,
     Object? titleFont = freezed,
     Object? mainFont = freezed,
+    Object? variableFont = freezed,
     Object? colorBackground = freezed,
     Object? colorNode = freezed,
     Object? colorOutline = freezed,
@@ -179,6 +188,10 @@ class __$$_PlatformDesignSettingCopyWithImpl<$Res>
       mainFont: mainFont == freezed
           ? _value.mainFont
           : mainFont // ignore: cast_nullable_to_non_nullable
+              as String,
+      variableFont: variableFont == freezed
+          ? _value.variableFont
+          : variableFont // ignore: cast_nullable_to_non_nullable
               as String,
       colorBackground: colorBackground == freezed
           ? _value.colorBackground
@@ -210,6 +223,7 @@ class _$_PlatformDesignSetting implements _PlatformDesignSetting {
       this.titleOutline = true,
       this.titleFont = "notoSans",
       this.mainFont = "notoSans",
+      this.variableFont = "notoSans",
       this.colorBackground = Colors.white,
       this.colorNode = Colors.white,
       this.colorOutline = Colors.lightBlueAccent,
@@ -235,6 +249,9 @@ class _$_PlatformDesignSetting implements _PlatformDesignSetting {
   final String mainFont;
   @override
   @JsonKey()
+  final String variableFont;
+  @override
+  @JsonKey()
   final Color colorBackground;
   @override
   @JsonKey()
@@ -248,7 +265,7 @@ class _$_PlatformDesignSetting implements _PlatformDesignSetting {
 
   @override
   String toString() {
-    return 'PlatformDesignSetting(titleOverlap: $titleOverlap, titlePosition: $titlePosition, titleOutline: $titleOutline, titleFont: $titleFont, mainFont: $mainFont, colorBackground: $colorBackground, colorNode: $colorNode, colorOutline: $colorOutline, colorTitle: $colorTitle)';
+    return 'PlatformDesignSetting(titleOverlap: $titleOverlap, titlePosition: $titlePosition, titleOutline: $titleOutline, titleFont: $titleFont, mainFont: $mainFont, variableFont: $variableFont, colorBackground: $colorBackground, colorNode: $colorNode, colorOutline: $colorOutline, colorTitle: $colorTitle)';
   }
 
   @override
@@ -264,6 +281,8 @@ class _$_PlatformDesignSetting implements _PlatformDesignSetting {
                 .equals(other.titleOutline, titleOutline) &&
             const DeepCollectionEquality().equals(other.titleFont, titleFont) &&
             const DeepCollectionEquality().equals(other.mainFont, mainFont) &&
+            const DeepCollectionEquality()
+                .equals(other.variableFont, variableFont) &&
             const DeepCollectionEquality()
                 .equals(other.colorBackground, colorBackground) &&
             const DeepCollectionEquality().equals(other.colorNode, colorNode) &&
@@ -282,6 +301,7 @@ class _$_PlatformDesignSetting implements _PlatformDesignSetting {
       const DeepCollectionEquality().hash(titleOutline),
       const DeepCollectionEquality().hash(titleFont),
       const DeepCollectionEquality().hash(mainFont),
+      const DeepCollectionEquality().hash(variableFont),
       const DeepCollectionEquality().hash(colorBackground),
       const DeepCollectionEquality().hash(colorNode),
       const DeepCollectionEquality().hash(colorOutline),
@@ -308,6 +328,7 @@ abstract class _PlatformDesignSetting implements PlatformDesignSetting {
       final bool titleOutline,
       final String titleFont,
       final String mainFont,
+      final String variableFont,
       final Color colorBackground,
       final Color colorNode,
       final Color colorOutline,
@@ -326,6 +347,8 @@ abstract class _PlatformDesignSetting implements PlatformDesignSetting {
   String get titleFont;
   @override
   String get mainFont;
+  @override
+  String get variableFont;
   @override
   Color get colorBackground;
   @override

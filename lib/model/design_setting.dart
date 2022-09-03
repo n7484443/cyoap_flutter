@@ -13,6 +13,7 @@ class PlatformDesignSetting with _$PlatformDesignSetting {
     @Default(true) bool titleOutline,
     @Default("notoSans") String titleFont,
     @Default("notoSans") String mainFont,
+    @Default("notoSans") String variableFont,
     @Default(Colors.white) Color colorBackground,
     @Default(Colors.white) Color colorNode,
     @Default(Colors.lightBlueAccent) Color colorOutline,

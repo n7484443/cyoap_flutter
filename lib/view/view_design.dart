@@ -18,39 +18,53 @@ class ViewDesignSetting extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(titleFontProvider, (String? previous, String next) {
-      getPlatform.designSetting = getPlatform.designSetting.copyWith(titleFont: next);
+      getPlatform.designSetting =
+          getPlatform.designSetting.copyWith(titleFont: next);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
     ref.listen(mainFontProvider, (String? previous, String next) {
-      getPlatform.designSetting = getPlatform.designSetting.copyWith(mainFont: next);
+      getPlatform.designSetting =
+          getPlatform.designSetting.copyWith(mainFont: next);
+      ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+    });
+    ref.listen(variableFontProvider, (String? previous, String next) {
+      getPlatform.designSetting =
+          getPlatform.designSetting.copyWith(variableFont: next);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
     ref.listen(titlePositionProvider, (bool? previous, bool next) {
-      getPlatform.designSetting = getPlatform.designSetting.copyWith(titlePosition: next);
+      getPlatform.designSetting =
+          getPlatform.designSetting.copyWith(titlePosition: next);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
     ref.listen(titleOverlapProvider, (bool? previous, bool next) {
-      getPlatform.designSetting = getPlatform.designSetting.copyWith(titleOverlap: next);
+      getPlatform.designSetting =
+          getPlatform.designSetting.copyWith(titleOverlap: next);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
     ref.listen(titleOutlineProvider, (bool? previous, bool next) {
-      getPlatform.designSetting = getPlatform.designSetting.copyWith(titleOutline: next);
+      getPlatform.designSetting =
+          getPlatform.designSetting.copyWith(titleOutline: next);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
     ref.listen(colorBackgroundProvider, (previous, Color next) {
-      getPlatform.designSetting = getPlatform.designSetting.copyWith(colorBackground: next);
+      getPlatform.designSetting =
+          getPlatform.designSetting.copyWith(colorBackground: next);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
     ref.listen(colorNodeProvider, (previous, Color next) {
-      getPlatform.designSetting = getPlatform.designSetting.copyWith(colorNode: next);
+      getPlatform.designSetting =
+          getPlatform.designSetting.copyWith(colorNode: next);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
     ref.listen(colorOutlineProvider, (previous, Color next) {
-      getPlatform.designSetting = getPlatform.designSetting.copyWith(colorOutline: next);
+      getPlatform.designSetting =
+          getPlatform.designSetting.copyWith(colorOutline: next);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
     ref.listen(colorTitleProvider, (previous, Color next) {
-      getPlatform.designSetting = getPlatform.designSetting.copyWith(colorTitle: next);
+      getPlatform.designSetting =
+          getPlatform.designSetting.copyWith(colorTitle: next);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
 
@@ -109,41 +123,17 @@ class ViewDesignSetting extends ConsumerWidget {
                     ),
                     Column(
                       children: [
-                        DropdownButtonFormField<String>(
-                          decoration: const InputDecoration(labelText: '제목 폰트'),
-                          items: ConstList.textFontList.keys
-                              .map<DropdownMenuItem<String>>((name) =>
-                                  DropdownMenuItem(
-                                      value: name,
-                                      child: Text(name,
-                                          style: ConstList.getFont(name))))
-                              .toList(),
-                          onChanged: (String? t) {
-                            if (t != null) {
-                              ref
-                                  .read(titleFontProvider.notifier)
-                                  .update((state) => t);
-                            }
-                          },
-                          value: ref.watch(titleFontProvider),
+                        ViewFontSelector(
+                          label: '제목 폰트',
+                          provider: titleFontProvider,
                         ),
-                        DropdownButtonFormField<String>(
-                          decoration: const InputDecoration(labelText: '내용 폰트'),
-                          items: ConstList.textFontList.keys
-                              .map<DropdownMenuItem<String>>((name) =>
-                                  DropdownMenuItem(
-                                      value: name,
-                                      child: Text(name,
-                                          style: ConstList.getFont(name))))
-                              .toList(),
-                          onChanged: (String? t) {
-                            if (t != null) {
-                              ref
-                                  .read(mainFontProvider.notifier)
-                                  .update((state) => t);
-                            }
-                          },
-                          value: ref.watch(mainFontProvider),
+                        ViewFontSelector(
+                          label: '내용 폰트',
+                          provider: mainFontProvider,
+                        ),
+                        ViewFontSelector(
+                          label: '점수 폰트',
+                          provider: variableFontProvider,
                         ),
                       ],
                     ),
@@ -184,6 +174,34 @@ class ViewDesignSetting extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class ViewFontSelector extends ConsumerWidget {
+  final String label;
+  final AutoDisposeStateProvider<String> provider;
+
+  const ViewFontSelector({
+    required this.label,
+    required this.provider,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return DropdownButtonFormField<String>(
+      decoration: InputDecoration(labelText: label),
+      items: ConstList.textFontList.keys
+          .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
+              value: name, child: Text(name, style: ConstList.getFont(name))))
+          .toList(),
+      onChanged: (String? t) {
+        if (t != null) {
+          ref.read(provider.notifier).update((state) => t);
+        }
+      },
+      value: ref.watch(provider),
     );
   }
 }

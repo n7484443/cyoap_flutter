@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/platform_system.dart';
 import '../viewModel/vm_code_editor.dart';
+import '../viewModel/vm_design_setting.dart';
 import '../viewModel/vm_make_platform.dart';
 
 class ViewChangeRotation extends ConsumerWidget {
@@ -199,7 +200,7 @@ class VariableTiles extends ConsumerWidget {
         if (asBottom) {
           variableList.add(
             Chip(
-              label: Text("$name   ${values.valueType.data.toString()}"),
+              label: Text("$name  ${values.valueType.data.toString()}", style: ConstList.getFont(ref.watch(variableFontProvider))),
             ),
           );
         } else {

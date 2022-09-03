@@ -14,6 +14,7 @@ _$_PlatformDesignSetting _$$_PlatformDesignSettingFromJson(
       titleOutline: json['titleOutline'] as bool? ?? true,
       titleFont: json['titleFont'] as String? ?? "notoSans",
       mainFont: json['mainFont'] as String? ?? "notoSans",
+      variableFont: json['variableFont'] as String? ?? "notoSans",
       colorBackground: json['colorBackground'] == null
           ? Colors.white
           : const ColorConverter().fromJson(json['colorBackground'] as int),
@@ -36,6 +37,7 @@ Map<String, dynamic> _$$_PlatformDesignSettingToJson(
       'titleOutline': instance.titleOutline,
       'titleFont': instance.titleFont,
       'mainFont': instance.mainFont,
+      'variableFont': instance.variableFont,
       'colorBackground':
           const ColorConverter().toJson(instance.colorBackground),
       'colorNode': const ColorConverter().toJson(instance.colorNode),
