@@ -1,10 +1,12 @@
 import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
 import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../main.dart';
 import '../viewModel/vm_platform.dart';
+import '../viewModel/vm_snackbar.dart';
 
 class ViewPlay extends ConsumerStatefulWidget {
   const ViewPlay({
@@ -16,6 +18,34 @@ class ViewPlay extends ConsumerStatefulWidget {
 }
 
 class _ViewPlayState extends ConsumerState<ViewPlay> {
+  void _showSnackBar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: SingleChildScrollView(
+          child: SelectionArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children:
+                  ref.watch(snackBarErrorProvider).map((e) => Text(e)).toList(),
+            ),
+          ),
+        ),
+        action: SnackBarAction(
+          label: '클립보드로 복사',
+          onPressed: () {
+            Clipboard.setData(ClipboardData(
+                text: ref.watch(snackBarErrorProvider).fold(
+                      "",
+                      (previousValue, element) => "$previousValue \n $element",
+                    )));
+            ref.read(snackBarErrorProvider.notifier).clear();
+          },
+        ),
+        duration: const Duration(days: 365),
+      ),
+    );
+  }
+
   @override
   void initState() {
     if (ConstList.isDistributed) {
@@ -40,6 +70,15 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
         ),
       );
     }
+
+    ref.listen(
+      snackBarErrorProvider,
+      (previous, List<String> next) {
+        if (next.isNotEmpty) {
+          _showSnackBar();
+        }
+      },
+    );
 
     return Scaffold(
       appBar: ConstList.isDistributed ? null : AppBar(),

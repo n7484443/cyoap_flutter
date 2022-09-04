@@ -11,6 +11,7 @@ final changeTabProvider = StateNotifierProvider<ChangeTabNotifier, int>((ref) {
 
 class ChangeTabNotifier extends StateNotifier<int> {
   final Ref ref;
+
   ChangeTabNotifier(this.ref) : super(0);
   List<int> stack = List.empty(growable: true);
 
@@ -76,22 +77,18 @@ class ChangeTabNotifier extends StateNotifier<int> {
     }
   }
 
-  void changePageString(String index, BuildContext context) {
-    switch (index) {
-      case "viewEditor":
-        return changePage(1, context);
-      case "viewGlobalSetting":
-        return changePage(2, context);
-      case "viewSource":
-        return changePage(3, context);
-      case "viewFontSource":
-        return changePage(4, context);
-      case "viewImageEditor":
-        return changePage(5, context);
-      case "viewDesignSetting":
-        return changePage(6, context);
-      default:
-        return changePage(0, context);
-    }
+  void changePageString(String name, BuildContext context) {
+    var index = tabList.indexOf(name).clamp(0, tabList.length);
+    changePage(index, context);
   }
 }
+
+final List<String> tabList = [
+  "viewMake",
+  "viewEditor",
+  "viewGlobalSetting",
+  "viewSource",
+  "viewFontSource",
+  "viewImageEditor",
+  "viewDesignSetting",
+];

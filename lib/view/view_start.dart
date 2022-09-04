@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import '../model/opening_file_folder.dart';
 import '../model/platform_system.dart';
+import '../viewModel/vm_snackbar.dart';
 import '../viewModel/vm_start.dart';
 
 class ViewStart extends ConsumerWidget {
@@ -172,6 +173,7 @@ class SelectMode extends ConsumerWidget {
                 if (value) {
                   getPlatformFileSystem.isEditable = false;
                   Navigator.of(context).pushNamed('/viewPlay');
+                  ref.read(snackBarErrorProvider.notifier).update();
                 }
               });
             },

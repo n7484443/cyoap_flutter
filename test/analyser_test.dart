@@ -15,7 +15,7 @@ void main() {
     let numberTest4 = 6 * 3
     let numberTest5 = 6 / 3
     """;
-    Analyser().run(Analyser().analyseCodes(strTest));
+    Analyser().run(Analyser().analyseMultiLine(strTest));
     expect(ins.getValueType('numberTest0')?.data, closeTo(-5.5, epsilon));
     expect(ins.getValueType('numberTest1')?.data, 24);
     expect(ins.getValueType('numberTest2')?.data, 14);
@@ -28,7 +28,7 @@ void main() {
     var boolTest1 = true
     var boolTest2 = false
     """;
-    Analyser().run(Analyser().analyseCodes(strTest));
+    Analyser().run(Analyser().analyseMultiLine(strTest));
     expect(ins.getValueType('boolTest1')?.data, true);
     expect(ins.getValueType('boolTest2')?.data, false);
   });
@@ -39,7 +39,7 @@ void main() {
     var ceilTest = ceil(4.8)
     var floorTest = floor(4.8)
     """;
-    Analyser().run(Analyser().analyseCodes(strTest));
+    Analyser().run(Analyser().analyseMultiLine(strTest));
     expect(ins.getValueType('roundTest')?.data, 5);
     expect(ins.getValueType('ceilTest')?.data, 5);
     expect(ins.getValueType('floorTest')?.data, 4);
@@ -52,7 +52,7 @@ void main() {
     var stringAddTest1 = "문자열테스트1"
     var stringAddTest2 = stringAddTest == stringAddTest1
     """;
-    Analyser().run(Analyser().analyseCodes(strTest));
+    Analyser().run(Analyser().analyseMultiLine(strTest));
     expect(ins.getValueType('stringTest')?.data, "문자열 테스트String1");
     expect(ins.getValueType('stringAddTest')?.data, "문자열테스트1");
     expect(ins.getValueType('stringAddTest1')?.data, "문자열테스트1");
@@ -65,7 +65,7 @@ void main() {
     var comp2 = numberTest0 >= -5.5
     var comp3 = numberTest0 > -5.5
     """;
-    Analyser().run(Analyser().analyseCodes(strTest));
+    Analyser().run(Analyser().analyseMultiLine(strTest));
     expect(ins.getValueType('comp1')?.data, true);
     expect(ins.getValueType('comp2')?.data, true);
     expect(ins.getValueType('comp3')?.data, false);
@@ -77,7 +77,7 @@ void main() {
     var test_beta = 1
     test_beta -= 5
     """;
-    Analyser().run(Analyser().analyseCodes(addTestStr));
+    Analyser().run(Analyser().analyseMultiLine(addTestStr));
     expect(ins.getValueType('test_alpha')?.data, 4);
     expect(ins.getValueType('test_beta')?.data, -4);
   });
@@ -91,7 +91,7 @@ void main() {
     var and_test_3 = and(true, false)
     var and_test_4 = and(false, false)
     """;
-    Analyser().run(Analyser().analyseCodes(andTestStr));
+    Analyser().run(Analyser().analyseMultiLine(andTestStr));
 
     expect(ins.getValueType('and_test_1')?.data, true);
     expect(ins.getValueType('and_test_2')?.data, false);
@@ -103,7 +103,7 @@ void main() {
     String strTest = """
     var multiple_test_1 = and(not(and(true, false)), true)
     """;
-    Analyser().run(Analyser().analyseCodes(strTest));
+    Analyser().run(Analyser().analyseMultiLine(strTest));
     expect(ins.getValueType('multiple_test_1')?.data, true);
   });
 
@@ -139,9 +139,9 @@ void main() {
     var visibleTest = isVisible("globalTest")
     var visibleTest_other = isVisible("globalTest_other")
     """;
-    Analyser().run(Analyser().analyseCodes(strTest));
+    Analyser().run(Analyser().analyseMultiLine(strTest));
     ins.clearLocalVariable();
-    Analyser().run(Analyser().analyseCodes(strGlobalTest));
+    Analyser().run(Analyser().analyseMultiLine(strGlobalTest));
     expect(ins.getValueType('T')?.data, true);
     expect(ins.getValueType('existTest')?.data, true);
     expect(ins.getValueType('existTest2')?.data, false);
@@ -158,7 +158,7 @@ void main() {
       var commentTest1 = 0
     """;
     ins.clearLocalVariable();
-    Analyser().run(Analyser().analyseCodes(strTest));
+    Analyser().run(Analyser().analyseMultiLine(strTest));
     expect(ins.getValueType('commentTest')?.data, 123);
     expect(ins.getValueType('asb')?.data, null);
     expect(ins.getValueType('commentTest1')?.data, 0);
@@ -176,7 +176,7 @@ void main() {
       var gamma = 12
     }
     """;
-    Analyser().run(Analyser().analyseCodes(strTest));
+    Analyser().run(Analyser().analyseMultiLine(strTest));
     expect(ins.getValueType('alpha')?.data, 11);
     expect(ins.getValueType('beta')?.data, null);
     expect(ins.getValueType('gamma')?.data, 12);
@@ -186,7 +186,7 @@ void main() {
     String strTest = """
     var test = true
     """;
-    var out = Analyser().analyseCodes(strTest);
+    var out = Analyser().analyseMultiLine(strTest);
     Analyser().run(out);
     expect(ins.getValueType('test')?.data, true);
     expect(out.toString().trim(),

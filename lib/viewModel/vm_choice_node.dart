@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
+import 'package:cyoap_flutter/viewModel/vm_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -246,6 +247,7 @@ class ChoiceNodeSizeNotifier extends StateNotifier<int> {
 
 void updateStatusAll(Ref ref) {
   getPlatform.updateStatusAll();
+  ref.read(snackBarErrorProvider.notifier).update();
   refreshPage(ref);
 }
 

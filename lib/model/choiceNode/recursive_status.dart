@@ -39,11 +39,11 @@ class RecursiveStatus {
 
   Map<String, dynamic> toJson() => _$RecursiveStatusToJson(this);
 
-  void generateParser() {
+  void generateParser(String pos) {
     conditionClickableRecursive =
-        Analyser().analyseSingleLine(conditionClickableString);
+        Analyser().analyseSingleLine(conditionClickableString, pos: pos);
     conditionVisibleRecursive =
-        Analyser().analyseSingleLine(conditionVisibleString);
-    executeCodeRecursive = Analyser().analyseCodes(executeCodeString);
+        Analyser().analyseSingleLine(conditionVisibleString, pos: pos);
+    executeCodeRecursive = Analyser().analyseMultiLine(executeCodeString, pos: pos);
   }
 }

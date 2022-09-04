@@ -22,19 +22,6 @@ class LineSetting extends GenerableParserAndPosition {
     recursiveStatus = RecursiveStatus();
   }
   @override
-  bool operator ==(Object other){
-    return other is LineSetting &&
-        super == other &&
-        maxSelect == other.maxSelect &&
-        alwaysVisible == other.alwaysVisible &&
-        backgroundColor == other.backgroundColor &&
-        backgroundImageString == other.backgroundImageString;
-  }
-
-  @override
-  int get hashCode => Object.hash(maxSelect, alwaysVisible, backgroundColor, backgroundImageString, super.hashCode);
-
-  @override
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = super.toJson();
     map.addAll({
@@ -122,10 +109,11 @@ class LineSetting extends GenerableParserAndPosition {
     for (var node in children) {
       node.execute();
       if (node.choiceStatus.isSelected() && node.isSelectableMode) {
-        Analyser().run(recursiveStatus.executeCodeRecursive);
+        Analyser().run(recursiveStatus.executeCodeRecursive, pos: errorName);
       }
     }
   }
 
-
+  @override
+  String get errorName => "${pos.data.toString()} $valName";
 }

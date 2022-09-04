@@ -12,6 +12,7 @@ class Analyser {
   }
 
   static final Analyser _instance = Analyser._init();
+  List<String> errorList = [];
 
   factory Analyser() {
     return _instance;
@@ -36,45 +37,51 @@ class Analyser {
     return tokenList;
   }
 
-  RecursiveUnit? analyse(String? codeInput) {
+  RecursiveUnit? analyseMultiLine(String? codeInput, {String pos = ""}) {
     if (codeInput == null) return null;
     try {
       return semanticAnalyser.analyseLines(toTokenList(codeInput));
     } catch (e) {
-      print(e);
+      addError("$pos, $e");
     }
     return null;
   }
 
-  RecursiveUnit? analyseSingleLine(String? codeInput) {
+  RecursiveUnit? analyseSingleLine(String? codeInput, {String pos = ""}) {
     if (codeInput == null) return null;
     try {
       return semanticAnalyser.analyseLine(toTokenList(codeInput));
     } catch (e) {
-      print(e);
+      addError("$pos, $e");
     }
     return null;
   }
 
-  void run(RecursiveUnit? unitList) {
+  void run(RecursiveUnit? unitList, {String pos = ""}) {
     if (unitList == null) return;
     try {
       unitList.unzip();
     } catch (e) {
-      print(e);
+      addError("$pos, $e");
     }
   }
 
-  dynamic check(RecursiveUnit? unitList) {
+  dynamic check(RecursiveUnit? unitList, {String pos = ""}) {
     if (unitList == null) return null;
     try {
       return unitList.unzip().dataUnzip();
     } catch (e) {
-      print(e);
+      addError("$pos, $e");
     }
   }
 
-  RecursiveUnit? analyseCodes(String? codeInput) {
-    return _instance.analyse(codeInput);
+  void addError(String str) {
+    if(!errorList.contains(str)) {
+      print(str);
+      errorList.add(str);
+    }
+  }
+  void clearError() {
+    errorList.clear();
   }
 }

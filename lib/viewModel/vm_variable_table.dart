@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/choiceNode/choice_node.dart';
+import '../model/choiceNode/pos.dart';
 import '../model/platform_system.dart';
 
 final vmVariableTableProvider = StateNotifierProvider<
@@ -40,9 +41,15 @@ class VariableTilesStateNotifier
 class CheckList {
   final String name;
   final bool? check;
+  final Pos pos;
   final List<CheckList>? children;
 
-  const CheckList(this.name, {this.check, this.children});
+  const CheckList({
+    this.check,
+    this.children,
+    required this.pos,
+    required this.name,
+  });
 }
 
 final checkListNotifierProvider =
@@ -67,10 +74,12 @@ class CheckListNotifier extends StateNotifier<List<CheckList>> {
         List<CheckList> subWidgetList = List.empty(growable: true);
         for (var child in line.children) {
           (child as ChoiceNode).doAllChild((node) {
-            subWidgetList.add(CheckList(node.title));
+            subWidgetList.add(CheckList(name: node.title, pos: node.pos));
           });
         }
-        nodeList.add(CheckList("lineSetting_${line.currentPos}",
+        nodeList.add(CheckList(
+            name: "lineSetting_${line.currentPos}",
+            pos: line.pos,
             children: subWidgetList));
       }
     } else {
@@ -79,12 +88,16 @@ class CheckListNotifier extends StateNotifier<List<CheckList>> {
         for (var child in line.children) {
           (child as ChoiceNode).doAllChild((node) {
             if (node.isVisible()) {
-              subWidgetList.add(
-                  CheckList(node.title, check: node.choiceStatus.isSelected()));
+              subWidgetList.add(CheckList(
+                  name: node.title,
+                  pos: child.pos,
+                  check: node.choiceStatus.isSelected()));
             }
           });
         }
-        nodeList.add(CheckList("lineSetting_${line.currentPos}",
+        nodeList.add(CheckList(
+            name: "lineSetting_${line.currentPos}",
+            pos: line.pos,
             children: subWidgetList));
       }
     }

@@ -2,12 +2,14 @@ import 'dart:ui';
 
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
+import 'package:cyoap_flutter/viewModel/vm_editor.dart';
 import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/platform_system.dart';
+import '../viewModel/vm_choice_node.dart';
 import '../viewModel/vm_code_editor.dart';
 import '../viewModel/vm_design_setting.dart';
 import '../viewModel/vm_make_platform.dart';
@@ -272,12 +274,15 @@ class NodeTiles extends ConsumerWidget {
                       (e) => ListTile(
                         title: Text(e.name),
                         onTap: () {
-                          if (ref.watch(changeTabProvider) == 2) {
+                          if (tabList[ref.watch(changeTabProvider)] == "viewEditor") {
                             var vmCodeEditor = ref.read(vmCodeEditorProvider);
                             if (vmCodeEditor.lastFocus != null) {
                               vmCodeEditor.insertText(vmCodeEditor.lastFocus!,
                                   e.name.replaceAll(" ", "").trim());
                             }
+                          }else if(e.pos.length > 1){
+                            ref.read(nodeEditorTargetProvider.notifier).state = ref.read(choiceNodeProvider(e.pos)).node!;
+                            ref.read(changeTabProvider.notifier).changePageString("viewEditor", context);
                           }
                         },
                       ),

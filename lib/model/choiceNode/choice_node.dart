@@ -47,42 +47,6 @@ class ChoiceNode extends GenerableParserAndPosition {
     this.width = width;
   }
 
-  @override
-  bool operator ==(Object other) {
-    return other is ChoiceNode &&
-        super == other &&
-        isCard == other.isCard &&
-        isRound == other.isRound &&
-        imagePosition == other.imagePosition &&
-        choiceNodeMode == other.choiceNodeMode &&
-        title == other.title &&
-        contentsString == other.contentsString &&
-        imageString == other.imageString &&
-        isOccupySpace == other.isOccupySpace &&
-        maximizingImage == other.maximizingImage &&
-        hideTitle == other.hideTitle &&
-        maximumStatus == other.maximumStatus &&
-        random == other.random &&
-        multiSelect == other.multiSelect;
-  }
-
-  @override
-  int get hashCode => Object.hash(
-      isCard,
-      isRound,
-      imagePosition,
-      choiceNodeMode,
-      title,
-      contentsString,
-      imageString,
-      isOccupySpace,
-      maximizingImage,
-      hideTitle,
-      maximumStatus,
-      random,
-      multiSelect,
-      super.hashCode);
-
   ChoiceNode.noTitle(
       int width, this.isCard, this.contentsString, this.imageString)
       : title = '' {
@@ -251,10 +215,13 @@ class ChoiceNode extends GenerableParserAndPosition {
   void execute() {
     if (choiceStatus.isSelected() ||
         choiceNodeMode == ChoiceNodeMode.onlyCode) {
-      Analyser().run(recursiveStatus.executeCodeRecursive);
+      Analyser().run(recursiveStatus.executeCodeRecursive, pos: errorName);
       for (var child in children) {
         child.execute();
       }
     }
   }
+
+  @override
+  String get errorName => "${pos.data.toString()} $title";
 }

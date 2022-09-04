@@ -9,23 +9,8 @@ import 'choice_status.dart';
 abstract class GenerableParserAndPosition {
   ChoiceStatus choiceStatus = ChoiceStatus();
 
-  @override
-  bool operator ==(Object other) {
-    return other is GenerableParserAndPosition &&
-        choiceStatus == other.choiceStatus &&
-        children == other.children &&
-        recursiveStatus == other.recursiveStatus &&
-        currentPos == other.currentPos &&
-        width == other.width &&
-        parent == other.parent;
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(choiceStatus, children, recursiveStatus, currentPos, width);
-
   void generateParser() {
-    recursiveStatus.generateParser();
+    recursiveStatus.generateParser(errorName);
     for (var child in children) {
       child.generateParser();
     }
@@ -56,7 +41,7 @@ abstract class GenerableParserAndPosition {
 
   void execute() {
     if (choiceStatus.isSelected()) {
-      Analyser().run(recursiveStatus.executeCodeRecursive);
+      Analyser().run(recursiveStatus.executeCodeRecursive, pos: errorName);
       for (var child in children) {
         child.execute();
       }
@@ -64,7 +49,7 @@ abstract class GenerableParserAndPosition {
   }
 
   bool isVisible() {
-    var data = Analyser().check(recursiveStatus.conditionVisibleRecursive);
+    var data = Analyser().check(recursiveStatus.conditionVisibleRecursive, pos: errorName);
     if (data != null) {
       if (data is bool) {
         return data;
@@ -88,7 +73,7 @@ abstract class GenerableParserAndPosition {
   }
 
   bool isClickable() {
-    var data = Analyser().check(recursiveStatus.conditionClickableRecursive);
+    var data = Analyser().check(recursiveStatus.conditionClickableRecursive, pos: errorName);
     if (data != null) {
       if (data is bool) {
         return data;
@@ -150,4 +135,6 @@ abstract class GenerableParserAndPosition {
     if (name == null) return null;
     return PlatformSpecified().saveProject!.convertImageName(name);
   }
+
+  String get errorName => pos.toString();
 }
