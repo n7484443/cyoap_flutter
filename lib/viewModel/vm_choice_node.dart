@@ -163,7 +163,7 @@ class ChoiceNodeSelectNotifier extends StateNotifier<int> {
     } else {
       node.selectNode(n);
     }
-    updateStatusAll(ref);
+    updateStatusAll(ref, start: node.pos.first);
   }
 }
 
@@ -245,10 +245,10 @@ class ChoiceNodeSizeNotifier extends StateNotifier<int> {
   }
 }
 
-void updateStatusAll(Ref ref) {
+void updateStatusAll(Ref ref, {int start = 0}) {
   getPlatform.updateStatusAll();
   ref.read(snackBarErrorProvider.notifier).update();
-  refreshPage(ref);
+  refreshPage(ref, start: start);
 }
 
 void updateImageAll(Ref ref) {

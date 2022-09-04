@@ -105,23 +105,28 @@ class VMDraggableNestedMap {
   }
 }
 
-void refreshPage(Ref ref) {
-  for (var pos = 0; pos < getPlatform.lineSettings.length; pos++) {
+void refreshPage(Ref ref, {int start = 0}) {
+  for (var pos = start; pos < getPlatform.lineSettings.length; pos++) {
     refreshLine(ref, pos);
   }
 }
 
-void refreshLine(Ref ref, int pos) {
-  ref.invalidate(lineProvider(pos));
+void refreshLine(Ref ref, int y) {
+  var pos = Pos(data: [y]);
+  ref.invalidate(lineProvider(y));
   ref.invalidate(lineLengthProvider);
-  ref.read(childrenChangeProvider(Pos(data: [pos])).notifier).update();
-  for (var child in ref.read(lineProvider(pos))!.children) {
+  ref.invalidate(lineVisibleProvider(pos));
+  ref.read(childrenChangeProvider(pos).notifier).update();
+  for (var child in ref.read(lineProvider(y))!.children) {
     refreshChild(ref, child);
   }
 }
 
 final lineProvider = Provider.autoDispose
     .family<LineSetting?, int>((ref, pos) => getPlatform.getLineSetting(pos));
+
+final lineVisibleProvider = Provider.autoDispose
+    .family<bool, Pos>((ref, pos) => !ref.watch(lineProvider(pos.first))!.choiceStatus.isHide());
 
 final _childrenProvider = Provider.autoDispose
     .family<List<GenerableParserAndPosition>, Pos>((ref, pos) {

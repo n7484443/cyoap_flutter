@@ -454,6 +454,9 @@ class ChoiceLine extends ConsumerWidget {
         ),
       );
     }
+    if(!ref.watch(lineVisibleProvider(pos))){
+      return const SizedBox.shrink();
+    }
     return ColoredBox(
       color: color,
       child: Column(children: [
