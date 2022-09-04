@@ -41,8 +41,8 @@ class Analyser {
     if (codeInput == null) return null;
     try {
       return semanticAnalyser.analyseLines(toTokenList(codeInput));
-    } catch (e) {
-      addError("$pos, $e");
+    } catch (e, stackTrace) {
+      addError("$pos, $e", stackTrace);
     }
     return null;
   }
@@ -51,8 +51,8 @@ class Analyser {
     if (codeInput == null) return null;
     try {
       return semanticAnalyser.analyseLine(toTokenList(codeInput));
-    } catch (e) {
-      addError("$pos, $e");
+    } catch (e, stackTrace) {
+      addError("$pos, $e", stackTrace);
     }
     return null;
   }
@@ -61,8 +61,8 @@ class Analyser {
     if (unitList == null) return;
     try {
       unitList.unzip();
-    } catch (e) {
-      addError("$pos, $e");
+    } catch (e, stackTrace) {
+      addError("$pos, $e", stackTrace);
     }
   }
 
@@ -70,14 +70,14 @@ class Analyser {
     if (unitList == null) return null;
     try {
       return unitList.unzip().dataUnzip();
-    } catch (e) {
-      addError("$pos, $e");
+    } catch (e, stackTrace) {
+      addError("$pos, $e", stackTrace);
     }
   }
 
-  void addError(String str) {
+  void addError(String str, StackTrace stackTrace) {
     if(!errorList.contains(str)) {
-      print(str);
+      print("$str $stackTrace");
       errorList.add(str);
     }
   }

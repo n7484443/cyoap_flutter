@@ -114,10 +114,6 @@ class LexicalAnalyser {
           tokenAdded = null;
           tokenList.add(Token(AnalyserConst.functionComma));
           break;
-        case '!':
-          tokenAdded =
-              Token(AnalyserConst.functionUnspecified, dataString: "!");
-          break;
         case '{':
           addToken();
           tokenAdded = null;
