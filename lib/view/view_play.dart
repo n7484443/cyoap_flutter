@@ -79,7 +79,12 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
     );
 
     return Scaffold(
-      appBar: ConstList.isDistributed ? null : AppBar(),
+      appBar: ConstList.isDistributed ? null : AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
       endDrawer: const Drawer(
         child: ViewPlayDrawer(),
       ),
