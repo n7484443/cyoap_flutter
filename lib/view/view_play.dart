@@ -22,13 +22,11 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: SingleChildScrollView(
-          child: SelectionArea(
-            child: Column(
+          child: Column(
               mainAxisSize: MainAxisSize.min,
               children:
                   ref.watch(snackBarErrorProvider).map((e) => Text(e)).toList(),
             ),
-          ),
         ),
         action: SnackBarAction(
           label: '클립보드로 복사',
