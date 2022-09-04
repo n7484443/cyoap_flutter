@@ -172,7 +172,7 @@ class SelectMode extends ConsumerWidget {
               ref.read(pathListProvider.notifier).openProject().then((value) {
                 if (value) {
                   getPlatformFileSystem.isEditable = false;
-                  Navigator.of(context).pushNamed('/viewPlay');
+                  Navigator.of(context).pushReplacementNamed('/viewPlay');
                   ref.read(snackBarErrorProvider.notifier).update();
                 }
               });
@@ -192,7 +192,7 @@ class SelectMode extends ConsumerWidget {
               ref.read(pathListProvider.notifier).openProject().then((value) {
                 if (value) {
                   getPlatformFileSystem.isEditable = true;
-                  Navigator.of(context).pushNamed('/viewMake');
+                  Navigator.of(context).pushReplacementNamed('/viewMake');
                 }
               });
             },

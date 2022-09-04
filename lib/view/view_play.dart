@@ -23,10 +23,10 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
       SnackBar(
         content: SingleChildScrollView(
           child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children:
-                  ref.watch(snackBarErrorProvider).map((e) => Text(e)).toList(),
-            ),
+            mainAxisSize: MainAxisSize.min,
+            children:
+                ref.watch(snackBarErrorProvider).map((e) => Text(e)).toList(),
+          ),
         ),
         action: SnackBarAction(
           label: '클립보드로 복사',
@@ -79,12 +79,15 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
     );
 
     return Scaffold(
-      appBar: ConstList.isDistributed ? null : AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
+      appBar: ConstList.isDistributed
+          ? null
+          : AppBar(
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () =>
+                    Navigator.of(context).pushReplacementNamed("/"),
+              ),
+            ),
       endDrawer: const Drawer(
         child: ViewPlayDrawer(),
       ),

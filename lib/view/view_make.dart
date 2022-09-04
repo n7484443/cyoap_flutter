@@ -12,17 +12,17 @@ import '../viewModel/vm_choice_node.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
 
 class ViewSaveDialog extends ConsumerWidget {
-  final int selected;
+  final bool asZip;
 
   const ViewSaveDialog(
-    this.selected, {
+    this.asZip, {
     super.key,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
-      title: Text(selected == 0 ? '저장중...' : '압축중...'),
+      title: Text(asZip ? '저장중...' : '압축중...'),
       content: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -49,17 +49,23 @@ class ViewMake extends ConsumerWidget {
           if (ref.read(draggableNestedMapChangedProvider)) {
             showDialog<bool>(
               context: context,
-              builder: (_) => ViewBackDialog(
-                  () => savePlatform(ref, ConstList.isWeb()), () {}),
-            ).then((value) {
+              builder: (_) => ViewBackDialog(() => () {}, () {}),
+            ).then((value) async {
               if (value ?? false) {
-                Navigator.of(context).pop();
-                ref.read(draggableNestedMapChangedProvider.notifier).state =
-                    false;
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) => ViewSaveDialog(getPlatformFileSystem.openAsFile),
+                    barrierDismissible: false);
+                savePlatform(ref, getPlatformFileSystem.openAsFile).then((v) {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pushReplacementNamed("/");
+                  ref.read(draggableNestedMapChangedProvider.notifier).state =
+                      false;
+                });
               }
             });
           } else {
-            Navigator.of(context).pop();
+            Navigator.of(context).pushReplacementNamed("/");
           }
         },
       ),
@@ -155,7 +161,7 @@ class ViewMake extends ConsumerWidget {
           onSelected: (int selected) {
             showDialog(
                 context: context,
-                builder: (BuildContext context) => ViewSaveDialog(selected),
+                builder: (BuildContext context) => ViewSaveDialog(selected == 0),
                 barrierDismissible: false);
             switch (selected) {
               case 0:
