@@ -1,4 +1,4 @@
-import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
+import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_editor.dart';
 import 'package:cyoap_flutter/viewModel/vm_global_setting.dart';
 import 'package:flutter/material.dart';
@@ -18,19 +18,20 @@ class ChangeTabNotifier extends StateNotifier<int> {
   Future<bool> removeFunction(int index, BuildContext context) async {
     switch (index) {
       case 1:
-        if (ref.read(changeProvider)) {
+        if (ref.read(editorChangeProvider)) {
           var out = await showDialog(
             context: context,
             builder: (_) => ViewBackDialog(
-              () => ref.read(changeProvider.notifier).save(),
+              () => ref.read(editorChangeProvider.notifier).save(),
               () => {},
-              cancelFunction: () => ref.read(changeProvider.notifier).update(),
+              cancelFunction: () => ref.read(editorChangeProvider.notifier).update(),
             ),
           );
           if (!out) {
             return false;
           }
-          refreshChild(ref, ref.read(nodeEditorTargetProvider));
+          refreshLine(ref, ref.read(nodeEditorTargetPosProvider)!.first);
+          ref.read(nodeEditorTargetPosProvider.notifier).state = null;
         }
         break;
       case 2:

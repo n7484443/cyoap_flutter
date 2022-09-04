@@ -9,8 +9,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/platform_system.dart';
-import '../viewModel/vm_choice_node.dart';
-import '../viewModel/vm_code_editor.dart';
 import '../viewModel/vm_design_setting.dart';
 import '../viewModel/vm_make_platform.dart';
 
@@ -189,7 +187,7 @@ class VariableTiles extends ConsumerWidget {
             trailing: Text(values.valueType.data.runtimeType.toString()),
             onTap: () {
               if (ref.watch(changeTabProvider) == 2) {
-                var vmCodeEditor = ref.read(vmCodeEditorProvider);
+                var vmCodeEditor = ref.read(editorChangeProvider.notifier);
                 if (vmCodeEditor.lastFocus != null) {
                   vmCodeEditor.insertText(vmCodeEditor.lastFocus!, key.trim());
                 }
@@ -274,15 +272,21 @@ class NodeTiles extends ConsumerWidget {
                       (e) => ListTile(
                         title: Text(e.name),
                         onTap: () {
-                          if (tabList[ref.watch(changeTabProvider)] == "viewEditor") {
-                            var vmCodeEditor = ref.read(vmCodeEditorProvider);
+                          if (tabList[ref.watch(changeTabProvider)] ==
+                              "viewEditor") {
+                            var vmCodeEditor =
+                                ref.read(editorChangeProvider.notifier);
                             if (vmCodeEditor.lastFocus != null) {
                               vmCodeEditor.insertText(vmCodeEditor.lastFocus!,
                                   e.name.replaceAll(" ", "").trim());
                             }
-                          }else if(e.pos.length > 1){
-                            ref.read(nodeEditorTargetProvider.notifier).state = ref.read(choiceNodeProvider(e.pos)).node!;
-                            ref.read(changeTabProvider.notifier).changePageString("viewEditor", context);
+                          } else if (e.pos.length > 1) {
+                            ref
+                                .read(nodeEditorTargetPosProvider.notifier)
+                                .state = e.pos;
+                            ref
+                                .read(changeTabProvider.notifier)
+                                .changePageString("viewEditor", context);
                           }
                         },
                       ),

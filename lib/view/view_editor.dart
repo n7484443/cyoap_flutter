@@ -1,9 +1,8 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
-import 'package:cyoap_flutter/view/view_code_editor.dart';
-import 'package:cyoap_flutter/viewModel/vm_code_editor.dart';
 import 'package:cyoap_flutter/viewModel/vm_design_setting.dart';
 import 'package:cyoap_flutter/viewModel/vm_image_editor.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
@@ -14,6 +13,7 @@ import 'package:tuple/tuple.dart';
 
 import '../main.dart';
 import '../model/choiceNode/choice_node.dart';
+import '../model/choiceNode/pos.dart';
 import '../model/platform_system.dart';
 import '../viewModel/vm_editor.dart';
 import '../viewModel/vm_make_platform.dart';
@@ -25,7 +25,13 @@ class ViewEditor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var children = const [ViewContentsEditor(), ViewCodeEditor()];
+    ref.listen<Pos?>(nodeEditorTargetPosProvider, (previous, next) {
+      ref.read(nodeEditorTargetProvider.notifier).update();
+    });
+    if(ref.watch(nodeEditorTargetPosProvider) == null){
+      return const SizedBox.shrink();
+    }
+    var children = [const ViewContentsEditor(), const ViewCodeEditor()];
     var childrenText = const ["내용 수정", "코드 수정"];
     return DefaultTabController(
       length: children.length,
@@ -36,7 +42,7 @@ class ViewEditor extends ConsumerWidget {
             builder: (context) => IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
-                if (ref.watch(titleControllerProvider).text.isNotEmpty) {
+                if (ref.watch(nodeTitleProvider).isNotEmpty) {
                   ref.read(changeTabProvider.notifier).back(context);
                 }
                 DefaultTabController.of(context)?.index = 0;
@@ -52,7 +58,7 @@ class ViewEditor extends ConsumerWidget {
             IconButton(
               icon: const Icon(Icons.save),
               onPressed: () {
-                ref.read(changeProvider.notifier).save();
+                ref.read(editorChangeProvider.notifier).save();
               },
             ),
           ],
@@ -72,44 +78,39 @@ class ViewContentsEditor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(isCardSwitchProvider,
-        (previous, next) => ref.read(changeProvider.notifier).needUpdate());
-    ref.listen(isRoundSwitchProvider,
-        (previous, next) => ref.read(changeProvider.notifier).needUpdate());
-    ref.listen(hideTitleProvider,
-        (previous, next) => ref.read(changeProvider.notifier).needUpdate());
-    ref.listen(maximizingImageSwitchProvider,
-        (previous, next) => ref.read(changeProvider.notifier).needUpdate());
-    ref.listen(imagePositionProvider,
-        (previous, next) => ref.read(changeProvider.notifier).needUpdate());
-    ref.listen(nodeModeProvider,
-        (previous, next) => ref.read(changeProvider.notifier).needUpdate());
-    ref.listen(nodeEditorTargetProvider, (previous, next) {
-      ref.invalidate(titleControllerProvider);
-      ref.invalidate(maximumProvider);
-      ref.invalidate(quillEditorProvider);
-      ref.invalidate(controllerClickableProvider);
-      ref.invalidate(controllerVisibleProvider);
-      ref.invalidate(controllerExecuteProvider);
-      ref.invalidate(imageStateProvider);
+    ref.listen(isCardSwitchProvider, (previous, bool next) {
+      ref.read(nodeEditorTargetProvider).node.isCard = next;
+      ref.read(editorChangeProvider.notifier).needUpdate();
+    });
+    ref.listen(isRoundSwitchProvider, (previous, bool next) {
+      ref.read(nodeEditorTargetProvider).node.isRound = next;
+      ref.read(editorChangeProvider.notifier).needUpdate();
+    });
+    ref.listen(hideTitleProvider, (previous, bool next) {
+      ref.read(nodeEditorTargetProvider).node.hideTitle = next;
+      ref.read(editorChangeProvider.notifier).needUpdate();
+    });
+    ref.listen(maximizingImageSwitchProvider, (previous, bool next) {
+      ref.read(nodeEditorTargetProvider).node.maximizingImage = next;
+      ref.read(editorChangeProvider.notifier).needUpdate();
+    });
+    ref.listen(imagePositionProvider, (previous, int next) {
+      ref.read(nodeEditorTargetProvider).node.imagePosition = next;
+      ref.read(editorChangeProvider.notifier).needUpdate();
+    });
+    ref.listen(nodeModeProvider, (previous, ChoiceNodeMode next) {
+      ref.read(nodeEditorTargetProvider).node.choiceNodeMode = next;
+      ref.read(editorChangeProvider.notifier).needUpdate();
+    });
+    ref.listen(nodeModeProvider, (previous, ChoiceNodeMode next) {
+      ref.read(nodeEditorTargetProvider).node.choiceNodeMode = next;
+      ref.read(editorChangeProvider.notifier).needUpdate();
     });
 
     return WillPopScope(
       child: Column(
         children: [
-          TextField(
-            controller: ref.watch(titleControllerProvider),
-            textAlign: TextAlign.center,
-            decoration: InputDecoration(
-              hintText: '제목',
-              hintStyle: ConstList.getFont(ref.watch(titleFontProvider))
-                  .copyWith(fontSize: 24, color: Colors.red),
-              filled: true,
-            ),
-            style: ConstList.getFont(ref.watch(titleFontProvider)).copyWith(
-              fontSize: 24,
-            ),
-          ),
+          const ViewTitleTextFieldInput(),
           Expanded(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,6 +144,55 @@ class ViewContentsEditor extends ConsumerWidget {
   }
 }
 
+class ViewTitleTextFieldInput extends ConsumerStatefulWidget {
+  const ViewTitleTextFieldInput({
+    super.key,
+  });
+
+  @override
+  ConsumerState createState() => _ViewTitleTextFieldInputState();
+}
+
+class _ViewTitleTextFieldInputState
+    extends ConsumerState<ViewTitleTextFieldInput> {
+  TextEditingController? _controller;
+
+  @override
+  void initState() {
+    var node = ref.read(nodeEditorTargetProvider).node;
+    _controller = TextEditingController(text: node.title);
+    _controller!.addListener(() {
+      node.title = _controller!.text;
+      ref.read(nodeTitleProvider.notifier).state = node.title;
+      ref.read(editorChangeProvider.notifier).needUpdate();
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: _controller,
+      textAlign: TextAlign.center,
+      decoration: InputDecoration(
+        hintText: '제목',
+        hintStyle: ConstList.getFont(ref.watch(titleFontProvider))
+            .copyWith(fontSize: 24, color: Colors.red),
+        filled: true,
+      ),
+      style: ConstList.getFont(ref.watch(titleFontProvider)).copyWith(
+        fontSize: 24,
+      ),
+    );
+  }
+}
+
 class ViewControlPanel extends ConsumerWidget {
   const ViewControlPanel({
     super.key,
@@ -150,6 +200,7 @@ class ViewControlPanel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var title = ref.watch(nodeTitleProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -163,8 +214,7 @@ class ViewControlPanel extends ConsumerWidget {
             DropdownMenuItem(
                 value: ChoiceNodeMode.multiSelect, child: Text('다중 선택')),
             DropdownMenuItem(
-                value: ChoiceNodeMode.unSelectableMode,
-                child: Text('선택 불가')),
+                value: ChoiceNodeMode.unSelectableMode, child: Text('선택 불가')),
             DropdownMenuItem(
                 value: ChoiceNodeMode.onlyCode, child: Text('코드만 사용')),
           ],
@@ -178,10 +228,8 @@ class ViewControlPanel extends ConsumerWidget {
             width: 120,
             child: Column(children: [
               Text('변수명', style: Theme.of(context).textTheme.labelLarge),
-              Text(
-                  '${ref.watch(titleControllerProvider).text.replaceAll(" ", "")}:random',
-                  softWrap: true,
-                  style: Theme.of(context).textTheme.bodySmall),
+              Text('${title.replaceAll(" ", "")}:random',
+                  softWrap: true, style: Theme.of(context).textTheme.bodySmall),
               TextField(
                 textAlign: TextAlign.end,
                 maxLength: 3,
@@ -197,16 +245,13 @@ class ViewControlPanel extends ConsumerWidget {
           ),
         ),
         Visibility(
-          visible:
-          ref.watch(nodeModeProvider) == ChoiceNodeMode.multiSelect,
+          visible: ref.watch(nodeModeProvider) == ChoiceNodeMode.multiSelect,
           child: SizedBox(
             width: 120,
             child: Column(children: [
               Text('변수명', style: Theme.of(context).textTheme.labelLarge),
-              Text(
-                  '${ref.watch(titleControllerProvider).text.replaceAll(" ", "")}:multi',
-                  softWrap: true,
-                  style: Theme.of(context).textTheme.bodySmall),
+              Text('${title.replaceAll(" ", "")}:multi',
+                  softWrap: true, style: Theme.of(context).textTheme.bodySmall),
               TextField(
                 textAlign: TextAlign.end,
                 maxLength: 3,
@@ -224,7 +269,7 @@ class ViewControlPanel extends ConsumerWidget {
         Visibility(
           visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
-                () => ref
+            () => ref
                 .read(isCardSwitchProvider.notifier)
                 .update((state) => !state),
             ref.watch(isCardSwitchProvider),
@@ -234,7 +279,7 @@ class ViewControlPanel extends ConsumerWidget {
         Visibility(
           visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
-                () => ref
+            () => ref
                 .read(isRoundSwitchProvider.notifier)
                 .update((state) => !state),
             ref.watch(isRoundSwitchProvider),
@@ -244,7 +289,7 @@ class ViewControlPanel extends ConsumerWidget {
         Visibility(
           visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
-                () => ref
+            () => ref
                 .read(maximizingImageSwitchProvider.notifier)
                 .update((state) => !state),
             ref.watch(maximizingImageSwitchProvider),
@@ -254,9 +299,8 @@ class ViewControlPanel extends ConsumerWidget {
         Visibility(
           visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
-                () => ref
-                .read(hideTitleProvider.notifier)
-                .update((state) => !state),
+            () =>
+                ref.read(hideTitleProvider.notifier).update((state) => !state),
             ref.watch(hideTitleProvider),
             label: '제목 숨기기',
           ),
@@ -264,7 +308,7 @@ class ViewControlPanel extends ConsumerWidget {
         Visibility(
           visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
-                () => ref
+            () => ref
                 .read(imagePositionProvider.notifier)
                 .update((state) => state == 0 ? 1 : 0),
             ref.watch(imagePositionProvider) != 0,
@@ -274,15 +318,11 @@ class ViewControlPanel extends ConsumerWidget {
         Visibility(
           visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
-                () {
+            () {
               if (ref.watch(imagePositionProvider) == 1) {
-                ref
-                    .read(imagePositionProvider.notifier)
-                    .update((state) => 2);
+                ref.read(imagePositionProvider.notifier).update((state) => 2);
               } else if (ref.watch(imagePositionProvider) == 2) {
-                ref
-                    .read(imagePositionProvider.notifier)
-                    .update((state) => 1);
+                ref.read(imagePositionProvider.notifier).update((state) => 1);
               }
             },
             ref.watch(imagePositionProvider) == 2,
@@ -308,10 +348,26 @@ class _ViewTextContentsEditorState
     extends ConsumerState<ViewTextContentsEditor> {
   FocusNode? _focusNode;
   ScrollController? _scrollController;
+  QuillController? _quillController;
 
   @override
   void initState() {
     _focusNode = FocusNode();
+    _focusNode!.addListener(() {
+      if (!_focusNode!.hasFocus) {
+        ref.read(nodeEditorTargetProvider).node.contentsString =
+            jsonEncode(_quillController?.document.toDelta().toJson());
+        ref.read(editorChangeProvider.notifier).needUpdate();
+      }
+    });
+    var node = ref.read(nodeEditorTargetProvider).node;
+    if (node.contentsString.isEmpty) {
+      _quillController = QuillController.basic();
+    } else {
+      _quillController = QuillController(
+          document: Document.fromJson(jsonDecode(node.contentsString)),
+          selection: const TextSelection.collapsed(offset: 0));
+    }
     _scrollController = ScrollController();
     super.initState();
   }
@@ -320,6 +376,7 @@ class _ViewTextContentsEditorState
   void dispose() {
     _focusNode?.dispose();
     _scrollController?.dispose();
+    _quillController?.dispose();
     super.dispose();
   }
 
@@ -369,7 +426,7 @@ class _ViewTextContentsEditorState
             IconButton(
               icon: const Icon(Icons.check),
               onPressed: () {
-                changeColor(ref.watch(quillEditorProvider), newColor, background);
+                changeColor(_quillController!, newColor, background);
                 Navigator.pop(context);
               },
             ),
@@ -383,7 +440,7 @@ class _ViewTextContentsEditorState
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: QuillToolbar.basic(
-            controller: ref.watch(quillEditorProvider),
+            controller: _quillController!,
             showListCheck: false,
             showInlineCode: false,
             showVideoButton: false,
@@ -418,7 +475,7 @@ class _ViewTextContentsEditorState
             elevation: ConstList.elevation,
             child: QuillEditor(
               padding: const EdgeInsets.all(3),
-              controller: ref.watch(quillEditorProvider),
+              controller: _quillController!,
               focusNode: _focusNode!,
               expands: true,
               scrollable: true,
@@ -518,7 +575,7 @@ class ViewNodeImageEditor extends ConsumerWidget {
                           } else {
                             ref.read(imageStateProvider.notifier).state = index;
                           }
-                          ref.read(changeProvider.notifier).needUpdate();
+                          ref.read(editorChangeProvider.notifier).needUpdate();
                         },
                       ),
                     );
@@ -588,6 +645,93 @@ class _ImageSourceDialogState extends ConsumerState<ImageSourceDialog> {
           child: const Text('저장하기'),
         ),
       ],
+    );
+  }
+}
+
+class ViewCodeEditor extends ConsumerWidget {
+  const ViewCodeEditor({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return WillPopScope(
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              children: [
+                Visibility(
+                  visible: ref.watch(nodeEditorTargetProvider).node.isSelectableMode,
+                  child: Focus(
+                    onFocusChange: (bool hasFocus) => ref
+                        .read(editorChangeProvider.notifier)
+                        .lastFocus = ref.watch(controllerClickableProvider),
+                    child: TextField(
+                      controller: ref.watch(controllerClickableProvider),
+                      textAlign: TextAlign.left,
+                      decoration: const InputDecoration(hintText: '실행 조건'),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible:
+                      ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
+                  child: Focus(
+                    onFocusChange: (bool hasFocus) => ref
+                        .read(editorChangeProvider.notifier)
+                        .lastFocus = ref.watch(controllerVisibleProvider),
+                    child: TextField(
+                      controller: ref.watch(controllerVisibleProvider),
+                      textAlign: TextAlign.left,
+                      decoration: const InputDecoration(
+                          hintText: '보이는 조건(true일 때 보임, 비어있을 시 true)'),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Focus(
+                    onFocusChange: (bool hasFocus) => ref
+                        .read(editorChangeProvider.notifier)
+                        .lastFocus = ref.watch(controllerExecuteProvider),
+                    child: TextField(
+                      controller: ref.watch(controllerExecuteProvider),
+                      textAlign: TextAlign.left,
+                      scrollController: ScrollController(),
+                      maxLines: null,
+                      expands: true,
+                      decoration: const InputDecoration(
+                        hintText: '선택 시 시행 코드',
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: Column(
+              children: [
+                ViewSwitchLabel(
+                  () {
+                    ref.read(nodeEditorTargetProvider).node.isOccupySpace =
+                        !ref.read(isOccupySpaceButtonProvider);
+                    ref
+                        .read(isOccupySpaceButtonProvider.notifier)
+                        .update((value) => value = !value);
+                  },
+                  ref.watch(isOccupySpaceButtonProvider),
+                  label: '숨김 시 공간 차지',
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      onWillPop: () async {
+        ref.read(changeTabProvider.notifier).back(context);
+        return false;
+      },
     );
   }
 }

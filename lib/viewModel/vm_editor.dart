@@ -1,65 +1,64 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cyoap_flutter/model/image_db.dart';
-import 'package:cyoap_flutter/viewModel/vm_code_editor.dart';
+import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_source.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/choiceNode/choice_node.dart';
+import '../model/choiceNode/pos.dart';
 
-final nodeEditorTargetProvider = StateProvider.autoDispose<ChoiceNode>((ref) {
-  return ChoiceNode.empty();
+final nodeEditorTargetPosProvider = StateProvider<Pos?>((ref) => null);
+
+final nodeEditorTargetProvider = ChangeNotifierProvider<NodeEditorTargetNotifier>((ref) {
+  var pos = ref.watch(nodeEditorTargetPosProvider);
+  if(pos == null){
+    return NodeEditorTargetNotifier(ChoiceNode.empty(), ref);
+  }
+  return NodeEditorTargetNotifier(getPlatform.getChoiceNode(pos)!.clone(), ref);
 });
+
+class NodeEditorTargetNotifier extends ChangeNotifier {
+  ChoiceNode node;
+  Ref ref;
+  NodeEditorTargetNotifier(this.node, this.ref);
+
+  void update(){
+    var pos = ref.watch(nodeEditorTargetPosProvider);
+    if(pos == null){
+      node = ChoiceNode.empty();
+    }else{
+      node = getPlatform.getChoiceNode(pos)?.clone() ?? ChoiceNode.empty();
+    }
+    notifyListeners();
+  }
+}
 
 final isCardSwitchProvider = StateProvider.autoDispose<bool>(
-    (ref) => ref.watch(nodeEditorTargetProvider).isCard);
+    (ref) => ref.watch(nodeEditorTargetProvider).node.isCard);
 final isRoundSwitchProvider = StateProvider.autoDispose<bool>(
-    (ref) => ref.watch(nodeEditorTargetProvider).isRound);
+    (ref) => ref.watch(nodeEditorTargetProvider).node.isRound);
 final hideTitleProvider = StateProvider.autoDispose<bool>(
-    (ref) => ref.watch(nodeEditorTargetProvider).hideTitle);
+    (ref) => ref.watch(nodeEditorTargetProvider).node.hideTitle);
 final maximizingImageSwitchProvider = StateProvider.autoDispose<bool>(
-    (ref) => ref.watch(nodeEditorTargetProvider).maximizingImage);
+    (ref) => ref.watch(nodeEditorTargetProvider).node.maximizingImage);
 final imagePositionProvider = StateProvider.autoDispose<int>(
-    (ref) => ref.watch(nodeEditorTargetProvider).imagePosition);
+    (ref) => ref.watch(nodeEditorTargetProvider).node.imagePosition);
 final nodeModeProvider = StateProvider.autoDispose<ChoiceNodeMode>(
-    (ref) => ref.watch(nodeEditorTargetProvider).choiceNodeMode);
+    (ref) => ref.watch(nodeEditorTargetProvider).node.choiceNodeMode);
+final nodeTitleProvider = StateProvider.autoDispose<String>(
+    (ref) => ref.watch(nodeEditorTargetProvider).node.title);
 
-final titleControllerProvider =
-    Provider.autoDispose<TextEditingController>((ref) {
-  var controller =
-      TextEditingController(text: ref.watch(nodeEditorTargetProvider).title);
-  controller.addListener(() {
-    ref.read(changeProvider.notifier).needUpdate();
-  });
-  ref.onDispose(() => controller.dispose());
-  return controller;
-});
 final maximumProvider = Provider.autoDispose<TextEditingController>((ref) {
-  var controller = TextEditingController(
-      text: ref.read(nodeEditorTargetProvider).maximumStatus.toString());
+  var node = ref.watch(nodeEditorTargetProvider).node;
+  var controller = TextEditingController(text: node.maximumStatus.toString());
   controller.addListener(() {
-    ref.read(changeProvider.notifier).needUpdate();
-  });
-  ref.onDispose(() => controller.dispose());
-  return controller;
-});
-final quillEditorProvider = Provider<QuillController>((ref) {
-  QuillController controller;
-  if (ref.read(nodeEditorTargetProvider).contentsString.isEmpty) {
-    controller = QuillController.basic();
-  } else {
-    controller = QuillController(
-        document: Document.fromJson(
-            jsonDecode(ref.read(nodeEditorTargetProvider).contentsString)),
-        selection: const TextSelection.collapsed(offset: 0));
-  }
-  controller.addListener(() {
-    ref.read(changeProvider.notifier).needUpdate();
+    ref.read(nodeEditorTargetProvider).node.maximumStatus =
+        int.tryParse(controller.text) ?? 0;
+    ref.read(editorChangeProvider.notifier).needUpdate();
   });
   ref.onDispose(() => controller.dispose());
   return controller;
@@ -88,17 +87,17 @@ class ImageListStateNotifier extends StateNotifier<List<String>> {
       ref
           .read(lastImageProvider.notifier)
           .update((state) => result.files.single.bytes);
-      ref.read(changeProvider.notifier).state = true;
+      ref.read(editorChangeProvider.notifier).state = true;
     }
     return name;
   }
 
   Future<void> addImageToList(String name, {Uint8List? data}) async {
     ImageDB().uploadImages(name, data ?? ref.read(lastImageProvider)!);
-    ref.read(nodeEditorTargetProvider).imageString = name;
+    ref.read(nodeEditorTargetProvider).node.imageString = name;
     ref.read(imageStateProvider.notifier).state = ImageDB().getImageIndex(name);
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-    ref.read(changeProvider.notifier).state = true;
+    ref.read(editorChangeProvider.notifier).state = true;
     ref.read(lastImageProvider.notifier).update((state) => null);
     ref.invalidate(vmSourceProvider);
     state = [...ImageDB().imageList];
@@ -106,15 +105,25 @@ class ImageListStateNotifier extends StateNotifier<List<String>> {
 }
 
 final imageStateProvider = StateProvider.autoDispose<int>((ref) =>
-    ImageDB().getImageIndex(ref.read(nodeEditorTargetProvider).imageString));
+    ImageDB().getImageIndex(ref.read(nodeEditorTargetProvider).node.imageString));
 
-final changeProvider =
-    StateNotifierProvider<ChangeNotifier, bool>((ref) => ChangeNotifier(ref));
+final editorChangeProvider =
+    StateNotifierProvider<EditorChangeNotifier, bool>((ref) => EditorChangeNotifier(ref));
 
-class ChangeNotifier extends StateNotifier<bool> {
+class EditorChangeNotifier extends StateNotifier<bool> {
   Ref ref;
 
-  ChangeNotifier(this.ref) : super(false);
+  EditorChangeNotifier(this.ref) : super(false);
+
+  TextEditingController? lastFocus;
+
+  void insertText(TextEditingController controller, String text) {
+    var selection = controller.selection;
+    controller.text =
+        controller.text.replaceRange(selection.start, selection.end, text);
+    controller.selection =
+        TextSelection.collapsed(offset: selection.start + text.length);
+  }
 
   void needUpdate() {
     state = true;
@@ -125,38 +134,68 @@ class ChangeNotifier extends StateNotifier<bool> {
   }
 
   void save() {
-    ref.read(nodeEditorTargetProvider).recursiveStatus.conditionClickableString =
-        ref.read(controllerClickableProvider).text;
-    ref.read(nodeEditorTargetProvider).recursiveStatus.conditionVisibleString =
-        ref.read(controllerVisibleProvider).text;
-    ref.read(nodeEditorTargetProvider).recursiveStatus.executeCodeString =
-        ref.read(controllerExecuteProvider).text;
-    ref.read(nodeEditorTargetProvider).title =
-        ref.read(titleControllerProvider).text;
-    ref.read(nodeEditorTargetProvider).contentsString =
-        jsonEncode(ref.read(quillEditorProvider).document.toDelta().toJson());
-    ref.read(nodeEditorTargetProvider).imageString =
-        ImageDB().getImageName(ref.read(imageStateProvider));
-    try {
-      ref.read(nodeEditorTargetProvider).maximumStatus =
-          int.parse(ref.read(maximumProvider).text);
-    } catch (e) {
-      ref.read(nodeEditorTargetProvider).maximumStatus = 0;
-    }
-    ref.read(nodeEditorTargetProvider).maximizingImage =
-        ref.read(maximizingImageSwitchProvider);
-    ref.read(nodeEditorTargetProvider).isRound =
-        ref.read(isRoundSwitchProvider);
-    ref.read(nodeEditorTargetProvider).isCard = ref.read(isCardSwitchProvider);
-    ref.read(nodeEditorTargetProvider).imagePosition =
-        ref.read(imagePositionProvider);
-    ref.read(nodeEditorTargetProvider).hideTitle = ref.read(hideTitleProvider);
-    ref.read(nodeEditorTargetProvider).choiceNodeMode =
-        ref.read(nodeModeProvider);
-
+    var pos = ref.read(nodeEditorTargetPosProvider)!;
+    var origin = getPlatform.getChoiceNode(pos)!;
+    var changed = ref.read(nodeEditorTargetProvider).node;
+    origin.title = changed.title;
+    origin.contentsString = changed.contentsString;
+    origin.maximumStatus = changed.maximumStatus;
+    origin.maximizingImage = changed.maximizingImage;
+    origin.isOccupySpace = changed.isOccupySpace;
+    origin.choiceNodeMode = changed.choiceNodeMode;
+    origin.imageString = changed.imageString;
+    origin.imagePosition = changed.imagePosition;
+    origin.isRound = changed.isRound;
+    origin.isCard = changed.isCard;
+    origin.recursiveStatus = changed.recursiveStatus;
+    origin.hideTitle = changed.hideTitle;
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     state = false;
+    refreshLine(ref, pos.first);
   }
 }
 
 final lastImageProvider = StateProvider<Uint8List?>((ref) => null);
+
+final isOccupySpaceButtonProvider = StateProvider.autoDispose<bool>((ref) {
+  return ref.watch(nodeEditorTargetProvider).node.isOccupySpace;
+});
+
+final controllerClickableProvider =
+    Provider.autoDispose<TextEditingController>((ref) {
+  var node = ref.watch(nodeEditorTargetProvider).node;
+  var controller = TextEditingController(
+      text: node.recursiveStatus.conditionClickableString);
+  controller.addListener(() {
+    node.recursiveStatus.conditionClickableString = controller.text;
+    ref.read(editorChangeProvider.notifier).needUpdate();
+  });
+  ref.onDispose(() => controller.dispose());
+  return controller;
+});
+
+final controllerVisibleProvider =
+    Provider.autoDispose<TextEditingController>((ref) {
+  var node = ref.watch(nodeEditorTargetProvider).node;
+  var controller =
+      TextEditingController(text: node.recursiveStatus.conditionVisibleString);
+  controller.addListener(() {
+    node.recursiveStatus.conditionVisibleString = controller.text;
+    ref.read(editorChangeProvider.notifier).needUpdate();
+  });
+  ref.onDispose(() => controller.dispose());
+  return controller;
+});
+
+final controllerExecuteProvider =
+    Provider.autoDispose<TextEditingController>((ref) {
+  var node = ref.watch(nodeEditorTargetProvider).node;
+  var controller =
+      TextEditingController(text: node.recursiveStatus.executeCodeString);
+  controller.addListener(() {
+    node.recursiveStatus.executeCodeString = controller.text;
+    ref.read(editorChangeProvider.notifier).needUpdate();
+  });
+  ref.onDispose(() => controller.dispose());
+  return controller;
+});

@@ -15,11 +15,11 @@ class Pos with _$Pos {
 
   bool get isValid => data.every((element) => element >= 0);
 
-  get first => data.first;
+  int get first => data.first;
 
-  get last => data.last;
+  int get last => data.last;
 
-  get length => data.length;
+  int get length => data.length;
 
   Pos addLast(int last) {
     return Pos(data: [...data, last]);

@@ -7,7 +7,7 @@ import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_design_setting.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
-import 'package:cyoap_flutter/viewModel/vm_editor.dart' show nodeEditorTargetProvider;
+import 'package:cyoap_flutter/viewModel/vm_editor.dart' show nodeEditorTargetPosProvider;
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -108,8 +108,8 @@ class ViewChoiceNodeMain extends ConsumerWidget {
             onDoubleTap: isEditable
                 ? () {
               ref
-                  .read(nodeEditorTargetProvider.notifier)
-                  .state = node;
+                  .read(nodeEditorTargetPosProvider.notifier)
+                  .state = node.pos;
               ref
                   .read(changeTabProvider.notifier)
                   .changePageString("viewEditor", context);
