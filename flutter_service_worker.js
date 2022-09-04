@@ -12,7 +12,7 @@ const RESOURCES = {
 "assets/fonts/NexonLv2Gothic/NexonLv2Gothic.otf": "a4dbe4178ecb2cc480eae9fed8a1169b",
 "assets/fonts/NexonLv2Gothic/NexonLv2GothicBold.otf": "9dfa861ef0caeec8567d0ca624870c60",
 "assets/images/noImage.png": "7d87716e9a2c7f81e959d63a09776608",
-"assets/NOTICES": "8f80f2111b8ebe6a62ed2c0bd0812f70",
+"assets/NOTICES": "3ce82bc332c04ecf9ea1d6e722608c25",
 "assets/packages/flex_color_picker/assets/opacity.png": "49c4f3bcb1b25364bb4c255edcaaf5b2",
 "assets/packages/flutter_inappwebview_quill/assets/t_rex_runner/t-rex.css": "5a8d0222407e388155d7d1395a75d5b9",
 "assets/packages/flutter_inappwebview_quill/assets/t_rex_runner/t-rex.html": "16911fcc170c8af1c5457940bd0bf055",
@@ -38,13 +38,12 @@ const RESOURCES = {
 "assets/packages/flutter_math_fork/lib/katex_fonts/fonts/KaTeX_Typewriter-Regular.ttf": "87f56927f1ba726ce0591955c8b3b42d",
 "assets/packages/math_keyboard/fonts/CustomKeyIcons.ttf": "b0bace3f25c2bd05862680e5ad4c6b54",
 "assets/packages/youtube_player_flutter_quill/assets/speedometer.webp": "50448630e948b5b3998ae5a5d112622b",
-"assets/shaders/ink_sparkle.frag": "2cfdd18b694dae7209afc1c248cd3b88",
-"canvaskit/canvaskit.js": "2bc454a691c631b07a9307ac4ca47797",
-"canvaskit/canvaskit.wasm": "bf50631470eb967688cca13ee181af62",
-"canvaskit/profiling/canvaskit.js": "38164e5a72bdad0faa4ce740c9b8e564",
-"canvaskit/profiling/canvaskit.wasm": "95a45378b69e77af5ed2bc72b2209b94",
+"canvaskit/canvaskit.js": "c2b4e5f3d7a3d82aed024e7249a78487",
+"canvaskit/canvaskit.wasm": "4b83d89d9fecbea8ca46f2f760c5a9ba",
+"canvaskit/profiling/canvaskit.js": "ae2949af4efc61d28a4a80fffa1db900",
+"canvaskit/profiling/canvaskit.wasm": "95e736ab31147d1b2c7b25f11d4c32cd",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
-"flutter.js": "f85e6fb278b0fd20c349186fb46ae36d",
+"flutter.js": "eb2682e33f25cd8f1fc59011497c35f8",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
@@ -52,17 +51,17 @@ const RESOURCES = {
 "index.html": "142447007b11498f32c9d63e1a7f2ae0",
 "/": "142447007b11498f32c9d63e1a7f2ae0",
 "jszip.js": "418ea325c68eb099ef2ccc8823771a63",
-"main.dart.js": "29adbb13874573053cb6817314000fab",
-"main.dart.js_1.part.js": "4781f4441b6b79afeb7daff96fd5fbb2",
-"main.dart.js_2.part.js": "bdbbbc24e3fc27e1db5c36cad1e2ac07",
-"main.dart.js_3.part.js": "67d362142d7d01caed9e96f2beb04cf2",
-"main.dart.js_4.part.js": "e1e92632faf34d98bc8f264ab635d977",
-"main.dart.js_5.part.js": "425949047d9118c47580b6775aa7357a",
-"main.dart.js_6.part.js": "a960ca483563788a72d04546d63ee81c",
-"main.dart.js_7.part.js": "554c385e20e6203a51bbb4f2a8d0eb3f",
+"main.dart.js": "5789c8e3b7c76dcc11263ba772b77d9d",
+"main.dart.js_1.part.js": "2b9e135dfdd851da33e541e92ef77bc4",
+"main.dart.js_2.part.js": "6e1f841659b6727c2d79dbf4c9db6177",
+"main.dart.js_3.part.js": "0947197b0ab40cda06ebbc79fa6edde9",
+"main.dart.js_4.part.js": "ea56e9c7037f47092f9ee46c93997d3e",
+"main.dart.js_5.part.js": "edc59c1125cff1ddfa07fcbfc1aa28a1",
+"main.dart.js_6.part.js": "23a66b322bc5985878866a33f22d5856",
+"main.dart.js_7.part.js": "fe7ed6554303f82b23ad0e5ada1a3e4a",
 "manifest.json": "ebc04e4594e86d4e5763ccf0df7285b3",
 "save_web.js": "6d7f19b0443d2ca2a960f0532299e5d7",
-"version.json": "21df46dfdf7eced423b8214d78e98238",
+"version.json": "472f76b4abea339edf1f2725af1d0ccf",
 "worker.js": "55118d4a43a00cedd42f65ca3b0b0d2a"
 };
 
@@ -71,6 +70,7 @@ const RESOURCES = {
 const CORE = [
   "main.dart.js",
 "index.html",
+"assets/NOTICES",
 "assets/AssetManifest.json",
 "assets/FontManifest.json"];
 // During install, the TEMP cache is populated with the application shell files.
@@ -169,11 +169,9 @@ self.addEventListener("fetch", (event) => {
     .then((cache) =>  {
       return cache.match(event.request).then((response) => {
         // Either respond with the cached resource, or perform a fetch and
-        // lazily populate the cache only if the resource was successfully fetched.
+        // lazily populate the cache.
         return response || fetch(event.request).then((response) => {
-          if (response && Boolean(response.ok)) {
-            cache.put(event.request, response.clone());
-          }
+          cache.put(event.request, response.clone());
           return response;
         });
       })
