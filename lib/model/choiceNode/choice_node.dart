@@ -196,11 +196,11 @@ class ChoiceNode extends GenerableParserAndPosition {
   }
 
   @override
-  bool isVisible() {
+  bool analyseVisibleCode() {
     if (choiceNodeMode == ChoiceNodeMode.onlyCode) {
       return false;
     }
-    return super.isVisible();
+    return super.analyseVisibleCode();
   }
 
   @override
@@ -224,4 +224,7 @@ class ChoiceNode extends GenerableParserAndPosition {
 
   @override
   String get errorName => "${pos.data.toString()} $title";
+
+  @override
+  bool get isHide => !isOccupySpace && choiceStatus.isHide();
 }

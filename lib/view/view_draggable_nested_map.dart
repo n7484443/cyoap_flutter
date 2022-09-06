@@ -229,7 +229,8 @@ class NodeDivider extends ConsumerWidget {
           divider,
           Visibility(
             visible: maxSelect != -1,
-            child: TextOutline('최대 $maxSelect개만큼 선택 가능', 18.0, ConstList.getFont(ref.watch(titleFontProvider)),
+            child: TextOutline('최대 $maxSelect개만큼 선택 가능', 18.0,
+                ConstList.getFont(ref.watch(titleFontProvider)),
                 strokeWidth: 5.0),
           ),
           Align(
@@ -290,7 +291,8 @@ class NodeDivider extends ConsumerWidget {
           divider,
           Visibility(
             visible: maxSelect != -1,
-            child: TextOutline('최대 $maxSelect개만큼 선택 가능', 18.0, ConstList.getFont(ref.watch(titleFontProvider)),
+            child: TextOutline('최대 $maxSelect개만큼 선택 가능', 18.0,
+                ConstList.getFont(ref.watch(titleFontProvider)),
                 strokeWidth: 5.0),
           ),
         ],
@@ -374,7 +376,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
   Widget build(BuildContext context) {
     ref.listen<double?>(
         dragPositionProvider, (previous, next) => dragUpdate(next));
-    var lineLength = ref.watch(lineLengthProvider) + (isEditable ? 1 : 0);
+    var lineLength = (ref.watch(lineLengthProvider) + (isEditable ? 1 : 0)) * 2;
     if (ConstList.isWeb() && !ConstList.isSmallDisplay(context)) {
       return WebSmoothScroll(
         controller: _scrollController!,
@@ -386,7 +388,11 @@ class _NestedMapState extends ConsumerState<NestedMap> {
           controller: _scrollController,
           itemCount: lineLength,
           itemBuilder: (BuildContext context, int index) {
-            return ChoiceLine(index);
+            if(index.isEven){
+              return NodeDivider(index ~/ 2);
+            }else{
+              return ChoiceLine(index ~/ 2);
+            }
           },
           cacheExtent: 200,
         ),
@@ -398,7 +404,11 @@ class _NestedMapState extends ConsumerState<NestedMap> {
       controller: _scrollController,
       itemCount: lineLength,
       itemBuilder: (BuildContext context, int index) {
-        return ChoiceLine(index);
+        if(index.isEven){
+          return NodeDivider(index ~/ 2);
+        }else{
+          return ChoiceLine(index ~/ 2);
+        }
       },
       cacheExtent: 200,
     );
@@ -416,14 +426,9 @@ class ChoiceLine extends ConsumerWidget {
     if (y >= ref.watch(lineLengthProvider)) {
       return Visibility(
         visible: ref.watch(dragChoiceNodeProvider) != null,
-        child: Column(
-          children: [
-            NodeDivider(y),
-            NodeDragTarget(
-              pos.addLast(0),
-              isHorizontal: true,
-            ),
-          ],
+        child: NodeDragTarget(
+          pos.addLast(0),
+          isHorizontal: true,
         ),
       );
     }
@@ -432,47 +437,34 @@ class ChoiceLine extends ConsumerWidget {
       if (ref.watch(childrenChangeProvider(pos)).isEmpty) {
         return ColoredBox(
           color: color,
-          child: Column(
-            children: [
-              NodeDivider(y),
-              NodeDragTarget(
-                pos.addLast(0),
-                isHorizontal: true,
-              ),
-            ],
+          child: NodeDragTarget(
+            pos.addLast(0),
+            isHorizontal: true,
           ),
         );
       }
       return ColoredBox(
         color: color,
-        child: Column(
-          children: [
-            NodeDivider(y),
-            ViewWrapCustomReorderable(
-                pos, (i) => NodeDragTarget(pos.addLast(i))),
-          ],
-        ),
+        child: ViewWrapCustomReorderable(
+            pos, (i) => NodeDragTarget(pos.addLast(i))),
       );
     }
-    if(!ref.watch(lineVisibleProvider(pos))){
+    if (!ref.watch(lineVisibleProvider(pos))) {
       return const SizedBox.shrink();
     }
     return ColoredBox(
       color: color,
-      child: Column(children: [
-        NodeDivider(y),
-        Padding(
-          padding: const EdgeInsets.only(
-            top: 12,
-            bottom: 12,
-          ),
-          child: ViewWrapCustom(
-            pos,
-            (i) => ViewChoiceNode(pos.addLast(i)),
-            isInner: false,
-          ),
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: 12,
+          bottom: 12,
         ),
-      ]),
+        child: ViewWrapCustom(
+          pos,
+          (i) => ViewChoiceNode(pos.addLast(i)),
+          isInner: false,
+        ),
+      ),
     );
   }
 }

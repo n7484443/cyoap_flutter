@@ -60,7 +60,7 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
     int stack = 0;
     List<Widget> subWidget = List<Widget>.empty(growable: true);
     for (int i = 0; i < children.length; i++) {
-      var child = children[i] as ChoiceNode;
+      var child = children[i];
       int size = child.width == 0 ? maxSize : child.width;
       if (stack == 0 && i == 0) {
         addBuildDraggable(outputWidget, i, horizontal: true);
@@ -145,8 +145,8 @@ class ViewWrapCustom extends ConsumerWidget {
     int stack = 0;
     List<Widget> subWidget = List<Widget>.empty(growable: true);
     for (int i = 0; i < children.length; i++) {
-      var child = children[i] as ChoiceNode;
-      if (!child.isOccupySpace && child.choiceStatus.isHide()) {
+      var child = children[i];
+      if (child.isHide) {
         continue;
       }
       int size = child.width == 0 ? maxSize : child.width;
