@@ -131,7 +131,7 @@ class _ViewProjectListState extends ConsumerState<ViewProjectList> {
                 ref.read(pathListSelectedProvider.notifier).state = index,
             style: ref.watch(pathListSelectedProvider) == index
                 ? OutlinedButton.styleFrom(
-                    shadowColor: Colors.white,
+                    primary: Colors.white,
                     backgroundColor: Colors.lightBlueAccent)
                 : null,
             child: Padding(

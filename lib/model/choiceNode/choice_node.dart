@@ -83,9 +83,9 @@ class ChoiceNode extends GenerableParserAndPosition {
     currentPos = json['x'] ?? json['pos'];
     recursiveStatus = RecursiveStatus.fromJson(json);
     if (json.containsKey('children')) {
-      children.addAll((json['children'] as List)
+      children = (json['children'] as List)
           .map((e) => ChoiceNode.fromJson(e)..parent = this)
-          .toList());
+          .toList();
     }
   }
 

@@ -13,14 +13,17 @@ class LineSetting extends GenerableParserAndPosition {
   bool alwaysVisible;
   Color? backgroundColor;
   String? backgroundImageString;
+  List<int> optimizedLengthList;
 
   LineSetting(int currentPos,
       {this.alwaysVisible = true,
       this.maxSelect = -1,
-      this.backgroundImageString}) {
+      this.backgroundImageString})
+      : optimizedLengthList = [] {
     super.currentPos = currentPos;
     recursiveStatus = RecursiveStatus();
   }
+
   @override
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = super.toJson();
@@ -29,6 +32,7 @@ class LineSetting extends GenerableParserAndPosition {
       'alwaysVisible': alwaysVisible,
       'backgroundColor': backgroundColor?.value,
       'backgroundImageString': convertToWebp(backgroundImageString),
+      'optimizedLengthList': optimizedLengthList,
     });
     return map;
   }
@@ -39,16 +43,18 @@ class LineSetting extends GenerableParserAndPosition {
         backgroundColor = json['backgroundColor'] == null
             ? null
             : Color(json['backgroundColor']),
-        backgroundImageString = json['backgroundImageString'] {
+        backgroundImageString = json['backgroundImageString'],
+        optimizedLengthList = [] {
     super.currentPos = json['y'] ?? json['pos'];
     if (json.containsKey('children')) {
-      children.addAll((json['children'] as List)
-          .map((e) => ChoiceNode.fromJson(e))
-          .toList());
+      children = (json['children'] as List)
+          .map((e) => ChoiceNode.fromJson(e)..parent = this)
+          .toList();
     }
     recursiveStatus = RecursiveStatus.fromJson(json);
-    for (var element in children) {
-      element.parent = this;
+    if (json.containsKey('optimizedLengthList')) {
+      optimizedLengthList =
+          (json['optimizedLengthList'] as List).map((e) => e as int).toList();
     }
   }
 
