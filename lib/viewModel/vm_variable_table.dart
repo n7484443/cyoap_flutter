@@ -69,37 +69,26 @@ class CheckListNotifier extends StateNotifier<List<CheckList>> {
 
   List<CheckList> get showList {
     var nodeList = List<CheckList>.empty(growable: true);
-    if (isEditable) {
-      for (var line in getPlatform.lineSettings) {
-        List<CheckList> subWidgetList = List.empty(growable: true);
-        for (var child in line.children) {
-          (child as ChoiceNode).doAllChild((node) {
+    for (var line in getPlatform.lineSettings) {
+      List<CheckList> subWidgetList = List.empty(growable: true);
+      for (var child in line.children) {
+        (child as ChoiceNode).doAllChild((node) {
+          if (isEditable) {
             subWidgetList.add(CheckList(name: node.title, pos: node.pos));
-          });
-        }
-        nodeList.add(CheckList(
-            name: "lineSetting_${line.currentPos}",
-            pos: line.pos,
-            children: subWidgetList));
-      }
-    } else {
-      for (var line in getPlatform.lineSettings) {
-        List<CheckList> subWidgetList = List.empty(growable: true);
-        for (var child in line.children) {
-          (child as ChoiceNode).doAllChild((node) {
+          } else {
             if (node.isVisible()) {
               subWidgetList.add(CheckList(
                   name: node.title,
                   pos: child.pos,
                   check: node.choiceStatus.isSelected()));
             }
-          });
-        }
-        nodeList.add(CheckList(
-            name: "lineSetting_${line.currentPos}",
-            pos: line.pos,
-            children: subWidgetList));
+          }
+        });
       }
+      nodeList.add(CheckList(
+          name: "lineSetting_${line.currentPos}",
+          pos: line.pos,
+          children: subWidgetList));
     }
     return nodeList;
   }
