@@ -397,48 +397,53 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
   }
 }
 
-class ViewContents extends ConsumerWidget {
+class ViewContents extends ConsumerStatefulWidget {
   final Pos pos;
 
   const ViewContents(
-    this.pos, {
-    super.key,
-  });
+      this.pos, {
+        super.key,
+      });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    var node = ref.watch(choiceNodeProvider(pos)).node!;
-    if (ref.watch(contentsQuillProvider(pos)).document.isEmpty()) {
-      if (node.choiceNodeMode == ChoiceNodeMode.multiSelect) {
-        return ViewChoiceNodeMultiSelect(node.pos);
-      } else {
-        return const SizedBox.shrink();
-      }
-    } else {
-      Widget contentText = IgnorePointer(
-        child: QuillEditor(
-          controller: ref.watch(contentsQuillProvider(pos)),
-          focusNode: FocusNode(),
-          readOnly: true,
-          autoFocus: false,
-          expands: false,
-          padding: const EdgeInsets.only(top: 4),
-          scrollController: ScrollController(),
-          scrollable: false,
-          customStyles: ConstList.getDefaultThemeData(
-              context, ConstList.scale(context),
-              fontStyle: ConstList.getFont(ref.watch(mainFontProvider))),
-        ),
-      );
-      if (node.choiceNodeMode == ChoiceNodeMode.multiSelect) {
-        return Column(children: [
-          contentText,
-          ViewChoiceNodeMultiSelect(node.pos),
-        ]);
-      } else {
-        return contentText;
-      }
+  ConsumerState createState() => _ViewContentsState();
+}
+
+class _ViewContentsState extends ConsumerState<ViewContents> {
+  FocusNode? _focusNode;
+  ScrollController? _scrollController;
+  @override
+  void initState() {
+    _focusNode = FocusNode();
+    _scrollController = ScrollController();
+    super.initState();
+  }
+  @override
+  void dispose() {
+    _focusNode?.dispose();
+    _scrollController?.dispose();
+    super.dispose();
+  }
+  @override
+  Widget build(BuildContext context) {
+    if (ref.watch(contentsQuillProvider(widget.pos)).document.isEmpty()) {
+      return const SizedBox.shrink();
     }
+    return QuillEditor(
+      controller: ref.watch(contentsQuillProvider(widget.pos)),
+      focusNode: _focusNode!,
+      readOnly: true,
+      autoFocus: false,
+      expands: false,
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      showCursor: false,
+      scrollController: _scrollController!,
+      scrollable: false,
+      enableInteractiveSelection: false,
+      customStyles: ConstList.getDefaultThemeData(
+          context, ConstList.scale(context),
+          fontStyle: ConstList.getFont(ref.watch(mainFontProvider))),
+    );
   }
 }
 
