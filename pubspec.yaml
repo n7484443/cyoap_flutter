@@ -31,13 +31,13 @@ dependencies:
     sdk: flutter
 
   image: ^3.2.0
-  extended_image: ^6.2.0
+  extended_image: ^6.2.1
   file_picker : ^5.0.0
   http: ^0.13.4
   shared_preferences: ^2.0.15
   google_fonts: ^3.0.1
   archive: ^3.3.1
-  flutter_quill: ^5.4.2
+  flutter_quill: ^6.0.0
   package_info_plus: ^1.4.3+1
   github: ^9.4.0
   flex_color_picker: ^2.5.0
