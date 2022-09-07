@@ -401,9 +401,9 @@ class ViewContents extends ConsumerStatefulWidget {
   final Pos pos;
 
   const ViewContents(
-      this.pos, {
-        super.key,
-      });
+    this.pos, {
+    super.key,
+  });
 
   @override
   ConsumerState createState() => _ViewContentsState();
@@ -412,18 +412,21 @@ class ViewContents extends ConsumerStatefulWidget {
 class _ViewContentsState extends ConsumerState<ViewContents> {
   FocusNode? _focusNode;
   ScrollController? _scrollController;
+
   @override
   void initState() {
     _focusNode = FocusNode();
     _scrollController = ScrollController();
     super.initState();
   }
+
   @override
   void dispose() {
     _focusNode?.dispose();
     _scrollController?.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     if (ref.watch(contentsQuillProvider(widget.pos)).document.isEmpty()) {
@@ -502,6 +505,8 @@ class ViewChoiceNodeContent extends ConsumerWidget {
               Expanded(child: image),
             ],
           ),
+          if (node.choiceNodeMode == ChoiceNodeMode.multiSelect)
+            ViewChoiceNodeMultiSelect(pos),
           child,
         ],
       );
@@ -518,6 +523,8 @@ class ViewChoiceNodeContent extends ConsumerWidget {
               ),
             ],
           ),
+          if (node.choiceNodeMode == ChoiceNodeMode.multiSelect)
+            ViewChoiceNodeMultiSelect(pos),
           child,
         ],
       );
@@ -549,6 +556,8 @@ class ViewChoiceNodeContent extends ConsumerWidget {
 
     subWidget.addAll([
       ViewContents(pos),
+      if (node.choiceNodeMode == ChoiceNodeMode.multiSelect)
+        ViewChoiceNodeMultiSelect(pos),
       child,
     ]);
 

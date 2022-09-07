@@ -105,8 +105,8 @@ class VMDraggableNestedMap {
   }
 }
 
-void refreshPage(Ref ref, {int start = 0}) {
-  for (var pos = start; pos < getPlatform.lineSettings.length; pos++) {
+void refreshPage(Ref ref, {int startLine = 0}) {
+  for (var pos = startLine; pos < getPlatform.lineSettings.length; pos++) {
     refreshLine(ref, pos);
   }
 }

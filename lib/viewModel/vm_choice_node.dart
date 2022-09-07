@@ -23,7 +23,7 @@ const int nonPositioned = -1;
 const int removedPositioned = -2;
 
 void refreshChild(Ref ref, GenerableParserAndPosition node) {
-  ref.read(choiceNodeProvider(node.pos)).needUpdate();
+  ref.invalidate(choiceNodeProvider(node.pos));
   ref.invalidate(opacityProvider(node.pos));
   ref.invalidate(isIgnorePointerProvider(node.pos));
   ref.read(childrenChangeProvider(node.pos).notifier).update();
@@ -52,10 +52,6 @@ class ChoiceNodeNotifier extends ChangeNotifier{
         this.node = null;
       }
     }
-  }
-
-  void needUpdate(){
-    notifyListeners();
   }
 }
 
@@ -163,7 +159,7 @@ class ChoiceNodeSelectNotifier extends StateNotifier<int> {
     } else {
       node.selectNode(n);
     }
-    updateStatusAll(ref, start: node.pos.first);
+    updateStatusAll(ref, startLine: node.pos.first);
   }
 }
 
@@ -245,10 +241,10 @@ class ChoiceNodeSizeNotifier extends StateNotifier<int> {
   }
 }
 
-void updateStatusAll(Ref ref, {int start = 0}) {
+void updateStatusAll(Ref ref, {int startLine = 0}) {
   getPlatform.updateStatusAll();
   ref.read(snackBarErrorProvider.notifier).update();
-  refreshPage(ref, start: start);
+  refreshPage(ref, startLine: startLine);
 }
 
 void updateImageAll(Ref ref) {

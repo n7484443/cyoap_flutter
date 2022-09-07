@@ -388,10 +388,24 @@ class _NestedMapState extends ConsumerState<NestedMap> {
           controller: _scrollController,
           itemCount: lineLength,
           itemBuilder: (BuildContext context, int index) {
-            if(index.isEven){
-              return NodeDivider(index ~/ 2);
-            }else{
-              return ChoiceLine(index ~/ 2);
+            var y = index ~/ 2;
+            if (index.isEven) {
+              return NodeDivider(y);
+            } else {
+              if (y >= ref.watch(lineLengthProvider)) {
+                return Visibility(
+                  visible: ref.watch(dragChoiceNodeProvider) != null,
+                  child: NodeDragTarget(
+                    Pos(data: [y]).addLast(0),
+                    isHorizontal: true,
+                  ),
+                );
+              }
+              var color = ref.watch(lineBackgroundColorProvider(y));
+              if (color != null) {
+                return ColoredBox(color: color, child: ChoiceLine(y));
+              }
+              return ChoiceLine(y);
             }
           },
           cacheExtent: 200,
@@ -404,10 +418,24 @@ class _NestedMapState extends ConsumerState<NestedMap> {
       controller: _scrollController,
       itemCount: lineLength,
       itemBuilder: (BuildContext context, int index) {
-        if(index.isEven){
-          return NodeDivider(index ~/ 2);
-        }else{
-          return ChoiceLine(index ~/ 2);
+        var y = index ~/ 2;
+        if (index.isEven) {
+          return NodeDivider(y);
+        } else {
+          if (y >= ref.watch(lineLengthProvider)) {
+            return Visibility(
+              visible: ref.watch(dragChoiceNodeProvider) != null,
+              child: NodeDragTarget(
+                Pos(data: [y]).addLast(0),
+                isHorizontal: true,
+              ),
+            );
+          }
+          var color = ref.watch(lineBackgroundColorProvider(y));
+          if (color != null) {
+            return ColoredBox(color: color, child: ChoiceLine(y));
+          }
+          return ChoiceLine(y);
         }
       },
       cacheExtent: 200,
@@ -423,47 +451,28 @@ class ChoiceLine extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var pos = Pos(data: [y]);
-    if (y >= ref.watch(lineLengthProvider)) {
-      return Visibility(
-        visible: ref.watch(dragChoiceNodeProvider) != null,
-        child: NodeDragTarget(
-          pos.addLast(0),
-          isHorizontal: true,
-        ),
-      );
-    }
-    var color = ref.watch(lineBackgroundColorProvider(y)) ?? Colors.transparent;
     if (isEditable) {
       if (ref.watch(childrenChangeProvider(pos)).isEmpty) {
-        return ColoredBox(
-          color: color,
-          child: NodeDragTarget(
-            pos.addLast(0),
-            isHorizontal: true,
-          ),
+        return NodeDragTarget(
+          pos.addLast(0),
+          isHorizontal: true,
         );
       }
-      return ColoredBox(
-        color: color,
-        child: ViewWrapCustomReorderable(
-            pos, (i) => NodeDragTarget(pos.addLast(i))),
-      );
+      return ViewWrapCustomReorderable(
+          pos, (i) => NodeDragTarget(pos.addLast(i)));
     }
     if (!ref.watch(lineVisibleProvider(pos))) {
       return const SizedBox.shrink();
     }
-    return ColoredBox(
-      color: color,
-      child: Padding(
-        padding: const EdgeInsets.only(
-          top: 12,
-          bottom: 12,
-        ),
-        child: ViewWrapCustom(
-          pos,
-          (i) => ViewChoiceNode(pos.addLast(i)),
-          isInner: false,
-        ),
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 12,
+        bottom: 12,
+      ),
+      child: ViewWrapCustom(
+        pos,
+        (i) => ViewChoiceNode(pos.addLast(i)),
+        isInner: false,
       ),
     );
   }
