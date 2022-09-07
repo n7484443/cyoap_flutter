@@ -126,7 +126,7 @@ final lineProvider = Provider.autoDispose
     .family<LineSetting?, int>((ref, pos) => getPlatform.getLineSetting(pos));
 
 final lineVisibleProvider = Provider.autoDispose
-    .family<bool, Pos>((ref, pos) => !ref.watch(lineProvider(pos.first))!.choiceStatus.isHide());
+    .family<bool, Pos>((ref, pos) => ref.watch(lineProvider(pos.first))!.choiceStatus.visible);
 
 final _childrenProvider = Provider.autoDispose
     .family<List<GenerableParserAndPosition>, Pos>((ref, pos) {

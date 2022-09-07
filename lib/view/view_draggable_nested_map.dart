@@ -211,10 +211,7 @@ class NodeDivider extends ConsumerWidget {
       );
     }
     if (!ref.watch(lineAlwaysVisibleProvider(y)) && !isEditable) {
-      return const Divider(
-        thickness: 4,
-        color: Colors.transparent,
-      );
+      return const SizedBox.shrink();
     }
     var maxSelect = ref.watch(lineMaxSelectProvider(y));
     var divider = Divider(
@@ -433,9 +430,17 @@ class _NestedMapState extends ConsumerState<NestedMap> {
           }
           var color = ref.watch(lineBackgroundColorProvider(y));
           if (color != null) {
-            return ColoredBox(color: color, child: ChoiceLine(y));
+            return ColoredBox(
+                color: color,
+                child: isEditable
+                    ? ViewWrapCustomReorderable(Pos(data: [y]),
+                        (i) => NodeDragTarget(Pos(data: [y, i])))
+                    : ChoiceLine(y));
           }
-          return ChoiceLine(y);
+          return isEditable
+              ? ViewWrapCustomReorderable(
+                  Pos(data: [y]), (i) => NodeDragTarget(Pos(data: [y, i])))
+              : ChoiceLine(y);
         }
       },
       cacheExtent: 200,
@@ -451,15 +456,15 @@ class ChoiceLine extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var pos = Pos(data: [y]);
-    if (isEditable) {
-      if (ref.watch(childrenChangeProvider(pos)).isEmpty) {
+    if (ref.watch(childrenChangeProvider(pos)).isEmpty) {
+      if (isEditable) {
         return NodeDragTarget(
           pos.addLast(0),
           isHorizontal: true,
         );
+      } else {
+        return const SizedBox.shrink();
       }
-      return ViewWrapCustomReorderable(
-          pos, (i) => NodeDragTarget(pos.addLast(i)));
     }
     if (!ref.watch(lineVisibleProvider(pos))) {
       return const SizedBox.shrink();
