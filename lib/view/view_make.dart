@@ -47,23 +47,23 @@ class ViewMake extends ConsumerWidget {
         icon: const Icon(Icons.arrow_back),
         onPressed: () {
           if (ref.read(draggableNestedMapChangedProvider)) {
-            showDialog<bool>(
+            showDialog(
               context: context,
-              builder: (_) => ViewBackDialog(() => () {}, () {}),
-            ).then((value) async {
-              if (value ?? false) {
+              builder: (_) => ViewBackDialog(() async {
                 showDialog(
                     context: context,
-                    builder: (BuildContext context) => ViewSaveDialog(getPlatformFileSystem.openAsFile),
+                    builder: (BuildContext context) =>
+                        ViewSaveDialog(getPlatformFileSystem.openAsFile),
                     barrierDismissible: false);
                 savePlatform(ref, getPlatformFileSystem.openAsFile).then((v) {
                   Navigator.of(context).pop();
-                  Navigator.of(context).pushReplacementNamed("/");
                   ref.read(draggableNestedMapChangedProvider.notifier).state =
                       false;
                 });
-              }
-            });
+              }, (i) {
+                Navigator.of(context).pushReplacementNamed("/");
+              }),
+            );
           } else {
             Navigator.of(context).pushReplacementNamed("/");
           }
@@ -161,7 +161,8 @@ class ViewMake extends ConsumerWidget {
           onSelected: (int selected) {
             showDialog(
                 context: context,
-                builder: (BuildContext context) => ViewSaveDialog(selected == 0),
+                builder: (BuildContext context) =>
+                    ViewSaveDialog(selected == 0),
                 barrierDismissible: false);
             switch (selected) {
               case 0:
@@ -198,7 +199,7 @@ class ViewMake extends ConsumerWidget {
           context: context,
           builder: (_) => ViewBackDialog(
             () => savePlatform(ref, ConstList.isWeb()),
-            () => Navigator.of(context).pop(),
+            (i) => Navigator.of(context).pop(),
           ),
         ) as Future<bool>;
       },

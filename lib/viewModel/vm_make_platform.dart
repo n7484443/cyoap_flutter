@@ -22,9 +22,10 @@ class ChangeTabNotifier extends StateNotifier<int> {
           var out = await showDialog(
             context: context,
             builder: (_) => ViewBackDialog(
-              () => ref.read(editorChangeProvider.notifier).save(),
-              () => {},
-              cancelFunction: () => ref.read(editorChangeProvider.notifier).update(),
+              () async => ref.read(editorChangeProvider.notifier).save(),
+              (i) => Navigator.of(context).pop(i != 0),
+              cancelFunction: () =>
+                  ref.read(editorChangeProvider.notifier).update(),
             ),
           );
           if (!out) {
@@ -39,8 +40,9 @@ class ChangeTabNotifier extends StateNotifier<int> {
           var out = await showDialog(
             context: context,
             builder: (_) => ViewBackDialog(
-              () => ref.read(valueTypeWrapperListProvider.notifier).save(),
-              () => {},
+              () async =>
+                  ref.read(valueTypeWrapperListProvider.notifier).save(),
+              (i) => Navigator.of(context).pop(i != 0),
               cancelFunction: () {},
             ),
           );

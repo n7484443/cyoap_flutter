@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ViewBackDialog extends StatelessWidget {
-  final void Function() saveFunction;
-  final void Function() backFunction;
+  final Future<void> Function() saveFunction;
+  final void Function(int) backFunction;
   final void Function()? cancelFunction;
   const ViewBackDialog(this.saveFunction, this.backFunction,
       {this.cancelFunction, super.key});
@@ -16,7 +16,7 @@ class ViewBackDialog extends StatelessWidget {
       actions: [
         ElevatedButton(
           onPressed: () {
-            Navigator.pop(context, false);
+            backFunction(0);
           },
           child: const Text('취소'),
         ),
@@ -25,16 +25,14 @@ class ViewBackDialog extends StatelessWidget {
             if (cancelFunction != null) {
               cancelFunction!();
             }
-            Navigator.pop(context, true);
-            backFunction();
+            backFunction(1);
           },
           child: const Text('아니오'),
         ),
         ElevatedButton(
-          onPressed: () {
-            saveFunction();
-            Navigator.pop(context, true);
-            backFunction();
+          onPressed: () async {
+            await saveFunction();
+            backFunction(2);
           },
           child: const Text('예'),
         ),
