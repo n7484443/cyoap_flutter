@@ -1,8 +1,9 @@
 import 'dart:collection';
 
-import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
-
 import 'grammar/value_type.dart';
+
+typedef VariableChangeCallback = void Function();
+typedef CheckListChangeCallback = void Function();
 
 class VariableDataBase {
   static final VariableDataBase _instance = VariableDataBase._init();
@@ -14,15 +15,16 @@ class VariableDataBase {
   VariableDataBase._init();
 
   var varMap = HashMap<String, ValueTypeWrapper>();
-  VariableTilesStateNotifier? variableTilesStateNotifier;
-  CheckListNotifier? checkListNotifier;
+
+  VariableChangeCallback? variableChangeCallback;
+  CheckListChangeCallback? checkListChangeCallback;
 
   void updateVariableTiles() {
-    variableTilesStateNotifier?.update();
+    variableChangeCallback!();
   }
 
   void updateCheckList() {
-    checkListNotifier?.update();
+    checkListChangeCallback!();
   }
 
   void setValue(String name, ValueTypeWrapper value) {

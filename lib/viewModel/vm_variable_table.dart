@@ -29,7 +29,9 @@ final isVisibleSourceProvider = StateProvider<bool>((ref) {
 class VariableTilesStateNotifier
     extends StateNotifier<Map<String, ValueTypeWrapper>> {
   VariableTilesStateNotifier(super.state) {
-    VariableDataBase().variableTilesStateNotifier = this;
+    VariableDataBase().variableChangeCallback = (){
+      update();
+    };
   }
 
   void update() {
@@ -59,7 +61,9 @@ final checkListNotifierProvider =
 
 class CheckListNotifier extends StateNotifier<List<CheckList>> {
   CheckListNotifier() : super([]) {
-    VariableDataBase().checkListNotifier = this;
+    VariableDataBase().checkListChangeCallback = (){
+      update();
+    };
     update();
   }
 
