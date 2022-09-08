@@ -12,30 +12,30 @@ class ViewSelectedGrid extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var posList = ref.watch(selectedChoiceNodeProvider);
+    var numRow = 4;
+    var listLength = (posList.length / numRow).ceil();
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListView.builder(
         itemBuilder: (context, index) {
-          return IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: List.generate(4, (innerIndex) {
-                var itemPos = index * 4 + innerIndex;
-                if (itemPos >= posList.length) {
-                  return const Flexible(
-                    child: SizedBox.shrink(),
-                  );
-                }
-                return Flexible(
-                  child: IgnorePointer(
-                    child: ViewChoiceNode(posList[itemPos], ignoreOpacity: true),
-                  ),
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: List.generate(numRow, (innerIndex) {
+              var itemPos = index * numRow + innerIndex;
+              if (itemPos >= posList.length) {
+                return const Expanded(
+                  child: SizedBox.shrink(),
                 );
-              }),
-            ),
+              }
+              return Expanded(
+                child: IgnorePointer(
+                  child: ViewChoiceNode(posList[itemPos], ignoreOpacity: true),
+                ),
+              );
+            }),
           );
         },
-        itemCount: posList.length ~/ 4 + posList.length % 4 == 0 ? 0 : 1,
+        itemCount: listLength,
       ),
     );
   }

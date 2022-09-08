@@ -251,10 +251,12 @@ class _ViewAddProjectDialogState extends ConsumerState<ViewAddProjectDialog> {
         ElevatedButton(
           onPressed: () async {
             Navigator.of(context).pop();
-            var path = await ProjectPath.getProjectFolder(
-                _textEditingController?.text);
-            await Directory(path).create(recursive: true);
-            await ref.read(pathListProvider.notifier).updatePathList();
+            if(_textEditingController?.text.isNotEmpty ?? false){
+              var path = await ProjectPath.getProjectFolder(
+                  _textEditingController?.text);
+              await Directory(path).create(recursive: true);
+              await ref.read(pathListProvider.notifier).updatePathList();
+            }
           },
           child: const Text('생성'),
         ),

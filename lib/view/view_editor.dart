@@ -524,6 +524,7 @@ class ViewNodeImageEditor extends ConsumerWidget {
                         ref
                             .read(changeTabProvider.notifier)
                             .changePageString('viewImageEditor', context);
+                        ref.read(beforeEditedNodePosProvider.notifier).state = ref.read(nodeEditorTargetPosProvider);
                       } else {
                         ref
                             .read(imageListStateProvider.notifier)

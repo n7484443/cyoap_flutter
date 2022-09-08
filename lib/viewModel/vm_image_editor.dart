@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image/image.dart';
 import 'package:tuple/tuple.dart';
 
+import '../model/choiceNode/pos.dart';
+
 final globalEditorKeyProvider =
     Provider.autoDispose<GlobalKey<ExtendedImageEditorState>>(
         (ref) => GlobalKey<ExtendedImageEditorState>());
@@ -24,3 +26,7 @@ final cropImageProvider = FutureProvider.autoDispose<Uint8List>((ref) async {
 final imageCropRatioProvider =
     StateProvider<Tuple2<double, double>?>((ref) => null);
 final imageCropIndexProvider = StateProvider<int>((ref) => 0);
+
+final beforeEditedNodePosProvider = StateProvider<Pos?>((ref) {
+  return null;
+});
