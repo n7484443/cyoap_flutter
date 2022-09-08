@@ -1,7 +1,7 @@
-import 'package:cyoap_flutter/model/grammar/analyser_const.dart';
-import 'package:cyoap_flutter/model/grammar/recursive_parser.dart';
-import 'package:cyoap_flutter/model/grammar/token.dart';
-import 'package:cyoap_flutter/model/grammar/value_type.dart';
+import 'analyser_const.dart';
+import 'recursive_parser.dart';
+import 'token.dart';
+import 'value_type.dart';
 
 import 'analyser.dart';
 

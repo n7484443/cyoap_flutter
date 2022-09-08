@@ -1,7 +1,6 @@
 import 'dart:convert';
 
-import 'package:cyoap_flutter/model/grammar/analyser.dart';
-
+import 'analyser.dart';
 import 'value_type.dart';
 
 abstract class RecursiveUnit {
