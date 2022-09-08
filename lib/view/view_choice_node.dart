@@ -22,8 +22,9 @@ import '../viewModel/vm_variable_table.dart';
 
 class ViewChoiceNode extends ConsumerWidget {
   final Pos pos;
+  final bool ignoreOpacity;
 
-  const ViewChoiceNode(this.pos, {super.key});
+  const ViewChoiceNode(this.pos, {this.ignoreOpacity = false, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,6 +39,9 @@ class ViewChoiceNode extends ConsumerWidget {
           height: nodeBaseHeight * ConstList.scale(context),
         ),
       );
+    }
+    if(ignoreOpacity){
+      return ViewChoiceNodeMain(pos);
     }
     var opacity = ref.watch(opacityProvider(pos));
     if (opacity == 0) {

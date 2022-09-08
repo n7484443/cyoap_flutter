@@ -22,7 +22,7 @@ class ViewSaveDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
-      title: Text(asZip ? '저장중...' : '압축중...'),
+      title: Text(asZip ? '압축중...' : '저장중...' ),
       content: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -50,18 +50,21 @@ class ViewMake extends ConsumerWidget {
             showDialog(
               context: context,
               builder: (_) => ViewBackDialog(() async {
+                final navigator = Navigator.of(context);
                 showDialog(
                     context: context,
                     builder: (BuildContext context) =>
                         ViewSaveDialog(getPlatformFileSystem.openAsFile),
                     barrierDismissible: false);
-                savePlatform(ref, getPlatformFileSystem.openAsFile).then((v) {
-                  Navigator.of(context).pop();
-                  ref.read(draggableNestedMapChangedProvider.notifier).state =
-                      false;
-                });
+                await savePlatform(ref, getPlatformFileSystem.openAsFile);
+                navigator.pop();
+                ref.read(draggableNestedMapChangedProvider.notifier).state =
+                    false;
               }, (i) {
-                Navigator.of(context).pushReplacementNamed("/");
+                Navigator.of(context).pop();
+                if (i != 0) {
+                  Navigator.of(context).pushReplacementNamed("/");
+                }
               }),
             );
           } else {
@@ -162,7 +165,7 @@ class ViewMake extends ConsumerWidget {
             showDialog(
                 context: context,
                 builder: (BuildContext context) =>
-                    ViewSaveDialog(selected == 0),
+                    ViewSaveDialog(selected != 0),
                 barrierDismissible: false);
             switch (selected) {
               case 0:
@@ -194,14 +197,8 @@ class ViewMake extends ConsumerWidget {
     );
 
     return WillPopScope(
-      onWillPop: () {
-        return showDialog(
-          context: context,
-          builder: (_) => ViewBackDialog(
-            () => savePlatform(ref, ConstList.isWeb()),
-            (i) => Navigator.of(context).pop(),
-          ),
-        ) as Future<bool>;
+      onWillPop: () async {
+        return false;
       },
       child: Scaffold(
         appBar: appbarWidget,

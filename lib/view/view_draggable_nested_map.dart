@@ -6,6 +6,7 @@ import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/view/util/view_text_outline.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
+import 'package:cyoap_flutter/view/view_selected_grid.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -373,7 +374,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
   Widget build(BuildContext context) {
     ref.listen<double?>(
         dragPositionProvider, (previous, next) => dragUpdate(next));
-    var lineLength = (ref.watch(lineLengthProvider) + (isEditable ? 1 : 0)) * 2;
+    var lineLength = ref.watch(lineLengthProvider) * 2 + (isEditable ? 2 : 1);
     if (ConstList.isWeb() && !ConstList.isSmallDisplay(context)) {
       return WebSmoothScroll(
         controller: _scrollController!,
@@ -387,23 +388,30 @@ class _NestedMapState extends ConsumerState<NestedMap> {
           itemBuilder: (BuildContext context, int index) {
             var y = index ~/ 2;
             if (index.isEven) {
+              if (y >= ref.watch(lineLengthProvider) && !isEditable) {
+                return TextButton(
+                    onPressed: () =>
+                        showDialog(context: context, builder: (context) => const Dialog(
+                          child: ViewSelectedGrid(),
+                        )),
+                    child: const Text("요약"));
+              }
               return NodeDivider(y);
-            } else {
-              if (y >= ref.watch(lineLengthProvider)) {
-                return Visibility(
-                  visible: ref.watch(dragChoiceNodeProvider) != null,
-                  child: NodeDragTarget(
-                    Pos(data: [y]).addLast(0),
-                    isHorizontal: true,
-                  ),
-                );
-              }
-              var color = ref.watch(lineBackgroundColorProvider(y));
-              if (color != null) {
-                return ColoredBox(color: color, child: ChoiceLine(y));
-              }
-              return ChoiceLine(y);
             }
+            if (y >= ref.watch(lineLengthProvider)) {
+              return Visibility(
+                visible: ref.watch(dragChoiceNodeProvider) != null,
+                child: NodeDragTarget(
+                  Pos(data: [y]).addLast(0),
+                  isHorizontal: true,
+                ),
+              );
+            }
+            var color = ref.watch(lineBackgroundColorProvider(y));
+            if (color != null) {
+              return ColoredBox(color: color, child: ChoiceLine(y));
+            }
+            return ChoiceLine(y);
           },
           cacheExtent: 200,
         ),
@@ -417,31 +425,30 @@ class _NestedMapState extends ConsumerState<NestedMap> {
       itemBuilder: (BuildContext context, int index) {
         var y = index ~/ 2;
         if (index.isEven) {
+          if (y >= ref.watch(lineLengthProvider) && !isEditable) {
+            return TextButton(
+                onPressed: () =>
+                    showDialog(context: context, builder: (context) => const Dialog(
+                      child: ViewSelectedGrid(),
+                    )),
+                child: const Text("요약"));
+          }
           return NodeDivider(y);
-        } else {
-          if (y >= ref.watch(lineLengthProvider)) {
-            return Visibility(
-              visible: ref.watch(dragChoiceNodeProvider) != null,
-              child: NodeDragTarget(
-                Pos(data: [y]).addLast(0),
-                isHorizontal: true,
-              ),
-            );
-          }
-          var color = ref.watch(lineBackgroundColorProvider(y));
-          if (color != null) {
-            return ColoredBox(
-                color: color,
-                child: isEditable
-                    ? ViewWrapCustomReorderable(Pos(data: [y]),
-                        (i) => NodeDragTarget(Pos(data: [y, i])))
-                    : ChoiceLine(y));
-          }
-          return isEditable
-              ? ViewWrapCustomReorderable(
-                  Pos(data: [y]), (i) => NodeDragTarget(Pos(data: [y, i])))
-              : ChoiceLine(y);
         }
+        if (y >= ref.watch(lineLengthProvider)) {
+          return Visibility(
+            visible: ref.watch(dragChoiceNodeProvider) != null,
+            child: NodeDragTarget(
+              Pos(data: [y]).addLast(0),
+              isHorizontal: true,
+            ),
+          );
+        }
+        var color = ref.watch(lineBackgroundColorProvider(y));
+        if (color != null) {
+          return ColoredBox(color: color, child: ChoiceLine(y));
+        }
+        return ChoiceLine(y);
       },
       cacheExtent: 200,
     );
@@ -466,7 +473,7 @@ class ChoiceLine extends ConsumerWidget {
         return const SizedBox.shrink();
       }
     }
-    if (!ref.watch(lineVisibleProvider(pos))) {
+    if (!isEditable && !ref.watch(lineVisibleProvider(pos))) {
       return const SizedBox.shrink();
     }
     return Padding(
