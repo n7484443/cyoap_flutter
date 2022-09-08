@@ -130,7 +130,7 @@ jobs:
         id: get_version
         uses: battila7/get-version-action@v2
 
-      - run: flutter build web --web-renderer canvaskit --release --base-href=/FlutterCyoap/
+      - run: flutter build web --web-renderer canvaskit --release --dart-define="isDistributed"=true
 
       - name: modify version of index.html
         run: |

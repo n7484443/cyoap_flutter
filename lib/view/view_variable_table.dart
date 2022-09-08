@@ -122,7 +122,6 @@ class ViewPlayDrawer extends ConsumerWidget {
       children: [
         Flexible(
           child: ListView(
-            controller: ScrollController(),
             children: [
               const VariableTiles(),
               const NodeTiles(),
@@ -137,7 +136,7 @@ class ViewPlayDrawer extends ConsumerWidget {
             ),
             ListTile(
               title: ViewSwitchLabel(
-                () => ref
+                    () => ref
                     .read(isVisibleSourceProvider.notifier)
                     .update((state) => !state),
                 ref.watch(isVisibleSourceProvider),
@@ -146,7 +145,7 @@ class ViewPlayDrawer extends ConsumerWidget {
             ),
             ListTile(
               title: ViewSwitchLabel(
-                () => ref
+                    () => ref
                     .read(isDebugModeProvider.notifier)
                     .update((state) => !state),
                 ref.watch(isDebugModeProvider),

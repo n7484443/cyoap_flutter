@@ -22,6 +22,7 @@ final textEditingControllerProvider =
   textEditingController.addListener(() {
     getPlatformFileSystem.addSource(name, textEditingController.text);
   });
+  ref.onDispose(() => textEditingController.dispose());
   return textEditingController;
 });
 
