@@ -389,13 +389,16 @@ class _NestedMapState extends ConsumerState<NestedMap> {
             var y = index ~/ 2;
             if (index.isEven) {
               if (y >= ref.watch(lineLengthProvider) && !isEditable) {
-                return TextButton(
-                    onPressed: () => showDialog(
-                        context: context,
-                        builder: (context) => const Dialog(
-                              child: ViewSelectedGrid(),
-                            )),
-                    child: const Text("요약"));
+                return SizedBox(
+                  height: 400,
+                  child: TextButton(
+                      onPressed: () => showDialog(
+                          context: context,
+                          builder: (context) => const Dialog(
+                                child: ViewSelectedGrid(),
+                              )),
+                      child: const Text("요약")),
+                );
               }
               return NodeDivider(y);
             }
@@ -427,13 +430,19 @@ class _NestedMapState extends ConsumerState<NestedMap> {
         var y = index ~/ 2;
         if (index.isEven) {
           if (y >= ref.watch(lineLengthProvider) && !isEditable) {
-            return TextButton(
-                onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) => const Dialog(
+            return SizedBox(
+              height: 40,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                    onPressed: () => showDialog(
+                        context: context,
+                        builder: (context) => const Dialog(
                           child: ViewSelectedGrid(),
                         )),
-                child: const Text("요약"));
+                    child: const Text("요약")),
+              ),
+            );
           }
           return NodeDivider(y);
         }

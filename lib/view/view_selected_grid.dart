@@ -16,7 +16,7 @@ class ViewSelectedGrid extends ConsumerWidget {
     var listLength = (posList.length / numRow).ceil();
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: ListView.builder(
+      child: ListView.separated(
         itemBuilder: (context, index) {
           return Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,13 +29,18 @@ class ViewSelectedGrid extends ConsumerWidget {
               }
               return Expanded(
                 child: IgnorePointer(
-                  child: ViewChoiceNode(posList[itemPos], ignoreOpacity: true),
+                  child: ViewChoiceNode(
+                    posList[itemPos],
+                    ignoreOpacity: true,
+                    ignoreChild: true,
+                  ),
                 ),
               );
             }),
           );
         },
         itemCount: listLength,
+        separatorBuilder: (BuildContext context, int index) => const Divider(),
       ),
     );
   }

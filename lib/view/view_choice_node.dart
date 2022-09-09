@@ -23,8 +23,9 @@ import '../viewModel/vm_variable_table.dart';
 class ViewChoiceNode extends ConsumerWidget {
   final Pos pos;
   final bool ignoreOpacity;
+  final bool ignoreChild;
 
-  const ViewChoiceNode(this.pos, {this.ignoreOpacity = false, super.key});
+  const ViewChoiceNode(this.pos, {this.ignoreOpacity = false, this.ignoreChild = false, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,14 +42,14 @@ class ViewChoiceNode extends ConsumerWidget {
       );
     }
     if(ignoreOpacity){
-      return ViewChoiceNodeMain(pos);
+      return ViewChoiceNodeMain(pos, ignoreChild: ignoreChild,);
     }
     var opacity = ref.watch(opacityProvider(pos));
     if (opacity == 0) {
       if (ref.watch(isChoiceNodeIsOccupySpaceProvider(pos))) {
         return Opacity(
           opacity: opacity,
-          child: ViewChoiceNodeMain(pos),
+          child: ViewChoiceNodeMain(pos, ignoreChild: ignoreChild),
         );
       } else {
         return const SizedBox.shrink();
@@ -56,15 +57,16 @@ class ViewChoiceNode extends ConsumerWidget {
     }
     return Opacity(
       opacity: opacity,
-      child: ViewChoiceNodeMain(pos),
+      child: ViewChoiceNodeMain(pos, ignoreChild: ignoreChild),
     );
   }
 }
 
 class ViewChoiceNodeMain extends ConsumerWidget {
   final Pos pos;
+  final bool ignoreChild;
 
-  const ViewChoiceNodeMain(this.pos, {super.key});
+  const ViewChoiceNodeMain(this.pos, {this.ignoreChild = false, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -130,7 +132,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
                         );
                   }
                 : null,
-            child: ViewChoiceNodeContent(pos),
+            child: ViewChoiceNodeContent(pos, ignoreChild: ignoreChild),
           ),
         ),
       ),
@@ -456,8 +458,9 @@ class _ViewContentsState extends ConsumerState<ViewContents> {
 
 class ViewChoiceNodeContent extends ConsumerWidget {
   final Pos pos;
+  final bool ignoreChild;
 
-  const ViewChoiceNodeContent(this.pos, {super.key});
+  const ViewChoiceNodeContent(this.pos, {this.ignoreChild = false, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -487,7 +490,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
           (i) => NodeDragTarget(pos.addLast(i)),
           maxSize: node.getMaxSize(true),
         );
-      } else {
+      } else if(!ignoreChild){
         child = ViewWrapCustom(
           pos,
           (i) => ViewChoiceNode(pos.addLast(i)),
