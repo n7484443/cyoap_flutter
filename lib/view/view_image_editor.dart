@@ -118,7 +118,6 @@ class ViewImageEditorContents extends ConsumerWidget {
                 data: await ref.read(cropImageProvider.future))
                 .then((value) {
               ref.read(changeTabProvider.notifier).back(context);
-              ref.read(nodeEditorTargetPosProvider.notifier).state = ref.read(beforeEditedNodePosProvider);
             });
           },
         ),

@@ -390,10 +390,11 @@ class _NestedMapState extends ConsumerState<NestedMap> {
             if (index.isEven) {
               if (y >= ref.watch(lineLengthProvider) && !isEditable) {
                 return TextButton(
-                    onPressed: () =>
-                        showDialog(context: context, builder: (context) => const Dialog(
-                          child: ViewSelectedGrid(),
-                        )),
+                    onPressed: () => showDialog(
+                        context: context,
+                        builder: (context) => const Dialog(
+                              child: ViewSelectedGrid(),
+                            )),
                     child: const Text("요약"));
               }
               return NodeDivider(y);
@@ -427,10 +428,11 @@ class _NestedMapState extends ConsumerState<NestedMap> {
         if (index.isEven) {
           if (y >= ref.watch(lineLengthProvider) && !isEditable) {
             return TextButton(
-                onPressed: () =>
-                    showDialog(context: context, builder: (context) => const Dialog(
-                      child: ViewSelectedGrid(),
-                    )),
+                onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => const Dialog(
+                          child: ViewSelectedGrid(),
+                        )),
                 child: const Text("요약"));
           }
           return NodeDivider(y);
@@ -463,29 +465,35 @@ class ChoiceLine extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var pos = Pos(data: [y]);
-    if (ref.watch(childrenChangeProvider(pos)).isEmpty) {
-      if (isEditable) {
+    if (isEditable) {
+      if (ref.watch(childrenChangeProvider(pos)).isEmpty) {
         return NodeDragTarget(
           pos.addLast(0),
           isHorizontal: true,
         );
-      } else {
+      }
+      return ViewWrapCustomReorderable(
+        pos,
+        (i) => NodeDragTarget(pos.addLast(i)),
+      );
+    } else {
+      if (ref.watch(childrenChangeProvider(pos)).isEmpty) {
         return const SizedBox.shrink();
       }
+      if (!ref.watch(lineVisibleProvider(pos))) {
+        return const SizedBox.shrink();
+      }
+      return Padding(
+        padding: const EdgeInsets.only(
+          top: 12,
+          bottom: 12,
+        ),
+        child: ViewWrapCustom(
+          pos,
+          (i) => ViewChoiceNode(pos.addLast(i)),
+          isInner: false,
+        ),
+      );
     }
-    if (!isEditable && !ref.watch(lineVisibleProvider(pos))) {
-      return const SizedBox.shrink();
-    }
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: 12,
-        bottom: 12,
-      ),
-      child: ViewWrapCustom(
-        pos,
-        (i) => ViewChoiceNode(pos.addLast(i)),
-        isInner: false,
-      ),
-    );
   }
 }

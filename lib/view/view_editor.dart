@@ -28,45 +28,51 @@ class ViewEditor extends ConsumerWidget {
     ref.listen<Pos?>(nodeEditorTargetPosProvider, (previous, next) {
       ref.read(nodeEditorTargetProvider.notifier).update();
     });
-    if(ref.watch(nodeEditorTargetPosProvider) == null){
+    if (ref.watch(nodeEditorTargetPosProvider) == null) {
       return const SizedBox.shrink();
     }
     var children = [const ViewContentsEditor(), const ViewCodeEditor()];
     var childrenText = const ["내용 수정", "코드 수정"];
-    return DefaultTabController(
-      length: children.length,
-      initialIndex: 0,
-      child: Scaffold(
-        appBar: AppBar(
-          leading: Builder(
-            builder: (context) => IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                if (ref.watch(nodeTitleProvider).isNotEmpty) {
-                  ref.read(changeTabProvider.notifier).back(context);
-                }
-                DefaultTabController.of(context)?.index = 0;
-              },
+    return WillPopScope(
+      child: DefaultTabController(
+        length: children.length,
+        initialIndex: 0,
+        child: Scaffold(
+          appBar: AppBar(
+            leading: Builder(
+              builder: (context) => IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  if (ref.watch(nodeTitleProvider).isNotEmpty) {
+                    ref.read(changeTabProvider.notifier).back(context);
+                  }
+                  DefaultTabController.of(context)?.index = 0;
+                },
+              ),
             ),
-          ),
-          title: TabBar(
-            labelColor: Theme.of(context).colorScheme.secondary,
-            unselectedLabelColor: Theme.of(context).colorScheme.primary,
-            tabs: childrenText.map((String e) => Tab(text: e)).toList(),
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.save),
-              onPressed: () {
-                ref.read(editorChangeProvider.notifier).save();
-              },
+            title: TabBar(
+              labelColor: Theme.of(context).colorScheme.secondary,
+              unselectedLabelColor: Theme.of(context).colorScheme.primary,
+              tabs: childrenText.map((String e) => Tab(text: e)).toList(),
             ),
-          ],
-        ),
-        body: TabBarView(
-          children: children,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.save),
+                onPressed: () {
+                  ref.read(editorChangeProvider.notifier).save();
+                },
+              ),
+            ],
+          ),
+          body: TabBarView(
+            children: children,
+          ),
         ),
       ),
+      onWillPop: () async {
+        ref.read(changeTabProvider.notifier).back(context);
+        return false;
+      },
     );
   }
 }
@@ -107,39 +113,33 @@ class ViewContentsEditor extends ConsumerWidget {
       ref.read(editorChangeProvider.notifier).needUpdate();
     });
 
-    return WillPopScope(
-      child: Column(
-        children: [
-          const ViewTitleTextFieldInput(),
-          Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Visibility(
-                      visible: ref.watch(nodeModeProvider) !=
-                          ChoiceNodeMode.onlyCode,
-                      child: const ViewTextContentsEditor(),
-                    ),
+    return Column(
+      children: [
+        const ViewTitleTextFieldInput(),
+        Expanded(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Visibility(
+                    visible: ref.watch(nodeModeProvider) !=
+                        ChoiceNodeMode.onlyCode,
+                    child: const ViewTextContentsEditor(),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.all(ConstList.paddingSmall),
-                  child: SingleChildScrollView(
-                    child: ViewControlPanel(),
-                  ),
+              ),
+              const Padding(
+                padding: EdgeInsets.all(ConstList.paddingSmall),
+                child: SingleChildScrollView(
+                  child: ViewControlPanel(),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-      onWillPop: () async {
-        ref.read(changeTabProvider.notifier).back(context);
-        return false;
-      },
+        ),
+      ],
     );
   }
 }
@@ -524,7 +524,6 @@ class ViewNodeImageEditor extends ConsumerWidget {
                         ref
                             .read(changeTabProvider.notifier)
                             .changePageString('viewImageEditor', context);
-                        ref.read(beforeEditedNodePosProvider.notifier).state = ref.read(nodeEditorTargetPosProvider);
                       } else {
                         ref
                             .read(imageListStateProvider.notifier)
@@ -652,84 +651,79 @@ class ViewCodeEditor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return WillPopScope(
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              children: [
-                Visibility(
-                  visible: ref.watch(nodeEditorTargetProvider).node.isSelectableMode,
-                  child: Focus(
-                    onFocusChange: (bool hasFocus) => ref
-                        .read(editorChangeProvider.notifier)
-                        .lastFocus = ref.watch(controllerClickableProvider),
-                    child: TextField(
-                      controller: ref.watch(controllerClickableProvider),
-                      textAlign: TextAlign.left,
-                      decoration: const InputDecoration(hintText: '실행 조건'),
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            children: [
+              Visibility(
+                visible:
+                    ref.watch(nodeEditorTargetProvider).node.isSelectableMode,
+                child: Focus(
+                  onFocusChange: (bool hasFocus) => ref
+                      .read(editorChangeProvider.notifier)
+                      .lastFocus = ref.watch(controllerClickableProvider),
+                  child: TextField(
+                    controller: ref.watch(controllerClickableProvider),
+                    textAlign: TextAlign.left,
+                    decoration: const InputDecoration(hintText: '실행 조건'),
+                  ),
+                ),
+              ),
+              Visibility(
+                visible:
+                    ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
+                child: Focus(
+                  onFocusChange: (bool hasFocus) => ref
+                      .read(editorChangeProvider.notifier)
+                      .lastFocus = ref.watch(controllerVisibleProvider),
+                  child: TextField(
+                    controller: ref.watch(controllerVisibleProvider),
+                    textAlign: TextAlign.left,
+                    decoration: const InputDecoration(
+                        hintText: '보이는 조건(true일 때 보임, 비어있을 시 true)'),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Focus(
+                  onFocusChange: (bool hasFocus) => ref
+                      .read(editorChangeProvider.notifier)
+                      .lastFocus = ref.watch(controllerExecuteProvider),
+                  child: TextField(
+                    controller: ref.watch(controllerExecuteProvider),
+                    textAlign: TextAlign.left,
+                    scrollController: ScrollController(),
+                    maxLines: null,
+                    expands: true,
+                    decoration: const InputDecoration(
+                      hintText: '선택 시 시행 코드',
                     ),
                   ),
                 ),
-                Visibility(
-                  visible:
-                      ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
-                  child: Focus(
-                    onFocusChange: (bool hasFocus) => ref
-                        .read(editorChangeProvider.notifier)
-                        .lastFocus = ref.watch(controllerVisibleProvider),
-                    child: TextField(
-                      controller: ref.watch(controllerVisibleProvider),
-                      textAlign: TextAlign.left,
-                      decoration: const InputDecoration(
-                          hintText: '보이는 조건(true일 때 보임, 비어있을 시 true)'),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Focus(
-                    onFocusChange: (bool hasFocus) => ref
-                        .read(editorChangeProvider.notifier)
-                        .lastFocus = ref.watch(controllerExecuteProvider),
-                    child: TextField(
-                      controller: ref.watch(controllerExecuteProvider),
-                      textAlign: TextAlign.left,
-                      scrollController: ScrollController(),
-                      maxLines: null,
-                      expands: true,
-                      decoration: const InputDecoration(
-                        hintText: '선택 시 시행 코드',
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(2.0),
-            child: Column(
-              children: [
-                ViewSwitchLabel(
-                  () {
-                    ref.read(nodeEditorTargetProvider).node.isOccupySpace =
-                        !ref.read(isOccupySpaceButtonProvider);
-                    ref
-                        .read(isOccupySpaceButtonProvider.notifier)
-                        .update((value) => value = !value);
-                  },
-                  ref.watch(isOccupySpaceButtonProvider),
-                  label: '숨김 시 공간 차지',
-                ),
-              ],
-            ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Column(
+            children: [
+              ViewSwitchLabel(
+                () {
+                  ref.read(nodeEditorTargetProvider).node.isOccupySpace =
+                      !ref.read(isOccupySpaceButtonProvider);
+                  ref
+                      .read(isOccupySpaceButtonProvider.notifier)
+                      .update((value) => value = !value);
+                },
+                ref.watch(isOccupySpaceButtonProvider),
+                label: '숨김 시 공간 차지',
+              ),
+            ],
           ),
-        ],
-      ),
-      onWillPop: () async {
-        ref.read(changeTabProvider.notifier).back(context);
-        return false;
-      },
+        ),
+      ],
     );
   }
 }

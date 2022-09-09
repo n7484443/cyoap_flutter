@@ -15,6 +15,14 @@ class ChangeTabNotifier extends StateNotifier<int> {
   ChangeTabNotifier(this.ref) : super(0);
   List<int> stack = List.empty(growable: true);
 
+  void entryFunction(int index, BuildContext context) {
+    switch (index) {
+      case 0:
+        ref.read(nodeEditorTargetPosProvider.notifier).state = null;
+        break;
+    }
+  }
+
   Future<bool> removeFunction(int index, BuildContext context) async {
     switch (index) {
       case 1:
@@ -32,7 +40,6 @@ class ChangeTabNotifier extends StateNotifier<int> {
             return false;
           }
           refreshLine(ref, ref.read(nodeEditorTargetPosProvider)!.first);
-          ref.read(nodeEditorTargetPosProvider.notifier).state = null;
         }
         break;
       case 2:
@@ -58,6 +65,7 @@ class ChangeTabNotifier extends StateNotifier<int> {
   void changePage(int index, BuildContext context) {
     removeFunction(state, context).then((value) {
       if (value) {
+        entryFunction(index, context);
         state = index;
         if (stack.isEmpty || stack.last != index) {
           stack.add(index);
@@ -70,11 +78,13 @@ class ChangeTabNotifier extends StateNotifier<int> {
     if (stack.length <= 1) {
       changePage(0, context);
       stack.clear();
+      entryFunction(state, context);
     } else {
       removeFunction(state, context).then((value) {
         if (value) {
           stack.removeLast();
           state = stack.last;
+          entryFunction(state, context);
         }
       });
     }
