@@ -176,16 +176,21 @@ class AbstractPlatform {
     }
   }
 
-  void updateStatusAll() {
+  void updateStatusAll({int startLine = 0}) {
     VariableDataBase().clear();
-    VariableDataBase().varMap.addAll(globalSetting);
-    for (var lineSetting in lineSettings) {
+    VariableDataBase().varMapGlobal.addAll(globalSetting);
+    var t = Stopwatch()..start();
+    for (var i = startLine; i < lineSettings.length; i++) {
+      var lineSetting = lineSettings[i];
       lineSetting.initValueTypeWrapper();
       lineSetting.execute();
       lineSetting.checkVisible(true);
       lineSetting.checkClickable(true, true);
       VariableDataBase().clearLocalVariable();
     }
+    print(t.elapsedMicroseconds);
+    t.reset();
+    t.stop();
   }
 
   void generateRecursiveParser() {

@@ -57,7 +57,7 @@ void main() {
         child: ViewChoiceNode(pos),
       ),
     ));
-    expect(find.byType(ViewChoiceNodeMain, skipOffstage: false), isOnstage);
+    expect(find.byType(ViewChoiceNodeMain), findsOneWidget);
   });
   testWidgets('ViewChoiceNodeWithOffstage', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
@@ -69,6 +69,6 @@ void main() {
         child: ViewChoiceNode(pos),
       ),
     ));
-    expect(find.byType(ViewChoiceNodeMain, skipOffstage: false), isOffstage);
+    expect(find.byType(SizedBox), findsOneWidget);
   });
 }

@@ -14,53 +14,70 @@ class VariableDataBase {
 
   VariableDataBase._init();
 
-  var varMap = HashMap<String, ValueTypeWrapper>();
+  var varMapGlobal = HashMap<String, ValueTypeWrapper>();
+  var varMapLocal = HashMap<String, ValueTypeWrapper>();
 
   VariableChangeCallback? variableChangeCallback;
   CheckListChangeCallback? checkListChangeCallback;
 
   void updateVariableTiles() {
-    variableChangeCallback!();
+    if(variableChangeCallback != null){
+      variableChangeCallback!();
+    }
   }
 
   void updateCheckList() {
-    checkListChangeCallback!();
+    if(checkListChangeCallback != null) {
+      checkListChangeCallback!();
+    }
   }
 
   void setValue(String name, ValueTypeWrapper value) {
-    varMap[name] = value;
+    if(value.isGlobal){
+      varMapGlobal[name] = value;
+    }else{
+      varMapLocal[name] = value;
+    }
     updateVariableTiles();
   }
 
   void deleteValue(String name) {
-    varMap.remove(name);
+    if(varMapLocal.containsKey(name)){
+      varMapLocal.remove(name);
+    }else{
+      varMapGlobal.remove(name);
+    }
     updateVariableTiles();
   }
 
   bool hasValue(String name) {
-    return varMap.containsKey(name);
+    return varMapLocal.containsKey(name) || varMapGlobal.containsKey(name);
   }
 
   ValueTypeWrapper? getValueTypeWrapper(String name) {
-    return varMap[name];
+    if(hasValue(name)){
+      return varMapLocal[name] ?? varMapGlobal[name];
+    }
+    return null;
   }
 
   ValueType? getValueType(String name) {
-    return varMap[name]?.valueType;
+    return getValueTypeWrapper(name)?.valueType;
   }
 
   @override
   String toString() {
-    return varMap.toString();
+    return varMapGlobal.toString();
   }
 
   void clear() {
-    varMap.clear();
+    varMapGlobal.clear();
+    varMapLocal.clear();
     updateVariableTiles();
     updateCheckList();
   }
 
   void clearLocalVariable() {
-    varMap.removeWhere((key, value) => !value.isGlobal);
+    varMapLocal.clear();
   }
 }
