@@ -1,52 +1,45 @@
-class AnalyserConst {
+enum AnalyserConst {
   /// 정수
-  static const int ints = 1;
-
+  ints,
   /// 소수점 붙음
-  static const int doubles = 2;
-
+  doubles,
   /// boolean
-  static const int bools = 3;
-
+  bools,
   /// string, "" 혹은 ''로 판단
-  static const int strings = 4;
+  strings,
 
   /// 판단 X
-  static const int unspecified = 5;
+  unspecified,
 
   /// 변수 사용
-  static const int variableName = 10;
+  variableName,
 
   /// 전역 변수 설정, let
-  static const int variableLet = 11;
-
+  variableLet,
   /// 지역 변수 설정, var
-  static const int variableVar = 12;
+  variableVar,
 
-  static const int functionUnspecified = 20;
-  static const int function = 21;
+  functionUnspecified,
+  function,
 
   /// (
-  static const int functionStart = 30;
-
+  functionStart,
   /// )
-  static const int functionEnd = 31;
+  functionEnd,
 
   /// ,
-  static const int functionComma = 32;
+  functionComma,
 
   /// if
-  static const int functionIf = 45;
-
+  functionIf,
   /// else
-  static const int functionElse = 46;
+  functionElse,
 
   /// {
-  static const int blockStart = 50;
-
+  blockStart,
   /// }
-  static const int blockEnd = 51;
+  blockEnd,
 
   /// ;
-  static const int lineEnd = 100;
+  lineEnd,
 }

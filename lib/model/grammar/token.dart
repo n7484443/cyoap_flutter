@@ -1,12 +1,12 @@
 import 'analyser_const.dart';
 
 class Token {
-  int type;
+  AnalyserConst type;
   String dataString;
 
   Token(this.type, {this.dataString = ""});
 
-  Token changeUnitType(int newType) {
+  Token changeUnitType(AnalyserConst newType) {
     return Token(newType, dataString: dataString);
   }
 
