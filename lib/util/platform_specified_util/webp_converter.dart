@@ -13,7 +13,8 @@ abstract class WebpConverter {
       throw "doesn't work in this platform";
 
   void init() {}
-  bool canConvert() => false;
+  bool saveAsWebp = true;
+  bool get canConvert => false;
 
   static WebpConverter? getWebpConverterImp() => null;
 }

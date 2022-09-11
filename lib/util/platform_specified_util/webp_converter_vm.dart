@@ -77,6 +77,9 @@ class WebpConverterImpWindows implements WebpConverterImp {
   @override
   Future<Tuple2<String, Uint8List>> convert(
       Uint8List input, String name) async {
+    if(!saveAsWebp){
+      return Tuple2(name, input);
+    }
     Image decodedImage;
     bool isLossless = true;
     if (name.endsWith(".png")) {
@@ -133,7 +136,10 @@ class WebpConverterImpWindows implements WebpConverterImp {
   }
 
   @override
-  bool canConvert() => true;
+  bool saveAsWebp = true;
+
+  @override
+  bool get canConvert => saveAsWebp;
 }
 
 class WebpConverterImpAndroid implements WebpConverterImp {
@@ -141,6 +147,9 @@ class WebpConverterImpAndroid implements WebpConverterImp {
   @override
   Future<Tuple2<String, Uint8List>> convert(
       Uint8List input, String name) async {
+    if(!saveAsWebp){
+      return Tuple2(name, input);
+    }
     Image decodeImage;
     if (name.endsWith(".png")) {
       decodeImage = PngDecoder().decodeImage(input)!;
@@ -166,5 +175,8 @@ class WebpConverterImpAndroid implements WebpConverterImp {
   void init() {}
 
   @override
-  bool canConvert() => true;
+  bool saveAsWebp = true;
+
+  @override
+  bool get canConvert => saveAsWebp;
 }

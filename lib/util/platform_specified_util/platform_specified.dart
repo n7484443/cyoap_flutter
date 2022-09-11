@@ -76,12 +76,3 @@ abstract class SaveProject {
 
   Future<void> saveRaw(String path, Map<String, dynamic> dataInput) async {}
 }
-
-abstract class WebpConverter {
-  Future<Tuple2<String, Uint8List>> convert(
-          Uint8List input, String name) async =>
-      throw "doesn't work in this platform";
-
-  void init() {}
-  bool canConvert() => false;
-}

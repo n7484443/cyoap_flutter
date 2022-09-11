@@ -2,12 +2,14 @@ import 'dart:io';
 
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
+import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../model/opening_file_folder.dart';
 import '../model/platform_system.dart';
+import '../viewModel/vm_global_setting.dart';
 import '../viewModel/vm_snackbar.dart';
 import '../viewModel/vm_start.dart';
 
@@ -16,6 +18,7 @@ class ViewStart extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(saveAsWebpFutureProvider);
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -23,26 +26,52 @@ class ViewStart extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Align(
-              alignment: Alignment.topRight,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+              alignment: Alignment.topCenter,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('version : ${ref.watch(versionProvider).value ?? ""}'),
-                  Visibility(
-                    visible: ref.watch(needUpdateStateProvider),
-                    child: TextButton(
-                      onPressed: () {
-                        if (ConstList.isMobile()) {
-                          launchUrlString(
-                              'market://details?id=com.clearApple.cyoap_flutter');
-                        } else {
-                          launchUrlString(
-                              'https://github.com/n7484443/FlutterCyoap/releases');
-                        }
-                      },
-                      child: const Text('새로운 버전이 나왔습니다!',
-                          style: TextStyle(color: Colors.redAccent)),
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                          'version : ${ref.watch(versionProvider).value ?? ""}'),
+                      Visibility(
+                        visible: ref.watch(needUpdateStateProvider),
+                        child: TextButton(
+                          onPressed: () {
+                            if (ConstList.isMobile()) {
+                              launchUrlString(
+                                  'market://details?id=com.clearApple.cyoap_flutter');
+                            } else {
+                              launchUrlString(
+                                  'https://github.com/n7484443/FlutterCyoap/releases');
+                            }
+                          },
+                          child: const Text('새로운 버전이 나왔습니다!',
+                              style: TextStyle(color: Colors.redAccent)),
+                        ),
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.settings),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => Consumer(
+                          builder: (context, ref, child) => AlertDialog(
+                            title: const Text('설정'),
+                            content: ViewSwitchLabel(
+                              (){
+                                ref.read(saveAsWebpProvider.notifier).state = !ref.read(saveAsWebpProvider);
+                              },
+                              ref.watch(saveAsWebpProvider),
+                              label: "저장 시 이미지를 webp 파일로 변환",
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -251,7 +280,7 @@ class _ViewAddProjectDialogState extends ConsumerState<ViewAddProjectDialog> {
         ElevatedButton(
           onPressed: () async {
             Navigator.of(context).pop();
-            if(_textEditingController?.text.isNotEmpty ?? false){
+            if (_textEditingController?.text.isNotEmpty ?? false) {
               var path = await ProjectPath.getProjectFolder(
                   _textEditingController?.text);
               await Directory(path).create(recursive: true);

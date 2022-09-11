@@ -8,12 +8,10 @@ import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/model/opening_file_folder.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:path/path.dart';
-import 'package:tuple/tuple.dart';
 
 import '../main.dart';
 import '../util/json_file_parsing.dart';
 import '../util/platform_specified_util/platform_specified.dart';
-import '../util/platform_specified_util/webp_converter.dart';
 import 'choiceNode/choice_line.dart';
 import 'platform.dart';
 
@@ -184,12 +182,6 @@ class PlatformFileSystem {
     platform = AbstractPlatform.none();
   }
 
-  final regReplace = RegExp(r'[.](png|jpg|jpeg|rawRgba)');
-
-  String convertImageName(String name) {
-    return name.replaceAll(regReplace, '.webp');
-  }
-
   Future<Map<String, dynamic>> get saveDataMap async {
     Map<String, String> lineSetting = {};
     for (int i = 0; i < getPlatform.lineSettings.length; i++) {
@@ -248,9 +240,5 @@ class PlatformFileSystem {
 
   bool hasSource(String image) {
     return _imageSource[image]?.isNotEmpty ?? false;
-  }
-
-  Future<Tuple2<String, Uint8List>> saveCapture(Uint8List input) async {
-    return await getWebpConverterInstance().convert(input, 'exported.png');
   }
 }
