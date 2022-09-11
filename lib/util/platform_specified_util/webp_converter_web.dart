@@ -18,4 +18,7 @@ class WebpConverterImp extends WebpConverter {
 
   @override
   void init() {}
+
+  @override
+  bool get canConvert => false;
 }
