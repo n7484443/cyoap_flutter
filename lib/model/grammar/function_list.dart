@@ -24,7 +24,7 @@ enum FunctionListEnum {
   exist(1),
   isVisible(1),
   loadVariable(1),
-  condition(1),
+  returnCondition(1),
   setLocal(2, hasOutput: false),
   setGlobal(2, hasOutput: false),
   setVariable(2, hasOutput: false),
@@ -78,7 +78,7 @@ class Functions {
             false);
     functionValueType[FunctionListEnum.loadVariable] =
         (input) => VariableDataBase().getValueType(input[0].data) ?? input[0];
-    functionValueType[FunctionListEnum.condition] = (input) => input[0];
+    functionValueType[FunctionListEnum.returnCondition] = (input) => input[0];
 
     functionValueType[FunctionListEnum.setLocal] = (input) {
       var varName = input[0].dataUnzip as String;

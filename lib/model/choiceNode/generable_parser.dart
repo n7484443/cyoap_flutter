@@ -3,7 +3,6 @@ import 'package:cyoap_flutter/model/choiceNode/recursive_status.dart';
 
 import '../../util/platform_specified_util/platform_specified.dart';
 import '../grammar/analyser.dart';
-import '../grammar/value_type.dart';
 import 'choice_status.dart';
 
 abstract class GenerableParserAndPosition {
@@ -50,16 +49,7 @@ abstract class GenerableParserAndPosition {
   }
 
   bool analyseVisibleCode() {
-    var data = Analyser().check(recursiveStatus.conditionVisibleRecursive, pos: errorName);
-    if (data != null) {
-      if (data is bool) {
-        return data;
-      } else if (data is ValueTypeWrapper) {
-        var out = data.valueType.dataUnzip();
-        return out is bool ? out : true;
-      }
-    }
-    return true;
+    return Analyser().run(recursiveStatus.conditionVisibleRecursive, pos: errorName) ?? true;
   }
 
   void checkVisible(bool parent) {
@@ -75,16 +65,7 @@ abstract class GenerableParserAndPosition {
   }
 
   bool isClickable() {
-    var data = Analyser().check(recursiveStatus.conditionClickableRecursive, pos: errorName);
-    if (data != null) {
-      if (data is bool) {
-        return data;
-      } else if (data is ValueTypeWrapper) {
-        var out = data.valueType.dataUnzip();
-        return out is bool ? out : true;
-      }
-    }
-    return true;
+    return Analyser().run(recursiveStatus.conditionClickableRecursive, pos: errorName) ?? true;
   }
 
   void checkClickable(bool parent, bool onlyWorkLine) {

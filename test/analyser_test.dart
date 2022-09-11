@@ -114,11 +114,8 @@ void main() {
     String strTest1 = """ 
     numberTest4 >= 19
     """;
-    var recursivedataUnzip = Analyser().analyseSingleLine(strTest);
-    expect(Analyser().check(recursivedataUnzip) as bool, true);
-
-    recursivedataUnzip = Analyser().analyseSingleLine(strTest1);
-    expect(Analyser().check(recursivedataUnzip) as bool, false);
+    expect(Analyser().run(Analyser().analyseSingleLine(strTest)) as bool, true);
+    expect(Analyser().run(Analyser().analyseSingleLine(strTest1)) as bool, false);
   });
 
   test('global variable Test', () {
@@ -184,10 +181,10 @@ void main() {
 
   test('simpleTest', (){
     String strTest1 = "true";
-    var out = Analyser().check(Analyser().analyseSingleLine(strTest1));
+    var out = Analyser().run(Analyser().analyseSingleLine(strTest1));
     expect(out, true);
     String strTest2 = "false";
-    out = Analyser().check(Analyser().analyseSingleLine(strTest2));
+    out = Analyser().run(Analyser().analyseSingleLine(strTest2));
     expect(out, false);
   });
 }

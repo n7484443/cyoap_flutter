@@ -58,20 +58,26 @@ class RecursiveFunction extends RecursiveUnit {
       }
       return list;
     }
-    if (body.type.isString && body.data == "condition") {
-      return  [...child[0].toByteCode(), "push"];
+    if (body.type.isString && body.data == "returnCondition") {
+      return  [...child[0].toByteCode(), "return"];
     }
     if (body.type.isString && body.data == "if") {
       var condition = child[0].toByteCode();
       var ifCode = child[1].toByteCode();
-      var elseCode = child[2].toByteCode();
-      return [
+      List<String> output = [
         ...condition,
-        "if_goto +++${ifCode.length + 1}",
+        "if_goto ${ifCode.length + 1}",
         ...ifCode,
-        "goto +++${elseCode.length}",
-        ...elseCode,
       ];
+      if(child.length == 3){
+        var elseCode = child[2].toByteCode();
+        return [
+          ...output,
+          "goto ${elseCode.length}",
+          ...elseCode,
+        ];
+      }
+      return output;
     }
     if (Analyser().functionList.hasFunction(body.data)) {
       var funcEnum = FunctionListEnum.getFunctionListEnum(body.data);

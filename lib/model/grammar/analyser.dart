@@ -40,7 +40,7 @@ class Analyser {
 
   List<String> toByteCode(RecursiveUnit input){
     //input 을 받아서 bytecode로 변환, if는 goto문으로 작성.
-    return  input.toByteCode();
+    return input.toByteCode().where((e) => e.isNotEmpty).toList();
   }
 
   List<String> analyseMultiLine(String? codeInput, {String pos = ""}) {
@@ -65,8 +65,8 @@ class Analyser {
     return [];
   }
 
-  void run(List<String> unitList, {String pos = ""}) {
-    if (unitList.isEmpty) return;
+  bool? run(List<String> unitList, {String pos = ""}) {
+    if (unitList.isEmpty) return null;
     print(unitList);
     try{
       List<ValueType> stack = [];
@@ -79,12 +79,22 @@ class Analyser {
         var argument = spaceIndex < code.length ? code.substring(spaceIndex + 1, code.length) : null;
         if(opCode == "push"){
           stack.add(getValueTypeFromStringInput(argument!));
+        }else if(opCode == "return"){
+          return stack.removeLast().dataUnzip as bool;
+        }else if(opCode == "if_goto"){
+          if(stack.removeLast().dataUnzip as bool){
+            continue;
+          }else{
+            line += int.parse(argument!);
+          }
+        }else if(opCode == "goto"){
+          line += int.parse(argument!);
         }else{
           var funcEnum = FunctionListEnum.getFunctionListEnum(opCode);
           var func = functionList.getFunction(funcEnum);
           if(func == null){
             addError("$pos, $opCode is not a function", StackTrace.current);
-            return;
+            return null;
           }
           //기본적으로 funcEnum.argumentLength 개의 인자를 사용함. code[1] 가 존재시 인자의 개수로 사용
           var argCount = funcEnum.argumentLength;
@@ -105,17 +115,7 @@ class Analyser {
     }catch (e, stackTrace) {
       addError("$pos, $e", stackTrace);
     }
-  }
-
-  dynamic check(List<String> unitList, {String pos = ""}) {
-    if (unitList.isEmpty) return null;
-    print(unitList);
-    /*
-    try {
-      return unitList.unzip().dataUnzip();
-    } catch (e, stackTrace) {
-      addError("$pos, $e", stackTrace);
-    }*/
+    return null;
   }
 
   void addError(String str, StackTrace stackTrace) {

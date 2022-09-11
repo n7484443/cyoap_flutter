@@ -74,7 +74,7 @@ class SemanticAnalyser {
           break;
         case AnalyserConst.lineEnd:
           while (pointer.body.data != "doLines" &&
-              pointer.body.data != "condition") {
+              pointer.body.data != "returnCondition") {
             pointer = pointer.parent!;
           }
           break;
@@ -123,7 +123,7 @@ class SemanticAnalyser {
 
   RecursiveUnit? analyseLine(List<Token> analysedData) {
     if (analysedData.isEmpty) return null;
-    RecursiveUnit mother = RecursiveFunction(const ValueType.string("condition"));
+    RecursiveUnit mother = RecursiveFunction(const ValueType.string("returnCondition"));
     abstractSyntaxTreeAnalyse(mother, analysedData);
     return mother;
   }
