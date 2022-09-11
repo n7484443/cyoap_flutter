@@ -70,7 +70,9 @@ class Analyser {
     try{
       List<ValueType> stack = [];
       for(int line = 0; line < unitList.length; line++){
+        //print(stack);
         var code = unitList[line];
+        //print(code);
         var spaceIndex = code.indexOf(" ");
         spaceIndex = spaceIndex == -1 ? code.length : spaceIndex;
         var opCode = code.substring(0, spaceIndex);
@@ -101,6 +103,7 @@ class Analyser {
             argCount = int.parse(argument);
           }
           List<ValueType> argumentList = [];
+          //print("$argCount $func");
           for(int i = 0; i < argCount; i++){
             argumentList.add(stack.removeLast());
           }

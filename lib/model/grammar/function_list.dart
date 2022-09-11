@@ -72,12 +72,12 @@ class Functions {
     functionValueType[FunctionListEnum.not] = funcNot;
     functionValueType[FunctionListEnum.random] = funcRandom;
     functionValueType[FunctionListEnum.exist] =
-        (input) => ValueType.bool(VariableDataBase().hasValue(input[0].data));
+        (input) => ValueType.bool(VariableDataBase().hasValue(input[0].dataUnzip));
     functionValueType[FunctionListEnum.isVisible] = (input) => ValueType.bool(
-        VariableDataBase().getValueTypeWrapper(input[0].data)?.visible ??
+        VariableDataBase().getValueTypeWrapper(input[0].dataUnzip)?.visible ??
             false);
     functionValueType[FunctionListEnum.loadVariable] =
-        (input) => VariableDataBase().getValueType(input[0].data) ?? input[0];
+        (input) => VariableDataBase().getValueType(input[0].dataUnzip)!;
     functionValueType[FunctionListEnum.returnCondition] = (input) => input[0];
 
     functionValueType[FunctionListEnum.setLocal] = (input) {
