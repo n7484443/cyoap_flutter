@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'analyser.dart';
+import 'function_list.dart';
 import 'value_type.dart';
 
 abstract class RecursiveUnit {
@@ -8,9 +9,7 @@ abstract class RecursiveUnit {
   ValueType body;
 
   // 함수 or 값
-  RecursiveUnit() : body = ValueType(null);
-
-  RecursiveUnit.fromValue(this.body);
+  RecursiveUnit(this.body);
 
   Map<String, dynamic> toJson();
 
@@ -20,22 +19,17 @@ abstract class RecursiveUnit {
 
   List<RecursiveUnit> get child => [];
 
-  ValueType unzip();
-
   @override
   String toString() {
     return jsonEncode(toJson());
   }
-}
 
-RecursiveUnit? getClassFromJson(Map<String, dynamic>? json) {
-  if (json == null) return null;
-  return json['class'] == 'RecursiveParser'
-      ? RecursiveFunction.fromJson(json)
-      : RecursiveData.fromJson(json);
+  //return and output
+  List<String> toByteCode();
 }
 
 class RecursiveFunction extends RecursiveUnit {
+  RecursiveFunction(super.body);
   List<RecursiveUnit> childNode = List.empty(growable: true);
 
   @override
@@ -49,52 +43,65 @@ class RecursiveFunction extends RecursiveUnit {
 
   @override
   Map<String, dynamic> toJson() => {
-        'class': 'RecursiveParser',
         'childNode': childNode,
         'value': body,
       };
-  RecursiveFunction(super.value) : super.fromValue();
-
-  RecursiveFunction.fromJson(Map<String, dynamic> json) {
-    super.body = ValueType.fromJson(json['value']);
-    childNode = json.containsKey('childNode')
-        ? (json['childNode'] as List).map((e) => getClassFromJson(e)!).toList()
-        : List.empty(growable: true);
-  }
 
   @override
-  ValueType unzip() {
-    if (body.data == null) return ValueType(null);
-    if (Analyser().functionList.hasFunction(body.data)) {
-      var functionValueType =
-          Analyser().functionList.getFunctionValueType(body.data);
-      if (functionValueType != null) {
-        var input = childNode.map((e) => e.unzip()).toList();
-        return functionValueType(input);
+  List<String> toByteCode() {
+    if (body.data.isEmpty) return [];
+    if(body.type.isString && body.data == "doLines"){
+      List<String> list = [];
+      for (var e in child) {
+        var out = e.toByteCode();
+        list.addAll(out);
       }
-      var functionVoid = Analyser().functionList.getFunctionVoid(body.data);
-      if (functionVoid != null) {
-        functionVoid(child);
-      }
+      return list;
     }
-    return ValueType(null);
+    if (body.type.isString && body.data == "condition") {
+      return  [...child[0].toByteCode(), "push"];
+    }
+    if (body.type.isString && body.data == "if") {
+      var condition = child[0].toByteCode();
+      var ifCode = child[1].toByteCode();
+      var elseCode = child[2].toByteCode();
+      return [
+        ...condition,
+        "if_goto +++${ifCode.length + 1}",
+        ...ifCode,
+        "goto +++${elseCode.length}",
+        ...elseCode,
+      ];
+    }
+    if (Analyser().functionList.hasFunction(body.data)) {
+      var funcEnum = FunctionListEnum.getFunctionListEnum(body.data);
+      List<String> output = [];
+      for (var e in child) {
+        output.addAll(e.toByteCode());
+      }
+      if(funcEnum.hasMultipleArgument){
+        return [...output, "${body.data} ${child.length}"];
+      }
+      return [...output, body.data];
+    }
+    return [];
   }
 }
 
 class RecursiveData extends RecursiveUnit {
-  RecursiveData(super.value) : super.fromValue();
-
-  @override
-  RecursiveData.fromJson(Map<String, dynamic> json) {
-    super.body = ValueType.fromJson(json['value']);
-  }
+  RecursiveData(super.body);
 
   @override
   Map<String, dynamic> toJson() => {
-        'class': 'RecursiveData',
         'value': body,
       };
 
   @override
-  ValueType unzip() => body;
+  List<String> toByteCode() {
+    if(body.data.isEmpty) return [];
+    if(body.type.isString){
+      return ["push \"${body.data}\""];
+    }
+    return ["push ${body.data}"];
+  }
 }

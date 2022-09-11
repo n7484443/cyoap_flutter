@@ -16,12 +16,12 @@ void main() {
     let numberTest5 = 6 / 3
     """;
     Analyser().run(Analyser().analyseMultiLine(strTest));
-    expect(ins.getValueType('numberTest0')?.data, closeTo(-5.5, epsilon));
-    expect(ins.getValueType('numberTest1')?.data, 24);
-    expect(ins.getValueType('numberTest2')?.data, 14);
-    expect(ins.getValueType('numberTest3')?.data, closeTo(0.5, epsilon));
-    expect(ins.getValueType('numberTest4')?.data, 18);
-    expect(ins.getValueType('numberTest5')?.data, 2);
+    expect(ins.getValueType('numberTest0')?.dataUnzip, closeTo(-5.5, epsilon));
+    expect(ins.getValueType('numberTest1')?.dataUnzip, 24);
+    expect(ins.getValueType('numberTest2')?.dataUnzip, 14);
+    expect(ins.getValueType('numberTest3')?.dataUnzip, closeTo(0.5, epsilon));
+    expect(ins.getValueType('numberTest4')?.dataUnzip, 18);
+    expect(ins.getValueType('numberTest5')?.dataUnzip, 2);
   });
   test('boolTest', () {
     String strTest = """                
@@ -29,8 +29,8 @@ void main() {
     var boolTest2 = false
     """;
     Analyser().run(Analyser().analyseMultiLine(strTest));
-    expect(ins.getValueType('boolTest1')?.data, true);
-    expect(ins.getValueType('boolTest2')?.data, false);
+    expect(ins.getValueType('boolTest1')?.dataUnzip, true);
+    expect(ins.getValueType('boolTest2')?.dataUnzip, false);
   });
 
   test('funcTest', () {
@@ -40,9 +40,9 @@ void main() {
     var floorTest = floor(4.8)
     """;
     Analyser().run(Analyser().analyseMultiLine(strTest));
-    expect(ins.getValueType('roundTest')?.data, 5);
-    expect(ins.getValueType('ceilTest')?.data, 5);
-    expect(ins.getValueType('floorTest')?.data, 4);
+    expect(ins.getValueType('roundTest')?.dataUnzip, 5);
+    expect(ins.getValueType('ceilTest')?.dataUnzip, 5);
+    expect(ins.getValueType('floorTest')?.dataUnzip, 4);
   });
 
   test('stringTest', () {
@@ -53,10 +53,10 @@ void main() {
     var stringAddTest2 = stringAddTest == stringAddTest1
     """;
     Analyser().run(Analyser().analyseMultiLine(strTest));
-    expect(ins.getValueType('stringTest')?.data, "문자열 테스트String1");
-    expect(ins.getValueType('stringAddTest')?.data, "문자열테스트1");
-    expect(ins.getValueType('stringAddTest1')?.data, "문자열테스트1");
-    expect(ins.getValueType('stringAddTest2')?.data, true);
+    expect(ins.getValueType('stringTest')?.dataUnzip, "문자열 테스트String1");
+    expect(ins.getValueType('stringAddTest')?.dataUnzip, "문자열테스트1");
+    expect(ins.getValueType('stringAddTest1')?.dataUnzip, "문자열테스트1");
+    expect(ins.getValueType('stringAddTest2')?.dataUnzip, true);
   });
 
   test('compTest', () {
@@ -66,9 +66,9 @@ void main() {
     var comp3 = numberTest0 > -5.5
     """;
     Analyser().run(Analyser().analyseMultiLine(strTest));
-    expect(ins.getValueType('comp1')?.data, true);
-    expect(ins.getValueType('comp2')?.data, true);
-    expect(ins.getValueType('comp3')?.data, false);
+    expect(ins.getValueType('comp1')?.dataUnzip, true);
+    expect(ins.getValueType('comp2')?.dataUnzip, true);
+    expect(ins.getValueType('comp3')?.dataUnzip, false);
   });
   test('addTest', () {
     var addTestStr = """
@@ -78,8 +78,8 @@ void main() {
     test_beta -= 5
     """;
     Analyser().run(Analyser().analyseMultiLine(addTestStr));
-    expect(ins.getValueType('test_alpha')?.data, 4);
-    expect(ins.getValueType('test_beta')?.data, -4);
+    expect(ins.getValueType('test_alpha')?.dataUnzip, 4);
+    expect(ins.getValueType('test_beta')?.dataUnzip, -4);
   });
 
   test('and Test', () {
@@ -93,10 +93,10 @@ void main() {
     """;
     Analyser().run(Analyser().analyseMultiLine(andTestStr));
 
-    expect(ins.getValueType('and_test_1')?.data, true);
-    expect(ins.getValueType('and_test_2')?.data, false);
-    expect(ins.getValueType('and_test_3')?.data, false);
-    expect(ins.getValueType('and_test_4')?.data, false);
+    expect(ins.getValueType('and_test_1')?.dataUnzip, true);
+    expect(ins.getValueType('and_test_2')?.dataUnzip, false);
+    expect(ins.getValueType('and_test_3')?.dataUnzip, false);
+    expect(ins.getValueType('and_test_4')?.dataUnzip, false);
   });
 
   test('multiple Test', () {
@@ -104,7 +104,7 @@ void main() {
     var multiple_test_1 = and(not(and(true, false)), true)
     """;
     Analyser().run(Analyser().analyseMultiLine(strTest));
-    expect(ins.getValueType('multiple_test_1')?.data, true);
+    expect(ins.getValueType('multiple_test_1')?.dataUnzip, true);
   });
 
   test('return Test', () {
@@ -114,11 +114,11 @@ void main() {
     String strTest1 = """ 
     numberTest4 >= 19
     """;
-    var recursiveData = Analyser().analyseSingleLine(strTest);
-    expect(Analyser().check(recursiveData) as bool, true);
+    var recursivedataUnzip = Analyser().analyseSingleLine(strTest);
+    expect(Analyser().check(recursivedataUnzip) as bool, true);
 
-    recursiveData = Analyser().analyseSingleLine(strTest1);
-    expect(Analyser().check(recursiveData) as bool, false);
+    recursivedataUnzip = Analyser().analyseSingleLine(strTest1);
+    expect(Analyser().check(recursivedataUnzip) as bool, false);
   });
 
   test('global variable Test', () {
@@ -142,14 +142,14 @@ void main() {
     Analyser().run(Analyser().analyseMultiLine(strTest));
     ins.clearLocalVariable();
     Analyser().run(Analyser().analyseMultiLine(strGlobalTest));
-    expect(ins.getValueType('T')?.data, true);
-    expect(ins.getValueType('existTest')?.data, true);
-    expect(ins.getValueType('existTest2')?.data, false);
+    expect(ins.getValueType('T')?.dataUnzip, true);
+    expect(ins.getValueType('existTest')?.dataUnzip, true);
+    expect(ins.getValueType('existTest2')?.dataUnzip, false);
 
     expect(ins.getValueTypeWrapper('globalTest')?.visible, true);
     expect(ins.getValueTypeWrapper('globalTest_other')?.visible, false);
-    expect(ins.getValueType('visibleTest')?.data, true);
-    expect(ins.getValueType('visibleTest_other')?.data, false);
+    expect(ins.getValueType('visibleTest')?.dataUnzip, true);
+    expect(ins.getValueType('visibleTest_other')?.dataUnzip, false);
   });
   test('comment test', () {
     String strTest = """
@@ -159,9 +159,9 @@ void main() {
     """;
     ins.clearLocalVariable();
     Analyser().run(Analyser().analyseMultiLine(strTest));
-    expect(ins.getValueType('commentTest')?.data, 123);
-    expect(ins.getValueType('asb')?.data, null);
-    expect(ins.getValueType('commentTest1')?.data, 0);
+    expect(ins.getValueType('commentTest')?.dataUnzip, 123);
+    expect(ins.getValueType('asb')?.dataUnzip, null);
+    expect(ins.getValueType('commentTest1')?.dataUnzip, 0);
   });
 
   test('ifTest', () {
@@ -177,20 +177,9 @@ void main() {
     }
     """;
     Analyser().run(Analyser().analyseMultiLine(strTest));
-    expect(ins.getValueType('alpha')?.data, 11);
-    expect(ins.getValueType('beta')?.data, null);
-    expect(ins.getValueType('gamma')?.data, 12);
-  });
-
-  test('oneLineOptimizeTest', () {
-    String strTest = """
-    var test = true
-    """;
-    var out = Analyser().analyseMultiLine(strTest);
-    Analyser().run(out);
-    expect(ins.getValueType('test')?.data, true);
-    expect(out.toString().trim(),
-        """{"class":"RecursiveParser","childNode":[{"class":"RecursiveData","value":{"data":"test","type":"String"}},{"class":"RecursiveData","value":{"data":"true","type":"bool"}}],"value":{"data":"setLocal","type":"String"}}""");
+    expect(ins.getValueType('alpha')?.dataUnzip, 11);
+    expect(ins.getValueType('beta')?.dataUnzip, null);
+    expect(ins.getValueType('gamma')?.dataUnzip, 12);
   });
 
   test('simpleTest', (){

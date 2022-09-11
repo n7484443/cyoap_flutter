@@ -16,7 +16,7 @@ class SemanticAnalyser {
       var token = tokens[pos];
       switch (token.type) {
         case AnalyserConst.functionUnspecified:
-          RecursiveFunction sub = RecursiveFunction(ValueType(token.data));
+          RecursiveFunction sub = RecursiveFunction(ValueType.string(token.data));
           var deleted = pointer.child.removeLast();
           pointer.add(sub);
           if (token.data == "setLocal" ||
@@ -29,7 +29,7 @@ class SemanticAnalyser {
           pointer = sub;
           break;
         case AnalyserConst.blockStart:
-          RecursiveFunction sub = RecursiveFunction(ValueType("doLines"));
+          RecursiveFunction sub = RecursiveFunction(const ValueType.string("doLines"));
           pointer.add(sub);
           pointer = sub;
           break;
@@ -45,12 +45,12 @@ class SemanticAnalyser {
         case AnalyserConst.functionElse:
           break;
         case AnalyserConst.functionIf:
-          RecursiveFunction sub = RecursiveFunction(ValueType("if"));
+          RecursiveFunction sub = RecursiveFunction(const ValueType.string("if"));
           pointer.add(sub);
           pointer = sub;
           break;
         case AnalyserConst.function:
-          RecursiveFunction sub = RecursiveFunction(ValueType(token.data));
+          RecursiveFunction sub = RecursiveFunction(ValueType.string(token.data));
           pointer.add(sub);
           pointer = sub;
           break;
@@ -68,8 +68,8 @@ class SemanticAnalyser {
           }
           break;
         case AnalyserConst.variableName:
-          RecursiveUnit out = RecursiveFunction(ValueType("loadVariable"));
-          out.add(RecursiveData(ValueType(token.dataString)));
+          RecursiveUnit out = RecursiveFunction(const ValueType.string("loadVariable"));
+          out.add(RecursiveData(ValueType.string(token.dataString)));
           pointer.add(out);
           break;
         case AnalyserConst.lineEnd:
@@ -79,7 +79,7 @@ class SemanticAnalyser {
           }
           break;
         default:
-          var sub = RecursiveData(ValueType(token.data));
+          var sub = RecursiveData(getValueTypeFromDynamicInput(token.data));
           pointer.add(sub);
           break;
       }
@@ -116,14 +116,14 @@ class SemanticAnalyser {
 
   RecursiveUnit? analyseLines(List<Token> analysedData) {
     if (analysedData.isEmpty) return null;
-    RecursiveUnit mother = RecursiveFunction(ValueType("doLines"));
+    RecursiveUnit mother = RecursiveFunction(const ValueType.string("doLines"));
     abstractSyntaxTreeAnalyse(mother, analysedData);
     return optimizeTree(mother);
   }
 
   RecursiveUnit? analyseLine(List<Token> analysedData) {
     if (analysedData.isEmpty) return null;
-    RecursiveUnit mother = RecursiveFunction(ValueType("condition"));
+    RecursiveUnit mother = RecursiveFunction(const ValueType.string("condition"));
     abstractSyntaxTreeAnalyse(mother, analysedData);
     return mother;
   }

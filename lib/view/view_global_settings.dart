@@ -185,7 +185,7 @@ class ViewGlobalSetting extends ConsumerWidget {
             child: const Text('초기값 추가'),
             onPressed: () {
               ref.read(valueTypeWrapperListProvider.notifier).addInitialValue(
-                  'point', ValueTypeWrapper(ValueType(0), visible: true));
+                  'point', ValueTypeWrapper(ValueType.int(0), visible: true));
             },
           )
         ],

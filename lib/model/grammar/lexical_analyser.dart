@@ -156,7 +156,7 @@ class LexicalAnalyser {
     return tokenList;
   }
 
-  List<Token> changeToSet(List<Token> tokenList) {
+  List<Token> changeToFunction(List<Token> tokenList) {
     var tokenOutput = List<Token>.empty(growable: true);
     var check = 0;
     for (var token in tokenList) {
@@ -176,6 +176,33 @@ class LexicalAnalyser {
               dataString: "setGlobal"));
         }
         check = 0;
+      } else if (token.dataString == "+") {
+        tokenOutput
+            .add(Token(AnalyserConst.functionUnspecified, dataString: "plus"));
+      } else if (token.dataString == "-") {
+        tokenOutput
+            .add(Token(AnalyserConst.functionUnspecified, dataString: "minus"));
+      } else if (token.dataString == "*") {
+        tokenOutput
+            .add(Token(AnalyserConst.functionUnspecified, dataString: "mul"));
+      } else if (token.dataString == "/") {
+        tokenOutput
+            .add(Token(AnalyserConst.functionUnspecified, dataString: "div"));
+      } else if (token.dataString == "==") {
+        tokenOutput
+            .add(Token(AnalyserConst.functionUnspecified, dataString: "equal"));
+      } else if (token.dataString == ">") {
+        tokenOutput
+            .add(Token(AnalyserConst.functionUnspecified, dataString: "bigger"));
+      } else if (token.dataString == ">=") {
+        tokenOutput
+            .add(Token(AnalyserConst.functionUnspecified, dataString: "biggerEqual"));
+      } else if (token.dataString == "<") {
+        tokenOutput
+            .add(Token(AnalyserConst.functionUnspecified, dataString: "smaller"));
+      } else if (token.dataString == "<=") {
+        tokenOutput
+            .add(Token(AnalyserConst.functionUnspecified, dataString: "smallerEqual"));
       } else {
         tokenOutput.add(token);
       }

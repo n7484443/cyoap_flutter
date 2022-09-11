@@ -8,10 +8,9 @@ part of 'recursive_status.dart';
 
 Map<String, dynamic> _$RecursiveStatusToJson(RecursiveStatus instance) =>
     <String, dynamic>{
-      'conditionClickableRecursive':
-          instance.conditionClickableRecursive?.toJson(),
-      'conditionVisibleRecursive': instance.conditionVisibleRecursive?.toJson(),
-      'executeCodeRecursive': instance.executeCodeRecursive?.toJson(),
+      'conditionClickableRecursive': instance.conditionClickableRecursive,
+      'conditionVisibleRecursive': instance.conditionVisibleRecursive,
+      'executeCodeRecursive': instance.executeCodeRecursive,
       'conditionClickableString': instance.conditionClickableString,
       'conditionVisibleString': instance.conditionVisibleString,
       'executeCodeString': instance.executeCodeString,

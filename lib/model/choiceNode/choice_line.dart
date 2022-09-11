@@ -93,7 +93,7 @@ class LineSetting extends GenerableParserAndPosition {
   @override
   void initValueTypeWrapper() {
     if (isNeedToCheck()) {
-      VariableDataBase().setValue(valName, ValueTypeWrapper(ValueType(0)));
+      VariableDataBase().setValue(valName, ValueTypeWrapper(ValueType.int(0)));
     } else {
       VariableDataBase().deleteValue(valName);
     }

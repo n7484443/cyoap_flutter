@@ -55,7 +55,8 @@ abstract class GenerableParserAndPosition {
       if (data is bool) {
         return data;
       } else if (data is ValueTypeWrapper) {
-        return data.valueType.data is bool ? data.valueType.data : true;
+        var out = data.valueType.dataUnzip();
+        return out is bool ? out : true;
       }
     }
     return true;
@@ -79,7 +80,8 @@ abstract class GenerableParserAndPosition {
       if (data is bool) {
         return data;
       } else if (data is ValueTypeWrapper) {
-        return data.valueType.data is bool ? data.valueType.data : true;
+        var out = data.valueType.dataUnzip();
+        return out is bool ? out : true;
       }
     }
     return true;

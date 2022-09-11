@@ -29,9 +29,9 @@ final globalSettingNameTextEditingProvider =
 
 final globalSettingValueTextEditingProvider =
     Provider.autoDispose<TextEditingController>((ref) {
-  var data = ref.read(initialValueWrapperProvider)!.item2.valueType.data;
-  data = data is String ? '"$data"' : data.toString();
-  var controller = TextEditingController(text: data);
+  var data = ref.read(initialValueWrapperProvider)!.item2.valueType;
+  var innerValue = data.type == DataType.strings ? '"$data"' : data.toString();
+  var controller = TextEditingController(text: innerValue);
   ref.onDispose(() => controller.dispose());
   return controller;
 });
@@ -59,18 +59,6 @@ class ValueTypeWrapperListNotifier
   Reader read;
 
   ValueTypeWrapperListNotifier(this.read, super.state);
-
-  ValueType getType(String input) {
-    if (input.startsWith("\"") && input.endsWith("\"")) {
-      return ValueType(input.replaceAll("\"", ""));
-    } else if (int.tryParse(input) != null) {
-      return ValueType(int.parse(input));
-    } else if (double.tryParse(input) != null) {
-      return ValueType(double.parse(input));
-    } else {
-      return ValueType(input.toLowerCase().trim() == 'true');
-    }
-  }
 
   void addInitialValue(String name, ValueTypeWrapper type) {
     int t = 0;
@@ -101,7 +89,7 @@ class ValueTypeWrapperListNotifier
     addInitialValue(
         read(globalSettingNameTextEditingProvider).text,
         ValueTypeWrapper(
-            getType(read(globalSettingValueTextEditingProvider).text),
+            getValueTypeFromStringInput(read(globalSettingValueTextEditingProvider).text),
             visible: read(globalSettingVisibleSwitchProvider),
             displayName:
                 read(globalSettingDisplayNameTextEditingProvider).text));
