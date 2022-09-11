@@ -25,9 +25,9 @@ class RecursiveStatus {
       : conditionClickableString = json['conditionClickableString'],
         conditionVisibleString = json['conditionVisibleString'],
         executeCodeString = json['executeCodeString'],
-        conditionClickableRecursive = json['conditionClickableRecursive'] ?? [],
-        conditionVisibleRecursive = json['conditionVisibleRecursive'] ?? [],
-        executeCodeRecursive = json['executeCodeRecursive'] ?? [];
+        conditionClickableRecursive = json['conditionClickableRecursive'] is List<String> ? json['conditionClickableRecursive'] : [],
+        conditionVisibleRecursive = json['conditionVisibleRecursive'] is List<String> ? json['conditionVisibleRecursive'] : [],
+        executeCodeRecursive = json['executeCodeRecursive'] is List<String> ? json['executeCodeRecursive'] : [];
 
   Map<String, dynamic> toJson() => _$RecursiveStatusToJson(this);
 

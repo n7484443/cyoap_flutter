@@ -44,7 +44,7 @@ class Analyser {
   }
 
   List<String> analyseMultiLine(String? codeInput, {String pos = ""}) {
-    if (codeInput == null) return [];
+    if (codeInput == null || codeInput.trim().isEmpty) return [];
     try {
       var out = semanticAnalyser.analyseLines(toTokenList(codeInput));
       return toByteCode(out!);
@@ -55,7 +55,7 @@ class Analyser {
   }
 
   List<String> analyseSingleLine(String? codeInput, {String pos = ""}) {
-    if (codeInput == null) return [];
+    if (codeInput == null || codeInput.trim().isEmpty) return [];
     try {
       var out = semanticAnalyser.analyseLine(toTokenList(codeInput));
       return toByteCode(out!);
@@ -67,11 +67,9 @@ class Analyser {
 
   bool? run(List<String> unitList, {String pos = ""}) {
     if (unitList.isEmpty) return null;
-    print(unitList);
     try{
       List<ValueType> stack = [];
       for(int line = 0; line < unitList.length; line++){
-        print(stack);
         var code = unitList[line];
         var spaceIndex = code.indexOf(" ");
         spaceIndex = spaceIndex == -1 ? code.length : spaceIndex;
@@ -80,7 +78,8 @@ class Analyser {
         if(opCode == "push"){
           stack.add(getValueTypeFromStringInput(argument!));
         }else if(opCode == "return"){
-          return stack.removeLast().dataUnzip as bool;
+          var out = stack.removeLast().dataUnzip;
+          return out as bool;
         }else if(opCode == "if_goto"){
           if(stack.removeLast().dataUnzip as bool){
             continue;

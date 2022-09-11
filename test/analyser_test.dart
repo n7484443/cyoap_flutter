@@ -187,4 +187,13 @@ void main() {
     out = Analyser().run(Analyser().analyseSingleLine(strTest2));
     expect(out, false);
   });
+
+
+  test('nodeTest', (){
+    String strTest1 = "let 테스트용:random = 3";
+    Analyser().run(Analyser().analyseMultiLine(strTest1));
+    String strTest2 = "테스트용:random == 3";
+    var out = Analyser().run(Analyser().analyseSingleLine(strTest2));
+    expect(out, true);
+  });
 }

@@ -129,8 +129,8 @@ class ValueTypeWrapper {
         displayName = json['displayName'] ?? '';
 
   Map<String, dynamic> toJson() => {
-        'visible': visible.toString().toLowerCase(),
-        'valueType': valueType.dataUnzip(),
+        'visible': visible,
+        'valueType': valueType.dataUnzip,
         'displayName': displayName,
         'isGlobal': isGlobal,
       };
