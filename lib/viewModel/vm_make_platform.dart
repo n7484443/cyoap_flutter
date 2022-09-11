@@ -1,6 +1,6 @@
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_editor.dart';
-import 'package:cyoap_flutter/viewModel/vm_global_setting.dart';
+import 'package:cyoap_flutter/viewModel/vm_project_setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../view/util/view_back_dialog.dart';
@@ -43,7 +43,7 @@ class ChangeTabNotifier extends StateNotifier<int> {
         }
         break;
       case 2:
-        if (ref.read(globalSettingChangedProvider)) {
+        if (ref.read(projectSettingChangedProvider)) {
           var out = await showDialog(
             context: context,
             builder: (_) => ViewBackDialog(

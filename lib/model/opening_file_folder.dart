@@ -76,4 +76,14 @@ class ProjectPath {
       await setFrequentPathFromData(pathList.toList());
     }
   }
+
+  Future<bool> getSaveAsWebp() async {
+    var prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('saveAsWebp') ?? true;
+  }
+
+  Future<void> setSaveAsWebp(bool data) async{
+    var prefs = await SharedPreferences.getInstance();
+    prefs.setBool('saveAsWebp', data);
+  }
 }

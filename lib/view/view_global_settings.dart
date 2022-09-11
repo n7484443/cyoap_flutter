@@ -1,7 +1,7 @@
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/grammar/value_type.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
-import 'package:cyoap_flutter/viewModel/vm_global_setting.dart';
+import 'package:cyoap_flutter/viewModel/vm_project_setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -29,7 +29,7 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
               child: TextField(
                 maxLines: 1,
                 maxLength: 50,
-                controller: ref.watch(globalSettingNameTextEditingProvider),
+                controller: ref.watch(projectSettingNameTextEditingProvider),
                 decoration: const InputDecoration(
                   label: Text('변수명'),
                 ),
@@ -42,7 +42,7 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
               child: TextField(
                 maxLines: 1,
                 maxLength: 50,
-                controller: ref.watch(globalSettingValueTextEditingProvider),
+                controller: ref.watch(projectSettingValueTextEditingProvider),
                 decoration: const InputDecoration(
                   label: Text('변수 초기값'),
                 ),
@@ -56,7 +56,7 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
                 maxLines: 1,
                 maxLength: 50,
                 controller:
-                    ref.watch(globalSettingDisplayNameTextEditingProvider),
+                    ref.watch(projectSettingDisplayNameTextEditingProvider),
                 decoration: const InputDecoration(
                   label: Text('변수 표기명'),
                 ),
@@ -70,9 +70,9 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
                 children: [
                   ViewSwitchLabel(
                     () => ref
-                        .read(globalSettingVisibleSwitchProvider.notifier)
+                        .read(projectSettingVisibleSwitchProvider.notifier)
                         .update((state) => !state),
-                    ref.watch(globalSettingVisibleSwitchProvider),
+                    ref.watch(projectSettingVisibleSwitchProvider),
                     label: '플레이시 표시',
                   ),
                 ],
