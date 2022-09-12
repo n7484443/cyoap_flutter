@@ -41,7 +41,7 @@ abstract class GenerableParserAndPosition {
 
   void execute() {
     if (choiceStatus.isSelected()) {
-      Analyser().run(recursiveStatus.executeCodeRecursive, pos: errorName);
+      Analyser().run(recursiveStatus.executeCode, pos: errorName);
       for (var child in children) {
         child.execute();
       }
@@ -49,7 +49,7 @@ abstract class GenerableParserAndPosition {
   }
 
   bool analyseVisibleCode() {
-    return Analyser().run(recursiveStatus.conditionVisibleRecursive, pos: errorName) ?? true;
+    return Analyser().run(recursiveStatus.conditionVisibleCode, pos: errorName) ?? true;
   }
 
   void checkVisible(bool parent) {
@@ -65,7 +65,7 @@ abstract class GenerableParserAndPosition {
   }
 
   bool isClickable() {
-    return Analyser().run(recursiveStatus.conditionClickableRecursive, pos: errorName) ?? true;
+    return Analyser().run(recursiveStatus.conditionClickableCode, pos: errorName) ?? true;
   }
 
   void checkClickable(bool parent, bool onlyWorkLine) {

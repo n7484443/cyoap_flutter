@@ -4,38 +4,35 @@ import '../grammar/analyser.dart';
 
 part 'recursive_status.g.dart';
 
-@JsonSerializable(explicitToJson: true, createFactory: false)
+@JsonSerializable(explicitToJson: true)
 class RecursiveStatus {
-  List<String> conditionClickableRecursive;
-  List<String> conditionVisibleRecursive;
-  List<String> executeCodeRecursive;
+  @JsonKey(defaultValue: [])
+  List<String> conditionClickableCode = [];
+  @JsonKey(defaultValue: [])
+  List<String> conditionVisibleCode = [];
+  @JsonKey(defaultValue: [])
+  List<String> executeCode = [];
 
   String? conditionClickableString;
   String? conditionVisibleString;
   String? executeCodeString;
-  RecursiveStatus(
-      {this.conditionClickableString,
-      this.conditionVisibleString,
-      this.executeCodeString}):
-        conditionClickableRecursive = [],
-        conditionVisibleRecursive = [],
-        executeCodeRecursive = [];
 
-  RecursiveStatus.fromJson(Map<String, dynamic> json)
-      : conditionClickableString = json['conditionClickableString'],
-        conditionVisibleString = json['conditionVisibleString'],
-        executeCodeString = json['executeCodeString'],
-        conditionClickableRecursive = json['conditionClickableRecursive'] is List<String> ? json['conditionClickableRecursive'] : [],
-        conditionVisibleRecursive = json['conditionVisibleRecursive'] is List<String> ? json['conditionVisibleRecursive'] : [],
-        executeCodeRecursive = json['executeCodeRecursive'] is List<String> ? json['executeCodeRecursive'] : [];
+  RecursiveStatus({
+    this.conditionClickableString,
+    this.conditionVisibleString,
+    this.executeCodeString,
+  });
+
+  factory RecursiveStatus.fromJson(Map<String, dynamic> json) =>
+      _$RecursiveStatusFromJson(json);
 
   Map<String, dynamic> toJson() => _$RecursiveStatusToJson(this);
 
   void generateParser(String pos) {
-    conditionClickableRecursive =
+    conditionClickableCode =
         Analyser().analyseSingleLine(conditionClickableString, pos: pos);
-    conditionVisibleRecursive =
+    conditionVisibleCode =
         Analyser().analyseSingleLine(conditionVisibleString, pos: pos);
-    executeCodeRecursive = Analyser().analyseMultiLine(executeCodeString, pos: pos);
+    executeCode = Analyser().analyseMultiLine(executeCodeString, pos: pos);
   }
 }

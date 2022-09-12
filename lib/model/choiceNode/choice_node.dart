@@ -215,7 +215,7 @@ class ChoiceNode extends GenerableParserAndPosition {
   void execute() {
     if (choiceStatus.isSelected() ||
         choiceNodeMode == ChoiceNodeMode.onlyCode) {
-      Analyser().run(recursiveStatus.executeCodeRecursive, pos: errorName);
+      Analyser().run(recursiveStatus.executeCode, pos: errorName);
       for (var child in children) {
         child.execute();
       }
