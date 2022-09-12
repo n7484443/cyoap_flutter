@@ -30,7 +30,7 @@ final projectSettingNameTextEditingProvider =
 final projectSettingValueTextEditingProvider =
     Provider.autoDispose<TextEditingController>((ref) {
   var data = ref.read(initialValueWrapperProvider)!.item2.valueType;
-  var text = data.type.isString ? '"${data.data}"' : data.data;
+  var text = data.type.isString ? '"${data.dataUnzip}"' : data.data;
   var controller = TextEditingController(text: text);
   ref.onDispose(() => controller.dispose());
   return controller;

@@ -33,36 +33,41 @@ class VariableDataBase {
   }
 
   void setValue(String name, ValueTypeWrapper value) {
+    var trim = name.trim();
     if(value.isGlobal){
-      varMapGlobal[name] = value;
+      varMapGlobal[trim] = value;
     }else{
-      varMapLocal[name] = value;
+      varMapLocal[trim] = value;
     }
     updateVariableTiles();
   }
 
   void deleteValue(String name) {
-    if(varMapLocal.containsKey(name)){
-      varMapLocal.remove(name);
+    var trim = name.trim();
+    if(varMapLocal.containsKey(trim)){
+      varMapLocal.remove(trim);
     }else{
-      varMapGlobal.remove(name);
+      varMapGlobal.remove(trim);
     }
     updateVariableTiles();
   }
 
   bool hasValue(String name) {
-    return varMapLocal.containsKey(name) || varMapGlobal.containsKey(name);
+    var trim = name.trim();
+    return varMapLocal.containsKey(trim) || varMapGlobal.containsKey(trim);
   }
 
   ValueTypeWrapper? getValueTypeWrapper(String name) {
-    if(hasValue(name)){
-      return varMapLocal[name] ?? varMapGlobal[name];
+    var trim = name.trim();
+    if(hasValue(trim)){
+      return varMapLocal[trim] ?? varMapGlobal[trim];
     }
     return null;
   }
 
   ValueType? getValueType(String name) {
-    return getValueTypeWrapper(name)?.valueType;
+    var trim = name.trim();
+    return getValueTypeWrapper(trim)?.valueType;
   }
 
   @override

@@ -112,21 +112,49 @@ class ViewEditDrawer extends ConsumerWidget {
   }
 }
 
-class ViewPlayDrawer extends ConsumerWidget {
-  const ViewPlayDrawer({super.key});
+class ViewPlayDrawer extends ConsumerStatefulWidget {
+  const ViewPlayDrawer({
+    super.key,
+  });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState createState() => _ViewPlayDrawerState();
+}
+
+class _ViewPlayDrawerState extends ConsumerState<ViewPlayDrawer> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    _controller.addListener(() {
+      ref.read(searchProvider.notifier).state = _controller.text;
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Flexible(
-          child: ListView(
-            children: [
-              const VariableTiles(),
-              const NodeTiles(),
-            ],
+        if (ref.watch(isDebugModeProvider))
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _controller,
+              decoration: const InputDecoration(
+                hintText: "검색",
+              ),
+            ),
           ),
+        const Flexible(
+          child: ViewSearchTable(),
         ),
         Column(
           children: [
@@ -136,7 +164,7 @@ class ViewPlayDrawer extends ConsumerWidget {
             ),
             ListTile(
               title: ViewSwitchLabel(
-                    () => ref
+                () => ref
                     .read(isVisibleSourceProvider.notifier)
                     .update((state) => !state),
                 ref.watch(isVisibleSourceProvider),
@@ -145,7 +173,7 @@ class ViewPlayDrawer extends ConsumerWidget {
             ),
             ListTile(
               title: ViewSwitchLabel(
-                    () => ref
+                () => ref
                     .read(isDebugModeProvider.notifier)
                     .update((state) => !state),
                 ref.watch(isDebugModeProvider),
@@ -155,6 +183,22 @@ class ViewPlayDrawer extends ConsumerWidget {
             const ViewChangeRotation()
           ],
         ),
+      ],
+    );
+  }
+}
+
+class ViewSearchTable extends ConsumerWidget {
+  const ViewSearchTable({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ListView(
+      children: [
+        const VariableTiles(),
+        const NodeTiles(),
       ],
     );
   }
@@ -204,10 +248,19 @@ class VariableTiles extends ConsumerWidget {
             ),
           );
         } else {
-          variableList.add(ListTile(
-            title: Text(name),
-            trailing: Text(values.valueType.data.toString()),
-          ));
+          if (ref.watch(searchProvider).isNotEmpty) {
+            if (name.contains(ref.watch(searchProvider))) {
+              variableList.add(ListTile(
+                title: Text(name),
+                subtitle: Text(values.valueType.data.toString()),
+              ));
+            }
+          } else {
+            variableList.add(ListTile(
+              title: Text(name),
+              trailing: Text(values.valueType.data.toString()),
+            ));
+          }
         }
       }
     }

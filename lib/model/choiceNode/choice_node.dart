@@ -134,7 +134,7 @@ class ChoiceNode extends GenerableParserAndPosition {
     var titleWhitespaceRemoved = title.replaceAll(" ", "");
     VariableDataBase().setValue(
         titleWhitespaceRemoved, ValueTypeWrapper(ValueType.bool(isSelected())));
-    if (choiceNodeMode == ChoiceNodeMode.randomMode && random != -1) {
+    if(choiceNodeMode == ChoiceNodeMode.randomMode){
       VariableDataBase().setValue('$titleWhitespaceRemoved:random',
           ValueTypeWrapper(ValueType.int(random)));
     }

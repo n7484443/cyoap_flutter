@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:meta/meta.dart';
 
 enum DataType {
@@ -41,8 +43,20 @@ ValueType getValueTypeFromStringInput(String input) {
   }
   return ValueType.string(input);
 }
+
 ValueType getValueTypeFromDynamicInput(dynamic input) {
   if (input is String) {
+    if (input.startsWith('{') && input.endsWith('}')) {
+      input = input
+          .replaceFirst('data', '"data"')
+          .replaceFirst('type', '"type"')
+          .replaceFirst('int', '"int"')
+          .replaceFirst('double', '"double"')
+          .replaceFirst('bool', '"bool"')
+          .replaceFirst('string', '"string"');
+      var json = jsonDecode(input);
+      return getValueTypeFromDynamicInput(json["data"]);
+    }
     return ValueType.string(input);
   }
   if (input is bool) {
@@ -123,7 +137,7 @@ class ValueTypeWrapper {
   }
 
   ValueTypeWrapper.fromJson(Map<String, dynamic> json)
-      : valueType = getValueTypeFromStringInput(json['valueType'].toString()),
+      : valueType = getValueTypeFromDynamicInput(json['valueType']),
         visible = json['visible'] == 'true',
         isGlobal = json['isGlobal'] ?? true,
         displayName = json['displayName'] ?? '';

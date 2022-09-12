@@ -77,7 +77,7 @@ class Functions {
         VariableDataBase().getValueTypeWrapper(input[0].dataUnzip)?.visible ??
             false);
     functionValueType[FunctionListEnum.loadVariable] =
-        (input) => VariableDataBase().getValueType(input[0].dataUnzip)!;
+        (input) => VariableDataBase().getValueType(input[0].dataUnzip) ?? const ValueType.nulls();
     functionValueType[FunctionListEnum.returnCondition] = (input) => input[0];
 
     functionValueType[FunctionListEnum.setLocal] = (input) {

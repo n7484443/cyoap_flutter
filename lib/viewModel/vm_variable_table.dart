@@ -22,6 +22,10 @@ final isVisibleHideVariableProvider = StateProvider<bool>((ref) {
   return false;
 });
 
+final searchProvider = StateProvider<String>((ref) {
+  return "";
+});
+
 final isVisibleSourceProvider = StateProvider<bool>((ref) {
   return false;
 });

@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/model/grammar/value_type.dart';
 import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/model/grammar/analyser.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -190,10 +191,9 @@ void main() {
 
 
   test('nodeTest', (){
-    String strTest1 = "let 테스트용:random = 3";
-    Analyser().run(Analyser().analyseMultiLine(strTest1));
-    String strTest2 = "테스트용:random == 3";
-    var out = Analyser().run(Analyser().analyseSingleLine(strTest2));
+    VariableDataBase().setValue("테스트용:random", ValueTypeWrapper(ValueType.int(3)));
+    String strTest1 = "테스트용:random == 3";
+    var out = Analyser().run(Analyser().analyseSingleLine(strTest1));
     expect(out, true);
   });
 }
