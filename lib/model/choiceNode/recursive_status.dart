@@ -1,6 +1,5 @@
+import 'package:cyoap_core/grammar/analyser.dart';
 import 'package:json_annotation/json_annotation.dart';
-
-import '../grammar/analyser.dart';
 
 part 'recursive_status.g.dart';
 

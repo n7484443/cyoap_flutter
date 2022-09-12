@@ -1,5 +1,5 @@
+import 'package:cyoap_core/grammar/value_type.dart';
 import 'package:cyoap_flutter/main.dart';
-import 'package:cyoap_flutter/model/grammar/value_type.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/viewModel/vm_project_setting.dart';
 import 'package:flutter/material.dart';

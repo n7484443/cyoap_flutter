@@ -1,10 +1,9 @@
 import 'dart:ui';
 
+import 'package:cyoap_core/grammar/analyser.dart';
+import 'package:cyoap_core/grammar/value_type.dart';
+import 'package:cyoap_core/variable_db.dart';
 import 'package:cyoap_flutter/model/choiceNode/recursive_status.dart';
-
-import '../grammar/analyser.dart';
-import '../grammar/value_type.dart';
-import '../variable_db.dart';
 import 'choice_node.dart';
 import 'generable_parser.dart';
 

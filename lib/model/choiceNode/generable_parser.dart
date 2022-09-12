@@ -1,8 +1,8 @@
+import 'package:cyoap_core/grammar/analyser.dart';
 import 'package:cyoap_flutter/model/choiceNode/pos.dart';
 import 'package:cyoap_flutter/model/choiceNode/recursive_status.dart';
 
 import '../../util/platform_specified_util/platform_specified.dart';
-import '../grammar/analyser.dart';
 import 'choice_status.dart';
 
 abstract class GenerableParserAndPosition {

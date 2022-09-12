@@ -29,7 +29,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  cyoap_core:
+    git:
+      url: https://github.com/n7484443/cyoap_core.git
   image: ^3.2.0
   extended_image: ^6.2.1
   file_picker : ^5.0.0

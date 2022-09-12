@@ -1,7 +1,7 @@
 import 'dart:collection';
 
-import 'package:cyoap_flutter/model/grammar/value_type.dart';
-import 'package:cyoap_flutter/model/variable_db.dart';
+import 'package:cyoap_core/grammar/value_type.dart';
+import 'package:cyoap_core/variable_db.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

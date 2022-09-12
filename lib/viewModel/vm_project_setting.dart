@@ -1,11 +1,10 @@
-import 'package:cyoap_flutter/model/grammar/value_type.dart';
+import 'package:cyoap_core/grammar/value_type.dart';
+import 'package:cyoap_core/variable_db.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tuple/tuple.dart';
-
-import '../model/variable_db.dart';
 
 final editIndex = StateProvider.autoDispose<int>((ref) => -1);
 

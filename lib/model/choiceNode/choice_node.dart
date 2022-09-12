@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:cyoap_core/grammar/analyser.dart';
+import 'package:cyoap_core/grammar/value_type.dart';
+import 'package:cyoap_core/variable_db.dart';
 import 'package:cyoap_flutter/model/choiceNode/recursive_status.dart';
-import 'package:cyoap_flutter/model/variable_db.dart';
 
 import '../../view/util/view_wrap_custom.dart';
-import '../grammar/analyser.dart';
-import '../grammar/value_type.dart';
 import 'choice_status.dart';
 import 'generable_parser.dart';
 

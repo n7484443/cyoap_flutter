@@ -1,7 +1,8 @@
+import 'package:cyoap_core/grammar/value_type.dart';
+import 'package:cyoap_core/variable_db.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
-import 'package:cyoap_flutter/model/variable_db.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 
 import '../util/version.dart';
@@ -11,7 +12,6 @@ import 'choiceNode/choice_status.dart';
 import 'choiceNode/generable_parser.dart';
 import 'choiceNode/pos.dart';
 import 'design_setting.dart';
-import 'grammar/value_type.dart';
 
 class AbstractPlatform {
   String stringImageName;
