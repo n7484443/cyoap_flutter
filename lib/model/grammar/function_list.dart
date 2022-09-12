@@ -83,12 +83,12 @@ class Functions {
     functionValueType[FunctionListEnum.setLocal] = (input) {
       var varName = input[0].dataUnzip as String;
       VariableDataBase()
-          .setValue(varName, ValueTypeWrapper(input[1], isGlobal: false));
+          .setValue(varName, ValueTypeWrapper(input[1]), isGlobal: false);
     };
     functionValueType[FunctionListEnum.setGlobal] = (input) {
       var varName = input[0].dataUnzip as String;
       VariableDataBase()
-          .setValue(varName, ValueTypeWrapper(input[1], isGlobal: true));
+          .setValue(varName, ValueTypeWrapper(input[1]), isGlobal: true);
     };
     functionValueType[FunctionListEnum.setVariable] = (input) {
       var varName = input[0].dataUnzip as String;

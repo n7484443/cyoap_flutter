@@ -113,15 +113,14 @@ class ValueType {
 class ValueTypeWrapper {
   final ValueType valueType;
   final bool visible;
-  final bool isGlobal;
   final String displayName;
 
   const ValueTypeWrapper(this.valueType,
-      {this.visible = false, this.displayName = '', this.isGlobal = true});
+      {this.visible = false, this.displayName = ''});
 
   @override
   String toString() {
-    return '( $valueType |{$visible : $isGlobal} )';
+    return '( $valueType | $visible )';
   }
 
   ValueTypeWrapper copyWith(
@@ -131,20 +130,17 @@ class ValueTypeWrapper {
       bool? isGlobal}) {
     return ValueTypeWrapper(valueType ?? this.valueType,
         visible: visible ?? this.visible,
-        displayName: displayName ?? this.displayName,
-        isGlobal: isGlobal ?? this.isGlobal);
+        displayName: displayName ?? this.displayName);
   }
 
   ValueTypeWrapper.fromJson(Map<String, dynamic> json)
       : valueType = getValueTypeFromDynamicInput(json['valueType']),
         visible = json['visible'] == 'true',
-        isGlobal = json['isGlobal'] ?? true,
         displayName = json['displayName'] ?? '';
 
   Map<String, dynamic> toJson() => {
         'visible': visible,
         'valueType': valueType.dataUnzip,
         'displayName': displayName,
-        'isGlobal': isGlobal,
       };
 }

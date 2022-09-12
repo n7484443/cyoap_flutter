@@ -191,7 +191,7 @@ void main() {
 
 
   test('nodeTest', (){
-    VariableDataBase().setValue("테스트용:random", ValueTypeWrapper(ValueType.int(3)));
+    VariableDataBase().setValue("테스트용:random", ValueTypeWrapper(ValueType.int(3)), isGlobal: true);
     String strTest1 = "테스트용:random == 3";
     var out = Analyser().run(Analyser().analyseSingleLine(strTest1));
     expect(out, true);

@@ -32,13 +32,20 @@ class VariableDataBase {
     }
   }
 
-  void setValue(String name, ValueTypeWrapper value) {
+  void setValue(String name, ValueTypeWrapper value, {bool? isGlobal}) {
     var trim = name.trim();
-    if(value.isGlobal){
+    if(isGlobal == null){
+      if(varMapLocal.containsKey(name)){
+        varMapLocal[trim] = value;
+      }else if(varMapGlobal.containsKey(name)) {
+        varMapGlobal[trim] = value;
+      }
+    }else if(isGlobal){
       varMapGlobal[trim] = value;
     }else{
       varMapLocal[trim] = value;
     }
+
     updateVariableTiles();
   }
 

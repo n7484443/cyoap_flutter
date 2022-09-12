@@ -133,14 +133,14 @@ class ChoiceNode extends GenerableParserAndPosition {
   void initValueTypeWrapper() {
     var titleWhitespaceRemoved = title.replaceAll(" ", "");
     VariableDataBase().setValue(
-        titleWhitespaceRemoved, ValueTypeWrapper(ValueType.bool(isSelected())));
+        titleWhitespaceRemoved, ValueTypeWrapper(ValueType.bool(isSelected())), isGlobal: true);
     if(choiceNodeMode == ChoiceNodeMode.randomMode){
       VariableDataBase().setValue('$titleWhitespaceRemoved:random',
-          ValueTypeWrapper(ValueType.int(random)));
+          ValueTypeWrapper(ValueType.int(random)), isGlobal: true);
     }
     if (choiceNodeMode == ChoiceNodeMode.multiSelect) {
       VariableDataBase().setValue('$titleWhitespaceRemoved:multi',
-          ValueTypeWrapper(ValueType.int(multiSelect)));
+          ValueTypeWrapper(ValueType.int(multiSelect)), isGlobal: true);
     }
     if (choiceStatus.isNotSelected()) {
       choiceStatus = choiceStatus.copyWith(
