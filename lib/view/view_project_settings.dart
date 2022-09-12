@@ -103,8 +103,8 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
   }
 }
 
-class ViewGlobalSetting extends ConsumerWidget {
-  const ViewGlobalSetting({super.key});
+class ViewProjectSetting extends ConsumerWidget {
+  const ViewProjectSetting({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

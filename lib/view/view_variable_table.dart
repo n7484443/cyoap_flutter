@@ -99,7 +99,7 @@ class ViewEditDrawer extends ConsumerWidget {
               onTap: () {
                 ref
                     .read(changeTabProvider.notifier)
-                    .changePageString('viewGlobalSetting', context);
+                    .changePageString('viewProjectSetting', context);
               },
               leading: const Icon(Icons.settings),
               title: const Text('전역 설정'),

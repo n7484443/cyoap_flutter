@@ -99,7 +99,7 @@ class ChangeTabNotifier extends StateNotifier<int> {
 final List<String> tabList = [
   "viewMake",
   "viewEditor",
-  "viewGlobalSetting",
+  "viewProjectSetting",
   "viewSource",
   "viewFontSource",
   "viewImageEditor",

@@ -1,7 +1,7 @@
 import 'package:cyoap_flutter/view/view_design.dart';
 import 'package:cyoap_flutter/view/view_editor.dart';
 import 'package:cyoap_flutter/view/view_font_source.dart';
-import 'package:cyoap_flutter/view/view_global_settings.dart';
+import 'package:cyoap_flutter/view/view_project_settings.dart';
 import 'package:cyoap_flutter/view/view_image_editor.dart';
 import 'package:cyoap_flutter/view/view_make.dart';
 import 'package:cyoap_flutter/view/view_source.dart';
@@ -27,7 +27,7 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
     const children = [
       ViewMake(),
       ViewEditor(),
-      ViewGlobalSetting(),
+      ViewProjectSetting(),
       ViewSource(),
       ViewFontSource(),
       ViewImageEditor(),
