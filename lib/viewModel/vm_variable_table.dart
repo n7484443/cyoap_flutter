@@ -1,12 +1,11 @@
 import 'dart:collection';
 
+import 'package:cyoap_core/choiceNode/choice_node.dart';
+import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/grammar/value_type.dart';
 import 'package:cyoap_core/variable_db.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../model/choiceNode/choice_node.dart';
-import '../model/choiceNode/pos.dart';
 import '../model/platform_system.dart';
 
 final vmVariableTableProvider = StateNotifierProvider<

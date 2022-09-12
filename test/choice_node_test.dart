@@ -1,5 +1,6 @@
-import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
-import 'package:cyoap_flutter/model/choiceNode/pos.dart';
+
+import 'package:cyoap_core/choiceNode/choice_node.dart';
+import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
+import 'package:cyoap_core/choiceNode/choice_line.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/model/opening_file_folder.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
@@ -12,7 +13,6 @@ import 'package:path/path.dart';
 import '../main.dart';
 import '../util/json_file_parsing.dart';
 import '../util/platform_specified_util/platform_specified.dart';
-import 'choiceNode/choice_line.dart';
 import 'platform.dart';
 
 class PlatformFileSystem {

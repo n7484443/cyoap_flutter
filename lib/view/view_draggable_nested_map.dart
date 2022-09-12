@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
@@ -12,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 
-import '../model/choiceNode/pos.dart';
 import '../viewModel/vm_choice_node.dart';
 import '../viewModel/vm_design_setting.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
@@ -106,7 +106,7 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
     ref.listen<Color?>(lineBackgroundColorProvider(widget.y), (previous, next) {
-      getPlatform.getLineSetting(widget.y)!.backgroundColor = next;
+      getPlatform.getLineSetting(widget.y)!.backgroundColor = next?.value;
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
     var maxSelect = ref.watch(lineMaxSelectProvider(widget.y));

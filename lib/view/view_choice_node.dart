@@ -1,5 +1,6 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
-import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
+import 'package:cyoap_core/choiceNode/choice_node.dart';
+import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_text_outline.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
@@ -15,7 +16,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../main.dart';
-import '../model/choiceNode/pos.dart';
 import '../model/platform_system.dart';
 import '../viewModel/vm_make_platform.dart';
 import '../viewModel/vm_variable_table.dart';

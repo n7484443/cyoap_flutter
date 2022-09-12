@@ -1,3 +1,4 @@
+import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
@@ -6,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../main.dart';
-import '../model/choiceNode/pos.dart';
 import '../model/platform_system.dart';
 import '../viewModel/vm_choice_node.dart';
 import '../viewModel/vm_draggable_nested_map.dart';

@@ -2,6 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:cyoap_core/choiceNode/choice_node.dart';
+import 'package:cyoap_core/choiceNode/choice_status.dart';
+import 'package:cyoap_core/choiceNode/generable_parser.dart';
+import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
@@ -9,11 +13,6 @@ import 'package:cyoap_flutter/viewModel/vm_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../model/choiceNode/choice_node.dart';
-import '../model/choiceNode/choice_status.dart';
-import '../model/choiceNode/generable_parser.dart';
-import '../model/choiceNode/pos.dart';
 import '../model/platform_system.dart';
 
 const double nodeBaseHeight = 200;

@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:cyoap_core/choiceNode/choice_node.dart';
+import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
@@ -13,8 +15,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
 import '../main.dart';
-import '../model/choiceNode/choice_node.dart';
-import '../model/choiceNode/pos.dart';
 import '../model/platform_system.dart';
 import '../viewModel/vm_editor.dart';
 import '../viewModel/vm_make_platform.dart';

@@ -1,15 +1,12 @@
+import 'package:cyoap_core/choiceNode/choice_node.dart';
+import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tuple/tuple.dart';
-
-import '../../model/choiceNode/choice_node.dart';
-import '../../model/choiceNode/pos.dart';
 import '../view_choice_node.dart';
-
-const int defaultMaxSize = 12;
 
 class ViewWrapCustomReorderable extends ConsumerWidget {
   final Pos parentPos;

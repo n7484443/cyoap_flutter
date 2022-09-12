@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
+import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tuple/tuple.dart';
 

@@ -1,16 +1,16 @@
+import 'package:cyoap_core/choiceNode/choice_line.dart';
+import 'package:cyoap_core/choiceNode/choice_node.dart';
+import 'package:cyoap_core/choiceNode/choice_status.dart';
+import 'package:cyoap_core/choiceNode/generable_parser.dart';
+import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/grammar/value_type.dart';
 import 'package:cyoap_core/variable_db.dart';
 import 'package:cyoap_flutter/main.dart';
-import 'package:cyoap_flutter/model/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 
 import '../util/version.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
-import 'choiceNode/choice_line.dart';
-import 'choiceNode/choice_status.dart';
-import 'choiceNode/generable_parser.dart';
-import 'choiceNode/pos.dart';
 import 'design_setting.dart';
 
 class AbstractPlatform {

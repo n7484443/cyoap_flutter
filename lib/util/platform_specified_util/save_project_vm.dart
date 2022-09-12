@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:archive/archive.dart';
+import 'package:cyoap_core/option.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/webp_converter.dart';
 import 'package:flutter/foundation.dart';
@@ -9,13 +10,14 @@ import 'package:tuple/tuple.dart';
 
 class SaveProjectImp extends SaveProject {
   @override
-  String convertImageName(String name) {
-    if(getWebpConverterInstance().saveAsWebp){
-      return name.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
-    }
-    return name;
+  void init(){
+    Option().convertToWebpFunction = (String? name){
+      if(getWebpConverterInstance().saveAsWebp){
+        return name?.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
+      }
+      return name;
+    };
   }
-
   @override
   Future<Tuple2<String, Uint8List>> convertImage(
       String name, Uint8List data) async {

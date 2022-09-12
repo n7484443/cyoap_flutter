@@ -37,9 +37,7 @@ abstract class SaveProject {
     return Tuple2(name, data);
   }
 
-  String convertImageName(String name) {
-    return name;
-  }
+  void init();
 
   Future<Map<String, dynamic>> getMap(Map<String, dynamic> dataInput) async {
     Map<String, dynamic> map = {
