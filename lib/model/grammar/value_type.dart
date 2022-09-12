@@ -45,15 +45,14 @@ ValueType getValueTypeFromStringInput(String input) {
 }
 
 ValueType getValueTypeFromDynamicInput(dynamic input) {
+  if(input is Map<String, dynamic>){
+    return getValueTypeFromDynamicInput(input["data"]);
+  }
   if (input is String) {
     if (input.startsWith('{') && input.endsWith('}')) {
-      input = input
-          .replaceFirst('data', '"data"')
-          .replaceFirst('type', '"type"')
-          .replaceFirst('int', '"int"')
-          .replaceFirst('double', '"double"')
-          .replaceFirst('bool', '"bool"')
-          .replaceFirst('string', '"string"');
+      //input 값을 , 이후 부분에서 자르기
+      input = "${input.trim().substring(0, input.indexOf(','))}}";
+      input = input.replaceAll('data', '"data"');
       var json = jsonDecode(input);
       return getValueTypeFromDynamicInput(json["data"]);
     }
