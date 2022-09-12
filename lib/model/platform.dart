@@ -22,7 +22,6 @@ class AbstractPlatform {
   PlatformDesignSetting designSetting = PlatformDesignSetting();
 
   void init() {
-    print("checkRender");
     checkDataCorrect();
     if (getPlatformFileSystem.isEditable) {
       generateRecursiveParser();

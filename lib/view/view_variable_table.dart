@@ -58,24 +58,48 @@ class ViewChangeRotation extends ConsumerWidget {
   }
 }
 
-class ViewEditDrawer extends ConsumerWidget {
+class ViewEditDrawer extends ConsumerStatefulWidget {
   const ViewEditDrawer({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState createState() => _ViewEditDrawerState();
+}
+
+class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    _controller.addListener(() {
+      ref.read(searchProvider.notifier).state = _controller.text;
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Flexible(
-          child: ListView(
-            controller: ScrollController(),
-            children: [
-              const VariableTiles(),
-              const NodeTiles(),
-            ],
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            controller: _controller,
+            decoration: const InputDecoration(
+              hintText: "검색",
+            ),
           ),
+        ),
+        const Flexible(
+          child: ViewSearchTable(),
         ),
         Column(
           children: [
@@ -215,6 +239,7 @@ class VariableTiles extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var isVisibleHideVariable = ref.watch(isVisibleHideVariableProvider);
+    var search = ref.watch(searchProvider);
 
     var variableList = List<Widget>.empty(growable: true);
     for (var key in ref.watch(vmVariableTableProvider).keys) {
@@ -223,20 +248,23 @@ class VariableTiles extends ConsumerWidget {
       if (isEditable) {
         if (isVisibleHideVariable ||
             (!isVisibleHideVariable && values.visible)) {
-          variableList.add(ListTile(
-            title: Text(key),
-            subtitle:
-                values.displayName.isEmpty ? null : Text(values.displayName),
-            trailing: Text(values.valueType.data.runtimeType.toString()),
-            onTap: () {
-              if (ref.watch(changeTabProvider) == 2) {
-                var vmCodeEditor = ref.read(editorChangeProvider.notifier);
-                if (vmCodeEditor.lastFocus != null) {
-                  vmCodeEditor.insertText(vmCodeEditor.lastFocus!, key.trim());
+          if (search.isEmpty || (search.isNotEmpty && key.contains(search))) {
+            variableList.add(ListTile(
+              title: Text(key),
+              subtitle:
+                  values.displayName.isEmpty ? null : Text(values.displayName),
+              trailing: Text(values.valueType.data.runtimeType.toString()),
+              onTap: () {
+                if (ref.watch(changeTabProvider) == 2) {
+                  var vmCodeEditor = ref.read(editorChangeProvider.notifier);
+                  if (vmCodeEditor.lastFocus != null) {
+                    vmCodeEditor.insertText(
+                        vmCodeEditor.lastFocus!, key.trim());
+                  }
                 }
-              }
-            },
-          ));
+              },
+            ));
+          }
         }
       } else if (ref.watch(isDebugModeProvider) || values.visible) {
         var name = values.displayName.isEmpty ? key : values.displayName;
@@ -247,20 +275,12 @@ class VariableTiles extends ConsumerWidget {
                   style: ConstList.getFont(ref.watch(variableFontProvider))),
             ),
           );
-        } else {
-          if (ref.watch(searchProvider).isNotEmpty) {
-            if (name.contains(ref.watch(searchProvider))) {
-              variableList.add(ListTile(
-                title: Text(name),
-                subtitle: Text(values.valueType.data.toString()),
-              ));
-            }
-          } else {
-            variableList.add(ListTile(
-              title: Text(name),
-              trailing: Text(values.valueType.data.toString()),
-            ));
-          }
+        } else if (search.isEmpty ||
+            (search.isNotEmpty && key.contains(search))) {
+          variableList.add(ListTile(
+            title: Text(name),
+            subtitle: Text(values.valueType.data.toString()),
+          ));
         }
       }
     }
@@ -308,58 +328,63 @@ class NodeTiles extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var search = ref.watch(searchProvider);
     var nodeList = ref.watch(checkListNotifierProvider);
     var widgetList = List<Widget>.empty(growable: true);
     var iconCheckBox = const Icon(Icons.check_box);
     var iconCheckBoxBlank = const Icon(Icons.check_box_outline_blank);
     for (var node in nodeList) {
-      if (isEditable) {
+      List<Widget> children = [];
+
+      var nodeChildren = node.children;
+      if (nodeChildren != null) {
+        if (isEditable) {
+          children = nodeChildren
+              .where((element) =>
+                  search.isEmpty ||
+                  (search.isNotEmpty && element.name.contains(search)))
+              .map(
+                (e) => ListTile(
+                  title: Text(e.name),
+                  onTap: () {
+                    if (tabList[ref.watch(changeTabProvider)] == "viewEditor") {
+                      var vmCodeEditor =
+                          ref.read(editorChangeProvider.notifier);
+                      if (vmCodeEditor.lastFocus != null) {
+                        vmCodeEditor.insertText(vmCodeEditor.lastFocus!,
+                            e.name.replaceAll(" ", "").trim());
+                      }
+                    } else if (e.pos.length > 1) {
+                      ref.read(nodeEditorTargetPosProvider.notifier).state =
+                          e.pos;
+                      ref
+                          .read(changeTabProvider.notifier)
+                          .changePageString("viewEditor", context);
+                    }
+                  },
+                ),
+              )
+              .toList();
+        } else {
+          children = nodeChildren
+              .where((element) =>
+                  search.isEmpty ||
+                  (search.isNotEmpty && element.name.contains(search)))
+              .map(
+                (e) => ListTile(
+                  title: Text(e.name),
+                  trailing:
+                      (e.check ?? false) ? iconCheckBox : iconCheckBoxBlank,
+                ),
+              )
+              .toList();
+        }
+      }
+      if(children.isNotEmpty){
         widgetList.add(
           ExpansionTile(
             title: Text(node.name),
-            children: node.children == null
-                ? []
-                : node.children!
-                    .map(
-                      (e) => ListTile(
-                        title: Text(e.name),
-                        onTap: () {
-                          if (tabList[ref.watch(changeTabProvider)] ==
-                              "viewEditor") {
-                            var vmCodeEditor =
-                                ref.read(editorChangeProvider.notifier);
-                            if (vmCodeEditor.lastFocus != null) {
-                              vmCodeEditor.insertText(vmCodeEditor.lastFocus!,
-                                  e.name.replaceAll(" ", "").trim());
-                            }
-                          } else if (e.pos.length > 1) {
-                            ref
-                                .read(nodeEditorTargetPosProvider.notifier)
-                                .state = e.pos;
-                            ref
-                                .read(changeTabProvider.notifier)
-                                .changePageString("viewEditor", context);
-                          }
-                        },
-                      ),
-                    )
-                    .toList(),
-          ),
-        );
-      } else {
-        widgetList.add(
-          ExpansionTile(
-            title: Text(node.name),
-            children: node.children == null
-                ? []
-                : node.children!
-                    .map((e) => ListTile(
-                          title: Text(e.name),
-                          trailing: (e.check ?? false)
-                              ? iconCheckBox
-                              : iconCheckBoxBlank,
-                        ))
-                    .toList(),
+            children: children,
           ),
         );
       }
