@@ -1,5 +1,6 @@
 import 'package:cyoap_flutter/model/grammar/value_type.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
+import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tuple/tuple.dart';
@@ -105,5 +106,6 @@ class ValueTypeWrapperListNotifier
     getPlatform.setGlobalSetting(state);
     VariableDataBase().updateVariableTiles();
     read(projectSettingChangedProvider.notifier).state = false;
+    read(draggableNestedMapChangedProvider.notifier).state = true;
   }
 }

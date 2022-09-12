@@ -10,7 +10,10 @@ import 'package:tuple/tuple.dart';
 class SaveProjectImp extends SaveProject {
   @override
   String convertImageName(String name) {
-    return name.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
+    if(getWebpConverterInstance().saveAsWebp){
+      return name.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
+    }
+    return name;
   }
 
   @override
