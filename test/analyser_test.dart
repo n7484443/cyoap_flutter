@@ -116,7 +116,8 @@ void main() {
     numberTest4 >= 19
     """;
     expect(Analyser().run(Analyser().analyseSingleLine(strTest)) as bool, true);
-    expect(Analyser().run(Analyser().analyseSingleLine(strTest1)) as bool, false);
+    expect(
+        Analyser().run(Analyser().analyseSingleLine(strTest1)) as bool, false);
   });
 
   test('global variable Test', () {
@@ -180,7 +181,7 @@ void main() {
     expect(ins.getValueType('gamma')?.dataUnzip, 12);
   });
 
-  test('simpleTest', (){
+  test('simpleTest', () {
     String strTest1 = "true";
     var out = Analyser().run(Analyser().analyseSingleLine(strTest1));
     expect(out, true);
@@ -189,9 +190,10 @@ void main() {
     expect(out, false);
   });
 
-
-  test('nodeTest', (){
-    VariableDataBase().setValue("테스트용:random", ValueTypeWrapper(ValueType.int(3)), isGlobal: true);
+  test('nodeTest', () {
+    VariableDataBase().setValue(
+        "테스트용:random", ValueTypeWrapper(ValueType.int(3)),
+        isGlobal: true);
     String strTest1 = "테스트용:random == 3";
     var out = Analyser().run(Analyser().analyseSingleLine(strTest1));
     expect(out, true);
