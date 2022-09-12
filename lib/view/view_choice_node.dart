@@ -466,6 +466,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var node = ref.watch(choiceNodeProvider(pos)).node!;
     Widget image;
+    print("$pos ${ref.watch(imageStringProvider(pos))}");
     if (ref.watch(imageStringProvider(pos)).isNotEmpty) {
       image = ConstrainedBox(
         constraints: BoxConstraints(

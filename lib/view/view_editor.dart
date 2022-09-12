@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/viewModel/vm_design_setting.dart';
@@ -500,6 +501,10 @@ class ViewNodeImageEditor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(imageStateProvider, (previous, int index) {
+      ref.read(nodeEditorTargetProvider).node.imageString = ImageDB().getImageName(index);
+      ref.read(editorChangeProvider.notifier).needUpdate();
+    });
     return Row(
       children: [
         Stack(
