@@ -155,6 +155,10 @@ class ViewProjectSetting extends ConsumerWidget {
                       .watch(valueTypeWrapperListProvider.notifier)
                       .getKey(index);
                   return ListTile(
+                    //보이지 않을 경우 푸른색으로
+                    tileColor:
+                        ref.watch(valueTypeWrapperListProvider)[key]!.visible
+                            ? Colors.blue : null,
                     onTap: () {
                       showDialog(
                           builder: (BuildContext context) =>

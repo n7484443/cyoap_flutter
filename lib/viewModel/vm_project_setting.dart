@@ -89,7 +89,8 @@ class ValueTypeWrapperListNotifier
     addInitialValue(
         read(projectSettingNameTextEditingProvider).text,
         ValueTypeWrapper(
-            getValueTypeFromStringInput(read(projectSettingValueTextEditingProvider).text),
+            getValueTypeFromStringInput(
+                read(projectSettingValueTextEditingProvider).text),
             visible: read(projectSettingVisibleSwitchProvider),
             displayName:
                 read(projectSettingDisplayNameTextEditingProvider).text));
