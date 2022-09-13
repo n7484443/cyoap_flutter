@@ -63,7 +63,7 @@ jobs:
           files: |
             build/windows/cyoap_windows_${{ steps.get_version.outputs.version-without-v }}.zip
 
-  build_webs_distribute:
+  build_webs_distribute_html:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
@@ -115,7 +115,7 @@ jobs:
           files: |
             build/web/distribute_html_${{ steps.get_version.outputs.version-without-v }}.zip
 
-  build_webs:
+  build_webs_distribute_canvasKit:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
@@ -137,12 +137,6 @@ jobs:
           (get-content ./build/web/index.html) -replace 'service_version', '${{ steps.get_version.outputs.version-without-v }}' | Out-File ./build/web/index_replaced.html
           Remove-Item ./build/web/index.html
           Rename-Item ./build/web/index_replaced.html index.html
-
-      - name: Deploy Web
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/web
 
       - name: remove useless files
         run: |
@@ -170,3 +164,31 @@ jobs:
         with:
           files: |
             build/web/distribute_canvasKit_${{ steps.get_version.outputs.version-without-v }}.zip
+  build_webs:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'beta'
+          cache: true
+          cache-key: flutter
+          cache-path: ${{ runner.tool_cache }}/flutter
+
+      - name: Get latest release version number
+        id: get_version
+        uses: battila7/get-version-action@v2
+
+      - run: flutter build web --web-renderer canvaskit --base-href=/FlutterCyoap/ --release
+
+      - name: modify version of index.html
+        run: |
+          (get-content ./build/web/index.html) -replace 'service_version', '${{ steps.get_version.outputs.version-without-v }}' | Out-File ./build/web/index_replaced.html
+          Remove-Item ./build/web/index.html
+          Rename-Item ./build/web/index_replaced.html index.html
+
+      - name: Deploy Web
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web
