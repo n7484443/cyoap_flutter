@@ -5,10 +5,7 @@ import 'package:cyoap_core/choiceNode/generable_parser.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/grammar/value_type.dart';
 import 'package:cyoap_core/variable_db.dart';
-import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
-
-import '../util/version.dart';
 import 'design_setting.dart';
 
 const int designSamplePosition0 = -100;
@@ -16,10 +13,9 @@ const int designSamplePosition1 = -101;
 const int nonPositioned = -1;
 
 class AbstractPlatform {
-  String stringImageName;
+  String? stringImageName;
   List<LineSetting> lineSettings = List.empty(growable: true);
   Map<String, ValueTypeWrapper> globalSetting = {};
-  String version;
 
   PlatformDesignSetting designSetting = PlatformDesignSetting();
 
@@ -31,31 +27,20 @@ class AbstractPlatform {
     updateStatusAll();
   }
 
-  bool versionCheckWithPlatform(String versionProgram) {
-    return versionCheck(versionProgram, version) >= 0;
-  }
+  AbstractPlatform();
 
-  AbstractPlatform(
-    this.stringImageName,
-    this.version,
-  );
-
-  AbstractPlatform.none()
-      : stringImageName = '',
-        version = ConstList.version;
+  AbstractPlatform.none();
 
   AbstractPlatform.fromJson(Map<String, dynamic> json)
       : stringImageName = json['stringImageName'] ?? '',
         globalSetting = (json['globalSetting'] as Map)
             .map((k, v) => MapEntry(k, ValueTypeWrapper.fromJson(v))),
-        version = json['version'] ?? ConstList.version,
         designSetting = PlatformDesignSetting.fromJson(json);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> out = {
       'stringImageName': stringImageName,
       'globalSetting': globalSetting,
-      'version': version,
     };
     out.addAll(designSetting.toJson());
     return out;

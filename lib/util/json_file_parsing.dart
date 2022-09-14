@@ -5,7 +5,6 @@ import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tuple/tuple.dart';
 
-import '../main.dart';
 import '../model/platform.dart';
 import 'base64_to_image.dart';
 
@@ -29,7 +28,7 @@ class JsonProjectParser {
       await f.writeAsBytes(outputImage[data]!);
     }
 
-    return AbstractPlatform('', ConstList.version);
+    return AbstractPlatform();
   }
 
   Future<Tuple2<String, Uint8List>?> checkImage(
