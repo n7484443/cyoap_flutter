@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 
+import '../model/platform.dart';
 import '../viewModel/vm_choice_node.dart';
 import '../viewModel/vm_design_setting.dart';
 import '../viewModel/vm_draggable_nested_map.dart';

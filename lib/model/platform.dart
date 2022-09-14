@@ -7,11 +7,13 @@ import 'package:cyoap_core/grammar/value_type.dart';
 import 'package:cyoap_core/variable_db.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
-import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 
 import '../util/version.dart';
-import '../viewModel/vm_draggable_nested_map.dart';
 import 'design_setting.dart';
+
+const int designSamplePosition0 = -100;
+const int designSamplePosition1 = -101;
+const int nonPositioned = -1;
 
 class AbstractPlatform {
   String stringImageName;
@@ -125,10 +127,14 @@ class AbstractPlatform {
             ChoiceStatus(status: SelectableStatus.selected, visible: true);
     }
     if (pos.last == nonPositioned) {
-      return VMDraggableNestedMap.createNodeForTemp();
+      return createTempNode();
     }
     if (pos.length == 1) return lineSettings[pos.first];
     return getChoiceNode(pos);
+  }
+
+  ChoiceNode createTempNode(){
+    return ChoiceNode.noTitle(3, true, '', '');
   }
 
   ChoiceNode removeData(Pos pos) {

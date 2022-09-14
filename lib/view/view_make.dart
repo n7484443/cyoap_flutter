@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../main.dart';
+import '../model/platform.dart';
 import '../model/platform_system.dart';
 import '../viewModel/vm_choice_node.dart';
 import '../viewModel/vm_draggable_nested_map.dart';

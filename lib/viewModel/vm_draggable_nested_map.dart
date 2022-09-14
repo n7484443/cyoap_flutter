@@ -6,6 +6,7 @@ import 'package:cyoap_core/variable_db.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../model/platform.dart';
 import '../model/platform_system.dart';
 
 const int maxWidthSize = 12;
@@ -62,13 +63,9 @@ class VMDraggableNestedMap {
     refreshPage(ref);
   }
 
-  static ChoiceNode createNodeForTemp() {
-    return ChoiceNode.noTitle(3, true, '', '');
-  }
-
   void changeData(Pos input, Pos target) {
     if (input.last == nonPositioned) {
-      getPlatform.addData(target, createNodeForTemp());
+      getPlatform.addData(target, getPlatform.createTempNode());
     } else {
       var inputNode = getPlatform.getChoiceNode(input)!;
       var targetNode = getPlatform.getChoiceNode(target);

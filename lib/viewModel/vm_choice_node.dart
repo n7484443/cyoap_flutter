@@ -16,9 +16,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../model/platform_system.dart';
 
 const double nodeBaseHeight = 200;
-const int designSamplePosition0 = -100;
-const int designSamplePosition1 = -101;
-const int nonPositioned = -1;
 const int removedPositioned = -2;
 
 void refreshChild(Ref ref, GenerableParserAndPosition node) {

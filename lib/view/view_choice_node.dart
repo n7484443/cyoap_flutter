@@ -16,6 +16,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../main.dart';
+import '../model/platform.dart';
 import '../model/platform_system.dart';
 import '../viewModel/vm_make_platform.dart';
 import '../viewModel/vm_variable_table.dart';
