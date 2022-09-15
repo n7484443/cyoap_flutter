@@ -49,7 +49,9 @@ Future<void> doDistributeMode(WidgetRef ref) async {
   Map<String, String> nodeMap = {};
   var time = DateTime.now().toIso8601String();
   for (var name in nodeList) {
-    var future = PlatformSpecified().distribute!.getFileAsJson('nodes/$name?preventCache=$time');
+    var future = PlatformSpecified()
+        .distribute!
+        .getFileAsJson('nodes/$name?preventCache=$time');
     future.then((value) => nodeMap[name] = value);
     futureMap.add(future);
   }
@@ -60,10 +62,12 @@ Future<void> doDistributeMode(WidgetRef ref) async {
     print('node loaded');
   }
 
-  String imageSource =
-      await PlatformSpecified().distribute!.getFileAsJson('imageSource.json?preventCache=$time');
-  String platformData =
-      await PlatformSpecified().distribute!.getFileAsJson('platform.json?preventCache=$time');
+  String imageSource = await PlatformSpecified()
+      .distribute!
+      .getFileAsJson('imageSource.json?preventCache=$time');
+  String platformData = await PlatformSpecified()
+      .distribute!
+      .getFileAsJson('platform.json?preventCache=$time');
   ref.read(loadStringProvider.notifier).state = '[ 로드 완료 ]';
   if (kDebugMode) {
     print('load end');

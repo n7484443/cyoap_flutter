@@ -62,8 +62,9 @@ class ViewStart extends ConsumerWidget {
                           builder: (context, ref, child) => AlertDialog(
                             title: const Text('설정'),
                             content: ViewSwitchLabel(
-                              (){
-                                ref.read(saveAsWebpProvider.notifier).state = !ref.read(saveAsWebpProvider);
+                              () {
+                                ref.read(saveAsWebpProvider.notifier).state =
+                                    !ref.read(saveAsWebpProvider);
                               },
                               ref.watch(saveAsWebpProvider),
                               label: "저장 시 이미지를 webp 파일로 변환",

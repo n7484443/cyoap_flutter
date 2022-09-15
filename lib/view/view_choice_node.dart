@@ -1,6 +1,7 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
+import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_text_outline.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
@@ -16,7 +17,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../main.dart';
-import '../model/platform.dart';
 import '../model/platform_system.dart';
 import '../viewModel/vm_make_platform.dart';
 import '../viewModel/vm_variable_table.dart';
@@ -26,7 +26,8 @@ class ViewChoiceNode extends ConsumerWidget {
   final bool ignoreOpacity;
   final bool ignoreChild;
 
-  const ViewChoiceNode(this.pos, {this.ignoreOpacity = false, this.ignoreChild = false, super.key});
+  const ViewChoiceNode(this.pos,
+      {this.ignoreOpacity = false, this.ignoreChild = false, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,8 +43,11 @@ class ViewChoiceNode extends ConsumerWidget {
         ),
       );
     }
-    if(ignoreOpacity){
-      return ViewChoiceNodeMain(pos, ignoreChild: ignoreChild,);
+    if (ignoreOpacity) {
+      return ViewChoiceNodeMain(
+        pos,
+        ignoreChild: ignoreChild,
+      );
     }
     var opacity = ref.watch(opacityProvider(pos));
     if (opacity == 0) {
@@ -491,7 +495,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
           (i) => NodeDragTarget(pos.addLast(i)),
           maxSize: node.getMaxSize(true),
         );
-      } else if(!ignoreChild){
+      } else if (!ignoreChild) {
         child = ViewWrapCustom(
           pos,
           (i) => ViewChoiceNode(pos.addLast(i)),

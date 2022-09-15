@@ -13,6 +13,7 @@ import 'package:cyoap_flutter/viewModel/vm_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../model/platform_system.dart';
 
 const double nodeBaseHeight = 200;
@@ -28,19 +29,19 @@ void refreshChild(Ref ref, GenerableParserAndPosition node) {
   }
 }
 
-final choiceNodeProvider =
-    ChangeNotifierProvider.family.autoDispose<ChoiceNodeNotifier, Pos>((ref, pos) {
-      return ChoiceNodeNotifier(ref, pos);
+final choiceNodeProvider = ChangeNotifierProvider.family
+    .autoDispose<ChoiceNodeNotifier, Pos>((ref, pos) {
+  return ChoiceNodeNotifier(ref, pos);
 });
 
-class ChoiceNodeNotifier extends ChangeNotifier{
+class ChoiceNodeNotifier extends ChangeNotifier {
   ChoiceNode? node;
   Ref ref;
   Pos pos;
-  ChoiceNodeNotifier(this.ref, this.pos){
+  ChoiceNodeNotifier(this.ref, this.pos) {
     if (pos.last == removedPositioned) {
       node = ref.read(removedChoiceNode);
-    }else{
+    } else {
       var node = getPlatform.getNode(pos);
       if (node is ChoiceNode) {
         this.node = node;
@@ -85,7 +86,8 @@ final contentsQuillProvider =
   if (ref.watch(choiceNodeProvider(pos)).node!.contentsString.isEmpty) {
     controller = QuillController.basic();
   } else {
-    var json = jsonDecode(ref.watch(choiceNodeProvider(pos)).node!.contentsString);
+    var json =
+        jsonDecode(ref.watch(choiceNodeProvider(pos)).node!.contentsString);
     var document = Document.fromJson(json);
     controller = QuillController(
         document: document,

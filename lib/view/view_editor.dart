@@ -125,8 +125,8 @@ class ViewContentsEditor extends ConsumerWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Visibility(
-                    visible: ref.watch(nodeModeProvider) !=
-                        ChoiceNodeMode.onlyCode,
+                    visible:
+                        ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
                     child: const ViewTextContentsEditor(),
                   ),
                 ),
@@ -502,7 +502,8 @@ class ViewNodeImageEditor extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(imageStateProvider, (previous, int index) {
-      ref.read(nodeEditorTargetProvider).node.imageString = ImageDB().getImageName(index);
+      ref.read(nodeEditorTargetProvider).node.imageString =
+          ImageDB().getImageName(index);
       ref.read(editorChangeProvider.notifier).needUpdate();
     });
     return Row(
@@ -676,8 +677,7 @@ class ViewCodeEditor extends ConsumerWidget {
                 ),
               ),
               Visibility(
-                visible:
-                    ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
+                visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
                 child: Focus(
                   onFocusChange: (bool hasFocus) => ref
                       .read(editorChangeProvider.notifier)

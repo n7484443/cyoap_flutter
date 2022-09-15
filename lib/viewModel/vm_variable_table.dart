@@ -6,6 +6,7 @@ import 'package:cyoap_core/grammar/value_type.dart';
 import 'package:cyoap_core/variable_db.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../model/platform_system.dart';
 
 final vmVariableTableProvider = StateNotifierProvider<
@@ -32,7 +33,7 @@ final isVisibleSourceProvider = StateProvider<bool>((ref) {
 class VariableTilesStateNotifier
     extends StateNotifier<Map<String, ValueTypeWrapper>> {
   VariableTilesStateNotifier(super.state) {
-    VariableDataBase().variableChangeCallback = (){
+    VariableDataBase().variableChangeCallback = () {
       update();
     };
   }
@@ -64,7 +65,7 @@ final checkListNotifierProvider =
 
 class CheckListNotifier extends StateNotifier<List<CheckList>> {
   CheckListNotifier() : super([]) {
-    VariableDataBase().checkListChangeCallback = (){
+    VariableDataBase().checkListChangeCallback = () {
       update();
     };
     update();

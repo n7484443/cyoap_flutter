@@ -70,11 +70,16 @@ class ConstList {
     _version = packageInfo.version;
 
     var userInfo = {
-      'platform' : isWeb() ? 'web' : isMobile() ? 'mobile' : 'desktop',
-      'version' : _version,
+      'platform': isWeb()
+          ? 'web'
+          : isMobile()
+              ? 'mobile'
+              : 'desktop',
+      'version': _version,
     };
-    if(isMobile()){
-      userInfo['androidVersion'] = (await DeviceInfoPlugin().androidInfo).version.sdkInt.toString();
+    if (isMobile()) {
+      userInfo['androidVersion'] =
+          (await DeviceInfoPlugin().androidInfo).version.sdkInt.toString();
     }
     Sentry.configureScope((scope) => scope.setContexts('USER_INFO', userInfo));
   }
@@ -157,7 +162,8 @@ class ConstList {
   }
 }
 
-const String sentryDsn = 'https://300bedade0de419fb189b2c5634ca1d8@o1393272.ingest.sentry.io/6714767';
+const String sentryDsn =
+    'https://300bedade0de419fb189b2c5634ca1d8@o1393272.ingest.sentry.io/6714767';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -169,7 +175,7 @@ void main() {
     }
     runZonedGuarded(() async {
       await SentryFlutter.init(
-            (options) {
+        (options) {
           options.dsn = kDebugMode ? '' : sentryDsn;
           options.attachStacktrace = true;
         },
@@ -181,10 +187,10 @@ void main() {
               routes: ConstList.isDistributed
                   ? {'/': (context) => v_play.ViewPlay()}
                   : {
-                '/': (context) => v_start.ViewStart(),
-                '/viewPlay': (context) => v_play.ViewPlay(),
-                '/viewMake': (context) => v_make.ViewMakePlatform(),
-              },
+                      '/': (context) => v_start.ViewStart(),
+                      '/viewPlay': (context) => v_play.ViewPlay(),
+                      '/viewMake': (context) => v_make.ViewMakePlatform(),
+                    },
               theme: appThemeLight,
               darkTheme: appThemeDark,
               themeMode: ThemeMode.light,

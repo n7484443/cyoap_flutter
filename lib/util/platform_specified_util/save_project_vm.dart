@@ -10,14 +10,15 @@ import 'package:tuple/tuple.dart';
 
 class SaveProjectImp extends SaveProject {
   @override
-  void init(){
-    Option().convertToWebpFunction = (String? name){
-      if(getWebpConverterInstance().saveAsWebp){
+  void init() {
+    Option().convertToWebpFunction = (String? name) {
+      if (getWebpConverterInstance().saveAsWebp) {
         return name?.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
       }
       return name;
     };
   }
+
   @override
   Future<Tuple2<String, Uint8List>> convertImage(
       String name, Uint8List data) async {

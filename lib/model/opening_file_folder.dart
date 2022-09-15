@@ -82,7 +82,7 @@ class ProjectPath {
     return prefs.getBool('saveAsWebp') ?? true;
   }
 
-  Future<void> setSaveAsWebp(bool data) async{
+  Future<void> setSaveAsWebp(bool data) async {
     var prefs = await SharedPreferences.getInstance();
     prefs.setBool('saveAsWebp', data);
   }

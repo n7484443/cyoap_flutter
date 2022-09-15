@@ -2,11 +2,12 @@ import 'package:cyoap_core/choiceNode/choice_line.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/generable_parser.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
+import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_core/variable_db.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../model/platform.dart';
+
 import '../model/platform_system.dart';
 
 const int maxWidthSize = 12;
@@ -121,8 +122,8 @@ void refreshLine(Ref ref, int y) {
 final lineProvider = Provider.autoDispose
     .family<LineSetting?, int>((ref, pos) => getPlatform.getLineSetting(pos));
 
-final lineVisibleProvider = Provider.autoDispose
-    .family<bool, Pos>((ref, pos) => ref.watch(lineProvider(pos.first))!.choiceStatus.visible);
+final lineVisibleProvider = Provider.autoDispose.family<bool, Pos>(
+    (ref, pos) => ref.watch(lineProvider(pos.first))!.choiceStatus.visible);
 
 final _childrenProvider = Provider.autoDispose
     .family<List<GenerableParserAndPosition>, Pos>((ref, pos) {
@@ -155,12 +156,11 @@ final lineAlwaysVisibleProvider = StateProvider.autoDispose.family<bool, int>(
 final lineMaxSelectProvider = StateProvider.autoDispose
     .family<int, int>((ref, pos) => ref.watch(lineProvider(pos))!.maxSelect);
 
-final lineBackgroundColorProvider = StateProvider.autoDispose
-    .family<Color?, int>(
-        (ref, pos) {
-          var colorCode = ref.watch(lineProvider(pos))!.backgroundColor;
-          return colorCode != null ? Color(colorCode) : null;
-    });
+final lineBackgroundColorProvider =
+    StateProvider.autoDispose.family<Color?, int>((ref, pos) {
+  var colorCode = ref.watch(lineProvider(pos))!.backgroundColor;
+  return colorCode != null ? Color(colorCode) : null;
+});
 
 final lineLengthProvider =
     Provider.autoDispose<int>((ref) => getPlatform.lineSettings.length);

@@ -77,7 +77,7 @@ class WebpConverterImpWindows implements WebpConverterImp {
   @override
   Future<Tuple2<String, Uint8List>> convert(
       Uint8List input, String name) async {
-    if(!saveAsWebp){
+    if (!saveAsWebp) {
       return Tuple2(name, input);
     }
     Image decodedImage;
@@ -147,7 +147,7 @@ class WebpConverterImpAndroid implements WebpConverterImp {
   @override
   Future<Tuple2<String, Uint8List>> convert(
       Uint8List input, String name) async {
-    if(!saveAsWebp){
+    if (!saveAsWebp) {
       return Tuple2(name, input);
     }
     Image decodeImage;

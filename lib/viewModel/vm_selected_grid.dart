@@ -7,8 +7,8 @@ final selectedChoiceNodeProvider = Provider.autoDispose<List<Pos>>((ref) {
   List<Pos> list = [];
   for (var line in getPlatform.lineSettings) {
     for (var choice in line.children) {
-      (choice as ChoiceNode).doAllChild((node){
-        if(node.isSelected() && node.isSelectableMode) {
+      (choice as ChoiceNode).doAllChild((node) {
+        if (node.isSelected() && node.isSelectableMode) {
           list.add(node.pos);
         }
       });

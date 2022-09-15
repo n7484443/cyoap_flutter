@@ -1,4 +1,5 @@
 import 'package:cyoap_core/choiceNode/pos.dart';
+import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
@@ -6,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../main.dart';
-import '../model/platform.dart';
 import '../model/platform_system.dart';
 import '../viewModel/vm_design_setting.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
@@ -49,22 +49,22 @@ class ViewDesignSetting extends ConsumerWidget {
     });
     ref.listen(colorBackgroundProvider, (previous, Color next) {
       getPlatform.designSetting =
-          getPlatform.designSetting.copyWith(colorBackground: next);
+          getPlatform.designSetting.copyWith(colorBackground: next.value);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
     ref.listen(colorNodeProvider, (previous, Color next) {
       getPlatform.designSetting =
-          getPlatform.designSetting.copyWith(colorNode: next);
+          getPlatform.designSetting.copyWith(colorNode: next.value);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
     ref.listen(colorOutlineProvider, (previous, Color next) {
       getPlatform.designSetting =
-          getPlatform.designSetting.copyWith(colorOutline: next);
+          getPlatform.designSetting.copyWith(colorOutline: next.value);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
     ref.listen(colorTitleProvider, (previous, Color next) {
       getPlatform.designSetting =
-          getPlatform.designSetting.copyWith(colorTitle: next);
+          getPlatform.designSetting.copyWith(colorTitle: next.value);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
 

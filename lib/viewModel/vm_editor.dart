@@ -12,9 +12,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final nodeEditorTargetPosProvider = StateProvider<Pos?>((ref) => null);
 
-final nodeEditorTargetProvider = ChangeNotifierProvider<NodeEditorTargetNotifier>((ref) {
+final nodeEditorTargetProvider =
+    ChangeNotifierProvider<NodeEditorTargetNotifier>((ref) {
   var pos = ref.watch(nodeEditorTargetPosProvider);
-  if(pos == null){
+  if (pos == null) {
     return NodeEditorTargetNotifier(ChoiceNode.empty(), ref);
   }
   return NodeEditorTargetNotifier(getPlatform.getChoiceNode(pos)!.clone(), ref);
@@ -25,11 +26,11 @@ class NodeEditorTargetNotifier extends ChangeNotifier {
   Ref ref;
   NodeEditorTargetNotifier(this.node, this.ref);
 
-  void update(){
+  void update() {
     var pos = ref.watch(nodeEditorTargetPosProvider);
-    if(pos == null){
+    if (pos == null) {
       node = ChoiceNode.empty();
-    }else{
+    } else {
       node = getPlatform.getChoiceNode(pos)?.clone() ?? ChoiceNode.empty();
     }
     notifyListeners();
@@ -103,11 +104,11 @@ class ImageListStateNotifier extends StateNotifier<List<String>> {
   }
 }
 
-final imageStateProvider = StateProvider.autoDispose<int>((ref) =>
-    ImageDB().getImageIndex(ref.read(nodeEditorTargetProvider).node.imageString));
+final imageStateProvider = StateProvider.autoDispose<int>((ref) => ImageDB()
+    .getImageIndex(ref.read(nodeEditorTargetProvider).node.imageString));
 
-final editorChangeProvider =
-    StateNotifierProvider<EditorChangeNotifier, bool>((ref) => EditorChangeNotifier(ref));
+final editorChangeProvider = StateNotifierProvider<EditorChangeNotifier, bool>(
+    (ref) => EditorChangeNotifier(ref));
 
 class EditorChangeNotifier extends StateNotifier<bool> {
   Ref ref;

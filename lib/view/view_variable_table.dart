@@ -380,7 +380,7 @@ class NodeTiles extends ConsumerWidget {
               .toList();
         }
       }
-      if(children.isNotEmpty){
+      if (children.isNotEmpty) {
         widgetList.add(
           ExpansionTile(
             title: Text(node.name),

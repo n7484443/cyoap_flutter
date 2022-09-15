@@ -3,14 +3,11 @@ import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/choice_status.dart';
 import 'package:cyoap_core/choiceNode/generable_parser.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
+import 'package:cyoap_core/design_setting.dart';
 import 'package:cyoap_core/grammar/value_type.dart';
+import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_core/variable_db.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
-import 'design_setting.dart';
-
-const int designSamplePosition0 = -100;
-const int designSamplePosition1 = -101;
-const int nonPositioned = -1;
 
 class AbstractPlatform {
   String? stringImageName;
@@ -118,7 +115,7 @@ class AbstractPlatform {
     return getChoiceNode(pos);
   }
 
-  ChoiceNode createTempNode(){
+  ChoiceNode createTempNode() {
     return ChoiceNode.noTitle(3, true, '', '');
   }
 

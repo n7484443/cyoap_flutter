@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cyoap_core/choiceNode/pos.dart';
+import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
@@ -13,7 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 
-import '../model/platform.dart';
 import '../viewModel/vm_choice_node.dart';
 import '../viewModel/vm_design_setting.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
@@ -189,18 +189,18 @@ class NodeDivider extends ConsumerWidget {
 
   const NodeDivider(this.y, {super.key});
 
-  Color getColorLine(bool alwaysVisible) {
+  Color getColorLine(bool alwaysVisible, WidgetRef ref) {
     if (y < getPlatform.lineSettings.length && !alwaysVisible) {
       return Colors.blueAccent;
     }
-    if (getPlatform.designSetting.colorBackground.computeLuminance() > 0.5) {
+    if (ref.read(colorBackgroundProvider).computeLuminance() > 0.5) {
       return Colors.black45;
     }
     return Colors.white54;
   }
 
-  Color getColorButton() {
-    return getPlatform.designSetting.colorBackground.computeLuminance() > 0.5
+  Color getColorButton(WidgetRef ref) {
+    return ref.read(colorBackgroundProvider).computeLuminance() > 0.5
         ? Colors.black
         : Colors.white;
   }
@@ -218,7 +218,7 @@ class NodeDivider extends ConsumerWidget {
     var maxSelect = ref.watch(lineMaxSelectProvider(y));
     var divider = Divider(
       thickness: 4,
-      color: getColorLine(ref.watch(lineAlwaysVisibleProvider(y))),
+      color: getColorLine(ref.watch(lineAlwaysVisibleProvider(y)), ref),
     );
 
     if (isEditable) {
@@ -267,13 +267,13 @@ class NodeDivider extends ConsumerWidget {
             child: Row(
               children: [
                 IconButton(
-                  icon: Icon(Icons.arrow_upward, color: getColorButton()),
+                  icon: Icon(Icons.arrow_upward, color: getColorButton(ref)),
                   onPressed: () {
                     ref.read(vmDraggableNestedMapProvider).moveLine(y, y - 1);
                   },
                 ),
                 IconButton(
-                  icon: Icon(Icons.arrow_downward, color: getColorButton()),
+                  icon: Icon(Icons.arrow_downward, color: getColorButton(ref)),
                   onPressed: () {
                     ref.read(vmDraggableNestedMapProvider).moveLine(y, y + 1);
                   },
@@ -439,8 +439,8 @@ class _NestedMapState extends ConsumerState<NestedMap> {
                     onPressed: () => showDialog(
                         context: context,
                         builder: (context) => const Dialog(
-                          child: ViewSelectedGrid(),
-                        )),
+                              child: ViewSelectedGrid(),
+                            )),
                     child: const Text("요약")),
               ),
             );

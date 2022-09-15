@@ -26,46 +26,32 @@ class ViewImageEditor extends ConsumerWidget {
         selectedIndex: ref.watch(imageCropIndexProvider),
         onDestinationSelected: (index) {
           if (index != 5) {
-            ref
-                .read(imageCropIndexProvider.notifier)
-                .state = index;
+            ref.read(imageCropIndexProvider.notifier).state = index;
           }
           switch (index) {
             case 0:
-              ref
-                  .read(imageCropRatioProvider.notifier)
-                  .state = null;
+              ref.read(imageCropRatioProvider.notifier).state = null;
               break;
             case 1:
-              ref
-                  .read(imageCropRatioProvider.notifier)
-                  .state =
-              const Tuple2(4, 3);
+              ref.read(imageCropRatioProvider.notifier).state =
+                  const Tuple2(4, 3);
               break;
             case 2:
-              ref
-                  .read(imageCropRatioProvider.notifier)
-                  .state =
-              const Tuple2(3, 2);
+              ref.read(imageCropRatioProvider.notifier).state =
+                  const Tuple2(3, 2);
               break;
             case 3:
-              ref
-                  .read(imageCropRatioProvider.notifier)
-                  .state =
-              const Tuple2(16, 9);
+              ref.read(imageCropRatioProvider.notifier).state =
+                  const Tuple2(16, 9);
               break;
             case 4:
-              ref
-                  .read(imageCropRatioProvider.notifier)
-                  .state =
-              const Tuple2(1, 1);
+              ref.read(imageCropRatioProvider.notifier).state =
+                  const Tuple2(1, 1);
               break;
             case 5:
               var data = ref.read(imageCropRatioProvider);
               if (data != null) {
-                ref
-                    .read(imageCropRatioProvider.notifier)
-                    .state =
+                ref.read(imageCropRatioProvider.notifier).state =
                     Tuple2(data.item2, data.item1);
               }
               break;
@@ -102,7 +88,7 @@ class ViewImageEditorContents extends ConsumerWidget {
                   hitTestSize: 20.0,
                   cropRectPadding: const EdgeInsets.all(10.0),
                   cropAspectRatio:
-                  data == null ? null : data.item1 / data.item2,
+                      data == null ? null : data.item1 / data.item2,
                   initCropRectType: InitCropRectType.imageRect,
                   editActionDetailsIsChanged: (EditActionDetails? details) {});
             },
@@ -115,7 +101,7 @@ class ViewImageEditorContents extends ConsumerWidget {
             ref
                 .read(imageListStateProvider.notifier)
                 .addImageToList(image.item1,
-                data: await ref.read(cropImageProvider.future))
+                    data: await ref.read(cropImageProvider.future))
                 .then((value) {
               ref.read(changeTabProvider.notifier).back(context);
             });
