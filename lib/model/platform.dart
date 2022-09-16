@@ -1,6 +1,5 @@
 import 'package:cyoap_core/choiceNode/choice_line.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
-import 'package:cyoap_core/choiceNode/choice_status.dart';
 import 'package:cyoap_core/choiceNode/generable_parser.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/design_setting.dart';
@@ -105,8 +104,7 @@ class AbstractPlatform {
       )
         ..isRound = false
         ..currentPos = -2
-        ..choiceStatus =
-            ChoiceStatus(status: SelectableStatus.selected, visible: true);
+        ..select = 1;
     }
     if (pos.last == nonPositioned) {
       return createTempNode();
@@ -116,7 +114,7 @@ class AbstractPlatform {
   }
 
   ChoiceNode createTempNode() {
-    return ChoiceNode.noTitle(3, true, '', '');
+    return ChoiceNode.empty()..width = 3;
   }
 
   ChoiceNode removeData(Pos pos) {

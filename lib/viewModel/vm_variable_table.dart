@@ -88,7 +88,7 @@ class CheckListNotifier extends StateNotifier<List<CheckList>> {
               subWidgetList.add(CheckList(
                   name: node.title,
                   pos: child.pos,
-                  check: node.choiceStatus.isSelected()));
+                  check: node.isExecutable()));
             }
           }
         });

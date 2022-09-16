@@ -143,20 +143,17 @@ class ChoiceNodeSelectNotifier extends StateNotifier<int> {
     }
 
     var node = ref.read(choiceNodeProvider(pos)).node!;
-    if (node.isSelected() &&
+    if (node.isExecutable() &&
         ref.read(nodeModeProvider(pos)) != ChoiceNodeMode.multiSelect) {
       node.selectNode(n);
     } else if (ref.read(nodeModeProvider(pos)) == ChoiceNodeMode.randomMode) {
       node.selectNode(n);
       ref.read(randomStateNotifierProvider(pos).notifier).startRandom();
       await showDialogFunction!();
-    } else if (ref.read(nodeModeProvider(pos)) == ChoiceNodeMode.multiSelect) {
-      state += n;
-      state = state.clamp(0, node.maximumStatus);
-      node.selectNode(state);
     } else {
       node.selectNode(n);
     }
+    state = node.select;
     updateStatusAll(ref, startLine: node.pos.first);
   }
 }
@@ -178,7 +175,7 @@ final opacityProvider = Provider.family.autoDispose<double, Pos>((ref, pos) {
       return 0.4;
     }
   } else {
-    if (ref.watch(choiceNodePlayStatusProvider(pos)).isSelected()) {
+    if (ref.watch(choiceNodePlayStatusProvider(pos)).isOpen()) {
       return 1;
     } else {
       return 0;

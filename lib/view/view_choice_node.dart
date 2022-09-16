@@ -83,9 +83,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
               side: BorderSide(
                 color: ref.watch(nodeModeProvider(pos)) !=
                             ChoiceNodeMode.unSelectableMode &&
-                        ref
-                            .watch(choiceNodePlayStatusProvider(pos))
-                            .isSelected()
+                        ref.watch(choiceNodeProvider(pos)).node!.isExecutable()
                     ? ref.watch(colorOutlineProvider)
                     : ref.watch(colorNodeProvider),
                 width: ConstList.isSmallDisplay(context) ? 2 : 4,
@@ -95,9 +93,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
               BorderSide(
                 color: ref.watch(nodeModeProvider(pos)) !=
                             ChoiceNodeMode.unSelectableMode &&
-                        ref
-                            .watch(choiceNodePlayStatusProvider(pos))
-                            .isSelected()
+                        ref.watch(choiceNodeProvider(pos)).node!.isExecutable()
                     ? ref.watch(colorOutlineProvider)
                     : ref.watch(colorNodeProvider),
                 width: ConstList.isSmallDisplay(context) ? 2 : 4,
