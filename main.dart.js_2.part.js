@@ -19017,7 +19017,8 @@ else v.a=C.De}else v=u
 this.c.push(v)}},
 $S:0}
 A.a9A.prototype={
-$2(d,e){var w=J.ah(e),v=A.aP8(w.h(e,"valueType")),u=J.h(w.h(e,"visible"),"true")
+$2(d,e){var w=J.ah(e),v=A.aP8(w.h(e,"valueType")),u=w.h(e,"visible")
+if(u==null)u=!1
 w=w.h(e,"displayName")
 return new B.aw(d,new A.cO(v,u,w==null?"":w),x.ht)},
 $S:z+48}
@@ -21441,4 +21442,4 @@ w($,"bpg","td",()=>A.b9V($.dA().buffer))
 w($,"bpi","aWE",()=>A.be_(1))
 w($,"bpj","b6d",()=>{var u=$.aWE()
 return A.b9W(u.gaDc(u))})})()}
-$__dart_deferred_initializers__["bFBhEnu8eKwdiJ5NHLklg2OfwTc="] = $__dart_deferred_initializers__.current
+$__dart_deferred_initializers__["VsWX3VHrt5kzrf8VdjHegV9tBKk="] = $__dart_deferred_initializers__.current
