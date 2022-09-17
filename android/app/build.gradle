@@ -48,6 +48,7 @@ android {
         applicationId "com.clearApple.cyoap_flutter"
         minSdkVersion 23
         targetSdkVersion 32
+        compileSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }

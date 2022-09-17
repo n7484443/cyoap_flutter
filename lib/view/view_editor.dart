@@ -8,6 +8,7 @@ import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/viewModel/vm_design_setting.dart';
 import 'package:cyoap_flutter/viewModel/vm_image_editor.dart';
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
@@ -354,13 +355,6 @@ class _ViewTextContentsEditorState
   @override
   void initState() {
     _focusNode = FocusNode();
-    _focusNode!.addListener(() {
-      if (!_focusNode!.hasFocus) {
-        ref.read(nodeEditorTargetProvider).node.contentsString =
-            jsonEncode(_quillController?.document.toDelta().toJson());
-        ref.read(editorChangeProvider.notifier).needUpdate();
-      }
-    });
     var node = ref.read(nodeEditorTargetProvider).node;
     if (node.contentsString.isEmpty) {
       _quillController = QuillController.basic();
@@ -369,12 +363,21 @@ class _ViewTextContentsEditorState
           document: Document.fromJson(jsonDecode(node.contentsString)),
           selection: const TextSelection.collapsed(offset: 0));
     }
+    _quillController?.addListener(() {
+      EasyDebounce.debounce('content-editor', const Duration(milliseconds: 500),
+          () {
+        ref.read(nodeEditorTargetProvider).node.contentsString =
+            jsonEncode(_quillController?.document.toDelta().toJson());
+        ref.read(editorChangeProvider.notifier).needUpdate();
+      });
+    });
     _scrollController = ScrollController();
     super.initState();
   }
 
   @override
   void dispose() {
+    EasyDebounce.cancel('content-editor');
     _focusNode?.dispose();
     _scrollController?.dispose();
     _quillController?.dispose();
