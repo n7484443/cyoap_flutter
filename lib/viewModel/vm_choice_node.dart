@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/choice_status.dart';
@@ -38,6 +37,7 @@ class ChoiceNodeNotifier extends ChangeNotifier {
   ChoiceNode? node;
   Ref ref;
   Pos pos;
+
   ChoiceNodeNotifier(this.ref, this.pos) {
     if (pos.last == removedPositioned) {
       node = ref.read(removedChoiceNode);
@@ -52,7 +52,8 @@ class ChoiceNodeNotifier extends ChangeNotifier {
   }
 }
 
-final choiceNodeDesignSettingProvider = Provider.family.autoDispose<ChoiceNodeDesign, Pos>((ref, pos) {
+final choiceNodeDesignSettingProvider =
+    Provider.family.autoDispose<ChoiceNodeDesign, Pos>((ref, pos) {
   var node = ref.watch(choiceNodeProvider(pos));
   return node.node!.choiceNodeDesign;
 });
@@ -123,23 +124,18 @@ class ChoiceNodeSelectNotifier extends StateNotifier<int> {
 
   ChoiceNodeSelectNotifier(this.ref, this.pos) : super(0);
 
-  Future<void> select(int n, {Future Function()? showDialogFunction}) async {
+  void select(int n, {Future Function()? showDialogFunction}) {
     if (!ref.read(isIgnorePointerProvider(pos))) {
       return;
     }
 
     var node = ref.read(choiceNodeProvider(pos)).node!;
-    if (node.isExecutable() &&
-        ref.read(nodeModeProvider(pos)) != ChoiceNodeMode.multiSelect) {
-      node.selectNode(n);
-    } else if (ref.read(nodeModeProvider(pos)) == ChoiceNodeMode.randomMode) {
-      node.selectNode(n);
-      ref.read(randomStateNotifierProvider(pos).notifier).startRandom();
-      await showDialogFunction!();
-    } else {
-      node.selectNode(n);
-    }
+    node.selectNode(n);
     state = node.select;
+    if (node.random != -1) {
+      showDialogFunction!();
+      ref.read(randomStateNotifierProvider(pos).notifier).startRandom();
+    }
     updateStatusAll(ref, startLine: node.pos.first);
   }
 }
@@ -185,8 +181,7 @@ class RandomProvider extends StateNotifier<int> {
     });
     Timer(const Duration(milliseconds: 2000), () {
       timer.cancel();
-      state = Random().nextInt(node.maximumStatus);
-      node.random = state;
+      state = node.random;
       ref.read(randomProcessExecutedProvider.notifier).state = false;
     });
   }
