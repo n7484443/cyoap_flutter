@@ -134,6 +134,7 @@ final opacityProvider = Provider.family.autoDispose<double, Pos>((ref, pos) {
   var status = ref.watch(choiceNodePlayStatusProvider(pos));
   if (status.isHide()) return 0;
   if (status.isClosed()) return 0.4;
+  if (!node.checkParentClickable(first: true)) return 0.4;
   return 1;
 });
 
