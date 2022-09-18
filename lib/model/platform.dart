@@ -88,7 +88,6 @@ class AbstractPlatform {
     if (pos.first == designSamplePosition0) {
       return ChoiceNode(
         1,
-        true,
         "디자인",
         "[{\"insert\":\"레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.\\n\"}]",
         "noImage",
@@ -97,12 +96,11 @@ class AbstractPlatform {
     if (pos.first == designSamplePosition1) {
       return ChoiceNode(
         1,
-        false,
         "디자인(바깥 라운드 X, 카드 모드 X)",
         "[{\"insert\":\"레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.\\n\"}]",
         "noImage",
       )
-        ..isRound = false
+        ..choiceNodeDesign = ChoiceNodeDesign(isRound: false, isCard: false)
         ..currentPos = -2
         ..select = 1;
     }

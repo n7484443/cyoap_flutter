@@ -51,7 +51,7 @@ class ViewChoiceNode extends ConsumerWidget {
     }
     var opacity = ref.watch(opacityProvider(pos));
     if (opacity == 0) {
-      if (ref.watch(isChoiceNodeIsOccupySpaceProvider(pos))) {
+      if (ref.watch(choiceNodeDesignSettingProvider(pos)).isOccupySpace) {
         return Opacity(
           opacity: opacity,
           child: ViewChoiceNodeMain(pos, ignoreChild: ignoreChild),
@@ -76,8 +76,9 @@ class ViewChoiceNodeMain extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var node = ref.watch(choiceNodeProvider(pos)).node!;
+    var design = ref.watch(choiceNodeDesignSettingProvider(pos));
     return Card(
-      shape: ref.watch(isChoiceNodeRoundProvider(pos))
+      shape: design.isRound
           ? RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4.0),
               side: BorderSide(
@@ -103,7 +104,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
       margin:
           ConstList.isSmallDisplay(context) ? const EdgeInsets.all(1.4) : null,
       elevation:
-          ref.watch(isChoiceNodeCardProvider(pos)) ? ConstList.elevation : 0,
+      design.isCard ? ConstList.elevation : 0,
       color: ref.watch(colorNodeProvider),
       child: Ink(
         color: ref.watch(colorNodeProvider),
@@ -292,7 +293,8 @@ class ViewTitleWithEdit extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Widget title;
-    if (!ref.watch(isChoiceNodeHideTitleProvider(pos))) {
+    var design = ref.watch(choiceNodeDesignSettingProvider(pos));
+    if (!design.hideTitle) {
       if (ref.watch(titleOutlineProvider)) {
         title = TextOutline(
           ref.watch(titleStringProvider(pos)),
@@ -466,11 +468,12 @@ class ViewChoiceNodeContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var node = ref.watch(choiceNodeProvider(pos)).node!;
+    var design = ref.watch(choiceNodeDesignSettingProvider(pos));
     Widget image;
     if (ref.watch(imageStringProvider(pos)).isNotEmpty) {
       image = ConstrainedBox(
         constraints: BoxConstraints(
-          maxHeight: ref.watch(maximizingImageProvider(pos))
+          maxHeight: design.maximizingImage
               ? MediaQuery.of(context).size.height / 1.25
               : MediaQuery.of(context).size.height / 2,
         ),
@@ -501,7 +504,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
     }
     child ??= const SizedBox.shrink();
 
-    if (ref.watch(imagePositionProvider(pos)) == 1) {
+    if (design.imagePosition== 1) {
       return Column(
         children: [
           ViewTitleWithEdit(pos),
@@ -519,7 +522,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
         ],
       );
     }
-    if (ref.watch(imagePositionProvider(pos)) == 2) {
+    if (design.imagePosition == 2) {
       return Column(
         children: [
           ViewTitleWithEdit(pos),

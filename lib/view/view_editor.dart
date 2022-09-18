@@ -86,24 +86,8 @@ class ViewContentsEditor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(isCardSwitchProvider, (previous, bool next) {
-      ref.read(nodeEditorTargetProvider).node.isCard = next;
-      ref.read(editorChangeProvider.notifier).needUpdate();
-    });
-    ref.listen(isRoundSwitchProvider, (previous, bool next) {
-      ref.read(nodeEditorTargetProvider).node.isRound = next;
-      ref.read(editorChangeProvider.notifier).needUpdate();
-    });
-    ref.listen(hideTitleProvider, (previous, bool next) {
-      ref.read(nodeEditorTargetProvider).node.hideTitle = next;
-      ref.read(editorChangeProvider.notifier).needUpdate();
-    });
-    ref.listen(maximizingImageSwitchProvider, (previous, bool next) {
-      ref.read(nodeEditorTargetProvider).node.maximizingImage = next;
-      ref.read(editorChangeProvider.notifier).needUpdate();
-    });
-    ref.listen(imagePositionProvider, (previous, int next) {
-      ref.read(nodeEditorTargetProvider).node.imagePosition = next;
+    ref.listen(nodeEditorDesignProvider, (previous, ChoiceNodeDesign next) {
+      ref.read(nodeEditorTargetProvider).node.choiceNodeDesign = next;
       ref.read(editorChangeProvider.notifier).needUpdate();
     });
     ref.listen(nodeModeProvider, (previous, ChoiceNodeMode next) {
@@ -203,6 +187,7 @@ class ViewControlPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var title = ref.watch(nodeTitleProvider);
+    var design = ref.watch(nodeEditorDesignProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -272,9 +257,9 @@ class ViewControlPanel extends ConsumerWidget {
           visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
             () => ref
-                .read(isCardSwitchProvider.notifier)
-                .update((state) => !state),
-            ref.watch(isCardSwitchProvider),
+                .read(nodeEditorDesignProvider.notifier)
+                .update((state) => state.copyWith(isCard: !design.isCard)),
+            design.isCard,
             label: '카드 모드',
           ),
         ),
@@ -282,38 +267,37 @@ class ViewControlPanel extends ConsumerWidget {
           visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
             () => ref
-                .read(isRoundSwitchProvider.notifier)
-                .update((state) => !state),
-            ref.watch(isRoundSwitchProvider),
+                .read(nodeEditorDesignProvider.notifier)
+                .update((state) => state.copyWith(isRound: !design.isRound)),
+            design.isRound,
             label: '외곽선 둥글게',
           ),
         ),
         Visibility(
           visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
-            () => ref
-                .read(maximizingImageSwitchProvider.notifier)
-                .update((state) => !state),
-            ref.watch(maximizingImageSwitchProvider),
+            () => ref.read(nodeEditorDesignProvider.notifier).update((state) =>
+                state.copyWith(maximizingImage: !design.maximizingImage)),
+            design.maximizingImage,
             label: '이미지 최대화',
           ),
         ),
         Visibility(
           visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
-            () =>
-                ref.read(hideTitleProvider.notifier).update((state) => !state),
-            ref.watch(hideTitleProvider),
+            () => ref.read(nodeEditorDesignProvider.notifier).update(
+                (state) => state.copyWith(hideTitle: !design.hideTitle)),
+            design.hideTitle,
             label: '제목 숨기기',
           ),
         ),
         Visibility(
           visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
-            () => ref
-                .read(imagePositionProvider.notifier)
-                .update((state) => state == 0 ? 1 : 0),
-            ref.watch(imagePositionProvider) != 0,
+            () => ref.read(nodeEditorDesignProvider.notifier).update((state) =>
+                state.copyWith(
+                    imagePosition: design.imagePosition == 0 ? 1 : 0)),
+            design.imagePosition != 0,
             label: '가로 모드',
           ),
         ),
@@ -321,14 +305,18 @@ class ViewControlPanel extends ConsumerWidget {
           visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
             () {
-              if (ref.watch(imagePositionProvider) == 1) {
-                ref.read(imagePositionProvider.notifier).update((state) => 2);
-              } else if (ref.watch(imagePositionProvider) == 2) {
-                ref.read(imagePositionProvider.notifier).update((state) => 1);
+              if (design.imagePosition == 1) {
+                ref
+                    .read(nodeEditorDesignProvider.notifier)
+                    .update((state) => state.copyWith(imagePosition: 2));
+              } else if (design.imagePosition == 2) {
+                ref
+                    .read(nodeEditorDesignProvider.notifier)
+                    .update((state) => state.copyWith(imagePosition: 1));
               }
             },
-            ref.watch(imagePositionProvider) == 2,
-            disable: ref.watch(imagePositionProvider) == 0,
+            design.imagePosition == 2,
+            disable: design.imagePosition == 0,
             label: '이미지 왼쪽으로',
           ),
         ),
@@ -660,6 +648,7 @@ class ViewCodeEditor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var design = ref.watch(nodeEditorDesignProvider);
     return Row(
       children: [
         Expanded(
@@ -719,13 +708,10 @@ class ViewCodeEditor extends ConsumerWidget {
             children: [
               ViewSwitchLabel(
                 () {
-                  ref.read(nodeEditorTargetProvider).node.isOccupySpace =
-                      !ref.read(isOccupySpaceButtonProvider);
-                  ref
-                      .read(isOccupySpaceButtonProvider.notifier)
-                      .update((value) => value = !value);
+                  ref.read(nodeEditorDesignProvider.notifier).state =
+                      design.copyWith(isOccupySpace: !design.isOccupySpace);
                 },
-                ref.watch(isOccupySpaceButtonProvider),
+                design.isOccupySpace,
                 label: '숨김 시 공간 차지',
               ),
             ],

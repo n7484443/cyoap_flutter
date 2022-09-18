@@ -1,4 +1,3 @@
-
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
@@ -12,14 +11,14 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   getPlatformFileSystem.isEditable = false;
   var pos = Pos(data: [0, 0]);
-  getPlatform.addData(pos, ChoiceNode(
-    4,
-    true,
-    "디자인",
-    "[{\"insert\":\"레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.\\n\"}]",
-    "noImage",
-  ));
-
+  getPlatform.addData(
+      pos,
+      ChoiceNode(
+        4,
+        "디자인",
+        "[{\"insert\":\"레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.\\n\"}]",
+        "noImage",
+      ));
 
   testWidgets('ViewChoiceNodeMain', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
@@ -52,7 +51,10 @@ void main() {
     await tester.pumpWidget(MaterialApp(
       home: ProviderScope(
         overrides: [
-          isChoiceNodeIsOccupySpaceProvider(pos).overrideWithValue(true),
+          choiceNodeDesignSettingProvider(pos)
+              .overrideWithValue(ChoiceNodeDesign(
+            isOccupySpace: true,
+          )),
           opacityProvider(pos).overrideWithValue(0),
         ],
         child: ViewChoiceNode(pos),
@@ -64,7 +66,10 @@ void main() {
     await tester.pumpWidget(MaterialApp(
       home: ProviderScope(
         overrides: [
-          isChoiceNodeIsOccupySpaceProvider(pos).overrideWithValue(false),
+          choiceNodeDesignSettingProvider(pos)
+              .overrideWithValue(ChoiceNodeDesign(
+            isOccupySpace: false,
+          )),
           opacityProvider(pos).overrideWithValue(0),
         ],
         child: ViewChoiceNode(pos),

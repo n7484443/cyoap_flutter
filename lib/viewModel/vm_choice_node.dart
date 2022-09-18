@@ -52,18 +52,10 @@ class ChoiceNodeNotifier extends ChangeNotifier {
   }
 }
 
-final isChoiceNodeIsOccupySpaceProvider = Provider.family
-    .autoDispose<bool, Pos>(
-        (ref, pos) => ref.watch(choiceNodeProvider(pos)).node!.isOccupySpace);
-
-final isChoiceNodeCardProvider = Provider.family.autoDispose<bool, Pos>(
-    (ref, pos) => ref.watch(choiceNodeProvider(pos)).node!.isCard);
-
-final isChoiceNodeRoundProvider = Provider.family.autoDispose<bool, Pos>(
-    (ref, pos) => ref.watch(choiceNodeProvider(pos)).node!.isRound);
-
-final isChoiceNodeHideTitleProvider = Provider.family.autoDispose<bool, Pos>(
-    (ref, pos) => ref.watch(choiceNodeProvider(pos)).node!.hideTitle);
+final choiceNodeDesignSettingProvider = Provider.family.autoDispose<ChoiceNodeDesign, Pos>((ref, pos) {
+  var node = ref.watch(choiceNodeProvider(pos));
+  return node.node!.choiceNodeDesign;
+});
 
 final imageStringProvider =
     Provider.family.autoDispose<String, Pos>((ref, pos) {
@@ -98,12 +90,6 @@ final contentsQuillProvider =
   });
   return controller;
 });
-
-final imagePositionProvider = Provider.family.autoDispose<int, Pos>(
-    (ref, pos) => ref.watch(choiceNodeProvider(pos)).node!.imagePosition);
-
-final maximizingImageProvider = Provider.family.autoDispose<bool, Pos>(
-    (ref, pos) => ref.watch(choiceNodeProvider(pos)).node!.maximizingImage);
 
 final nodeModeProvider = Provider.family.autoDispose<ChoiceNodeMode, Pos>(
     (ref, pos) => ref.watch(choiceNodeProvider(pos)).node!.choiceNodeMode);

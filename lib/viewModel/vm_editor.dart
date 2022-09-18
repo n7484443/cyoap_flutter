@@ -37,16 +37,9 @@ class NodeEditorTargetNotifier extends ChangeNotifier {
   }
 }
 
-final isCardSwitchProvider = StateProvider.autoDispose<bool>(
-    (ref) => ref.watch(nodeEditorTargetProvider).node.isCard);
-final isRoundSwitchProvider = StateProvider.autoDispose<bool>(
-    (ref) => ref.watch(nodeEditorTargetProvider).node.isRound);
-final hideTitleProvider = StateProvider.autoDispose<bool>(
-    (ref) => ref.watch(nodeEditorTargetProvider).node.hideTitle);
-final maximizingImageSwitchProvider = StateProvider.autoDispose<bool>(
-    (ref) => ref.watch(nodeEditorTargetProvider).node.maximizingImage);
-final imagePositionProvider = StateProvider.autoDispose<int>(
-    (ref) => ref.watch(nodeEditorTargetProvider).node.imagePosition);
+final nodeEditorDesignProvider = StateProvider.autoDispose<ChoiceNodeDesign>(
+    (ref) => ref.watch(nodeEditorTargetProvider).node.choiceNodeDesign);
+
 final nodeModeProvider = StateProvider.autoDispose<ChoiceNodeMode>(
     (ref) => ref.watch(nodeEditorTargetProvider).node.choiceNodeMode);
 final nodeTitleProvider = StateProvider.autoDispose<String>(
@@ -140,15 +133,10 @@ class EditorChangeNotifier extends StateNotifier<bool> {
     origin.title = changed.title;
     origin.contentsString = changed.contentsString;
     origin.maximumStatus = changed.maximumStatus;
-    origin.maximizingImage = changed.maximizingImage;
-    origin.isOccupySpace = changed.isOccupySpace;
     origin.choiceNodeMode = changed.choiceNodeMode;
     origin.imageString = changed.imageString;
-    origin.imagePosition = changed.imagePosition;
-    origin.isRound = changed.isRound;
-    origin.isCard = changed.isCard;
     origin.recursiveStatus = changed.recursiveStatus;
-    origin.hideTitle = changed.hideTitle;
+    origin.choiceNodeDesign = ref.read(nodeEditorDesignProvider);
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     state = false;
     refreshLine(ref, pos.first);
@@ -156,10 +144,6 @@ class EditorChangeNotifier extends StateNotifier<bool> {
 }
 
 final lastImageProvider = StateProvider<Uint8List?>((ref) => null);
-
-final isOccupySpaceButtonProvider = StateProvider.autoDispose<bool>((ref) {
-  return ref.watch(nodeEditorTargetProvider).node.isOccupySpace;
-});
 
 final controllerClickableProvider =
     Provider.autoDispose<TextEditingController>((ref) {
