@@ -2,6 +2,7 @@ import 'package:cyoap_core/choiceNode/choice_line.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/generable_parser.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
+import 'package:cyoap_core/choiceNode/selectable_status.dart';
 import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_core/variable_db.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
@@ -123,7 +124,7 @@ final lineProvider = Provider.autoDispose
     .family<LineSetting?, int>((ref, pos) => getPlatform.getLineSetting(pos));
 
 final lineVisibleProvider = Provider.autoDispose.family<bool, Pos>(
-    (ref, pos) => ref.watch(lineProvider(pos.first))!.choiceStatus.visible);
+    (ref, pos) => ref.watch(lineProvider(pos.first))!.selectableStatus.isOpen());
 
 final _childrenProvider = Provider.autoDispose
     .family<List<GenerableParserAndPosition>, Pos>((ref, pos) {

@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cyoap_core/choiceNode/choice_node.dart';
-import 'package:cyoap_core/choiceNode/choice_status.dart';
 import 'package:cyoap_core/choiceNode/generable_parser.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
+import 'package:cyoap_core/choiceNode/selectable_status.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
@@ -21,7 +21,6 @@ const int removedPositioned = -2;
 void refreshChild(Ref ref, GenerableParserAndPosition node) {
   ref.invalidate(choiceNodeProvider(node.pos));
   ref.invalidate(opacityProvider(node.pos));
-  ref.invalidate(isIgnorePointerProvider(node.pos));
   ref.read(childrenChangeProvider(node.pos).notifier).update();
   for (var child in node.children) {
     refreshChild(ref, child);
@@ -96,22 +95,8 @@ final nodeModeProvider = Provider.family.autoDispose<ChoiceNodeMode, Pos>(
     (ref, pos) => ref.watch(choiceNodeProvider(pos)).node!.choiceNodeMode);
 
 final choiceNodePlayStatusProvider =
-    Provider.family.autoDispose<ChoiceStatus, Pos>((ref, pos) {
-  return ref.watch(choiceNodeProvider(pos)).node!.choiceStatus;
-});
-
-final isIgnorePointerProvider =
-    Provider.family.autoDispose<bool, Pos>((ref, pos) {
-  if (ref.watch(nodeModeProvider(pos)) == ChoiceNodeMode.onlyCode) {
-    return false;
-  }
-  if (ref.watch(nodeModeProvider(pos)) == ChoiceNodeMode.unSelectableMode) {
-    return false;
-  }
-  var choiceStatus = ref.watch(choiceNodePlayStatusProvider(pos));
-  var node = ref.watch(choiceNodeProvider(pos)).node!;
-  return choiceStatus.visible &&
-      choiceStatus.isPointerInteractive(node.isSelectableMode);
+    Provider.family.autoDispose<SelectableStatus, Pos>((ref, pos) {
+  return ref.watch(choiceNodeProvider(pos)).node!.selectableStatus;
 });
 
 final choiceNodeSelectProvider = StateNotifierProvider.family
@@ -125,18 +110,14 @@ class ChoiceNodeSelectNotifier extends StateNotifier<int> {
   ChoiceNodeSelectNotifier(this.ref, this.pos) : super(0);
 
   void select(int n, {Future Function()? showDialogFunction}) {
-    if (!ref.read(isIgnorePointerProvider(pos))) {
-      return;
-    }
-
     var node = ref.read(choiceNodeProvider(pos)).node!;
     node.selectNode(n);
-    state = node.select;
     if (node.random != -1) {
       showDialogFunction!();
       ref.read(randomStateNotifierProvider(pos).notifier).startRandom();
     }
     updateStatusAll(ref, startLine: node.pos.first);
+    state = node.select;
   }
 }
 
@@ -148,21 +129,12 @@ final randomStateNotifierProvider =
 final opacityProvider = Provider.family.autoDispose<double, Pos>((ref, pos) {
   var node = ref.watch(choiceNodeProvider(pos)).node!;
   if (isEditable) return 1;
-  if (!ref.watch(choiceNodePlayStatusProvider(pos)).visible) return 0;
-
-  if (node.isSelectableMode) {
-    if (ref.watch(isIgnorePointerProvider(pos))) {
-      return 1;
-    } else {
-      return 0.4;
-    }
-  } else {
-    if (ref.watch(choiceNodePlayStatusProvider(pos)).isOpen()) {
-      return 1;
-    } else {
-      return 0;
-    }
-  }
+  if (node.choiceNodeMode == ChoiceNodeMode.onlyCode) return 0;
+  if (node.isExecutable()) return 1;
+  var status = ref.watch(choiceNodePlayStatusProvider(pos));
+  if (status.isHide()) return 0;
+  if (status.isClosed()) return 0.4;
+  return 1;
 });
 
 class RandomProvider extends StateNotifier<int> {

@@ -84,7 +84,7 @@ class CheckListNotifier extends StateNotifier<List<CheckList>> {
           if (isEditable) {
             subWidgetList.add(CheckList(name: node.title, pos: node.pos));
           } else {
-            if (node.analyseVisibleCode()) {
+            if (node.checkParentClickable()) {
               subWidgetList.add(CheckList(
                   name: node.title,
                   pos: child.pos,

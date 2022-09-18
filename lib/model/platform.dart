@@ -5,16 +5,9 @@ import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/design_setting.dart';
 import 'package:cyoap_core/grammar/value_type.dart';
 import 'package:cyoap_core/playable_platform.dart';
-import 'package:cyoap_core/variable_db.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 
-class AbstractPlatform {
-  String? stringImageName;
-  List<LineSetting> lineSettings = List.empty(growable: true);
-  Map<String, ValueTypeWrapper> globalSetting = {};
-
-  PlatformDesignSetting designSetting = PlatformDesignSetting();
-
+class AbstractPlatform extends PlayablePlatform {
   void init() {
     checkDataCorrect();
     if (getPlatformFileSystem.isEditable) {
@@ -27,11 +20,12 @@ class AbstractPlatform {
 
   AbstractPlatform.none();
 
-  AbstractPlatform.fromJson(Map<String, dynamic> json)
-      : stringImageName = json['stringImageName'] ?? '',
-        globalSetting = (json['globalSetting'] as Map)
-            .map((k, v) => MapEntry(k, ValueTypeWrapper.fromJson(v))),
-        designSetting = PlatformDesignSetting.fromJson(json);
+  AbstractPlatform.fromJson(Map<String, dynamic> json) {
+    stringImageName = json['stringImageName'] ?? '';
+    globalSetting = (json['globalSetting'] as Map)
+        .map((k, v) => MapEntry(k, ValueTypeWrapper.fromJson(v)));
+    designSetting = PlatformDesignSetting.fromJson(json);
+  }
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> out = {
@@ -84,6 +78,7 @@ class AbstractPlatform {
     checkDataCorrect();
   }
 
+  @override
   GenerableParserAndPosition? getNode(Pos pos) {
     if (pos.first == designSamplePosition0) {
       return ChoiceNode(
@@ -122,29 +117,6 @@ class AbstractPlatform {
     return node;
   }
 
-  GenerableParserAndPosition? getGenerableParserAndPosition(Pos pos) {
-    if (pos.first >= lineSettings.length) return null;
-    GenerableParserAndPosition child = lineSettings[pos.first];
-    for (var i = 1; i < pos.length; i++) {
-      if (child.children.length <= pos.data[i]) {
-        return null;
-      } else if (pos.data[i] < 0) {
-        return null;
-      }
-      child = child.children[pos.data[i]];
-    }
-    return child;
-  }
-
-  ChoiceNode? getChoiceNode(Pos pos) {
-    return getGenerableParserAndPosition(pos) as ChoiceNode?;
-  }
-
-  LineSetting? getLineSetting(int y) {
-    if (lineSettings.length <= y) return null;
-    return lineSettings[y];
-  }
-
   void compress() {
     lineSettings.removeWhere((item) => item.children.isEmpty);
     checkDataCorrect();
@@ -157,29 +129,6 @@ class AbstractPlatform {
       for (int x = 0; x < line.children.length; x++) {
         line.children[x].currentPos = x;
       }
-    }
-  }
-
-  void updateStatusAll({int startLine = 0}) {
-    VariableDataBase().clear();
-    VariableDataBase().varMapGlobal.addAll(globalSetting);
-    var t = Stopwatch()..start();
-    for (var i = startLine; i < lineSettings.length; i++) {
-      var lineSetting = lineSettings[i];
-      lineSetting.initValueTypeWrapper();
-      lineSetting.execute();
-      lineSetting.checkVisible(true);
-      lineSetting.checkClickable(true, true);
-      VariableDataBase().clearLocalVariable();
-    }
-    print(t.elapsedMicroseconds);
-    t.reset();
-    t.stop();
-  }
-
-  void generateRecursiveParser() {
-    for (var lineSetting in lineSettings) {
-      lineSetting.generateParser();
     }
   }
 

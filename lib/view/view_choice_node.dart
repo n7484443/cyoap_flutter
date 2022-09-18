@@ -51,14 +51,7 @@ class ViewChoiceNode extends ConsumerWidget {
     }
     var opacity = ref.watch(opacityProvider(pos));
     if (opacity == 0) {
-      if (ref.watch(choiceNodeDesignSettingProvider(pos)).isOccupySpace) {
-        return Opacity(
-          opacity: opacity,
-          child: ViewChoiceNodeMain(pos, ignoreChild: ignoreChild),
-        );
-      } else {
-        return const SizedBox.shrink();
-      }
+      return const SizedBox.shrink();
     }
     return Opacity(
       opacity: opacity,
@@ -82,9 +75,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
           ? RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4.0),
               side: BorderSide(
-                color: ref.watch(nodeModeProvider(pos)) !=
-                            ChoiceNodeMode.unSelectableMode &&
-                        ref.watch(choiceNodeProvider(pos)).node!.isExecutable()
+                color: node.select > 0
                     ? ref.watch(colorOutlineProvider)
                     : ref.watch(colorNodeProvider),
                 width: ConstList.isSmallDisplay(context) ? 2 : 4,
@@ -92,9 +83,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
             )
           : Border.fromBorderSide(
               BorderSide(
-                color: ref.watch(nodeModeProvider(pos)) !=
-                            ChoiceNodeMode.unSelectableMode &&
-                        ref.watch(choiceNodeProvider(pos)).node!.isExecutable()
+                color: node.select > 0
                     ? ref.watch(colorOutlineProvider)
                     : ref.watch(colorNodeProvider),
                 width: ConstList.isSmallDisplay(context) ? 2 : 4,
@@ -103,8 +92,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
       clipBehavior: Clip.antiAlias,
       margin:
           ConstList.isSmallDisplay(context) ? const EdgeInsets.all(1.4) : null,
-      elevation:
-      design.isCard ? ConstList.elevation : 0,
+      elevation: design.isCard ? ConstList.elevation : 0,
       color: ref.watch(colorNodeProvider),
       child: Ink(
         color: ref.watch(colorNodeProvider),
@@ -122,7 +110,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
                         .changePageString("viewEditor", context);
                   }
                 : null,
-            onTap: !isEditable && ref.watch(isIgnorePointerProvider(pos))
+            onTap: !isEditable
                 ? () {
                     ref.read(choiceNodeSelectProvider(pos).notifier).select(
                           0,
@@ -504,7 +492,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
     }
     child ??= const SizedBox.shrink();
 
-    if (design.imagePosition== 1) {
+    if (design.imagePosition == 1) {
       return Column(
         children: [
           ViewTitleWithEdit(pos),
