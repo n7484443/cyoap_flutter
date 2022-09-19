@@ -113,6 +113,7 @@ void refreshLine(Ref ref, int y) {
   var pos = Pos(data: [y]);
   ref.invalidate(lineProvider(y));
   ref.invalidate(lineLengthProvider);
+  ref.invalidate(lineListProvider);
   ref.invalidate(lineVisibleProvider(pos));
   ref.read(childrenChangeProvider(pos).notifier).update();
   for (var child in ref.read(lineProvider(y))!.children) {
@@ -123,8 +124,8 @@ void refreshLine(Ref ref, int y) {
 final lineProvider = Provider.autoDispose
     .family<LineSetting?, int>((ref, pos) => getPlatform.getLineSetting(pos));
 
-final lineVisibleProvider = Provider.autoDispose.family<bool, Pos>(
-    (ref, pos) => ref.watch(lineProvider(pos.first))!.selectableStatus.isOpen());
+final lineVisibleProvider = Provider.autoDispose.family<bool, Pos>((ref, pos) =>
+    ref.watch(lineProvider(pos.first))!.selectableStatus.isOpen());
 
 final _childrenProvider = Provider.autoDispose
     .family<List<GenerableParserAndPosition>, Pos>((ref, pos) {
@@ -165,3 +166,13 @@ final lineBackgroundColorProvider =
 
 final lineLengthProvider =
     Provider.autoDispose<int>((ref) => getPlatform.lineSettings.length);
+
+final lineListProvider = Provider.autoDispose<List<int>>((ref) {
+  if (isEditable) {
+    return getPlatform.lineSettings.map((e) => e.currentPos).toList();
+  }
+  return getPlatform.lineSettings
+      .where((e) => e.selectableStatus.isOpen())
+      .map((e) => e.currentPos)
+      .toList();
+});

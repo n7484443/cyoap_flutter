@@ -375,95 +375,75 @@ class _NestedMapState extends ConsumerState<NestedMap> {
   Widget build(BuildContext context) {
     ref.listen<double?>(
         dragPositionProvider, (previous, next) => dragUpdate(next));
-    var lineLength = ref.watch(lineLengthProvider) * 2 + (isEditable ? 2 : 1);
-    if (ConstList.isWeb() && !ConstList.isSmallDisplay(context)) {
-      return WebSmoothScroll(
-        controller: _scrollController!,
-        scrollOffset: 100,
-        animationDuration: 150,
-        child: ListView.builder(
-          key: const PageStorageKey(0),
-          physics: const NeverScrollableScrollPhysics(),
-          controller: _scrollController,
-          itemCount: lineLength,
-          itemBuilder: (BuildContext context, int index) {
-            var y = index ~/ 2;
-            if (index.isEven) {
-              if (y >= ref.watch(lineLengthProvider) && !isEditable) {
-                return SizedBox(
-                  height: 400,
-                  child: TextButton(
-                      onPressed: () => showDialog(
-                          context: context,
-                          builder: (context) => const Dialog(
-                                child: ViewSelectedGrid(),
-                              )),
-                      child: const Text("요약")),
-                );
-              }
-              return NodeDivider(y);
-            }
-            if (y >= ref.watch(lineLengthProvider)) {
-              return Visibility(
-                visible: ref.watch(dragChoiceNodeProvider) != null,
-                child: NodeDragTarget(
-                  Pos(data: [y]).addLast(0),
-                  isHorizontal: true,
-                ),
-              );
-            }
-            var color = ref.watch(lineBackgroundColorProvider(y));
-            if (color != null) {
-              return ColoredBox(color: color, child: ChoiceLine(y));
-            }
-            return ChoiceLine(y);
-          },
-          cacheExtent: 200,
-        ),
-      );
-    }
+    var lineList = ref.watch(lineListProvider);
+    var lineLength = ref.watch(lineLengthProvider);
 
-    return ListView.builder(
+    var smoothScroll = ConstList.isWeb() && !ConstList.isSmallDisplay(context);
+
+    var listBuilder = ListView.builder(
       key: const PageStorageKey(0),
+      physics: smoothScroll ? const NeverScrollableScrollPhysics() : null,
       controller: _scrollController,
-      itemCount: lineLength,
+      itemCount: lineList.length * 2 + (isEditable ? 2 : 1),
       itemBuilder: (BuildContext context, int index) {
-        var y = index ~/ 2;
-        if (index.isEven) {
-          if (y >= ref.watch(lineLengthProvider) && !isEditable) {
-            return SizedBox(
-              height: 40,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
+        if (index >= lineList.length * 2) {
+          if (isEditable) {
+            if (index.isEven) {
+              return NodeDivider(lineLength);
+            }
+            return Visibility(
+              visible: ref.watch(dragChoiceNodeProvider) != null,
+              child: NodeDragTarget(
+                Pos(data: [lineLength]).addLast(0),
+                isHorizontal: true,
+              ),
+            );
+          } else {
+            return Column(
+              children: [
+                SizedBox(
+                  height: 50,
+                  child: TextButton(
                     onPressed: () => showDialog(
                         context: context,
                         builder: (context) => const Dialog(
                               child: ViewSelectedGrid(),
                             )),
-                    child: const Text("요약")),
-              ),
+                    child: const Text("요약"),
+                  ),
+                ),
+                const SizedBox(
+                  height: 50,
+                )
+              ],
             );
           }
-          return NodeDivider(y);
         }
-        if (y >= ref.watch(lineLengthProvider)) {
-          return Visibility(
-            visible: ref.watch(dragChoiceNodeProvider) != null,
-            child: NodeDragTarget(
-              Pos(data: [y]).addLast(0),
-              isHorizontal: true,
-            ),
-          );
+
+        var pos = lineList[index ~/ 2];
+        if (index.isEven) {
+          return NodeDivider(pos);
+        } else {
+          var color = ref.watch(lineBackgroundColorProvider(pos));
+          if (color != null) {
+            return ColoredBox(color: color, child: ChoiceLine(pos));
+          }
+          return ChoiceLine(pos);
         }
-        var color = ref.watch(lineBackgroundColorProvider(y));
-        if (color != null) {
-          return ColoredBox(color: color, child: ChoiceLine(y));
-        }
-        return ChoiceLine(y);
       },
       cacheExtent: 200,
     );
+
+    if (ConstList.isWeb() && !ConstList.isSmallDisplay(context)) {
+      return WebSmoothScroll(
+        controller: _scrollController!,
+        scrollOffset: 100,
+        animationDuration: 150,
+        child: listBuilder,
+      );
+    }
+
+    return listBuilder;
   }
 }
 
