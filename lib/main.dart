@@ -133,14 +133,6 @@ class ConstList {
     "Black And White Picture": GoogleFonts.blackAndWhitePicture(
         color: Colors.black,
         fontFeatures: const [FontFeature.proportionalFigures()]),
-    "메이플스토리체": const TextStyle(
-        fontFamily: 'MapleStory',
-        color: Colors.black,
-        fontFeatures: [FontFeature.proportionalFigures()]),
-    "넥슨 Lv2 고딕": const TextStyle(
-        fontFamily: 'NexonLv2Gothic',
-        color: Colors.black,
-        fontFeatures: [FontFeature.proportionalFigures()]),
     "Neo 둥근모": const TextStyle(
         fontFamily: 'NeoDGM',
         color: Colors.black,
