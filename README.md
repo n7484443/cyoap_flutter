@@ -2,8 +2,9 @@
 <img src="https://img.shields.io/github/v/release/n7484443/FlutterCyoap"></img>
 [![pages-build-deployment](https://github.com/n7484443/FlutterCyoap/actions/workflows/pages/pages-build-deployment/badge.svg?branch=gh-pages)](https://github.com/n7484443/FlutterCyoap/actions/workflows/pages/pages-build-deployment)
 
-[web 버전](https://n7484443.github.io/FlutterCyoap/)
+[cyoap web](https://n7484443.github.io/FlutterCyoap/)
 
+[web 배포용 뷰어](https://github.com/n7484443/cyoap_vue/releases/tag/v0.1.0)
 ## 목차
 1. [프로젝트 파일 형식](#프로젝트-파일-형식)
 
