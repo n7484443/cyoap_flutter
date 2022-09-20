@@ -528,30 +528,15 @@ class ViewChoiceNodeContent extends ConsumerWidget {
         ],
       );
     }
-    List<Widget> subWidget;
-    if (ref.watch(titleOverlapProvider)) {
-      subWidget = [
-        Stack(
-          alignment: ref.watch(titlePositionProvider)
-              ? Alignment.topCenter
-              : Alignment.bottomCenter,
-          children: [
+    List<Widget> subWidget = ref.watch(titlePositionProvider)
+        ? [
+            ViewTitleWithEdit(pos),
+            image,
+          ]
+        : [
             image,
             ViewTitleWithEdit(pos),
-          ],
-        ),
-      ];
-    } else if (ref.watch(titlePositionProvider)) {
-      subWidget = [
-        ViewTitleWithEdit(pos),
-        image,
-      ];
-    } else {
-      subWidget = [
-        image,
-        ViewTitleWithEdit(pos),
-      ];
-    }
+          ];
 
     subWidget.addAll([
       ViewContents(pos),

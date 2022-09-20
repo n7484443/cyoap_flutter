@@ -37,11 +37,6 @@ class ViewDesignSetting extends ConsumerWidget {
           getPlatform.designSetting.copyWith(titlePosition: next);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
-    ref.listen(titleOverlapProvider, (bool? previous, bool next) {
-      getPlatform.designSetting =
-          getPlatform.designSetting.copyWith(titleOverlap: next);
-      ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-    });
     ref.listen(titleOutlineProvider, (bool? previous, bool next) {
       getPlatform.designSetting =
           getPlatform.designSetting.copyWith(titleOutline: next);
@@ -98,13 +93,6 @@ class ViewDesignSetting extends ConsumerWidget {
                     ),
                     Column(
                       children: [
-                        ViewSwitchLabel(
-                          label: "제목을 이미지 위에 겹치기",
-                          () => ref
-                              .read(titleOverlapProvider.notifier)
-                              .update((state) => !state),
-                          ref.watch(titleOverlapProvider),
-                        ),
                         ViewSwitchLabel(
                           label: "제목을 위로",
                           () => ref
