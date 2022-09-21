@@ -4,6 +4,7 @@ import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/viewModel/vm_editor.dart';
 import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -73,13 +74,16 @@ class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
   @override
   void initState() {
     _controller.addListener(() {
-      ref.read(searchProvider.notifier).state = _controller.text;
+      EasyDebounce.debounce('search', const Duration(milliseconds: 500), () {
+        ref.read(searchProvider.notifier).state = _controller.text;
+      });
     });
     super.initState();
   }
 
   @override
   void dispose() {
+    EasyDebounce.cancel('search');
     _controller.dispose();
     super.dispose();
   }
@@ -151,13 +155,16 @@ class _ViewPlayDrawerState extends ConsumerState<ViewPlayDrawer> {
   @override
   void initState() {
     _controller.addListener(() {
-      ref.read(searchProvider.notifier).state = _controller.text;
+      EasyDebounce.debounce('search', const Duration(milliseconds: 500), () {
+        ref.read(searchProvider.notifier).state = _controller.text;
+      });
     });
     super.initState();
   }
 
   @override
   void dispose() {
+    EasyDebounce.cancel('search');
     _controller.dispose();
     super.dispose();
   }
