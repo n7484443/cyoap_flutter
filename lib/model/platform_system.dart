@@ -18,7 +18,7 @@ class PlatformSystem {
   static final PlatformFileSystem platformFileSystem = PlatformFileSystem();
 
   Future<void> openPlatformZipForWeb(PlatformFile? file) async {
-    if(file == null){
+    if (file == null) {
       await PlatformSystem().openPlatformVoid();
       return;
     }

@@ -330,6 +330,7 @@ class NestedScroll extends ConsumerWidget {
     );
   }
 }
+
 class AdjustableScrollController extends ScrollController {
   AdjustableScrollController([int extraScrollSpeed = 20]) {
     super.addListener(() {
@@ -378,9 +379,9 @@ class _NestedMapState extends ConsumerState<NestedMap> {
 
   @override
   void initState() {
-    if(ConstList.isDesktop()){
+    if (ConstList.isDesktop()) {
       _scrollController = AdjustableScrollController();
-    }else{
+    } else {
       _scrollController = ScrollController();
     }
     super.initState();

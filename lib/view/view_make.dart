@@ -151,10 +151,8 @@ class ViewMake extends ConsumerWidget {
         ],
       ),
       actions: [
-        if (ConstList.isMobile())
-          const ViewRefreshIcons(),
-        if (ConstList.isMobile())
-          const ViewSaveIcons()
+        if (ConstList.isMobile()) const ViewRefreshIcons(),
+        if (ConstList.isMobile()) const ViewSaveIcons()
       ],
     );
 

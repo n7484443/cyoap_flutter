@@ -35,7 +35,7 @@ class ProjectPath {
     return "/storage/emulated/0/Download";
   }
 
-  void removeFolder(String path) async{
+  void removeFolder(String path) async {
     var directory = Directory(path);
     await directory.delete(recursive: true);
   }

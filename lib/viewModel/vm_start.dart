@@ -57,7 +57,7 @@ class PathListNotifier extends StateNotifier<List<String>> {
       type: FileType.custom,
       allowedExtensions: ['zip', 'json'],
     );
-    if(result == null)return -1;
+    if (result == null) return -1;
 
     var data = result.files.single;
     if (ConstList.isWeb()) {
@@ -77,7 +77,7 @@ class PathListNotifier extends StateNotifier<List<String>> {
       PlatformSystem().openPlatformZipForWeb(ref.watch(pathListFileProvider));
       return true;
     }
-    if (index == -1 || index >= state.length){
+    if (index == -1 || index >= state.length) {
       return false;
     }
     var path = state[index];
