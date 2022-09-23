@@ -378,7 +378,11 @@ class _NestedMapState extends ConsumerState<NestedMap> {
 
   @override
   void initState() {
-    _scrollController = AdjustableScrollController();
+    if(ConstList.isDesktop()){
+      _scrollController = AdjustableScrollController();
+    }else{
+      _scrollController = ScrollController();
+    }
     super.initState();
   }
 
