@@ -151,49 +151,10 @@ class ViewMake extends ConsumerWidget {
         ],
       ),
       actions: [
-        IconButton(
-          icon: const Icon(Icons.play_arrow),
-          tooltip: '변수 목록 갱신',
-          onPressed: () {
-            getPlatform.generateRecursiveParser();
-            getPlatform.updateStatusAll();
-          },
-        ),
-        PopupMenuButton(
-          icon: const Icon(Icons.save),
-          tooltip: '저장 관련 옵션',
-          onSelected: (int selected) {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) =>
-                    ViewSaveDialog(selected != 0),
-                barrierDismissible: false);
-            switch (selected) {
-              case 0:
-                savePlatform(ref, false)
-                    .then((value) => Navigator.of(context).pop());
-                break;
-              case 1:
-                savePlatform(ref, true)
-                    .then((value) => Navigator.of(context).pop());
-                break;
-            }
-          },
-          itemBuilder: (BuildContext context) {
-            return [
-              if (!getPlatformFileSystem.openAsFile)
-                const PopupMenuItem(
-                  value: 0,
-                  child: Text('저장'),
-                ),
-              PopupMenuItem(
-                value: 1,
-                child: Text(
-                    '${ConstList.isMobile() ? 'download 폴더에 ' : ''}zip 파일로 추출'),
-              ),
-            ];
-          },
-        )
+        if (ConstList.isMobile())
+          const ViewRefreshIcons(),
+        if (ConstList.isMobile())
+          const ViewSaveIcons()
       ],
     );
 
@@ -205,6 +166,66 @@ class ViewMake extends ConsumerWidget {
         appBar: appbarWidget,
         body: const NestedScroll(),
       ),
+    );
+  }
+}
+
+class ViewRefreshIcons extends ConsumerWidget {
+  const ViewRefreshIcons({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return IconButton(
+      icon: const Icon(Icons.play_arrow),
+      tooltip: '변수 목록 갱신',
+      onPressed: () {
+        getPlatform.generateRecursiveParser();
+        getPlatform.updateStatusAll();
+      },
+    );
+  }
+}
+
+class ViewSaveIcons extends ConsumerWidget {
+  const ViewSaveIcons({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return PopupMenuButton(
+      icon: const Icon(Icons.save),
+      tooltip: '저장 관련 옵션',
+      onSelected: (int selected) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) => ViewSaveDialog(selected != 0),
+            barrierDismissible: false);
+        switch (selected) {
+          case 0:
+            savePlatform(ref, false)
+                .then((value) => Navigator.of(context).pop());
+            break;
+          case 1:
+            savePlatform(ref, true)
+                .then((value) => Navigator.of(context).pop());
+            break;
+        }
+      },
+      itemBuilder: (BuildContext context) {
+        return [
+          if (!getPlatformFileSystem.openAsFile)
+            const PopupMenuItem(
+              value: 0,
+              child: Text('저장'),
+            ),
+          PopupMenuItem(
+            value: 1,
+            child: Text(
+                '${ConstList.isMobile() ? 'download 폴더에 ' : ''}zip 파일로 추출'),
+          ),
+        ];
+      },
     );
   }
 }

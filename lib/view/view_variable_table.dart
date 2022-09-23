@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
+import 'package:cyoap_flutter/view/view_make.dart';
 import 'package:cyoap_flutter/viewModel/vm_editor.dart';
 import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
 import 'package:easy_debounce/easy_debounce.dart';
@@ -93,6 +94,14 @@ class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        if (ConstList.isDesktop())
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              const ViewSaveIcons(),
+              const ViewRefreshIcons(),
+            ],
+          ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: TextField(
@@ -102,8 +111,13 @@ class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
             ),
           ),
         ),
-        const Flexible(
-          child: ViewSearchTable(),
+        Flexible(
+          child: ListView(
+            children: [
+              const VariableTiles(),
+              const NodeTiles(),
+            ],
+          ),
         ),
         Column(
           children: [
@@ -184,8 +198,12 @@ class _ViewPlayDrawerState extends ConsumerState<ViewPlayDrawer> {
               ),
             ),
           ),
-        const Flexible(
-          child: ViewSearchTable(),
+        Flexible(
+          child: ListView(
+            children: [
+              const VariableTiles(),
+            ],
+          ),
         ),
         Column(
           children: [
@@ -214,22 +232,6 @@ class _ViewPlayDrawerState extends ConsumerState<ViewPlayDrawer> {
             const ViewChangeRotation()
           ],
         ),
-      ],
-    );
-  }
-}
-
-class ViewSearchTable extends ConsumerWidget {
-  const ViewSearchTable({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return ListView(
-      children: [
-        const VariableTiles(),
-        const NodeTiles(),
       ],
     );
   }
@@ -338,54 +340,36 @@ class NodeTiles extends ConsumerWidget {
     var search = ref.watch(searchProvider);
     var nodeList = ref.watch(checkListNotifierProvider);
     var widgetList = List<Widget>.empty(growable: true);
-    var iconCheckBox = const Icon(Icons.check_box);
-    var iconCheckBoxBlank = const Icon(Icons.check_box_outline_blank);
     for (var node in nodeList) {
       List<Widget> children = [];
 
       var nodeChildren = node.children;
       if (nodeChildren != null) {
-        if (isEditable) {
-          children = nodeChildren
-              .where((element) =>
-                  search.isEmpty ||
-                  (search.isNotEmpty && element.name.contains(search)))
-              .map(
-                (e) => ListTile(
-                  title: Text(e.name),
-                  onTap: () {
-                    if (tabList[ref.watch(changeTabProvider)] == "viewEditor") {
-                      var vmCodeEditor =
-                          ref.read(editorChangeProvider.notifier);
-                      if (vmCodeEditor.lastFocus != null) {
-                        vmCodeEditor.insertText(vmCodeEditor.lastFocus!,
-                            e.name.replaceAll(" ", "").trim());
-                      }
-                    } else if (e.pos.length > 1) {
-                      ref.read(nodeEditorTargetPosProvider.notifier).state =
-                          e.pos;
-                      ref
-                          .read(changeTabProvider.notifier)
-                          .changePageString("viewEditor", context);
+        children = nodeChildren
+            .where((element) =>
+                search.isEmpty ||
+                (search.isNotEmpty && element.name.contains(search)))
+            .map(
+              (e) => ListTile(
+                title: Text(e.name),
+                onTap: () {
+                  if (tabList[ref.watch(changeTabProvider)] == "viewEditor") {
+                    var vmCodeEditor = ref.read(editorChangeProvider.notifier);
+                    if (vmCodeEditor.lastFocus != null) {
+                      vmCodeEditor.insertText(vmCodeEditor.lastFocus!,
+                          e.name.replaceAll(" ", "").trim());
                     }
-                  },
-                ),
-              )
-              .toList();
-        } else {
-          children = nodeChildren
-              .where((element) =>
-                  search.isEmpty ||
-                  (search.isNotEmpty && element.name.contains(search)))
-              .map(
-                (e) => ListTile(
-                  title: Text(e.name),
-                  trailing:
-                      (e.check ?? false) ? iconCheckBox : iconCheckBoxBlank,
-                ),
-              )
-              .toList();
-        }
+                  } else if (e.pos.length > 1) {
+                    ref.read(nodeEditorTargetPosProvider.notifier).state =
+                        e.pos;
+                    ref
+                        .read(changeTabProvider.notifier)
+                        .changePageString("viewEditor", context);
+                  }
+                },
+              ),
+            )
+            .toList();
       }
       if (children.isNotEmpty) {
         widgetList.add(

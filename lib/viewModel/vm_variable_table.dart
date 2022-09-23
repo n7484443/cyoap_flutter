@@ -81,16 +81,7 @@ class CheckListNotifier extends StateNotifier<List<CheckList>> {
       List<CheckList> subWidgetList = List.empty(growable: true);
       for (var child in line.children) {
         (child as ChoiceNode).doAllChild((node) {
-          if (isEditable) {
-            subWidgetList.add(CheckList(name: node.title, pos: node.pos));
-          } else {
-            if (node.checkParentClickable()) {
-              subWidgetList.add(CheckList(
-                  name: node.title,
-                  pos: child.pos,
-                  check: node.isExecutable()));
-            }
-          }
+          subWidgetList.add(CheckList(name: node.title, pos: node.pos));
         });
       }
       nodeList.add(CheckList(
