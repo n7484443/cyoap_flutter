@@ -141,7 +141,7 @@ class _ViewProjectListState extends ConsumerState<ViewProjectList> {
   void initState() {
     super.initState();
     if (!ConstList.isWeb()) {
-      ref.read(pathListProvider.notifier).updatePathList().then(
+      ref.read(pathListProvider.notifier).updateFromData().then(
           (value) => ref.read(isLoadingStateProvider.notifier).state = false);
     }
   }
@@ -285,7 +285,7 @@ class _ViewAddProjectDialogState extends ConsumerState<ViewAddProjectDialog> {
               var path = await ProjectPath.getProjectFolder(
                   _textEditingController?.text);
               await Directory(path).create(recursive: true);
-              await ref.read(pathListProvider.notifier).updatePathList();
+              await ref.read(pathListProvider.notifier).updateFromData();
             }
           },
           child: const Text('생성'),

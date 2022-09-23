@@ -14,8 +14,6 @@ class ProjectPath {
 
   ProjectPath._init();
 
-  List<String> pathList = List.empty(growable: true);
-
   Future<bool> get androidVersion async {
     var deviceInfoPlugin = DeviceInfoPlugin();
     var androidInfo = await deviceInfoPlugin.androidInfo;
@@ -37,6 +35,11 @@ class ProjectPath {
     return "/storage/emulated/0/Download";
   }
 
+  void removeFolder(String path) async{
+    var directory = Directory(path);
+    await directory.delete(recursive: true);
+  }
+
   Future<List<String>> get frequentPathFromData async {
     if (ConstList.isMobile()) {
       var dir = await getProjectFolder(null);
@@ -44,37 +47,16 @@ class ProjectPath {
       if (!await directory.exists()) {
         await directory.create();
       }
-      pathList.clear();
-      for (var sub in directory.listSync()) {
-        pathList.add(sub.path);
-      }
+      return directory.listSync().map((e) => e.path).toList();
     } else {
       var prefs = await SharedPreferences.getInstance();
-      pathList = prefs.getStringList('cyoap_frequent_path') ?? [];
+      return prefs.getStringList('cyoap_frequent_path') ?? [];
     }
-    return pathList;
   }
 
-  Future<bool> setFrequentPathFromData(List<String> list) async {
+  Future<bool> setFrequentPathFromData(List<String> pathList) async {
     var prefs = await SharedPreferences.getInstance();
-    return prefs.setStringList('cyoap_frequent_path', list);
-  }
-
-  Future<void> addFrequentPath(String path) async {
-    pathList.add(path);
-    await setFrequentPathFromData(pathList.toList());
-  }
-
-  Future<void> removeFrequentPath(int index) async {
-    if (ConstList.isMobile()) {
-      var dir = Directory(pathList[index]);
-      await dir.delete(recursive: true);
-      pathList = await frequentPathFromData;
-    } else {
-      pathList = await frequentPathFromData;
-      pathList.removeAt(index);
-      await setFrequentPathFromData(pathList.toList());
-    }
+    return prefs.setStringList('cyoap_frequent_path', pathList);
   }
 
   Future<bool> getSaveAsWebp() async {

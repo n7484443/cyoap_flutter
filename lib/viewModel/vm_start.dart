@@ -24,20 +24,29 @@ final pathListProvider = StateNotifierProvider<PathListNotifier, List<String>>(
     (ref) => PathListNotifier(ref));
 
 final pathListSelectedProvider = StateProvider<int>((ref) => -1);
+final pathListFileProvider = StateProvider<PlatformFile?>((ref) => null);
 
 final isLoadingStateProvider =
     StateProvider<bool>((ref) => ConstList.isWeb() ? false : true);
 
 class PathListNotifier extends StateNotifier<List<String>> {
   Ref ref;
-  List<Future<void>> isAdded = List.empty(growable: true);
+
   PathListNotifier(this.ref) : super([]);
+
+  Future<void> updateFromState() async {
+    ProjectPath().setFrequentPathFromData(state);
+  }
+
+  Future<void> updateFromData() async {
+    state = await ProjectPath().frequentPathFromData;
+  }
 
   Future<bool> addDirectory() async {
     String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
     if (selectedDirectory != null) {
-      ProjectPath().addFrequentPath(selectedDirectory);
-      state = List.from(ProjectPath().pathList);
+      state = [...state, selectedDirectory];
+      updateFromState();
       return true;
     }
     return false;
@@ -48,76 +57,68 @@ class PathListNotifier extends StateNotifier<List<String>> {
       type: FileType.custom,
       allowedExtensions: ['zip', 'json'],
     );
-    if (result != null) {
-      if (ConstList.isWeb()) {
-        isAdded
-            .add(PlatformSystem().openPlatformZipForWeb(result.files.single));
-        state = [...state, result.files.single.name];
-      } else {
-        ProjectPath().addFrequentPath(result.files.single.path!);
-        state = [...ProjectPath().pathList];
-      }
-      return 0;
+    if(result == null)return -1;
+
+    var data = result.files.single;
+    if (ConstList.isWeb()) {
+      ref.read(pathListFileProvider.notifier).state = data;
+      state = [data.name];
+    } else {
+      state = [...state, data.path!];
+      updateFromState();
     }
-    return -1;
+    return 0;
   }
 
   Future<bool> openProject() async {
     ImageDB().clearImageCache();
-    var selected = ref.read(pathListSelectedProvider);
-    if (selected >= 0) {
-      await Future.wait(isAdded);
-
-      isAdded.clear();
-      if (ConstList.isWeb()) {
-        return true;
-      }
-      var path = state[selected];
-      if (path.isNotEmpty) {
-        if (path.endsWith('.zip')) {
-          var file = File(path);
-          if (!await file.exists()) {
-            return false;
-          }
-          await PlatformSystem().openPlatformZip(file);
-        } else if (path.endsWith('.json')) {
-          var file = File(path);
-          if (!await file.exists()) {
-            return false;
-          }
-          await PlatformSystem().openPlatformJson(file);
-        } else {
-          var dir = Directory(path);
-          if (!await dir.exists()) {
-            return false;
-          }
-          await PlatformSystem().openPlatformFolder(path);
-        }
-        return true;
-      }
-    } else if (ConstList.isWeb()) {
-      await PlatformSystem().openPlatformVoid();
+    var index = ref.read(pathListSelectedProvider);
+    if (ConstList.isWeb()) {
+      PlatformSystem().openPlatformZipForWeb(ref.watch(pathListFileProvider));
       return true;
     }
-    return false;
+    if (index == -1 || index >= state.length){
+      return false;
+    }
+    var path = state[index];
+    if (path.endsWith('.zip')) {
+      var file = File(path);
+      if (!await file.exists()) {
+        state.removeAt(index);
+        state = [...state];
+        updateFromState();
+        return false;
+      }
+      await PlatformSystem().openPlatformZip(file);
+      return true;
+    }
+    if (path.endsWith('.json')) {
+      var file = File(path);
+      if (!await file.exists()) {
+        return false;
+      }
+      await PlatformSystem().openPlatformJson(file);
+      return true;
+    }
+    var dir = Directory(path);
+    if (!await dir.exists()) {
+      return false;
+    }
+    await PlatformSystem().openPlatformFolder(path);
+    return true;
   }
 
   Future<void> removeFrequentPath(
       int index, Future<bool?> Function() dialog) async {
-    if (!ConstList.isMobile()) {
-      await ProjectPath().removeFrequentPath(index);
-      state = List.from(ProjectPath().pathList);
-      await updatePathList();
-    } else {
-      if (await dialog() ?? false) {
-        await ProjectPath().removeFrequentPath(index);
-        await updatePathList();
+    if (ConstList.isMobile()) {
+      if (!(await dialog() ?? false)) {
+        return;
       }
+      ProjectPath().removeFolder(state[index]);
     }
-  }
-
-  Future<void> updatePathList() async {
-    state = List.from(await ProjectPath().frequentPathFromData);
+    state.removeAt(index);
+    state = [...state];
+    updateFromState();
   }
 
   set select(int index) {
