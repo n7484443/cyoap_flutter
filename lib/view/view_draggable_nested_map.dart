@@ -11,6 +11,7 @@ import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/view/view_selected_grid.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 
@@ -329,6 +330,22 @@ class NestedScroll extends ConsumerWidget {
     );
   }
 }
+class AdjustableScrollController extends ScrollController {
+  AdjustableScrollController([int extraScrollSpeed = 20]) {
+    super.addListener(() {
+      ScrollDirection scrollDirection = super.position.userScrollDirection;
+      if (scrollDirection != ScrollDirection.idle) {
+        double scrollEnd = super.offset +
+            (scrollDirection == ScrollDirection.reverse
+                ? extraScrollSpeed
+                : -extraScrollSpeed);
+        scrollEnd = min(super.position.maxScrollExtent,
+            max(super.position.minScrollExtent, scrollEnd));
+        jumpTo(scrollEnd);
+      }
+    });
+  }
+}
 
 class NestedMap extends ConsumerStatefulWidget {
   const NestedMap({
@@ -361,7 +378,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
 
   @override
   void initState() {
-    _scrollController = ScrollController();
+    _scrollController = AdjustableScrollController();
     super.initState();
   }
 
