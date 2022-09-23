@@ -23,11 +23,8 @@ class PlatformFileSystem {
   Map<String, String> get imageSource => _imageSource;
 
   bool openAsFile = false;
-  bool _isEditable = true;
+  bool isEditable = true;
 
-  bool get isEditable => ConstList.isDistributed ? false : _isEditable;
-
-  set isEditable(bool input) => _isEditable = input;
   String? path;
 
   PlatformFileSystem();

@@ -3,9 +3,6 @@ import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../main.dart';
-import '../viewModel/vm_platform.dart';
 import '../viewModel/vm_snackbar.dart';
 
 class ViewPlay extends ConsumerStatefulWidget {
@@ -46,29 +43,11 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
 
   @override
   void initState() {
-    if (ConstList.isDistributed) {
-      doDistributeMode(ref);
-    }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (ConstList.isDistributed && !ref.watch(loadedProvider)) {
-      return Scaffold(
-        body: Center(
-          child: Column(
-            children: [
-              const CircularProgressIndicator(),
-              const Text('로딩중입니다. 잠시만 기다려주세요.'),
-              Text(ref.watch(loadStringProvider)),
-              Text(ref.watch(stopWatchProvider)),
-            ],
-          ),
-        ),
-      );
-    }
-
     ref.listen(
       snackBarErrorProvider,
       (previous, List<String> next) {
@@ -79,15 +58,12 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
     );
 
     return Scaffold(
-      appBar: ConstList.isDistributed
-          ? null
-          : AppBar(
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () =>
-                    Navigator.of(context).pushReplacementNamed("/"),
-              ),
-            ),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pushReplacementNamed("/"),
+        ),
+      ),
       endDrawer: const Drawer(
         child: ViewPlayDrawer(),
       ),

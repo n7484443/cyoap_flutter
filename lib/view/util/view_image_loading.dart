@@ -1,7 +1,6 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
-import '../../main.dart';
 import '../../model/image_db.dart';
 
 class ViewImageLoading extends StatelessWidget {
@@ -12,14 +11,6 @@ class ViewImageLoading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (ConstList.isDistributed) {
-      return ExtendedImage.network(
-        '/dist/images/$name',
-        filterQuality: FilterQuality.high,
-        isAntiAlias: true,
-        fit: boxFit,
-      );
-    }
     var image = ImageDB().getImage(name);
     if (image != null) {
       var output = ExtendedImage.memory(

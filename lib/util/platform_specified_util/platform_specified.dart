@@ -11,7 +11,6 @@ abstract class PlatformSpecified {
   factory PlatformSpecified() {
     return _instance;
   }
-  late final Distribute? distribute;
   late final SaveProject? saveProject;
   void init() {}
   void preInit() {}

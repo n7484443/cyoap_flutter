@@ -4,9 +4,9 @@ import 'dart:ui';
 
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart'
     deferred as platform_specified;
-import 'package:cyoap_flutter/view/view_make_platform.dart' deferred as v_make;
-import 'package:cyoap_flutter/view/view_play.dart' deferred as v_play;
-import 'package:cyoap_flutter/view/view_start.dart' deferred as v_start;
+import 'package:cyoap_flutter/view/view_make_platform.dart';
+import 'package:cyoap_flutter/view/view_play.dart';
+import 'package:cyoap_flutter/view/view_start.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -20,15 +20,13 @@ import 'package:tuple/tuple.dart';
 import 'color_schemes.g.dart';
 
 class ConstList {
-  static const bool isDistributed =
-      bool.fromEnvironment("isDistributed", defaultValue: false);
   static const double appBarSize = 38.0;
   static const double elevation = 6.0;
   static const double padding = 8.0;
   static const double paddingSmall = 4.0;
 
   static bool isWeb() {
-    return isDistributed || kIsWeb;
+    return kIsWeb;
   }
 
   static bool isMobile() {
@@ -41,9 +39,7 @@ class ConstList {
 
   static bool isRotatable(BuildContext context) {
     return ConstList.isMobile() ||
-        (ConstList.isWeb() &&
-            ConstList.isSmallDisplay(context) &&
-            !ConstList.isDistributed);
+        (ConstList.isWeb() && ConstList.isSmallDisplay(context));
   }
 
   static double getScreenWidth(BuildContext context) {
@@ -160,11 +156,6 @@ const String sentryDsn =
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   ConstList.preInit().then((value) async {
-    await v_play.loadLibrary();
-    if (!ConstList.isDistributed) {
-      await v_start.loadLibrary();
-      await v_make.loadLibrary();
-    }
     runZonedGuarded(() async {
       await SentryFlutter.init(
         (options) {
@@ -176,13 +167,11 @@ void main() {
             child: MaterialApp(
               title: 'CYOAP',
               initialRoute: '/',
-              routes: ConstList.isDistributed
-                  ? {'/': (context) => v_play.ViewPlay()}
-                  : {
-                      '/': (context) => v_start.ViewStart(),
-                      '/viewPlay': (context) => v_play.ViewPlay(),
-                      '/viewMake': (context) => v_make.ViewMakePlatform(),
-                    },
+              routes: {
+                '/': (context) => const ViewStart(),
+                '/viewPlay': (context) => const ViewPlay(),
+                '/viewMake': (context) => const ViewMakePlatform(),
+              },
               theme: appThemeLight,
               darkTheme: appThemeDark,
               themeMode: ThemeMode.light,

@@ -5,7 +5,6 @@ import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/generable_parser.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/choiceNode/selectable_status.dart';
-import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_snackbar.dart';
@@ -60,7 +59,6 @@ final choiceNodeDesignSettingProvider =
 final imageStringProvider =
     Provider.family.autoDispose<String, Pos>((ref, pos) {
   var node = ref.watch(choiceNodeProvider(pos)).node!;
-  if (ConstList.isDistributed) return node.imageString;
   if (!ImageDB().contains(node.imageString) && node.imageString.isNotEmpty) {
     if (node.imageString != "noImage") {
       node.imageString = "";
