@@ -188,11 +188,12 @@ class ViewControlPanel extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var title = ref.watch(nodeTitleProvider);
     var design = ref.watch(nodeEditorDesignProvider);
+    var nodeMode = ref.watch(nodeModeProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         DropdownButton<ChoiceNodeMode>(
-          value: ref.watch(nodeModeProvider),
+          value: nodeMode,
           items: const [
             DropdownMenuItem(
                 value: ChoiceNodeMode.defaultMode, child: Text('기본')),
@@ -210,7 +211,7 @@ class ViewControlPanel extends ConsumerWidget {
           },
         ),
         Visibility(
-          visible: ref.watch(nodeModeProvider) == ChoiceNodeMode.randomMode,
+          visible: nodeMode == ChoiceNodeMode.randomMode,
           child: SizedBox(
             width: 120,
             child: Column(children: [
@@ -232,7 +233,7 @@ class ViewControlPanel extends ConsumerWidget {
           ),
         ),
         Visibility(
-          visible: ref.watch(nodeModeProvider) == ChoiceNodeMode.multiSelect,
+          visible: nodeMode == ChoiceNodeMode.multiSelect,
           child: SizedBox(
             width: 120,
             child: Column(children: [
@@ -254,7 +255,7 @@ class ViewControlPanel extends ConsumerWidget {
           ),
         ),
         Visibility(
-          visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
+          visible: nodeMode != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
             () => ref
                 .read(nodeEditorDesignProvider.notifier)
@@ -264,7 +265,7 @@ class ViewControlPanel extends ConsumerWidget {
           ),
         ),
         Visibility(
-          visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
+          visible: nodeMode != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
             () => ref
                 .read(nodeEditorDesignProvider.notifier)
@@ -274,7 +275,7 @@ class ViewControlPanel extends ConsumerWidget {
           ),
         ),
         Visibility(
-          visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
+          visible: nodeMode != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
             () => ref.read(nodeEditorDesignProvider.notifier).update((state) =>
                 state.copyWith(maximizingImage: !design.maximizingImage)),
@@ -283,7 +284,7 @@ class ViewControlPanel extends ConsumerWidget {
           ),
         ),
         Visibility(
-          visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
+          visible: nodeMode != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
             () => ref.read(nodeEditorDesignProvider.notifier).update(
                 (state) => state.copyWith(hideTitle: !design.hideTitle)),
@@ -292,7 +293,7 @@ class ViewControlPanel extends ConsumerWidget {
           ),
         ),
         Visibility(
-          visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
+          visible: nodeMode != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
             () => ref.read(nodeEditorDesignProvider.notifier).update((state) =>
                 state.copyWith(
@@ -302,7 +303,7 @@ class ViewControlPanel extends ConsumerWidget {
           ),
         ),
         Visibility(
-          visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
+          visible: nodeMode != ChoiceNodeMode.onlyCode,
           child: ViewSwitchLabel(
             () {
               if (design.imagePosition == 1) {
@@ -318,6 +319,16 @@ class ViewControlPanel extends ConsumerWidget {
             design.imagePosition == 2,
             disable: design.imagePosition == 0,
             label: '이미지 왼쪽으로',
+          ),
+        ),
+        Visibility(
+          visible: nodeMode != ChoiceNodeMode.onlyCode &&
+              nodeMode != ChoiceNodeMode.unSelectableMode,
+          child: ViewSwitchLabel(
+            () => ref.read(nodeEditorDesignProvider.notifier).update(
+                (state) => state.copyWith(hideAsResult: !design.hideAsResult)),
+            design.hideAsResult,
+            label: '결론창에서 \n숨기기',
           ),
         ),
       ],
