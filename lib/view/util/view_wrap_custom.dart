@@ -13,10 +13,10 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
   final Pos parentPos;
   final Widget Function(int) builderDraggable;
   final int maxSize;
-  final bool setCenter;
+  final bool isInner;
 
   ViewWrapCustomReorderable(this.parentPos, this.builderDraggable,
-      {this.maxSize = defaultMaxSize, this.setCenter = false, super.key}) {
+      {this.maxSize = defaultMaxSize, this.isInner = true, super.key}) {
     if (ConstList.isMobile()) {
       mul = const Tuple2(7, 4);
     } else {
@@ -117,9 +117,29 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
       );
     }
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: outputWidget,
+    if (isInner) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: outputWidget,
+      );
+    }
+    var color = ref.watch(lineBackgroundColorProvider(parentPos.first));
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+            (context, index){
+          if(color == null) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: outputWidget[index],
+            );
+          }
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: ColoredBox(color: color, child: outputWidget[index]),
+          );
+        },
+        childCount: outputWidget.length,
+      ),
     );
   }
 }
@@ -196,10 +216,29 @@ class ViewWrapCustom extends ConsumerWidget {
         );
       }
     }
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: outputWidget,
+    if (isInner) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: outputWidget,
+      );
+    }
+    var color = ref.watch(lineBackgroundColorProvider(parentPos.first));
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+            (context, index){
+          if(color == null) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: outputWidget[index],
+            );
+          }
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: ColoredBox(color: color, child: outputWidget[index]),
+          );
+        },
+        childCount: outputWidget.length,
+      ),
     );
   }
 }

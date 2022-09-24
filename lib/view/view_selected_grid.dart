@@ -12,35 +12,36 @@ class ViewSelectedGrid extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var posList = ref.watch(selectedChoiceNodeProvider);
-    var numRow = 4;
+    var numRow = 6;
     var listLength = (posList.length / numRow).ceil();
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: ListView.separated(
-        itemBuilder: (context, index) {
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: List.generate(numRow, (innerIndex) {
-              var itemPos = index * numRow + innerIndex;
-              if (itemPos >= posList.length) {
-                return const Expanded(
-                  child: SizedBox.shrink(),
-                );
-              }
-              return Expanded(
-                child: IgnorePointer(
-                  child: ViewChoiceNode(
-                    posList[itemPos],
-                    ignoreOpacity: true,
-                    ignoreChild: true,
+      child: ListView(
+        children: List.generate(listLength * 2 - 1, (index){
+          if(index.isEven){
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: List.generate(numRow, (innerIndex) {
+                var itemPos = index ~/ 2 * numRow + innerIndex;
+                if (itemPos >= posList.length) {
+                  return const Expanded(
+                    child: SizedBox.shrink(),
+                  );
+                }
+                return Expanded(
+                  child: IgnorePointer(
+                    child: ViewChoiceNode(
+                      posList[itemPos],
+                      ignoreOpacity: true,
+                      ignoreChild: true,
+                    ),
                   ),
-                ),
-              );
-            }),
-          );
-        },
-        itemCount: listLength,
-        separatorBuilder: (BuildContext context, int index) => const Divider(),
+                );
+              }),
+            );
+          }
+          return const Divider();
+        }),
       ),
     );
   }
