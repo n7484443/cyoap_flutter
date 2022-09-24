@@ -33,8 +33,12 @@ class ViewEditor extends ConsumerWidget {
     if (ref.watch(nodeEditorTargetPosProvider) == null) {
       return const SizedBox.shrink();
     }
-    var children = [const ViewContentsEditor(), const ViewCodeEditor()];
-    var childrenText = const ["내용 수정", "코드 수정"];
+    var children = [
+      const ViewContentsEditor(),
+      const ViewCodeEditor(),
+      const ViewNodeOptionEditor()
+    ];
+    var childrenText = const ["내용", "코드", "설정"];
     return WillPopScope(
       child: DefaultTabController(
         length: children.length,
@@ -103,26 +107,12 @@ class ViewContentsEditor extends ConsumerWidget {
       children: [
         const ViewTitleTextFieldInput(),
         Expanded(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Visibility(
-                    visible:
-                        ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
-                    child: const ViewTextContentsEditor(),
-                  ),
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.all(ConstList.paddingSmall),
-                child: SingleChildScrollView(
-                  child: ViewControlPanel(),
-                ),
-              ),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Visibility(
+              visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
+              child: const ViewTextContentsEditor(),
+            ),
           ),
         ),
       ],
@@ -175,163 +165,6 @@ class _ViewTitleTextFieldInputState
       style: ConstList.getFont(ref.watch(titleFontProvider)).copyWith(
         fontSize: 24,
       ),
-    );
-  }
-}
-
-class ViewControlPanel extends ConsumerWidget {
-  const ViewControlPanel({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    var title = ref.watch(nodeTitleProvider);
-    var design = ref.watch(nodeEditorDesignProvider);
-    var nodeMode = ref.watch(nodeModeProvider);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        DropdownButton<ChoiceNodeMode>(
-          value: nodeMode,
-          items: const [
-            DropdownMenuItem(
-                value: ChoiceNodeMode.defaultMode, child: Text('기본')),
-            DropdownMenuItem(
-                value: ChoiceNodeMode.randomMode, child: Text('랜덤 선택')),
-            DropdownMenuItem(
-                value: ChoiceNodeMode.multiSelect, child: Text('다중 선택')),
-            DropdownMenuItem(
-                value: ChoiceNodeMode.unSelectableMode, child: Text('선택 불가')),
-            DropdownMenuItem(
-                value: ChoiceNodeMode.onlyCode, child: Text('코드만 사용')),
-          ],
-          onChanged: (ChoiceNodeMode? value) {
-            ref.read(nodeModeProvider.notifier).update((state) => value!);
-          },
-        ),
-        Visibility(
-          visible: nodeMode == ChoiceNodeMode.randomMode,
-          child: SizedBox(
-            width: 120,
-            child: Column(children: [
-              Text('변수명', style: Theme.of(context).textTheme.labelLarge),
-              Text('${title.replaceAll(" ", "")}:random',
-                  softWrap: true, style: Theme.of(context).textTheme.bodySmall),
-              TextField(
-                textAlign: TextAlign.end,
-                maxLength: 3,
-                minLines: 1,
-                maxLines: 1,
-                keyboardType: TextInputType.number,
-                controller: ref.watch(maximumProvider),
-                decoration: const InputDecoration(
-                  label: Text('랜덤 수, 0 ~ n-1'),
-                ),
-              ),
-            ]),
-          ),
-        ),
-        Visibility(
-          visible: nodeMode == ChoiceNodeMode.multiSelect,
-          child: SizedBox(
-            width: 120,
-            child: Column(children: [
-              Text('변수명', style: Theme.of(context).textTheme.labelLarge),
-              Text('${title.replaceAll(" ", "")}:multi',
-                  softWrap: true, style: Theme.of(context).textTheme.bodySmall),
-              TextField(
-                textAlign: TextAlign.end,
-                maxLength: 3,
-                minLines: 1,
-                maxLines: 1,
-                keyboardType: TextInputType.number,
-                controller: ref.watch(maximumProvider),
-                decoration: const InputDecoration(
-                  label: Text('최대 선택'),
-                ),
-              ),
-            ]),
-          ),
-        ),
-        Visibility(
-          visible: nodeMode != ChoiceNodeMode.onlyCode,
-          child: ViewSwitchLabel(
-            () => ref
-                .read(nodeEditorDesignProvider.notifier)
-                .update((state) => state.copyWith(isCard: !design.isCard)),
-            design.isCard,
-            label: '카드 모드',
-          ),
-        ),
-        Visibility(
-          visible: nodeMode != ChoiceNodeMode.onlyCode,
-          child: ViewSwitchLabel(
-            () => ref
-                .read(nodeEditorDesignProvider.notifier)
-                .update((state) => state.copyWith(isRound: !design.isRound)),
-            design.isRound,
-            label: '외곽선 둥글게',
-          ),
-        ),
-        Visibility(
-          visible: nodeMode != ChoiceNodeMode.onlyCode,
-          child: ViewSwitchLabel(
-            () => ref.read(nodeEditorDesignProvider.notifier).update((state) =>
-                state.copyWith(maximizingImage: !design.maximizingImage)),
-            design.maximizingImage,
-            label: '이미지 최대화',
-          ),
-        ),
-        Visibility(
-          visible: nodeMode != ChoiceNodeMode.onlyCode,
-          child: ViewSwitchLabel(
-            () => ref.read(nodeEditorDesignProvider.notifier).update(
-                (state) => state.copyWith(hideTitle: !design.hideTitle)),
-            design.hideTitle,
-            label: '제목 숨기기',
-          ),
-        ),
-        Visibility(
-          visible: nodeMode != ChoiceNodeMode.onlyCode,
-          child: ViewSwitchLabel(
-            () => ref.read(nodeEditorDesignProvider.notifier).update((state) =>
-                state.copyWith(
-                    imagePosition: design.imagePosition == 0 ? 1 : 0)),
-            design.imagePosition != 0,
-            label: '가로 모드',
-          ),
-        ),
-        Visibility(
-          visible: nodeMode != ChoiceNodeMode.onlyCode,
-          child: ViewSwitchLabel(
-            () {
-              if (design.imagePosition == 1) {
-                ref
-                    .read(nodeEditorDesignProvider.notifier)
-                    .update((state) => state.copyWith(imagePosition: 2));
-              } else if (design.imagePosition == 2) {
-                ref
-                    .read(nodeEditorDesignProvider.notifier)
-                    .update((state) => state.copyWith(imagePosition: 1));
-              }
-            },
-            design.imagePosition == 2,
-            disable: design.imagePosition == 0,
-            label: '이미지 왼쪽으로',
-          ),
-        ),
-        Visibility(
-          visible: nodeMode != ChoiceNodeMode.onlyCode &&
-              nodeMode != ChoiceNodeMode.unSelectableMode,
-          child: ViewSwitchLabel(
-            () => ref.read(nodeEditorDesignProvider.notifier).update(
-                (state) => state.copyWith(hideAsResult: !design.hideAsResult)),
-            design.hideAsResult,
-            label: '결론창에서 \n숨기기',
-          ),
-        ),
-      ],
     );
   }
 }
@@ -726,6 +559,161 @@ class ViewCodeEditor extends ConsumerWidget {
                 label: '숨김 시 공간 차지',
               ),
             ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class ViewNodeOptionEditor extends ConsumerWidget {
+  const ViewNodeOptionEditor({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    var title = ref.watch(nodeTitleProvider);
+    var design = ref.watch(nodeEditorDesignProvider);
+    var nodeMode = ref.watch(nodeModeProvider);
+
+    List<Widget> list = [];
+    if (nodeMode != ChoiceNodeMode.onlyCode) {
+      list.add(
+        ViewSwitchLabel(
+          () => ref
+              .read(nodeEditorDesignProvider.notifier)
+              .update((state) => state.copyWith(isCard: !design.isCard)),
+          design.isCard,
+          label: '카드 모드',
+        ),
+      );
+      list.add(
+        ViewSwitchLabel(
+          () => ref
+              .read(nodeEditorDesignProvider.notifier)
+              .update((state) => state.copyWith(isRound: !design.isRound)),
+          design.isRound,
+          label: '외곽선 둥글게',
+        ),
+      );
+      list.add(
+        ViewSwitchLabel(
+          () => ref.read(nodeEditorDesignProvider.notifier).update((state) =>
+              state.copyWith(maximizingImage: !design.maximizingImage)),
+          design.maximizingImage,
+          label: '이미지 최대화',
+        ),
+      );
+      list.add(
+        ViewSwitchLabel(
+          () => ref
+              .read(nodeEditorDesignProvider.notifier)
+              .update((state) => state.copyWith(hideTitle: !design.hideTitle)),
+          design.hideTitle,
+          label: '제목 숨기기',
+        ),
+      );
+      list.add(
+        ViewSwitchLabel(
+          () => ref.read(nodeEditorDesignProvider.notifier).update((state) =>
+              state.copyWith(imagePosition: design.imagePosition == 0 ? 1 : 0)),
+          design.imagePosition != 0,
+          label: '가로 모드',
+        ),
+      );
+      list.add(
+        ViewSwitchLabel(
+          () {
+            if (design.imagePosition == 1) {
+              ref
+                  .read(nodeEditorDesignProvider.notifier)
+                  .update((state) => state.copyWith(imagePosition: 2));
+            } else if (design.imagePosition == 2) {
+              ref
+                  .read(nodeEditorDesignProvider.notifier)
+                  .update((state) => state.copyWith(imagePosition: 1));
+            }
+          },
+          design.imagePosition == 2,
+          disable: design.imagePosition == 0,
+          label: '이미지 왼쪽으로',
+        ),
+      );
+      if (nodeMode != ChoiceNodeMode.unSelectableMode) {
+        list.add(
+          ViewSwitchLabel(
+            () => ref.read(nodeEditorDesignProvider.notifier).update(
+                (state) => state.copyWith(hideAsResult: !design.hideAsResult)),
+            design.hideAsResult,
+            label: '결론창에서 \n숨기기',
+          ),
+        );
+      }
+    }
+
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: DropdownButton<ChoiceNodeMode>(
+                value: nodeMode,
+                items: const [
+                  DropdownMenuItem(
+                      value: ChoiceNodeMode.defaultMode, child: Text('기본')),
+                  DropdownMenuItem(
+                      value: ChoiceNodeMode.randomMode, child: Text('랜덤 선택')),
+                  DropdownMenuItem(
+                      value: ChoiceNodeMode.multiSelect, child: Text('다중 선택')),
+                  DropdownMenuItem(
+                      value: ChoiceNodeMode.unSelectableMode,
+                      child: Text('선택 불가')),
+                  DropdownMenuItem(
+                      value: ChoiceNodeMode.onlyCode, child: Text('코드만 사용')),
+                ],
+                onChanged: (ChoiceNodeMode? value) {
+                  ref.read(nodeModeProvider.notifier).update((state) => value!);
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Visibility(
+                visible: nodeMode == ChoiceNodeMode.multiSelect || nodeMode == ChoiceNodeMode.randomMode,
+                child: SizedBox(
+                  width: 120,
+                  child: Column(children: [
+                    Text('변수명', style: Theme.of(context).textTheme.labelLarge),
+                    Text('${title.replaceAll(" ", "")}:${nodeMode == ChoiceNodeMode.multiSelect ? 'multi' : 'random'}',
+                        softWrap: true,
+                        style: Theme.of(context).textTheme.bodySmall),
+                    TextField(
+                      textAlign: TextAlign.end,
+                      maxLength: 3,
+                      minLines: 1,
+                      maxLines: 1,
+                      keyboardType: TextInputType.number,
+                      controller: ref.watch(maximumProvider),
+                      decoration: InputDecoration(
+                        label: Text(nodeMode == ChoiceNodeMode.multiSelect ? '최대선택' : '랜덤 수, 0 ~ n-1'),
+                      ),
+                    ),
+                  ]),
+                ),
+              ),
+            ),
+          ]),
+        ),
+        SliverGrid(
+          delegate: SliverChildListDelegate(list),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 4,
+            crossAxisSpacing: 2,
+            mainAxisExtent: 80,
+            mainAxisSpacing: 2,
           ),
         ),
       ],
