@@ -286,6 +286,8 @@ class _ViewTextContentsEditorState
             showColorButton: false,
             showBackgroundColorButton: false,
             showFontFamily: false,
+            showSearchButton: false,
+            showIndent: false,
             customButtons: [
               QuillCustomButton(
                 icon: Icons.color_lens,

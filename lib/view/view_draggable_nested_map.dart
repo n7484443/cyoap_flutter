@@ -17,6 +17,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../viewModel/vm_choice_node.dart';
 import '../viewModel/vm_design_setting.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
+import '../viewModel/vm_selected_grid.dart';
 
 class NodeDragTarget extends ConsumerWidget {
   final Pos pos;
@@ -462,10 +463,21 @@ class _NestedMapState extends ConsumerState<NestedMap> {
               SizedBox(
                 height: 50,
                 child: TextButton(
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) => const ViewSelectedGrid(),
-                  ),
+                  onPressed: () {
+                    if (ref.watch(selectedChoiceNodeProvider).isNotEmpty) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => const ViewSelectedGrid(),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('선택한 선택지가 없습니다.'),
+                          duration: Duration(seconds: 1),
+                        ),
+                      );
+                    }
+                  },
                   child: const Text("요약"),
                 ),
               ),
