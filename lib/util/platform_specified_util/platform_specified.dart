@@ -63,7 +63,7 @@ abstract class SaveProject {
     return map;
   }
 
-  Future<void> downloadCapture(String name, Uint8List data) async {
+  Future<void> downloadCapture(String path, String name, Uint8List data) async {
     throw UnimplementedError();
   }
 

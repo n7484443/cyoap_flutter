@@ -126,8 +126,8 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
     var color = ref.watch(lineBackgroundColorProvider(parentPos.first));
     return SliverList(
       delegate: SliverChildBuilderDelegate(
-            (context, index){
-          if(color == null) {
+        (context, index) {
+          if (color == null) {
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: outputWidget[index],
@@ -225,8 +225,8 @@ class ViewWrapCustom extends ConsumerWidget {
     var color = ref.watch(lineBackgroundColorProvider(parentPos.first));
     return SliverList(
       delegate: SliverChildBuilderDelegate(
-            (context, index){
-          if(color == null) {
+        (context, index) {
+          if (color == null) {
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: outputWidget[index],

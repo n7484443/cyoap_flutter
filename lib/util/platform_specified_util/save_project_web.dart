@@ -13,11 +13,11 @@ class SaveProjectImp extends SaveProject {
     await JsIsolatedWorker().importScripts(['save_web.js', 'jszip.js']);
     Uint8List output = await JsIsolatedWorker()
         .run(functionName: '_compressToZip', arguments: jsonEncode(map));
-    downloadCapture(name, output);
+    downloadCapture("", name, output);
   }
 
   @override
-  Future<void> downloadCapture(String name, Uint8List data) async {
+  Future<void> downloadCapture(String path, String name, Uint8List data) async {
     _exportRaw(name, data);
   }
 

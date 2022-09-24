@@ -464,9 +464,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
                 child: TextButton(
                   onPressed: () => showDialog(
                     context: context,
-                    builder: (context) => const Dialog(
-                      child: ViewSelectedGrid(),
-                    ),
+                    builder: (context) => const ViewSelectedGrid(),
                   ),
                   child: const Text("요약"),
                 ),

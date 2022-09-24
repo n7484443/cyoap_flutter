@@ -92,11 +92,16 @@ class SaveProjectImp extends SaveProject {
   }
 
   @override
-  Future<void> downloadCapture(String name, Uint8List data) async {
-    var file = File(name);
-    if (await file.exists()) {
-      await file.delete();
+  Future<void> downloadCapture(String path, String name, Uint8List data) async {
+    var fileName = name.split(".")[0];
+    var ext = name.split(".")[1];
+    var editName = "$fileName.$ext";
+    int addNum = 0;
+    while (await File("$path/$editName").exists()) {
+      editName = '$fileName (${addNum++}).$ext';
     }
+    var file = File("$path/$editName");
+    print("$path/$editName");
     await file.create();
     await file.writeAsBytes(data);
   }
