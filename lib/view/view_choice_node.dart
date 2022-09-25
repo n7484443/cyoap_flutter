@@ -49,12 +49,8 @@ class ViewChoiceNode extends ConsumerWidget {
         ignoreChild: ignoreChild,
       );
     }
-    var opacity = ref.watch(opacityProvider(pos));
-    if (opacity == 0) {
-      return const SizedBox.shrink();
-    }
     return Opacity(
-      opacity: opacity,
+      opacity: ref.watch(opacityProvider(pos)),
       child: ViewChoiceNodeMain(pos, ignoreChild: ignoreChild),
     );
   }
