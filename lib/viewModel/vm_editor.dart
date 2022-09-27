@@ -179,6 +179,7 @@ final controllerExecuteProvider =
   controller.addListener(() {
     node.recursiveStatus.executeCodeString = controller.text;
     ref.read(editorChangeProvider.notifier).needUpdate();
+
     if('{'.allMatches(controller.text).length != '}'.allMatches(controller.text).length){
       print("something wrong!");
     }

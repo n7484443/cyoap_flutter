@@ -552,8 +552,27 @@ class ViewCodeEditor extends ConsumerWidget {
           padding: const EdgeInsets.all(2.0),
           child: Column(
             children: [
+              IconButton(
+                icon: const Icon(Icons.start),
+                tooltip: "정렬",
+                onPressed: () {
+                  var text = ref.read(controllerExecuteProvider).text.split("\n");
+                  var stack = 0;
+                  var output = [];
+                  for(var code in text){
+                    stack -= "}".allMatches(code).length;
+                    var outputCode = code.trim();
+                    for(var i = 0; i < stack; i++){
+                      outputCode = "  $outputCode";
+                    }
+                    output.add(outputCode);
+                    stack += "{".allMatches(code).length;
+                  }
+                  ref.read(controllerExecuteProvider).text = output.join("\n");
+                },
+              ),
               ViewSwitchLabel(
-                () {
+                    () {
                   ref.read(nodeEditorDesignProvider.notifier).state =
                       design.copyWith(isOccupySpace: !design.isOccupySpace);
                 },
