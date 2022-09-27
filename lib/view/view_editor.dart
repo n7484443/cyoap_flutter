@@ -557,7 +557,8 @@ class ViewCodeEditor extends ConsumerWidget {
                 tooltip: "정렬",
                 onPressed: () {
                   var text = ref.read(controllerExecuteProvider).text;
-                  var output = ref.read(editorChangeProvider.notifier).formatting(text);
+                  var output =
+                      ref.read(editorChangeProvider.notifier).formatting(text);
                   if (output.item2) {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content: Text("코드의 {의 개수와 }의 개수가 같지 않습니다."),

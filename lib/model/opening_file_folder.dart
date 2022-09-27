@@ -32,7 +32,7 @@ class ProjectPath {
   }
 
   static Future<String> getDownloadFolder() async {
-    if(ConstList.isDesktop()){
+    if (ConstList.isDesktop()) {
       return (await getDownloadsDirectory())!.path;
     }
     return "/storage/emulated/0/Download";

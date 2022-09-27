@@ -140,8 +140,9 @@ class EditorChangeNotifier extends StateNotifier<bool> {
     origin.imageString = changed.imageString;
     origin.recursiveStatus = changed.recursiveStatus;
     origin.choiceNodeDesign = ref.read(nodeEditorDesignProvider);
-    if(origin.recursiveStatus.executeCodeString != null){
-      origin.recursiveStatus.executeCodeString = formatting(origin.recursiveStatus.executeCodeString!).item1;
+    if (origin.recursiveStatus.executeCodeString != null) {
+      origin.recursiveStatus.executeCodeString =
+          formatting(origin.recursiveStatus.executeCodeString!).item1;
     }
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     state = false;

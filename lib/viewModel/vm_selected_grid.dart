@@ -13,16 +13,18 @@ final selectedChoiceNodeProvider = Provider.autoDispose<List<Pos>>((ref) {
   return getPlatform.selectedPos;
 });
 
-void saveAsImage(GlobalKey globalKey) async{
+void saveAsImage(GlobalKey globalKey) async {
   var renderObject = globalKey.currentContext?.findRenderObject();
-  if(renderObject == null)return;
-  if(renderObject is! RenderRepaintBoundary)return;
-  var image = await (await renderObject.toImage()).toByteData(format: ImageByteFormat.png);
+  if (renderObject == null) return;
+  if (renderObject is! RenderRepaintBoundary) return;
+  var image = await (await renderObject.toImage())
+      .toByteData(format: ImageByteFormat.png);
   var pngBytes = image?.buffer.asUint8List();
   var name = "result.png";
-  if(ConstList.isWeb()){
+  if (ConstList.isWeb()) {
     PlatformSpecified().saveProject?.downloadCapture("", name, pngBytes!);
-  }else{
-    PlatformSpecified().saveProject?.downloadCapture(await ProjectPath.getDownloadFolder(), name, pngBytes!);
+  } else {
+    PlatformSpecified().saveProject?.downloadCapture(
+        await ProjectPath.getDownloadFolder(), name, pngBytes!);
   }
 }
