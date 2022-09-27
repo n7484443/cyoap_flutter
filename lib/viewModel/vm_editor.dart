@@ -10,6 +10,7 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tuple/tuple.dart';
 
 final nodeEditorTargetPosProvider = StateProvider<Pos?>((ref) => null);
 
@@ -139,9 +140,30 @@ class EditorChangeNotifier extends StateNotifier<bool> {
     origin.imageString = changed.imageString;
     origin.recursiveStatus = changed.recursiveStatus;
     origin.choiceNodeDesign = ref.read(nodeEditorDesignProvider);
+    if(origin.recursiveStatus.executeCodeString != null){
+      origin.recursiveStatus.executeCodeString = formatting(origin.recursiveStatus.executeCodeString!).item1;
+    }
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     state = false;
     refreshLine(ref, pos.first);
+  }
+
+  Tuple2<String, bool> formatting(String input) {
+    var text = input.split("\n");
+    var stack = 0;
+    var output = [];
+    var regexSpace = RegExp(r"if +\(");
+    for (var code in text) {
+      stack -= "}".allMatches(code).length;
+      var outputCode = code.trim().replaceAll(regexSpace, "if(");
+
+      for (var i = 0; i < stack; i++) {
+        outputCode = "  $outputCode";
+      }
+      output.add(outputCode);
+      stack += "{".allMatches(code).length;
+    }
+    return Tuple2(output.join("\n"), stack == 0);
   }
 }
 

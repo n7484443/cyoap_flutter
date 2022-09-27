@@ -556,23 +556,18 @@ class ViewCodeEditor extends ConsumerWidget {
                 icon: const Icon(Icons.start),
                 tooltip: "정렬",
                 onPressed: () {
-                  var text = ref.read(controllerExecuteProvider).text.split("\n");
-                  var stack = 0;
-                  var output = [];
-                  for(var code in text){
-                    stack -= "}".allMatches(code).length;
-                    var outputCode = code.trim();
-                    for(var i = 0; i < stack; i++){
-                      outputCode = "  $outputCode";
-                    }
-                    output.add(outputCode);
-                    stack += "{".allMatches(code).length;
+                  var text = ref.read(controllerExecuteProvider).text;
+                  var output = ref.read(editorChangeProvider.notifier).formatting(text);
+                  if (output.item2) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text("코드의 {의 개수와 }의 개수가 같지 않습니다."),
+                    ));
                   }
-                  ref.read(controllerExecuteProvider).text = output.join("\n");
+                  ref.read(controllerExecuteProvider).text = output.item1;
                 },
               ),
               ViewSwitchLabel(
-                    () {
+                () {
                   ref.read(nodeEditorDesignProvider.notifier).state =
                       design.copyWith(isOccupySpace: !design.isOccupySpace);
                 },
@@ -703,12 +698,14 @@ class ViewNodeOptionEditor extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Visibility(
-                visible: nodeMode == ChoiceNodeMode.multiSelect || nodeMode == ChoiceNodeMode.randomMode,
+                visible: nodeMode == ChoiceNodeMode.multiSelect ||
+                    nodeMode == ChoiceNodeMode.randomMode,
                 child: SizedBox(
                   width: 120,
                   child: Column(children: [
                     Text('변수명', style: Theme.of(context).textTheme.labelLarge),
-                    Text('${title.replaceAll(" ", "")}:${nodeMode == ChoiceNodeMode.multiSelect ? 'multi' : 'random'}',
+                    Text(
+                        '${title.replaceAll(" ", "")}:${nodeMode == ChoiceNodeMode.multiSelect ? 'multi' : 'random'}',
                         softWrap: true,
                         style: Theme.of(context).textTheme.bodySmall),
                     TextField(
@@ -719,7 +716,9 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                       keyboardType: TextInputType.number,
                       controller: ref.watch(maximumProvider),
                       decoration: InputDecoration(
-                        label: Text(nodeMode == ChoiceNodeMode.multiSelect ? '최대선택' : '랜덤 수, 0 ~ n-1'),
+                        label: Text(nodeMode == ChoiceNodeMode.multiSelect
+                            ? '최대선택'
+                            : '랜덤 수, 0 ~ n-1'),
                       ),
                     ),
                   ]),
