@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:cyoap_core/option.dart';
