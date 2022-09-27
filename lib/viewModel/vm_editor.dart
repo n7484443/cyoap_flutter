@@ -163,7 +163,7 @@ class EditorChangeNotifier extends StateNotifier<bool> {
       output.add(outputCode);
       stack += "{".allMatches(code).length;
     }
-    return Tuple2(output.join("\n"), stack == 0);
+    return Tuple2(output.join("\n"), stack != 0);
   }
 }
 
