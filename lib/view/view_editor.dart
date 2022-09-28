@@ -35,7 +35,7 @@ class ViewEditor extends ConsumerWidget {
     }
     var children = [
       const ViewContentsEditor(),
-      const ViewCodeEditor(),
+      const ViewCodeIde(),
       const ViewNodeOptionEditor()
     ];
     var childrenText = const ["내용", "코드", "설정"];
@@ -489,16 +489,86 @@ class _ImageSourceDialogState extends ConsumerState<ImageSourceDialog> {
   }
 }
 
-class ViewCodeEditor extends ConsumerWidget {
-  const ViewCodeEditor({super.key});
+class ViewCodeIde extends ConsumerStatefulWidget {
+  const ViewCodeIde({
+    super.key,
+  });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState createState() => _ViewCodeIdeState();
+}
+
+class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
+  FocusNode? _focusNode;
+  QuillController? _quillController;
+  ScrollController? _scrollController;
+
+  var regexSpace = RegExp(
+      r"((if|for)(?=\())|((?<=(\s|}))else)|((?<=(\s|{))(in|break|continue)(?=\s))");
+
+  @override
+  void initState() {
+    _focusNode = FocusNode();
+    var data = [
+      {
+        "insert":
+            "${ref.read(nodeEditorTargetProvider).node.recursiveStatus.executeCodeString ?? ''}\n"
+      }
+    ];
+    _quillController = QuillController(
+        document: Document.fromJson(data),
+        selection: const TextSelection.collapsed(offset: 0));
+    _quillController?.addListener(() {
+      EasyDebounce.debounce('code-ide', const Duration(milliseconds: 500), () {
+        var plainText = _quillController?.document.toPlainText() ?? '';
+        if (ref
+                .read(nodeEditorTargetProvider)
+                .node
+                .recursiveStatus
+                .executeCodeString !=
+            plainText) {
+          print('update');
+          var styleNull = Attribute.color;
+          var styleDeepOrange =
+              ColorAttribute('#${Colors.deepOrangeAccent.hex}');
+
+          _quillController?.formatText(0, plainText.length, styleNull);
+          var match = regexSpace.allMatches(plainText);
+          for (var m in match) {
+            _quillController?.formatText(
+                m.start, m.end - m.start, styleDeepOrange);
+          }
+
+          ref
+              .read(nodeEditorTargetProvider)
+              .node
+              .recursiveStatus
+              .executeCodeString = plainText;
+          ref.read(editorChangeProvider.notifier).needUpdate();
+        }
+      });
+    });
+    _scrollController = ScrollController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _focusNode?.dispose();
+    _quillController?.dispose();
+    _scrollController?.dispose();
+    EasyDebounce.cancel('code-ide');
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     var design = ref.watch(nodeEditorDesignProvider);
     return Row(
       children: [
         Expanded(
-          child: Column(
+          child: ListView(
+            controller: _scrollController,
             children: [
               Visibility(
                 visible:
@@ -528,22 +598,16 @@ class ViewCodeEditor extends ConsumerWidget {
                   ),
                 ),
               ),
-              Expanded(
-                child: Focus(
-                  onFocusChange: (bool hasFocus) => ref
-                      .read(editorChangeProvider.notifier)
-                      .lastFocus = ref.watch(controllerExecuteProvider),
-                  child: TextField(
-                    controller: ref.watch(controllerExecuteProvider),
-                    textAlign: TextAlign.left,
-                    scrollController: ScrollController(),
-                    maxLines: null,
-                    expands: true,
-                    decoration: const InputDecoration(
-                      hintText: '선택 시 시행 코드',
-                    ),
-                  ),
-                ),
+              QuillEditor(
+                focusNode: _focusNode!,
+                scrollable: false,
+                readOnly: false,
+                autoFocus: false,
+                scrollController: _scrollController!,
+                controller: _quillController!,
+                padding: EdgeInsets.zero,
+                expands: false,
+                placeholder: "선택 시 시행 코드",
               ),
             ],
           ),
@@ -552,21 +616,6 @@ class ViewCodeEditor extends ConsumerWidget {
           padding: const EdgeInsets.all(2.0),
           child: Column(
             children: [
-              IconButton(
-                icon: const Icon(Icons.start),
-                tooltip: "정렬",
-                onPressed: () {
-                  var text = ref.read(controllerExecuteProvider).text;
-                  var output =
-                      ref.read(editorChangeProvider.notifier).formatting(text);
-                  if (output.item2) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("코드의 {의 개수와 }의 개수가 같지 않습니다."),
-                    ));
-                  }
-                  ref.read(controllerExecuteProvider).text = output.item1;
-                },
-              ),
               ViewSwitchLabel(
                 () {
                   ref.read(nodeEditorDesignProvider.notifier).state =
@@ -574,6 +623,22 @@ class ViewCodeEditor extends ConsumerWidget {
                 },
                 design.isOccupySpace,
                 label: '숨김 시 공간 차지',
+              ),
+              IconButton(
+                icon: const Icon(Icons.start),
+                tooltip: "정렬",
+                onPressed: () {
+                  var text = _quillController?.document.toPlainText() ?? '';
+                  var output =
+                      ref.read(editorChangeProvider.notifier).formatting(text);
+                  if (output.item2) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text("코드의 {의 개수와 }의 개수가 같지 않습니다."),
+                    ));
+                  }
+                  _quillController?.clear();
+                  _quillController?.document.insert(0, output.item1);
+                },
               ),
             ],
           ),

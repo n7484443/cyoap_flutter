@@ -211,22 +211,3 @@ final controllerVisibleProvider =
   });
   return controller;
 });
-
-final controllerExecuteProvider =
-    Provider.autoDispose<TextEditingController>((ref) {
-  var node = ref.watch(nodeEditorTargetProvider).node;
-  var controller =
-      TextEditingController(text: node.recursiveStatus.executeCodeString);
-  controller.addListener(() {
-    EasyDebounce.debounce(
-        'executeCodeString', const Duration(milliseconds: 500), () {
-      node.recursiveStatus.executeCodeString = controller.text;
-      ref.read(editorChangeProvider.notifier).needUpdate();
-    });
-  });
-  ref.onDispose(() {
-    controller.dispose();
-    EasyDebounce.cancel('executeCodeString');
-  });
-  return controller;
-});
