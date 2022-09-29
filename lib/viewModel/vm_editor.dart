@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
+import '../util/platform_specified_util/webp_converter.dart';
+
 final nodeEditorTargetPosProvider = StateProvider<Pos?>((ref) => null);
 
 final nodeEditorTargetProvider =
@@ -89,9 +91,12 @@ class ImageListStateNotifier extends StateNotifier<List<String>> {
   }
 
   Future<void> addImageToList(String name, {Uint8List? data}) async {
-    ImageDB().uploadImages(name, data ?? ref.read(lastImageProvider)!);
-    ref.read(nodeEditorTargetProvider).node.imageString = name;
-    ref.read(imageStateProvider.notifier).state = ImageDB().getImageIndex(name);
+    var before = data ?? ref.read(lastImageProvider)!;
+    var out = await WebpConverter.instance!.convert(before, name);
+
+    ImageDB().uploadImages(out.item1, out.item2);
+    ref.read(nodeEditorTargetProvider).node.imageString = out.item1;
+    ref.read(imageStateProvider.notifier).state = ImageDB().getImageIndex(out.item1);
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     ref.read(editorChangeProvider.notifier).state = true;
     ref.read(lastImageProvider.notifier).update((state) => null);

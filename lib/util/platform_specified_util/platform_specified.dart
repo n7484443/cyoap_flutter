@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:tuple/tuple.dart';
-
 import 'platform_specified_vm.dart'
     if (dart.library.html) 'platform_specified_web.dart';
 
@@ -31,13 +29,6 @@ abstract class Distribute {
 }
 
 abstract class SaveProject {
-  Future<Tuple2<String, Uint8List>> convertImage(
-      String name, Uint8List data) async {
-    return Tuple2(name, data);
-  }
-
-  void init();
-
   Future<Map<String, dynamic>> getMap(Map<String, dynamic> dataInput) async {
     Map<String, dynamic> map = {
       'platform.json': utf8.encode(dataInput['platform']),
@@ -47,8 +38,7 @@ abstract class SaveProject {
     var image = dataInput['imageMap'] as Map<String, String>;
     for (var name in image.keys) {
       var data = Uint8List.fromList(image[name]!.codeUnits);
-      var output = await convertImage(name, data);
-      map['images/${output.item1}'] = output.item2;
+      map['images/$name'] = data;
     }
 
     var fileList = List.empty(growable: true);

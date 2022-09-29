@@ -20,9 +20,6 @@ class SaveProjectImp extends SaveProject {
   Future<void> downloadCapture(String path, String name, Uint8List data) async {
     _exportRaw(name, data);
   }
-
-  @override
-  void init() {}
 }
 
 @JS()

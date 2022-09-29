@@ -2,30 +2,11 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
-import 'package:cyoap_core/option.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
-import 'package:cyoap_flutter/util/platform_specified_util/webp_converter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
-import 'package:tuple/tuple.dart';
 
 class SaveProjectImp extends SaveProject {
-  @override
-  void init() {
-    Option().convertToWebpFunction = (String? name) {
-      if (getWebpConverterInstance().saveAsWebp) {
-        return name?.replaceAll(RegExp('[.](png|jpg|jpeg)'), '.webp');
-      }
-      return name;
-    };
-  }
-
-  @override
-  Future<Tuple2<String, Uint8List>> convertImage(
-      String name, Uint8List data) async {
-    return await getWebpConverterInstance().convert(data, name);
-  }
-
   Future<Uint8List> mapToArchive(Map<String, dynamic> dataInput) async {
     var map = await getMap(dataInput);
 
