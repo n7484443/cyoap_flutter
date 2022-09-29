@@ -13,6 +13,7 @@ class ViewSource extends ConsumerWidget {
     var controller = ref.watch(vmSourceProvider);
     var deleteList = ref.watch(deleteImageListProvider);
     var widget = ListView.builder(
+      controller: ScrollController(),
       itemBuilder: (BuildContext context, int index) {
         var name = controller[index];
         return Padding(
