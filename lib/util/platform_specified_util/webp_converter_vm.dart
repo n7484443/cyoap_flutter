@@ -177,7 +177,11 @@ class WebpConverterImpAndroid implements WebpConverterImp {
   }
 
   @override
-  void init() {}
+  void init() {
+    ProjectPath().getSaveAsWebp().then((value){
+      saveAsWebp = value;
+    });
+  }
 
   @override
   bool saveAsWebp = true;
