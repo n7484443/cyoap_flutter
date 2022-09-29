@@ -94,14 +94,6 @@ class ViewContentsEditor extends ConsumerWidget {
       ref.read(nodeEditorTargetProvider).node.choiceNodeDesign = next;
       ref.read(editorChangeProvider.notifier).needUpdate();
     });
-    ref.listen(nodeModeProvider, (previous, ChoiceNodeMode next) {
-      ref.read(nodeEditorTargetProvider).node.choiceNodeMode = next;
-      ref.read(editorChangeProvider.notifier).needUpdate();
-    });
-    ref.listen(nodeModeProvider, (previous, ChoiceNodeMode next) {
-      ref.read(nodeEditorTargetProvider).node.choiceNodeMode = next;
-      ref.read(editorChangeProvider.notifier).needUpdate();
-    });
 
     return Column(
       children: [
@@ -655,6 +647,14 @@ class ViewNodeOptionEditor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(nodeModeProvider, (previous, ChoiceNodeMode next) {
+      ref.read(nodeEditorTargetProvider).node.choiceNodeMode = next;
+      ref.read(editorChangeProvider.notifier).needUpdate();
+    });
+    ref.listen(nodeEditorDesignProvider, (previous, ChoiceNodeDesign next) {
+      ref.read(nodeEditorTargetProvider).node.choiceNodeDesign = next;
+      ref.read(editorChangeProvider.notifier).needUpdate();
+    });
     var title = ref.watch(nodeTitleProvider);
     var design = ref.watch(nodeEditorDesignProvider);
     var nodeMode = ref.watch(nodeModeProvider);
