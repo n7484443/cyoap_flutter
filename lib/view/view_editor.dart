@@ -519,7 +519,6 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
                 .recursiveStatus
                 .executeCodeString !=
             plainText) {
-          print('update');
           var styleNull = Attribute.color;
           var styleDeepOrange =
               ColorAttribute('#${Colors.deepOrangeAccent.hex}');
