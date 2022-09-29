@@ -10,12 +10,12 @@ class ViewSource extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var controller = ref.watch(vmSourceProvider);
+    var data = ref.watch(vmSourceProvider);
     var deleteList = ref.watch(deleteImageListProvider);
     var widget = ListView.builder(
       controller: ScrollController(),
       itemBuilder: (BuildContext context, int index) {
-        var name = controller[index];
+        var name = data[index];
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: Card(
@@ -70,7 +70,7 @@ class ViewSource extends ConsumerWidget {
           ),
         );
       },
-      itemCount: controller.length,
+      itemCount: data.length,
     );
 
     Widget icon;
