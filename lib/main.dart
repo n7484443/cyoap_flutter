@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart'
     deferred as platform_specified;
+import 'package:cyoap_flutter/util/platform_specified_util/webp_converter.dart';
 import 'package:cyoap_flutter/view/view_make_platform.dart';
 import 'package:cyoap_flutter/view/view_play.dart';
 import 'package:cyoap_flutter/view/view_start.dart';
@@ -78,6 +79,7 @@ class ConstList {
           (await DeviceInfoPlugin().androidInfo).version.sdkInt.toString();
     }
     Sentry.configureScope((scope) => scope.setContexts('USER_INFO', userInfo));
+    WebpConverter.instance?.init();
   }
 
   static DefaultStyles getDefaultThemeData(BuildContext context, double scale,

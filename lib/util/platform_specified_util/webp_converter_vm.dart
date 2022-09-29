@@ -9,6 +9,7 @@ import 'package:image/image.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../main.dart';
+import '../../model/opening_file_folder.dart';
 
 class WebpConverterImp extends WebpConverter {
   factory WebpConverterImp() {
@@ -32,6 +33,10 @@ class WebpConverterImpWindows implements WebpConverterImp {
 
   @override
   void init() {
+    ProjectPath().getSaveAsWebp().then((value){
+      saveAsWebp = value;
+    });
+
     var startPath = Platform.script.resolve("libwebp.dll").toFilePath();
     // 'windows/libwebp.dll'
     File f = File(startPath);
