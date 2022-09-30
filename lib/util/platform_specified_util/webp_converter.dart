@@ -12,10 +12,9 @@ abstract class WebpConverter {
           Uint8List input, String name) async =>
       throw "doesn't work in this platform";
 
-  void init() {}
+  void init() async {}
   bool saveAsWebp = false;
   bool get canConvert => false;
-
   static WebpConverter? getWebpConverterImp() => null;
 }
 

@@ -4,6 +4,7 @@ import 'package:archive/archive.dart';
 import 'package:archive/archive_io.dart';
 import 'package:cyoap_flutter/model/platform_file_system.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'platform.dart';
 
@@ -38,9 +39,9 @@ class PlatformSystem {
     await platformFileSystem.createFromZip(archiveBytes);
   }
 
-  Future<void> openPlatformJson(File file) async {
+  Future<void> openPlatformJson(File file, Ref ref) async {
     platformFileSystem.path = file.parent.path;
-    await platformFileSystem.createFromJson(file.readAsStringSync());
+    await platformFileSystem.createFromJson(file.readAsStringSync(), ref);
   }
 
   Future<void> openPlatformFolder(String path) async {

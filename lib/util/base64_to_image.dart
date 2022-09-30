@@ -6,16 +6,18 @@ import 'package:tuple/tuple.dart';
 
 class Base64ToImage {
 //   data:image/jpeg;base64,  base64어쩌구
-  static Future<Tuple2<String, Uint8List>> convertToImage(
-      String input, String name) {
+  static final RegExp pattern = RegExp(';|/');
+  static Future<Tuple2<String, Uint8List>?> convertToImage(
+      String input) async {
     var split = input.split(",");
-    var type = split[0];
-    var pattern = RegExp(';|/');
-    var imageType = type.split(pattern)[1];
-    var encode = type.split(pattern)[2];
-    print('$name.$imageType');
+    if(split.length != 2){
+      return null;
+    }
+    var type = split[0].split(pattern);
+    var imageType = type[1];
 
     Uint8List data = base64.decode(split[1]);
-    return getWebpConverterInstance().convert(data, '$name.$imageType');
+    getWebpConverterInstance().saveAsWebp = false;
+    return await getWebpConverterInstance().convert(data, imageType);
   }
 }

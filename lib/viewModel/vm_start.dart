@@ -28,6 +28,7 @@ final pathListFileProvider = StateProvider<PlatformFile?>((ref) => null);
 
 final isLoadingStateProvider =
     StateProvider<bool>((ref) => ConstList.isWeb() ? false : true);
+final loadProjectStateProvider = StateProvider<String>((ref) => '');
 
 class PathListNotifier extends StateNotifier<List<String>> {
   Ref ref;
@@ -70,7 +71,7 @@ class PathListNotifier extends StateNotifier<List<String>> {
     return 0;
   }
 
-  Future<bool> openProject() async {
+  Future<bool> openProject(void Function() dialog) async {
     ImageDB().clearImageCache();
     var index = ref.read(pathListSelectedProvider);
     if (ConstList.isWeb()) {
@@ -93,11 +94,12 @@ class PathListNotifier extends StateNotifier<List<String>> {
       return true;
     }
     if (path.endsWith('.json')) {
+      dialog();
       var file = File(path);
       if (!await file.exists()) {
         return false;
       }
-      await PlatformSystem().openPlatformJson(file);
+      await PlatformSystem().openPlatformJson(file, ref);
       return true;
     }
     var dir = Directory(path);

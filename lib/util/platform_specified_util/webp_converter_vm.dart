@@ -32,15 +32,13 @@ class WebpConverterImpWindows implements WebpConverterImp {
       Pointer<Pointer<Uint8>> output) webPEncodeLosslessRGBA;
 
   @override
-  void init() {
-    ProjectPath().getSaveAsWebp().then((value){
-      saveAsWebp = value;
-    });
+  void init() async {
+    saveAsWebp = await ProjectPath().getSaveAsWebp();
 
     var startPath = Platform.script.resolve("libwebp.dll").toFilePath();
     // 'windows/libwebp.dll'
     File f = File(startPath);
-    if (!f.existsSync()) {
+    if (!await f.exists()) {
       startPath = "libwebp.dll";
     }
     nativeWebp = DynamicLibrary.open(startPath);
@@ -177,10 +175,8 @@ class WebpConverterImpAndroid implements WebpConverterImp {
   }
 
   @override
-  void init() {
-    ProjectPath().getSaveAsWebp().then((value){
-      saveAsWebp = value;
-    });
+  void init() async{
+    saveAsWebp = await ProjectPath().getSaveAsWebp();
   }
 
   @override

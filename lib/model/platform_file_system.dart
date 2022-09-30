@@ -8,6 +8,7 @@ import 'package:cyoap_core/choiceNode/choice_line.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/model/opening_file_folder.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart';
 
 import '../main.dart';
@@ -168,9 +169,13 @@ class PlatformFileSystem {
     archive.clear();
   }
 
-  Future<void> createFromJson(String input) async {
+  Future<void> createFromJson(String input, Ref ref) async {
     var jsonParser = JsonProjectParser(path!);
-    platform = await jsonParser.getPlatform(input);
+    var output = await jsonParser.getPlatform(input, ref);
+    for(var key in output.item2.keys){
+      ImageDB().uploadImages(key, output.item2[key]!);
+    }
+    platform = output.item1;
     platform!.init();
   }
 

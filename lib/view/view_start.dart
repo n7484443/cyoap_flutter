@@ -199,7 +199,16 @@ class SelectMode extends ConsumerWidget {
         Expanded(
           child: InkWell(
             onTap: () {
-              ref.read(pathListProvider.notifier).openProject().then((value) {
+              ref
+                  .read(pathListProvider.notifier)
+                  .openProject(
+                    () => showDialog(
+                      barrierDismissible: false,
+                      context: context,
+                      builder: (context) => const ViewLoadingDialog(),
+                    ),
+                  )
+                  .then((value) {
                 if (value) {
                   getPlatformFileSystem.isEditable = false;
                   Navigator.of(context).pushReplacementNamed('/viewPlay');
@@ -219,7 +228,16 @@ class SelectMode extends ConsumerWidget {
         Expanded(
           child: InkWell(
             onTap: () {
-              ref.read(pathListProvider.notifier).openProject().then((value) {
+              ref
+                  .read(pathListProvider.notifier)
+                  .openProject(
+                    () => showDialog(
+                      barrierDismissible: false,
+                      context: context,
+                      builder: (context) => const ViewLoadingDialog(),
+                    ),
+                  )
+                  .then((value) {
                 if (value) {
                   getPlatformFileSystem.isEditable = true;
                   Navigator.of(context).pushReplacementNamed('/viewMake');
@@ -291,6 +309,25 @@ class _ViewAddProjectDialogState extends ConsumerState<ViewAddProjectDialog> {
           child: const Text('생성'),
         ),
       ],
+    );
+  }
+}
+
+class ViewLoadingDialog extends ConsumerWidget {
+  const ViewLoadingDialog({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return AlertDialog(
+      scrollable: true,
+      content: Column(
+        children: [
+          const CircularProgressIndicator(),
+          Text(ref.watch(loadProjectStateProvider)),
+        ],
+      ),
     );
   }
 }
