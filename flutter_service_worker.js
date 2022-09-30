@@ -24,10 +24,10 @@ const RESOURCES = {
 "index.html": "142447007b11498f32c9d63e1a7f2ae0",
 "/": "142447007b11498f32c9d63e1a7f2ae0",
 "jszip.js": "418ea325c68eb099ef2ccc8823771a63",
-"main.dart.js": "6b71bc45f9decfa8c17afefeeadae8ac",
+"main.dart.js": "271df1a71ebe489754a79e739a693bad",
 "manifest.json": "ebc04e4594e86d4e5763ccf0df7285b3",
 "save_web.js": "6d7f19b0443d2ca2a960f0532299e5d7",
-"version.json": "a63bd1ac883e08174b7c0219cff6de25",
+"version.json": "3cc6ccdadcaaafc93b16b403c85f2c24",
 "worker.js": "55118d4a43a00cedd42f65ca3b0b0d2a"
 };
 
