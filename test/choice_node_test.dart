@@ -26,9 +26,9 @@ void main() {
     await tester.pumpWidget(MaterialApp(
       home: ProviderScope(
         overrides: [
-          titleOutlineProvider.overrideWithValue(StateController(false)),
-          colorNodeProvider.overrideWithValue(StateController(Colors.black)),
-          colorOutlineProvider.overrideWithValue(StateController(Colors.white)),
+          titleOutlineProvider.overrideWithProvider(StateProvider.autoDispose((ref) => false)),
+          colorNodeProvider.overrideWithProvider(StateProvider.autoDispose((ref) => Colors.black)),
+          colorOutlineProvider.overrideWithProvider(StateProvider.autoDispose((ref) => Colors.white)),
         ],
         child: ViewChoiceNodeMain(pos0_0),
       ),

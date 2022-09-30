@@ -46,8 +46,8 @@ final projectSettingDisplayNameTextEditingProvider =
 
 final valueTypeWrapperListProvider = StateNotifierProvider.autoDispose<
         ValueTypeWrapperListNotifier, Map<String, ValueTypeWrapper>>(
-    (ref) => ValueTypeWrapperListNotifier(
-        ref.read, Map.from(getPlatform.globalSetting)));
+    (ref) =>
+        ValueTypeWrapperListNotifier(ref, Map.from(getPlatform.globalSetting)));
 
 final projectSettingChangedProvider = StateProvider<bool>((ref) => false);
 
@@ -56,9 +56,9 @@ final projectSettingVisibleSwitchProvider = StateProvider.autoDispose<bool>(
 
 class ValueTypeWrapperListNotifier
     extends StateNotifier<Map<String, ValueTypeWrapper>> {
-  Reader read;
+  Ref ref;
 
-  ValueTypeWrapperListNotifier(this.read, super.state);
+  ValueTypeWrapperListNotifier(this.ref, super.state);
 
   void addInitialValue(String name, ValueTypeWrapper type) {
     int t = 0;
@@ -74,12 +74,12 @@ class ValueTypeWrapperListNotifier
         }
       }
     }
-    read(projectSettingChangedProvider.notifier).state = true;
+    ref.read(projectSettingChangedProvider.notifier).state = true;
   }
 
   void deleteInitialValue(int index) {
     state = Map.from(state)..remove(getKey(index));
-    read(projectSettingChangedProvider.notifier).state = true;
+    ref.read(projectSettingChangedProvider.notifier).state = true;
   }
 
   void editInitialValue(int index) {
@@ -87,14 +87,14 @@ class ValueTypeWrapperListNotifier
       deleteInitialValue(index);
     }
     addInitialValue(
-        read(projectSettingNameTextEditingProvider).text,
+        ref.read(projectSettingNameTextEditingProvider).text,
         ValueTypeWrapper(
             getValueTypeFromStringInput(
-                read(projectSettingValueTextEditingProvider).text),
-            visible: read(projectSettingVisibleSwitchProvider),
+                ref.read(projectSettingValueTextEditingProvider).text),
+            visible: ref.read(projectSettingVisibleSwitchProvider),
             displayName:
-                read(projectSettingDisplayNameTextEditingProvider).text));
-    read(projectSettingChangedProvider.notifier).state = true;
+                ref.read(projectSettingDisplayNameTextEditingProvider).text));
+    ref.read(projectSettingChangedProvider.notifier).state = true;
   }
 
   String getKey(int index) {
@@ -104,7 +104,7 @@ class ValueTypeWrapperListNotifier
   void save() {
     getPlatform.setGlobalSetting(state);
     VariableDataBase().updateVariableTiles();
-    read(projectSettingChangedProvider.notifier).state = false;
-    read(draggableNestedMapChangedProvider.notifier).state = true;
+    ref.read(projectSettingChangedProvider.notifier).state = false;
+    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
   }
 }
