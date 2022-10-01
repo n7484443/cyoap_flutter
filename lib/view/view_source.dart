@@ -98,7 +98,7 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
                           color: Theme.of(context).colorScheme.outline,
                         ),
                         borderRadius:
-                            const BorderRadius.all(Radius.circular(12)),
+                            const BorderRadius.all(Radius.circular(4)),
                       ),
                       color: deleteList.contains(name)
                           ? Theme.of(context).colorScheme.secondaryContainer
