@@ -6,8 +6,8 @@ import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
+import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_design_setting.dart';
-import 'package:cyoap_flutter/viewModel/vm_image_editor.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +18,7 @@ import 'package:tuple/tuple.dart';
 import '../main.dart';
 import '../model/platform_system.dart';
 import '../viewModel/vm_editor.dart';
+import '../viewModel/vm_image_editor.dart';
 import '../viewModel/vm_make_platform.dart';
 
 class ViewEditor extends ConsumerWidget {
@@ -36,9 +37,10 @@ class ViewEditor extends ConsumerWidget {
     var children = [
       const ViewContentsEditor(),
       const ViewCodeIde(),
-      const ViewNodeOptionEditor()
+      const ViewNodeOptionEditor(),
+      const ViewImageSelector()
     ];
-    var childrenText = const ["내용", "코드", "설정"];
+    var childrenText = const ["내용", "코드", "설정", "이미지"];
     return WillPopScope(
       child: DefaultTabController(
         length: children.length,
@@ -56,10 +58,18 @@ class ViewEditor extends ConsumerWidget {
                 },
               ),
             ),
-            title: TabBar(
-              labelColor: Theme.of(context).colorScheme.secondary,
-              unselectedLabelColor: Theme.of(context).colorScheme.primary,
-              tabs: childrenText.map((String e) => Tab(text: e)).toList(),
+            title: ScrollConfiguration(
+              behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
+                PointerDeviceKind.touch,
+                PointerDeviceKind.mouse,
+              }),
+              child: TabBar(
+                labelColor: Theme.of(context).colorScheme.secondary,
+                unselectedLabelColor: Theme.of(context).colorScheme.primary,
+                tabs: childrenText.map((String e) => Tab(text: e)).toList(),
+                isScrollable: true,
+                physics: const AlwaysScrollableScrollPhysics(),
+              ),
             ),
             actions: [
               IconButton(
@@ -312,108 +322,6 @@ class _ViewTextContentsEditorState
               scrollController: _scrollController!,
               customStyles: ConstList.getDefaultThemeData(context, 1,
                   fontStyle: ConstList.getFont(ref.watch(mainFontProvider))),
-            ),
-          ),
-        ),
-        const Expanded(
-          child: ViewNodeImageEditor(),
-        ),
-      ],
-    );
-  }
-}
-
-class ViewNodeImageEditor extends ConsumerWidget {
-  const ViewNodeImageEditor({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(imageStateProvider, (previous, int index) {
-      ref.read(nodeEditorTargetProvider).node.imageString =
-          ImageDB().getImageName(index);
-      ref.read(editorChangeProvider.notifier).needUpdate();
-    });
-    return Row(
-      children: [
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            IconButton(
-                onPressed: () async {
-                  var name = await ref
-                      .read(imageListStateProvider.notifier)
-                      .addImage();
-                  if (name != '') {
-                    getPlatformFileSystem.addSource(
-                        name, ref.read(imageSourceProvider));
-                    showDialog<bool>(
-                      builder: (_) => ImageSourceDialog(name),
-                      context: context,
-                      barrierDismissible: false,
-                    ).then((value) {
-                      if (value ?? false) {
-                        ref.read(imageProvider.notifier).update((state) =>
-                            Tuple2(name, ref.watch(lastImageProvider)!));
-                        ref
-                            .read(changeTabProvider.notifier)
-                            .changePageString('viewImageEditor', context);
-                      } else {
-                        ref
-                            .read(imageListStateProvider.notifier)
-                            .addImageToList(name);
-                      }
-                    });
-                  }
-                },
-                icon: const Icon(Icons.add)),
-          ],
-        ),
-        Expanded(
-          child: Card(
-            elevation: ConstList.elevation,
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: ScrollConfiguration(
-                behavior:
-                    ScrollConfiguration.of(context).copyWith(dragDevices: {
-                  PointerDeviceKind.touch,
-                  PointerDeviceKind.mouse,
-                }),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  controller: ScrollController(),
-                  itemCount: ref.watch(imageListStateProvider).length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 3,
-                          color: index == ref.watch(imageStateProvider)
-                              ? Colors.redAccent
-                              : Colors.white,
-                        ),
-                      ),
-                      child: GestureDetector(
-                        child: ViewImageLoading(
-                            ref.watch(imageListStateProvider)[index]),
-                        onDoubleTap: () {
-                          if (ref.read(imageStateProvider.notifier).state ==
-                              index) {
-                            ref.read(imageStateProvider.notifier).state = -1;
-                          } else {
-                            ref.read(imageStateProvider.notifier).state = index;
-                          }
-                          ref.read(editorChangeProvider.notifier).needUpdate();
-                        },
-                      ),
-                    );
-                  },
-                ),
-              ),
             ),
           ),
         ),
@@ -801,6 +709,116 @@ class ViewNodeOptionEditor extends ConsumerWidget {
             mainAxisSpacing: 2,
           ),
         ),
+      ],
+    );
+  }
+}
+
+class ViewImageSelector extends ConsumerStatefulWidget {
+  const ViewImageSelector({
+    super.key,
+  });
+
+  @override
+  ConsumerState createState() => _ViewImageSelectorState();
+}
+
+class _ViewImageSelectorState extends ConsumerState<ViewImageSelector> {
+  ScrollController? _controller;
+
+  @override
+  void initState() {
+    _controller = AdjustableScrollController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ref.listen(imageStateProvider, (previous, int index) {
+      ref.read(nodeEditorTargetProvider).node.imageString =
+          ImageDB().getImageName(index);
+      ref.read(editorChangeProvider.notifier).needUpdate();
+    });
+    return Stack(
+      children: [
+        CustomScrollView(
+          controller: _controller,
+          slivers: [
+            SliverGrid(
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: 3,
+                        color: index == ref.watch(imageStateProvider)
+                            ? Colors.redAccent
+                            : Colors.white,
+                      ),
+                    ),
+                    child: GestureDetector(
+                      child: ViewImageLoading(
+                          ref.watch(imageListStateProvider)[index]),
+                      onDoubleTap: () {
+                        if (ref.read(imageStateProvider.notifier).state ==
+                            index) {
+                          ref.read(imageStateProvider.notifier).state = -1;
+                        } else {
+                          ref.read(imageStateProvider.notifier).state = index;
+                        }
+                        ref.read(editorChangeProvider.notifier).needUpdate();
+                      },
+                    ),
+                  );
+                },
+                childCount: ref.watch(imageListStateProvider).length,
+              ),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 4,
+                crossAxisSpacing: 3.0,
+                mainAxisSpacing: 3.0,
+              ),
+            ),
+          ],
+        ),
+        Positioned(
+          bottom: 5,
+          right: 5,
+          child: FloatingActionButton(
+            onPressed: () async {
+              var name =
+                  await ref.read(imageListStateProvider.notifier).addImage();
+              if (name != '') {
+                getPlatformFileSystem.addSource(
+                    name, ref.read(imageSourceProvider));
+                showDialog<bool>(
+                  builder: (_) => ImageSourceDialog(name),
+                  context: context,
+                  barrierDismissible: false,
+                ).then((value) {
+                  if (value ?? false) {
+                    ref.read(imageProvider.notifier).update(
+                        (state) => Tuple2(name, ref.watch(lastImageProvider)!));
+                    ref
+                        .read(changeTabProvider.notifier)
+                        .changePageString('viewImageEditor', context);
+                  } else {
+                    ref
+                        .read(imageListStateProvider.notifier)
+                        .addImageToList(name);
+                  }
+                });
+              }
+            },
+            child: const Icon(Icons.add),
+          ),
+        )
       ],
     );
   }
