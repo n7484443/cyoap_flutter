@@ -1,6 +1,6 @@
+import 'package:cyoap_core/choiceNode/choice.dart';
 import 'package:cyoap_core/choiceNode/choice_line.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
-import 'package:cyoap_core/choiceNode/generable_parser.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/choiceNode/selectable_status.dart';
 import 'package:cyoap_core/playable_platform.dart';
@@ -122,13 +122,13 @@ void refreshLine(Ref ref, int y) {
 }
 
 final lineProvider = Provider.autoDispose
-    .family<LineSetting?, int>((ref, pos) => getPlatform.getLineSetting(pos));
+    .family<ChoiceLine?, int>((ref, pos) => getPlatform.getLineSetting(pos));
 
 final lineVisibleProvider = Provider.autoDispose.family<bool, Pos>((ref, pos) =>
     ref.watch(lineProvider(pos.first))!.selectableStatus.isOpen());
 
-final _childrenProvider = Provider.autoDispose
-    .family<List<GenerableParserAndPosition>, Pos>((ref, pos) {
+final _childrenProvider =
+    Provider.autoDispose.family<List<Choice>, Pos>((ref, pos) {
   if (pos.length == 1) {
     return ref.watch(lineProvider(pos.first))!.children;
   } else {
@@ -137,10 +137,10 @@ final _childrenProvider = Provider.autoDispose
 });
 
 final childrenChangeProvider = StateNotifierProvider.autoDispose
-    .family<ChildrenNotifier, List<GenerableParserAndPosition>, Pos>(
+    .family<ChildrenNotifier, List<Choice>, Pos>(
         (ref, pos) => ChildrenNotifier(ref, pos));
 
-class ChildrenNotifier extends StateNotifier<List<GenerableParserAndPosition>> {
+class ChildrenNotifier extends StateNotifier<List<Choice>> {
   Ref ref;
   Pos pos;
 

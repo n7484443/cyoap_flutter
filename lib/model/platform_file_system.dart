@@ -79,7 +79,7 @@ class PlatformFileSystem {
     }
 
     var existNodes = await dirNodes.exists();
-    List<LineSetting> lineSettingList = List.empty(growable: true);
+    List<ChoiceLine> lineSettingList = List.empty(growable: true);
     if (!existNodes) {
       dirNodes.create();
     } else {
@@ -88,7 +88,7 @@ class PlatformFileSystem {
         if (f is File) {
           var value = await f.readAsString();
           if (f.path.contains('lineSetting_')) {
-            lineSettingList.add(LineSetting.fromJson(jsonDecode(value)));
+            lineSettingList.add(ChoiceLine.fromJson(jsonDecode(value)));
           }
         }
       }
@@ -102,13 +102,13 @@ class PlatformFileSystem {
       String imageSource, String platformData) async {
     openAsFile = true;
 
-    List<LineSetting> lineSettingList = List.empty(growable: true);
+    List<ChoiceLine> lineSettingList = List.empty(growable: true);
 
     for (var name in choiceNodes.keys) {
       var data = choiceNodes[name]!;
       var decoded = jsonDecode(data);
       if (name.contains('lineSetting_')) {
-        lineSettingList.add(LineSetting.fromJson(decoded));
+        lineSettingList.add(ChoiceLine.fromJson(decoded));
       }
     }
     Map map = jsonDecode(imageSource);
@@ -126,7 +126,7 @@ class PlatformFileSystem {
     openAsFile = true;
     String? platformJson;
 
-    List<LineSetting> lineSettingList = List.empty(growable: true);
+    List<ChoiceLine> lineSettingList = List.empty(growable: true);
     for (var file in archive) {
       Uint8List data = file.content as Uint8List;
 
@@ -144,7 +144,7 @@ class PlatformFileSystem {
           if (fileName.startsWith('nodes')) {
             if (fileName.contains('lineSetting_')) {
               lineSettingList
-                  .add(LineSetting.fromJson(jsonDecode(dataConverted)));
+                  .add(ChoiceLine.fromJson(jsonDecode(dataConverted)));
             }
           } else if (fileName.endsWith('platform.json')) {
             platformJson = dataConverted;

@@ -31,7 +31,7 @@ class JsonProjectParser {
       if (out != null && out.item2 != null) {
         imageList[imageName] = out.item2!;
       }
-      var lineSetting = LineSetting(i);
+      var lineSetting = ChoiceLine(i);
       lineSetting.addChildren(ChoiceNode(0, rowTitle,
           toContent(row["titleText"] ?? parsed['defaultRowText']), imageName)
         ..choiceNodeDesign.copyWith(

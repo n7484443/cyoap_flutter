@@ -1,6 +1,6 @@
+import 'package:cyoap_core/choiceNode/choice.dart';
 import 'package:cyoap_core/choiceNode/choice_line.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
-import 'package:cyoap_core/choiceNode/generable_parser.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/design_setting.dart';
 import 'package:cyoap_core/grammar/value_type.dart';
@@ -36,16 +36,16 @@ class AbstractPlatform extends PlayablePlatform {
     return out;
   }
 
-  void addLineSettingData(LineSetting lineSetting) {
+  void addLineSettingData(ChoiceLine lineSetting) {
     while (lineSettings.length <= lineSetting.currentPos) {
-      lineSettings.add(LineSetting(lineSettings.length));
+      lineSettings.add(ChoiceLine(lineSettings.length));
     }
     lineSettings[lineSetting.currentPos] = lineSetting;
   }
 
   void addData(Pos pos, ChoiceNode node) {
     while (lineSettings.length <= pos.first) {
-      lineSettings.add(LineSetting(lineSettings.length));
+      lineSettings.add(ChoiceLine(lineSettings.length));
     }
     var parent = getNode(pos.removeLast())!;
     parent.addChildren(node, pos: pos.last);
@@ -63,7 +63,7 @@ class AbstractPlatform extends PlayablePlatform {
   }
 
   void insertDataWithParent(
-      ChoiceNode nodeA, GenerableParserAndPosition parentB) {
+      ChoiceNode nodeA, Choice parentB) {
     var parentA = nodeA.parent!;
 
     parentA.removeChildren(nodeA);
@@ -71,7 +71,7 @@ class AbstractPlatform extends PlayablePlatform {
     checkDataCorrect();
   }
 
-  void addDataAll(List<LineSetting> lineList) {
+  void addDataAll(List<ChoiceLine> lineList) {
     for (var lineSetting in lineList) {
       addLineSettingData(lineSetting);
     }
@@ -79,7 +79,7 @@ class AbstractPlatform extends PlayablePlatform {
   }
 
   @override
-  GenerableParserAndPosition? getNode(Pos pos) {
+  Choice? getNode(Pos pos) {
     if (pos.first == designSamplePosition0) {
       return ChoiceNode(
         1,

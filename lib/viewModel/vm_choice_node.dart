@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cyoap_core/choiceNode/choice.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
-import 'package:cyoap_core/choiceNode/generable_parser.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/choiceNode/selectable_status.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
@@ -17,7 +17,7 @@ import '../model/platform_system.dart';
 const double nodeBaseHeight = 200;
 const int removedPositioned = -2;
 
-void refreshChild(Ref ref, GenerableParserAndPosition node) {
+void refreshChild(Ref ref, Choice node) {
   ref.invalidate(choiceNodeProvider(node.pos));
   ref.invalidate(opacityProvider(node.pos));
   ref.read(childrenChangeProvider(node.pos).notifier).update();
