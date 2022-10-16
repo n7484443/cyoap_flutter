@@ -71,6 +71,7 @@ class ViewEditDrawer extends ConsumerStatefulWidget {
 
 class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
   final TextEditingController _controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -86,6 +87,7 @@ class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
   void dispose() {
     EasyDebounce.cancel('search');
     _controller.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -113,6 +115,7 @@ class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
         ),
         Flexible(
           child: ListView(
+            controller: _scrollController,
             children: [
               const VariableTiles(),
               const NodeTiles(),
@@ -165,6 +168,7 @@ class ViewPlayDrawer extends ConsumerStatefulWidget {
 
 class _ViewPlayDrawerState extends ConsumerState<ViewPlayDrawer> {
   final TextEditingController _controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -180,6 +184,7 @@ class _ViewPlayDrawerState extends ConsumerState<ViewPlayDrawer> {
   void dispose() {
     EasyDebounce.cancel('search');
     _controller.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -200,6 +205,7 @@ class _ViewPlayDrawerState extends ConsumerState<ViewPlayDrawer> {
           ),
         Flexible(
           child: ListView(
+            controller: _scrollController,
             children: [
               const VariableTiles(),
             ],
