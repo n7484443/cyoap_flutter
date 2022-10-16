@@ -8,6 +8,7 @@ import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_design_setting.dart';
+import 'package:desktop_drop/desktop_drop.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class ViewEditor extends ConsumerWidget {
       const ViewContentsEditor(),
       const ViewCodeIde(),
       const ViewNodeOptionEditor(),
-      const ViewImageSelector()
+      const ViewImageDraggable()
     ];
     var childrenText = const ["내용", "코드", "설정", "이미지"];
     return WillPopScope(
@@ -714,6 +715,72 @@ class ViewNodeOptionEditor extends ConsumerWidget {
   }
 }
 
+class ViewImageDraggable extends ConsumerWidget {
+  const ViewImageDraggable({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (!ConstList.isDesktop()) {
+      return const ViewImageSelector();
+    }
+    return DropTarget(
+      onDragDone: (detail) async {
+        for (var file in detail.files) {
+          var fileName = file.name;
+          if (!ImageDB.regCheckImage.hasMatch(fileName)) {
+            continue;
+          }
+          var fileData = await file.readAsBytes();
+          ref.read(lastImageProvider.notifier).update((state) => fileData);
+          ref.read(editorChangeProvider.notifier).needUpdate();
+          openImageEditor(ref, context, fileName);
+        }
+      },
+      onDragEntered: (detail) {
+        ref.read(editorImageDragDropColorProvider.notifier).state =
+            Colors.lightBlueAccent;
+      },
+      onDragExited: (detail) {
+        ref.read(editorImageDragDropColorProvider.notifier).state =
+            Colors.black12;
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+              color: ref.watch(editorImageDragDropColorProvider), width: 5),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        padding: const EdgeInsets.all(4.0),
+        child: const ViewImageSelector(),
+      ),
+    );
+  }
+
+  void openImageEditor(WidgetRef ref, BuildContext context, String name) {
+    if (name != '') {
+      getPlatformFileSystem.addSource(name, ref.read(imageSourceProvider));
+      showDialog<bool>(
+        builder: (_) => ImageSourceDialog(name),
+        context: context,
+        barrierDismissible: false,
+      ).then((value) {
+        if (value ?? false) {
+          ref
+              .read(imageProvider.notifier)
+              .update((state) => Tuple2(name, ref.watch(lastImageProvider)!));
+          ref
+              .read(changeTabProvider.notifier)
+              .changePageString('viewImageEditor', context);
+        } else {
+          ref.read(imageListStateProvider.notifier).addImageToList(name);
+        }
+      });
+    }
+  }
+}
+
 class ViewImageSelector extends ConsumerStatefulWidget {
   const ViewImageSelector({
     super.key,
@@ -791,35 +858,38 @@ class _ViewImageSelectorState extends ConsumerState<ViewImageSelector> {
           bottom: 5,
           right: 5,
           child: FloatingActionButton(
-            onPressed: () async {
-              var name =
-                  await ref.read(imageListStateProvider.notifier).addImage();
-              if (name != '') {
-                getPlatformFileSystem.addSource(
-                    name, ref.read(imageSourceProvider));
-                showDialog<bool>(
-                  builder: (_) => ImageSourceDialog(name),
-                  context: context,
-                  barrierDismissible: false,
-                ).then((value) {
-                  if (value ?? false) {
-                    ref.read(imageProvider.notifier).update(
-                        (state) => Tuple2(name, ref.watch(lastImageProvider)!));
-                    ref
-                        .read(changeTabProvider.notifier)
-                        .changePageString('viewImageEditor', context);
-                  } else {
-                    ref
-                        .read(imageListStateProvider.notifier)
-                        .addImageToList(name);
-                  }
-                });
-              }
+            onPressed: () {
+              ref
+                  .read(imageListStateProvider.notifier)
+                  .addImage()
+                  .then((name) => openImageEditor(ref, context, name));
             },
             child: const Icon(Icons.add),
           ),
         )
       ],
     );
+  }
+
+  void openImageEditor(WidgetRef ref, BuildContext context, String name) {
+    if (name != '') {
+      getPlatformFileSystem.addSource(name, ref.read(imageSourceProvider));
+      showDialog<bool>(
+        builder: (_) => ImageSourceDialog(name),
+        context: context,
+        barrierDismissible: false,
+      ).then((value) {
+        if (value ?? false) {
+          ref
+              .read(imageProvider.notifier)
+              .update((state) => Tuple2(name, ref.watch(lastImageProvider)!));
+          ref
+              .read(changeTabProvider.notifier)
+              .changePageString('viewImageEditor', context);
+        } else {
+          ref.read(imageListStateProvider.notifier).addImageToList(name);
+        }
+      });
+    }
   }
 }

@@ -59,6 +59,7 @@ dependencies:
   js: any
   sentry_flutter: ^6.9.1
   easy_debounce: ^2.0.2+1
+  desktop_drop: ^0.3.3
 
 dev_dependencies:
   flutter_test:

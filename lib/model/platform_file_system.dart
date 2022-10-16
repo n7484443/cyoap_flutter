@@ -218,15 +218,13 @@ class PlatformFileSystem {
     }
   }
 
-  final regCheckImage = RegExp(r'[.](webp|png|jpg|jpeg|bmp|gif)$');
-
   //1 = 일반 이미지, 0 = 웹 이미지, -1 = 이미지 아님.
   int isImageFile(String path) {
     var name = basename(path).toLowerCase();
     if (name.startsWith('http')) {
       return 0;
     }
-    if (regCheckImage.hasMatch(name)) {
+    if (ImageDB.regCheckImage.hasMatch(name)) {
       return 1;
     }
     return -1;

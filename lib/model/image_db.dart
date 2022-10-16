@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 class ImageDB {
+  static final regCheckImage = RegExp(r'[.](webp|png|jpg|jpeg|bmp|gif)$');
+
   static final ImageDB _instance = ImageDB._init();
 
   factory ImageDB() {
