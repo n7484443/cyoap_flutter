@@ -29,7 +29,6 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
       ViewEditor(),
       ViewProjectSetting(),
       ViewSource(),
-      ViewFontSource(),
       ViewImageEditor(),
       ViewDesignSetting(),
     ];

@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart'
     deferred as platform_specified;
 import 'package:cyoap_flutter/util/platform_specified_util/webp_converter.dart';
+import 'package:cyoap_flutter/view/view_font_source.dart';
 import 'package:cyoap_flutter/view/view_make_platform.dart';
 import 'package:cyoap_flutter/view/view_play.dart';
 import 'package:cyoap_flutter/view/view_start.dart';
@@ -173,6 +174,7 @@ void main() {
                 '/': (context) => const ViewStart(),
                 '/viewPlay': (context) => const ViewPlay(),
                 '/viewMake': (context) => const ViewMakePlatform(),
+                '/viewLicense': (context) => const ViewFontSource(),
               },
               theme: appThemeLight,
               darkTheme: appThemeDark,

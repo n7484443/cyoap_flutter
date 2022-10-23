@@ -58,19 +58,7 @@ class ViewStart extends ConsumerWidget {
                     onPressed: () {
                       showDialog(
                         context: context,
-                        builder: (context) => Consumer(
-                          builder: (context, ref, child) => AlertDialog(
-                            title: const Text('설정'),
-                            content: ViewSwitchLabel(
-                              () {
-                                ref.read(saveAsWebpProvider.notifier).state =
-                                    !ref.read(saveAsWebpProvider);
-                              },
-                              ref.watch(saveAsWebpProvider),
-                              label: "저장 시 이미지를 webp 파일로 변환",
-                            ),
-                          ),
-                        ),
+                        builder: (context) => const ViewGlobalSettingDialog(),
                       );
                     },
                   ),
@@ -326,6 +314,36 @@ class ViewLoadingDialog extends ConsumerWidget {
         children: [
           const CircularProgressIndicator(),
           Text(ref.watch(loadProjectStateProvider)),
+        ],
+      ),
+    );
+  }
+}
+
+class ViewGlobalSettingDialog extends ConsumerWidget {
+  const ViewGlobalSettingDialog({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return AlertDialog(
+      title: const Text('설정'),
+      content: Column(
+        children: [
+          ViewSwitchLabel(
+            () {
+              ref.read(saveAsWebpProvider.notifier).state =
+                  !ref.read(saveAsWebpProvider);
+            },
+            ref.watch(saveAsWebpProvider),
+            label: "저장 시 이미지를 webp 파일로 변환",
+          ),
+          const Spacer(),
+          TextButton(onPressed: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pushReplacementNamed("/viewLicense");
+          }, child: const Text("폰트 라이센스")),
         ],
       ),
     );

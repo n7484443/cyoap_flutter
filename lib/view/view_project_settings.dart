@@ -122,14 +122,6 @@ class ViewProjectSetting extends ConsumerWidget {
         },
       ),
       actions: [
-        IconButton(
-          icon: const Icon(Icons.settings),
-          onPressed: () {
-            ref
-                .read(changeTabProvider.notifier)
-                .changePageString('viewFontSource', context);
-          },
-        ),
         if(ConstList.isMobile())
         IconButton(
           icon: const Icon(Icons.save),

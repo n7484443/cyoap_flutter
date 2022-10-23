@@ -106,7 +106,6 @@ final List<String> tabList = [
   "viewEditor",
   "viewProjectSetting",
   "viewSource",
-  "viewFontSource",
   "viewImageEditor",
   "viewDesignSetting",
 ];

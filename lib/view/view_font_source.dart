@@ -13,7 +13,7 @@ class ViewFontSource extends ConsumerWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            ref.read(changeTabProvider.notifier).back(context);
+            Navigator.of(context).pushReplacementNamed("/");
           },
         ),
       ),
