@@ -194,7 +194,8 @@ class ViewSaveIcons extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if(ref.watch(changeTabProvider.notifier).currentPage() == "viewEditor"){
+    var current = tabList[ref.watch(changeTabProvider)];
+    if(current == "viewEditor"){
       return IconButton(
         icon: const Icon(Icons.save),
         onPressed: () {
@@ -202,7 +203,7 @@ class ViewSaveIcons extends ConsumerWidget {
         },
       );
     }
-    if(ref.watch(changeTabProvider.notifier).currentPage() == "viewProjectSetting"){
+    if(current == "viewProjectSetting"){
       return IconButton(
         icon: const Icon(Icons.save),
         onPressed: () {

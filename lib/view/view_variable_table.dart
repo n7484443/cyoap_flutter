@@ -268,7 +268,7 @@ class VariableTiles extends ConsumerWidget {
               title: Text(key),
               subtitle:
                   values.displayName.isEmpty ? null : Text(values.displayName),
-              trailing: Text(values.valueType.data.runtimeType.toString()),
+              trailing: Text(values.valueType.type.name),
               onTap: () {
                 if (ref.watch(changeTabProvider) == 2) {
                   var vmCodeEditor = ref.read(editorChangeProvider.notifier);
