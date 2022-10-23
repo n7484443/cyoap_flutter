@@ -17,7 +17,6 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.read(editIndex.notifier).state = index;
     return AlertDialog(
       title: const Text("데이터 변경"),
       content: Padding(
@@ -29,20 +28,20 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
               child: TextField(
                 maxLines: 1,
                 maxLength: 50,
-                controller: ref.watch(projectSettingNameTextEditingProvider),
+                controller: ref.watch(projectSettingNameTextEditingProvider(index)),
                 decoration: const InputDecoration(
                   label: Text('변수명'),
                 ),
                 textAlign: TextAlign.right,
               ),
-            ),
+             ),
             const Spacer(),
             Flexible(
               flex: 4,
               child: TextField(
                 maxLines: 1,
                 maxLength: 50,
-                controller: ref.watch(projectSettingValueTextEditingProvider),
+                controller: ref.watch(projectSettingValueTextEditingProvider(index)),
                 decoration: const InputDecoration(
                   label: Text('변수 초기값'),
                 ),
@@ -56,7 +55,7 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
                 maxLines: 1,
                 maxLength: 50,
                 controller:
-                    ref.watch(projectSettingDisplayNameTextEditingProvider),
+                    ref.watch(projectSettingDisplayNameTextEditingProvider(index)),
                 decoration: const InputDecoration(
                   label: Text('변수 표기명'),
                 ),
@@ -70,9 +69,9 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
                 children: [
                   ViewSwitchLabel(
                     () => ref
-                        .read(projectSettingVisibleSwitchProvider.notifier)
+                        .read(projectSettingVisibleSwitchProvider(index).notifier)
                         .update((state) => !state),
-                    ref.watch(projectSettingVisibleSwitchProvider),
+                    ref.watch(projectSettingVisibleSwitchProvider(index)),
                     label: '플레이시 표시',
                   ),
                 ],
@@ -91,9 +90,16 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
         TextButton(
           child: const Text('저장'),
           onPressed: () {
+            var after = ValueTypeWrapper(
+                getValueTypeFromStringInput(
+                    ref.read(projectSettingValueTextEditingProvider(index)).text),
+                visible: ref.read(projectSettingVisibleSwitchProvider(index)),
+                displayName:
+                ref.read(projectSettingDisplayNameTextEditingProvider(index)).text);
+            var name = ref.read(projectSettingNameTextEditingProvider(index)).text;
             ref
                 .read(valueTypeWrapperListProvider.notifier)
-                .editInitialValue(index);
+                .editInitialValue(index, name, after);
             Navigator.pop(context);
           },
         )

@@ -6,30 +6,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
-final editIndex = StateProvider.autoDispose<int>((ref) => -1);
-
-final initialValueWrapperProvider =
-    Provider.autoDispose<Tuple2<String, ValueTypeWrapper>?>((ref) {
-  if (ref.watch(editIndex) != -1) {
-    var key = ref
-        .watch(valueTypeWrapperListProvider.notifier)
-        .getKey(ref.watch(editIndex));
-    return Tuple2(key, ref.watch(valueTypeWrapperListProvider)[key]!);
-  }
-  return null;
-});
-
 final projectSettingNameTextEditingProvider =
-    Provider.autoDispose<TextEditingController>((ref) {
-  var controller =
-      TextEditingController(text: ref.read(initialValueWrapperProvider)!.item1);
+    Provider.family.autoDispose<TextEditingController, int>((ref, index) {
+  var controller = TextEditingController(
+      text: ref
+          .read(valueTypeWrapperListProvider.notifier)
+          .getEditTarget(index)!
+          .item1);
   ref.onDispose(() => controller.dispose());
   return controller;
 });
 
 final projectSettingValueTextEditingProvider =
-    Provider.autoDispose<TextEditingController>((ref) {
-  var data = ref.read(initialValueWrapperProvider)!.item2.valueType;
+    Provider.family.autoDispose<TextEditingController, int>((ref, index) {
+  var data = ref
+      .read(valueTypeWrapperListProvider.notifier)
+      .getEditTarget(index)!
+      .item2
+      .valueType;
   var text = data.type.isString ? '"${data.dataUnzip}"' : data.data;
   var controller = TextEditingController(text: text);
   ref.onDispose(() => controller.dispose());
@@ -37,9 +31,13 @@ final projectSettingValueTextEditingProvider =
 });
 
 final projectSettingDisplayNameTextEditingProvider =
-    Provider.autoDispose<TextEditingController>((ref) {
+Provider.family.autoDispose<TextEditingController, int>((ref, index) {
   var controller = TextEditingController(
-      text: ref.read(initialValueWrapperProvider)!.item2.displayName);
+      text: ref
+          .read(valueTypeWrapperListProvider.notifier)
+          .getEditTarget(index)!
+          .item2
+          .displayName);
   ref.onDispose(() => controller.dispose());
   return controller;
 });
@@ -51,8 +49,12 @@ final valueTypeWrapperListProvider = StateNotifierProvider.autoDispose<
 
 final projectSettingChangedProvider = StateProvider<bool>((ref) => false);
 
-final projectSettingVisibleSwitchProvider = StateProvider.autoDispose<bool>(
-    (ref) => ref.read(initialValueWrapperProvider)!.item2.visible);
+final projectSettingVisibleSwitchProvider = StateProvider.family.autoDispose<bool, int>(
+    (ref, index) => ref
+        .read(valueTypeWrapperListProvider.notifier)
+        .getEditTarget(index)!
+        .item2
+        .visible);
 
 class ValueTypeWrapperListNotifier
     extends StateNotifier<Map<String, ValueTypeWrapper>> {
@@ -82,18 +84,11 @@ class ValueTypeWrapperListNotifier
     ref.read(projectSettingChangedProvider.notifier).state = true;
   }
 
-  void editInitialValue(int index) {
+  void editInitialValue(int index, String name, ValueTypeWrapper value) {
     if (index != -1) {
       deleteInitialValue(index);
     }
-    addInitialValue(
-        ref.read(projectSettingNameTextEditingProvider).text,
-        ValueTypeWrapper(
-            getValueTypeFromStringInput(
-                ref.read(projectSettingValueTextEditingProvider).text),
-            visible: ref.read(projectSettingVisibleSwitchProvider),
-            displayName:
-                ref.read(projectSettingDisplayNameTextEditingProvider).text));
+    addInitialValue(name, value);
     ref.read(projectSettingChangedProvider.notifier).state = true;
   }
 
@@ -101,10 +96,22 @@ class ValueTypeWrapperListNotifier
     return state.keys.elementAt(index);
   }
 
+  ValueTypeWrapper? getValue(String key) {
+    return state[key];
+  }
+
   void save() {
     getPlatform.setGlobalSetting(state);
     VariableDataBase().updateVariableTiles();
     ref.read(projectSettingChangedProvider.notifier).state = false;
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+  }
+
+  Tuple2<String, ValueTypeWrapper>? getEditTarget(int index) {
+    if (index != -1) {
+      var key = getKey(index);
+      return Tuple2(key, getValue(key)!);
+    }
+    return null;
   }
 }
