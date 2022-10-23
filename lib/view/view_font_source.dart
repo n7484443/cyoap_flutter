@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../viewModel/vm_make_platform.dart';
-
 class ViewFontSource extends ConsumerWidget {
   const ViewFontSource({super.key});
 
