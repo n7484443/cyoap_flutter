@@ -48,16 +48,14 @@ class ViewEditor extends ConsumerWidget {
         initialIndex: 0,
         child: Scaffold(
           appBar: AppBar(
-            leading: Builder(
-              builder: (context) => IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () {
-                  if (ref.watch(nodeTitleProvider).isNotEmpty) {
-                    ref.read(changeTabProvider.notifier).back(context);
-                  }
-                  DefaultTabController.of(context)?.index = 0;
-                },
-              ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                if (ref.watch(nodeTitleProvider).isNotEmpty) {
+                  ref.read(changeTabProvider.notifier).back(context);
+                }
+                DefaultTabController.of(context)?.index = 0;
+              },
             ),
             title: ScrollConfiguration(
               behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
@@ -72,14 +70,14 @@ class ViewEditor extends ConsumerWidget {
                 physics: const AlwaysScrollableScrollPhysics(),
               ),
             ),
-            actions: [
+            actions: ConstList.isMobile() ? [
               IconButton(
                 icon: const Icon(Icons.save),
                 onPressed: () {
                   ref.read(editorChangeProvider.notifier).save();
                 },
               ),
-            ],
+            ] : null,
           ),
           body: TabBarView(
             children: children,
@@ -736,6 +734,7 @@ class ViewImageDraggable extends ConsumerWidget {
           ref.read(lastImageProvider.notifier).update((state) => fileData);
           ref.read(editorChangeProvider.notifier).needUpdate();
           openImageEditor(ref, context, fileName);
+          break;
         }
       },
       onDragEntered: (detail) {

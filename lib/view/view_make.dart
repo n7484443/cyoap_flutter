@@ -11,6 +11,9 @@ import '../main.dart';
 import '../model/platform_system.dart';
 import '../viewModel/vm_choice_node.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
+import '../viewModel/vm_editor.dart';
+import '../viewModel/vm_make_platform.dart';
+import '../viewModel/vm_project_setting.dart';
 
 class ViewSaveDialog extends ConsumerWidget {
   final bool asZip;
@@ -191,6 +194,22 @@ class ViewSaveIcons extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if(ref.watch(changeTabProvider.notifier).currentPage() == "viewEditor"){
+      return IconButton(
+        icon: const Icon(Icons.save),
+        onPressed: () {
+          ref.read(editorChangeProvider.notifier).save();
+        },
+      );
+    }
+    if(ref.watch(changeTabProvider.notifier).currentPage() == "viewProjectSetting"){
+      return IconButton(
+        icon: const Icon(Icons.save),
+        onPressed: () {
+          ref.read(valueTypeWrapperListProvider.notifier).save();
+        },
+      );
+    }
     return PopupMenuButton(
       icon: const Icon(Icons.save),
       tooltip: '저장 관련 옵션',

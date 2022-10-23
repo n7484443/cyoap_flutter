@@ -130,6 +130,7 @@ class ViewProjectSetting extends ConsumerWidget {
                 .changePageString('viewFontSource', context);
           },
         ),
+        if(ConstList.isMobile())
         IconButton(
           icon: const Icon(Icons.save),
           onPressed: () {

@@ -95,6 +95,10 @@ class ChangeTabNotifier extends StateNotifier<int> {
     var index = tabList.indexOf(name).clamp(0, tabList.length);
     changePage(index, context);
   }
+
+  String currentPage(){
+    return tabList[state];
+  }
 }
 
 final List<String> tabList = [
