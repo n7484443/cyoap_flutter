@@ -70,14 +70,16 @@ class ViewEditor extends ConsumerWidget {
                 physics: const AlwaysScrollableScrollPhysics(),
               ),
             ),
-            actions: ConstList.isMobile() ? [
-              IconButton(
-                icon: const Icon(Icons.save),
-                onPressed: () {
-                  ref.read(editorChangeProvider.notifier).save();
-                },
-              ),
-            ] : null,
+            actions: ConstList.isMobile()
+                ? [
+                    IconButton(
+                      icon: const Icon(Icons.save),
+                      onPressed: () {
+                        ref.read(editorChangeProvider.notifier).save();
+                      },
+                    ),
+                  ]
+                : null,
           ),
           body: TabBarView(
             children: children,
@@ -641,6 +643,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
     }
 
     return CustomScrollView(
+      controller: ScrollController(),
       slivers: [
         SliverToBoxAdapter(
           child:
@@ -705,6 +708,51 @@ class ViewNodeOptionEditor extends ConsumerWidget {
             crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 4,
             crossAxisSpacing: 2,
             mainAxisExtent: 80,
+            mainAxisSpacing: 2,
+          ),
+        ),
+        const SliverToBoxAdapter(
+          child: Divider(),
+        ),
+        SliverGrid(
+          delegate: SliverChildListDelegate([
+            ColorPicker(
+              heading: Stack(
+                alignment: Alignment.center,
+                children: [
+                  const Center(
+                    child: Text('선택지 색상'),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      icon: const Icon(Icons.format_color_reset),
+                      onPressed: () {},
+                    ),
+                  )
+                ],
+              ),
+              color: Colors.white,
+              onColorChanged: (Color value) {
+                //ref.read(providerList[check].notifier).update((state) => value);
+              },
+              pickersEnabled: {
+                ColorPickerType.wheel: true,
+                ColorPickerType.accent: false
+              },
+              pickerTypeLabels: {
+                ColorPickerType.primary: "색상 선택",
+                ColorPickerType.wheel: "직접 선택"
+              },
+              width: 22,
+              height: 22,
+              borderRadius: 22,
+            ),
+          ]),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
+            crossAxisSpacing: 2,
+            mainAxisExtent: 380,
             mainAxisSpacing: 2,
           ),
         ),
