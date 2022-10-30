@@ -20,7 +20,7 @@ class ViewSwitchLabel extends StatelessWidget {
     return InkWell(
       onTap: () => updateState(),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             label,
