@@ -163,11 +163,13 @@ class ViewDesignSetting extends ConsumerWidget {
                               .image,
                           fit: backgroundBoxFit,
                           repeat: backgroundRepeat,
+                          filterQuality: FilterQuality.high,
                         )
                       : null,
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: ConstList.padding, vertical: 50),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: ConstList.padding, vertical: 50),
                   child: IgnorePointer(
                     child: Row(
                       children: [
@@ -205,14 +207,17 @@ class ViewPositionSetting extends ConsumerStatefulWidget {
 
 class _ViewPositionSettingState extends ConsumerState<ViewPositionSetting> {
   TextEditingController? _controller;
+
   @override
   void initState() {
     _controller = TextEditingController(
       text: ref.read(marginVerticalProvider).toString(),
     );
     _controller?.addListener(() {
-      EasyDebounce.debounce('marginController', const Duration(milliseconds: 500), () {
-        ref.read(marginVerticalProvider.notifier).state = double.tryParse(_controller?.text ?? '') ?? 12.0;
+      EasyDebounce.debounce(
+          'marginController', const Duration(milliseconds: 500), () {
+        ref.read(marginVerticalProvider.notifier).state =
+            double.tryParse(_controller?.text ?? '') ?? 12.0;
       });
     });
     super.initState();
@@ -225,23 +230,21 @@ class _ViewPositionSettingState extends ConsumerState<ViewPositionSetting> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ViewSwitchLabel(
           label: "제목을 위로",
-              () => ref
+          () => ref
               .read(titlePositionProvider.notifier)
               .update((state) => !state),
           ref.watch(titlePositionProvider),
         ),
         ViewSwitchLabel(
           label: "제목 테두리",
-              () => ref
-              .read(titleOutlineProvider.notifier)
-              .update((state) => !state),
+          () =>
+              ref.read(titleOutlineProvider.notifier).update((state) => !state),
           ref.watch(titleOutlineProvider),
         ),
         Row(
@@ -255,7 +258,8 @@ class _ViewPositionSettingState extends ConsumerState<ViewPositionSetting> {
                 maxLength: 4,
                 minLines: 1,
                 maxLines: 1,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: false),
+                keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true, signed: false),
                 controller: _controller,
                 decoration: const InputDecoration(
                   label: Text('기본 값 12.0'),
@@ -404,7 +408,6 @@ class _ViewBackgroundSettingState extends ConsumerState<ViewBackgroundSetting> {
     var widget = ImageAttribute.values
         .map((e) => DropdownMenuItem(value: e, child: Text(e.name)))
         .toList();
-    var background = ref.watch(backgroundProvider);
     return CustomScrollView(
       controller: _scrollController,
       slivers: [

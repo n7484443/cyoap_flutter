@@ -354,6 +354,7 @@ class NestedScroll extends ConsumerWidget {
                 .image,
             fit: backgroundBoxFit,
             repeat: backgroundRepeat,
+            filterQuality: FilterQuality.high,
           )
               : null,
         ),
