@@ -4,6 +4,7 @@ import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -78,6 +79,12 @@ class ViewDesignSetting extends ConsumerWidget {
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
 
+    ref.listen(marginVerticalProvider, (previous, double next) {
+      getPlatform.designSetting =
+          getPlatform.designSetting.copyWith(marginVertical: next);
+      ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+    });
+
     var background = ref.watch(backgroundProvider);
     var backgroundAttribute = ref.watch(backgroundAttributeProvider);
 
@@ -126,24 +133,7 @@ class ViewDesignSetting extends ConsumerWidget {
                 child: TabBarView(
                   children: [
                     const ViewColorSelect(),
-                    Column(
-                      children: [
-                        ViewSwitchLabel(
-                          label: "제목을 위로",
-                          () => ref
-                              .read(titlePositionProvider.notifier)
-                              .update((state) => !state),
-                          ref.watch(titlePositionProvider),
-                        ),
-                        ViewSwitchLabel(
-                          label: "제목 테두리",
-                          () => ref
-                              .read(titleOutlineProvider.notifier)
-                              .update((state) => !state),
-                          ref.watch(titleOutlineProvider),
-                        ),
-                      ],
-                    ),
+                    const ViewPositionSetting(),
                     Column(
                       children: [
                         ViewFontSelector(
@@ -200,6 +190,81 @@ class ViewDesignSetting extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class ViewPositionSetting extends ConsumerStatefulWidget {
+  const ViewPositionSetting({
+    super.key,
+  });
+
+  @override
+  ConsumerState createState() => _ViewPositionSettingState();
+}
+
+class _ViewPositionSettingState extends ConsumerState<ViewPositionSetting> {
+  TextEditingController? _controller;
+  @override
+  void initState() {
+    _controller = TextEditingController(
+      text: ref.read(marginVerticalProvider).toString(),
+    );
+    _controller?.addListener(() {
+      EasyDebounce.debounce('marginController', const Duration(milliseconds: 500), () {
+        ref.read(marginVerticalProvider.notifier).state = double.tryParse(_controller?.text ?? '') ?? 12.0;
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    EasyDebounce.cancel('marginController');
+    super.dispose();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ViewSwitchLabel(
+          label: "제목을 위로",
+              () => ref
+              .read(titlePositionProvider.notifier)
+              .update((state) => !state),
+          ref.watch(titlePositionProvider),
+        ),
+        ViewSwitchLabel(
+          label: "제목 테두리",
+              () => ref
+              .read(titleOutlineProvider.notifier)
+              .update((state) => !state),
+          ref.watch(titleOutlineProvider),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('선택지 간 세로 여백', style: Theme.of(context).textTheme.labelLarge),
+            SizedBox(
+              width: 100,
+              child: TextField(
+                textAlign: TextAlign.end,
+                maxLength: 4,
+                minLines: 1,
+                maxLines: 1,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: false),
+                controller: _controller,
+                decoration: const InputDecoration(
+                  label: Text('기본 값 12.0'),
+                ),
+              ),
+            ),
+          ],
+        )
+      ],
     );
   }
 }
@@ -399,8 +464,6 @@ class _ViewBackgroundSettingState extends ConsumerState<ViewBackgroundSetting> {
             mainAxisSpacing: 3.0,
           ),
         ),
-        if (background != null)
-          SliverToBoxAdapter(child: ViewImageLoading(background)),
       ],
     );
   }

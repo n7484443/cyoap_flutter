@@ -34,3 +34,5 @@ final backgroundCurrentStateProvider = StateProvider.autoDispose<int>((ref){
   return ImageDB().getImageIndex(backgroundName);
 });
 final backgroundAttributeProvider = StateProvider.autoDispose<ImageAttribute>((ref) => getPlatform.designSetting.backgroundAttribute);
+
+final marginVerticalProvider = StateProvider.autoDispose<double>((ref) => getPlatform.designSetting.marginVertical);

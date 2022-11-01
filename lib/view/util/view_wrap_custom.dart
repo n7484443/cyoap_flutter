@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
+import '../../viewModel/vm_design_setting.dart';
 import '../view_choice_node.dart';
 
 class ViewWrapCustomReorderable extends ConsumerWidget {
@@ -129,12 +130,12 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
         (context, index) {
           if (color == null) {
             return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12),
+              padding: EdgeInsets.symmetric(vertical: ref.watch(marginVerticalProvider)),
               child: outputWidget[index],
             );
           }
           return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            padding: EdgeInsets.symmetric(vertical: ref.watch(marginVerticalProvider)),
             child: ColoredBox(color: color, child: outputWidget[index]),
           );
         },
@@ -228,12 +229,12 @@ class ViewWrapCustom extends ConsumerWidget {
         (context, index) {
           if (color == null) {
             return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12),
+              padding: EdgeInsets.symmetric(vertical: ref.watch(marginVerticalProvider)),
               child: outputWidget[index],
             );
           }
           return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            padding: EdgeInsets.symmetric(vertical: ref.watch(marginVerticalProvider)),
             child: ColoredBox(color: color, child: outputWidget[index]),
           );
         },
