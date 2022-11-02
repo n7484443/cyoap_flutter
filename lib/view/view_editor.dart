@@ -727,14 +727,16 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                     alignment: Alignment.centerRight,
                     child: IconButton(
                       icon: const Icon(Icons.format_color_reset),
-                      onPressed: () {},
+                      onPressed: () {
+                        ref.read(nodeEditorDesignProvider.notifier).update((state) => state.copyWith(colorNode: null));
+                      },
                     ),
                   )
                 ],
               ),
-              color: Colors.white,
+              color: Color(ref.read(nodeEditorDesignProvider).colorNode ?? ref.read(colorNodeProvider).value),
               onColorChanged: (Color value) {
-                //ref.read(providerList[check].notifier).update((state) => value);
+                ref.read(nodeEditorDesignProvider.notifier).update((state) => state.copyWith(colorNode: value.value));
               },
               pickersEnabled: {
                 ColorPickerType.wheel: true,

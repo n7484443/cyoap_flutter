@@ -66,6 +66,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var node = ref.watch(choiceNodeProvider(pos)).node!;
     var design = ref.watch(choiceNodeDesignSettingProvider(pos));
+    var defaultColor = Color(design.colorNode ?? ref.watch(colorNodeProvider).value);
     return Card(
       shape: design.isRound
           ? RoundedRectangleBorder(
@@ -73,7 +74,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
               side: BorderSide(
                 color: node.select > 0
                     ? ref.watch(colorOutlineProvider)
-                    : ref.watch(colorNodeProvider),
+                    : defaultColor,
                 width: ConstList.isSmallDisplay(context) ? 2 : 4,
               ),
             )
@@ -81,7 +82,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
               BorderSide(
                 color: node.select > 0
                     ? ref.watch(colorOutlineProvider)
-                    : ref.watch(colorNodeProvider),
+                    : defaultColor,
                 width: ConstList.isSmallDisplay(context) ? 2 : 4,
               ),
             ),
@@ -89,9 +90,9 @@ class ViewChoiceNodeMain extends ConsumerWidget {
       margin:
           ConstList.isSmallDisplay(context) ? const EdgeInsets.all(1.4) : null,
       elevation: design.isCard ? ConstList.elevation : 0,
-      color: ref.watch(colorNodeProvider),
+      color: defaultColor,
       child: Ink(
-        color: ref.watch(colorNodeProvider),
+        color: defaultColor,
         child: Padding(
           padding: ConstList.isSmallDisplay(context)
               ? const EdgeInsets.all(2.0)
