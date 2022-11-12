@@ -153,10 +153,12 @@ class ViewProjectSetting extends ConsumerWidget {
                   var key = ref
                       .watch(valueTypeWrapperListProvider.notifier)
                       .getKey(index);
+                  var data = ref.watch(valueTypeWrapperListProvider)[key]!;
+                  var visible = data.visible;
                   return ListTile(
                     //보이지 않을 경우 푸른색으로
                     tileColor:
-                        ref.watch(valueTypeWrapperListProvider)[key]!.visible
+                    visible
                             ? Colors.blue
                             : null,
                     onTap: () {
@@ -165,14 +167,12 @@ class ViewProjectSetting extends ConsumerWidget {
                               ViewInitialValueEditDialog(index),
                           context: context);
                     },
-                    title: Text(key),
-                    subtitle: Text(ref
-                        .watch(valueTypeWrapperListProvider)[key]!
-                        .valueType
+                    title: Text(key, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: visible ? Colors.white : null)),
+                    subtitle: Text(data.valueType
                         .data
-                        .toString()),
+                        .toString(), style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: visible ? Colors.white : null)),
                     trailing: IconButton(
-                      icon: const Icon(Icons.delete),
+                      icon: Icon(Icons.delete, color: visible ? Colors.white : null),
                       onPressed: () {
                         ref
                             .read(valueTypeWrapperListProvider.notifier)
