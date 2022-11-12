@@ -122,7 +122,7 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
         children: [
           Row(
             children: [
-              const Text('선택 가능'),
+              const Text('선택 가능 개수'),
               const Spacer(),
               IconButton(
                 icon: const Icon(Icons.chevron_left),
