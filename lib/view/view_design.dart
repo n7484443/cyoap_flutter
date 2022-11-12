@@ -347,11 +347,14 @@ class _ViewColorSelectState extends ConsumerState<ViewColorSelect> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: List<Widget>.generate(
                   textList.length,
-                  (index) => ChoiceChip(
-                      label: Text(textList[index]),
-                      selected: ref.watch(colorSelectProvider) == index,
-                      onSelected: (value) =>
-                          ref.read(colorSelectProvider.notifier).state = index),
+                  (index) => Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: ChoiceChip(
+                        label: Text(textList[index]),
+                        selected: ref.watch(colorSelectProvider) == index,
+                        onSelected: (value) =>
+                            ref.read(colorSelectProvider.notifier).state = index),
+                  ),
                 ),
               ),
             ),

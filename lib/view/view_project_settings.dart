@@ -159,7 +159,7 @@ class ViewProjectSetting extends ConsumerWidget {
                     //보이지 않을 경우 푸른색으로
                     tileColor:
                     visible
-                            ? Colors.blue
+                            ? Colors.lightBlue
                             : null,
                     onTap: () {
                       showDialog(
