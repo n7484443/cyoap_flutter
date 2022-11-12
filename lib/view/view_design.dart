@@ -42,11 +42,6 @@ class ViewDesignSetting extends ConsumerWidget {
           getPlatform.designSetting.copyWith(titlePosition: next);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
-    ref.listen(titleOutlineProvider, (bool? previous, bool next) {
-      getPlatform.designSetting =
-          getPlatform.designSetting.copyWith(titleOutline: next);
-      ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-    });
     ref.listen(colorBackgroundProvider, (previous, Color next) {
       getPlatform.designSetting =
           getPlatform.designSetting.copyWith(colorBackground: next.value);
@@ -240,12 +235,6 @@ class _ViewPositionSettingState extends ConsumerState<ViewPositionSetting> {
               .read(titlePositionProvider.notifier)
               .update((state) => !state),
           ref.watch(titlePositionProvider),
-        ),
-        ViewSwitchLabel(
-          label: "제목 테두리",
-          () =>
-              ref.read(titleOutlineProvider.notifier).update((state) => !state),
-          ref.watch(titleOutlineProvider),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

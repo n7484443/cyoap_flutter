@@ -3,7 +3,6 @@ import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
-import 'package:cyoap_flutter/view/util/view_text_outline.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
@@ -280,24 +279,13 @@ class ViewTitleWithEdit extends ConsumerWidget {
     Widget title;
     var design = ref.watch(choiceNodeDesignSettingProvider(pos));
     if (!design.hideTitle) {
-      if (ref.watch(titleOutlineProvider)) {
-        title = TextOutline(
-          ref.watch(titleStringProvider(pos)),
-          20 * ConstList.scale(context),
-          ConstList.getFont(
-            ref.watch(titleFontProvider),
-          ),
-          textColor: ref.watch(colorTitleProvider),
-        );
-      } else {
-        title = Text(
-          ref.watch(titleStringProvider(pos)),
-          style: ConstList.getFont(ref.watch(titleFontProvider)).copyWith(
-            fontSize: 20 * ConstList.scale(context),
-            color: ref.watch(colorTitleProvider),
-          ),
-        );
-      }
+      title = Text(
+        ref.watch(titleStringProvider(pos)),
+        style: ConstList.getFont(ref.watch(titleFontProvider)).copyWith(
+          fontSize: 20 * ConstList.scale(context),
+          color: ref.watch(colorTitleProvider),
+        ),
+      );
     } else {
       title = const SizedBox.shrink();
     }

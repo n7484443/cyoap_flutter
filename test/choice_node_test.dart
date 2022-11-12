@@ -13,22 +13,20 @@ void main() {
   getPlatformFileSystem.isEditable = false;
   var pos0_0 = Pos(data: [0, 0]);
   getPlatform.addData(
-    pos0_0,
-    ChoiceNode(
-      4,
-      "디자인",
-      "[{\"insert\":\"레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.\\n\"}]",
-      "noImage",
-    )
-  );
+      pos0_0,
+      ChoiceNode(
+        4,
+        "디자인",
+        "[{\"insert\":\"레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.\\n\"}]",
+        "noImage",
+      ));
 
   testWidgets('ViewChoiceNodeMain', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
       home: ProviderScope(
         overrides: [
-          titleOutlineProvider.overrideWithProvider(StateProvider.autoDispose((ref) => false)),
-          colorNodeProvider.overrideWithProvider(StateProvider.autoDispose((ref) => Colors.black)),
-          colorOutlineProvider.overrideWithProvider(StateProvider.autoDispose((ref) => Colors.white)),
+          colorNodeProvider.overrideWith((color) => Colors.black),
+          colorOutlineProvider.overrideWith((color) => Colors.white),
         ],
         child: ViewChoiceNodeMain(pos0_0),
       ),
@@ -53,23 +51,21 @@ void main() {
   var pos1_0 = Pos(data: [1, 0]);
   var pos1_1 = Pos(data: [1, 1]);
   getPlatform.addData(
-    pos1_0,
-    ChoiceNode(
-      4,
-      "디자인",
-      "[{\"insert\":\"레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.\\n\"}]",
-      "noImage",
-    )
-  );
+      pos1_0,
+      ChoiceNode(
+        4,
+        "디자인",
+        "[{\"insert\":\"레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.\\n\"}]",
+        "noImage",
+      ));
   getPlatform.addData(
-    pos1_1,
-    ChoiceNode(
-      4,
-      "디자인",
-      "[{\"insert\":\"레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.\\n\"}]",
-      "noImage",
-    )
-  );
+      pos1_1,
+      ChoiceNode(
+        4,
+        "디자인",
+        "[{\"insert\":\"레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.\\n\"}]",
+        "noImage",
+      ));
 
   testWidgets('OccupySpace', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
@@ -79,9 +75,11 @@ void main() {
             parentPos1, (i) => ViewChoiceNode(parentPos1.addLast(i))),
       ),
     ));
-    getPlatform.getChoiceNode(pos1_0)?.choiceNodeDesign = ChoiceNodeDesign(isOccupySpace: true);
+    getPlatform.getChoiceNode(pos1_0)?.choiceNodeDesign =
+        ChoiceNodeDesign(isOccupySpace: true);
     getPlatform.getChoiceNode(pos1_0)?.selectableStatus = SelectableStatus.hide;
-    getPlatform.getChoiceNode(pos1_1)?.choiceNodeDesign = ChoiceNodeDesign(isOccupySpace: true);
+    getPlatform.getChoiceNode(pos1_1)?.choiceNodeDesign =
+        ChoiceNodeDesign(isOccupySpace: true);
     getPlatform.getChoiceNode(pos1_1)?.selectableStatus = SelectableStatus.hide;
     expect(find.byType(Expanded), findsNWidgets(3));
   });
@@ -93,9 +91,11 @@ void main() {
             parentPos1, (i) => ViewChoiceNode(parentPos1.addLast(i))),
       ),
     ));
-    getPlatform.getChoiceNode(pos1_0)?.choiceNodeDesign = ChoiceNodeDesign(isOccupySpace: false);
+    getPlatform.getChoiceNode(pos1_0)?.choiceNodeDesign =
+        ChoiceNodeDesign(isOccupySpace: false);
     getPlatform.getChoiceNode(pos1_0)?.selectableStatus = SelectableStatus.hide;
-    getPlatform.getChoiceNode(pos1_1)?.choiceNodeDesign = ChoiceNodeDesign(isOccupySpace: false);
+    getPlatform.getChoiceNode(pos1_1)?.choiceNodeDesign =
+        ChoiceNodeDesign(isOccupySpace: false);
     getPlatform.getChoiceNode(pos1_1)?.selectableStatus = SelectableStatus.hide;
     expect(find.byType(Expanded), findsNothing);
   });
