@@ -634,9 +634,18 @@ class ViewNodeOptionEditor extends ConsumerWidget {
         list.add(
           ViewSwitchLabel(
             () => ref.read(nodeEditorDesignProvider.notifier).update(
-                (state) => state.copyWith(hideAsResult: !design.hideAsResult)),
+                (state) => state.copyWith(hideAsResult: !design.hideAsResult, showAsResult: false)),
             design.hideAsResult,
             label: '결론창에서 \n숨기기',
+          ),
+        );
+      }else{
+        list.add(
+          ViewSwitchLabel(
+                () => ref.read(nodeEditorDesignProvider.notifier).update(
+                    (state) => state.copyWith(showAsResult: !design.showAsResult, hideAsResult: false)),
+            design.showAsResult,
+            label: '결론창에서 \n보이기',
           ),
         );
       }
