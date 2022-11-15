@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:cyoap_core/option.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart'
     deferred as platform_specified;
 import 'package:cyoap_flutter/util/platform_specified_util/webp_converter.dart';
@@ -81,6 +82,12 @@ class ConstList {
     }
     Sentry.configureScope((scope) => scope.setContexts('USER_INFO', userInfo));
     WebpConverter.instance?.init();
+    Option().isDebugMode = false;
+    Option().enableCode = true;
+    Option().enableToken = true;
+    Option().enableSelectLog = true;
+    Option().enableRecursiveResult = true;
+    Option().enableRecursiveStack = true;
   }
 
   static DefaultStyles getDefaultThemeData(BuildContext context, double scale,
