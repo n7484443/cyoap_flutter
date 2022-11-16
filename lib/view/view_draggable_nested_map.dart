@@ -453,7 +453,6 @@ class _NestedMapState extends ConsumerState<NestedMap> {
         }
         return ViewWrapCustomReorderable(
           pos,
-          (i) => NodeDragTarget(pos.addLast(i)),
           isInner: false,
         );
       });

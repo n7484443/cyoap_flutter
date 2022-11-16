@@ -9,14 +9,14 @@ import 'package:tuple/tuple.dart';
 
 import '../../viewModel/vm_design_setting.dart';
 import '../view_choice_node.dart';
+import '../view_draggable_nested_map.dart';
 
 class ViewWrapCustomReorderable extends ConsumerWidget {
   final Pos parentPos;
-  final Widget Function(int) builderDraggable;
   final int maxSize;
   final bool isInner;
 
-  ViewWrapCustomReorderable(this.parentPos, this.builderDraggable,
+  ViewWrapCustomReorderable(this.parentPos,
       {this.maxSize = defaultMaxSize, this.isInner = true, super.key}) {
     if (ConstList.isMobile()) {
       mul = const Tuple2(7, 4);
@@ -30,13 +30,12 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
   void addBuildDraggable(List<Widget> widget, int pos,
       {bool horizontal = false}) {
     if (horizontal) {
-      widget.add(Padding(
-        padding: const EdgeInsets.all(8.0),
-        child:
-            SizedBox(height: nodeBaseHeight / 6, child: builderDraggable(pos)),
-      ));
+      widget.add(SizedBox(
+          height: nodeBaseHeight / 6,
+          child: NodeDragTarget(parentPos.addLast(pos))));
     } else {
-      widget.add(Expanded(flex: mul.item2, child: builderDraggable(pos)));
+      widget.add(Expanded(
+          flex: mul.item2, child: NodeDragTarget(parentPos.addLast(pos))));
     }
   }
 
@@ -53,8 +52,9 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
     List<Widget> outputWidget = List<Widget>.empty(growable: true);
     var children = ref.watch(childrenChangeProvider(parentPos));
     if (children.isEmpty) {
-      addBuildDraggable(outputWidget, children.length, horizontal: true);
-      return outputWidget.first;
+      return SizedBox(
+          height: nodeBaseHeight / 6,
+          child: NodeDragTarget(parentPos.addLast(0)));
     }
     int stack = 0;
     List<Widget> subWidget = List<Widget>.empty(growable: true);
@@ -130,12 +130,14 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
         (context, index) {
           if (color == null) {
             return Padding(
-              padding: EdgeInsets.symmetric(vertical: ref.watch(marginVerticalProvider)),
+              padding: EdgeInsets.symmetric(
+                  vertical: ref.watch(marginVerticalProvider)),
               child: outputWidget[index],
             );
           }
           return Padding(
-            padding: EdgeInsets.symmetric(vertical: ref.watch(marginVerticalProvider)),
+            padding: EdgeInsets.symmetric(
+                vertical: ref.watch(marginVerticalProvider)),
             child: ColoredBox(color: color, child: outputWidget[index]),
           );
         },
@@ -229,12 +231,14 @@ class ViewWrapCustom extends ConsumerWidget {
         (context, index) {
           if (color == null) {
             return Padding(
-              padding: EdgeInsets.symmetric(vertical: ref.watch(marginVerticalProvider)),
+              padding: EdgeInsets.symmetric(
+                  vertical: ref.watch(marginVerticalProvider)),
               child: outputWidget[index],
             );
           }
           return Padding(
-            padding: EdgeInsets.symmetric(vertical: ref.watch(marginVerticalProvider)),
+            padding: EdgeInsets.symmetric(
+                vertical: ref.watch(marginVerticalProvider)),
             child: ColoredBox(color: color, child: outputWidget[index]),
           );
         },

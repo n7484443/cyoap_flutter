@@ -4,7 +4,6 @@ import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
-import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_design_setting.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
@@ -464,7 +463,6 @@ class ViewChoiceNodeContent extends ConsumerWidget {
       if (isEditable) {
         child = ViewWrapCustomReorderable(
           pos,
-          (i) => NodeDragTarget(pos.addLast(i)),
           maxSize: node.getMaxSize(true),
         );
       } else if (!ignoreChild) {
