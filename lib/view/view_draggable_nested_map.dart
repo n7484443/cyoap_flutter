@@ -473,7 +473,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
         if (ref.watch(childrenChangeProvider(pos)).isEmpty) {
           continue;
         }
-        if (!ref.watch(lineVisibleProvider(pos))) {
+        if (ref.watch(lineProvider(y)) != null && !ref.watch(lineVisibleProvider(pos))!) {
           continue;
         }
         sliverList.add(SliverToBoxAdapter(

@@ -124,8 +124,8 @@ void refreshLine(Ref ref, int y) {
 final lineProvider = Provider.autoDispose
     .family<ChoiceLine?, int>((ref, pos) => getPlatform.getLineSetting(pos));
 
-final lineVisibleProvider = Provider.autoDispose.family<bool, Pos>((ref, pos) =>
-    ref.watch(lineProvider(pos.first))!.selectableStatus.isOpen());
+final lineVisibleProvider = Provider.autoDispose.family<bool?, Pos>((ref, pos) =>
+    ref.watch(lineProvider(pos.first))?.selectableStatus.isOpen());
 
 final _childrenProvider =
     Provider.autoDispose.family<List<Choice>, Pos>((ref, pos) {
