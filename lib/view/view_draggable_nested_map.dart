@@ -432,7 +432,6 @@ class _NestedMapState extends ConsumerState<NestedMap> {
         dragPositionProvider, (previous, next) => dragUpdate(next));
     var lineList = ref.watch(lineListProvider);
     var lineLength = ref.watch(lineLengthProvider);
-
     List<Widget> sliverList = [];
     if (isEditable) {
       sliverList = List.generate(lineList.length * 2, (index) {

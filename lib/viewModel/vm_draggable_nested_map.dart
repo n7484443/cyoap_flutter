@@ -104,6 +104,7 @@ class VMDraggableNestedMap {
 }
 
 void refreshPage(Ref ref, {int startLine = 0}) {
+  ref.invalidate(lineLengthProvider);
   for (var pos = startLine; pos < getPlatform.lineSettings.length; pos++) {
     refreshLine(ref, pos);
   }
@@ -112,7 +113,6 @@ void refreshPage(Ref ref, {int startLine = 0}) {
 void refreshLine(Ref ref, int y) {
   var pos = Pos(data: [y]);
   ref.invalidate(lineProvider(y));
-  ref.invalidate(lineLengthProvider);
   ref.invalidate(lineListProvider);
   ref.invalidate(lineVisibleProvider(pos));
   ref.read(childrenChangeProvider(pos).notifier).update();
