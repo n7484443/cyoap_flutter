@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cyoap_flutter/model/platform_system.dart';
@@ -29,14 +28,13 @@ class PlayDataNotifier extends StateNotifier<void> {
   }
   Future<void> loadPlayData() async {
     var selected = await FilePicker.platform.pickFiles(type: FileType.custom,
-      allowedExtensions: ['json'],);
+      allowedExtensions: ['json'], withData: true);
     if (selected == null) {
       return;
     }
     var bytes = selected.files[0].bytes;
     var string = String.fromCharCodes(bytes!);
-    var json = jsonDecode(string);
-    getPlatform.setSelectedPosInternal(json);
+    getPlatform.setSelectedPosInternal(string);
     updateStatusAll(ref);
   }
 }

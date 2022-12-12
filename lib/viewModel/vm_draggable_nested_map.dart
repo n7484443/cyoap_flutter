@@ -128,11 +128,11 @@ final lineVisibleProvider = Provider.autoDispose.family<bool?, Pos>((ref, pos) =
     ref.watch(lineProvider(pos.first))?.selectableStatus.isOpen());
 
 final _childrenProvider =
-    Provider.autoDispose.family<List<Choice>, Pos>((ref, pos) {
+    Provider.autoDispose.family<List<Choice>?, Pos>((ref, pos) {
   if (pos.length == 1) {
-    return ref.watch(lineProvider(pos.first))!.children;
+    return ref.watch(lineProvider(pos.first))?.children;
   } else {
-    return ref.watch(choiceNodeProvider(pos)).node!.children;
+    return ref.watch(choiceNodeProvider(pos)).node?.children;
   }
 });
 
@@ -145,10 +145,10 @@ class ChildrenNotifier extends StateNotifier<List<Choice>> {
   Pos pos;
 
   ChildrenNotifier(this.ref, this.pos)
-      : super([...ref.read(_childrenProvider(pos))]);
+      : super([...(ref.read(_childrenProvider(pos)) ?? [])]);
 
   void update() {
-    state = [...ref.read(_childrenProvider(pos))];
+    state = [...(ref.read(_childrenProvider(pos)) ?? [])];
   }
 }
 
