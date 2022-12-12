@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../viewModel/vm_play.dart';
 import '../viewModel/vm_snackbar.dart';
 
 class ViewPlay extends ConsumerStatefulWidget {
@@ -63,6 +64,13 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pushReplacementNamed("/"),
+        ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            IconButton(onPressed: () => ref.read(playDataProvider.notifier).savePlayData(), icon: const Icon(Icons.save)),
+            IconButton(onPressed: () => ref.read(playDataProvider.notifier).loadPlayData(), icon: const Icon(Icons.file_upload_outlined)),
+          ],
         ),
       ),
       endDrawer: const Drawer(

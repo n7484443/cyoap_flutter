@@ -39,7 +39,7 @@ class ViewSelectedGrid extends ConsumerWidget {
                     return Expanded(
                       child: IgnorePointer(
                         child: ViewChoiceNode(
-                          posList[itemPos],
+                          posList[itemPos].item1,
                           ignoreOpacity: true,
                           ignoreChild: true,
                         ),
