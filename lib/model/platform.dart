@@ -21,7 +21,6 @@ class AbstractPlatform extends PlayablePlatform {
   Map<String, ChoiceNodeDesignPreset> get presetList => {
         ...designSetting.choiceNodePresetList,
         'default': ChoiceNodeDesignPreset(),
-        'only_test': ChoiceNodeDesignPreset(isCard: true, isRound: true),
       };
 
   AbstractPlatform();
@@ -94,19 +93,6 @@ class AbstractPlatform extends PlayablePlatform {
         "[{\"insert\":\"레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.\\n\"}]",
         "noImage",
       )..currentPos = -1;
-    }
-    if (pos.first == designSamplePosition1) {
-      return ChoiceNode(
-        1,
-        "디자인(바깥 라운드 X, 카드 모드 X)",
-        "[{\"insert\":\"레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.\\n\"}]",
-        "noImage",
-      )
-        ..choiceNodeDesign = ChoiceNodeDesign(
-          presetName: 'only_test',
-        )
-        ..currentPos = -2
-        ..select = 1;
     }
     if (pos.last == nonPositioned) {
       return createTempNode();

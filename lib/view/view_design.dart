@@ -52,26 +52,6 @@ class ViewDesignSetting extends ConsumerWidget {
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
 
-    var background = ref.watch(backgroundProvider);
-    var backgroundAttribute = ref.watch(backgroundAttributeProvider);
-
-    BoxFit backgroundBoxFit = BoxFit.contain;
-    ImageRepeat backgroundRepeat = ImageRepeat.noRepeat;
-    switch (backgroundAttribute) {
-      case ImageAttribute.fill:
-        backgroundBoxFit = BoxFit.cover;
-        break;
-      case ImageAttribute.fit:
-        backgroundBoxFit = BoxFit.contain;
-        break;
-      case ImageAttribute.pattern:
-        backgroundBoxFit = BoxFit.contain;
-        backgroundRepeat = ImageRepeat.repeat;
-        break;
-      case ImageAttribute.stretch:
-        backgroundBoxFit = BoxFit.fill;
-        break;
-    }
 
     return DefaultTabController(
       length: 5,
@@ -109,40 +89,6 @@ class ViewDesignSetting extends ConsumerWidget {
                     const ViewBackgroundSetting(),
                     const ViewPresetTab(),
                   ],
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: ref.watch(colorBackgroundProvider),
-                  image: background != null
-                      ? DecorationImage(
-                          image: Image.memory(ImageDB().getImage(background)!)
-                              .image,
-                          fit: backgroundBoxFit,
-                          repeat: backgroundRepeat,
-                          filterQuality: FilterQuality.high,
-                        )
-                      : null,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: ConstList.padding, vertical: 50),
-                  child: IgnorePointer(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: ViewChoiceNode(
-                            Pos(data: [designSamplePosition0]),
-                          ),
-                        ),
-                        Expanded(
-                          child: ViewChoiceNode(
-                            Pos(data: [designSamplePosition1]),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
                 ),
               ),
             ],
@@ -421,19 +367,71 @@ class ViewPresetTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var background = ref.watch(backgroundProvider);
+    var backgroundAttribute = ref.watch(backgroundAttributeProvider);
+
+    BoxFit backgroundBoxFit = BoxFit.contain;
+    ImageRepeat backgroundRepeat = ImageRepeat.noRepeat;
+    switch (backgroundAttribute) {
+      case ImageAttribute.fill:
+        backgroundBoxFit = BoxFit.cover;
+        break;
+      case ImageAttribute.fit:
+        backgroundBoxFit = BoxFit.contain;
+        break;
+      case ImageAttribute.pattern:
+        backgroundBoxFit = BoxFit.contain;
+        backgroundRepeat = ImageRepeat.repeat;
+        break;
+      case ImageAttribute.stretch:
+        backgroundBoxFit = BoxFit.fill;
+        break;
+    }
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: ListView(
-            controller: AdjustableScrollController(),
-            children: [
-              const ListTile(
-                title: Text('선택지'),
-                selected: true,
+          child: Column(children: [
+            Expanded(
+              child: ListView(
+                controller: AdjustableScrollController(),
+                children: [
+                  const ListTile(
+                    title: Text('선택지'),
+                    selected: true,
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: ref.watch(colorBackgroundProvider),
+                  image: background != null
+                      ? DecorationImage(
+                          image: Image.memory(ImageDB().getImage(background)!)
+                              .image,
+                          fit: backgroundBoxFit,
+                          repeat: backgroundRepeat,
+                          filterQuality: FilterQuality.high,
+                        )
+                      : null,
+                ),
+                child: IgnorePointer(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: ViewChoiceNode(
+                          Pos(data: [designSamplePosition0]),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            )
+          ]),
         ),
         Expanded(
           child: CustomScrollView(
@@ -465,8 +463,9 @@ class ViewPresetTab extends ConsumerWidget {
           ),
         ),
         const Expanded(
-          flex: 4,
-          child: ViewNodeOptionEditor()/*Row(
+            flex: 4,
+            child:
+                ViewNodeOptionEditor() /*Row(
             children: [
               /*ViewFontSelector(
                 label: '제목 폰트',
@@ -479,7 +478,7 @@ class ViewPresetTab extends ConsumerWidget {
               const ViewNodeOptionEditor(),
             ],
           ),*/
-        ),
+            ),
       ],
     );
   }
@@ -511,13 +510,14 @@ class ViewNodeOptionEditor extends ConsumerWidget {
             .read(presetListProvider.notifier)
             .update(presetName, preset.copyWith(isCard: !preset.isCard)),
         preset.isCard,
-        label: '카드 모드',
+        label: '그림자',
       ),
     );
     list.add(
       ViewSwitchLabel(
-        () => ref.read(presetListProvider.notifier).update(
-            presetName, preset.copyWith(isCard: !preset.isRound)),
+        () => ref
+            .read(presetListProvider.notifier)
+            .update(presetName, preset.copyWith(isRound: !preset.isRound)),
         preset.isRound,
         label: '외곽선 둥글게',
       ),
@@ -532,16 +532,17 @@ class ViewNodeOptionEditor extends ConsumerWidget {
     );
     list.add(
       ViewSwitchLabel(
-        () => ref.read(presetListProvider.notifier).update(
-            presetName, preset.copyWith(hideTitle: !preset.hideTitle)),
+        () => ref
+            .read(presetListProvider.notifier)
+            .update(presetName, preset.copyWith(hideTitle: !preset.hideTitle)),
         preset.hideTitle,
         label: '제목 숨기기',
       ),
     );
     list.add(
       ViewSwitchLabel(
-            () => ref.read(presetListProvider.notifier).update(
-                presetName, preset.copyWith(titlePosition: !preset.titlePosition)),
+        () => ref.read(presetListProvider.notifier).update(
+            presetName, preset.copyWith(titlePosition: !preset.titlePosition)),
         preset.titlePosition,
         label: '제목을 위로',
       ),
@@ -596,9 +597,29 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               ),
               color: Color(preset.colorNode),
               onColorChanged: (Color value) {
-                ref
-                    .read(presetListProvider.notifier)
-                    .update(presetName, preset.copyWith(colorNode: value.value));
+                ref.read(presetListProvider.notifier).update(
+                    presetName, preset.copyWith(colorNode: value.value));
+              },
+              pickersEnabled: {
+                ColorPickerType.wheel: true,
+                ColorPickerType.accent: false
+              },
+              pickerTypeLabels: {
+                ColorPickerType.primary: "색상 선택",
+                ColorPickerType.wheel: "직접 선택"
+              },
+              width: 22,
+              height: 22,
+              borderRadius: 22,
+            ),
+            ColorPicker(
+              heading: const Center(
+                child: Text('외곽선 색상'),
+              ),
+              color: Color(preset.colorSelectNode),
+              onColorChanged: (Color value) {
+                ref.read(presetListProvider.notifier).update(
+                    presetName, preset.copyWith(colorSelectNode: value.value));
               },
               pickersEnabled: {
                 ColorPickerType.wheel: true,
