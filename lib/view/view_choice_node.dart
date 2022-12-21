@@ -2,6 +2,7 @@ import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/playable_platform.dart';
+import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
@@ -397,7 +398,7 @@ class _ViewContentsState extends ConsumerState<ViewContents> {
   @override
   void initState() {
     _focusNode = FocusNode();
-    _scrollController = ScrollController();
+    _scrollController = AdjustableScrollController();
     super.initState();
   }
 

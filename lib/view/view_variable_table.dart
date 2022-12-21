@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:cyoap_flutter/main.dart';
+import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/view/view_make.dart';
 import 'package:cyoap_flutter/viewModel/vm_editor.dart';
@@ -71,7 +72,7 @@ class ViewEditDrawer extends ConsumerStatefulWidget {
 
 class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
   final TextEditingController _controller = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = AdjustableScrollController();
 
   @override
   void initState() {
@@ -168,7 +169,7 @@ class ViewPlayDrawer extends ConsumerStatefulWidget {
 
 class _ViewPlayDrawerState extends ConsumerState<ViewPlayDrawer> {
   final TextEditingController _controller = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = AdjustableScrollController();
 
   @override
   void initState() {

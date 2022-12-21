@@ -4,9 +4,9 @@ import 'dart:ui';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
+import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
-import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_design_setting.dart';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:easy_debounce/easy_debounce.dart';
@@ -206,7 +206,7 @@ class _ViewTextContentsEditorState
         ref.read(editorChangeProvider.notifier).needUpdate();
       });
     });
-    _scrollController = ScrollController();
+    _scrollController = AdjustableScrollController();
     super.initState();
   }
 
@@ -448,7 +448,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
         }
       });
     });
-    _scrollController = ScrollController();
+    _scrollController = AdjustableScrollController();
     super.initState();
   }
 

@@ -5,6 +5,7 @@ import 'package:cyoap_core/design_setting.dart';
 import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
+import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/view/util/view_text_outline.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
@@ -12,7 +13,6 @@ import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/view/view_selected_grid.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/image_db.dart';
@@ -364,23 +364,6 @@ class NestedScroll extends ConsumerWidget {
   }
 }
 
-class AdjustableScrollController extends ScrollController {
-  AdjustableScrollController([int extraScrollSpeed = 20]) {
-    super.addListener(() {
-      ScrollDirection scrollDirection = super.position.userScrollDirection;
-      if (scrollDirection != ScrollDirection.idle) {
-        double scrollEnd = super.offset +
-            (scrollDirection == ScrollDirection.reverse
-                ? extraScrollSpeed
-                : -extraScrollSpeed);
-        scrollEnd = min(super.position.maxScrollExtent,
-            max(super.position.minScrollExtent, scrollEnd));
-        jumpTo(scrollEnd);
-      }
-    });
-  }
-}
-
 class NestedMap extends ConsumerStatefulWidget {
   const NestedMap({
     super.key,
@@ -412,11 +395,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
 
   @override
   void initState() {
-    if (ConstList.isDesktop()) {
-      _scrollController = AdjustableScrollController();
-    } else {
-      _scrollController = ScrollController();
-    }
+    _scrollController = AdjustableScrollController();
     super.initState();
   }
 

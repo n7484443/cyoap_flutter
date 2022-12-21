@@ -1,6 +1,7 @@
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/design_setting.dart';
 import 'package:cyoap_core/playable_platform.dart';
+import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
@@ -102,7 +103,7 @@ class ViewDesignSetting extends ConsumerWidget {
     }
 
     return DefaultTabController(
-      length: 4,
+      length: 5,
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -117,6 +118,7 @@ class ViewDesignSetting extends ConsumerWidget {
               const Tab(text: '위치'),
               const Tab(text: '폰트'),
               const Tab(text: '배경'),
+              const Tab(text: '프리셋'),
             ],
           ),
         ),
@@ -146,6 +148,7 @@ class ViewDesignSetting extends ConsumerWidget {
                       ],
                     ),
                     const ViewBackgroundSetting(),
+                    const ViewPresetTab(),
                   ],
                 ),
               ),
@@ -236,6 +239,13 @@ class _ViewPositionSettingState extends ConsumerState<ViewPositionSetting> {
               .update((state) => !state),
           ref.watch(titlePositionProvider),
         ),
+        ViewSwitchLabel(
+          label: "그림자 활성화",
+          () => ref
+              .read(titlePositionProvider.notifier)
+              .update((state) => !state),
+          ref.watch(titlePositionProvider),
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -312,7 +322,7 @@ class _ViewColorSelectState extends ConsumerState<ViewColorSelect> {
     colorOutlineProvider,
     colorTitleProvider,
   ];
-  final ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = AdjustableScrollController();
 
   @override
   void dispose() {
@@ -341,8 +351,9 @@ class _ViewColorSelectState extends ConsumerState<ViewColorSelect> {
                     child: ChoiceChip(
                         label: Text(textList[index]),
                         selected: ref.watch(colorSelectProvider) == index,
-                        onSelected: (value) =>
-                            ref.read(colorSelectProvider.notifier).state = index),
+                        onSelected: (value) => ref
+                            .read(colorSelectProvider.notifier)
+                            .state = index),
                   ),
                 ),
               ),
@@ -387,7 +398,7 @@ class ViewBackgroundSetting extends ConsumerStatefulWidget {
 }
 
 class _ViewBackgroundSettingState extends ConsumerState<ViewBackgroundSetting> {
-  final ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = AdjustableScrollController();
 
   @override
   void dispose() {
@@ -457,6 +468,60 @@ class _ViewBackgroundSettingState extends ConsumerState<ViewBackgroundSetting> {
             crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 4,
             crossAxisSpacing: 3.0,
             mainAxisSpacing: 3.0,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class ViewPresetTab extends ConsumerWidget {
+  const ViewPresetTab({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Column(
+            children: [
+              ListTile(
+                title: const Text('프리셋'),
+                trailing: IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () {
+                    // ref.read(presetListProvider.notifier).add();
+                  },
+                ),
+              ),
+              Expanded(
+                child: ListView(
+                  controller: ScrollController(),
+                  children: [
+                    const SizedBox(
+                      width: 100,
+                      height: 100,
+                      child: ColoredBox(
+                        color: Colors.red,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+        const Expanded(
+          flex: 4,
+          child: SizedBox(
+            width: 100,
+            height: 100,
+            child: ColoredBox(
+              color: Colors.blue,
+            ),
           ),
         ),
       ],
