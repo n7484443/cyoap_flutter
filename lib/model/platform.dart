@@ -5,6 +5,7 @@ import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/design_setting.dart';
 import 'package:cyoap_core/grammar/value_type.dart';
 import 'package:cyoap_core/playable_platform.dart';
+import 'package:cyoap_core/preset/choice_node_preset.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 
 class AbstractPlatform extends PlayablePlatform {
@@ -15,6 +16,13 @@ class AbstractPlatform extends PlayablePlatform {
     }
     updateStatusAll();
   }
+
+  @override
+  Map<String, ChoiceNodeDesignPreset> get presetList => {
+        ...designSetting.choiceNodePresetList,
+        'default': ChoiceNodeDesignPreset(),
+        'only_test': ChoiceNodeDesignPreset(isCard: true, isRound: true),
+      };
 
   AbstractPlatform();
 
@@ -62,8 +70,7 @@ class AbstractPlatform extends PlayablePlatform {
     checkDataCorrect();
   }
 
-  void insertDataWithParent(
-      ChoiceNode nodeA, Choice parentB) {
+  void insertDataWithParent(ChoiceNode nodeA, Choice parentB) {
     var parentA = nodeA.parent!;
 
     parentA.removeChildren(nodeA);
@@ -95,7 +102,9 @@ class AbstractPlatform extends PlayablePlatform {
         "[{\"insert\":\"레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.\\n\"}]",
         "noImage",
       )
-        ..choiceNodeDesign = ChoiceNodeDesign(isRound: false, isCard: false)
+        ..choiceNodeDesign = ChoiceNodeDesign(
+          presetName: 'only_test',
+        )
         ..currentPos = -2
         ..select = 1;
     }

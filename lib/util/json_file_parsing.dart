@@ -16,7 +16,7 @@ class JsonProjectParser {
   String path;
 
   JsonProjectParser(this.path);
-
+  //todo : 주석 부분 재작성 필요
   Future<Tuple2<AbstractPlatform, Map<String, Uint8List>>> getPlatform(
       String input, Ref ref) async {
     Map<String, dynamic> parsed = jsonDecode(input);
@@ -33,11 +33,11 @@ class JsonProjectParser {
       }
       var lineSetting = ChoiceLine(i);
       lineSetting.addChildren(ChoiceNode(0, rowTitle,
-          toContent(row["titleText"] ?? parsed['defaultRowText']), imageName)
-        ..choiceNodeDesign.copyWith(
+          toContent(row["titleText"] ?? parsed['defaultRowText']), imageName));
+        /*..choiceNodeDesign.copyWith(
             imagePosition: parseAsInt(row["template"]) == 4
                 ? 1
-                : parseAsInt(row["template"])));
+                : parseAsInt(row["template"])));*/
       var objectWidth = row['objectWidth'] as String? ?? '';
       var width = int.tryParse(
               objectWidth.replaceAll("md-", "").replaceAll("col-", "")) ??
@@ -51,9 +51,9 @@ class JsonProjectParser {
         }
         var choiceNode = ChoiceNode(0, objectTitle,
             toContent(object["text"] ?? parsed['defaultChoiceText']), imageName)
-          ..width = width
-          ..choiceNodeDesign
-              .copyWith(imagePosition: parseAsInt(object["template"]));
+          ..width = width;
+          /*..choiceNodeDesign
+              .copyWith(imagePosition: parseAsInt(object["template"]));*/
         for (var addon in object['addons']) {
           var addonTitle = addon["title"] ?? parsed['defaultAddonTitle'];
           var out = await checkImage(addon, addon["id"], addonTitle, ref);
@@ -62,9 +62,9 @@ class JsonProjectParser {
             imageList[imageName] = out.item2!;
           }
           choiceNode.addChildren(ChoiceNode(0, addonTitle,
-              toContent(addon["text"] ?? parsed['defaultAddonText']), imageName)
-            ..choiceNodeDesign
-                .copyWith(imagePosition: parseAsInt(addon["template"])));
+              toContent(addon["text"] ?? parsed['defaultAddonText']), imageName));
+            /*..choiceNodeDesign
+                .copyWith(imagePosition: parseAsInt(addon["template"])));*/
         }
         lineSetting.addChildren(choiceNode);
       }

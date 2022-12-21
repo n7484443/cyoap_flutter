@@ -223,7 +223,6 @@ class NodeDivider extends ConsumerWidget {
       thickness: 4,
       color: getColorLine(ref.watch(lineAlwaysVisibleProvider(y)), ref),
     );
-
     if (isEditable) {
       return Stack(
         alignment: Alignment.center,
@@ -232,7 +231,7 @@ class NodeDivider extends ConsumerWidget {
           Visibility(
             visible: maxSelect != -1,
             child: TextOutline('최대 $maxSelect개만큼 선택 가능', 18.0,
-                ConstList.getFont(ref.watch(titleFontProvider)),
+                ConstList.getFont("notoSans"),
                 strokeWidth: 5.0),
           ),
           Align(
@@ -294,7 +293,7 @@ class NodeDivider extends ConsumerWidget {
           Visibility(
             visible: maxSelect != -1,
             child: TextOutline('최대 $maxSelect개만큼 선택 가능', 18.0,
-                ConstList.getFont(ref.watch(titleFontProvider)),
+                ConstList.getFont("notoSans"),
                 strokeWidth: 5.0),
           ),
         ],

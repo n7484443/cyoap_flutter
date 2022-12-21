@@ -7,7 +7,6 @@ import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
-import 'package:cyoap_flutter/viewModel/vm_design_setting.dart';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
@@ -18,6 +17,7 @@ import 'package:tuple/tuple.dart';
 
 import '../main.dart';
 import '../model/platform_system.dart';
+import '../viewModel/vm_design_setting.dart';
 import '../viewModel/vm_editor.dart';
 import '../viewModel/vm_image_editor.dart';
 import '../viewModel/vm_make_platform.dart';
@@ -156,16 +156,18 @@ class _ViewTitleTextFieldInputState
 
   @override
   Widget build(BuildContext context) {
+    var design = ref.watch(nodeEditorDesignProvider);
+    var preset = ref.watch(presetProvider(design.presetName));
     return TextField(
       controller: _controller,
       textAlign: TextAlign.center,
       decoration: InputDecoration(
         hintText: '제목',
-        hintStyle: ConstList.getFont(ref.watch(titleFontProvider))
+        hintStyle: ConstList.getFont(preset.titleFont)
             .copyWith(fontSize: 24, color: Colors.red),
         filled: true,
       ),
-      style: ConstList.getFont(ref.watch(titleFontProvider)).copyWith(
+      style: ConstList.getFont(preset.titleFont).copyWith(
         fontSize: 24,
       ),
     );
@@ -273,7 +275,8 @@ class _ViewTextContentsEditorState
         ),
       );
     }
-
+    var design = ref.watch(nodeEditorDesignProvider);
+    var preset = ref.watch(presetProvider(design.presetName));
     return Column(
       children: [
         Padding(
@@ -322,7 +325,7 @@ class _ViewTextContentsEditorState
               showCursor: true,
               scrollController: _scrollController!,
               customStyles: ConstList.getDefaultThemeData(context, 1,
-                  fontStyle: ConstList.getFont(ref.watch(mainFontProvider))),
+                  fontStyle: ConstList.getFont(preset.mainFont)),
             ),
           ),
         ),
@@ -568,88 +571,42 @@ class ViewNodeOptionEditor extends ConsumerWidget {
     var nodeMode = ref.watch(nodeModeProvider);
 
     List<Widget> list = [];
-    if (nodeMode != ChoiceNodeMode.onlyCode) {
-      list.add(
-        ViewSwitchLabel(
-          () => ref
-              .read(nodeEditorDesignProvider.notifier)
-              .update((state) => state.copyWith(isCard: !design.isCard)),
-          design.isCard,
-          label: '카드 모드',
-        ),
-      );
-      list.add(
-        ViewSwitchLabel(
-          () => ref
-              .read(nodeEditorDesignProvider.notifier)
-              .update((state) => state.copyWith(isRound: !design.isRound)),
-          design.isRound,
-          label: '외곽선 둥글게',
-        ),
-      );
+    if (nodeMode != ChoiceNodeMode.unSelectableMode) {
       list.add(
         ViewSwitchLabel(
           () => ref.read(nodeEditorDesignProvider.notifier).update((state) =>
-              state.copyWith(maximizingImage: !design.maximizingImage)),
-          design.maximizingImage,
-          label: '이미지 최대화',
+              state.copyWith(
+                  hideAsResult: !design.hideAsResult, showAsResult: false)),
+          design.hideAsResult,
+          label: '결론창에서 \n숨기기',
         ),
       );
-      list.add(
-        ViewSwitchLabel(
-          () => ref
-              .read(nodeEditorDesignProvider.notifier)
-              .update((state) => state.copyWith(hideTitle: !design.hideTitle)),
-          design.hideTitle,
-          label: '제목 숨기기',
-        ),
-      );
+    } else {
       list.add(
         ViewSwitchLabel(
           () => ref.read(nodeEditorDesignProvider.notifier).update((state) =>
-              state.copyWith(imagePosition: design.imagePosition == 0 ? 1 : 0)),
-          design.imagePosition != 0,
-          label: '가로 모드',
+              state.copyWith(
+                  showAsResult: !design.showAsResult, hideAsResult: false)),
+          design.showAsResult,
+          label: '결론창에서 \n보이기',
         ),
       );
-      list.add(
-        ViewSwitchLabel(
-          () {
-            if (design.imagePosition == 1) {
-              ref
-                  .read(nodeEditorDesignProvider.notifier)
-                  .update((state) => state.copyWith(imagePosition: 2));
-            } else if (design.imagePosition == 2) {
-              ref
-                  .read(nodeEditorDesignProvider.notifier)
-                  .update((state) => state.copyWith(imagePosition: 1));
+    }
+    list.add(
+        DropdownButtonFormField<String>(
+          decoration: const InputDecoration(labelText: '프리셋 설정'),
+          items: ref.watch(presetListProvider).keys
+              .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
+              value: name, child: Text(name, style: ConstList.getFont(name))))
+              .toList(),
+          onChanged: (String? t) {
+            if (t != null) {
+              ref.read(nodeEditorDesignProvider.notifier).update((state) => state.copyWith(presetName: t));
             }
           },
-          design.imagePosition == 2,
-          disable: design.imagePosition == 0,
-          label: '이미지 왼쪽으로',
-        ),
-      );
-      if (nodeMode != ChoiceNodeMode.unSelectableMode) {
-        list.add(
-          ViewSwitchLabel(
-            () => ref.read(nodeEditorDesignProvider.notifier).update(
-                (state) => state.copyWith(hideAsResult: !design.hideAsResult, showAsResult: false)),
-            design.hideAsResult,
-            label: '결론창에서 \n숨기기',
-          ),
-        );
-      }else{
-        list.add(
-          ViewSwitchLabel(
-                () => ref.read(nodeEditorDesignProvider.notifier).update(
-                    (state) => state.copyWith(showAsResult: !design.showAsResult, hideAsResult: false)),
-            design.showAsResult,
-            label: '결론창에서 \n보이기',
-          ),
-        );
-      }
-    }
+          value: design.presetName,
+        )
+    );
 
     return CustomScrollView(
       controller: ScrollController(),
@@ -722,50 +679,6 @@ class ViewNodeOptionEditor extends ConsumerWidget {
         ),
         const SliverToBoxAdapter(
           child: Divider(),
-        ),
-        SliverGrid(
-          delegate: SliverChildListDelegate([
-            ColorPicker(
-              heading: Stack(
-                alignment: Alignment.center,
-                children: [
-                  const Center(
-                    child: Text('선택지 색상'),
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                      icon: const Icon(Icons.format_color_reset),
-                      onPressed: () {
-                        ref.read(nodeEditorDesignProvider.notifier).update((state) => state.copyWith(colorNode: null));
-                      },
-                    ),
-                  )
-                ],
-              ),
-              color: Color(ref.read(nodeEditorDesignProvider).colorNode ?? ref.read(colorNodeProvider).value),
-              onColorChanged: (Color value) {
-                ref.read(nodeEditorDesignProvider.notifier).update((state) => state.copyWith(colorNode: value.value));
-              },
-              pickersEnabled: {
-                ColorPickerType.wheel: true,
-                ColorPickerType.accent: false
-              },
-              pickerTypeLabels: {
-                ColorPickerType.primary: "색상 선택",
-                ColorPickerType.wheel: "직접 선택"
-              },
-              width: 22,
-              height: 22,
-              borderRadius: 22,
-            ),
-          ]),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
-            crossAxisSpacing: 2,
-            mainAxisExtent: 380,
-            mainAxisSpacing: 2,
-          ),
         ),
       ],
     );

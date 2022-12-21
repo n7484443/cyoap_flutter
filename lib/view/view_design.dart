@@ -1,3 +1,4 @@
+import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/design_setting.dart';
 import 'package:cyoap_core/playable_platform.dart';
@@ -23,44 +24,14 @@ class ViewDesignSetting extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(titleFontProvider, (String? previous, String next) {
-      getPlatform.designSetting =
-          getPlatform.designSetting.copyWith(titleFont: next);
-      ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-    });
-    ref.listen(mainFontProvider, (String? previous, String next) {
-      getPlatform.designSetting =
-          getPlatform.designSetting.copyWith(mainFont: next);
-      ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-    });
     ref.listen(variableFontProvider, (String? previous, String next) {
       getPlatform.designSetting =
           getPlatform.designSetting.copyWith(variableFont: next);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
-    ref.listen(titlePositionProvider, (bool? previous, bool next) {
-      getPlatform.designSetting =
-          getPlatform.designSetting.copyWith(titlePosition: next);
-      ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-    });
     ref.listen(colorBackgroundProvider, (previous, Color next) {
       getPlatform.designSetting =
           getPlatform.designSetting.copyWith(colorBackground: next.value);
-      ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-    });
-    ref.listen(colorNodeProvider, (previous, Color next) {
-      getPlatform.designSetting =
-          getPlatform.designSetting.copyWith(colorNode: next.value);
-      ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-    });
-    ref.listen(colorOutlineProvider, (previous, Color next) {
-      getPlatform.designSetting =
-          getPlatform.designSetting.copyWith(colorOutline: next.value);
-      ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-    });
-    ref.listen(colorTitleProvider, (previous, Color next) {
-      getPlatform.designSetting =
-          getPlatform.designSetting.copyWith(colorTitle: next.value);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
 
@@ -131,21 +102,9 @@ class ViewDesignSetting extends ConsumerWidget {
                   children: [
                     const ViewColorSelect(),
                     const ViewPositionSetting(),
-                    Column(
-                      children: [
-                        ViewFontSelector(
-                          label: '제목 폰트',
-                          provider: titleFontProvider,
-                        ),
-                        ViewFontSelector(
-                          label: '내용 폰트',
-                          provider: mainFontProvider,
-                        ),
-                        ViewFontSelector(
-                          label: '점수 폰트',
-                          provider: variableFontProvider,
-                        ),
-                      ],
+                    ViewFontSelector(
+                      label: '점수 폰트',
+                      provider: variableFontProvider,
                     ),
                     const ViewBackgroundSetting(),
                     const ViewPresetTab(),
@@ -232,20 +191,6 @@ class _ViewPositionSettingState extends ConsumerState<ViewPositionSetting> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ViewSwitchLabel(
-          label: "제목을 위로",
-          () => ref
-              .read(titlePositionProvider.notifier)
-              .update((state) => !state),
-          ref.watch(titlePositionProvider),
-        ),
-        ViewSwitchLabel(
-          label: "그림자 활성화",
-          () => ref
-              .read(titlePositionProvider.notifier)
-              .update((state) => !state),
-          ref.watch(titlePositionProvider),
-        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -312,15 +257,9 @@ class ViewColorSelect extends ConsumerStatefulWidget {
 class _ViewColorSelectState extends ConsumerState<ViewColorSelect> {
   final textList = const [
     "배경",
-    "선택지",
-    "외곽선",
-    "제목",
   ];
   final providerList = [
     colorBackgroundProvider,
-    colorNodeProvider,
-    colorOutlineProvider,
-    colorTitleProvider,
   ];
   final ScrollController _scrollController = AdjustableScrollController();
 
@@ -486,29 +425,40 @@ class ViewPresetTab extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: Column(
+          child: ListView(
+            controller: AdjustableScrollController(),
             children: [
-              ListTile(
-                title: const Text('프리셋'),
-                trailing: IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () {
-                    // ref.read(presetListProvider.notifier).add();
-                  },
+              const ListTile(
+                title: Text('선택지'),
+                selected: true,
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: CustomScrollView(
+            controller: AdjustableScrollController(),
+            slivers: [
+              SliverAppBar(
+                pinned: true,
+                flexibleSpace: ListTile(
+                  title: const Text('프리셋'),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: () {
+                      // ref.read(presetListProvider.notifier).add();
+                    },
+                  ),
                 ),
               ),
-              Expanded(
-                child: ListView(
-                  controller: ScrollController(),
-                  children: [
-                    const SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: ColoredBox(
-                        color: Colors.red,
-                      ),
-                    ),
-                  ],
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    return const ListTile(
+                      title: Text('기본'),
+                    );
+                  },
+                  childCount: 1,
                 ),
               )
             ],
@@ -516,12 +466,158 @@ class ViewPresetTab extends ConsumerWidget {
         ),
         const Expanded(
           flex: 4,
-          child: SizedBox(
-            width: 100,
-            height: 100,
-            child: ColoredBox(
-              color: Colors.blue,
+          child: ViewNodeOptionEditor()/*Row(
+            children: [
+              /*ViewFontSelector(
+                label: '제목 폰트',
+                provider: preset.titleFont,
+              ),
+              ViewFontSelector(
+                label: '내용 폰트',
+                provider: ConstList.getFont(preset.mainFont),
+              ),*/
+              const ViewNodeOptionEditor(),
+            ],
+          ),*/
+        ),
+      ],
+    );
+  }
+}
+
+class ViewNodeOptionEditor extends ConsumerWidget {
+  const ViewNodeOptionEditor({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(nodeModeProvider, (previous, ChoiceNodeMode next) {
+      ref.read(nodeEditorTargetProvider).node.choiceNodeMode = next;
+      ref.read(editorChangeProvider.notifier).needUpdate();
+    });
+    ref.listen(nodeEditorDesignProvider, (previous, ChoiceNodeDesign next) {
+      ref.read(nodeEditorTargetProvider).node.choiceNodeDesign = next;
+      ref.read(editorChangeProvider.notifier).needUpdate();
+    });
+
+    var presetName = ref.watch(presetCurrentEditNameProvider);
+    var preset = ref.watch(presetCurrentEditProvider);
+
+    List<Widget> list = [];
+    list.add(
+      ViewSwitchLabel(
+        () => ref
+            .read(presetListProvider.notifier)
+            .update(presetName, preset.copyWith(isCard: !preset.isCard)),
+        preset.isCard,
+        label: '카드 모드',
+      ),
+    );
+    list.add(
+      ViewSwitchLabel(
+        () => ref.read(presetListProvider.notifier).update(
+            presetName, preset.copyWith(isCard: !preset.isRound)),
+        preset.isRound,
+        label: '외곽선 둥글게',
+      ),
+    );
+    list.add(
+      ViewSwitchLabel(
+        () => ref.read(presetListProvider.notifier).update(presetName,
+            preset.copyWith(maximizingImage: !preset.maximizingImage)),
+        preset.maximizingImage,
+        label: '이미지 최대화',
+      ),
+    );
+    list.add(
+      ViewSwitchLabel(
+        () => ref.read(presetListProvider.notifier).update(
+            presetName, preset.copyWith(hideTitle: !preset.hideTitle)),
+        preset.hideTitle,
+        label: '제목 숨기기',
+      ),
+    );
+    list.add(
+      ViewSwitchLabel(
+            () => ref.read(presetListProvider.notifier).update(
+                presetName, preset.copyWith(titlePosition: !preset.titlePosition)),
+        preset.titlePosition,
+        label: '제목을 위로',
+      ),
+    );
+    list.add(
+      ViewSwitchLabel(
+        () => ref.read(presetListProvider.notifier).update(presetName,
+            preset.copyWith(imagePosition: preset.imagePosition == 0 ? 1 : 0)),
+        preset.imagePosition != 0,
+        label: '가로 모드',
+      ),
+    );
+    list.add(
+      ViewSwitchLabel(
+        () {
+          if (preset.imagePosition == 1) {
+            ref
+                .read(presetListProvider.notifier)
+                .update(presetName, preset.copyWith(imagePosition: 2));
+          } else if (preset.imagePosition == 2) {
+            ref
+                .read(presetListProvider.notifier)
+                .update(presetName, preset.copyWith(imagePosition: 1));
+          }
+        },
+        preset.imagePosition == 2,
+        disable: preset.imagePosition == 0,
+        label: '이미지 왼쪽으로',
+      ),
+    );
+
+    return CustomScrollView(
+      controller: ScrollController(),
+      slivers: [
+        SliverGrid(
+          delegate: SliverChildListDelegate(list),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 4,
+            crossAxisSpacing: 2,
+            mainAxisExtent: 80,
+            mainAxisSpacing: 2,
+          ),
+        ),
+        const SliverToBoxAdapter(
+          child: Divider(),
+        ),
+        SliverGrid(
+          delegate: SliverChildListDelegate([
+            ColorPicker(
+              heading: const Center(
+                child: Text('선택지 색상'),
+              ),
+              color: Color(preset.colorNode),
+              onColorChanged: (Color value) {
+                ref
+                    .read(presetListProvider.notifier)
+                    .update(presetName, preset.copyWith(colorNode: value.value));
+              },
+              pickersEnabled: {
+                ColorPickerType.wheel: true,
+                ColorPickerType.accent: false
+              },
+              pickerTypeLabels: {
+                ColorPickerType.primary: "색상 선택",
+                ColorPickerType.wheel: "직접 선택"
+              },
+              width: 22,
+              height: 22,
+              borderRadius: 22,
             ),
+          ]),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
+            crossAxisSpacing: 2,
+            mainAxisExtent: 380,
+            mainAxisSpacing: 2,
           ),
         ),
       ],

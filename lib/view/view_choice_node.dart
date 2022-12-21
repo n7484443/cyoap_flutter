@@ -31,8 +31,9 @@ class ViewChoiceNode extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (pos.last == nonPositioned) {
+      var presetName = ref.watch(choiceNodeDesignSettingProvider(pos)).presetName;
       return Card(
-        color: ref.watch(colorNodeProvider),
+        color: Color(ref.watch(presetProvider(presetName)).colorNode),
         child: SizedBox(
           width: MediaQuery.of(context).size.width /
               defaultMaxSize *
@@ -65,14 +66,15 @@ class ViewChoiceNodeMain extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var node = ref.watch(choiceNodeProvider(pos)).node!;
     var design = ref.watch(choiceNodeDesignSettingProvider(pos));
-    var defaultColor = Color(design.colorNode ?? ref.watch(colorNodeProvider).value);
+    var preset = ref.watch(presetProvider(design.presetName));
+    var defaultColor = Color(preset.colorNode);
     return Card(
-      shape: design.isRound
+      shape: preset.isRound
           ? RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4.0),
               side: BorderSide(
                 color: node.select > 0
-                    ? ref.watch(colorOutlineProvider)
+                    ? Color(preset.colorSelectNode)
                     : defaultColor,
                 width: ConstList.isSmallDisplay(context) ? 2 : 4,
               ),
@@ -80,7 +82,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
           : Border.fromBorderSide(
               BorderSide(
                 color: node.select > 0
-                    ? ref.watch(colorOutlineProvider)
+                    ? Color(preset.colorSelectNode)
                     : defaultColor,
                 width: ConstList.isSmallDisplay(context) ? 2 : 4,
               ),
@@ -88,7 +90,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
       clipBehavior: Clip.antiAlias,
       margin:
           ConstList.isSmallDisplay(context) ? const EdgeInsets.all(1.4) : null,
-      elevation: design.isCard ? ConstList.elevation : 0,
+      elevation: preset.isRound ? ConstList.elevation : 0,
       color: defaultColor,
       child: Ink(
         color: defaultColor,
@@ -278,12 +280,13 @@ class ViewTitleWithEdit extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     Widget title;
     var design = ref.watch(choiceNodeDesignSettingProvider(pos));
-    if (!design.hideTitle) {
+    var preset = ref.watch(presetProvider(design.presetName));
+    if (!preset.hideTitle) {
       title = Text(
         ref.watch(titleStringProvider(pos)),
-        style: ConstList.getFont(ref.watch(titleFontProvider)).copyWith(
+        style: ConstList.getFont(preset.titleFont).copyWith(
           fontSize: 20 * ConstList.scale(context),
-          color: ref.watch(colorTitleProvider),
+          color: Color(preset.colorTitle),
         ),
       );
     } else {
@@ -414,6 +417,8 @@ class _ViewContentsState extends ConsumerState<ViewContents> {
     if (ref.watch(contentsQuillProvider(widget.pos)).document.isEmpty()) {
       return const SizedBox.shrink();
     }
+    var design = ref.watch(choiceNodeDesignSettingProvider(widget.pos));
+    var preset = ref.watch(presetProvider(design.presetName));
     return QuillEditor(
       controller: ref.watch(contentsQuillProvider(widget.pos)),
       focusNode: _focusNode!,
@@ -427,7 +432,7 @@ class _ViewContentsState extends ConsumerState<ViewContents> {
       enableInteractiveSelection: false,
       customStyles: ConstList.getDefaultThemeData(
           context, ConstList.scale(context),
-          fontStyle: ConstList.getFont(ref.watch(mainFontProvider))),
+          fontStyle: ConstList.getFont(preset.mainFont)),
     );
   }
 }
@@ -442,11 +447,12 @@ class ViewChoiceNodeContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var node = ref.watch(choiceNodeProvider(pos)).node!;
     var design = ref.watch(choiceNodeDesignSettingProvider(pos));
+    var preset = ref.watch(presetProvider(design.presetName));
     Widget image;
     if (ref.watch(imageStringProvider(pos)).isNotEmpty) {
       image = ConstrainedBox(
         constraints: BoxConstraints(
-          maxHeight: design.maximizingImage
+          maxHeight: preset.maximizingImage
               ? MediaQuery.of(context).size.height / 1.25
               : MediaQuery.of(context).size.height / 2,
         ),
@@ -476,7 +482,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
     }
     child ??= const SizedBox.shrink();
 
-    if (design.imagePosition == 1) {
+    if (preset.imagePosition == 1) {
       return Column(
         children: [
           ViewTitleWithEdit(pos),
@@ -494,7 +500,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
         ],
       );
     }
-    if (design.imagePosition == 2) {
+    if (preset.imagePosition == 2) {
       return Column(
         children: [
           ViewTitleWithEdit(pos),
@@ -512,7 +518,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
         ],
       );
     }
-    List<Widget> subWidget = ref.watch(titlePositionProvider)
+    List<Widget> subWidget = preset.titlePosition
         ? [
             ViewTitleWithEdit(pos),
             image,
