@@ -79,7 +79,7 @@ class AbstractPlatform extends PlayablePlatform {
 
   @override
   Choice? getNode(Pos pos) {
-    if (pos.first == designSamplePosition0) {
+    if (pos.first == designSamplePosition) {
       return ChoiceNode(
         1,
         "디자인",

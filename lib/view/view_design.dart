@@ -423,7 +423,7 @@ class ViewPresetTab extends ConsumerWidget {
                     children: [
                       Expanded(
                         child: ViewChoiceNode(
-                          Pos(data: [designSamplePosition0]),
+                          Pos(data: [designSamplePosition]),
                         ),
                       ),
                     ],
@@ -444,7 +444,7 @@ class ViewPresetTab extends ConsumerWidget {
                   trailing: IconButton(
                     icon: const Icon(Icons.add),
                     onPressed: () {
-                      // ref.read(presetListProvider.notifier).add();
+                      ref.read(presetListProvider.notifier).create();
                     },
                   ),
                 ),
@@ -452,11 +452,22 @@ class ViewPresetTab extends ConsumerWidget {
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
-                    return const ListTile(
-                      title: Text('기본'),
+                    var name = ref.watch(presetListProvider).keys.toList()[index];
+                    return ListTile(
+                      title: Text(name),
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete, size: (IconTheme.of(context).size ?? 18) * 0.8),
+                        onPressed: () {
+                          ref.read(presetListProvider.notifier).delete(name);
+                        },
+                      ),
+                      onTap: (){
+                        ref.read(presetCurrentEditNameProvider.notifier).update((state) => name);
+                      },
+                      selected: name == ref.watch(presetCurrentEditNameProvider),
                     );
                   },
-                  childCount: 1,
+                  childCount: ref.watch(presetListProvider).length,
                 ),
               )
             ],

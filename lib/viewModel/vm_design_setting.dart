@@ -46,4 +46,20 @@ class PresetListNotifier
     state.remove(name);
     state = {...state, name: preset};
   }
+
+  void create() {
+    var name = '새 프리셋';
+    var rename = name;
+    var i = 0;
+    while(state.containsKey(rename)) {
+      rename = '$name $i';
+      i++;
+    }
+    state = {...state, rename : const ChoiceNodeDesignPreset()};
+  }
+
+  void delete(String name) {
+    state.remove(name);
+    state = {...state};
+  }
 }
