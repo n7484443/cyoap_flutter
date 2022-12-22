@@ -5,7 +5,6 @@ import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/design_setting.dart';
 import 'package:cyoap_core/grammar/value_type.dart';
 import 'package:cyoap_core/playable_platform.dart';
-import 'package:cyoap_core/preset/choice_node_preset.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 
 class AbstractPlatform extends PlayablePlatform {
@@ -16,12 +15,6 @@ class AbstractPlatform extends PlayablePlatform {
     }
     updateStatusAll();
   }
-
-  @override
-  Map<String, ChoiceNodeDesignPreset> get presetList => {
-        ...designSetting.choiceNodePresetList,
-        'default': ChoiceNodeDesignPreset(),
-      };
 
   AbstractPlatform();
 

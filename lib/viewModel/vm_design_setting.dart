@@ -40,7 +40,7 @@ final presetListProvider = StateNotifierProvider<PresetListNotifier,
 
 class PresetListNotifier
     extends StateNotifier<Map<String, ChoiceNodeDesignPreset>> {
-  PresetListNotifier() : super({'default' : ChoiceNodeDesignPreset()});
+  PresetListNotifier() : super({...getPlatform.designSetting.choiceNodePresetMap});
 
   void update(String name, ChoiceNodeDesignPreset preset) {
     state.remove(name);
