@@ -482,37 +482,100 @@ class _ReorderablePresetListState extends ConsumerState<ReorderablePresetList> {
           ),
         ),
         Expanded(
-          child: ReorderableListView(
-            onReorder: (int oldIndex, int newIndex) => ref
-                .read(presetListProvider.notifier)
-                .reorder(oldIndex, newIndex),
-            children: List.generate(
-              list.length,
-              (index) {
-                var preset = list[index];
-                return ListTile(
-                  key: Key('$index'),
-                  title: Text(preset.name),
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete,
-                        size: (IconTheme.of(context).size ?? 18) * 0.8),
-                    onPressed: () {
-                      ref.read(presetListProvider.notifier).deleteIndex(index);
-                    },
-                  ),
-                  onTap: () {
+          child: ListView.builder(
+            // onReorder: (int oldIndex, int newIndex) => ref
+            //     .read(presetListProvider.notifier)
+            //     .reorder(oldIndex, newIndex),
+            itemCount: list.length,
+            itemBuilder: (BuildContext context, int index) {
+              var preset = list[index];
+              return ListTile(
+                key: Key('$index'),
+                title: Text(preset.name),
+                trailing: IconButton(
+                  icon: Icon(Icons.delete,
+                      size: (IconTheme.of(context).size ?? 18) * 0.8),
+                  onPressed: () {
+                    ref.read(presetListProvider.notifier).deleteIndex(index);
+                  },
+                ),
+                onTap: () {
+                  ref
+                      .read(presetCurrentEditIndexProvider.notifier)
+                      .update((state) => index);
+                  var pos = Pos(data: [designSamplePosition]);
+                  ref.invalidate(choiceNodeProvider(pos));
+                },
+                onLongPress: () async {
+                  var text = await showDialog(
+                      context: context,
+                      builder: (context) {
+                        return PresetRenameDialog(preset.name);
+                      },
+                      barrierDismissible: false);
+                  if (text != null && text.trim().isNotEmpty) {
                     ref
-                        .read(presetCurrentEditIndexProvider.notifier)
-                        .update((state) => index);
+                        .read(presetListProvider.notifier)
+                        .updateAll(index, text.trim());
                     var pos = Pos(data: [designSamplePosition]);
                     ref.invalidate(choiceNodeProvider(pos));
-                  },
-                  selected: index == ref.watch(presetCurrentEditIndexProvider),
-                );
-              },
-            ),
+                  }
+                },
+                selected: index == ref.watch(presetCurrentEditIndexProvider),
+              );
+            },
           ),
         ),
+      ],
+    );
+  }
+}
+
+class PresetRenameDialog extends ConsumerStatefulWidget {
+  final String name;
+
+  const PresetRenameDialog(
+    this.name, {
+    super.key,
+  });
+
+  @override
+  ConsumerState createState() => _PresetRenameDialogState();
+}
+
+class _PresetRenameDialogState extends ConsumerState<PresetRenameDialog> {
+  TextEditingController? controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = TextEditingController(text: widget.name);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller?.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      content: TextField(
+        controller: controller,
+      ),
+      actionsAlignment: MainAxisAlignment.spaceBetween,
+      actions: [
+        TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('취소')),
+        TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(controller?.text);
+            },
+            child: const Text('저장')),
       ],
     );
   }

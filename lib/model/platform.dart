@@ -118,4 +118,16 @@ class AbstractPlatform extends PlayablePlatform {
     generateRecursiveParser();
     updateStatusAll();
   }
+
+  void updatePresetNameAll(String before, String after) {
+    for (var line in lineSettings) {
+      for (var choice in line.children) {
+        (choice as ChoiceNode).doAllChild((node) {
+          if(node.choiceNodeDesign.presetName == before){
+            node.choiceNodeDesign = node.choiceNodeDesign.copyWith(presetName: after);
+          }
+        });
+      }
+    }
+  }
 }

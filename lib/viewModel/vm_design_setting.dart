@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:cyoap_core/design_setting.dart';
 import 'package:cyoap_core/preset/choice_node_preset.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
+import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/image_db.dart';
@@ -34,7 +36,7 @@ final presetProvider = Provider.family
             orElse: () => const ChoiceNodeDesignPreset(name: 'default')));
 
 final presetCurrentEditIndexProvider = StateProvider<int>((ref) => 0);
-final presetCurrentEditProvider = Provider<ChoiceNodeDesignPreset>((ref){
+final presetCurrentEditProvider = Provider<ChoiceNodeDesignPreset>((ref) {
   var list = ref.watch(presetListProvider);
   var index = ref.watch(presetCurrentEditIndexProvider);
   if (index >= list.length) {
@@ -45,11 +47,19 @@ final presetCurrentEditProvider = Provider<ChoiceNodeDesignPreset>((ref){
 
 final presetListProvider =
     StateNotifierProvider<PresetListNotifier, List<ChoiceNodeDesignPreset>>(
-        (ref) => PresetListNotifier());
+        (ref) => PresetListNotifier(ref));
 
 class PresetListNotifier extends StateNotifier<List<ChoiceNodeDesignPreset>> {
-  PresetListNotifier()
+  Ref ref;
+  PresetListNotifier(this.ref)
       : super([...getPlatform.designSetting.choiceNodePresetList]);
+
+  void updateAll(int index, String after){
+    var before = state[index].name;
+    updateIndex(index, state[index].copyWith(name: after));
+    getPlatform.updatePresetNameAll(before, after);
+    ref.invalidate(choiceNodeDesignSettingProvider);
+  }
 
   void updateName(String name, ChoiceNodeDesignPreset preset) {
     int index = state.indexWhere((preset) => preset.name == name);
@@ -84,7 +94,7 @@ class PresetListNotifier extends StateNotifier<List<ChoiceNodeDesignPreset>> {
   }
 
   void reorder(int oldIndex, int newIndex) {
-    if(oldIndex < newIndex){
+    if (oldIndex < newIndex) {
       newIndex -= 1;
     }
     var preset = state.removeAt(oldIndex);
