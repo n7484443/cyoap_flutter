@@ -6,12 +6,14 @@ import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/choiceNode/selectable_status.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
+import 'package:cyoap_flutter/viewModel/vm_design_setting.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../model/platform.dart';
 import '../model/platform_system.dart';
 
 const double nodeBaseHeight = 200;
@@ -39,7 +41,16 @@ class ChoiceNodeNotifier extends ChangeNotifier {
   ChoiceNodeNotifier(this.ref, this.pos) {
     if (pos.last == removedPositioned) {
       node = ref.read(removedChoiceNode);
-    } else {
+    } else if (pos.last == designSamplePosition) {
+      node = ChoiceNode(
+        1,
+        "디자인",
+        "[{\"insert\":\"레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.\\n\"}]",
+        "noImage",
+      )..currentPos = -1;
+
+      node!.choiceNodeDesign = node!.choiceNodeDesign.copyWith(presetName: ref.read(presetCurrentEditNameProvider));
+    }else{
       var node = getPlatform.getNode(pos);
       if (node is ChoiceNode) {
         this.node = node;
@@ -198,7 +209,7 @@ void updateImageAll(Ref ref) {
   getPlatform.updateStatusAll();
   for (var lineSetting in getPlatform.lineSettings) {
     for (var node in lineSetting.children) {
-      ref.refresh(imageStringProvider(node.pos));
+      ref.invalidate(imageStringProvider(node.pos));
     }
   }
 }

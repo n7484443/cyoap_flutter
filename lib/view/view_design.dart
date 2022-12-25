@@ -1,7 +1,5 @@
-import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/design_setting.dart';
-import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
@@ -13,7 +11,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../main.dart';
 import '../model/image_db.dart';
+import '../model/platform.dart';
 import '../model/platform_system.dart';
+import '../viewModel/vm_choice_node.dart' show choiceNodeProvider;
 import '../viewModel/vm_design_setting.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
 import '../viewModel/vm_editor.dart';
@@ -51,7 +51,6 @@ class ViewDesignSetting extends ConsumerWidget {
           getPlatform.designSetting.copyWith(marginVertical: next);
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     });
-
 
     return DefaultTabController(
       length: 5,
@@ -452,19 +451,26 @@ class ViewPresetTab extends ConsumerWidget {
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
-                    var name = ref.watch(presetListProvider).keys.toList()[index];
+                    var name =
+                        ref.watch(presetListProvider).keys.toList()[index];
                     return ListTile(
                       title: Text(name),
                       trailing: IconButton(
-                        icon: Icon(Icons.delete, size: (IconTheme.of(context).size ?? 18) * 0.8),
+                        icon: Icon(Icons.delete,
+                            size: (IconTheme.of(context).size ?? 18) * 0.8),
                         onPressed: () {
                           ref.read(presetListProvider.notifier).delete(name);
                         },
                       ),
-                      onTap: (){
-                        ref.read(presetCurrentEditNameProvider.notifier).update((state) => name);
+                      onTap: () {
+                        ref
+                            .read(presetCurrentEditNameProvider.notifier)
+                            .update((state) => name);
+                        var pos = Pos(data: [designSamplePosition]);
+                        ref.invalidate(choiceNodeProvider(pos));
                       },
-                      selected: name == ref.watch(presetCurrentEditNameProvider),
+                      selected:
+                          name == ref.watch(presetCurrentEditNameProvider),
                     );
                   },
                   childCount: ref.watch(presetListProvider).length,
@@ -502,94 +508,70 @@ class ViewNodeOptionEditor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(nodeModeProvider, (previous, ChoiceNodeMode next) {
-      ref.read(nodeEditorTargetProvider).node.choiceNodeMode = next;
-      ref.read(editorChangeProvider.notifier).needUpdate();
-    });
-    ref.listen(nodeEditorDesignProvider, (previous, ChoiceNodeDesign next) {
-      ref.read(nodeEditorTargetProvider).node.choiceNodeDesign = next;
-      ref.read(editorChangeProvider.notifier).needUpdate();
-    });
-
     var presetName = ref.watch(presetCurrentEditNameProvider);
     var preset = ref.watch(presetCurrentEditProvider);
-
-    List<Widget> list = [];
-    list.add(
-      ViewSwitchLabel(
-        () => ref
-            .read(presetListProvider.notifier)
-            .update(presetName, preset.copyWith(isCard: !preset.isCard)),
-        preset.isCard,
-        label: '그림자',
-      ),
-    );
-    list.add(
-      ViewSwitchLabel(
-        () => ref
-            .read(presetListProvider.notifier)
-            .update(presetName, preset.copyWith(isRound: !preset.isRound)),
-        preset.isRound,
-        label: '외곽선 둥글게',
-      ),
-    );
-    list.add(
-      ViewSwitchLabel(
-        () => ref.read(presetListProvider.notifier).update(presetName,
-            preset.copyWith(maximizingImage: !preset.maximizingImage)),
-        preset.maximizingImage,
-        label: '이미지 최대화',
-      ),
-    );
-    list.add(
-      ViewSwitchLabel(
-        () => ref
-            .read(presetListProvider.notifier)
-            .update(presetName, preset.copyWith(hideTitle: !preset.hideTitle)),
-        preset.hideTitle,
-        label: '제목 숨기기',
-      ),
-    );
-    list.add(
-      ViewSwitchLabel(
-        () => ref.read(presetListProvider.notifier).update(
-            presetName, preset.copyWith(titlePosition: !preset.titlePosition)),
-        preset.titlePosition,
-        label: '제목을 위로',
-      ),
-    );
-    list.add(
-      ViewSwitchLabel(
-        () => ref.read(presetListProvider.notifier).update(presetName,
-            preset.copyWith(imagePosition: preset.imagePosition == 0 ? 1 : 0)),
-        preset.imagePosition != 0,
-        label: '가로 모드',
-      ),
-    );
-    list.add(
-      ViewSwitchLabel(
-        () {
-          if (preset.imagePosition == 1) {
-            ref
-                .read(presetListProvider.notifier)
-                .update(presetName, preset.copyWith(imagePosition: 2));
-          } else if (preset.imagePosition == 2) {
-            ref
-                .read(presetListProvider.notifier)
-                .update(presetName, preset.copyWith(imagePosition: 1));
-          }
-        },
-        preset.imagePosition == 2,
-        disable: preset.imagePosition == 0,
-        label: '이미지 왼쪽으로',
-      ),
-    );
 
     return CustomScrollView(
       controller: ScrollController(),
       slivers: [
         SliverGrid(
-          delegate: SliverChildListDelegate(list),
+          delegate: SliverChildListDelegate([
+            ViewSwitchLabel(
+              () => ref
+                  .read(presetListProvider.notifier)
+                  .update(presetName, preset.copyWith(isCard: !preset.isCard)),
+              preset.isCard,
+              label: '그림자',
+            ),
+            ViewSwitchLabel(
+              () => ref.read(presetListProvider.notifier).update(
+                  presetName, preset.copyWith(isRound: !preset.isRound)),
+              preset.isRound,
+              label: '외곽선 둥글게',
+            ),
+            ViewSwitchLabel(
+              () => ref.read(presetListProvider.notifier).update(presetName,
+                  preset.copyWith(maximizingImage: !preset.maximizingImage)),
+              preset.maximizingImage,
+              label: '이미지 최대화',
+            ),
+            ViewSwitchLabel(
+              () => ref.read(presetListProvider.notifier).update(
+                  presetName, preset.copyWith(hideTitle: !preset.hideTitle)),
+              preset.hideTitle,
+              label: '제목 숨기기',
+            ),
+            ViewSwitchLabel(
+              () => ref.read(presetListProvider.notifier).update(presetName,
+                  preset.copyWith(titlePosition: !preset.titlePosition)),
+              preset.titlePosition,
+              label: '제목을 위로',
+            ),
+            ViewSwitchLabel(
+              () => ref.read(presetListProvider.notifier).update(
+                  presetName,
+                  preset.copyWith(
+                      imagePosition: preset.imagePosition == 0 ? 1 : 0)),
+              preset.imagePosition != 0,
+              label: '가로 모드',
+            ),
+            ViewSwitchLabel(
+              () {
+                if (preset.imagePosition == 1) {
+                  ref
+                      .read(presetListProvider.notifier)
+                      .update(presetName, preset.copyWith(imagePosition: 2));
+                } else if (preset.imagePosition == 2) {
+                  ref
+                      .read(presetListProvider.notifier)
+                      .update(presetName, preset.copyWith(imagePosition: 1));
+                }
+              },
+              preset.imagePosition == 2,
+              disable: preset.imagePosition == 0,
+              label: '이미지 왼쪽으로',
+            ),
+          ]),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 4,
             crossAxisSpacing: 2,

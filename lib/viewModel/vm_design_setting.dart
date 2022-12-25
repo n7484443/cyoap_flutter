@@ -29,7 +29,7 @@ final marginVerticalProvider = StateProvider.autoDispose<double>(
 
 final presetProvider = Provider.family
     .autoDispose<ChoiceNodeDesignPreset, String>(
-        (ref, presetName) => ref.watch(presetListProvider)[presetName] ?? ChoiceNodeDesignPreset());
+        (ref, presetName) => ref.watch(presetListProvider)[presetName] ?? const ChoiceNodeDesignPreset());
 
 final presetCurrentEditNameProvider = StateProvider<String>((ref) => 'default');
 final presetCurrentEditProvider = Provider<ChoiceNodeDesignPreset>((ref) =>

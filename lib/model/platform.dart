@@ -7,6 +7,7 @@ import 'package:cyoap_core/grammar/value_type.dart';
 import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 
+const int designSamplePosition = -100;
 class AbstractPlatform extends PlayablePlatform {
   void init() {
     checkDataCorrect();
@@ -79,14 +80,6 @@ class AbstractPlatform extends PlayablePlatform {
 
   @override
   Choice? getNode(Pos pos) {
-    if (pos.first == designSamplePosition) {
-      return ChoiceNode(
-        1,
-        "디자인",
-        "[{\"insert\":\"레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.\\n\"}]",
-        "noImage",
-      )..currentPos = -1;
-    }
     if (pos.last == nonPositioned) {
       return createTempNode();
     }
