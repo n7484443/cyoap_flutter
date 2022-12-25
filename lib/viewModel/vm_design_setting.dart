@@ -82,4 +82,13 @@ class PresetListNotifier extends StateNotifier<List<ChoiceNodeDesignPreset>> {
     state.removeAt(index);
     state = [...state];
   }
+
+  void reorder(int oldIndex, int newIndex) {
+    if(oldIndex < newIndex){
+      newIndex -= 1;
+    }
+    var preset = state.removeAt(oldIndex);
+    state.insert(newIndex, preset);
+    state = [...state];
+  }
 }

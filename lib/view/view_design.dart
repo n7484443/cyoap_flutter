@@ -432,53 +432,8 @@ class ViewPresetTab extends ConsumerWidget {
             )
           ]),
         ),
-        Expanded(
-          child: CustomScrollView(
-            controller: AdjustableScrollController(),
-            slivers: [
-              SliverAppBar(
-                pinned: true,
-                flexibleSpace: ListTile(
-                  title: const Text('프리셋'),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: () {
-                      ref.read(presetListProvider.notifier).create();
-                    },
-                  ),
-                ),
-              ),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    var preset = ref.watch(presetListProvider)[index];
-                    return ListTile(
-                      title: Text(preset.name),
-                      trailing: IconButton(
-                        icon: Icon(Icons.delete,
-                            size: (IconTheme.of(context).size ?? 18) * 0.8),
-                        onPressed: () {
-                          ref
-                              .read(presetListProvider.notifier)
-                              .deleteIndex(index);
-                        },
-                      ),
-                      onTap: () {
-                        ref
-                            .read(presetCurrentEditIndexProvider.notifier)
-                            .update((state) => index);
-                        var pos = Pos(data: [designSamplePosition]);
-                        ref.invalidate(choiceNodeProvider(pos));
-                      },
-                      selected:
-                          index == ref.watch(presetCurrentEditIndexProvider),
-                    );
-                  },
-                  childCount: ref.watch(presetListProvider).length,
-                ),
-              )
-            ],
-          ),
+        const Expanded(
+          child: ReorderablePresetList(),
         ),
         const Expanded(
             flex: 4,
@@ -497,6 +452,67 @@ class ViewPresetTab extends ConsumerWidget {
             ],
           ),*/
             ),
+      ],
+    );
+  }
+}
+
+class ReorderablePresetList extends ConsumerStatefulWidget {
+  const ReorderablePresetList({
+    super.key,
+  });
+
+  @override
+  ConsumerState createState() => _ReorderablePresetListState();
+}
+
+class _ReorderablePresetListState extends ConsumerState<ReorderablePresetList> {
+  @override
+  Widget build(BuildContext context) {
+    var list = ref.watch(presetListProvider);
+    return Column(
+      children: [
+        ListTile(
+          title: const Text('프리셋'),
+          trailing: IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              ref.read(presetListProvider.notifier).create();
+            },
+          ),
+        ),
+        Expanded(
+          child: ReorderableListView(
+            onReorder: (int oldIndex, int newIndex) => ref
+                .read(presetListProvider.notifier)
+                .reorder(oldIndex, newIndex),
+            children: List.generate(
+              list.length,
+              (index) {
+                var preset = list[index];
+                return ListTile(
+                  key: Key('$index'),
+                  title: Text(preset.name),
+                  trailing: IconButton(
+                    icon: Icon(Icons.delete,
+                        size: (IconTheme.of(context).size ?? 18) * 0.8),
+                    onPressed: () {
+                      ref.read(presetListProvider.notifier).deleteIndex(index);
+                    },
+                  ),
+                  onTap: () {
+                    ref
+                        .read(presetCurrentEditIndexProvider.notifier)
+                        .update((state) => index);
+                    var pos = Pos(data: [designSamplePosition]);
+                    ref.invalidate(choiceNodeProvider(pos));
+                  },
+                  selected: index == ref.watch(presetCurrentEditIndexProvider),
+                );
+              },
+            ),
+          ),
+        ),
       ],
     );
   }
