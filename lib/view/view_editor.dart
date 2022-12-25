@@ -595,9 +595,9 @@ class ViewNodeOptionEditor extends ConsumerWidget {
     list.add(
         DropdownButtonFormField<String>(
           decoration: const InputDecoration(labelText: '프리셋 설정'),
-          items: ref.watch(presetListProvider).keys
-              .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
-              value: name, child: Text(name, style: ConstList.getFont(name))))
+          items: ref.watch(presetListProvider)
+              .map<DropdownMenuItem<String>>((preset) => DropdownMenuItem(
+              value: preset.name, child: Text(preset.name)))
               .toList(),
           onChanged: (String? t) {
             if (t != null) {

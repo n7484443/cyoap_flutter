@@ -451,26 +451,27 @@ class ViewPresetTab extends ConsumerWidget {
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
-                    var name =
-                        ref.watch(presetListProvider).keys.toList()[index];
+                    var preset = ref.watch(presetListProvider)[index];
                     return ListTile(
-                      title: Text(name),
+                      title: Text(preset.name),
                       trailing: IconButton(
                         icon: Icon(Icons.delete,
                             size: (IconTheme.of(context).size ?? 18) * 0.8),
                         onPressed: () {
-                          ref.read(presetListProvider.notifier).delete(name);
+                          ref
+                              .read(presetListProvider.notifier)
+                              .deleteIndex(index);
                         },
                       ),
                       onTap: () {
                         ref
-                            .read(presetCurrentEditNameProvider.notifier)
-                            .update((state) => name);
+                            .read(presetCurrentEditIndexProvider.notifier)
+                            .update((state) => index);
                         var pos = Pos(data: [designSamplePosition]);
                         ref.invalidate(choiceNodeProvider(pos));
                       },
                       selected:
-                          name == ref.watch(presetCurrentEditNameProvider),
+                          index == ref.watch(presetCurrentEditIndexProvider),
                     );
                   },
                   childCount: ref.watch(presetListProvider).length,
@@ -508,7 +509,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var presetName = ref.watch(presetCurrentEditNameProvider);
+    var presetIndex = ref.watch(presetCurrentEditIndexProvider);
     var preset = ref.watch(presetCurrentEditProvider);
 
     return CustomScrollView(
@@ -517,39 +518,40 @@ class ViewNodeOptionEditor extends ConsumerWidget {
         SliverGrid(
           delegate: SliverChildListDelegate([
             ViewSwitchLabel(
-              () => ref
-                  .read(presetListProvider.notifier)
-                  .update(presetName, preset.copyWith(isCard: !preset.isCard)),
+              () => ref.read(presetListProvider.notifier).updateIndex(
+                  presetIndex, preset.copyWith(isCard: !preset.isCard)),
               preset.isCard,
               label: '그림자',
             ),
             ViewSwitchLabel(
-              () => ref.read(presetListProvider.notifier).update(
-                  presetName, preset.copyWith(isRound: !preset.isRound)),
+              () => ref.read(presetListProvider.notifier).updateIndex(
+                  presetIndex, preset.copyWith(isRound: !preset.isRound)),
               preset.isRound,
               label: '외곽선 둥글게',
             ),
             ViewSwitchLabel(
-              () => ref.read(presetListProvider.notifier).update(presetName,
+              () => ref.read(presetListProvider.notifier).updateIndex(
+                  presetIndex,
                   preset.copyWith(maximizingImage: !preset.maximizingImage)),
               preset.maximizingImage,
               label: '이미지 최대화',
             ),
             ViewSwitchLabel(
-              () => ref.read(presetListProvider.notifier).update(
-                  presetName, preset.copyWith(hideTitle: !preset.hideTitle)),
+              () => ref.read(presetListProvider.notifier).updateIndex(
+                  presetIndex, preset.copyWith(hideTitle: !preset.hideTitle)),
               preset.hideTitle,
               label: '제목 숨기기',
             ),
             ViewSwitchLabel(
-              () => ref.read(presetListProvider.notifier).update(presetName,
+              () => ref.read(presetListProvider.notifier).updateIndex(
+                  presetIndex,
                   preset.copyWith(titlePosition: !preset.titlePosition)),
               preset.titlePosition,
               label: '제목을 위로',
             ),
             ViewSwitchLabel(
-              () => ref.read(presetListProvider.notifier).update(
-                  presetName,
+              () => ref.read(presetListProvider.notifier).updateIndex(
+                  presetIndex,
                   preset.copyWith(
                       imagePosition: preset.imagePosition == 0 ? 1 : 0)),
               preset.imagePosition != 0,
@@ -558,13 +560,11 @@ class ViewNodeOptionEditor extends ConsumerWidget {
             ViewSwitchLabel(
               () {
                 if (preset.imagePosition == 1) {
-                  ref
-                      .read(presetListProvider.notifier)
-                      .update(presetName, preset.copyWith(imagePosition: 2));
+                  ref.read(presetListProvider.notifier).updateIndex(
+                      presetIndex, preset.copyWith(imagePosition: 2));
                 } else if (preset.imagePosition == 2) {
-                  ref
-                      .read(presetListProvider.notifier)
-                      .update(presetName, preset.copyWith(imagePosition: 1));
+                  ref.read(presetListProvider.notifier).updateIndex(
+                      presetIndex, preset.copyWith(imagePosition: 1));
                 }
               },
               preset.imagePosition == 2,
@@ -590,8 +590,8 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               ),
               color: Color(preset.colorNode),
               onColorChanged: (Color value) {
-                ref.read(presetListProvider.notifier).update(
-                    presetName, preset.copyWith(colorNode: value.value));
+                ref.read(presetListProvider.notifier).updateIndex(
+                    presetIndex, preset.copyWith(colorNode: value.value));
               },
               pickersEnabled: {
                 ColorPickerType.wheel: true,
@@ -611,8 +611,8 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               ),
               color: Color(preset.colorSelectNode),
               onColorChanged: (Color value) {
-                ref.read(presetListProvider.notifier).update(
-                    presetName, preset.copyWith(colorSelectNode: value.value));
+                ref.read(presetListProvider.notifier).updateIndex(
+                    presetIndex, preset.copyWith(colorSelectNode: value.value));
               },
               pickersEnabled: {
                 ColorPickerType.wheel: true,

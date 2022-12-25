@@ -28,38 +28,58 @@ final marginVerticalProvider = StateProvider.autoDispose<double>(
     (ref) => getPlatform.designSetting.marginVertical);
 
 final presetProvider = Provider.family
-    .autoDispose<ChoiceNodeDesignPreset, String>(
-        (ref, presetName) => ref.watch(presetListProvider)[presetName] ?? const ChoiceNodeDesignPreset());
+    .autoDispose<ChoiceNodeDesignPreset, String>((ref, presetName) => ref
+        .watch(presetListProvider)
+        .firstWhere((element) => element.name == presetName,
+            orElse: () => const ChoiceNodeDesignPreset(name: 'default')));
 
-final presetCurrentEditNameProvider = StateProvider<String>((ref) => 'default');
-final presetCurrentEditProvider = Provider<ChoiceNodeDesignPreset>((ref) =>
-    ref.watch(presetListProvider)[ref.watch(presetCurrentEditNameProvider)]!);
+final presetCurrentEditIndexProvider = StateProvider<int>((ref) => 0);
+final presetCurrentEditProvider = Provider<ChoiceNodeDesignPreset>((ref){
+  var list = ref.watch(presetListProvider);
+  var index = ref.watch(presetCurrentEditIndexProvider);
+  if (index >= list.length) {
+    return const ChoiceNodeDesignPreset(name: 'default');
+  }
+  return list[index];
+});
 
-final presetListProvider = StateNotifierProvider<PresetListNotifier,
-    Map<String, ChoiceNodeDesignPreset>>((ref) => PresetListNotifier());
+final presetListProvider =
+    StateNotifierProvider<PresetListNotifier, List<ChoiceNodeDesignPreset>>(
+        (ref) => PresetListNotifier());
 
-class PresetListNotifier
-    extends StateNotifier<Map<String, ChoiceNodeDesignPreset>> {
-  PresetListNotifier() : super({...getPlatform.designSetting.choiceNodePresetMap});
+class PresetListNotifier extends StateNotifier<List<ChoiceNodeDesignPreset>> {
+  PresetListNotifier()
+      : super([...getPlatform.designSetting.choiceNodePresetList]);
 
-  void update(String name, ChoiceNodeDesignPreset preset) {
-    state.remove(name);
-    state = {...state, name: preset};
+  void updateName(String name, ChoiceNodeDesignPreset preset) {
+    int index = state.indexWhere((preset) => preset.name == name);
+    updateIndex(index, preset);
+  }
+
+  void updateIndex(int index, ChoiceNodeDesignPreset preset) {
+    state.removeAt(index);
+    state.insert(index, preset);
+    state = [...state];
   }
 
   void create() {
     var name = '새 프리셋';
     var rename = name;
     var i = 0;
-    while(state.containsKey(rename)) {
+    while (state.any((preset) => preset.name == rename)) {
       rename = '$name $i';
       i++;
     }
-    state = {...state, rename : const ChoiceNodeDesignPreset()};
+    state = [...state, ChoiceNodeDesignPreset(name: rename)];
   }
 
-  void delete(String name) {
-    state.remove(name);
-    state = {...state};
+  void deleteName(String name) {
+    state.removeWhere((preset) => preset.name == name);
+    state = [...state];
+  }
+
+  void deleteIndex(int index) {
+    state.removeAt(index);
+    state = [...state];
   }
 }
