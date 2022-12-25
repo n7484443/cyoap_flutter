@@ -31,7 +31,8 @@ class ViewChoiceNode extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (pos.last == nonPositioned) {
-      var presetName = ref.watch(choiceNodeDesignSettingProvider(pos)).presetName;
+      var presetName =
+          ref.watch(choiceNodeDesignSettingProvider(pos)).presetName;
       return Card(
         color: Color(ref.watch(presetProvider(presetName)).colorNode),
         child: SizedBox(
@@ -68,61 +69,61 @@ class ViewChoiceNodeMain extends ConsumerWidget {
     var design = ref.watch(choiceNodeDesignSettingProvider(pos));
     var preset = ref.watch(presetProvider(design.presetName));
     var defaultColor = Color(preset.colorNode);
-    return Card(
-      shape: preset.isRound
-          ? RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4.0),
-              side: BorderSide(
-                color: node.select > 0
-                    ? Color(preset.colorSelectNode)
-                    : defaultColor,
-                width: ConstList.isSmallDisplay(context) ? 2 : 4,
-              ),
-            )
-          : Border.fromBorderSide(
-              BorderSide(
-                color: node.select > 0
-                    ? Color(preset.colorSelectNode)
-                    : defaultColor,
-                width: ConstList.isSmallDisplay(context) ? 2 : 4,
-              ),
-            ),
-      clipBehavior: Clip.antiAlias,
-      margin:
-          ConstList.isSmallDisplay(context) ? const EdgeInsets.all(1.4) : null,
-      elevation: preset.isRound ? ConstList.elevation : 0,
+    var borderColor =
+        node.select > 0 ? Color(preset.colorSelectNode) : defaultColor;
+    var borderSide = BorderSide(
+      color: borderColor,
+      width: ConstList.isSmallDisplay(context) ? 2 : 4,
+      style: BorderStyle.solid
+    );
+    var shape = preset.isRound
+        ? RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(4.0),
+      side: borderSide,
+    )
+        : Border.fromBorderSide(
+      borderSide,
+    );
+    var innerWidget = Ink(
       color: defaultColor,
-      child: Ink(
-        color: defaultColor,
-        child: Padding(
-          padding: ConstList.isSmallDisplay(context)
-              ? const EdgeInsets.all(2.0)
-              : const EdgeInsets.all(4.0),
-          child: InkWell(
-            onDoubleTap: isEditable
-                ? () {
-                    ref.read(nodeEditorTargetPosProvider.notifier).state =
-                        node.pos;
-                    ref
-                        .read(changeTabProvider.notifier)
-                        .changePageString("viewEditor", context);
-                  }
-                : null,
-            onTap: !isEditable
-                ? () {
-                    ref.read(choiceNodeSelectProvider(pos).notifier).select(
-                          0,
-                          showDialogFunction: () => showDialog(
-                            context: context,
-                            builder: (builder) => RandomDialog(pos),
-                            barrierDismissible: false,
-                          ),
-                        );
-                  }
-                : null,
-            child: ViewChoiceNodeContent(pos, ignoreChild: ignoreChild),
-          ),
+      child: Padding(
+        padding: ConstList.isSmallDisplay(context)
+            ? const EdgeInsets.all(2.0)
+            : const EdgeInsets.all(4.0),
+        child: InkWell(
+          onDoubleTap: isEditable
+              ? () {
+            ref.read(nodeEditorTargetPosProvider.notifier).state =
+                node.pos;
+            ref
+                .read(changeTabProvider.notifier)
+                .changePageString("viewEditor", context);
+          }
+              : null,
+          onTap: !isEditable
+              ? () {
+            ref.read(choiceNodeSelectProvider(pos).notifier).select(
+              0,
+              showDialogFunction: () => showDialog(
+                context: context,
+                builder: (builder) => RandomDialog(pos),
+                barrierDismissible: false,
+              ),
+            );
+          }
+              : null,
+          child: ViewChoiceNodeContent(pos, ignoreChild: ignoreChild),
         ),
+      ),
+    );
+    return ConstList.isSmallDisplay(context) ? innerWidget : Padding(
+      padding: const EdgeInsets.all(1.4),
+      child: Card(
+        shape: shape,
+        clipBehavior: Clip.antiAlias,
+        elevation: preset.isCard ? ConstList.elevation : 0,
+        color: defaultColor,
+        child: innerWidget,
       ),
     );
   }

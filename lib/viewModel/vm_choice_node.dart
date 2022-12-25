@@ -51,6 +51,7 @@ class ChoiceNodeNotifier extends ChangeNotifier {
 
       node!.choiceNodeDesign = node!.choiceNodeDesign
           .copyWith(presetName: ref.read(presetCurrentEditProvider).name);
+      node!.select = ref.read(presetTestSelectProvider) ? 1 : 0;
     } else {
       var node = getPlatform.getNode(pos);
       if (node is ChoiceNode) {

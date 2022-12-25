@@ -1,5 +1,6 @@
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/design_setting.dart';
+import 'package:cyoap_core/preset/choice_node_preset.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
@@ -417,16 +418,26 @@ class ViewPresetTab extends ConsumerWidget {
                         )
                       : null,
                 ),
-                child: IgnorePointer(
-                  child: Row(
-                    children: [
-                      Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: IgnorePointer(
                         child: ViewChoiceNode(
                           Pos(data: [designSamplePosition]),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          ref
+                              .read(presetTestSelectProvider.notifier)
+                              .update((state) => !state);
+                          var pos = Pos(data: [designSamplePosition]);
+                          ref.invalidate(choiceNodeProvider(pos));
+                        },
+                        icon: const Icon(Icons.border_style)),
+                  ],
                 ),
               ),
             )
@@ -435,23 +446,7 @@ class ViewPresetTab extends ConsumerWidget {
         const Expanded(
           child: ReorderablePresetList(),
         ),
-        const Expanded(
-            flex: 4,
-            child:
-                ViewNodeOptionEditor() /*Row(
-            children: [
-              /*ViewFontSelector(
-                label: '제목 폰트',
-                provider: preset.titleFont,
-              ),
-              ViewFontSelector(
-                label: '내용 폰트',
-                provider: ConstList.getFont(preset.mainFont),
-              ),*/
-              const ViewNodeOptionEditor(),
-            ],
-          ),*/
-            ),
+        const Expanded(flex: 4, child: ViewNodeOptionEditor()),
       ],
     );
   }
@@ -713,6 +708,68 @@ class ViewNodeOptionEditor extends ConsumerWidget {
             mainAxisSpacing: 2,
           ),
         ),
+        SliverGrid(
+          delegate: SliverChildListDelegate([
+            DropdownButtonFormField<String>(
+              decoration: const InputDecoration(labelText: '제목 폰트'),
+              items: ConstList.textFontList.keys
+                  .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
+                      value: name,
+                      child: Text(name, style: ConstList.getFont(name))))
+                  .toList(),
+              onChanged: (String? t) {
+                if (t != null) {
+                  var index = ref.read(presetCurrentEditIndexProvider);
+                  ref
+                      .read(presetListProvider.notifier)
+                      .updateIndex(index, preset.copyWith(titleFont: t));
+                }
+              },
+              value: preset.titleFont,
+            ),
+            DropdownButtonFormField<String>(
+              decoration: const InputDecoration(labelText: '내용 폰트'),
+              items: ConstList.textFontList.keys
+                  .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
+                      value: name,
+                      child: Text(name, style: ConstList.getFont(name))))
+                  .toList(),
+              onChanged: (String? t) {
+                if (t != null) {
+                  var index = ref.read(presetCurrentEditIndexProvider);
+                  ref
+                      .read(presetListProvider.notifier)
+                      .updateIndex(index, preset.copyWith(mainFont: t));
+                }
+              },
+              value: preset.titleFont,
+            ),
+          ]),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
+            crossAxisSpacing: 2,
+            mainAxisExtent: 60,
+            mainAxisSpacing: 2,
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: DropdownButtonFormField<Outline>(
+            decoration: const InputDecoration(labelText: '외곽선 형태'),
+            items: Outline.values
+                .map<DropdownMenuItem<Outline>>((type) =>
+                    DropdownMenuItem(value: type, child: Text(type.name)))
+                .toList(),
+            onChanged: (Outline? t) {
+              if (t != null) {
+                var index = ref.read(presetCurrentEditIndexProvider);
+                ref
+                    .read(presetListProvider.notifier)
+                    .updateIndex(index, preset.copyWith(outline: t));
+              }
+            },
+            value: preset.outline,
+          ),
+        )
       ],
     );
   }

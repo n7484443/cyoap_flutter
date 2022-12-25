@@ -29,14 +29,17 @@ final backgroundAttributeProvider = StateProvider.autoDispose<ImageAttribute>(
 final marginVerticalProvider = StateProvider.autoDispose<double>(
     (ref) => getPlatform.designSetting.marginVertical);
 
+final presetTestSelectProvider = StateProvider<bool>((ref) => false);
+
+
 final presetProvider = Provider.family
     .autoDispose<ChoiceNodeDesignPreset, String>((ref, presetName) => ref
         .watch(presetListProvider)
         .firstWhere((element) => element.name == presetName,
             orElse: () => const ChoiceNodeDesignPreset(name: 'default')));
 
-final presetCurrentEditIndexProvider = StateProvider<int>((ref) => 0);
-final presetCurrentEditProvider = Provider<ChoiceNodeDesignPreset>((ref) {
+final presetCurrentEditIndexProvider = StateProvider.autoDispose<int>((ref) => 0);
+final presetCurrentEditProvider = Provider.autoDispose<ChoiceNodeDesignPreset>((ref) {
   var list = ref.watch(presetListProvider);
   var index = ref.watch(presetCurrentEditIndexProvider);
   if (index >= list.length) {
@@ -46,7 +49,7 @@ final presetCurrentEditProvider = Provider<ChoiceNodeDesignPreset>((ref) {
 });
 
 final presetListProvider =
-    StateNotifierProvider<PresetListNotifier, List<ChoiceNodeDesignPreset>>(
+    StateNotifierProvider.autoDispose<PresetListNotifier, List<ChoiceNodeDesignPreset>>(
         (ref) => PresetListNotifier(ref));
 
 class PresetListNotifier extends StateNotifier<List<ChoiceNodeDesignPreset>> {
