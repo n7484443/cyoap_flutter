@@ -1,9 +1,9 @@
-import 'dart:ui';
-
 import 'package:cyoap_core/design_setting.dart';
 import 'package:cyoap_core/preset/choice_node_preset.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
+import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -31,15 +31,16 @@ final marginVerticalProvider = StateProvider.autoDispose<double>(
 
 final presetTestSelectProvider = StateProvider<bool>((ref) => false);
 
-
 final presetProvider = Provider.family
     .autoDispose<ChoiceNodeDesignPreset, String>((ref, presetName) => ref
         .watch(presetListProvider)
         .firstWhere((element) => element.name == presetName,
             orElse: () => const ChoiceNodeDesignPreset(name: 'default')));
 
-final presetCurrentEditIndexProvider = StateProvider.autoDispose<int>((ref) => 0);
-final presetCurrentEditProvider = Provider.autoDispose<ChoiceNodeDesignPreset>((ref) {
+final presetCurrentEditIndexProvider =
+    StateProvider.autoDispose<int>((ref) => 0);
+final presetCurrentEditProvider =
+    Provider.autoDispose<ChoiceNodeDesignPreset>((ref) {
   var list = ref.watch(presetListProvider);
   var index = ref.watch(presetCurrentEditIndexProvider);
   if (index >= list.length) {
@@ -48,16 +49,62 @@ final presetCurrentEditProvider = Provider.autoDispose<ChoiceNodeDesignPreset>((
   return list[index];
 });
 
-final presetListProvider =
-    StateNotifierProvider.autoDispose<PresetListNotifier, List<ChoiceNodeDesignPreset>>(
-        (ref) => PresetListNotifier(ref));
+final presetCurrentEditElevationProvider =
+    Provider.autoDispose<TextEditingController>((ref) {
+  var controller = TextEditingController(
+      text: ref.watch(presetCurrentEditProvider).elevation.toString());
+  controller.addListener(() {
+    EasyDebounce.debounce('Elevation Input', const Duration(milliseconds: 500),
+        () {
+      ref.read(presetListProvider.notifier).updateIndex(
+          ref.watch(presetCurrentEditIndexProvider),
+          ref.read(presetCurrentEditProvider).copyWith(
+              elevation: double.tryParse(controller.text) ?? 0.0));
+    });
+  });
+  ref.onDispose(() {
+    EasyDebounce.cancel('Elevation Input');
+    controller.dispose();
+  });
+  return controller;
+});
+
+final presetCurrentEditRoundProvider =
+    Provider.autoDispose<TextEditingController>((ref) {
+  var controller = TextEditingController(
+      text: ref.watch(presetCurrentEditProvider).round.toString());
+  controller.addListener(() {
+    EasyDebounce.debounce('Round Input', const Duration(milliseconds: 500),
+        () {
+      ref.read(presetListProvider.notifier).updateIndex(
+          ref.watch(presetCurrentEditIndexProvider),
+          ref.read(presetCurrentEditProvider).copyWith(
+              round: double.tryParse(controller.text) ?? 0.0));
+    });
+  });
+  ref.onDispose(() {
+    EasyDebounce.cancel('Round Input');
+    controller.dispose();
+  });
+  return controller;
+});
+
+final presetListProvider = StateNotifierProvider.autoDispose<PresetListNotifier,
+    List<ChoiceNodeDesignPreset>>((ref){
+      ref.listenSelf((previous, next) {
+        getPlatform.designSetting = getPlatform.designSetting.copyWith(choiceNodePresetList: next);
+        ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+      });
+      return PresetListNotifier(ref);
+    });
 
 class PresetListNotifier extends StateNotifier<List<ChoiceNodeDesignPreset>> {
   Ref ref;
+
   PresetListNotifier(this.ref)
       : super([...getPlatform.designSetting.choiceNodePresetList]);
 
-  void updateAll(int index, String after){
+  void updateAll(int index, String after) {
     var before = state[index].name;
     updateIndex(index, state[index].copyWith(name: after));
     getPlatform.updatePresetNameAll(before, after);

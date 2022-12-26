@@ -76,13 +76,9 @@ class ViewChoiceNodeMain extends ConsumerWidget {
       width: ConstList.isSmallDisplay(context) ? 2 : 4,
       style: BorderStyle.solid
     );
-    var shape = preset.isRound
-        ? RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(4.0),
+    var shape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(preset.round),
       side: borderSide,
-    )
-        : Border.fromBorderSide(
-      borderSide,
     );
     var innerWidget = Ink(
       color: defaultColor,
@@ -116,12 +112,12 @@ class ViewChoiceNodeMain extends ConsumerWidget {
         ),
       ),
     );
-    return ConstList.isSmallDisplay(context) ? innerWidget : Padding(
+    return Padding(
       padding: const EdgeInsets.all(1.4),
       child: Card(
         shape: shape,
         clipBehavior: Clip.antiAlias,
-        elevation: preset.isCard ? ConstList.elevation : 0,
+        elevation: preset.elevation,
         color: defaultColor,
         child: innerWidget,
       ),

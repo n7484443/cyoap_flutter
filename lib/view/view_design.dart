@@ -1,6 +1,5 @@
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/design_setting.dart';
-import 'package:cyoap_core/preset/choice_node_preset.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
@@ -388,6 +387,64 @@ class ViewPresetTab extends ConsumerWidget {
         break;
     }
 
+    if (ConstList.isSmallDisplay(context)) {
+      return CustomScrollView(
+        controller: AdjustableScrollController(),
+        slivers: [
+          SliverGrid(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2),
+            delegate: SliverChildListDelegate([
+              const ListTile(
+                title: Text('선택지'),
+                selected: true,
+              ),
+              const PresetList(),
+            ]),
+          ),
+          SliverToBoxAdapter(
+            child: Container(
+              decoration: BoxDecoration(
+                color: ref.watch(colorBackgroundProvider),
+                image: background != null
+                    ? DecorationImage(
+                        image:
+                            Image.memory(ImageDB().getImage(background)!).image,
+                        fit: backgroundBoxFit,
+                        repeat: backgroundRepeat,
+                        filterQuality: FilterQuality.high,
+                      )
+                    : null,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: IgnorePointer(
+                      child: ViewChoiceNode(
+                        Pos(data: [designSamplePosition]),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        ref
+                            .read(presetTestSelectProvider.notifier)
+                            .update((state) => !state);
+                        var pos = Pos(data: [designSamplePosition]);
+                        ref.invalidate(choiceNodeProvider(pos));
+                      },
+                      icon: const Icon(Icons.border_style)),
+                ],
+              ),
+            ),
+          ),
+          const SliverToBoxAdapter(
+            child: ViewNodeOptionEditor(),
+          )
+        ],
+      );
+    }
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -410,12 +467,12 @@ class ViewPresetTab extends ConsumerWidget {
                   color: ref.watch(colorBackgroundProvider),
                   image: background != null
                       ? DecorationImage(
-                          image: Image.memory(ImageDB().getImage(background)!)
-                              .image,
-                          fit: backgroundBoxFit,
-                          repeat: backgroundRepeat,
-                          filterQuality: FilterQuality.high,
-                        )
+                    image:
+                    Image.memory(ImageDB().getImage(background)!).image,
+                    fit: backgroundBoxFit,
+                    repeat: backgroundRepeat,
+                    filterQuality: FilterQuality.high,
+                  )
                       : null,
                 ),
                 child: Row(
@@ -444,7 +501,7 @@ class ViewPresetTab extends ConsumerWidget {
           ]),
         ),
         const Expanded(
-          child: ReorderablePresetList(),
+          child: PresetList(),
         ),
         const Expanded(flex: 4, child: ViewNodeOptionEditor()),
       ],
@@ -452,18 +509,13 @@ class ViewPresetTab extends ConsumerWidget {
   }
 }
 
-class ReorderablePresetList extends ConsumerStatefulWidget {
-  const ReorderablePresetList({
+class PresetList extends ConsumerWidget {
+  const PresetList({
     super.key,
   });
 
   @override
-  ConsumerState createState() => _ReorderablePresetListState();
-}
-
-class _ReorderablePresetListState extends ConsumerState<ReorderablePresetList> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     var list = ref.watch(presetListProvider);
     return Column(
       children: [
@@ -478,9 +530,8 @@ class _ReorderablePresetListState extends ConsumerState<ReorderablePresetList> {
         ),
         Expanded(
           child: ListView.builder(
-            // onReorder: (int oldIndex, int newIndex) => ref
-            //     .read(presetListProvider.notifier)
-            //     .reorder(oldIndex, newIndex),
+            controller: AdjustableScrollController(),
+            shrinkWrap: true,
             itemCount: list.length,
             itemBuilder: (BuildContext context, int index) {
               var preset = list[index];
@@ -576,6 +627,56 @@ class _PresetRenameDialogState extends ConsumerState<PresetRenameDialog> {
   }
 }
 
+class ViewTextFieldInput extends ConsumerStatefulWidget {
+  final String text;
+  final AutoDisposeProvider<double> provider;
+  final void Function(String) inputFunction;
+
+  const ViewTextFieldInput(
+    this.text,
+    this.provider,
+    this.inputFunction, {
+    super.key,
+  });
+
+  @override
+  ConsumerState createState() => _ViewTextFieldInputState();
+}
+
+class _ViewTextFieldInputState extends ConsumerState<ViewTextFieldInput> {
+  TextEditingController? _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+    _controller?.addListener(() {
+      EasyDebounce.debounce(widget.text, const Duration(milliseconds: 500), () {
+        widget.inputFunction(_controller?.text ?? '');
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller?.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      textAlign: TextAlign.end,
+      maxLength: 3,
+      minLines: 1,
+      maxLines: 1,
+      keyboardType: TextInputType.number,
+      controller: _controller,
+      decoration: InputDecoration(labelText: widget.text),
+    );
+  }
+}
+
 class ViewNodeOptionEditor extends ConsumerWidget {
   const ViewNodeOptionEditor({
     super.key,
@@ -588,20 +689,25 @@ class ViewNodeOptionEditor extends ConsumerWidget {
 
     return CustomScrollView(
       controller: ScrollController(),
+      shrinkWrap: true,
       slivers: [
         SliverGrid(
           delegate: SliverChildListDelegate([
-            ViewSwitchLabel(
-              () => ref.read(presetListProvider.notifier).updateIndex(
-                  presetIndex, preset.copyWith(isCard: !preset.isCard)),
-              preset.isCard,
-              label: '그림자',
+            TextFormField(
+              textAlign: TextAlign.end,
+              minLines: 1,
+              maxLines: 1,
+              keyboardType: TextInputType.number,
+              controller: ref.watch(presetCurrentEditElevationProvider),
+              decoration: const InputDecoration(labelText: '높이'),
             ),
-            ViewSwitchLabel(
-              () => ref.read(presetListProvider.notifier).updateIndex(
-                  presetIndex, preset.copyWith(isRound: !preset.isRound)),
-              preset.isRound,
-              label: '외곽선 둥글게',
+            TextFormField(
+              textAlign: TextAlign.end,
+              minLines: 1,
+              maxLines: 1,
+              keyboardType: TextInputType.number,
+              controller: ref.watch(presetCurrentEditRoundProvider),
+              decoration: const InputDecoration(labelText: '모서리 라운드'),
             ),
             ViewSwitchLabel(
               () => ref.read(presetListProvider.notifier).updateIndex(
@@ -752,7 +858,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
             mainAxisSpacing: 2,
           ),
         ),
-        SliverToBoxAdapter(
+        /*SliverToBoxAdapter(
           child: DropdownButtonFormField<Outline>(
             decoration: const InputDecoration(labelText: '외곽선 형태'),
             items: Outline.values
@@ -769,7 +875,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
             },
             value: preset.outline,
           ),
-        )
+        )*/
       ],
     );
   }
