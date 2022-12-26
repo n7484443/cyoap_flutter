@@ -58,8 +58,9 @@ final presetCurrentEditElevationProvider =
         () {
       ref.read(presetListProvider.notifier).updateIndex(
           ref.watch(presetCurrentEditIndexProvider),
-          ref.read(presetCurrentEditProvider).copyWith(
-              elevation: double.tryParse(controller.text) ?? 0.0));
+          ref
+              .read(presetCurrentEditProvider)
+              .copyWith(elevation: double.tryParse(controller.text) ?? 0.0));
     });
   });
   ref.onDispose(() {
@@ -74,12 +75,12 @@ final presetCurrentEditRoundProvider =
   var controller = TextEditingController(
       text: ref.watch(presetCurrentEditProvider).round.toString());
   controller.addListener(() {
-    EasyDebounce.debounce('Round Input', const Duration(milliseconds: 500),
-        () {
+    EasyDebounce.debounce('Round Input', const Duration(milliseconds: 500), () {
       ref.read(presetListProvider.notifier).updateIndex(
           ref.watch(presetCurrentEditIndexProvider),
-          ref.read(presetCurrentEditProvider).copyWith(
-              round: double.tryParse(controller.text) ?? 0.0));
+          ref
+              .read(presetCurrentEditProvider)
+              .copyWith(round: double.tryParse(controller.text) ?? 0.0));
     });
   });
   ref.onDispose(() {
@@ -90,13 +91,14 @@ final presetCurrentEditRoundProvider =
 });
 
 final presetListProvider = StateNotifierProvider.autoDispose<PresetListNotifier,
-    List<ChoiceNodeDesignPreset>>((ref){
-      ref.listenSelf((previous, next) {
-        getPlatform.designSetting = getPlatform.designSetting.copyWith(choiceNodePresetList: next);
-        ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-      });
-      return PresetListNotifier(ref);
-    });
+    List<ChoiceNodeDesignPreset>>((ref) {
+  ref.listenSelf((previous, next) {
+    getPlatform.designSetting =
+        getPlatform.designSetting.copyWith(choiceNodePresetList: next);
+    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+  });
+  return PresetListNotifier(ref);
+});
 
 class PresetListNotifier extends StateNotifier<List<ChoiceNodeDesignPreset>> {
   Ref ref;
@@ -104,7 +106,7 @@ class PresetListNotifier extends StateNotifier<List<ChoiceNodeDesignPreset>> {
   PresetListNotifier(this.ref)
       : super([...getPlatform.designSetting.choiceNodePresetList]);
 
-  void updateAll(int index, String after) {
+  void rename(int index, String after) {
     var before = state[index].name;
     updateIndex(index, state[index].copyWith(name: after));
     getPlatform.updatePresetNameAll(before, after);
@@ -134,13 +136,19 @@ class PresetListNotifier extends StateNotifier<List<ChoiceNodeDesignPreset>> {
   }
 
   void deleteName(String name) {
-    state.removeWhere((preset) => preset.name == name);
-    state = [...state];
+    if (state.length >= 2) {
+      state.removeWhere((preset) => preset.name == name);
+      state = [...state];
+      getPlatform.updatePresetNameAll(name, state.first.name);
+    }
   }
 
   void deleteIndex(int index) {
-    state.removeAt(index);
-    state = [...state];
+    if (state.length >= 2) {
+      var removed = state.removeAt(index);
+      state = [...state];
+      getPlatform.updatePresetNameAll(removed.name, state.first.name);
+    }
   }
 
   void reorder(int oldIndex, int newIndex) {

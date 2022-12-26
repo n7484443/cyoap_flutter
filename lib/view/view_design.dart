@@ -562,7 +562,7 @@ class PresetList extends ConsumerWidget {
                   if (text != null && text.trim().isNotEmpty) {
                     ref
                         .read(presetListProvider.notifier)
-                        .updateAll(index, text.trim());
+                        .rename(index, text.trim());
                     var pos = Pos(data: [designSamplePosition]);
                     ref.invalidate(choiceNodeProvider(pos));
                   }
