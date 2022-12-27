@@ -123,8 +123,8 @@ class AbstractPlatform extends PlayablePlatform {
     for (var line in lineSettings) {
       for (var choice in line.children) {
         (choice as ChoiceNode).doAllChild((node) {
-          if(node.choiceNodeDesign.presetName == before){
-            node.choiceNodeDesign = node.choiceNodeDesign.copyWith(presetName: after);
+          if(node.choiceNodeOption.presetName == before){
+            node.choiceNodeOption = node.choiceNodeOption.copyWith(presetName: after);
           }
         });
       }

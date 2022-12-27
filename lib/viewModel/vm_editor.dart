@@ -42,8 +42,8 @@ class NodeEditorTargetNotifier extends ChangeNotifier {
   }
 }
 
-final nodeEditorDesignProvider = StateProvider.autoDispose<ChoiceNodeDesign>(
-    (ref) => ref.watch(nodeEditorTargetProvider).node.choiceNodeDesign);
+final nodeEditorDesignProvider = StateProvider.autoDispose<ChoiceNodeOption>(
+    (ref) => ref.watch(nodeEditorTargetProvider).node.choiceNodeOption);
 
 final nodeModeProvider = StateProvider.autoDispose<ChoiceNodeMode>(
     (ref) => ref.watch(nodeEditorTargetProvider).node.choiceNodeMode);
@@ -145,7 +145,7 @@ class EditorChangeNotifier extends StateNotifier<bool> {
     origin.choiceNodeMode = changed.choiceNodeMode;
     origin.imageString = changed.imageString;
     origin.recursiveStatus = changed.recursiveStatus;
-    origin.choiceNodeDesign = ref.read(nodeEditorDesignProvider);
+    origin.choiceNodeOption = ref.read(nodeEditorDesignProvider);
     if (origin.recursiveStatus.executeCodeString != null) {
       origin.recursiveStatus.executeCodeString =
           formatting(origin.recursiveStatus.executeCodeString!).item1;

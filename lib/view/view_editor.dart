@@ -101,8 +101,8 @@ class ViewContentsEditor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(nodeEditorDesignProvider, (previous, ChoiceNodeDesign next) {
-      ref.read(nodeEditorTargetProvider).node.choiceNodeDesign = next;
+    ref.listen(nodeEditorDesignProvider, (previous, ChoiceNodeOption next) {
+      ref.read(nodeEditorTargetProvider).node.choiceNodeOption = next;
       ref.read(editorChangeProvider.notifier).needUpdate();
     });
 
@@ -562,8 +562,8 @@ class ViewNodeOptionEditor extends ConsumerWidget {
       ref.read(nodeEditorTargetProvider).node.choiceNodeMode = next;
       ref.read(editorChangeProvider.notifier).needUpdate();
     });
-    ref.listen(nodeEditorDesignProvider, (previous, ChoiceNodeDesign next) {
-      ref.read(nodeEditorTargetProvider).node.choiceNodeDesign = next;
+    ref.listen(nodeEditorDesignProvider, (previous, ChoiceNodeOption next) {
+      ref.read(nodeEditorTargetProvider).node.choiceNodeOption = next;
       ref.read(editorChangeProvider.notifier).needUpdate();
     });
     var title = ref.watch(nodeTitleProvider);

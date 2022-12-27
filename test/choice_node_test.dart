@@ -75,11 +75,11 @@ void main() {
             parentPos1, (i) => ViewChoiceNode(parentPos1.addLast(i))),
       ),
     ));
-    getPlatform.getChoiceNode(pos1_0)?.choiceNodeDesign =
-        ChoiceNodeDesign(isOccupySpace: true);
+    getPlatform.getChoiceNode(pos1_0)?.choiceNodeOption =
+        ChoiceNodeOption(isOccupySpace: true);
     getPlatform.getChoiceNode(pos1_0)?.selectableStatus = SelectableStatus.hide;
-    getPlatform.getChoiceNode(pos1_1)?.choiceNodeDesign =
-        ChoiceNodeDesign(isOccupySpace: true);
+    getPlatform.getChoiceNode(pos1_1)?.choiceNodeOption =
+        ChoiceNodeOption(isOccupySpace: true);
     getPlatform.getChoiceNode(pos1_1)?.selectableStatus = SelectableStatus.hide;
     expect(find.byType(Expanded), findsNWidgets(3));
   });
@@ -91,11 +91,11 @@ void main() {
             parentPos1, (i) => ViewChoiceNode(parentPos1.addLast(i))),
       ),
     ));
-    getPlatform.getChoiceNode(pos1_0)?.choiceNodeDesign =
-        ChoiceNodeDesign(isOccupySpace: false);
+    getPlatform.getChoiceNode(pos1_0)?.choiceNodeOption =
+        ChoiceNodeOption(isOccupySpace: false);
     getPlatform.getChoiceNode(pos1_0)?.selectableStatus = SelectableStatus.hide;
-    getPlatform.getChoiceNode(pos1_1)?.choiceNodeDesign =
-        ChoiceNodeDesign(isOccupySpace: false);
+    getPlatform.getChoiceNode(pos1_1)?.choiceNodeOption =
+        ChoiceNodeOption(isOccupySpace: false);
     getPlatform.getChoiceNode(pos1_1)?.selectableStatus = SelectableStatus.hide;
     expect(find.byType(Expanded), findsNothing);
   });

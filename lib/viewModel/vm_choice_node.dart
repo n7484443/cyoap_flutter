@@ -49,7 +49,7 @@ class ChoiceNodeNotifier extends ChangeNotifier {
         "noImage",
       )..currentPos = -1;
 
-      node!.choiceNodeDesign = node!.choiceNodeDesign
+      node!.choiceNodeOption = node!.choiceNodeOption
           .copyWith(presetName: ref.read(presetCurrentEditProvider).name);
       node!.select = ref.read(presetTestSelectProvider) ? 1 : 0;
     } else {
@@ -64,9 +64,9 @@ class ChoiceNodeNotifier extends ChangeNotifier {
 }
 
 final choiceNodeDesignSettingProvider =
-    Provider.family.autoDispose<ChoiceNodeDesign, Pos>((ref, pos) {
+    Provider.family.autoDispose<ChoiceNodeOption, Pos>((ref, pos) {
   var node = ref.watch(choiceNodeProvider(pos));
-  return node.node!.choiceNodeDesign;
+  return node.node!.choiceNodeOption;
 });
 
 final imageStringProvider =
