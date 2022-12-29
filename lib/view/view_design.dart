@@ -848,7 +848,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                       .updateIndex(index, preset.copyWith(mainFont: t));
                 }
               },
-              value: preset.titleFont,
+              value: preset.mainFont,
             ),
           ]),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
