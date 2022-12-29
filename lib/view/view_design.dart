@@ -51,7 +51,7 @@ class ViewDesignSetting extends ConsumerWidget {
                       provider: variableFontProvider,
                     ),
                     const ViewBackgroundSetting(),
-                    const ViewPresetTab(),
+                    ViewPresetTab(),
                   ],
                 ),
               ),

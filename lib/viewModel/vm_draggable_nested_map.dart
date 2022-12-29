@@ -173,6 +173,11 @@ final lineMaxSelectProvider =
   return ref.watch(lineProvider(pos))!.maxSelect;
 });
 
+final linePresetNameProvider =
+Provider.family.autoDispose<String, int>((ref, pos) {
+  return ref.watch(lineProvider(pos))!.presetName;
+});
+
 // todo 수정 필요
 final lineBackgroundColorProvider =
     StateProvider.autoDispose.family<Color?, int>((ref, pos) {

@@ -34,7 +34,7 @@ class ViewChoiceNode extends ConsumerWidget {
       var presetName =
           ref.watch(choiceNodeDesignSettingProvider(pos)).presetName;
       return Card(
-        color: Color(ref.watch(presetProvider(presetName)).colorNode),
+        color: Color(ref.watch(choiceNodePresetProvider(presetName)).colorNode),
         child: SizedBox(
           width: MediaQuery.of(context).size.width /
               defaultMaxSize *
@@ -67,7 +67,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var node = ref.watch(choiceNodeProvider(pos)).node!;
     var design = ref.watch(choiceNodeDesignSettingProvider(pos));
-    var preset = ref.watch(presetProvider(design.presetName));
+    var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     var defaultColor = Color(preset.colorNode);
     var borderColor =
         node.select > 0 ? Color(preset.colorSelectNode) : defaultColor;
@@ -276,7 +276,7 @@ class ViewTitleWithEdit extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     Widget title;
     var design = ref.watch(choiceNodeDesignSettingProvider(pos));
-    var preset = ref.watch(presetProvider(design.presetName));
+    var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     if (!preset.hideTitle) {
       title = Text(
         ref.watch(titleStringProvider(pos)),
@@ -414,7 +414,7 @@ class _ViewContentsState extends ConsumerState<ViewContents> {
       return const SizedBox.shrink();
     }
     var design = ref.watch(choiceNodeDesignSettingProvider(widget.pos));
-    var preset = ref.watch(presetProvider(design.presetName));
+    var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     return QuillEditor(
       controller: ref.watch(contentsQuillProvider(widget.pos)),
       focusNode: _focusNode!,
@@ -443,7 +443,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var node = ref.watch(choiceNodeProvider(pos)).node!;
     var design = ref.watch(choiceNodeDesignSettingProvider(pos));
-    var preset = ref.watch(presetProvider(design.presetName));
+    var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     Widget image;
     if (ref.watch(imageStringProvider(pos)).isNotEmpty) {
       image = ConstrainedBox(

@@ -1,4 +1,5 @@
 import 'package:cyoap_core/preset/choice_node_preset.dart';
+import 'package:cyoap_flutter/viewModel/preset/vm_preset.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,29 +8,27 @@ import '../../model/platform_system.dart';
 import '../vm_choice_node.dart';
 import '../vm_draggable_nested_map.dart';
 
-final presetCurrentEditIndexProvider =
-StateProvider.autoDispose<int>((ref) => 0);
-final presetCurrentEditProvider =
+final choiceNodePresetCurrentEditProvider =
 Provider.autoDispose<ChoiceNodeDesignPreset>((ref) {
-  var list = ref.watch(presetListProvider);
-  var index = ref.watch(presetCurrentEditIndexProvider);
+  var list = ref.watch(choiceNodePresetListProvider);
+  var index = ref.watch(currentPresetIndexProvider);
   if (index >= list.length) {
     return const ChoiceNodeDesignPreset(name: 'default');
   }
   return list[index];
 });
 
-final presetCurrentEditElevationProvider =
+final choiceNodePresetCurrentEditElevationProvider =
 Provider.autoDispose<TextEditingController>((ref) {
   var controller = TextEditingController(
-      text: ref.watch(presetCurrentEditProvider).elevation.toString());
+      text: ref.watch(choiceNodePresetCurrentEditProvider).elevation.toString());
   controller.addListener(() {
     EasyDebounce.debounce('Elevation Input', const Duration(milliseconds: 500),
             () {
-          ref.read(presetListProvider.notifier).updateIndex(
-              ref.watch(presetCurrentEditIndexProvider),
+          ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+              ref.watch(currentPresetIndexProvider),
               ref
-                  .read(presetCurrentEditProvider)
+                  .read(choiceNodePresetCurrentEditProvider)
                   .copyWith(elevation: double.tryParse(controller.text) ?? 0.0));
         });
   });
@@ -39,24 +38,24 @@ Provider.autoDispose<TextEditingController>((ref) {
   });
   return controller;
 });
-final presetTestSelectProvider = StateProvider<bool>((ref) => false);
+final choiceNodePresetTestSelectProvider = StateProvider<bool>((ref) => false);
 
-final presetProvider = Provider.family
+final choiceNodePresetProvider = Provider.family
     .autoDispose<ChoiceNodeDesignPreset, String>((ref, presetName) => ref
-    .watch(presetListProvider)
+    .watch(choiceNodePresetListProvider)
     .firstWhere((element) => element.name == presetName,
     orElse: () => const ChoiceNodeDesignPreset(name: 'default')));
 
-final presetCurrentEditRoundProvider =
+final choiceNodePresetCurrentEditRoundProvider =
 Provider.autoDispose<TextEditingController>((ref) {
   var controller = TextEditingController(
-      text: ref.watch(presetCurrentEditProvider).round.toString());
+      text: ref.watch(choiceNodePresetCurrentEditProvider).round.toString());
   controller.addListener(() {
     EasyDebounce.debounce('Round Input', const Duration(milliseconds: 500), () {
-      ref.read(presetListProvider.notifier).updateIndex(
-          ref.watch(presetCurrentEditIndexProvider),
+      ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+          ref.watch(currentPresetIndexProvider),
           ref
-              .read(presetCurrentEditProvider)
+              .read(choiceNodePresetCurrentEditProvider)
               .copyWith(round: double.tryParse(controller.text) ?? 0.0));
     });
   });
@@ -67,20 +66,20 @@ Provider.autoDispose<TextEditingController>((ref) {
   return controller;
 });
 
-final presetListProvider = StateNotifierProvider.autoDispose<PresetListNotifier,
+final choiceNodePresetListProvider = StateNotifierProvider.autoDispose<ChoiceNodePresetListNotifier,
     List<ChoiceNodeDesignPreset>>((ref) {
   ref.listenSelf((previous, next) {
     getPlatform.designSetting =
         getPlatform.designSetting.copyWith(choiceNodePresetList: next);
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
   });
-  return PresetListNotifier(ref);
+  return ChoiceNodePresetListNotifier(ref);
 });
 
-class PresetListNotifier extends StateNotifier<List<ChoiceNodeDesignPreset>> {
+class ChoiceNodePresetListNotifier extends StateNotifier<List<ChoiceNodeDesignPreset>> {
   Ref ref;
 
-  PresetListNotifier(this.ref)
+  ChoiceNodePresetListNotifier(this.ref)
       : super([...getPlatform.designSetting.choiceNodePresetList]);
 
   void rename(int index, String after) {

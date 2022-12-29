@@ -9,6 +9,7 @@ import '../../main.dart';
 import '../../model/image_db.dart';
 import '../../model/platform.dart';
 import '../../viewModel/preset/vm_choice_node_preset.dart';
+import '../../viewModel/preset/vm_preset.dart';
 import '../../viewModel/vm_choice_node.dart';
 import '../../viewModel/vm_design_setting.dart';
 import '../util/controller_adjustable_scroll.dart';
@@ -66,7 +67,7 @@ class ChoiceNodeSample extends ConsumerWidget{
           IconButton(
               onPressed: () {
                 ref
-                    .read(presetTestSelectProvider.notifier)
+                    .read(choiceNodePresetTestSelectProvider.notifier)
                     .update((state) => !state);
                 var pos = Pos(data: [designSamplePosition]);
                 ref.invalidate(choiceNodeProvider(pos));
@@ -78,14 +79,14 @@ class ChoiceNodeSample extends ConsumerWidget{
   }
 }
 
-class PresetList extends ConsumerWidget {
-  const PresetList({
+class ChoiceNodePresetList extends ConsumerWidget {
+  const ChoiceNodePresetList({
     super.key,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var list = ref.watch(presetListProvider);
+    var list = ref.watch(choiceNodePresetListProvider);
     return Column(
       children: [
         ListTile(
@@ -93,7 +94,7 @@ class PresetList extends ConsumerWidget {
           trailing: IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              ref.read(presetListProvider.notifier).create();
+              ref.read(choiceNodePresetListProvider.notifier).create();
             },
           ),
         ),
@@ -111,12 +112,12 @@ class PresetList extends ConsumerWidget {
                   icon: Icon(Icons.delete,
                       size: (IconTheme.of(context).size ?? 18) * 0.8),
                   onPressed: () {
-                    ref.read(presetListProvider.notifier).deleteIndex(index);
+                    ref.read(choiceNodePresetListProvider.notifier).deleteIndex(index);
                   },
                 ),
                 onTap: () {
                   ref
-                      .read(presetCurrentEditIndexProvider.notifier)
+                      .read(currentPresetIndexProvider.notifier)
                       .update((state) => index);
                   var pos = Pos(data: [designSamplePosition]);
                   ref.invalidate(choiceNodeProvider(pos));
@@ -130,13 +131,13 @@ class PresetList extends ConsumerWidget {
                       barrierDismissible: false);
                   if (text != null && text.trim().isNotEmpty) {
                     ref
-                        .read(presetListProvider.notifier)
+                        .read(choiceNodePresetListProvider.notifier)
                         .rename(index, text.trim());
                     var pos = Pos(data: [designSamplePosition]);
                     ref.invalidate(choiceNodeProvider(pos));
                   }
                 },
-                selected: index == ref.watch(presetCurrentEditIndexProvider),
+                selected: index == ref.watch(currentPresetIndexProvider),
               );
             },
           ),
@@ -253,8 +254,8 @@ class ViewNodeOptionEditor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var presetIndex = ref.watch(presetCurrentEditIndexProvider);
-    var preset = ref.watch(presetCurrentEditProvider);
+    var presetIndex = ref.watch(currentPresetIndexProvider);
+    var preset = ref.watch(choiceNodePresetCurrentEditProvider);
 
     return CustomScrollView(
       controller: ScrollController(),
@@ -267,7 +268,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               minLines: 1,
               maxLines: 1,
               keyboardType: TextInputType.number,
-              controller: ref.watch(presetCurrentEditElevationProvider),
+              controller: ref.watch(choiceNodePresetCurrentEditElevationProvider),
               decoration: const InputDecoration(labelText: '높이'),
             ),
             TextFormField(
@@ -275,31 +276,31 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               minLines: 1,
               maxLines: 1,
               keyboardType: TextInputType.number,
-              controller: ref.watch(presetCurrentEditRoundProvider),
+              controller: ref.watch(choiceNodePresetCurrentEditRoundProvider),
               decoration: const InputDecoration(labelText: '모서리 라운드'),
             ),
             ViewSwitchLabel(
-                  () => ref.read(presetListProvider.notifier).updateIndex(
+                  () => ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                   presetIndex,
                   preset.copyWith(maximizingImage: !preset.maximizingImage)),
               preset.maximizingImage,
               label: '이미지 최대화',
             ),
             ViewSwitchLabel(
-                  () => ref.read(presetListProvider.notifier).updateIndex(
+                  () => ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                   presetIndex, preset.copyWith(hideTitle: !preset.hideTitle)),
               preset.hideTitle,
               label: '제목 숨기기',
             ),
             ViewSwitchLabel(
-                  () => ref.read(presetListProvider.notifier).updateIndex(
+                  () => ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                   presetIndex,
                   preset.copyWith(titlePosition: !preset.titlePosition)),
               preset.titlePosition,
               label: '제목을 위로',
             ),
             ViewSwitchLabel(
-                  () => ref.read(presetListProvider.notifier).updateIndex(
+                  () => ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                   presetIndex,
                   preset.copyWith(
                       imagePosition: preset.imagePosition == 0 ? 1 : 0)),
@@ -309,10 +310,10 @@ class ViewNodeOptionEditor extends ConsumerWidget {
             ViewSwitchLabel(
                   () {
                 if (preset.imagePosition == 1) {
-                  ref.read(presetListProvider.notifier).updateIndex(
+                  ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                       presetIndex, preset.copyWith(imagePosition: 2));
                 } else if (preset.imagePosition == 2) {
-                  ref.read(presetListProvider.notifier).updateIndex(
+                  ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                       presetIndex, preset.copyWith(imagePosition: 1));
                 }
               },
@@ -339,7 +340,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               ),
               color: Color(preset.colorNode),
               onColorChanged: (Color value) {
-                ref.read(presetListProvider.notifier).updateIndex(
+                ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                     presetIndex, preset.copyWith(colorNode: value.value));
               },
               pickersEnabled: {
@@ -360,7 +361,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               ),
               color: Color(preset.colorSelectNode),
               onColorChanged: (Color value) {
-                ref.read(presetListProvider.notifier).updateIndex(
+                ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                     presetIndex, preset.copyWith(colorSelectNode: value.value));
               },
               pickersEnabled: {
@@ -394,9 +395,9 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                   .toList(),
               onChanged: (String? t) {
                 if (t != null) {
-                  var index = ref.read(presetCurrentEditIndexProvider);
+                  var index = ref.read(currentPresetIndexProvider);
                   ref
-                      .read(presetListProvider.notifier)
+                      .read(choiceNodePresetListProvider.notifier)
                       .updateIndex(index, preset.copyWith(titleFont: t));
                 }
               },
@@ -411,9 +412,9 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                   .toList(),
               onChanged: (String? t) {
                 if (t != null) {
-                  var index = ref.read(presetCurrentEditIndexProvider);
+                  var index = ref.read(currentPresetIndexProvider);
                   ref
-                      .read(presetListProvider.notifier)
+                      .read(choiceNodePresetListProvider.notifier)
                       .updateIndex(index, preset.copyWith(mainFont: t));
                 }
               },

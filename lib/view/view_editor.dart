@@ -148,7 +148,7 @@ class _ViewTitleTextFieldInputState
   @override
   Widget build(BuildContext context) {
     var design = ref.watch(nodeEditorDesignProvider);
-    var preset = ref.watch(presetProvider(design.presetName));
+    var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     return TextField(
       controller: _controller,
       textAlign: TextAlign.center,
@@ -268,7 +268,7 @@ class _ViewTextContentsEditorState
     }
 
     var design = ref.watch(nodeEditorDesignProvider);
-    var preset = ref.watch(presetProvider(design.presetName));
+    var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     return Column(
       children: [
         Padding(
@@ -579,7 +579,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
     list.add(DropdownButtonFormField<String>(
       decoration: const InputDecoration(labelText: '프리셋 설정'),
       items: ref
-          .watch(presetListProvider)
+          .watch(choiceNodePresetListProvider)
           .map<DropdownMenuItem<String>>((preset) =>
               DropdownMenuItem(value: preset.name, child: Text(preset.name)))
           .toList(),
