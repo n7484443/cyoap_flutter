@@ -172,7 +172,7 @@ class PlatformFileSystem {
   Future<void> createFromJson(String input, Ref ref) async {
     var jsonParser = JsonProjectParser(path!);
     var output = await jsonParser.getPlatform(input, ref);
-    for(var key in output.item2.keys){
+    for (var key in output.item2.keys) {
       ImageDB().uploadImages(key, output.item2[key]!);
     }
     platform = output.item1;

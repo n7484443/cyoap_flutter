@@ -72,10 +72,9 @@ class ViewChoiceNodeMain extends ConsumerWidget {
     var borderColor =
         node.select > 0 ? Color(preset.colorSelectNode) : defaultColor;
     var borderSide = BorderSide(
-      color: borderColor,
-      width: ConstList.isSmallDisplay(context) ? 2 : 4,
-      style: BorderStyle.solid
-    );
+        color: borderColor,
+        width: ConstList.isSmallDisplay(context) ? 2 : 4,
+        style: BorderStyle.solid);
     var shape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(preset.round),
       side: borderSide,
@@ -89,24 +88,24 @@ class ViewChoiceNodeMain extends ConsumerWidget {
         child: InkWell(
           onDoubleTap: isEditable
               ? () {
-            ref.read(nodeEditorTargetPosProvider.notifier).state =
-                node.pos;
-            ref
-                .read(changeTabProvider.notifier)
-                .changePageString("viewEditor", context);
-          }
+                  ref.read(nodeEditorTargetPosProvider.notifier).state =
+                      node.pos;
+                  ref
+                      .read(changeTabProvider.notifier)
+                      .changePageString("viewEditor", context);
+                }
               : null,
           onTap: !isEditable
               ? () {
-            ref.read(choiceNodeSelectProvider(pos).notifier).select(
-              0,
-              showDialogFunction: () => showDialog(
-                context: context,
-                builder: (builder) => RandomDialog(pos),
-                barrierDismissible: false,
-              ),
-            );
-          }
+                  ref.read(choiceNodeSelectProvider(pos).notifier).select(
+                        0,
+                        showDialogFunction: () => showDialog(
+                          context: context,
+                          builder: (builder) => RandomDialog(pos),
+                          barrierDismissible: false,
+                        ),
+                      );
+                }
               : null,
           child: ViewChoiceNodeContent(pos, ignoreChild: ignoreChild),
         ),

@@ -8,6 +8,7 @@ import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 
 const int designSamplePosition = -100;
+
 class AbstractPlatform extends PlayablePlatform {
   void init() {
     checkDataCorrect();
@@ -123,8 +124,9 @@ class AbstractPlatform extends PlayablePlatform {
     for (var line in lineSettings) {
       for (var choice in line.children) {
         (choice as ChoiceNode).doAllChild((node) {
-          if(node.choiceNodeOption.presetName == before){
-            node.choiceNodeOption = node.choiceNodeOption.copyWith(presetName: after);
+          if (node.choiceNodeOption.presetName == before) {
+            node.choiceNodeOption =
+                node.choiceNodeOption.copyWith(presetName: after);
           }
         });
       }

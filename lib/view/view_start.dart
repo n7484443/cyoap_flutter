@@ -340,10 +340,12 @@ class ViewGlobalSettingDialog extends ConsumerWidget {
             label: "저장 시 이미지를 webp 파일로 변환",
           ),
           const Spacer(),
-          TextButton(onPressed: () {
-            Navigator.of(context).pop();
-            Navigator.of(context).pushReplacementNamed("/viewLicense");
-          }, child: const Text("폰트 라이센스")),
+          TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacementNamed("/viewLicense");
+              },
+              child: const Text("폰트 라이센스")),
         ],
       ),
     );

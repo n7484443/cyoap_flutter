@@ -22,7 +22,6 @@ class ViewDesignSetting extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     return DefaultTabController(
       length: 5,
       child: Scaffold(
@@ -438,12 +437,12 @@ class ViewPresetTab extends ConsumerWidget {
                   color: ref.watch(colorBackgroundProvider),
                   image: background != null
                       ? DecorationImage(
-                    image:
-                    Image.memory(ImageDB().getImage(background)!).image,
-                    fit: backgroundBoxFit,
-                    repeat: backgroundRepeat,
-                    filterQuality: FilterQuality.high,
-                  )
+                          image: Image.memory(ImageDB().getImage(background)!)
+                              .image,
+                          fit: backgroundBoxFit,
+                          repeat: backgroundRepeat,
+                          filterQuality: FilterQuality.high,
+                        )
                       : null,
                 ),
                 child: Row(

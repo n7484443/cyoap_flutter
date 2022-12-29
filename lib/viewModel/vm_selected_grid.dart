@@ -10,7 +10,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
-final selectedChoiceNodeProvider = Provider.autoDispose<List<Tuple2<Pos, int>>>((ref) {
+final selectedChoiceNodeProvider =
+    Provider.autoDispose<List<Tuple2<Pos, int>>>((ref) {
   return getPlatform.selectedPos;
 });
 

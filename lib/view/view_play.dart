@@ -68,8 +68,14 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            IconButton(onPressed: () => ref.read(playDataProvider.notifier).savePlayData(), icon: const Icon(Icons.save)),
-            IconButton(onPressed: () => ref.read(playDataProvider.notifier).loadPlayData(), icon: const Icon(Icons.file_upload_outlined)),
+            IconButton(
+                onPressed: () =>
+                    ref.read(playDataProvider.notifier).savePlayData(),
+                icon: const Icon(Icons.save)),
+            IconButton(
+                onPressed: () =>
+                    ref.read(playDataProvider.notifier).loadPlayData(),
+                icon: const Icon(Icons.file_upload_outlined)),
           ],
         ),
       ),

@@ -9,7 +9,7 @@ final saveAsWebpFutureProvider = FutureProvider<bool>((ref) async {
   return out;
 });
 
-final saveAsWebpProvider = StateProvider<bool>((ref){
+final saveAsWebpProvider = StateProvider<bool>((ref) {
   ref.listenSelf((previous, next) {
     ProjectPath().setSaveAsWebp(next);
     WebpConverter.instance?.saveAsWebp = next;

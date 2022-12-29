@@ -9,7 +9,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../main.dart';
 import '../model/opening_file_folder.dart';
 
-final playDataProvider = StateNotifierProvider<PlayDataNotifier, void>((ref) => PlayDataNotifier(ref));
+final playDataProvider = StateNotifierProvider<PlayDataNotifier, void>(
+    (ref) => PlayDataNotifier(ref));
 
 class PlayDataNotifier extends StateNotifier<void> {
   Ref ref;
@@ -23,12 +24,14 @@ class PlayDataNotifier extends StateNotifier<void> {
     if (ConstList.isWeb()) {
       await saveProject.downloadCapture('', 'save.json', data);
     } else {
-      await saveProject.downloadCapture(await ProjectPath.getDownloadFolder(), 'save.json', data);
+      await saveProject.downloadCapture(
+          await ProjectPath.getDownloadFolder(), 'save.json', data);
     }
   }
+
   Future<void> loadPlayData() async {
-    var selected = await FilePicker.platform.pickFiles(type: FileType.custom,
-      allowedExtensions: ['json'], withData: true);
+    var selected = await FilePicker.platform.pickFiles(
+        type: FileType.custom, allowedExtensions: ['json'], withData: true);
     if (selected == null) {
       return;
     }

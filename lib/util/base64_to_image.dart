@@ -7,10 +7,9 @@ import 'package:tuple/tuple.dart';
 class Base64ToImage {
 //   data:image/jpeg;base64,  base64어쩌구
   static final RegExp pattern = RegExp(';|/');
-  static Future<Tuple2<String, Uint8List>?> convertToImage(
-      String input) async {
+  static Future<Tuple2<String, Uint8List>?> convertToImage(String input) async {
     var split = input.split(",");
-    if(split.length != 2){
+    if (split.length != 2) {
       return null;
     }
     var type = split[0].split(pattern);

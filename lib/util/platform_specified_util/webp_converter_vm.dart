@@ -175,7 +175,7 @@ class WebpConverterImpAndroid implements WebpConverterImp {
   }
 
   @override
-  void init() async{
+  void init() async {
     saveAsWebp = await ProjectPath().getSaveAsWebp();
   }
 

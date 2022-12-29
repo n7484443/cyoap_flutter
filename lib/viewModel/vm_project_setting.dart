@@ -31,7 +31,7 @@ final projectSettingValueTextEditingProvider =
 });
 
 final projectSettingDisplayNameTextEditingProvider =
-Provider.family.autoDispose<TextEditingController, int>((ref, index) {
+    Provider.family.autoDispose<TextEditingController, int>((ref, index) {
   var controller = TextEditingController(
       text: ref
           .read(valueTypeWrapperListProvider.notifier)
@@ -49,8 +49,8 @@ final valueTypeWrapperListProvider = StateNotifierProvider.autoDispose<
 
 final projectSettingChangedProvider = StateProvider<bool>((ref) => false);
 
-final projectSettingVisibleSwitchProvider = StateProvider.family.autoDispose<bool, int>(
-    (ref, index) => ref
+final projectSettingVisibleSwitchProvider = StateProvider.family
+    .autoDispose<bool, int>((ref, index) => ref
         .read(valueTypeWrapperListProvider.notifier)
         .getEditTarget(index)!
         .item2

@@ -34,7 +34,7 @@ class JsonProjectParser {
       var lineSetting = ChoiceLine(i);
       lineSetting.addChildren(ChoiceNode(0, rowTitle,
           toContent(row["titleText"] ?? parsed['defaultRowText']), imageName));
-        /*..choiceNodeDesign.copyWith(
+      /*..choiceNodeDesign.copyWith(
             imagePosition: parseAsInt(row["template"]) == 4
                 ? 1
                 : parseAsInt(row["template"])));*/
@@ -52,7 +52,7 @@ class JsonProjectParser {
         var choiceNode = ChoiceNode(0, objectTitle,
             toContent(object["text"] ?? parsed['defaultChoiceText']), imageName)
           ..width = width;
-          /*..choiceNodeDesign
+        /*..choiceNodeDesign
               .copyWith(imagePosition: parseAsInt(object["template"]));*/
         for (var addon in object['addons']) {
           var addonTitle = addon["title"] ?? parsed['defaultAddonTitle'];
@@ -61,9 +61,12 @@ class JsonProjectParser {
           if (out != null && out.item2 != null) {
             imageList[imageName] = out.item2!;
           }
-          choiceNode.addChildren(ChoiceNode(0, addonTitle,
-              toContent(addon["text"] ?? parsed['defaultAddonText']), imageName));
-            /*..choiceNodeDesign
+          choiceNode.addChildren(ChoiceNode(
+              0,
+              addonTitle,
+              toContent(addon["text"] ?? parsed['defaultAddonText']),
+              imageName));
+          /*..choiceNodeDesign
                 .copyWith(imagePosition: parseAsInt(addon["template"])));*/
         }
         lineSetting.addChildren(choiceNode);

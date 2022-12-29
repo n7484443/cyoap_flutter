@@ -28,20 +28,22 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
               child: TextField(
                 maxLines: 1,
                 maxLength: 50,
-                controller: ref.watch(projectSettingNameTextEditingProvider(index)),
+                controller:
+                    ref.watch(projectSettingNameTextEditingProvider(index)),
                 decoration: const InputDecoration(
                   label: Text('변수명'),
                 ),
                 textAlign: TextAlign.right,
               ),
-             ),
+            ),
             const Spacer(),
             Flexible(
               flex: 4,
               child: TextField(
                 maxLines: 1,
                 maxLength: 50,
-                controller: ref.watch(projectSettingValueTextEditingProvider(index)),
+                controller:
+                    ref.watch(projectSettingValueTextEditingProvider(index)),
                 decoration: const InputDecoration(
                   label: Text('변수 초기값'),
                 ),
@@ -54,8 +56,8 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
               child: TextField(
                 maxLines: 1,
                 maxLength: 50,
-                controller:
-                    ref.watch(projectSettingDisplayNameTextEditingProvider(index)),
+                controller: ref
+                    .watch(projectSettingDisplayNameTextEditingProvider(index)),
                 decoration: const InputDecoration(
                   label: Text('변수 표기명'),
                 ),
@@ -69,7 +71,8 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
                 children: [
                   ViewSwitchLabel(
                     () => ref
-                        .read(projectSettingVisibleSwitchProvider(index).notifier)
+                        .read(
+                            projectSettingVisibleSwitchProvider(index).notifier)
                         .update((state) => !state),
                     ref.watch(projectSettingVisibleSwitchProvider(index)),
                     label: '플레이시 표시',
@@ -91,12 +94,15 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
           child: const Text('저장'),
           onPressed: () {
             var after = ValueTypeWrapper(
-                getValueTypeFromStringInput(
-                    ref.read(projectSettingValueTextEditingProvider(index)).text),
+                getValueTypeFromStringInput(ref
+                    .read(projectSettingValueTextEditingProvider(index))
+                    .text),
                 visible: ref.read(projectSettingVisibleSwitchProvider(index)),
-                displayName:
-                ref.read(projectSettingDisplayNameTextEditingProvider(index)).text);
-            var name = ref.read(projectSettingNameTextEditingProvider(index)).text;
+                displayName: ref
+                    .read(projectSettingDisplayNameTextEditingProvider(index))
+                    .text);
+            var name =
+                ref.read(projectSettingNameTextEditingProvider(index)).text;
             ref
                 .read(valueTypeWrapperListProvider.notifier)
                 .editInitialValue(index, name, after);
@@ -122,13 +128,13 @@ class ViewProjectSetting extends ConsumerWidget {
         },
       ),
       actions: [
-        if(ConstList.isMobile())
-        IconButton(
-          icon: const Icon(Icons.save),
-          onPressed: () {
-            ref.read(valueTypeWrapperListProvider.notifier).save();
-          },
-        )
+        if (ConstList.isMobile())
+          IconButton(
+            icon: const Icon(Icons.save),
+            onPressed: () {
+              ref.read(valueTypeWrapperListProvider.notifier).save();
+            },
+          )
       ],
     );
 
@@ -157,22 +163,26 @@ class ViewProjectSetting extends ConsumerWidget {
                   var visible = data.visible;
                   return ListTile(
                     //보이지 않을 경우 푸른색으로
-                    tileColor:
-                    visible
-                            ? Colors.lightBlue
-                            : null,
+                    tileColor: visible ? Colors.lightBlue : null,
                     onTap: () {
                       showDialog(
                           builder: (BuildContext context) =>
                               ViewInitialValueEditDialog(index),
                           context: context);
                     },
-                    title: Text(key, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: visible ? Colors.white : null)),
-                    subtitle: Text(data.valueType
-                        .data
-                        .toString(), style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: visible ? Colors.white : null)),
+                    title: Text(key,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
+                            ?.copyWith(color: visible ? Colors.white : null)),
+                    subtitle: Text(data.valueType.data.toString(),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(color: visible ? Colors.white : null)),
                     trailing: IconButton(
-                      icon: Icon(Icons.delete, color: visible ? Colors.white : null),
+                      icon: Icon(Icons.delete,
+                          color: visible ? Colors.white : null),
                       onPressed: () {
                         ref
                             .read(valueTypeWrapperListProvider.notifier)

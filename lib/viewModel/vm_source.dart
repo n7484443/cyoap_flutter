@@ -10,8 +10,9 @@ final deleteModeProvider = StateProvider.autoDispose<bool>((ref) => false);
 final deleteImageListProvider =
     StateProvider.autoDispose<List<String>>((ref) => []);
 
-final vmSourceProvider = StateNotifierProvider.autoDispose<VMSource, List<String>>(
-    (ref) => VMSource(ref, List<String>.from(ImageDB().imageList)));
+final vmSourceProvider =
+    StateNotifierProvider.autoDispose<VMSource, List<String>>(
+        (ref) => VMSource(ref, List<String>.from(ImageDB().imageList)));
 
 final textEditingControllerProvider =
     Provider.autoDispose.family<TextEditingController, String>((ref, name) {
