@@ -124,8 +124,9 @@ void refreshLine(Ref ref, int y) {
 final lineProvider = Provider.autoDispose
     .family<ChoiceLine?, int>((ref, pos) => getPlatform.getLineSetting(pos));
 
-final lineVisibleProvider = Provider.autoDispose.family<bool?, Pos>((ref, pos) =>
-    ref.watch(lineProvider(pos.first))?.selectableStatus.isOpen());
+final lineVisibleProvider = Provider.autoDispose.family<bool?, Pos>(
+    (ref, pos) =>
+        ref.watch(lineProvider(pos.first))?.selectableStatus.isOpen());
 
 final _childrenProvider =
     Provider.autoDispose.family<List<Choice>?, Pos>((ref, pos) {
@@ -152,14 +153,30 @@ class ChildrenNotifier extends StateNotifier<List<Choice>> {
   }
 }
 
-final lineAlwaysVisibleProvider = StateProvider.autoDispose.family<bool, int>(
-    (ref, pos) => ref.watch(lineProvider(pos))!.alwaysVisible);
+final lineAlwaysVisibleProvider =
+    StateProvider.autoDispose.family<bool, int>((ref, pos) {
+  ref.listenSelf((previous, bool next) {
+    getPlatform.getLineSetting(pos)!.alwaysVisible = next;
+    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+  });
+  return ref.watch(lineProvider(pos))!.alwaysVisible;
+});
 
-final lineMaxSelectProvider = StateProvider.autoDispose
-    .family<int, int>((ref, pos) => ref.watch(lineProvider(pos))!.maxSelect);
+final lineMaxSelectProvider =
+    StateProvider.autoDispose.family<int, int>((ref, pos) {
+  ref.listenSelf((previous, int next) {
+    getPlatform.getLineSetting(pos)!.maxSelect = next;
+    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+  });
+  return ref.watch(lineProvider(pos))!.maxSelect;
+});
 
 final lineBackgroundColorProvider =
     StateProvider.autoDispose.family<Color?, int>((ref, pos) {
+  ref.listenSelf((previous, next) {
+    getPlatform.getLineSetting(pos)!.backgroundColor = next?.value;
+    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+  });
   var colorCode = ref.watch(lineProvider(pos))!.backgroundColor;
   return colorCode != null ? Color(colorCode) : null;
 });

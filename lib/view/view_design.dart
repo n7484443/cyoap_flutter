@@ -12,10 +12,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../main.dart';
 import '../model/image_db.dart';
 import '../model/platform.dart';
-import '../model/platform_system.dart';
 import '../viewModel/vm_choice_node.dart' show choiceNodeProvider;
 import '../viewModel/vm_design_setting.dart';
-import '../viewModel/vm_draggable_nested_map.dart';
 import '../viewModel/vm_editor.dart';
 import '../viewModel/vm_make_platform.dart';
 
@@ -24,33 +22,6 @@ class ViewDesignSetting extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(variableFontProvider, (String? previous, String next) {
-      getPlatform.designSetting =
-          getPlatform.designSetting.copyWith(variableFont: next);
-      ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-    });
-    ref.listen(colorBackgroundProvider, (previous, Color next) {
-      getPlatform.designSetting =
-          getPlatform.designSetting.copyWith(colorBackground: next.value);
-      ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-    });
-
-    ref.listen<String?>(backgroundProvider, (previous, String? next) {
-      getPlatform.designSetting =
-          getPlatform.designSetting.copyWith(backgroundImage: next);
-      ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-    });
-    ref.listen(backgroundAttributeProvider, (previous, ImageAttribute next) {
-      getPlatform.designSetting =
-          getPlatform.designSetting.copyWith(backgroundAttribute: next);
-      ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-    });
-
-    ref.listen(marginVerticalProvider, (previous, double next) {
-      getPlatform.designSetting =
-          getPlatform.designSetting.copyWith(marginVertical: next);
-      ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-    });
 
     return DefaultTabController(
       length: 5,

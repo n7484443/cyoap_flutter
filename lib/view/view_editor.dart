@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:cyoap_core/choiceNode/choice_node.dart';
-import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
@@ -29,9 +28,6 @@ class ViewEditor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen<Pos?>(nodeEditorTargetPosProvider, (previous, next) {
-      ref.read(nodeEditorTargetProvider.notifier).update();
-    });
     if (ref.watch(nodeEditorTargetPosProvider) == null) {
       return const SizedBox.shrink();
     }
@@ -101,11 +97,6 @@ class ViewContentsEditor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(nodeEditorDesignProvider, (previous, ChoiceNodeOption next) {
-      ref.read(nodeEditorTargetProvider).node.choiceNodeOption = next;
-      ref.read(editorChangeProvider.notifier).needUpdate();
-    });
-
     return Column(
       children: [
         const ViewTitleTextFieldInput(),
@@ -558,14 +549,6 @@ class ViewNodeOptionEditor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(nodeModeProvider, (previous, ChoiceNodeMode next) {
-      ref.read(nodeEditorTargetProvider).node.choiceNodeMode = next;
-      ref.read(editorChangeProvider.notifier).needUpdate();
-    });
-    ref.listen(nodeEditorDesignProvider, (previous, ChoiceNodeOption next) {
-      ref.read(nodeEditorTargetProvider).node.choiceNodeOption = next;
-      ref.read(editorChangeProvider.notifier).needUpdate();
-    });
     var title = ref.watch(nodeTitleProvider);
     var design = ref.watch(nodeEditorDesignProvider);
     var nodeMode = ref.watch(nodeModeProvider);
@@ -778,11 +761,6 @@ class _ViewImageSelectorState extends ConsumerState<ViewImageSelector> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(imageStateProvider, (previous, int index) {
-      ref.read(nodeEditorTargetProvider).node.imageString =
-          ImageDB().getImageName(index);
-      ref.read(editorChangeProvider.notifier).needUpdate();
-    });
     return Stack(
       children: [
         CustomScrollView(

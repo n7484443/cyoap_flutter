@@ -14,7 +14,9 @@ import 'package:tuple/tuple.dart';
 
 import '../util/platform_specified_util/webp_converter.dart';
 
-final nodeEditorTargetPosProvider = StateProvider<Pos?>((ref) => null);
+final nodeEditorTargetPosProvider = StateProvider<Pos?>((ref) {
+  return null;
+});
 
 final nodeEditorTargetProvider =
     ChangeNotifierProvider<NodeEditorTargetNotifier>((ref) {
@@ -42,11 +44,22 @@ class NodeEditorTargetNotifier extends ChangeNotifier {
   }
 }
 
-final nodeEditorDesignProvider = StateProvider.autoDispose<ChoiceNodeOption>(
-    (ref) => ref.watch(nodeEditorTargetProvider).node.choiceNodeOption);
+final nodeEditorDesignProvider =
+    StateProvider.autoDispose<ChoiceNodeOption>((ref) {
+  ref.listenSelf((previous, ChoiceNodeOption next) {
+    ref.read(nodeEditorTargetProvider).node.choiceNodeOption = next;
+    ref.read(editorChangeProvider.notifier).needUpdate();
+  });
+  return ref.watch(nodeEditorTargetProvider).node.choiceNodeOption;
+});
 
-final nodeModeProvider = StateProvider.autoDispose<ChoiceNodeMode>(
-    (ref) => ref.watch(nodeEditorTargetProvider).node.choiceNodeMode);
+final nodeModeProvider = StateProvider.autoDispose<ChoiceNodeMode>((ref) {
+  ref.listenSelf((previous, ChoiceNodeMode next) {
+    ref.read(nodeEditorTargetProvider).node.choiceNodeMode = next;
+    ref.read(editorChangeProvider.notifier).needUpdate();
+  });
+  return ref.watch(nodeEditorTargetProvider).node.choiceNodeMode;
+});
 final nodeTitleProvider = StateProvider.autoDispose<String>(
     (ref) => ref.watch(nodeEditorTargetProvider).node.title);
 
@@ -106,8 +119,15 @@ class ImageListStateNotifier extends StateNotifier<List<String>> {
   }
 }
 
-final imageStateProvider = StateProvider.autoDispose<int>((ref) => ImageDB()
-    .getImageIndex(ref.read(nodeEditorTargetProvider).node.imageString));
+final imageStateProvider = StateProvider.autoDispose<int>((ref) {
+  ref.listenSelf((previous, int index) {
+    ref.read(nodeEditorTargetProvider).node.imageString =
+        ImageDB().getImageName(index);
+    ref.read(editorChangeProvider.notifier).needUpdate();
+  });
+  return ImageDB()
+      .getImageIndex(ref.read(nodeEditorTargetProvider).node.imageString);
+});
 
 final editorChangeProvider = StateNotifierProvider<EditorChangeNotifier, bool>(
     (ref) => EditorChangeNotifier(ref));

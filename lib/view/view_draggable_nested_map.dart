@@ -101,18 +101,6 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(lineAlwaysVisibleProvider(widget.y), (previous, bool next) {
-      getPlatform.getLineSetting(widget.y)!.alwaysVisible = next;
-      ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-    });
-    ref.listen(lineMaxSelectProvider(widget.y), (previous, int next) {
-      getPlatform.getLineSetting(widget.y)!.maxSelect = next;
-      ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-    });
-    ref.listen<Color?>(lineBackgroundColorProvider(widget.y), (previous, next) {
-      getPlatform.getLineSetting(widget.y)!.backgroundColor = next?.value;
-      ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-    });
     var maxSelect = ref.watch(lineMaxSelectProvider(widget.y));
     var maxSelectString = maxSelect == -1 ? "max" : maxSelect.toString();
     return AlertDialog(

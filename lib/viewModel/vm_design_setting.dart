@@ -9,25 +9,56 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/image_db.dart';
 
-final variableFontProvider = StateProvider.autoDispose<String>(
-    (ref) => getPlatform.designSetting.variableFont);
-final colorBackgroundProvider = StateProvider.autoDispose<Color>(
-    (ref) => Color(getPlatform.designSetting.colorBackground));
+final variableFontProvider = StateProvider.autoDispose<String>((ref) {
+  ref.listenSelf((String? previous, String next) {
+    getPlatform.designSetting =
+        getPlatform.designSetting.copyWith(variableFont: next);
+    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+  });
+  return getPlatform.designSetting.variableFont;
+});
+final colorBackgroundProvider = StateProvider.autoDispose<Color>((ref) {
+  ref.listenSelf((previous, Color next) {
+    getPlatform.designSetting =
+        getPlatform.designSetting.copyWith(colorBackground: next.value);
+    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+  });
+  return Color(getPlatform.designSetting.colorBackground);
+});
 
 final colorSelectProvider = StateProvider.autoDispose<int>((ref) => 0);
 
-final backgroundProvider = StateProvider.autoDispose<String?>(
-    (ref) => getPlatform.designSetting.backgroundImage);
+final backgroundProvider = StateProvider.autoDispose<String?>((ref) {
+  ref.listenSelf((previous, next) {
+    getPlatform.designSetting =
+        getPlatform.designSetting.copyWith(backgroundImage: next);
+    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+  });
+  return getPlatform.designSetting.backgroundImage;
+});
 final backgroundCurrentStateProvider = StateProvider.autoDispose<int>((ref) {
   var backgroundName = ref.watch(backgroundProvider);
   if (backgroundName == null) return -1;
   return ImageDB().getImageIndex(backgroundName);
 });
-final backgroundAttributeProvider = StateProvider.autoDispose<ImageAttribute>(
-    (ref) => getPlatform.designSetting.backgroundAttribute);
+final backgroundAttributeProvider =
+    StateProvider.autoDispose<ImageAttribute>((ref) {
+  ref.listenSelf((previous, ImageAttribute next) {
+    getPlatform.designSetting =
+        getPlatform.designSetting.copyWith(backgroundAttribute: next);
+    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+  });
+  return getPlatform.designSetting.backgroundAttribute;
+});
 
-final marginVerticalProvider = StateProvider.autoDispose<double>(
-    (ref) => getPlatform.designSetting.marginVertical);
+final marginVerticalProvider = StateProvider.autoDispose<double>((ref) {
+  ref.listenSelf((previous, double next) {
+    getPlatform.designSetting =
+        getPlatform.designSetting.copyWith(marginVertical: next);
+    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+  });
+  return getPlatform.designSetting.marginVertical;
+});
 
 final presetTestSelectProvider = StateProvider<bool>((ref) => false);
 
