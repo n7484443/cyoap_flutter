@@ -153,13 +153,15 @@ class ChildrenNotifier extends StateNotifier<List<Choice>> {
   }
 }
 
+// todo 수정 필요
 final lineAlwaysVisibleProvider =
     StateProvider.autoDispose.family<bool, int>((ref, pos) {
-  ref.listenSelf((previous, bool next) {
-    getPlatform.getLineSetting(pos)!.alwaysVisible = next;
-    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-  });
-  return ref.watch(lineProvider(pos))!.alwaysVisible;
+  // ref.listenSelf((previous, bool next) {
+  //   getPlatform.getLineSetting(pos)!.alwaysVisible = next;
+  //   ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+  // });
+  // return ref.watch(lineProvider(pos))!.alwaysVisible;
+      return true;
 });
 
 final lineMaxSelectProvider =
@@ -171,14 +173,16 @@ final lineMaxSelectProvider =
   return ref.watch(lineProvider(pos))!.maxSelect;
 });
 
+// todo 수정 필요
 final lineBackgroundColorProvider =
     StateProvider.autoDispose.family<Color?, int>((ref, pos) {
-  ref.listenSelf((previous, next) {
-    getPlatform.getLineSetting(pos)!.backgroundColor = next?.value;
-    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-  });
-  var colorCode = ref.watch(lineProvider(pos))!.backgroundColor;
-  return colorCode != null ? Color(colorCode) : null;
+  // ref.listenSelf((previous, next) {
+  //   getPlatform.getLineSetting(pos)!.backgroundColor = next?.value;
+  //   ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+  // });
+  // var colorCode = ref.watch(lineProvider(pos))!.backgroundColor;
+  // return colorCode != null ? Color(colorCode) : null;
+      return null;
 });
 
 final lineLengthProvider =

@@ -6,7 +6,7 @@ import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/choiceNode/selectable_status.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
-import 'package:cyoap_flutter/viewModel/vm_design_setting.dart';
+import 'package:cyoap_flutter/viewModel/preset/vm_choice_node_preset.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_snackbar.dart';
 import 'package:flutter/material.dart';

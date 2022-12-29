@@ -16,7 +16,7 @@ import 'package:tuple/tuple.dart';
 
 import '../main.dart';
 import '../model/platform_system.dart';
-import '../viewModel/vm_design_setting.dart';
+import '../viewModel/preset/vm_choice_node_preset.dart';
 import '../viewModel/vm_editor.dart';
 import '../viewModel/vm_image_editor.dart';
 import '../viewModel/vm_make_platform.dart';
