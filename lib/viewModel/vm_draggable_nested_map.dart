@@ -4,9 +4,10 @@ import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/choiceNode/selectable_status.dart';
 import 'package:cyoap_core/playable_platform.dart';
+import 'package:cyoap_core/preset/line_preset.dart';
 import 'package:cyoap_core/variable_db.dart';
+import 'package:cyoap_flutter/viewModel/preset/vm_choice_line_preset.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/platform_system.dart';
@@ -153,15 +154,20 @@ class ChildrenNotifier extends StateNotifier<List<Choice>> {
   }
 }
 
-// todo 수정 필요
-final lineAlwaysVisibleProvider =
-    StateProvider.autoDispose.family<bool, int>((ref, pos) {
-  // ref.listenSelf((previous, bool next) {
-  //   getPlatform.getLineSetting(pos)!.alwaysVisible = next;
-  //   ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-  // });
-  // return ref.watch(lineProvider(pos))!.alwaysVisible;
-      return true;
+final linePresetNameProvider =
+    StateProvider.autoDispose.family<String, int>((ref, pos) {
+  ref.listenSelf((previous, String next) {
+    getPlatform.getLineSetting(pos)?.presetName = next;
+    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+  });
+  return ref.watch(lineProvider(pos))?.presetName ?? "default";
+});
+
+final linePresetProvider = Provider.family.autoDispose<ChoiceLineDesignPreset, int>((ref, pos) {
+  var list = ref.watch(choiceLinePresetListProvider);
+  var presetName = ref.watch(linePresetNameProvider(pos));
+  return list.firstWhere((element) => element.name == presetName,
+      orElse: () => const ChoiceLineDesignPreset(name: 'default'));
 });
 
 final lineMaxSelectProvider =
@@ -171,23 +177,6 @@ final lineMaxSelectProvider =
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
   });
   return ref.watch(lineProvider(pos))!.maxSelect;
-});
-
-final linePresetNameProvider =
-Provider.family.autoDispose<String, int>((ref, pos) {
-  return ref.watch(lineProvider(pos))!.presetName;
-});
-
-// todo 수정 필요
-final lineBackgroundColorProvider =
-    StateProvider.autoDispose.family<Color?, int>((ref, pos) {
-  // ref.listenSelf((previous, next) {
-  //   getPlatform.getLineSetting(pos)!.backgroundColor = next?.value;
-  //   ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-  // });
-  // var colorCode = ref.watch(lineProvider(pos))!.backgroundColor;
-  // return colorCode != null ? Color(colorCode) : null;
-      return null;
 });
 
 final lineLengthProvider =

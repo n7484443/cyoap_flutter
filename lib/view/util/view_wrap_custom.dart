@@ -124,21 +124,24 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
         children: outputWidget,
       );
     }
-    var color = ref.watch(lineBackgroundColorProvider(parentPos.first));
+    var preset = ref.watch(linePresetProvider(parentPos.first));
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          if (color == null) {
+          if (preset.backgroundColor == null) {
             return Padding(
               padding: EdgeInsets.symmetric(
                   vertical: ref.watch(marginVerticalProvider)),
               child: outputWidget[index],
             );
           }
-          return Padding(
-            padding: EdgeInsets.symmetric(
-                vertical: ref.watch(marginVerticalProvider)),
-            child: ColoredBox(color: color, child: outputWidget[index]),
+          return ColoredBox(
+            color: Color(preset.backgroundColor!),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: ref.watch(marginVerticalProvider)),
+              child: outputWidget[index],
+            ),
           );
         },
         childCount: outputWidget.length,
@@ -225,21 +228,24 @@ class ViewWrapCustom extends ConsumerWidget {
         children: outputWidget,
       );
     }
-    var color = ref.watch(lineBackgroundColorProvider(parentPos.first));
+    var preset = ref.watch(linePresetProvider(parentPos.first));
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          if (color == null) {
+          if (preset.backgroundColor == null) {
             return Padding(
               padding: EdgeInsets.symmetric(
                   vertical: ref.watch(marginVerticalProvider)),
               child: outputWidget[index],
             );
           }
-          return Padding(
-            padding: EdgeInsets.symmetric(
-                vertical: ref.watch(marginVerticalProvider)),
-            child: ColoredBox(color: color, child: outputWidget[index]),
+          return ColoredBox(
+            color: Color(preset.backgroundColor!),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: ref.watch(marginVerticalProvider)),
+              child: outputWidget[index],
+            ),
           );
         },
         childCount: outputWidget.length,

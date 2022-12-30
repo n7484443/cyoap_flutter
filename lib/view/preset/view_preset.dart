@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/view/preset/view_choice_line_preset.dart';
 import 'package:cyoap_flutter/view/preset/view_choice_node_preset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,21 +16,33 @@ class ViewPresetTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var currentIndex = ref.watch(currentPresetTab);
+    var first = ListView.builder(
+      controller: AdjustableScrollController(),
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(tabName[index]),
+          selected: ref.watch(currentPresetTab) == index,
+          onTap: (){
+            ref.read(currentPresetTab.notifier).state = index;
+          },
+        );
+      },
+      itemCount: tabName.length,
+    );
+    if(currentIndex == 0){
+      return ViewPresetPosition(
+        first: first,
+        second: const ChoiceNodePresetList(),
+        sample: const ChoiceNodeSample(),
+        describe: const ViewNodeOptionEditor(),
+      );
+    }
     return ViewPresetPosition(
-      first: ListView.builder(
-        controller: AdjustableScrollController(),
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(tabName[index]),
-            selected: ref.watch(currentPresetTab) == index,
-          );
-        },
-        itemCount: tabName.length,
-      ),
-      second: const ChoiceNodePresetList(),
-      sample: const ChoiceNodeSample(),
-      describe: const ViewNodeOptionEditor(),
-
+      first: first,
+      second: const ChoiceLinePresetList(),
+      sample: null,
+      describe: const ViewLineOptionEditor(),
     );
   }
 }
@@ -102,6 +115,56 @@ class _ViewPresetPositionState extends ConsumerState<ViewPresetPosition> {
           child: widget.second,
         ),
         Expanded(flex: 4, child: widget.describe),
+      ],
+    );
+  }
+}
+
+class PresetRenameDialog extends ConsumerStatefulWidget {
+  final String name;
+
+  const PresetRenameDialog(
+      this.name, {
+        super.key,
+      });
+
+  @override
+  ConsumerState createState() => _PresetRenameDialogState();
+}
+
+class _PresetRenameDialogState extends ConsumerState<PresetRenameDialog> {
+  TextEditingController? controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = TextEditingController(text: widget.name);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller?.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      content: TextField(
+        controller: controller,
+      ),
+      actionsAlignment: MainAxisAlignment.spaceBetween,
+      actions: [
+        TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('취소')),
+        TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(controller?.text);
+            },
+            child: const Text('저장')),
       ],
     );
   }

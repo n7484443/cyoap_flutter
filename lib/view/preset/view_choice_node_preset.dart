@@ -1,5 +1,6 @@
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/design_setting.dart';
+import 'package:cyoap_flutter/view/preset/view_preset.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
@@ -147,56 +148,6 @@ class ChoiceNodePresetList extends ConsumerWidget {
   }
 }
 
-class PresetRenameDialog extends ConsumerStatefulWidget {
-  final String name;
-
-  const PresetRenameDialog(
-      this.name, {
-        super.key,
-      });
-
-  @override
-  ConsumerState createState() => _PresetRenameDialogState();
-}
-
-class _PresetRenameDialogState extends ConsumerState<PresetRenameDialog> {
-  TextEditingController? controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = TextEditingController(text: widget.name);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    controller?.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      content: TextField(
-        controller: controller,
-      ),
-      actionsAlignment: MainAxisAlignment.spaceBetween,
-      actions: [
-        TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('취소')),
-        TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(controller?.text);
-            },
-            child: const Text('저장')),
-      ],
-    );
-  }
-}
-
 class ViewTextFieldInput extends ConsumerStatefulWidget {
   final String text;
   final AutoDisposeProvider<double> provider;
@@ -258,7 +209,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
     var preset = ref.watch(choiceNodePresetCurrentEditProvider);
 
     return CustomScrollView(
-      controller: ScrollController(),
+      controller: AdjustableScrollController(),
       shrinkWrap: true,
       slivers: [
         SliverGrid(

@@ -1,11 +1,13 @@
-
-import 'package:cyoap_flutter/view/preset/view_choice_node_preset.dart';
+import 'package:cyoap_flutter/view/preset/view_preset.dart';
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../main.dart';
 import '../../viewModel/preset/vm_choice_line_preset.dart';
 import '../../viewModel/preset/vm_preset.dart';
 import '../util/controller_adjustable_scroll.dart';
+import '../util/view_switch_label.dart';
 
 class ChoiceLinePresetList extends ConsumerWidget {
   const ChoiceLinePresetList({
@@ -40,7 +42,9 @@ class ChoiceLinePresetList extends ConsumerWidget {
                   icon: Icon(Icons.delete,
                       size: (IconTheme.of(context).size ?? 18) * 0.8),
                   onPressed: () {
-                    ref.read(choiceLinePresetListProvider.notifier).deleteIndex(index);
+                    ref
+                        .read(choiceLinePresetListProvider.notifier)
+                        .deleteIndex(index);
                   },
                 ),
                 onTap: () {
@@ -66,6 +70,73 @@ class ChoiceLinePresetList extends ConsumerWidget {
             },
           ),
         ),
+      ],
+    );
+  }
+}
+
+class ViewLineOptionEditor extends ConsumerWidget {
+  const ViewLineOptionEditor({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    var preset = ref.watch(choiceLinePresetCurrentEditProvider);
+    var index = ref.watch(currentPresetIndexProvider);
+    return CustomScrollView(
+      controller: AdjustableScrollController(),
+      shrinkWrap: true,
+      slivers: [
+        SliverGrid(
+          delegate: SliverChildListDelegate([
+            ViewSwitchLabel(
+              () => ref.read(choiceLinePresetListProvider.notifier).updateIndex(
+                  index,
+                  preset.copyWith(
+                      alwaysVisibleLine: !preset.alwaysVisibleLine)),
+              preset.alwaysVisibleLine,
+              label: '검은 줄이 보임',
+            ),
+          ]),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 4,
+            crossAxisSpacing: 2,
+            mainAxisExtent: 80,
+            mainAxisSpacing: 2,
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: ColorPicker(
+            heading: const Center(
+              child: Text('배경 색상'),
+            ),
+            color: Color(preset.backgroundColor ?? 0x000000),
+            onColorChanged: (Color color) {
+              ref.read(choiceLinePresetListProvider.notifier).updateIndex(
+                  index, preset.copyWith(backgroundColor: color.value));
+            },
+            pickersEnabled: {
+              ColorPickerType.wheel: true,
+              ColorPickerType.accent: false
+            },
+            pickerTypeLabels: {
+              ColorPickerType.primary: "색상 선택",
+              ColorPickerType.wheel: "직접 선택"
+            },
+            width: 22,
+            height: 22,
+            borderRadius: 22,
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: IconButton(
+            onPressed: () {
+              ref
+                  .read(choiceLinePresetListProvider.notifier)
+                  .updateIndex(index, preset.copyWith(backgroundColor: null));
+            },
+            icon: const Icon(Icons.format_color_reset),
+          ),
+        )
       ],
     );
   }

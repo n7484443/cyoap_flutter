@@ -1,11 +1,11 @@
-import 'package:cyoap_core/preset/choice_line_preset.dart';
+import 'package:cyoap_core/preset/line_preset.dart';
 import 'package:cyoap_flutter/viewModel/preset/vm_preset.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../model/platform_system.dart';
 import '../vm_draggable_nested_map.dart';
 
-final choiceNodePresetCurrentEditProvider =
+final choiceLinePresetCurrentEditProvider =
     Provider.autoDispose<ChoiceLineDesignPreset>((ref) {
   var list = ref.watch(choiceLinePresetListProvider);
   var index = ref.watch(currentPresetIndexProvider);
@@ -41,7 +41,7 @@ class ChoiceLinePresetListNotifier
   void rename(int index, String after) {
     var before = state[index].name;
     updateIndex(index, state[index].copyWith(name: after));
-    getPlatform.updatePresetNameAll(before, after);
+    getPlatform.updateLinePresetNameAll(before, after);
     ref.invalidate(linePresetNameProvider);
   }
 
@@ -71,7 +71,7 @@ class ChoiceLinePresetListNotifier
     if (state.length >= 2) {
       state.removeWhere((preset) => preset.name == name);
       state = [...state];
-      getPlatform.updatePresetNameAll(name, state.first.name);
+      getPlatform.updateLinePresetNameAll(name, state.first.name);
     }
   }
 
@@ -79,7 +79,7 @@ class ChoiceLinePresetListNotifier
     if (state.length >= 2) {
       var removed = state.removeAt(index);
       state = [...state];
-      getPlatform.updatePresetNameAll(removed.name, state.first.name);
+      getPlatform.updateLinePresetNameAll(removed.name, state.first.name);
     }
   }
 

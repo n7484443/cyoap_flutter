@@ -1,4 +1,4 @@
-import 'package:cyoap_core/preset/choice_node_preset.dart';
+import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/viewModel/preset/vm_preset.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
@@ -85,7 +85,7 @@ class ChoiceNodePresetListNotifier extends StateNotifier<List<ChoiceNodeDesignPr
   void rename(int index, String after) {
     var before = state[index].name;
     updateIndex(index, state[index].copyWith(name: after));
-    getPlatform.updatePresetNameAll(before, after);
+    getPlatform.updateNodePresetNameAll(before, after);
     ref.invalidate(choiceNodeDesignSettingProvider);
   }
 
@@ -115,7 +115,7 @@ class ChoiceNodePresetListNotifier extends StateNotifier<List<ChoiceNodeDesignPr
     if (state.length >= 2) {
       state.removeWhere((preset) => preset.name == name);
       state = [...state];
-      getPlatform.updatePresetNameAll(name, state.first.name);
+      getPlatform.updateNodePresetNameAll(name, state.first.name);
     }
   }
 
@@ -123,7 +123,7 @@ class ChoiceNodePresetListNotifier extends StateNotifier<List<ChoiceNodeDesignPr
     if (state.length >= 2) {
       var removed = state.removeAt(index);
       state = [...state];
-      getPlatform.updatePresetNameAll(removed.name, state.first.name);
+      getPlatform.updateNodePresetNameAll(removed.name, state.first.name);
     }
   }
 

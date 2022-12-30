@@ -6,16 +6,15 @@ import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
-import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/view/util/view_text_outline.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/view/view_selected_grid.dart';
-import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/image_db.dart';
+import '../viewModel/preset/vm_choice_line_preset.dart';
 import '../viewModel/vm_choice_node.dart';
 import '../viewModel/vm_design_setting.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
@@ -131,36 +130,26 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
               ),
             ],
           ),
-          ViewSwitchLabel(
-            () => ref
-                .read(lineAlwaysVisibleProvider(widget.y).notifier)
-                .update((state) => !state),
-            ref.watch(lineAlwaysVisibleProvider(widget.y)),
-            label: '검은 줄이 보임',
-          ),
-          ColorPicker(
-            pickersEnabled: {
-              ColorPickerType.both: true,
-              ColorPickerType.primary: false,
-              ColorPickerType.accent: false
-            },
-            color: const Color(0x00000000),
-            onColorChanged: (color) {
-              ref.read(lineBackgroundColorProvider(widget.y).notifier).state =
-                  color;
-            },
-          ),
-          IconButton(
-            onPressed: () {
-              ref.read(lineBackgroundColorProvider(widget.y).notifier).state =
-                  null;
-            },
-            icon: const Icon(Icons.format_color_reset),
-          ),
           TextField(
             controller: _textFieldController,
             decoration: const InputDecoration(
                 hintText: '보이는 조건(true 일 때 보임, 비어있을 시 true)'),
+          ),
+          DropdownButtonFormField<String>(
+            decoration: const InputDecoration(labelText: '프리셋 설정'),
+            items: ref
+                .watch(choiceLinePresetListProvider)
+                .map<DropdownMenuItem<String>>((preset) => DropdownMenuItem(
+                    value: preset.name, child: Text(preset.name)))
+                .toList(),
+            onChanged: (String? t) {
+              if (t != null) {
+                ref
+                    .read(linePresetNameProvider(widget.y).notifier)
+                    .update((state) => t);
+              }
+            },
+            value: ref.watch(linePresetNameProvider(widget.y)),
           ),
         ],
       ),
@@ -203,16 +192,18 @@ class NodeDivider extends ConsumerWidget {
         thickness: 4,
       );
     }
-    if (!ref.watch(lineAlwaysVisibleProvider(y)) && !isEditable) {
+    var preset = ref.watch(linePresetProvider(y));
+    if (!preset.alwaysVisibleLine && !isEditable) {
       return const SizedBox.shrink();
     }
     var maxSelect = ref.watch(lineMaxSelectProvider(y));
     var divider = Divider(
       thickness: 4,
-      color: getColorLine(ref.watch(lineAlwaysVisibleProvider(y)), ref),
+      color: getColorLine(preset.alwaysVisibleLine, ref),
     );
+    Widget inner;
     if (isEditable) {
-      return Stack(
+      inner = Stack(
         alignment: Alignment.center,
         children: [
           divider,
@@ -274,7 +265,7 @@ class NodeDivider extends ConsumerWidget {
         ],
       );
     } else {
-      return Stack(
+      inner = Stack(
         alignment: Alignment.center,
         children: [
           divider,
@@ -287,6 +278,10 @@ class NodeDivider extends ConsumerWidget {
         ],
       );
     }
+    if (preset.backgroundColor == null) {
+      return inner;
+    }
+    return ColoredBox(color: Color(preset.backgroundColor!), child: inner);
   }
 }
 
@@ -487,11 +482,41 @@ class _NestedMapState extends ConsumerState<NestedMap> {
       );
     }
 
-    var listBuilder = CustomScrollView(
+    return CustomScrollView(
       controller: _scrollController,
-      slivers: sliverList,
+      slivers: [
+        ...sliverList,
+        SliverToBoxAdapter(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 50,
+                child: TextButton(
+                  onPressed: () {
+                    if (ref.watch(selectedChoiceNodeProvider).isNotEmpty) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => const ViewSelectedGrid(),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('선택한 선택지가 없습니다.'),
+                          duration: Duration(seconds: 1),
+                        ),
+                      );
+                    }
+                  },
+                  child: const Text("요약"),
+                ),
+              ),
+              const SizedBox(
+                height: 50,
+              )
+            ],
+          ),
+        ),
+      ],
     );
-
-    return listBuilder;
   }
 }
