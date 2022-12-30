@@ -1,6 +1,5 @@
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
-import 'package:cyoap_flutter/viewModel/vm_design_setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,35 +21,32 @@ class ViewSelectedGrid extends ConsumerWidget {
       scrollable: true,
       content: RepaintBoundary(
         key: globalKey,
-        child: ColoredBox(
-          color: ref.watch(colorBackgroundProvider),
-          child: Column(
-            children: List.generate(listLength * 2 - 1, (index) {
-              if (index.isEven) {
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: List.generate(numRow, (innerIndex) {
-                    var itemPos = index ~/ 2 * numRow + innerIndex;
-                    if (itemPos >= posList.length) {
-                      return const Expanded(
-                        child: SizedBox.shrink(),
-                      );
-                    }
-                    return Expanded(
-                      child: IgnorePointer(
-                        child: ViewChoiceNode(
-                          posList[itemPos].item1,
-                          ignoreOpacity: true,
-                          ignoreChild: true,
-                        ),
-                      ),
+        child: Column(
+          children: List.generate(listLength * 2 - 1, (index) {
+            if (index.isEven) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: List.generate(numRow, (innerIndex) {
+                  var itemPos = index ~/ 2 * numRow + innerIndex;
+                  if (itemPos >= posList.length) {
+                    return const Expanded(
+                      child: SizedBox.shrink(),
                     );
-                  }),
-                );
-              }
-              return const Divider();
-            }),
-          ),
+                  }
+                  return Expanded(
+                    child: IgnorePointer(
+                      child: ViewChoiceNode(
+                        posList[itemPos].item1,
+                        ignoreOpacity: true,
+                        ignoreChild: true,
+                      ),
+                    ),
+                  );
+                }),
+              );
+            }
+            return const Divider();
+          }),
         ),
       ),
       actions: [

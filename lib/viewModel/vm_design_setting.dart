@@ -1,7 +1,6 @@
 import 'package:cyoap_core/design_setting.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/image_db.dart';
@@ -13,14 +12,6 @@ final variableFontProvider = StateProvider.autoDispose<String>((ref) {
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
   });
   return getPlatform.designSetting.variableFont;
-});
-final colorBackgroundProvider = StateProvider.autoDispose<Color>((ref) {
-  ref.listenSelf((previous, Color next) {
-    getPlatform.designSetting =
-        getPlatform.designSetting.copyWith(colorBackground: next.value);
-    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-  });
-  return Color(getPlatform.designSetting.colorBackground);
 });
 
 final colorSelectProvider = StateProvider.autoDispose<int>((ref) => 0);

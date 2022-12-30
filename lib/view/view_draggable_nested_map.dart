@@ -6,7 +6,6 @@ import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
-import 'package:cyoap_flutter/view/util/view_text_outline.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/view/view_selected_grid.dart';
@@ -130,11 +129,6 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
               ),
             ],
           ),
-          TextField(
-            controller: _textFieldController,
-            decoration: const InputDecoration(
-                hintText: '보이는 조건(true 일 때 보임, 비어있을 시 true)'),
-          ),
           DropdownButtonFormField<String>(
             decoration: const InputDecoration(labelText: '프리셋 설정'),
             items: ref
@@ -150,6 +144,11 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
               }
             },
             value: ref.watch(linePresetNameProvider(widget.y)),
+          ),
+          TextField(
+            controller: _textFieldController,
+            decoration: const InputDecoration(
+                hintText: '보이는 조건(true 일 때 보임, 비어있을 시 true)'),
           ),
         ],
       ),
@@ -169,20 +168,24 @@ class NodeDivider extends ConsumerWidget {
 
   const NodeDivider(this.y, {super.key});
 
-  Color getColorLine(bool alwaysVisible, WidgetRef ref) {
+  Color getColorLine(bool alwaysVisible, int? color) {
     if (y < getPlatform.lineSettings.length && !alwaysVisible) {
       return Colors.blueAccent;
     }
-    if (ref.read(colorBackgroundProvider).computeLuminance() > 0.5) {
+    if (color == null) {
+      return Colors.white54;
+    }
+    if (Color(color).computeLuminance() > 0.5) {
       return Colors.black45;
     }
     return Colors.white54;
   }
 
-  Color getColorButton(WidgetRef ref) {
-    return ref.read(colorBackgroundProvider).computeLuminance() > 0.5
-        ? Colors.black
-        : Colors.white;
+  Color getColorButton(int? color) {
+    if (color == null) {
+      return Colors.white;
+    }
+    return Color(color).computeLuminance() > 0.5 ? Colors.white : Colors.black;
   }
 
   @override
@@ -199,7 +202,7 @@ class NodeDivider extends ConsumerWidget {
     var maxSelect = ref.watch(lineMaxSelectProvider(y));
     var divider = Divider(
       thickness: 4,
-      color: getColorLine(preset.alwaysVisibleLine, ref),
+      color: getColorLine(preset.alwaysVisibleLine, preset.backgroundColor),
     );
     Widget inner;
     if (isEditable) {
@@ -209,9 +212,14 @@ class NodeDivider extends ConsumerWidget {
           divider,
           Visibility(
             visible: maxSelect != -1,
-            child: TextOutline(
-                '최대 $maxSelect개만큼 선택 가능', 18.0, ConstList.getFont("notoSans"),
-                strokeWidth: 5.0),
+            child: Text(
+              '최대 $maxSelect개만큼 선택 가능',
+              style: ConstList.getFont("notoSans").copyWith(
+                fontSize: 18.0,
+                color: getColorButton(preset.backgroundColor),
+                fontWeight: FontWeight.bold,
+              ),
+            )
           ),
           Align(
             alignment: Alignment.centerRight,
@@ -248,13 +256,15 @@ class NodeDivider extends ConsumerWidget {
             child: Row(
               children: [
                 IconButton(
-                  icon: Icon(Icons.arrow_upward, color: getColorButton(ref)),
+                  icon: Icon(Icons.arrow_upward,
+                      color: getColorButton(preset.backgroundColor)),
                   onPressed: () {
                     ref.read(vmDraggableNestedMapProvider).moveLine(y, y - 1);
                   },
                 ),
                 IconButton(
-                  icon: Icon(Icons.arrow_downward, color: getColorButton(ref)),
+                  icon: Icon(Icons.arrow_downward,
+                      color: getColorButton(preset.backgroundColor)),
                   onPressed: () {
                     ref.read(vmDraggableNestedMapProvider).moveLine(y, y + 1);
                   },
@@ -271,9 +281,14 @@ class NodeDivider extends ConsumerWidget {
           divider,
           Visibility(
             visible: maxSelect != -1,
-            child: TextOutline(
-                '최대 $maxSelect개만큼 선택 가능', 18.0, ConstList.getFont("notoSans"),
-                strokeWidth: 5.0),
+            child: Text(
+              '최대 $maxSelect개만큼 선택 가능',
+              style: ConstList.getFont("notoSans").copyWith(
+                fontSize: 18.0,
+                color: getColorButton(preset.backgroundColor),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ],
       );
@@ -329,7 +344,6 @@ class NestedScroll extends ConsumerWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: ref.watch(colorBackgroundProvider),
           image: background != null
               ? DecorationImage(
                   image: Image.memory(ImageDB().getImage(background)!).image,

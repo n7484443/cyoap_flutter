@@ -3,7 +3,6 @@ import 'package:cyoap_flutter/view/preset/view_preset.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:easy_debounce/easy_debounce.dart';
-import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -18,7 +17,7 @@ class ViewDesignSetting extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return DefaultTabController(
-      length: 5,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -29,7 +28,6 @@ class ViewDesignSetting extends ConsumerWidget {
             labelColor: Theme.of(context).colorScheme.secondary,
             unselectedLabelColor: Theme.of(context).colorScheme.primary,
             tabs: [
-              const Tab(text: '색상'),
               const Tab(text: '위치'),
               const Tab(text: '폰트'),
               const Tab(text: '배경'),
@@ -44,7 +42,6 @@ class ViewDesignSetting extends ConsumerWidget {
               Expanded(
                 child: TabBarView(
                   children: [
-                    const ViewColorSelect(),
                     const ViewPositionSetting(),
                     ViewFontSelector(
                       label: '점수 폰트',
@@ -151,88 +148,6 @@ class ViewFontSelector extends ConsumerWidget {
         }
       },
       value: ref.watch(provider),
-    );
-  }
-}
-
-class ViewColorSelect extends ConsumerStatefulWidget {
-  const ViewColorSelect({
-    super.key,
-  });
-
-  @override
-  ConsumerState createState() => _ViewColorSelectState();
-}
-
-class _ViewColorSelectState extends ConsumerState<ViewColorSelect> {
-  final textList = const [
-    "배경",
-  ];
-  final providerList = [
-    colorBackgroundProvider,
-  ];
-  final ScrollController _scrollController = AdjustableScrollController();
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var check = ref.watch(colorSelectProvider);
-    return SingleChildScrollView(
-      controller: _scrollController,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              width: 100,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: List<Widget>.generate(
-                  textList.length,
-                  (index) => Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: ChoiceChip(
-                        label: Text(textList[index]),
-                        selected: ref.watch(colorSelectProvider) == index,
-                        onSelected: (value) => ref
-                            .read(colorSelectProvider.notifier)
-                            .state = index),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Column(
-              children: [
-                ColorPicker(
-                  color: ref.watch(providerList[check]),
-                  onColorChanged: (Color value) => ref
-                      .read(providerList[check].notifier)
-                      .update((state) => value),
-                  pickersEnabled: {
-                    ColorPickerType.wheel: true,
-                    ColorPickerType.accent: false
-                  },
-                  pickerTypeLabels: {
-                    ColorPickerType.primary: "색상 선택",
-                    ColorPickerType.wheel: "직접 선택"
-                  },
-                  width: 22,
-                  height: 22,
-                  borderRadius: 22,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

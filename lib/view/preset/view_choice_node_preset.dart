@@ -44,7 +44,6 @@ class ChoiceNodeSample extends ConsumerWidget{
     }
     return Container(
       decoration: BoxDecoration(
-        color: ref.watch(colorBackgroundProvider),
         image: background != null
             ? DecorationImage(
           image:
