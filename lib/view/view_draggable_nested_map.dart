@@ -498,39 +498,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
 
     return CustomScrollView(
       controller: _scrollController,
-      slivers: [
-        ...sliverList,
-        SliverToBoxAdapter(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 50,
-                child: TextButton(
-                  onPressed: () {
-                    if (ref.watch(selectedChoiceNodeProvider).isNotEmpty) {
-                      showDialog(
-                        context: context,
-                        builder: (context) => const ViewSelectedGrid(),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('선택한 선택지가 없습니다.'),
-                          duration: Duration(seconds: 1),
-                        ),
-                      );
-                    }
-                  },
-                  child: const Text("요약"),
-                ),
-              ),
-              const SizedBox(
-                height: 50,
-              )
-            ],
-          ),
-        ),
-      ],
+      slivers: sliverList,
     );
   }
 }
