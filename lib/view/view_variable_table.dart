@@ -148,7 +148,7 @@ class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
                     .changePageString('viewProjectSetting', context);
               },
               leading: const Icon(Icons.settings),
-              title: const Text('전역 설정'),
+              title: const Text('프로젝트 설정'),
             ),
             const ViewChangeRotation(),
           ],
