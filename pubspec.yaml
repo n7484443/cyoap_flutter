@@ -60,6 +60,7 @@ dependencies:
   sentry_flutter: ^6.9.1
   easy_debounce: ^2.0.2+1
   desktop_drop: ^0.4.0
+  shared_storage: ^0.7.0
 
 dev_dependencies:
   flutter_test:

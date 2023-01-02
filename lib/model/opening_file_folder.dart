@@ -14,10 +14,10 @@ class ProjectPath {
 
   ProjectPath._init();
 
-  Future<bool> get androidVersion async {
+  Future<int> get androidVersion async {
     var deviceInfoPlugin = DeviceInfoPlugin();
     var androidInfo = await deviceInfoPlugin.androidInfo;
-    return androidInfo.version.sdkInt >= 30;
+    return androidInfo.version.sdkInt;
   }
 
   static Future<String> getProjectFolder(String? name) async {

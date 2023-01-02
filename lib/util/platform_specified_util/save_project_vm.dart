@@ -2,9 +2,15 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
+import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
+import 'package:shared_storage/shared_storage.dart';
+
+import '../../model/opening_file_folder.dart';
+
+import 'package:shared_storage/saf.dart' as saf;
 
 class SaveProjectImp extends SaveProject {
   Future<Uint8List> mapToArchive(Map<String, dynamic> dataInput) async {
@@ -23,6 +29,12 @@ class SaveProjectImp extends SaveProject {
   Future<void> saveZip(String name, Map<String, dynamic> dataInput) async {
     var uint8data = await compute(mapToArchive, dataInput);
 
+    if (ConstList.isMobile() && await ProjectPath().androidVersion >= 29) {
+      var grantedUri = (await openDocumentTree())!;
+      await saf.createFile(grantedUri, mimeType: 'application/zip',
+          displayName: 'extract.zip', bytes: uint8data);
+      return;
+    }
     var file = File('$name/extract.zip');
     int i = 0;
     while (file.existsSync()) {
