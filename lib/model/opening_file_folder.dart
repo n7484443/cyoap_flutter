@@ -48,7 +48,7 @@ class ProjectPath {
       var dir = await getProjectFolder(null);
       var directory = Directory(dir);
       if (!await directory.exists()) {
-        await directory.create();
+        await directory.create(recursive: true);
       }
       return directory.listSync().map((e) => e.path).toList();
     } else {
