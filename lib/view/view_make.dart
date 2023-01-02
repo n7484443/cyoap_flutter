@@ -237,10 +237,10 @@ class ViewSaveIcons extends ConsumerWidget {
               value: 0,
               child: Text('저장'),
             ),
-          PopupMenuItem(
+          const PopupMenuItem(
             value: 1,
             child: Text(
-                '${ConstList.isMobile() ? 'download 폴더에 ' : ''}zip 파일로 추출'),
+                'zip 파일로 추출'),
           ),
         ];
       },

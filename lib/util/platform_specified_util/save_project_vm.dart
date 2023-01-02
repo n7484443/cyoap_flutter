@@ -8,8 +8,6 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:shared_storage/shared_storage.dart';
 
-import '../../model/opening_file_folder.dart';
-
 import 'package:shared_storage/saf.dart' as saf;
 
 class SaveProjectImp extends SaveProject {
@@ -29,7 +27,7 @@ class SaveProjectImp extends SaveProject {
   Future<void> saveZip(String name, Map<String, dynamic> dataInput) async {
     var uint8data = await compute(mapToArchive, dataInput);
 
-    if (ConstList.isMobile() && await ProjectPath().androidVersion >= 29) {
+    if (ConstList.isMobile()) {
       var grantedUri = (await openDocumentTree())!;
       await saf.createFile(grantedUri, mimeType: 'application/zip',
           displayName: 'extract.zip', bytes: uint8data);
