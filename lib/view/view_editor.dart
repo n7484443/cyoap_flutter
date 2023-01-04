@@ -517,7 +517,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
                     controller: ref.watch(controllerVisibleProvider),
                     textAlign: TextAlign.left,
                     decoration: const InputDecoration(
-                        hintText: '보이는 조건(true일 때 보임, 비어있을 시 true)'),
+                        hintText: '보이는 조건(true 일 때 보임, 비어있을 시 true)'),
                   ),
                 ),
               ),
