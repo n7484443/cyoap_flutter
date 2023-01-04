@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:cyoap_core/choiceNode/choice_node.dart';
+import 'package:cyoap_core/grammar/function_list.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
@@ -399,8 +400,16 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
   QuillController? _quillController;
   ScrollController? _scrollController;
 
-  var regexSpace = RegExp(
-      r"((if|for)(?=\())|((?<=(\s|}))else)|((?<=(\s|{))(in|break|continue)(?=\s))");
+  final regexSpace =
+      RegExp(r"(\b|}|\))(if|for|else|in|break|continue)(\b|{|\()");
+  final regexBrace = RegExp(r"[{}()]");
+  final regexComment = RegExp(r"//.*");
+  final regexFunction = RegExp("(${
+        FunctionListEnum.values
+            .where((e) => e.displayWithColor)
+            .map((e) => e.functionName ?? e.name)
+            .join('|')
+      })"r"\(");
 
   @override
   void initState() {
@@ -426,6 +435,9 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
           var styleNull = Attribute.color;
           var styleDeepOrange =
               ColorAttribute('#${Colors.deepOrangeAccent.hex}');
+          var styleDeepPurple =
+          ColorAttribute('#${Colors.deepPurple.hex}');
+          var styleGrey = ColorAttribute('#${Colors.grey.hex}');
 
           _quillController?.formatText(0, plainText.length, styleNull);
           var match = regexSpace.allMatches(plainText);
@@ -433,6 +445,22 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
             _quillController?.formatText(
                 m.start, m.end - m.start, styleDeepOrange);
           }
+
+          match = regexFunction.allMatches(plainText);
+          for (var m in match) {
+            _quillController?.formatText(m.start, m.end - m.start, styleDeepPurple);
+          }
+
+          match = regexBrace.allMatches(plainText);
+          for (var m in match) {
+            _quillController?.formatText(m.start, m.end - m.start, styleNull);
+          }
+
+          match = regexComment.allMatches(plainText);
+          for (var m in match) {
+            _quillController?.formatText(m.start, m.end - m.start, styleGrey);
+          }
+
 
           ref
               .read(nodeEditorTargetProvider)
