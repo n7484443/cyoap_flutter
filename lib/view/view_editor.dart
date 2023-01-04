@@ -345,9 +345,6 @@ class _ImageSourceDialogState extends ConsumerState<ImageSourceDialog> {
   @override
   void initState() {
     _sourceController = TextEditingController();
-    _sourceController!.addListener(() {
-      ref.read(imageSourceProvider.notifier).state = _sourceController!.text;
-    });
     super.initState();
   }
 
@@ -371,13 +368,13 @@ class _ImageSourceDialogState extends ConsumerState<ImageSourceDialog> {
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.pop(context, true);
+            Navigator.pop(context, Tuple2(true, _sourceController?.text));
           },
           child: const Text('자르기'),
         ),
         TextButton(
           onPressed: () {
-            Navigator.pop(context, false);
+            Navigator.pop(context, Tuple2(false, _sourceController?.text));
           },
           child: const Text('저장하기'),
         ),
@@ -744,13 +741,13 @@ class ViewImageDraggable extends ConsumerWidget {
 
   void openImageEditor(WidgetRef ref, BuildContext context, String name) {
     if (name != '') {
-      getPlatformFileSystem.addSource(name, ref.read(imageSourceProvider));
-      showDialog<bool>(
+      showDialog<Tuple2<bool, String>>(
         builder: (_) => ImageSourceDialog(name),
         context: context,
         barrierDismissible: false,
       ).then((value) {
-        if (value ?? false) {
+        getPlatformFileSystem.addSource(name, value?.item2 ?? '');
+        if (value?.item1 ?? false) {
           ref
               .read(imageProvider.notifier)
               .update((state) => Tuple2(name, ref.watch(lastImageProvider)!));
@@ -852,13 +849,13 @@ class _ViewImageSelectorState extends ConsumerState<ViewImageSelector> {
 
   void openImageEditor(WidgetRef ref, BuildContext context, String name) {
     if (name != '') {
-      getPlatformFileSystem.addSource(name, ref.read(imageSourceProvider));
-      showDialog<bool>(
+      showDialog<Tuple2<bool, String>>(
         builder: (_) => ImageSourceDialog(name),
         context: context,
         barrierDismissible: false,
       ).then((value) {
-        if (value ?? false) {
+        getPlatformFileSystem.addSource(name, value?.item2 ?? '');
+        if (value?.item1 ?? false) {
           ref
               .read(imageProvider.notifier)
               .update((state) => Tuple2(name, ref.watch(lastImageProvider)!));

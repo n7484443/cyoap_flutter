@@ -75,8 +75,6 @@ final maximumProvider = Provider.autoDispose<TextEditingController>((ref) {
   return controller;
 });
 
-final imageSourceProvider = StateProvider.autoDispose<String>((ref) => "");
-
 final imageListStateProvider =
     StateNotifierProvider.autoDispose<ImageListStateNotifier, List<String>>(
         (ref) => ImageListStateNotifier(ref));
