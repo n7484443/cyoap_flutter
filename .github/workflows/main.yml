@@ -80,7 +80,7 @@ jobs:
         id: get_version
         uses: battila7/get-version-action@v2
 
-      - run: flutter build web --web-renderer canvaskit --base-href=/FlutterCyoap/ --release
+      - run: flutter build web --web-renderer canvaskit --base-href=/cyoap_flutter/ --release
 
       - name: modify version of index.html
         run: |
