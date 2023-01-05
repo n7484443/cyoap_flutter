@@ -153,13 +153,13 @@ class WebpConverterImpAndroid implements WebpConverterImp {
     if (!saveAsWebp) {
       return Tuple2(name, input);
     }
-    Image decodeImage;
+    Image decodedImage;
     if (name.endsWith(".png")) {
-      decodeImage = PngDecoder().decodeImage(input)!;
-    } else if (name.endsWith(".jpg") | name.endsWith(".jpeg")) {
-      decodeImage = JpegDecoder().decodeImage(input)!;
-    } else if (name.endsWith(".bmp")) {
-      decodeImage = BmpDecoder().decodeImage(input)!;
+      decodedImage = decodeImage(input)!;
+    } else if (name.endsWith(".jpg") |
+    name.endsWith(".jpeg") |
+    name.endsWith(".bmp")) {
+      decodedImage = decodeImage(input)!;
     } else {
       return Tuple2(name, input);
     }
@@ -167,8 +167,8 @@ class WebpConverterImpAndroid implements WebpConverterImp {
       input,
       format: CompressFormat.webp,
       quality: quality,
-      minWidth: decodeImage.width,
-      minHeight: decodeImage.height,
+      minWidth: decodedImage.width,
+      minHeight: decodedImage.height,
     );
     return Tuple2(
         name.replaceAll(RegExp('[.](png|jpg|jpeg|bmp)'), '.webp'), output);
