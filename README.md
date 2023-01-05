@@ -1,8 +1,8 @@
 # CYOA Player
-<img src="https://img.shields.io/github/v/release/n7484443/FlutterCyoap"></img>
-[![pages-build-deployment](https://github.com/n7484443/FlutterCyoap/actions/workflows/pages/pages-build-deployment/badge.svg?branch=gh-pages)](https://github.com/n7484443/FlutterCyoap/actions/workflows/pages/pages-build-deployment)
+<img src="https://img.shields.io/github/v/release/n7484443/cyoap_flutter"></img>
+[![pages-build-deployment](https://github.com/n7484443/cyoap_flutter/actions/workflows/pages/pages-build-deployment/badge.svg?branch=gh-pages)](https://github.com/n7484443/cyoap_flutter/actions/workflows/pages/pages-build-deployment)
 
-[cyoap web](https://n7484443.github.io/FlutterCyoap/)
+[cyoap web](https://n7484443.github.io/cyoap_flutter/)
 
 [web 배포용 뷰어](https://github.com/n7484443/cyoap_vue/releases/tag/v0.1.0)
 ## 목차
