@@ -27,7 +27,7 @@ const RESOURCES = {
 "main.dart.js": "016d589119e8e9d1f260d29efe394f6d",
 "manifest.json": "ebc04e4594e86d4e5763ccf0df7285b3",
 "save_web.js": "6d7f19b0443d2ca2a960f0532299e5d7",
-"version.json": "66ba275e3aef817b68c2904ec132b79b",
+"version.json": "8c9cc8aa10a5deb70f87aa5fdba46705",
 "worker.js": "55118d4a43a00cedd42f65ca3b0b0d2a"
 };
 
