@@ -368,13 +368,13 @@ class _ImageSourceDialogState extends ConsumerState<ImageSourceDialog> {
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.pop(context, Tuple2(true, _sourceController?.text));
+            Navigator.pop(context, Tuple2(true, _sourceController?.text ?? ''));
           },
           child: const Text('자르기'),
         ),
         TextButton(
           onPressed: () {
-            Navigator.pop(context, Tuple2(false, _sourceController?.text));
+            Navigator.pop(context, Tuple2(false, _sourceController?.text ?? ''));
           },
           child: const Text('저장하기'),
         ),
