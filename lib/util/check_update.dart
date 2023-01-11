@@ -14,9 +14,7 @@ class CheckUpdate {
           .listReleases(RepositorySlug('n7484443', 'cyoap_flutter'))
           .first;
     } catch (e) {
-      lastRelease = await github.repositories
-          .listReleases(RepositorySlug('n7484443', 'FlutterCyoap'))
-          .first;
+      return false;
     }
     if (kDebugMode) {
       print(
