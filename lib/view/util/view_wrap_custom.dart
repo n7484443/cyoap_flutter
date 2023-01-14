@@ -85,7 +85,9 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
         stack = 0;
         i -= 1;
         continue;
-      } else if (size == maxSize) {
+      }
+
+      if (size == maxSize) {
         if (i != 0) {
           var before = (children[i - 1] as ChoiceNode).width;
           if (before != 0 && before != maxSize) {
@@ -95,12 +97,13 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
         outputWidget.add(NodeDraggable(child.pos));
         subWidget = List.empty(growable: true);
         addBuildDraggable(outputWidget, i + 1, horizontal: true);
-      } else {
-        subWidget.add(Expanded(
-            flex: calculateFlex(size), child: NodeDraggable(child.pos)));
-        addBuildDraggable(subWidget, i + 1);
-        stack += size;
+        continue;
       }
+
+      subWidget.add(
+          Expanded(flex: calculateFlex(size), child: NodeDraggable(child.pos)));
+      addBuildDraggable(subWidget, i + 1);
+      stack += size;
     }
     if (0 < stack && stack < maxSize) {
       subWidget.add(Expanded(
