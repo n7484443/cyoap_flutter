@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/main.dart';
@@ -60,12 +62,12 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
     List<Widget> subWidget = List<Widget>.empty(growable: true);
     for (int i = 0; i < children.length; i++) {
       var child = children[i];
-      int size = child.width == 0 ? maxSize : child.width;
+      int size = child.width == 0 ? maxSize : min(child.width, maxSize);
       if (stack == 0 && i == 0) {
         addBuildDraggable(outputWidget, i, horizontal: true);
       }
       if (stack + size > maxSize) {
-        if (maxSize > stack) {
+        if (stack < maxSize) {
           subWidget.add(
             Expanded(
               flex: calculateFlexReverse(maxSize - stack),
@@ -176,7 +178,7 @@ class ViewWrapCustom extends ConsumerWidget {
       if (child.isHide) {
         continue;
       }
-      int size = child.width == 0 ? maxSize : child.width;
+      int size = child.width == 0 ? maxSize : min(child.width, maxSize);
 
       if (stack + size > maxSize) {
         if (maxSize > stack) {
