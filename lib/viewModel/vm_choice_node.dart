@@ -131,6 +131,11 @@ class ChoiceNodeSelectNotifier extends StateNotifier<int> {
     updateStatusAll(ref, startLine: node.pos.first);
     state = node.select;
   }
+
+  int maxSelect(){
+    var node = ref.read(choiceNodeProvider(pos)).node!;
+    return node.maximumStatus;
+  }
 }
 
 final randomProcessExecutedProvider = StateProvider<bool>((ref) => false);

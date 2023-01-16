@@ -338,9 +338,28 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
   final Pos pos;
 
   const ViewChoiceNodeMultiSelect(this.pos, {super.key});
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var design = ref.watch(choiceNodeDesignSettingProvider(pos));
+    if (design.showAsSlider) {
+      return Slider(
+        value: ref.watch(choiceNodeSelectProvider(pos)).toDouble(),
+        min: 0,
+        max: ref
+            .watch(choiceNodeSelectProvider(pos).notifier)
+            .maxSelect()
+            .toDouble(),
+        label: ref.watch(choiceNodeSelectProvider(pos)).toString(),
+        onChanged: (value) {
+          var valueInt = value.toInt();
+          if (!isEditable &&
+              valueInt != ref.read(choiceNodeSelectProvider(pos))) {
+            int t = valueInt - ref.read(choiceNodeSelectProvider(pos));
+            ref.read(choiceNodeSelectProvider(pos).notifier).select(t);
+          }
+        },
+      );
+    }
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -351,7 +370,9 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
             icon: const Icon(Icons.chevron_left),
             onPressed: () {
               if (!isEditable) {
-                ref.read(choiceNodeSelectProvider(pos).notifier).select(-1);
+                ref
+                    .read(choiceNodeSelectProvider(pos).notifier)
+                    .select(-1);
               }
             },
           ),
@@ -368,7 +389,9 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
             icon: const Icon(Icons.chevron_right),
             onPressed: () {
               if (!isEditable) {
-                ref.read(choiceNodeSelectProvider(pos).notifier).select(1);
+                ref
+                    .read(choiceNodeSelectProvider(pos).notifier)
+                    .select(1);
               }
             },
           ),

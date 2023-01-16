@@ -601,6 +601,17 @@ class ViewNodeOptionEditor extends ConsumerWidget {
         ),
       );
     }
+    if (nodeMode == ChoiceNodeMode.multiSelect) {
+      list.add(
+        ViewSwitchLabel(
+              () => ref.read(nodeEditorDesignProvider.notifier).update((state) =>
+              state.copyWith(
+                  showAsSlider: !design.showAsSlider)),
+          design.showAsSlider,
+          label: '슬라이더 모드',
+        ),
+      );
+    }
     list.add(DropdownButtonFormField<String>(
       decoration: const InputDecoration(labelText: '프리셋 설정'),
       items: ref

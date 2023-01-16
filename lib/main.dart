@@ -205,6 +205,9 @@ final ThemeData appThemeLight = ThemeData.from(
   appBarTheme: const AppBarTheme(
     toolbarHeight: ConstList.appBarSize,
   ),
+  sliderTheme: const SliderThemeData(
+    showValueIndicator: ShowValueIndicator.always,
+  ),
 );
 
 final ThemeData appThemeDark = ThemeData.from(
@@ -217,5 +220,8 @@ final ThemeData appThemeDark = ThemeData.from(
 ).copyWith(
   appBarTheme: const AppBarTheme(
     toolbarHeight: ConstList.appBarSize,
+  ),
+  sliderTheme: const SliderThemeData(
+    showValueIndicator: ShowValueIndicator.always,
   ),
 );
