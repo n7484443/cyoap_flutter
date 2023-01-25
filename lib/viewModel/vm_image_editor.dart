@@ -16,9 +16,9 @@ final cropImageProvider = FutureProvider.autoDispose<Uint8List>((ref) async {
   var state = ref.watch(globalEditorKeyProvider).currentState!;
   var cropRect = state.getCropRect()!;
   var image = decodeImage(ref.watch(imageProvider)!.item2)!;
-  var output = copyCrop(image, cropRect.left.toInt(), cropRect.top.toInt(),
-      cropRect.width.toInt(), cropRect.height.toInt());
-  return PngEncoder().encodeImage(output) as Uint8List;
+  var output = copyCrop(image, x: cropRect.left.toInt(), y: cropRect.top.toInt(),
+      width: cropRect.width.toInt(), height: cropRect.height.toInt());
+  return PngEncoder().encode(output);
 });
 
 final imageCropRatioProvider =

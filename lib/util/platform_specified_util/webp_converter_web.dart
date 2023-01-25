@@ -9,8 +9,8 @@ class WebpConverterImp extends WebpConverter {
   Future<Tuple2<String, Uint8List>> convert(
       Uint8List input, String name) async {
     if (name.endsWith(".bmp")) {
-      var image = BmpDecoder().decodeImage(input);
-      var output = Uint8List.fromList(PngEncoder().encodeImage(image!));
+      var image = BmpDecoder().decode(input);
+      var output = Uint8List.fromList(PngEncoder().encode(image!));
       return Tuple2(name.replaceAll(RegExp('[.](bmp)'), '.png'), output);
     }
     return Tuple2(name, input);

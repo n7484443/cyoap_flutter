@@ -100,8 +100,8 @@ class WebpConverterImpWindows implements WebpConverterImp {
     Pointer<Uint8> inputBuff;
     Uint8List output;
     int outputSize;
-    if (decodedImage.channels == Channels.rgb) {
-      var inputBuffered = decodedImage.getBytes(format: Format.rgb);
+    if (decodedImage.numChannels == 3) {
+      var inputBuffered = decodedImage.getBytes(order: ChannelOrder.rgb);
       int size = inputBuffered.length;
       inputBuff = calloc.allocate<Uint8>(size);
       for (int i = 0; i < inputBuffered.length; i++) {
@@ -116,7 +116,7 @@ class WebpConverterImpWindows implements WebpConverterImp {
       }
     } else {
       //rgba
-      var inputBuffered = decodedImage.getBytes(format: Format.rgba);
+      var inputBuffered = decodedImage.getBytes(order: ChannelOrder.rgba);
       int size = inputBuffered.length;
       inputBuff = calloc.allocate<Uint8>(size);
       for (int i = 0; i < inputBuffered.length; i++) {

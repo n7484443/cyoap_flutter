@@ -21,34 +21,34 @@ class ViewSelectedGrid extends ConsumerWidget {
       scrollable: true,
       content: RepaintBoundary(
         key: globalKey,
-        child: Column(
-          children: List.generate(listLength * 2 - 1, (index) {
-            if (index.isEven) {
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: List.generate(numRow, (innerIndex) {
-                  var itemPos = index ~/ 2 * numRow + innerIndex;
-                  if (itemPos >= posList.length) {
-                    return const Expanded(
-                      child: SizedBox.shrink(),
-                    );
-                  }
-                  return Expanded(
-                    child: IgnorePointer(
-                      child: ViewChoiceNode(
-                        posList[itemPos].item1,
-                        ignoreOpacity: true,
-                        ignoreChild: true,
+          child: Column(
+            children: List.generate(listLength * 2 - 1, (index) {
+              if (index.isEven) {
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: List.generate(numRow, (innerIndex) {
+                    var itemPos = index ~/ 2 * numRow + innerIndex;
+                    if (itemPos >= posList.length) {
+                      return const Expanded(
+                        child: SizedBox.shrink(),
+                      );
+                    }
+                    return Expanded(
+                      child: IgnorePointer(
+                        child: ViewChoiceNode(
+                          posList[itemPos].item1,
+                          ignoreOpacity: true,
+                          ignoreChild: true,
+                        ),
                       ),
-                    ),
-                  );
-                }),
-              );
-            }
-            return const Divider();
-          }),
+                    );
+                  }),
+                );
+              }
+              return const Divider();
+            }),
+          ),
         ),
-      ),
       actions: [
         TextButton(
           onPressed: () {
