@@ -26,7 +26,7 @@ class ViewSaveDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
-      title: Text(asZip ? '압축중...' : '저장중...'),
+      title: Text(asZip ? 'Compressing...' : 'Saving...'),
       content: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,7 +47,7 @@ class ViewMake extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var appbarWidget = AppBar(
       leading: IconButton(
-        tooltip: '뒤로가기',
+        tooltip: 'Back',
         icon: const Icon(Icons.arrow_back),
         onPressed: () {
           if (ref.read(draggableNestedMapChangedProvider)) {
@@ -83,7 +83,7 @@ class ViewMake extends ConsumerWidget {
             builder: (BuildContext context, List<dynamic> accepted,
                 List<dynamic> rejected) {
               return const Tooltip(
-                  message: '드래그&드랍으로 선택지 삭제', child: Icon(Icons.delete));
+                  message: 'Delete selections with drag-and-drop', child: Icon(Icons.delete));
             },
             onAccept: (Pos data) {
               ref.read(vmDraggableNestedMapProvider).removeData(data);
@@ -115,7 +115,7 @@ class ViewMake extends ConsumerWidget {
                 .read(dragPositionProvider.notifier)
                 .state = details.localPosition.dy,
             child: const Tooltip(
-              message: '드래그로 선택지 생성',
+              message: 'Drag to create a selection',
               child: Icon(Icons.add),
             ),
           ),
@@ -146,7 +146,7 @@ class ViewMake extends ConsumerWidget {
                   .read(dragPositionProvider.notifier)
                   .state = details.localPosition.dy,
               child: const Tooltip(
-                message: '최근 삭제된 선택지 생성',
+                message: 'Create recently deleted options',
                 child: Icon(Icons.paste),
               ),
             ),
@@ -178,7 +178,7 @@ class ViewRefreshIcons extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return IconButton(
       icon: const Icon(Icons.play_arrow),
-      tooltip: '변수 목록 갱신',
+      tooltip: 'Update the variable list',
       onPressed: () {
         getPlatform.generateRecursiveParser();
         getPlatform.updateStatusAll();
@@ -213,7 +213,7 @@ class ViewSaveIcons extends ConsumerWidget {
     }
     return PopupMenuButton(
       icon: const Icon(Icons.save),
-      tooltip: '저장 관련 옵션',
+      tooltip: 'Saving options',
       onSelected: (int selected) {
         showDialog(
             context: context,
@@ -235,12 +235,12 @@ class ViewSaveIcons extends ConsumerWidget {
           if (!getPlatformFileSystem.openAsFile)
             const PopupMenuItem(
               value: 0,
-              child: Text('저장'),
+              child: Text('Save'),
             ),
           const PopupMenuItem(
             value: 1,
             child: Text(
-                'zip 파일로 추출'),
+                'Extract to zip file'),
           ),
         ];
       },
