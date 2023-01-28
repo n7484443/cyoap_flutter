@@ -38,7 +38,7 @@ class ViewEditor extends ConsumerWidget {
       const ViewNodeOptionEditor(),
       const ViewImageDraggable()
     ];
-    var childrenText = const ["내용", "코드", "설정", "이미지"];
+    var childrenText = const ["Content", "Code", "Setting", "Image"];
     return WillPopScope(
       child: DefaultTabController(
         length: children.length,
@@ -154,7 +154,7 @@ class _ViewTitleTextFieldInputState
       controller: _controller,
       textAlign: TextAlign.center,
       decoration: InputDecoration(
-        hintText: '제목',
+        hintText: 'Title',
         hintStyle: ConstList.getFont(preset.titleFont)
             .copyWith(fontSize: 24, color: Colors.red),
         filled: true,
@@ -357,11 +357,11 @@ class _ImageSourceDialogState extends ConsumerState<ImageSourceDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('출처'),
+      title: const Text('Sources'),
       content: TextField(
         controller: _sourceController,
         decoration: const InputDecoration(
-          hintText: '출처를 모르거나 없을 경우 비워두세요.',
+          hintText: 'If you dont know or dont have a source, leave it blank.',
         ),
       ),
       actionsAlignment: MainAxisAlignment.spaceBetween,
@@ -370,13 +370,13 @@ class _ImageSourceDialogState extends ConsumerState<ImageSourceDialog> {
           onPressed: () {
             Navigator.pop(context, Tuple2(true, _sourceController?.text ?? ''));
           },
-          child: const Text('자르기'),
+          child: const Text('Crop'),
         ),
         TextButton(
           onPressed: () {
             Navigator.pop(context, Tuple2(false, _sourceController?.text ?? ''));
           },
-          child: const Text('저장하기'),
+          child: const Text('Save'),
         ),
       ],
     );
@@ -500,7 +500,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
                   child: TextField(
                     controller: ref.watch(controllerClickableProvider),
                     textAlign: TextAlign.left,
-                    decoration: const InputDecoration(hintText: '실행 조건'),
+                    decoration: const InputDecoration(hintText: 'Execution Conditions'),
                   ),
                 ),
               ),
@@ -514,7 +514,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
                     controller: ref.watch(controllerVisibleProvider),
                     textAlign: TextAlign.left,
                     decoration: const InputDecoration(
-                        hintText: '보이는 조건(true 일 때 보임, 비어있을 시 true)'),
+                        hintText: 'Visible conditions(Visible when true, true if empty)'),
                   ),
                 ),
               ),
@@ -527,7 +527,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
                 controller: _quillController!,
                 padding: EdgeInsets.zero,
                 expands: false,
-                placeholder: "선택 시 시행 코드",
+                placeholder: "Enforcement code on selection",
               ),
             ],
           ),
@@ -542,18 +542,18 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
                       design.copyWith(isOccupySpace: !design.isOccupySpace);
                 },
                 design.isOccupySpace,
-                label: '숨김 시 공간 차지',
+                label: 'Takes up space when hidden',
               ),
               IconButton(
                 icon: const Icon(Icons.start),
-                tooltip: "정렬",
+                tooltip: "Sort",
                 onPressed: () {
                   var text = _quillController?.document.toPlainText() ?? '';
                   var output =
                       ref.read(editorChangeProvider.notifier).formatting(text);
                   if (output.item2) {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("코드의 {의 개수와 }의 개수가 같지 않습니다."),
+                      content: Text("The number of {'s and }'s in the code are not equal."),
                     ));
                   }
                   _quillController?.clear();
@@ -587,7 +587,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               state.copyWith(
                   hideAsResult: !design.hideAsResult, showAsResult: false)),
           design.hideAsResult,
-          label: '결론창에서 \n숨기기',
+          label: 'Hide \n in the final window',
         ),
       );
     } else {
@@ -597,7 +597,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               state.copyWith(
                   showAsResult: !design.showAsResult, hideAsResult: false)),
           design.showAsResult,
-          label: '결론창에서 \n보이기',
+          label: 'Show \n in the final window',
         ),
       );
     }
@@ -608,12 +608,12 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               state.copyWith(
                   showAsSlider: !design.showAsSlider)),
           design.showAsSlider,
-          label: '슬라이더 모드',
+          label: 'Slider mode',
         ),
       );
     }
     list.add(DropdownButtonFormField<String>(
-      decoration: const InputDecoration(labelText: '프리셋 설정'),
+      decoration: const InputDecoration(labelText: 'Preset settings'),
       items: ref
           .watch(choiceNodePresetListProvider)
           .map<DropdownMenuItem<String>>((preset) =>
@@ -641,16 +641,16 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                 value: nodeMode,
                 items: const [
                   DropdownMenuItem(
-                      value: ChoiceNodeMode.defaultMode, child: Text('기본')),
+                      value: ChoiceNodeMode.defaultMode, child: Text('Default')),
                   DropdownMenuItem(
-                      value: ChoiceNodeMode.randomMode, child: Text('랜덤 선택')),
+                      value: ChoiceNodeMode.randomMode, child: Text('Randomize')),
                   DropdownMenuItem(
-                      value: ChoiceNodeMode.multiSelect, child: Text('다중 선택')),
+                      value: ChoiceNodeMode.multiSelect, child: Text('Multiple selections')),
                   DropdownMenuItem(
                       value: ChoiceNodeMode.unSelectableMode,
-                      child: Text('선택 불가')),
+                      child: Text('Unable to select')),
                   DropdownMenuItem(
-                      value: ChoiceNodeMode.onlyCode, child: Text('코드만 사용')),
+                      value: ChoiceNodeMode.onlyCode, child: Text('Use code only')),
                 ],
                 onChanged: (ChoiceNodeMode? value) {
                   ref.read(nodeModeProvider.notifier).update((state) => value!);
@@ -679,8 +679,8 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                       controller: ref.watch(maximumProvider),
                       decoration: InputDecoration(
                         label: Text(nodeMode == ChoiceNodeMode.multiSelect
-                            ? '최대선택'
-                            : '랜덤 수, 0 ~ n-1'),
+                            ? 'MaxSelect'
+                            : 'Random number, 0 to n-1'),
                       ),
                     ),
                   ]),
