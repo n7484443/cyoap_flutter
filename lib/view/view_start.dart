@@ -328,7 +328,7 @@ class ViewGlobalSettingDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
-      title: const Text('설정'),
+      title: const Text('Settings'),
       content: Column(
         children: [
           ViewSwitchLabel(
