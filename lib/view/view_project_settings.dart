@@ -18,7 +18,7 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
-      title: const Text("데이터 변경"),
+      title: const Text("Change data"),
       content: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
@@ -31,7 +31,7 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
                 controller:
                     ref.watch(projectSettingNameTextEditingProvider(index)),
                 decoration: const InputDecoration(
-                  label: Text('변수명'),
+                  label: Text('Variable name'),
                 ),
                 textAlign: TextAlign.right,
               ),
@@ -45,7 +45,7 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
                 controller:
                     ref.watch(projectSettingValueTextEditingProvider(index)),
                 decoration: const InputDecoration(
-                  label: Text('변수 초기값'),
+                  label: Text('Variable initial values'),
                 ),
                 textAlign: TextAlign.right,
               ),
@@ -59,7 +59,7 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
                 controller: ref
                     .watch(projectSettingDisplayNameTextEditingProvider(index)),
                 decoration: const InputDecoration(
-                  label: Text('변수 표기명'),
+                  label: Text('Variable notation'),
                 ),
                 textAlign: TextAlign.right,
               ),
@@ -75,7 +75,7 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
                             projectSettingVisibleSwitchProvider(index).notifier)
                         .update((state) => !state),
                     ref.watch(projectSettingVisibleSwitchProvider(index)),
-                    label: '플레이시 표시',
+                    label: 'Show when playing',
                   ),
                 ],
               ),
@@ -85,13 +85,13 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
       ),
       actions: [
         TextButton(
-          child: const Text('취소'),
+          child: const Text('Cancel'),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         TextButton(
-          child: const Text('저장'),
+          child: const Text('Save'),
           onPressed: () {
             var after = ValueTypeWrapper(
                 getValueTypeFromStringInput(ref
@@ -162,7 +162,7 @@ class ViewProjectSetting extends ConsumerWidget {
                   var data = ref.watch(valueTypeWrapperListProvider)[key]!;
                   var visible = data.visible;
                   return ListTile(
-                    //보이지 않을 경우 푸른색으로
+                    //If not visible, it will be colored blue
                     tileColor: visible ? Colors.lightBlue : null,
                     onTap: () {
                       showDialog(
@@ -196,7 +196,7 @@ class ViewProjectSetting extends ConsumerWidget {
             ),
           ),
           TextButton(
-            child: const Text('초기값 추가'),
+            child: const Text('Add default values'),
             onPressed: () {
               ref.read(valueTypeWrapperListProvider.notifier).addInitialValue(
                   'point', ValueTypeWrapper(ValueType.int(0), visible: true));
