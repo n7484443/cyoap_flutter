@@ -44,7 +44,7 @@ class ChoiceNodeNotifier extends ChangeNotifier {
     } else if (pos.last == designSamplePosition) {
       node = ChoiceNode(
         1,
-        "디자인",
+        "Design",
         "[{\"insert\":\"Adjust and view layouts, fonts, designs, sizes, and more.\\n\"}]",
         "noImage",
       )..currentPos = -1;
