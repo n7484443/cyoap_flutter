@@ -101,7 +101,7 @@ class ChoiceNodePresetListNotifier extends StateNotifier<List<ChoiceNodeDesignPr
   }
 
   void create() {
-    var name = '새 프리셋';
+    var name = 'New Preset';
     var rename = name;
     var i = 0;
     while (state.any((preset) => preset.name == rename)) {
