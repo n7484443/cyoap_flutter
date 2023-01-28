@@ -28,7 +28,7 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
           ),
         ),
         action: SnackBarAction(
-          label: '클립보드로 복사',
+          label: 'Copy to clipboard',
           onPressed: () {
             Clipboard.setData(ClipboardData(
                 text: ref.watch(snackBarErrorProvider).fold(
