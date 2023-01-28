@@ -319,7 +319,7 @@ class VariableTiles extends ConsumerWidget {
       );
     }
     return ExpansionTile(
-      title: const Text('변수'),
+      title: const Text('Variables'),
       subtitle: isEditable
           ? ViewSwitchLabel(
               () {
