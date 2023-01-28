@@ -143,7 +143,7 @@ class SizeDialog extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('길이 : $str', style: Theme.of(context).textTheme.titleMedium),
+            Text('length : $str', style: Theme.of(context).textTheme.titleMedium),
             Slider(
               onChanged: (double value) {
                 ref
