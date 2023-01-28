@@ -20,7 +20,7 @@ class ChoiceLinePresetList extends ConsumerWidget {
     return Column(
       children: [
         ListTile(
-          title: const Text('프리셋'),
+          title: const Text('Preset'),
           trailing: IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
@@ -94,7 +94,7 @@ class ViewLineOptionEditor extends ConsumerWidget {
                   preset.copyWith(
                       alwaysVisibleLine: !preset.alwaysVisibleLine)),
               preset.alwaysVisibleLine,
-              label: '검은 줄이 보임',
+              label: 'I see a black line',
             ),
           ]),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -107,7 +107,7 @@ class ViewLineOptionEditor extends ConsumerWidget {
         SliverToBoxAdapter(
           child: ColorPicker(
             heading: const Center(
-              child: Text('배경 색상'),
+              child: Text('Background color'),
             ),
             color: Color(preset.backgroundColor ?? 0x000000),
             onColorChanged: (Color color) {
@@ -119,8 +119,8 @@ class ViewLineOptionEditor extends ConsumerWidget {
               ColorPickerType.accent: false
             },
             pickerTypeLabels: {
-              ColorPickerType.primary: "색상 선택",
-              ColorPickerType.wheel: "직접 선택"
+              ColorPickerType.primary: "Select color",
+              ColorPickerType.wheel: "Direct selection"
             },
             width: 22,
             height: 22,
