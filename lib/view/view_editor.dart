@@ -665,7 +665,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                 child: SizedBox(
                   width: 120,
                   child: Column(children: [
-                    Text('변수명', style: Theme.of(context).textTheme.labelLarge),
+                    Text('Variable name', style: Theme.of(context).textTheme.labelLarge),
                     Text(
                         '${title.replaceAll(" ", "")}:${nodeMode == ChoiceNodeMode.multiSelect ? 'multi' : 'random'}',
                         softWrap: true,
