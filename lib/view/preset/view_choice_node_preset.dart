@@ -90,7 +90,7 @@ class ChoiceNodePresetList extends ConsumerWidget {
     return Column(
       children: [
         ListTile(
-          title: const Text('프리셋'),
+          title: const Text('Presets'),
           trailing: IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
@@ -219,7 +219,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               maxLines: 1,
               keyboardType: TextInputType.number,
               controller: ref.watch(choiceNodePresetCurrentEditElevationProvider),
-              decoration: const InputDecoration(labelText: '높이'),
+              decoration: const InputDecoration(labelText: 'Height'),
             ),
             TextFormField(
               textAlign: TextAlign.end,
@@ -227,27 +227,27 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               maxLines: 1,
               keyboardType: TextInputType.number,
               controller: ref.watch(choiceNodePresetCurrentEditRoundProvider),
-              decoration: const InputDecoration(labelText: '모서리 라운드'),
+              decoration: const InputDecoration(labelText: 'Rounded corners'),
             ),
             ViewSwitchLabel(
                   () => ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                   presetIndex,
                   preset.copyWith(maximizingImage: !preset.maximizingImage)),
               preset.maximizingImage,
-              label: '이미지 최대화',
+              label: 'Maximize images',
             ),
             ViewSwitchLabel(
                   () => ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                   presetIndex, preset.copyWith(hideTitle: !preset.hideTitle)),
               preset.hideTitle,
-              label: '제목 숨기기',
+              label: 'Hide title',
             ),
             ViewSwitchLabel(
                   () => ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                   presetIndex,
                   preset.copyWith(titlePosition: !preset.titlePosition)),
               preset.titlePosition,
-              label: '제목을 위로',
+              label: 'Title up',
             ),
             ViewSwitchLabel(
                   () => ref.read(choiceNodePresetListProvider.notifier).updateIndex(
@@ -255,7 +255,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                   preset.copyWith(
                       imagePosition: preset.imagePosition == 0 ? 1 : 0)),
               preset.imagePosition != 0,
-              label: '가로 모드',
+              label: 'Landscape mode',
             ),
             ViewSwitchLabel(
                   () {
@@ -269,7 +269,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               },
               preset.imagePosition == 2,
               disable: preset.imagePosition == 0,
-              label: '이미지 왼쪽으로',
+              label: 'Image left',
             ),
           ]),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -286,7 +286,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
           delegate: SliverChildListDelegate([
             ColorPicker(
               heading: const Center(
-                child: Text('선택지 색상'),
+                child: Text('Selector color'),
               ),
               color: Color(preset.colorNode),
               onColorChanged: (Color value) {
@@ -298,8 +298,8 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                 ColorPickerType.accent: false
               },
               pickerTypeLabels: {
-                ColorPickerType.primary: "색상 선택",
-                ColorPickerType.wheel: "직접 선택"
+                ColorPickerType.primary: "Select color",
+                ColorPickerType.wheel: "Direct selection"
               },
               width: 22,
               height: 22,
@@ -307,7 +307,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
             ),
             ColorPicker(
               heading: const Center(
-                child: Text('외곽선 색상'),
+                child: Text('Outline color'),
               ),
               color: Color(preset.colorSelectNode),
               onColorChanged: (Color value) {
@@ -319,8 +319,8 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                 ColorPickerType.accent: false
               },
               pickerTypeLabels: {
-                ColorPickerType.primary: "색상 선택",
-                ColorPickerType.wheel: "직접 선택"
+                ColorPickerType.primary: "Select color",
+                ColorPickerType.wheel: "Direct selection"
               },
               width: 22,
               height: 22,
@@ -337,7 +337,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
         SliverGrid(
           delegate: SliverChildListDelegate([
             DropdownButtonFormField<String>(
-              decoration: const InputDecoration(labelText: '제목 폰트'),
+              decoration: const InputDecoration(labelText: 'Title font'),
               items: ConstList.textFontList.keys
                   .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
                   value: name,
@@ -354,7 +354,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               value: preset.titleFont,
             ),
             DropdownButtonFormField<String>(
-              decoration: const InputDecoration(labelText: '내용 폰트'),
+              decoration: const InputDecoration(labelText: 'Content font'),
               items: ConstList.textFontList.keys
                   .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
                   value: name,
@@ -380,7 +380,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
         ),
         /*SliverToBoxAdapter(
           child: DropdownButtonFormField<Outline>(
-            decoration: const InputDecoration(labelText: '외곽선 형태'),
+            decoration: const InputDecoration(labelText: 'Outline Shape'),
             items: Outline.values
                 .map<DropdownMenuItem<Outline>>((type) =>
                     DropdownMenuItem(value: type, child: Text(type.name)))
