@@ -10,15 +10,15 @@ class ViewBackDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Center(child: Text('뒤로가기')),
-      content: const Text('저장되지 않은 내용이 있습니다. 저장하시겠습니까?'),
+      title: const Center(child: Text('Back')),
+      content: const Text('There is something unsaved. Do you want to save it?'),
       actionsAlignment: MainAxisAlignment.spaceAround,
       actions: [
         ElevatedButton(
           onPressed: () {
             backFunction(0);
           },
-          child: const Text('취소'),
+          child: const Text('Cancel'),
         ),
         ElevatedButton(
           onPressed: () {
@@ -27,14 +27,14 @@ class ViewBackDialog extends StatelessWidget {
             }
             backFunction(1);
           },
-          child: const Text('아니오'),
+          child: const Text('No'),
         ),
         ElevatedButton(
           onPressed: () async {
             await saveFunction();
             backFunction(2);
           },
-          child: const Text('예'),
+          child: const Text('Yes'),
         ),
       ],
     );
@@ -50,8 +50,8 @@ class ViewWarningDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Center(child: Text('!경고!')),
-      content: const Text('이것은 선택된 프로젝트를 완전히 삭제하는 것이며, 복구할 수 없습니다. 삭제하시겠습니까?'),
+      title: const Center(child: Text('!Warning!')),
+      content: const Text('This is a complete deletion of the selected project and cannot be recovered. Are you sure you want to delete it?'),
       actionsAlignment: MainAxisAlignment.spaceAround,
       actions: [
         ElevatedButton(
@@ -61,7 +61,7 @@ class ViewWarningDialog extends StatelessWidget {
             }
             Navigator.pop(context, false);
           },
-          child: const Text('아니오'),
+          child: const Text('No'),
         ),
         ElevatedButton(
           onPressed: () {
@@ -70,7 +70,7 @@ class ViewWarningDialog extends StatelessWidget {
             }
             Navigator.pop(context, true);
           },
-          child: const Text('예'),
+          child: const Text('Yes'),
         ),
       ],
     );
