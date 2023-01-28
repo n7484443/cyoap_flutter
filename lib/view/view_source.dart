@@ -43,7 +43,7 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
         children: [
           IconButton(
             icon: const Icon(Icons.delete),
-            tooltip: '프로젝트에서 이미지 삭제',
+            tooltip: 'Delete images from a project',
             onPressed: () {
               ref.read(deleteModeProvider.notifier).update((state) => true);
             },
@@ -56,7 +56,7 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
         children: [
           IconButton(
             icon: const Icon(Icons.close),
-            tooltip: '이미지 삭제 취소',
+            tooltip: 'Undelete an image',
             onPressed: () {
               ref.read(deleteImageListProvider.notifier).update((state) => []);
               ref.read(deleteModeProvider.notifier).update((state) => false);
@@ -64,7 +64,7 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
           ),
           IconButton(
             icon: const Icon(Icons.check),
-            tooltip: '프로젝트에서 이미지 삭제',
+            tooltip: 'Delete images from a project',
             onPressed: () {
               ref.read(vmSourceProvider.notifier).remove();
               ref.read(deleteModeProvider.notifier).update((state) => false);
