@@ -28,10 +28,10 @@ class ViewDesignSetting extends ConsumerWidget {
             labelColor: Theme.of(context).colorScheme.secondary,
             unselectedLabelColor: Theme.of(context).colorScheme.primary,
             tabs: [
-              const Tab(text: '위치'),
-              const Tab(text: '폰트'),
-              const Tab(text: '배경'),
-              const Tab(text: '프리셋'),
+              const Tab(text: 'Location'),
+              const Tab(text: 'Font'),
+              const Tab(text: 'Background'),
+              const Tab(text: 'Preset'),
             ],
           ),
         ),
@@ -44,7 +44,7 @@ class ViewDesignSetting extends ConsumerWidget {
                   children: [
                     const ViewPositionSetting(),
                     ViewFontSelector(
-                      label: '점수 폰트',
+                      label: 'Score font',
                       provider: variableFontProvider,
                     ),
                     const ViewBackgroundSetting(),
@@ -101,7 +101,7 @@ class _ViewPositionSettingState extends ConsumerState<ViewPositionSetting> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('선택지 간 세로 여백', style: Theme.of(context).textTheme.labelLarge),
+            Text('Vertical margin between choices', style: Theme.of(context).textTheme.labelLarge),
             SizedBox(
               width: 100,
               child: TextField(
@@ -113,7 +113,7 @@ class _ViewPositionSettingState extends ConsumerState<ViewPositionSetting> {
                     decimal: true, signed: false),
                 controller: _controller,
                 decoration: const InputDecoration(
-                  label: Text('기본 값 12.0'),
+                  label: Text('Default Value 12.0'),
                 ),
               ),
             ),
@@ -180,7 +180,7 @@ class _ViewBackgroundSettingState extends ConsumerState<ViewBackgroundSetting> {
       slivers: [
         SliverToBoxAdapter(
           child: DropdownButtonFormField<ImageAttribute>(
-            decoration: const InputDecoration(labelText: '배경 이미지'),
+            decoration: const InputDecoration(labelText: 'Background Image'),
             items: widget,
             onChanged: (ImageAttribute? t) {
               if (t != null) {
