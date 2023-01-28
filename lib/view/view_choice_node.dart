@@ -136,7 +136,7 @@ class SizeDialog extends ConsumerWidget {
     return AlertDialog(
       scrollable: true,
       alignment: Alignment.center,
-      title: const Text('크기 수정', textAlign: TextAlign.center),
+      title: const Text('Modify size', textAlign: TextAlign.center),
       content: SizedBox(
         width: 400,
         height: 100,
@@ -172,7 +172,7 @@ class RandomDialog extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
         scrollable: true,
-        title: const Text('랜덤'),
+        title: const Text('Random'),
         content: AnimatedFlipCounter(
             value: ref.watch(randomStateNotifierProvider(pos)),
             duration: const Duration(milliseconds: 500),
@@ -186,7 +186,7 @@ class RandomDialog extends ConsumerWidget {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('확인'),
+              child: const Text('Confirm'),
             ),
           )
         ]);
@@ -319,11 +319,11 @@ class ViewTitleWithEdit extends ConsumerWidget {
               return [
                 const PopupMenuItem(
                   value: 0,
-                  child: Text('크기 수정'),
+                  child: Text('Modify size'),
                 ),
                 const PopupMenuItem(
                   value: 1,
-                  child: Text('복사'),
+                  child: Text('Copy'),
                 ),
               ];
             },
@@ -560,7 +560,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
       subWidget.add(
         TextButton(
           child: const Text(
-            '출처',
+            'Sources',
             style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w800),
           ),
           onPressed: () {
