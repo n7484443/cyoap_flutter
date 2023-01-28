@@ -8,7 +8,7 @@ import '../../viewModel/preset/vm_preset.dart';
 import '../util/controller_adjustable_scroll.dart';
 
 class ViewPresetTab extends ConsumerWidget {
-  final List<String> tabName = ['선택지', '라인'];
+  final List<String> tabName = ['Options', 'Line'];
 
   ViewPresetTab({
     super.key,
@@ -159,12 +159,12 @@ class _PresetRenameDialogState extends ConsumerState<PresetRenameDialog> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text('취소')),
+            child: const Text('Cancel')),
         TextButton(
             onPressed: () {
               Navigator.of(context).pop(controller?.text);
             },
-            child: const Text('저장')),
+            child: const Text('Save')),
       ],
     );
   }
