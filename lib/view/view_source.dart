@@ -133,7 +133,7 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
                             child: TextField(
                               textAlign: TextAlign.start,
                               decoration: const InputDecoration(
-                                hintText: '출처를 여기에 적어주세요!',
+                                hintText: 'Please write your sources here!',
                                 alignLabelWithHint: true,
                               ),
                               controller: ref
