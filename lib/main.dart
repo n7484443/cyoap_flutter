@@ -13,6 +13,7 @@ import 'package:cyoap_flutter/view/view_start.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -158,6 +159,8 @@ class ConstList {
   static double scale(BuildContext context) {
     return isSmallDisplay(context) ? 0.85 : 1.0;
   }
+
+  Locale currentLocale = const Locale('en', "US");
 }
 
 const String sentryDsn =
@@ -175,6 +178,16 @@ void main() {
         appRunner: () => runApp(
           ProviderScope(
             child: MaterialApp(
+              locale: ConstList().currentLocale,
+              localizationsDelegates: [
+                GlobalMaterialLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+              ],
+              supportedLocales: [
+                const Locale('en', "US"),
+                const Locale('ko', "KR"),
+              ],
               title: 'CYOAP',
               initialRoute: '/',
               routes: {

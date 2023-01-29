@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
@@ -34,7 +35,7 @@ class ViewStart extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                          'version : ${ref.watch(versionProvider).value ?? ""}'),
+                          '${'version'.i18n} : ${ref.watch(versionProvider).value ?? ""}'),
                       Visibility(
                         visible: ref.watch(needUpdateStateProvider),
                         child: TextButton(
@@ -73,7 +74,7 @@ class ViewStart extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 TextButton(
-                  child: const Text('파일 추가'),
+                  child: Text('add_file'.i18n),
                   onPressed: () async {
                     if (await ref.read(pathListProvider.notifier).addFile() ==
                         0) {
@@ -84,7 +85,7 @@ class ViewStart extends ConsumerWidget {
                 Visibility(
                   visible: !ConstList.isWeb(),
                   child: TextButton(
-                    child: const Text('폴더 추가'),
+                    child: Text('add_folder'.i18n),
                     onPressed: () async {
                       if (ConstList.isMobile()) {
                         showDialog(
@@ -149,7 +150,7 @@ class _ViewProjectListState extends ConsumerState<ViewProjectList> {
                 ref.read(pathListSelectedProvider.notifier).state = index,
             style: ref.watch(pathListSelectedProvider) == index
                 ? OutlinedButton.styleFrom(
-                    primary: Colors.white,
+                    foregroundColor: Colors.white,
                     backgroundColor: Colors.lightBlueAccent)
                 : null,
             child: Padding(
@@ -208,7 +209,7 @@ class SelectMode extends ConsumerWidget {
               child: Text(
                 'Play',
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline1,
+                style: Theme.of(context).textTheme.displayLarge,
               ),
             ),
           ),
@@ -236,7 +237,7 @@ class SelectMode extends ConsumerWidget {
               child: Text(
                 'Make',
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline1,
+                style: Theme.of(context).textTheme.displayLarge,
               ),
             ),
           ),
@@ -337,7 +338,7 @@ class ViewGlobalSettingDialog extends ConsumerWidget {
                   !ref.read(saveAsWebpProvider);
             },
             ref.watch(saveAsWebpProvider),
-            label: "저장 시 이미지를 webp 파일로 변환",
+            label: "save_as_webp".i18n,
           ),
           const Spacer(),
           TextButton(

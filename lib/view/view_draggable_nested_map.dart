@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/design_setting.dart';
 import 'package:cyoap_core/playable_platform.dart';
+import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
@@ -484,7 +485,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
                       );
                     }
                   },
-                  child: const Text("요약"),
+                  child: Text("summary".i18n),
                 ),
               ),
               const SizedBox(

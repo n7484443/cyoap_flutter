@@ -1,4 +1,5 @@
 import 'package:cyoap_core/grammar/value_type.dart';
+import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/viewModel/vm_project_setting.dart';
@@ -30,8 +31,8 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
                 maxLength: 50,
                 controller:
                     ref.watch(projectSettingNameTextEditingProvider(index)),
-                decoration: const InputDecoration(
-                  label: Text('변수명'),
+                decoration: InputDecoration(
+                  label: Text('variable'.i18n),
                 ),
                 textAlign: TextAlign.right,
               ),
