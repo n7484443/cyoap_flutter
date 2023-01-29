@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/main.dart';
-import 'package:cyoap_flutter/model/opening_file_folder.dart';
+import 'package:cyoap_flutter/model/device_preference.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +27,6 @@ void saveAsImage(GlobalKey globalKey) async {
     PlatformSpecified().saveProject?.downloadCapture("", name, pngBytes!);
   } else {
     PlatformSpecified().saveProject?.downloadCapture(
-        await ProjectPath.getDownloadFolder(), name, pngBytes!);
+        await DevicePreference.getDownloadFolder(), name, pngBytes!);
   }
 }

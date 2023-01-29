@@ -6,9 +6,10 @@ import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:i18n_extension/i18n_widget.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import '../model/opening_file_folder.dart';
+import '../model/device_preference.dart';
 import '../model/platform_system.dart';
 import '../viewModel/vm_global_setting.dart';
 import '../viewModel/vm_snackbar.dart';
@@ -53,6 +54,16 @@ class ViewStart extends ConsumerWidget {
                         ),
                       ),
                     ],
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Icons.language),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => const ViewLanguageDialog(),
+                      );
+                    },
                   ),
                   IconButton(
                     icon: const Icon(Icons.settings),
@@ -289,7 +300,7 @@ class _ViewAddProjectDialogState extends ConsumerState<ViewAddProjectDialog> {
           onPressed: () async {
             Navigator.of(context).pop();
             if (_textEditingController?.text.isNotEmpty ?? false) {
-              var path = await ProjectPath.getProjectFolder(
+              var path = await DevicePreference.getProjectFolder(
                   _textEditingController?.text);
               await Directory(path).create(recursive: true);
               await ref.read(pathListProvider.notifier).updateFromData();
@@ -321,6 +332,34 @@ class ViewLoadingDialog extends ConsumerWidget {
   }
 }
 
+class ViewLanguageDialog extends ConsumerWidget {
+  const ViewLanguageDialog({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return AlertDialog(
+      scrollable: true,
+      title: Text('language'.i18n),
+      content: Column(
+        children: ConstList.localeMap.keys
+            .map(
+              (e) => RadioListTile(
+                  title: Text(ConstList.localeMap[e]?.item1 ?? ''),
+                  value: e,
+                  groupValue: ref.watch(languageProvider),
+                  onChanged: (String? e) {
+                    ref.read(languageProvider.notifier).state = e!;
+                    I18n.of(context).locale = ConstList.localeMap[e]!.item2;
+                  }),
+            )
+            .toList(),
+      ),
+    );
+  }
+}
+
 class ViewGlobalSettingDialog extends ConsumerWidget {
   const ViewGlobalSettingDialog({
     super.key,
@@ -329,6 +368,7 @@ class ViewGlobalSettingDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
+      scrollable: true,
       title: const Text('설정'),
       content: Column(
         children: [
@@ -340,7 +380,6 @@ class ViewGlobalSettingDialog extends ConsumerWidget {
             ref.watch(saveAsWebpProvider),
             label: "save_as_webp".i18n,
           ),
-          const Spacer(),
           TextButton(
               onPressed: () {
                 Navigator.of(context).pop();

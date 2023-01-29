@@ -4,6 +4,8 @@ extension Localization on String {
   static final _t = Translations.byLocale("en_us") +
       const {
         "en_us": {
+          'language': 'Language Setting',
+
           //first page
           'add_file': 'Add file',
           'add_folder': 'Add folder',
@@ -20,6 +22,8 @@ extension Localization on String {
           //make page
         },
         "ko_kr": {
+          'language': '언어 설정',
+
           //first page
           'add_file': '파일 추가',
           'add_folder': '폴더 추가',

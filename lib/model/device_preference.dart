@@ -6,13 +6,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';
 
-class ProjectPath {
-  static final ProjectPath _projectPath = ProjectPath._init();
-  factory ProjectPath() {
+class DevicePreference {
+  static final DevicePreference _projectPath = DevicePreference._init();
+  factory DevicePreference() {
     return _projectPath;
   }
 
-  ProjectPath._init();
+  DevicePreference._init();
 
   Future<int> get androidVersion async {
     var deviceInfoPlugin = DeviceInfoPlugin();
@@ -70,5 +70,14 @@ class ProjectPath {
   Future<void> setSaveAsWebp(bool data) async {
     var prefs = await SharedPreferences.getInstance();
     prefs.setBool('saveAsWebp', data);
+  }
+
+  static Future<String> getLocaleName() async{
+    var prefs = await SharedPreferences.getInstance();
+    return prefs.getString('cyoap_language') ?? 'en_us';
+  }
+  static void setLocaleName(String str) async{
+    var prefs = await SharedPreferences.getInstance();
+    prefs.setString('cyoap_language', str);
   }
 }

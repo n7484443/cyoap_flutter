@@ -6,7 +6,7 @@ import 'dart:typed_data';
 import 'package:archive/archive.dart';
 import 'package:cyoap_core/choiceNode/choice_line.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
-import 'package:cyoap_flutter/model/opening_file_folder.dart';
+import 'package:cyoap_flutter/model/device_preference.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart';
@@ -209,7 +209,7 @@ class PlatformFileSystem {
       } else if (ConstList.isMobile()) {
         await PlatformSpecified()
             .saveProject!
-            .saveZip(await ProjectPath.getDownloadFolder(), data);
+            .saveZip(await DevicePreference.getDownloadFolder(), data);
       } else {
         await PlatformSpecified().saveProject!.saveZip(path!, data);
       }
