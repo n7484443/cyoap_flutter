@@ -1,5 +1,4 @@
 import 'package:cyoap_core/choiceNode/pos.dart';
-import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
@@ -89,36 +88,6 @@ class ViewMake extends ConsumerWidget {
             onAccept: (Pos data) {
               ref.read(vmDraggableNestedMapProvider).removeData(data);
             },
-          ),
-          Draggable<Pos>(
-            data: Pos(data: [nonPositioned, nonPositioned]),
-            feedback: Transform.scale(
-              scale: 0.9,
-              child: Opacity(
-                opacity: 0.6,
-                child: ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      maxWidth: 400,
-                    ),
-                    child: ViewChoiceNode(
-                        Pos(data: [nonPositioned, nonPositioned]))),
-              ),
-            ),
-            onDragStarted: () {
-              ref
-                  .read(dragChoiceNodeProvider.notifier)
-                  .dragStart(Pos(data: [nonPositioned, nonPositioned]));
-            },
-            onDragEnd: (DraggableDetails data) {
-              ref.read(dragChoiceNodeProvider.notifier).dragEnd();
-            },
-            onDragUpdate: (DragUpdateDetails details) => ref
-                .read(dragPositionProvider.notifier)
-                .state = details.localPosition.dy,
-            child: Tooltip(
-              message: 'create_tooltip'.i18n,
-              child: const Icon(Icons.add),
-            ),
           ),
           Visibility(
             visible: ref.watch(removedChoiceNode) != null,

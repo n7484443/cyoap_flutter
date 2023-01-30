@@ -189,8 +189,8 @@ class ChoiceNodeSizeNotifier extends StateNotifier<int> {
   ChoiceNode node;
 
   ChoiceNodeSizeNotifier(this.pos, this.ref)
-      : node = ref.read(choiceNodeProvider(pos)).node!,
-        super(ref.read(choiceNodeProvider(pos)).node!.width);
+      : node = ref.read(choiceNodeProvider(pos)).node ?? ChoiceNode.empty(),
+        super(ref.read(choiceNodeProvider(pos)).node?.width ?? 12);
 
   void sizeChange(int width) {
     if (width == -1) {

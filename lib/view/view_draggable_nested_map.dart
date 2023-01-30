@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/design_setting.dart';
 import 'package:cyoap_core/playable_platform.dart';
@@ -409,38 +410,75 @@ class _NestedMapState extends ConsumerState<NestedMap> {
     var lineLength = ref.watch(lineLengthProvider);
     List<Widget> sliverList = [];
     if (isEditable) {
-      sliverList = List.generate(lineList.length * 2, (index) {
-        var y = lineList[index ~/ 2];
-        var pos = Pos(data: [y]);
-        if (index.isEven) {
-          return SliverToBoxAdapter(
-            child: NodeDivider(y),
-          );
-        }
-        if (ref.watch(childrenChangeProvider(pos)).isEmpty) {
-          return SliverToBoxAdapter(
-            child: NodeDragTarget(
-              pos.addLast(0),
-              isHorizontal: true,
-            ),
-          );
-        }
-        return ViewWrapCustomReorderable(
-          pos,
-          isInner: false,
-        );
-      });
-      sliverList.add(
-        SliverToBoxAdapter(
-          child: Visibility(
-            visible: ref.watch(dragChoiceNodeProvider) != null,
-            child: NodeDragTarget(
-              Pos(data: [lineLength]).addLast(0),
-              isHorizontal: true,
+      if (lineLength == 0) {
+        sliverList = [
+          SliverToBoxAdapter(
+            child: NodeDivider(0),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: IconButton(
+                onPressed: () {
+                  ref.read(vmDraggableNestedMapProvider).addData(
+                      Pos(data: [0, 0]), ChoiceNode.empty()..width = 3);
+                },
+                icon: const Icon(Icons.add),
+                tooltip: 'create_tooltip'.i18n,
+              ),
             ),
           ),
-        ),
-      );
+        ];
+      } else {
+        sliverList = List.generate(lineList.length * 2, (index) {
+          var y = lineList[index ~/ 2];
+          var pos = Pos(data: [y]);
+          if (index.isEven) {
+            return SliverToBoxAdapter(
+              child: NodeDivider(y),
+            );
+          }
+          if (ref.watch(childrenChangeProvider(pos)).isEmpty) {
+            return SliverToBoxAdapter(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  NodeDragTarget(
+                    pos.addLast(0),
+                    isHorizontal: true,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(32.0),
+                    child: IconButton(
+                      onPressed: () {
+                        ref.read(vmDraggableNestedMapProvider).addData(
+                            pos.addLast(0), ChoiceNode.empty()..width = 3);
+                      },
+                      icon: const Icon(Icons.add),
+                      tooltip: 'create_tooltip'.i18n,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+          return ViewWrapCustomReorderable(
+            pos,
+            isInner: false,
+          );
+        });
+        sliverList.add(
+          SliverToBoxAdapter(
+            child: Visibility(
+              visible: ref.watch(dragChoiceNodeProvider) != null,
+              child: NodeDragTarget(
+                Pos(data: [lineLength]).addLast(0),
+                isHorizontal: true,
+              ),
+            ),
+          ),
+        );
+      }
     } else {
       for (int index = 0; index < lineList.length; index++) {
         var y = lineList[index];

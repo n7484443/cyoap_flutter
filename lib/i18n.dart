@@ -28,6 +28,7 @@ extension Localization on String {
           'line': 'Line',
           'yes': 'Yes',
           'no': 'No',
+          'length': 'Width',
 
           //play page
           'summary': 'Summary',
@@ -167,6 +168,7 @@ extension Localization on String {
           'line': '라인',
           'yes': '예',
           'no': '아니오',
+          'length': '크기',
 
           //play page
           'summary': '요약',

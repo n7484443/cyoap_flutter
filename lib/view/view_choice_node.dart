@@ -465,7 +465,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var node = ref.watch(choiceNodeProvider(pos)).node!;
+    var node = ref.watch(choiceNodeProvider(pos)).node ?? ChoiceNode.empty();
     var design = ref.watch(choiceNodeDesignSettingProvider(pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     Widget image;

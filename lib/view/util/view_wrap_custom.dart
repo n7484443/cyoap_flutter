@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
+import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
@@ -107,10 +108,22 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
       addBuildDraggable(subWidget, i + 1);
       stack += size;
     }
+    Widget addButton = IconButton(
+      onPressed: () {
+        ref
+            .read(vmDraggableNestedMapProvider)
+            .addData(parentPos.addLast(children.length), ChoiceNode.empty()..width = 3);
+      },
+      icon: const Icon(Icons.add),
+      tooltip: 'create_tooltip'.i18n,
+    );
+    bool check = false;
     if (0 < stack && stack < maxSize) {
       subWidget.add(Expanded(
           flex: calculateFlexReverse(maxSize - stack),
-          child: const SizedBox.shrink()));
+          child: addButton));
+    }else{
+      check = true;
     }
     if (subWidget.isNotEmpty) {
       outputWidget.add(
@@ -121,6 +134,9 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
           ),
         ),
       );
+    }
+    if(check){
+      outputWidget.add(addButton);
     }
 
     if (isInner) {

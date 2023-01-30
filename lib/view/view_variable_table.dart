@@ -98,7 +98,7 @@ class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        if (ConstList.isDesktop())
+        if (!ConstList.isMobile())
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
