@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
@@ -43,7 +44,7 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
         children: [
           IconButton(
             icon: const Icon(Icons.delete),
-            tooltip: 'Delete images from a project',
+            tooltip: 'remove_image'.i18n,
             onPressed: () {
               ref.read(deleteModeProvider.notifier).update((state) => true);
             },
@@ -56,7 +57,7 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
         children: [
           IconButton(
             icon: const Icon(Icons.close),
-            tooltip: 'Undelete an image',
+            tooltip: 'remove_image_undo'.i18n,
             onPressed: () {
               ref.read(deleteImageListProvider.notifier).update((state) => []);
               ref.read(deleteModeProvider.notifier).update((state) => false);
@@ -64,7 +65,7 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
           ),
           IconButton(
             icon: const Icon(Icons.check),
-            tooltip: 'Delete images from a project',
+            tooltip: 'remove_image'.i18n,
             onPressed: () {
               ref.read(vmSourceProvider.notifier).remove();
               ref.read(deleteModeProvider.notifier).update((state) => false);

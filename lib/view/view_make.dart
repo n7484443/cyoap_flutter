@@ -1,5 +1,6 @@
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/playable_platform.dart';
+import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
@@ -26,7 +27,7 @@ class ViewSaveDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
-      title: Text(asZip ? 'Compressing...' : 'Saving...'),
+      title: Text(asZip ? 'compress_process'.i18n : 'save_process'.i18n ),
       content: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,7 +48,7 @@ class ViewMake extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var appbarWidget = AppBar(
       leading: IconButton(
-        tooltip: 'Back',
+        tooltip: 'back'.i18n,
         icon: const Icon(Icons.arrow_back),
         onPressed: () {
           if (ref.read(draggableNestedMapChangedProvider)) {
@@ -82,8 +83,8 @@ class ViewMake extends ConsumerWidget {
           DragTarget<Pos>(
             builder: (BuildContext context, List<dynamic> accepted,
                 List<dynamic> rejected) {
-              return const Tooltip(
-                  message: 'Delete selections with drag-and-drop', child: Icon(Icons.delete));
+              return Tooltip(
+                  message: 'remove_tooltip'.i18n, child: const Icon(Icons.delete));
             },
             onAccept: (Pos data) {
               ref.read(vmDraggableNestedMapProvider).removeData(data);
@@ -114,9 +115,9 @@ class ViewMake extends ConsumerWidget {
             onDragUpdate: (DragUpdateDetails details) => ref
                 .read(dragPositionProvider.notifier)
                 .state = details.localPosition.dy,
-            child: const Tooltip(
-              message: 'Drag to create a selection',
-              child: Icon(Icons.add),
+            child: Tooltip(
+              message: 'create_tooltip'.i18n,
+              child: const Icon(Icons.add),
             ),
           ),
           Visibility(
@@ -145,9 +146,9 @@ class ViewMake extends ConsumerWidget {
               onDragUpdate: (DragUpdateDetails details) => ref
                   .read(dragPositionProvider.notifier)
                   .state = details.localPosition.dy,
-              child: const Tooltip(
-                message: 'Create recently deleted options',
-                child: Icon(Icons.paste),
+              child: Tooltip(
+                message: 'recently_tooltip'.i18n,
+                child: const Icon(Icons.paste),
               ),
             ),
           ),
@@ -178,7 +179,7 @@ class ViewRefreshIcons extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return IconButton(
       icon: const Icon(Icons.play_arrow),
-      tooltip: 'Update the variable list',
+      tooltip: 'update_variable_tooltip'.i18n,
       onPressed: () {
         getPlatform.generateRecursiveParser();
         getPlatform.updateStatusAll();
@@ -213,7 +214,7 @@ class ViewSaveIcons extends ConsumerWidget {
     }
     return PopupMenuButton(
       icon: const Icon(Icons.save),
-      tooltip: 'Saving options',
+      tooltip: 'save_option'.i18n,
       onSelected: (int selected) {
         showDialog(
             context: context,
@@ -233,14 +234,14 @@ class ViewSaveIcons extends ConsumerWidget {
       itemBuilder: (BuildContext context) {
         return [
           if (!getPlatformFileSystem.openAsFile)
-            const PopupMenuItem(
+            PopupMenuItem(
               value: 0,
-              child: Text('Save'),
+              child: Text('save'.i18n),
             ),
-          const PopupMenuItem(
+          PopupMenuItem(
             value: 1,
             child: Text(
-                'Extract to zip file'),
+                'extract'.i18n),
           ),
         ];
       },

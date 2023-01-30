@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:flutter/material.dart';
@@ -54,13 +55,13 @@ class ViewSelectedGrid extends ConsumerWidget {
           onPressed: () {
             saveAsImage(globalKey);
           },
-          child: const Text('Save as image'),
+          child: Text('save_as_image'.i18n),
         ),
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text('Confirm'),
+          child: Text('confirm'.i18n),
         ),
       ],
     );

@@ -110,8 +110,8 @@ class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
           padding: const EdgeInsets.all(8.0),
           child: TextField(
             controller: _controller,
-            decoration: const InputDecoration(
-              hintText: "Search",
+            decoration: InputDecoration(
+              hintText: "search".i18n,
             ),
           ),
         ),
@@ -133,11 +133,11 @@ class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
                     .changePageString('viewDesignSetting', context);
               },
               leading: const Icon(Icons.settings),
-              title: const Text('Design settings'),
+              title: Text('design_settings'.i18n),
             ),
             ListTile(
               leading: const Icon(Icons.settings),
-              title: const Text('Image settings'),
+              title: Text('image_settings'.i18n),
               onTap: () => ref
                   .read(changeTabProvider.notifier)
                   .changePageString("viewSource", context),
@@ -149,7 +149,7 @@ class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
                     .changePageString('viewProjectSetting', context);
               },
               leading: const Icon(Icons.settings),
-              title: const Text('Project settings'),
+              title: Text('project_settings'.i18n),
             ),
             const ViewChangeRotation(),
           ],
@@ -200,8 +200,8 @@ class _ViewPlayDrawerState extends ConsumerState<ViewPlayDrawer> {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               controller: _controller,
-              decoration: const InputDecoration(
-                hintText: "Search",
+              decoration: InputDecoration(
+                hintText: "search".i18n,
               ),
             ),
           ),
@@ -389,7 +389,7 @@ class NodeTiles extends ConsumerWidget {
       }
     }
     return ExpansionTile(
-      title: const Text('Node'),
+      title: Text('node'.i18n),
       children: widgetList,
     );
   }

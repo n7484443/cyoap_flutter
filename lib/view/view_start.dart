@@ -285,7 +285,7 @@ class _ViewAddProjectDialogState extends ConsumerState<ViewAddProjectDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Project Name"),
+      title: Text("project_name".i18n),
       content: TextField(
         controller: _textEditingController,
       ),
@@ -294,7 +294,7 @@ class _ViewAddProjectDialogState extends ConsumerState<ViewAddProjectDialog> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text('Cancel'),
+          child: Text('cancel'.i18n),
         ),
         ElevatedButton(
           onPressed: () async {
@@ -306,7 +306,7 @@ class _ViewAddProjectDialogState extends ConsumerState<ViewAddProjectDialog> {
               await ref.read(pathListProvider.notifier).updateFromData();
             }
           },
-          child: const Text('Create'),
+          child: Text('create'.i18n),
         ),
       ],
     );
@@ -385,7 +385,7 @@ class ViewGlobalSettingDialog extends ConsumerWidget {
                 Navigator.of(context).pop();
                 Navigator.of(context).pushReplacementNamed("/viewLicense");
               },
-              child: const Text("Font licenses")),
+              child: Text("font_licenses".i18n)),
         ],
       ),
     );
