@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
 import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
           ),
         ),
         action: SnackBarAction(
-          label: 'Copy to clipboard',
+          label: 'copy_clipboard'.i18n,
           onPressed: () {
             Clipboard.setData(ClipboardData(
                 text: ref.watch(snackBarErrorProvider).fold(

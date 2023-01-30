@@ -19,7 +19,7 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
-      title: const Text("Change data"),
+      title: Text("change_data".i18n),
       content: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
@@ -45,8 +45,8 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
                 maxLength: 50,
                 controller:
                     ref.watch(projectSettingValueTextEditingProvider(index)),
-                decoration: const InputDecoration(
-                  label: Text('Variable initial values'),
+                decoration: InputDecoration(
+                  label: Text('variable_init'.i18n),
                 ),
                 textAlign: TextAlign.right,
               ),
@@ -59,8 +59,8 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
                 maxLength: 50,
                 controller: ref
                     .watch(projectSettingDisplayNameTextEditingProvider(index)),
-                decoration: const InputDecoration(
-                  label: Text('Variable notation'),
+                decoration: InputDecoration(
+                  label: Text('variable_notation'.i18n),
                 ),
                 textAlign: TextAlign.right,
               ),
@@ -76,7 +76,7 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
                             projectSettingVisibleSwitchProvider(index).notifier)
                         .update((state) => !state),
                     ref.watch(projectSettingVisibleSwitchProvider(index)),
-                    label: 'Show when playing',
+                    label: 'variable_show'.i18n,
                   ),
                 ],
               ),
@@ -86,13 +86,13 @@ class ViewInitialValueEditDialog extends ConsumerWidget {
       ),
       actions: [
         TextButton(
-          child: const Text('Cancel'),
+          child: Text('cancel'.i18n),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         TextButton(
-          child: const Text('Save'),
+          child: Text('save'.i18n),
           onPressed: () {
             var after = ValueTypeWrapper(
                 getValueTypeFromStringInput(ref
@@ -197,7 +197,7 @@ class ViewProjectSetting extends ConsumerWidget {
             ),
           ),
           TextButton(
-            child: const Text('Add default values'),
+            child: Text('variable_add'.i18n),
             onPressed: () {
               ref.read(valueTypeWrapperListProvider.notifier).addInitialValue(
                   'point', ValueTypeWrapper(ValueType.int(0), visible: true));

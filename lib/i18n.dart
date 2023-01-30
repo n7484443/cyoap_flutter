@@ -33,6 +33,8 @@ extension Localization on String {
 
           'save_as_image' : 'Save as image',
 
+          'copy_clipboard' : 'Copy to clipboard',
+
           //make page
           'lineSetting_tooltip_0': 'Number of selections available',
           'lineSetting_tooltip_1': 'Max %s number of selections',
@@ -55,6 +57,16 @@ extension Localization on String {
 
           'remove_image' : 'Delete images from a project',
           'remove_image_undo' : 'Undelete an image',
+
+          'change_data' : 'Change data',
+          'variable_init' : 'Variable initial values',
+          'variable_notation' : 'Variable notation',
+          'variable_show' : 'Show when playing',
+          'variable_add' : 'Add default values',
+
+          //image editor
+          'crop_ratio_free' : 'Free',
+          'crop_rotate' : 'Rotate',
         },
         "ko_kr": {
           'language': '언어 설정',
@@ -86,6 +98,8 @@ extension Localization on String {
 
           'save_as_image' : '이미지로 저장',
 
+          'copy_clipboard' : '클립보드로 복사',
+
           //make page
           'lineSetting_tooltip_0': '선택 가능 개수',
           'lineSetting_tooltip_1': '최대 %s 개만큼 선택 가능',
@@ -106,6 +120,16 @@ extension Localization on String {
 
           'remove_image' : '프로젝트에서 이미지 삭제',
           'remove_image_undo' : '이미지 삭제 취소',
+
+          'change_data' : '데이터 변경',
+          'variable_init' : '변수 초기값',
+          'variable_notation' : '변수 표기명',
+          'variable_show' : '플레이시 표시',
+          'variable_add' : '초기값 추가',
+
+          //image editor
+          'crop_ratio_free' : '자유',
+          'crop_rotate' : '회전',
         },
       };
 

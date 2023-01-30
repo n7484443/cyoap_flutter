@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/viewModel/vm_editor.dart';
 import 'package:cyoap_flutter/viewModel/vm_image_editor.dart';
 import 'package:extended_image/extended_image.dart';
@@ -15,13 +16,13 @@ class ViewImageEditor extends ConsumerWidget {
     return Scaffold(
       body: const ViewImageEditorContents(),
       bottomNavigationBar: NavigationBar(
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.close), label: "Free"),
-          NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "4:3"),
-          NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "3:2"),
-          NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "16:9"),
-          NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "1:1"),
-          NavigationDestination(icon: Icon(Icons.crop_rotate), label: "Rotate"),
+        destinations: [
+          NavigationDestination(icon: const Icon(Icons.close), label: "crop_ratio_free".i18n),
+          const NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "4:3"),
+          const NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "3:2"),
+          const NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "16:9"),
+          const NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "1:1"),
+          NavigationDestination(icon: const Icon(Icons.crop_rotate), label: "rotate".i18n),
         ],
         selectedIndex: ref.watch(imageCropIndexProvider),
         onDestinationSelected: (index) {
