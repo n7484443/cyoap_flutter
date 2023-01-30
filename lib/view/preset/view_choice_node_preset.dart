@@ -1,5 +1,6 @@
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/design_setting.dart';
+import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/preset/view_preset.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
@@ -90,7 +91,7 @@ class ChoiceNodePresetList extends ConsumerWidget {
     return Column(
       children: [
         ListTile(
-          title: const Text('Presets'),
+          title: Text('preset'.i18n),
           trailing: IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
@@ -219,7 +220,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               maxLines: 1,
               keyboardType: TextInputType.number,
               controller: ref.watch(choiceNodePresetCurrentEditElevationProvider),
-              decoration: const InputDecoration(labelText: 'Height'),
+              decoration: InputDecoration(labelText: 'height'.i18n),
             ),
             TextFormField(
               textAlign: TextAlign.end,
@@ -227,27 +228,27 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               maxLines: 1,
               keyboardType: TextInputType.number,
               controller: ref.watch(choiceNodePresetCurrentEditRoundProvider),
-              decoration: const InputDecoration(labelText: 'Rounded corners'),
+              decoration: InputDecoration(labelText: 'round'.i18n),
             ),
             ViewSwitchLabel(
                   () => ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                   presetIndex,
                   preset.copyWith(maximizingImage: !preset.maximizingImage)),
               preset.maximizingImage,
-              label: 'Maximize images',
+              label: 'maximize_image'.i18n,
             ),
             ViewSwitchLabel(
                   () => ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                   presetIndex, preset.copyWith(hideTitle: !preset.hideTitle)),
               preset.hideTitle,
-              label: 'Hide title',
+              label: 'hide_title'.i18n,
             ),
             ViewSwitchLabel(
                   () => ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                   presetIndex,
                   preset.copyWith(titlePosition: !preset.titlePosition)),
               preset.titlePosition,
-              label: 'Title up',
+              label: 'title_up'.i18n,
             ),
             ViewSwitchLabel(
                   () => ref.read(choiceNodePresetListProvider.notifier).updateIndex(
@@ -255,7 +256,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                   preset.copyWith(
                       imagePosition: preset.imagePosition == 0 ? 1 : 0)),
               preset.imagePosition != 0,
-              label: 'Landscape mode',
+              label: 'horizontal_mode'.i18n,
             ),
             ViewSwitchLabel(
                   () {
@@ -269,7 +270,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               },
               preset.imagePosition == 2,
               disable: preset.imagePosition == 0,
-              label: 'Image left',
+              label: 'image_left'.i18n,
             ),
           ]),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -285,8 +286,8 @@ class ViewNodeOptionEditor extends ConsumerWidget {
         SliverGrid(
           delegate: SliverChildListDelegate([
             ColorPicker(
-              heading: const Center(
-                child: Text('Selector color'),
+              heading: Center(
+                child: Text('node_color'.i18n),
               ),
               color: Color(preset.colorNode),
               onColorChanged: (Color value) {
@@ -298,16 +299,16 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                 ColorPickerType.accent: false
               },
               pickerTypeLabels: {
-                ColorPickerType.primary: "Select color",
-                ColorPickerType.wheel: "Direct selection"
+                ColorPickerType.primary: "color_select".i18n,
+                ColorPickerType.wheel: "color_direct_select".i18n
               },
               width: 22,
               height: 22,
               borderRadius: 22,
             ),
             ColorPicker(
-              heading: const Center(
-                child: Text('Outline color'),
+              heading: Center(
+                child: Text('node_outline_color'.i18n),
               ),
               color: Color(preset.colorSelectNode),
               onColorChanged: (Color value) {
@@ -319,8 +320,8 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                 ColorPickerType.accent: false
               },
               pickerTypeLabels: {
-                ColorPickerType.primary: "Select color",
-                ColorPickerType.wheel: "Direct selection"
+                ColorPickerType.primary: "color_select".i18n,
+                ColorPickerType.wheel: "color_direct_select".i18n
               },
               width: 22,
               height: 22,
@@ -337,7 +338,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
         SliverGrid(
           delegate: SliverChildListDelegate([
             DropdownButtonFormField<String>(
-              decoration: const InputDecoration(labelText: 'Title font'),
+              decoration: InputDecoration(labelText: 'font_title'.i18n),
               items: ConstList.textFontList.keys
                   .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
                   value: name,
@@ -354,7 +355,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               value: preset.titleFont,
             ),
             DropdownButtonFormField<String>(
-              decoration: const InputDecoration(labelText: 'Content font'),
+              decoration: InputDecoration(labelText: 'font_content'.i18n),
               items: ConstList.textFontList.keys
                   .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
                   value: name,

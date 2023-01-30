@@ -133,8 +133,8 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
                             padding: const EdgeInsets.all(8.0),
                             child: TextField(
                               textAlign: TextAlign.start,
-                              decoration: const InputDecoration(
-                                hintText: 'Please write your sources here!',
+                              decoration: InputDecoration(
+                                hintText: 'source_hint'.i18n,
                                 alignLabelWithHint: true,
                               ),
                               controller: ref

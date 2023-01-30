@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/preset/view_preset.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class ChoiceLinePresetList extends ConsumerWidget {
     return Column(
       children: [
         ListTile(
-          title: const Text('Preset'),
+          title: Text('preset'.i18n),
           trailing: IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
@@ -94,7 +95,7 @@ class ViewLineOptionEditor extends ConsumerWidget {
                   preset.copyWith(
                       alwaysVisibleLine: !preset.alwaysVisibleLine)),
               preset.alwaysVisibleLine,
-              label: 'I see a black line',
+              label: 'black_line'.i18n,
             ),
           ]),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -106,8 +107,8 @@ class ViewLineOptionEditor extends ConsumerWidget {
         ),
         SliverToBoxAdapter(
           child: ColorPicker(
-            heading: const Center(
-              child: Text('Background color'),
+            heading: Center(
+              child: Text('background_color'.i18n),
             ),
             color: Color(preset.backgroundColor ?? 0x000000),
             onColorChanged: (Color color) {
@@ -119,8 +120,8 @@ class ViewLineOptionEditor extends ConsumerWidget {
               ColorPickerType.accent: false
             },
             pickerTypeLabels: {
-              ColorPickerType.primary: "Select color",
-              ColorPickerType.wheel: "Direct selection"
+              ColorPickerType.primary: "color_select".i18n,
+              ColorPickerType.wheel: "color_direct_select".i18n,
             },
             width: 22,
             height: 22,
