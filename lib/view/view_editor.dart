@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/grammar/function_list.dart';
+import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
@@ -38,7 +39,7 @@ class ViewEditor extends ConsumerWidget {
       const ViewNodeOptionEditor(),
       const ViewImageDraggable()
     ];
-    var childrenText = const ["Content", "Code", "Setting", "Image"];
+    var childrenText = const ["content", "code", "setting", "image"].map((e) => e.i18n);
     return WillPopScope(
       child: DefaultTabController(
         length: children.length,
@@ -51,7 +52,7 @@ class ViewEditor extends ConsumerWidget {
                 if (ref.watch(nodeTitleProvider).isNotEmpty) {
                   ref.read(changeTabProvider.notifier).back(context);
                 }
-                DefaultTabController.of(context)?.index = 0;
+                DefaultTabController.of(context).index = 0;
               },
             ),
             title: ScrollConfiguration(
@@ -154,7 +155,7 @@ class _ViewTitleTextFieldInputState
       controller: _controller,
       textAlign: TextAlign.center,
       decoration: InputDecoration(
-        hintText: 'Title',
+        hintText: 'title'.i18n,
         hintStyle: ConstList.getFont(preset.titleFont)
             .copyWith(fontSize: 24, color: Colors.red),
         filled: true,
@@ -357,11 +358,11 @@ class _ImageSourceDialogState extends ConsumerState<ImageSourceDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Sources'),
+      title: Text('source'.i18n),
       content: TextField(
         controller: _sourceController,
-        decoration: const InputDecoration(
-          hintText: 'If you dont know or dont have a source, leave it blank.',
+        decoration: InputDecoration(
+          hintText: 'source_hint'.i18n,
         ),
       ),
       actionsAlignment: MainAxisAlignment.spaceBetween,
@@ -370,13 +371,13 @@ class _ImageSourceDialogState extends ConsumerState<ImageSourceDialog> {
           onPressed: () {
             Navigator.pop(context, Tuple2(true, _sourceController?.text ?? ''));
           },
-          child: const Text('Crop'),
+          child: Text('crop'.i18n),
         ),
         TextButton(
           onPressed: () {
             Navigator.pop(context, Tuple2(false, _sourceController?.text ?? ''));
           },
-          child: const Text('Save'),
+          child: Text('save'.i18n),
         ),
       ],
     );
@@ -500,7 +501,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
                   child: TextField(
                     controller: ref.watch(controllerClickableProvider),
                     textAlign: TextAlign.left,
-                    decoration: const InputDecoration(hintText: 'Execution Conditions'),
+                    decoration: InputDecoration(hintText: 'code_hint_execute_condition'.i18n),
                   ),
                 ),
               ),
@@ -513,8 +514,8 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
                   child: TextField(
                     controller: ref.watch(controllerVisibleProvider),
                     textAlign: TextAlign.left,
-                    decoration: const InputDecoration(
-                        hintText: 'Visible conditions(Visible when true, true if empty)'),
+                    decoration: InputDecoration(
+                        hintText: 'code_hint_visible_condition'.i18n),
                   ),
                 ),
               ),
@@ -527,7 +528,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
                 controller: _quillController!,
                 padding: EdgeInsets.zero,
                 expands: false,
-                placeholder: "Enforcement code on selection",
+                placeholder: "code_hint_execute".i18n,
               ),
             ],
           ),
@@ -542,18 +543,18 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
                       design.copyWith(isOccupySpace: !design.isOccupySpace);
                 },
                 design.isOccupySpace,
-                label: 'Takes up space when hidden',
+                label: 'space_hide'.i18n,
               ),
               IconButton(
                 icon: const Icon(Icons.start),
-                tooltip: "Sort",
+                tooltip: "sort".i18n,
                 onPressed: () {
                   var text = _quillController?.document.toPlainText() ?? '';
                   var output =
                       ref.read(editorChangeProvider.notifier).formatting(text);
                   if (output.item2) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("The number of {'s and }'s in the code are not equal."),
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("sort_error".i18n),
                     ));
                   }
                   _quillController?.clear();
@@ -587,7 +588,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               state.copyWith(
                   hideAsResult: !design.hideAsResult, showAsResult: false)),
           design.hideAsResult,
-          label: 'Hide \n in the final window',
+          label: 'hide_result'.i18n,
         ),
       );
     } else {
@@ -597,7 +598,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               state.copyWith(
                   showAsResult: !design.showAsResult, hideAsResult: false)),
           design.showAsResult,
-          label: 'Show \n in the final window',
+          label: 'show_result'.i18n,
         ),
       );
     }
@@ -608,12 +609,12 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               state.copyWith(
                   showAsSlider: !design.showAsSlider)),
           design.showAsSlider,
-          label: 'Slider mode',
+          label: 'slider_mode'.i18n,
         ),
       );
     }
     list.add(DropdownButtonFormField<String>(
-      decoration: const InputDecoration(labelText: 'Preset settings'),
+      decoration: InputDecoration(labelText: 'preset_setting'.i18n),
       items: ref
           .watch(choiceNodePresetListProvider)
           .map<DropdownMenuItem<String>>((preset) =>
@@ -639,18 +640,18 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               padding: const EdgeInsets.all(8.0),
               child: DropdownButton<ChoiceNodeMode>(
                 value: nodeMode,
-                items: const [
+                items: [
                   DropdownMenuItem(
-                      value: ChoiceNodeMode.defaultMode, child: Text('Default')),
+                      value: ChoiceNodeMode.defaultMode, child: Text('default'.i18n)),
                   DropdownMenuItem(
-                      value: ChoiceNodeMode.randomMode, child: Text('Randomize')),
+                      value: ChoiceNodeMode.randomMode, child: Text('random'.i18n)),
                   DropdownMenuItem(
-                      value: ChoiceNodeMode.multiSelect, child: Text('Multiple selections')),
+                      value: ChoiceNodeMode.multiSelect, child: Text('multiple'.i18n)),
                   DropdownMenuItem(
                       value: ChoiceNodeMode.unSelectableMode,
-                      child: Text('Unable to select')),
+                      child: Text('unselect'.i18n)),
                   DropdownMenuItem(
-                      value: ChoiceNodeMode.onlyCode, child: Text('Use code only')),
+                      value: ChoiceNodeMode.onlyCode, child: Text('onlyCode'.i18n)),
                 ],
                 onChanged: (ChoiceNodeMode? value) {
                   ref.read(nodeModeProvider.notifier).update((state) => value!);
@@ -679,8 +680,8 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                       controller: ref.watch(maximumProvider),
                       decoration: InputDecoration(
                         label: Text(nodeMode == ChoiceNodeMode.multiSelect
-                            ? 'MaxSelect'
-                            : 'Random number, 0 to n-1'),
+                            ? 'max_select'.i18n
+                            : 'max_random'.i18n),
                       ),
                     ),
                   ]),
