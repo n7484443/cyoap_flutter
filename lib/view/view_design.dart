@@ -1,4 +1,5 @@
 import 'package:cyoap_core/design_setting.dart';
+import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/preset/view_preset.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
@@ -28,10 +29,10 @@ class ViewDesignSetting extends ConsumerWidget {
             labelColor: Theme.of(context).colorScheme.secondary,
             unselectedLabelColor: Theme.of(context).colorScheme.primary,
             tabs: [
-              const Tab(text: 'Location'),
-              const Tab(text: 'Font'),
-              const Tab(text: 'Background'),
-              const Tab(text: 'Preset'),
+              Tab(text: 'location'.i18n),
+              Tab(text: 'font'.i18n),
+              Tab(text: 'background'.i18n),
+              Tab(text: 'preset'.i18n),
             ],
           ),
         ),
@@ -44,7 +45,7 @@ class ViewDesignSetting extends ConsumerWidget {
                   children: [
                     const ViewPositionSetting(),
                     ViewFontSelector(
-                      label: 'Score font',
+                      label: 'font_score'.i18n,
                       provider: variableFontProvider,
                     ),
                     const ViewBackgroundSetting(),
@@ -101,7 +102,8 @@ class _ViewPositionSettingState extends ConsumerState<ViewPositionSetting> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Vertical margin between choices', style: Theme.of(context).textTheme.labelLarge),
+            Text('margin_vertical'.i18n,
+                style: Theme.of(context).textTheme.labelLarge),
             SizedBox(
               width: 100,
               child: TextField(
@@ -112,8 +114,8 @@ class _ViewPositionSettingState extends ConsumerState<ViewPositionSetting> {
                 keyboardType: const TextInputType.numberWithOptions(
                     decimal: true, signed: false),
                 controller: _controller,
-                decoration: const InputDecoration(
-                  label: Text('Default Value 12.0'),
+                decoration: InputDecoration(
+                  label: Text('${"margin_default".i18n} 12.0'),
                 ),
               ),
             ),
@@ -180,7 +182,7 @@ class _ViewBackgroundSettingState extends ConsumerState<ViewBackgroundSetting> {
       slivers: [
         SliverToBoxAdapter(
           child: DropdownButtonFormField<ImageAttribute>(
-            decoration: const InputDecoration(labelText: 'Background Image'),
+            decoration: InputDecoration(labelText: 'background_image'.i18n),
             items: widget,
             onChanged: (ImageAttribute? t) {
               if (t != null) {

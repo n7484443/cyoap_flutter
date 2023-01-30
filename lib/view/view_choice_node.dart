@@ -2,6 +2,7 @@ import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/playable_platform.dart';
+import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
@@ -136,7 +137,7 @@ class SizeDialog extends ConsumerWidget {
     return AlertDialog(
       scrollable: true,
       alignment: Alignment.center,
-      title: const Text('Modify size', textAlign: TextAlign.center),
+      title: Text('modify_size'.i18n, textAlign: TextAlign.center),
       content: SizedBox(
         width: 400,
         height: 100,
@@ -172,7 +173,7 @@ class RandomDialog extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
         scrollable: true,
-        title: const Text('Random'),
+        title: Text('random_show'.i18n),
         content: AnimatedFlipCounter(
             value: ref.watch(randomStateNotifierProvider(pos)),
             duration: const Duration(milliseconds: 500),
@@ -186,7 +187,7 @@ class RandomDialog extends ConsumerWidget {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Confirm'),
+              child: Text('confirm'.i18n),
             ),
           )
         ]);
@@ -317,13 +318,13 @@ class ViewTitleWithEdit extends ConsumerWidget {
             },
             itemBuilder: (context) {
               return [
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 0,
-                  child: Text('Modify size'),
+                  child: Text('modify_size'.i18n),
                 ),
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 1,
-                  child: Text('Copy'),
+                  child: Text('copy'.i18n),
                 ),
               ];
             },
@@ -379,7 +380,7 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
         ),
         Text(
           ref.watch(choiceNodeSelectProvider(pos)).toString(),
-          style: Theme.of(context).textTheme.headline5,
+          style: Theme.of(context).textTheme.headlineSmall,
           textAlign: TextAlign.center,
         ),
         SizedBox(
@@ -559,9 +560,9 @@ class ViewChoiceNodeContent extends ConsumerWidget {
         ref.watch(isVisibleSourceProvider)) {
       subWidget.add(
         TextButton(
-          child: const Text(
-            'Sources',
-            style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w800),
+          child: Text(
+            'source'.i18n,
+            style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.w800),
           ),
           onPressed: () {
             var url = getPlatformFileSystem

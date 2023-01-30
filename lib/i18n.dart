@@ -101,6 +101,20 @@ extension Localization on String {
 
           //preset
           'preset_setting': 'Preset settings',
+
+          //design
+          'location': 'Location',
+          'font': 'Font',
+          'background': 'Background',
+          'preset': 'Preset',
+          'font_score': 'Score font',
+          'margin_vertical': 'Vertical margin between choices',
+          'margin_default':'Default value',
+          'background_image': 'Background Image',
+
+          'modify_size': 'Modify size',
+          'random_show': 'Random',
+          'copy': 'Copy',
         },
         "ko_kr": {
           'language': '언어 설정',
@@ -195,6 +209,20 @@ extension Localization on String {
 
           //preset
           'preset_setting': '프리셋 설정',
+
+          //design
+          'location': '위치',
+          'font': '폰트',
+          'background': '배경',
+          'preset': '프리셋',
+          'font_score': '점수 폰트',
+          'margin_vertical': '선택지 간 세로 여백',
+          'margin_default':'기본 값',
+          'background_image': '배경 이미지',
+
+          'modify_size': '크기 수정',
+          'random_show': '랜덤',
+          'copy': '복사',
         },
       };
 
