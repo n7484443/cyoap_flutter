@@ -22,7 +22,7 @@ class ViewImageEditor extends ConsumerWidget {
           const NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "3:2"),
           const NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "16:9"),
           const NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "1:1"),
-          NavigationDestination(icon: const Icon(Icons.crop_rotate), label: "rotate".i18n),
+          NavigationDestination(icon: const Icon(Icons.crop_rotate), label: "crop_rotate".i18n),
         ],
         selectedIndex: ref.watch(imageCropIndexProvider),
         onDestinationSelected: (index) {

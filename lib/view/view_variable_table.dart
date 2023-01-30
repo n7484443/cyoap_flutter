@@ -329,7 +329,7 @@ class VariableTiles extends ConsumerWidget {
                     .update((state) => !state);
               },
               isVisibleHideVariable,
-              label: 'Hidden variables',
+              label: 'variable_show_hidden'.i18n,
             )
           : null,
       initiallyExpanded: true,

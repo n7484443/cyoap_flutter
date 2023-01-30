@@ -18,7 +18,7 @@ extension Localization on String {
           //common
           'variable': 'Variable',
           'variable_name': 'Variable',
-          'version': 'Variable name',
+          'version': 'Version',
           'confirm': 'Confirm',
           'cancel': 'Cancel',
           'back': 'Back',
@@ -66,6 +66,7 @@ extension Localization on String {
           'variable_notation': 'Variable notation',
           'variable_show': 'Show when playing',
           'variable_add': 'Add default values',
+          'variable_show_hidden': 'Hidden variables',
 
           'unsaved' : 'There is something unsaved. Do you want to save it?',
           'warning' : '!Warning!',
@@ -189,7 +190,8 @@ extension Localization on String {
           'compress_process': '압축중...',
           'save_process': '저장중...',
           'remove_tooltip': '드래그-드랍으로 선택지 삭제',
-          'recently_tooltip': '드래그로 선택지 생성',
+          'create_tooltip': '드래그로 선택지 생성',
+          'recently_tooltip': '드래그로 삭제된 선택지 생성',
           'update_variable_tooltip': '변수 목록 갱신',
           'save_option': '저장 관련 옵션',
           'extract': 'zip 파일로 추출',
@@ -202,6 +204,7 @@ extension Localization on String {
           'variable_notation': '변수 표기명',
           'variable_show': '플레이시 표시',
           'variable_add': '초기값 추가',
+          'variable_show_hidden': '숨겨진 변수',
 
           'unsaved' : '저장되지 않은 내용이 있습니다. 저장하시겠습니까?',
           'warning' : '!경고!',
