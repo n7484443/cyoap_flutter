@@ -163,9 +163,9 @@ class ConstList {
     return isSmallDisplay(context) ? 0.85 : 1.0;
   }
 
-  static String currentLocaleName = 'en_us';
+  static String? currentLocaleName;
 
-  static Locale get currentLocale => localeMap[currentLocaleName]!.item2;
+  static Locale? get currentLocale => currentLocaleName == null ? null : localeMap[currentLocaleName]?.item2;
 
   static Map<String, Tuple2<String, Locale>> localeMap = {
     'en_us': const Tuple2('English', Locale('en', 'US')),
@@ -186,9 +186,9 @@ void main() {
           options.attachStacktrace = true;
         },
         appRunner: () => runApp(
-          I18n(
-            initialLocale: ConstList.currentLocale,
-            child: ProviderScope(
+          ProviderScope(
+            child: I18n(
+              initialLocale: ConstList.currentLocale,
               child: MaterialApp(
                 localizationsDelegates: [
                   GlobalMaterialLocalizations.delegate,

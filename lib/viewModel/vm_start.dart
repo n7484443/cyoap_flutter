@@ -10,14 +10,6 @@ import '../model/device_preference.dart';
 import '../model/platform_system.dart';
 import '../util/check_update.dart';
 
-final languageProvider = StateProvider<String>((ref){
-  ref.listenSelf((previous, next) {
-    DevicePreference.setLocaleName(next);
-    ConstList.currentLocaleName = next;
-  });
-  return ConstList.currentLocaleName;
-});
-
 final needUpdateStateProvider = StateProvider<bool>((ref) {
   return false;
 });

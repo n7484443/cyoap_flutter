@@ -348,10 +348,11 @@ class ViewLanguageDialog extends ConsumerWidget {
               (e) => RadioListTile(
                   title: Text(ConstList.localeMap[e]?.item1 ?? ''),
                   value: e,
-                  groupValue: ref.watch(languageProvider),
+                  groupValue: I18n.localeStr,
                   onChanged: (String? e) {
-                    ref.read(languageProvider.notifier).state = e!;
                     I18n.of(context).locale = ConstList.localeMap[e]!.item2;
+                    DevicePreference.setLocaleName(e!);
+                    Navigator.of(context).pop();
                   }),
             )
             .toList(),
