@@ -1,4 +1,5 @@
 import 'package:cyoap_core/preset/node_preset.dart';
+import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/viewModel/preset/vm_preset.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
@@ -101,7 +102,7 @@ class ChoiceNodePresetListNotifier extends StateNotifier<List<ChoiceNodeDesignPr
   }
 
   void create() {
-    var name = 'New Preset';
+    var name = 'preset_new'.i18n;
     var rename = name;
     var i = 0;
     while (state.any((preset) => preset.name == rename)) {

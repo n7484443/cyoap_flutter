@@ -5,6 +5,7 @@ import 'package:cyoap_core/choiceNode/choice.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/choiceNode/selectable_status.dart';
+import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/viewModel/preset/vm_choice_node_preset.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
@@ -44,8 +45,8 @@ class ChoiceNodeNotifier extends ChangeNotifier {
     } else if (pos.last == designSamplePosition) {
       node = ChoiceNode(
         1,
-        "Design",
-        "[{\"insert\":\"Adjust and view layouts, fonts, designs, sizes, and more.\\n\"}]",
+        "sample_title".i18n,
+        "[{\"insert\":\"${'sample_node'.i18n}\\n\"}]",
         "noImage",
       )..currentPos = -1;
 

@@ -25,6 +25,7 @@ extension Localization on String {
           'save': 'Save',
           'search': 'Search',
           'node': 'Node',
+          'line': 'Line',
           'yes': 'Yes',
           'no': 'No',
 
@@ -108,6 +109,7 @@ extension Localization on String {
           //preset
           'preset': 'Preset',
           'preset_setting': 'Preset settings',
+          'preset_new' : 'New preset',
           'black_line' : 'visible black line',
           'background_color' : 'Background color',
           'color_select' : 'Select color',
@@ -136,6 +138,8 @@ extension Localization on String {
           'modify_size': 'Modify size',
           'random_show': 'Random',
           'copy': 'Copy',
+          'sample_node' : 'Adjust and view layouts, fonts, designs, sizes, and more.',
+          'sample_title': 'Design',
         },
         "ko_kr": {
           'language': '언어 설정',
@@ -158,7 +162,8 @@ extension Localization on String {
           'back': '뒤로가기',
           'save': '저장',
           'search': '검색',
-          'node': '노드',
+          'node': '선택지',
+          'line': '라인',
           'yes': '예',
           'no': '아니오',
 
@@ -237,6 +242,7 @@ extension Localization on String {
           //preset
           'preset': '프리셋',
           'preset_setting': '프리셋 설정',
+          'preset_new' : '새 프리셋',
           'black_line' : '검은 줄이 보임',
           'background_color' : '배경 색상',
           'color_select' : '색상 선택',
@@ -265,6 +271,8 @@ extension Localization on String {
           'modify_size': '크기 수정',
           'random_show': '랜덤',
           'copy': '복사',
+          'sample_node' : '레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.',
+          'sample_title': '디자인',
         },
       };
 

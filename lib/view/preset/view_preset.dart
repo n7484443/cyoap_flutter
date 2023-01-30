@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/preset/view_choice_line_preset.dart';
 import 'package:cyoap_flutter/view/preset/view_choice_node_preset.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,7 @@ import '../../viewModel/preset/vm_preset.dart';
 import '../util/controller_adjustable_scroll.dart';
 
 class ViewPresetTab extends ConsumerWidget {
-  final List<String> tabName = ['Options', 'Line'];
+  final List<String> tabName = ['node'.i18n, 'line'.i18n];
 
   ViewPresetTab({
     super.key,
@@ -159,12 +160,12 @@ class _PresetRenameDialogState extends ConsumerState<PresetRenameDialog> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text('Cancel')),
+            child: Text('cancel'.i18n)),
         TextButton(
             onPressed: () {
               Navigator.of(context).pop(controller?.text);
             },
-            child: const Text('Save')),
+            child: Text('save'.i18n)),
       ],
     );
   }
