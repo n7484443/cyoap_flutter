@@ -33,11 +33,11 @@ dependencies:
     git:
       url: https://github.com/n7484443/cyoap_core.git
   image: ^4.0.12
-  extended_image: ^6.2.1
+  extended_image: ^7.0.0
   file_picker : ^5.0.0
   http: ^0.13.4
   shared_preferences: ^2.0.15
-  google_fonts: ^3.0.1
+  google_fonts: ^4.0.0
   archive: ^3.3.1
   flutter_quill: ^6.3.0
   package_info_plus: ^3.0.2
@@ -61,6 +61,9 @@ dependencies:
   easy_debounce: ^2.0.2+1
   desktop_drop: ^0.4.0
   shared_storage: ^0.7.0
+  i18n_extension: ^6.0.0
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:

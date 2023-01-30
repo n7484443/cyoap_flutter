@@ -13,14 +13,17 @@ import 'package:cyoap_flutter/view/view_start.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:i18n_extension/i18n_widget.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:tuple/tuple.dart';
 
 import 'color_schemes.g.dart';
+import 'model/device_preference.dart';
 
 class ConstList {
   static const double appBarSize = 38.0;
@@ -152,12 +155,22 @@ class ConstList {
   static Future<void> preInit() async {
     await platform_specified.loadLibrary();
     platform_specified.PlatformSpecified().preInit();
+    currentLocaleName = await DevicePreference.getLocaleName();
     return;
   }
 
   static double scale(BuildContext context) {
     return isSmallDisplay(context) ? 0.85 : 1.0;
   }
+
+  static String currentLocaleName = 'en_us';
+
+  static Locale get currentLocale => localeMap[currentLocaleName]!.item2;
+
+  static Map<String, Tuple2<String, Locale>> localeMap = {
+    'en_us': const Tuple2('English', Locale('en', 'US')),
+    'ko_kr' : const Tuple2('한국어', Locale('ko', 'KR')),
+  };
 }
 
 const String sentryDsn =
@@ -173,20 +186,32 @@ void main() {
           options.attachStacktrace = true;
         },
         appRunner: () => runApp(
-          ProviderScope(
-            child: MaterialApp(
-              title: 'CYOAP',
-              initialRoute: '/',
-              routes: {
-                '/': (context) => const ViewStart(),
-                '/viewPlay': (context) => const ViewPlay(),
-                '/viewMake': (context) => const ViewMakePlatform(),
-                '/viewLicense': (context) => const ViewFontSource(),
-              },
-              theme: appThemeLight,
-              darkTheme: appThemeDark,
-              themeMode: ThemeMode.light,
-              debugShowCheckedModeBanner: false,
+          I18n(
+            initialLocale: ConstList.currentLocale,
+            child: ProviderScope(
+              child: MaterialApp(
+                localizationsDelegates: [
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                ],
+                supportedLocales: [
+                  const Locale('en', "US"),
+                  const Locale('ko', "KR"),
+                ],
+                title: 'CYOAP',
+                initialRoute: '/',
+                routes: {
+                  '/': (context) => const ViewStart(),
+                  '/viewPlay': (context) => const ViewPlay(),
+                  '/viewMake': (context) => const ViewMakePlatform(),
+                  '/viewLicense': (context) => const ViewFontSource(),
+                },
+                theme: appThemeLight,
+                darkTheme: appThemeDark,
+                themeMode: ThemeMode.light,
+                debugShowCheckedModeBanner: false,
+              ),
             ),
           ),
         ),

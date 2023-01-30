@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/design_setting.dart';
 import 'package:cyoap_core/playable_platform.dart';
+import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
@@ -102,13 +103,13 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
     var maxSelect = ref.watch(lineMaxSelectProvider(widget.y));
     var maxSelectString = maxSelect == -1 ? "max" : maxSelect.toString();
     return AlertDialog(
-      title: Text('Variable name : lineSetting_${widget.y}'),
+      title: Text('${'variable_name'.i18n}: lineSetting_${widget.y}'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             children: [
-              const Text('Number of selections available'),
+              Text('lineSetting_tooltip_0'.i18n),
               const Spacer(),
               IconButton(
                 icon: const Icon(Icons.chevron_left),
@@ -130,7 +131,8 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
             ],
           ),
           DropdownButtonFormField<String>(
-            decoration: const InputDecoration(labelText: 'Preset settings'),
+            decoration:
+                const InputDecoration(labelText: 'preset_setting_tooltip'),
             items: ref
                 .watch(choiceLinePresetListProvider)
                 .map<DropdownMenuItem<String>>((preset) => DropdownMenuItem(
@@ -147,8 +149,8 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
           ),
           TextField(
             controller: _textFieldController,
-            decoration: const InputDecoration(
-                hintText: 'Visible condition (visible when true, true when empty)'),
+            decoration:
+                InputDecoration(hintText: 'visible_condition_tooltip'.i18n),
           ),
         ],
       ),
@@ -157,7 +159,7 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
             onPressed: () {
               Navigator.of(context).pop(_textFieldController!.text);
             },
-            child: const Text("Confirm"))
+            child: Text("confirm".i18n))
       ],
     );
   }
@@ -211,16 +213,15 @@ class NodeDivider extends ConsumerWidget {
         children: [
           divider,
           Visibility(
-            visible: maxSelect != -1,
-            child: Text(
-              'Max $maxSelect number of selections',
-              style: ConstList.getFont("notoSans").copyWith(
-                fontSize: 18.0,
-                color: getColorButton(preset.backgroundColor),
-                fontWeight: FontWeight.bold,
-              ),
-            )
-          ),
+              visible: maxSelect != -1,
+              child: Text(
+                'lineSetting_tooltip_1'.fill([maxSelect]),
+                style: ConstList.getFont("notoSans").copyWith(
+                  fontSize: 18.0,
+                  color: getColorButton(preset.backgroundColor),
+                  fontWeight: FontWeight.bold,
+                ),
+              )),
           Align(
             alignment: Alignment.centerRight,
             child: PopupMenuButton<int>(
@@ -243,9 +244,9 @@ class NodeDivider extends ConsumerWidget {
               },
               itemBuilder: (BuildContext context) {
                 return [
-                  const PopupMenuItem(
+                  PopupMenuItem(
                     value: 0,
-                    child: Text('Line settings'),
+                    child: Text('lineSetting'.i18n),
                   ),
                 ];
               },
@@ -282,7 +283,7 @@ class NodeDivider extends ConsumerWidget {
           Visibility(
             visible: maxSelect != -1,
             child: Text(
-              'Max $maxSelect number of selections',
+              'lineSetting_tooltip_1'.fill([maxSelect]),
               style: ConstList.getFont("notoSans").copyWith(
                 fontSize: 18.0,
                 color: getColorButton(preset.backgroundColor),
@@ -477,14 +478,14 @@ class _NestedMapState extends ConsumerState<NestedMap> {
                       );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('No options selected'),
-                          duration: Duration(seconds: 1),
+                        SnackBar(
+                          content: Text('summary_error'.i18n),
+                          duration: const Duration(seconds: 1),
                         ),
                       );
                     }
                   },
-                  child: const Text("Summary"),
+                  child: Text("summary".i18n),
                 ),
               ),
               const SizedBox(

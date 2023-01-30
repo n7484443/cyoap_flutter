@@ -7,7 +7,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../main.dart';
-import '../model/opening_file_folder.dart';
+import '../model/device_preference.dart';
 
 final playDataProvider = StateNotifierProvider<PlayDataNotifier, void>(
     (ref) => PlayDataNotifier(ref));
@@ -25,7 +25,7 @@ class PlayDataNotifier extends StateNotifier<void> {
       await saveProject.downloadCapture('', 'save.json', data);
     } else {
       await saveProject.downloadCapture(
-          await ProjectPath.getDownloadFolder(), 'save.json', data);
+          await DevicePreference.getDownloadFolder(), 'save.json', data);
     }
   }
 

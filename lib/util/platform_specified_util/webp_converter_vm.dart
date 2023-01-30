@@ -9,7 +9,7 @@ import 'package:image/image.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../main.dart';
-import '../../model/opening_file_folder.dart';
+import '../../model/device_preference.dart';
 
 class WebpConverterImp extends WebpConverter {
   factory WebpConverterImp() {
@@ -33,7 +33,7 @@ class WebpConverterImpWindows implements WebpConverterImp {
 
   @override
   void init() async {
-    saveAsWebp = await ProjectPath().getSaveAsWebp();
+    saveAsWebp = await DevicePreference().getSaveAsWebp();
 
     var startPath = Platform.script.resolve("libwebp.dll").toFilePath();
     // 'windows/libwebp.dll'
@@ -176,7 +176,7 @@ class WebpConverterImpAndroid implements WebpConverterImp {
 
   @override
   void init() async {
-    saveAsWebp = await ProjectPath().getSaveAsWebp();
+    saveAsWebp = await DevicePreference().getSaveAsWebp();
   }
 
   @override
