@@ -25,6 +25,8 @@ extension Localization on String {
           'save': 'Save',
           'search': 'Search',
           'node': 'Node',
+          'yes': 'Yes',
+          'no': 'No',
 
           //play page
           'summary': 'Summary',
@@ -63,6 +65,10 @@ extension Localization on String {
           'variable_notation': 'Variable notation',
           'variable_show': 'Show when playing',
           'variable_add': 'Add default values',
+
+          'unsaved' : 'There is something unsaved. Do you want to save it?',
+          'warning' : '!Warning!',
+          'warning_message' : 'This is a complete deletion of the selected project and cannot be recovered. Are you sure you want to delete it?',
 
           //image editor
           'crop_ratio_free': 'Free',
@@ -138,6 +144,8 @@ extension Localization on String {
           'save': '저장',
           'search': '검색',
           'node': '노드',
+          'yes': '예',
+          'no': '아니오',
 
           //play page
           'summary': '요약',
@@ -174,6 +182,10 @@ extension Localization on String {
           'variable_notation': '변수 표기명',
           'variable_show': '플레이시 표시',
           'variable_add': '초기값 추가',
+
+          'unsaved' : '저장되지 않은 내용이 있습니다. 저장하시겠습니까?',
+          'warning' : '!경고!',
+          'warning_message' : '이것은 선택된 프로젝트를 완전히 삭제하는 것이며, 복구할 수 없습니다. 삭제하시겠습니까?',
 
           //image editor
           'crop_ratio_free': '자유',

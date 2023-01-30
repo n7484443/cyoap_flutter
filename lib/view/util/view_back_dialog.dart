@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
 class ViewBackDialog extends StatelessWidget {
@@ -10,15 +11,15 @@ class ViewBackDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Center(child: Text('Back')),
-      content: const Text('There is something unsaved. Do you want to save it?'),
+      title: Center(child: Text('back'.i18n)),
+      content: Text('unsaved'.i18n),
       actionsAlignment: MainAxisAlignment.spaceAround,
       actions: [
         ElevatedButton(
           onPressed: () {
             backFunction(0);
           },
-          child: const Text('Cancel'),
+          child: Text('cancel'.i18n),
         ),
         ElevatedButton(
           onPressed: () {
@@ -27,14 +28,14 @@ class ViewBackDialog extends StatelessWidget {
             }
             backFunction(1);
           },
-          child: const Text('No'),
+          child: Text('no'.i18n),
         ),
         ElevatedButton(
           onPressed: () async {
             await saveFunction();
             backFunction(2);
           },
-          child: const Text('Yes'),
+          child: Text('yes'.i18n),
         ),
       ],
     );
@@ -50,8 +51,8 @@ class ViewWarningDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Center(child: Text('!Warning!')),
-      content: const Text('This is a complete deletion of the selected project and cannot be recovered. Are you sure you want to delete it?'),
+      title: Center(child: Text('warning'.i18n)),
+      content: Text('warning_message'.i18n),
       actionsAlignment: MainAxisAlignment.spaceAround,
       actions: [
         ElevatedButton(
@@ -61,7 +62,7 @@ class ViewWarningDialog extends StatelessWidget {
             }
             Navigator.pop(context, false);
           },
-          child: const Text('No'),
+          child: Text('no'.i18n),
         ),
         ElevatedButton(
           onPressed: () {
@@ -70,7 +71,7 @@ class ViewWarningDialog extends StatelessWidget {
             }
             Navigator.pop(context, true);
           },
-          child: const Text('Yes'),
+          child: Text('yes'.i18n),
         ),
       ],
     );
