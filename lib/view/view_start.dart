@@ -1,13 +1,15 @@
 import 'dart:io';
 
+import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:i18n_extension/i18n_widget.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import '../model/opening_file_folder.dart';
+import '../model/device_preference.dart';
 import '../model/platform_system.dart';
 import '../viewModel/vm_global_setting.dart';
 import '../viewModel/vm_snackbar.dart';
@@ -34,7 +36,7 @@ class ViewStart extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                          'version : ${ref.watch(versionProvider).value ?? ""}'),
+                          '${'version'.i18n} : ${ref.watch(versionProvider).value ?? ""}'),
                       Visibility(
                         visible: ref.watch(needUpdateStateProvider),
                         child: TextButton(
@@ -52,6 +54,16 @@ class ViewStart extends ConsumerWidget {
                         ),
                       ),
                     ],
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Icons.language),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => const ViewLanguageDialog(),
+                      );
+                    },
                   ),
                   IconButton(
                     icon: const Icon(Icons.settings),
@@ -73,7 +85,7 @@ class ViewStart extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 TextButton(
-                  child: const Text('Add file'),
+                  child: Text('add_file'.i18n),
                   onPressed: () async {
                     if (await ref.read(pathListProvider.notifier).addFile() ==
                         0) {
@@ -84,7 +96,7 @@ class ViewStart extends ConsumerWidget {
                 Visibility(
                   visible: !ConstList.isWeb(),
                   child: TextButton(
-                    child: const Text('Add folder'),
+                    child: Text('add_folder'.i18n),
                     onPressed: () async {
                       if (ConstList.isMobile()) {
                         showDialog(
@@ -149,7 +161,7 @@ class _ViewProjectListState extends ConsumerState<ViewProjectList> {
                 ref.read(pathListSelectedProvider.notifier).state = index,
             style: ref.watch(pathListSelectedProvider) == index
                 ? OutlinedButton.styleFrom(
-                    primary: Colors.white,
+                    foregroundColor: Colors.white,
                     backgroundColor: Colors.lightBlueAccent)
                 : null,
             child: Padding(
@@ -208,7 +220,7 @@ class SelectMode extends ConsumerWidget {
               child: Text(
                 'Play',
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline1,
+                style: Theme.of(context).textTheme.displayLarge,
               ),
             ),
           ),
@@ -236,7 +248,7 @@ class SelectMode extends ConsumerWidget {
               child: Text(
                 'Make',
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline1,
+                style: Theme.of(context).textTheme.displayLarge,
               ),
             ),
           ),
@@ -288,7 +300,7 @@ class _ViewAddProjectDialogState extends ConsumerState<ViewAddProjectDialog> {
           onPressed: () async {
             Navigator.of(context).pop();
             if (_textEditingController?.text.isNotEmpty ?? false) {
-              var path = await ProjectPath.getProjectFolder(
+              var path = await DevicePreference.getProjectFolder(
                   _textEditingController?.text);
               await Directory(path).create(recursive: true);
               await ref.read(pathListProvider.notifier).updateFromData();
@@ -320,6 +332,34 @@ class ViewLoadingDialog extends ConsumerWidget {
   }
 }
 
+class ViewLanguageDialog extends ConsumerWidget {
+  const ViewLanguageDialog({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return AlertDialog(
+      scrollable: true,
+      title: Text('language'.i18n),
+      content: Column(
+        children: ConstList.localeMap.keys
+            .map(
+              (e) => RadioListTile(
+                  title: Text(ConstList.localeMap[e]?.item1 ?? ''),
+                  value: e,
+                  groupValue: ref.watch(languageProvider),
+                  onChanged: (String? e) {
+                    ref.read(languageProvider.notifier).state = e!;
+                    I18n.of(context).locale = ConstList.localeMap[e]!.item2;
+                  }),
+            )
+            .toList(),
+      ),
+    );
+  }
+}
+
 class ViewGlobalSettingDialog extends ConsumerWidget {
   const ViewGlobalSettingDialog({
     super.key,
@@ -328,7 +368,8 @@ class ViewGlobalSettingDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
-      title: const Text('Settings'),
+      scrollable: true,
+      title: Text('settings'.i18n),
       content: Column(
         children: [
           ViewSwitchLabel(
@@ -337,9 +378,8 @@ class ViewGlobalSettingDialog extends ConsumerWidget {
                   !ref.read(saveAsWebpProvider);
             },
             ref.watch(saveAsWebpProvider),
-            label: "Convert images to WEBP when saving",
+            label: "save_as_webp".i18n,
           ),
-          const Spacer(),
           TextButton(
               onPressed: () {
                 Navigator.of(context).pop();

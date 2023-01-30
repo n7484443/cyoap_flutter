@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
@@ -215,7 +216,7 @@ class _ViewPlayDrawerState extends ConsumerState<ViewPlayDrawer> {
         Column(
           children: [
             ListTile(
-              leading: const Text('Version'),
+              leading: Text('version'.i18n),
               title: Text(ConstList.version),
             ),
             ListTile(
@@ -224,7 +225,7 @@ class _ViewPlayDrawerState extends ConsumerState<ViewPlayDrawer> {
                     .read(isVisibleSourceProvider.notifier)
                     .update((state) => !state),
                 ref.watch(isVisibleSourceProvider),
-                label: 'View source',
+                label: 'show_image_source'.i18n,
               ),
             ),
             ListTile(
@@ -233,7 +234,7 @@ class _ViewPlayDrawerState extends ConsumerState<ViewPlayDrawer> {
                     .read(isDebugModeProvider.notifier)
                     .update((state) => !state),
                 ref.watch(isDebugModeProvider),
-                label: 'Enable debug mode',
+                label: 'debug_mode'.i18n,
               ),
             ),
             const ViewChangeRotation()
@@ -319,7 +320,7 @@ class VariableTiles extends ConsumerWidget {
       );
     }
     return ExpansionTile(
-      title: const Text('Variables'),
+      title: Text('variable'.i18n),
       subtitle: isEditable
           ? ViewSwitchLabel(
               () {
