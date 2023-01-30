@@ -110,7 +110,7 @@ class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
           child: TextField(
             controller: _controller,
             decoration: const InputDecoration(
-              hintText: "검색",
+              hintText: "Search",
             ),
           ),
         ),
@@ -132,11 +132,11 @@ class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
                     .changePageString('viewDesignSetting', context);
               },
               leading: const Icon(Icons.settings),
-              title: const Text('디자인 설정'),
+              title: const Text('Design settings'),
             ),
             ListTile(
               leading: const Icon(Icons.settings),
-              title: const Text('이미지 설정'),
+              title: const Text('Image settings'),
               onTap: () => ref
                   .read(changeTabProvider.notifier)
                   .changePageString("viewSource", context),
@@ -148,7 +148,7 @@ class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
                     .changePageString('viewProjectSetting', context);
               },
               leading: const Icon(Icons.settings),
-              title: const Text('프로젝트 설정'),
+              title: const Text('Project settings'),
             ),
             const ViewChangeRotation(),
           ],
@@ -200,7 +200,7 @@ class _ViewPlayDrawerState extends ConsumerState<ViewPlayDrawer> {
             child: TextField(
               controller: _controller,
               decoration: const InputDecoration(
-                hintText: "검색",
+                hintText: "Search",
               ),
             ),
           ),
@@ -215,7 +215,7 @@ class _ViewPlayDrawerState extends ConsumerState<ViewPlayDrawer> {
         Column(
           children: [
             ListTile(
-              leading: const Text('버전'),
+              leading: const Text('Version'),
               title: Text(ConstList.version),
             ),
             ListTile(
@@ -224,7 +224,7 @@ class _ViewPlayDrawerState extends ConsumerState<ViewPlayDrawer> {
                     .read(isVisibleSourceProvider.notifier)
                     .update((state) => !state),
                 ref.watch(isVisibleSourceProvider),
-                label: '출처 보기',
+                label: 'View source',
               ),
             ),
             ListTile(
@@ -233,7 +233,7 @@ class _ViewPlayDrawerState extends ConsumerState<ViewPlayDrawer> {
                     .read(isDebugModeProvider.notifier)
                     .update((state) => !state),
                 ref.watch(isDebugModeProvider),
-                label: '디버그 모드 활성화',
+                label: 'Enable debug mode',
               ),
             ),
             const ViewChangeRotation()
@@ -319,7 +319,7 @@ class VariableTiles extends ConsumerWidget {
       );
     }
     return ExpansionTile(
-      title: const Text('변수'),
+      title: const Text('Variables'),
       subtitle: isEditable
           ? ViewSwitchLabel(
               () {
@@ -328,7 +328,7 @@ class VariableTiles extends ConsumerWidget {
                     .update((state) => !state);
               },
               isVisibleHideVariable,
-              label: '숨겨진 변수 보기',
+              label: 'Hidden variables',
             )
           : null,
       initiallyExpanded: true,
@@ -388,7 +388,7 @@ class NodeTiles extends ConsumerWidget {
       }
     }
     return ExpansionTile(
-      title: const Text('노드'),
+      title: const Text('Node'),
       children: widgetList,
     );
   }

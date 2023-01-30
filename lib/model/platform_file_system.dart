@@ -30,7 +30,7 @@ class PlatformFileSystem {
 
   PlatformFileSystem();
 
-  /*TODO - page 시스템 개발*/
+  /*TODO - page System Development*/
   Future<void> createFromFolder(String path) async {
     openAsFile = false;
     var dirImages = Directory('$path/images');
@@ -137,7 +137,7 @@ class PlatformFileSystem {
           if (type == 1) {
             ImageDB().uploadImages(fileName.split("/")[1], data);
           } else {
-            //아직 지원 x
+            //Not yet supported x
           }
         } else {
           String dataConverted = utf8.decode(data);
@@ -218,7 +218,7 @@ class PlatformFileSystem {
     }
   }
 
-  //1 = 일반 이미지, 0 = 웹 이미지, -1 = 이미지 아님.
+  //1 = Normal image, 0 = web image, -1 = not an image.
   int isImageFile(String path) {
     var name = basename(path).toLowerCase();
     if (name.startsWith('http')) {

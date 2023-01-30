@@ -16,12 +16,12 @@ class ViewImageEditor extends ConsumerWidget {
       body: const ViewImageEditorContents(),
       bottomNavigationBar: NavigationBar(
         destinations: const [
-          NavigationDestination(icon: Icon(Icons.close), label: "자유"),
+          NavigationDestination(icon: Icon(Icons.close), label: "Free"),
           NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "4:3"),
           NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "3:2"),
           NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "16:9"),
           NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "1:1"),
-          NavigationDestination(icon: Icon(Icons.crop_rotate), label: "회전"),
+          NavigationDestination(icon: Icon(Icons.crop_rotate), label: "Rotate"),
         ],
         selectedIndex: ref.watch(imageCropIndexProvider),
         onDestinationSelected: (index) {

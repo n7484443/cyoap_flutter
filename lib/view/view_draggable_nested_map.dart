@@ -102,13 +102,13 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
     var maxSelect = ref.watch(lineMaxSelectProvider(widget.y));
     var maxSelectString = maxSelect == -1 ? "max" : maxSelect.toString();
     return AlertDialog(
-      title: Text('변수명 : lineSetting_${widget.y}'),
+      title: Text('Variable name : lineSetting_${widget.y}'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             children: [
-              const Text('선택 가능 개수'),
+              const Text('Number of selections available'),
               const Spacer(),
               IconButton(
                 icon: const Icon(Icons.chevron_left),
@@ -130,7 +130,7 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
             ],
           ),
           DropdownButtonFormField<String>(
-            decoration: const InputDecoration(labelText: '프리셋 설정'),
+            decoration: const InputDecoration(labelText: 'Preset settings'),
             items: ref
                 .watch(choiceLinePresetListProvider)
                 .map<DropdownMenuItem<String>>((preset) => DropdownMenuItem(
@@ -148,7 +148,7 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
           TextField(
             controller: _textFieldController,
             decoration: const InputDecoration(
-                hintText: '보이는 조건(true 일 때 보임, 비어있을 시 true)'),
+                hintText: 'Visible condition (visible when true, true when empty)'),
           ),
         ],
       ),
@@ -157,7 +157,7 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
             onPressed: () {
               Navigator.of(context).pop(_textFieldController!.text);
             },
-            child: const Text("확인"))
+            child: const Text("Confirm"))
       ],
     );
   }
@@ -213,7 +213,7 @@ class NodeDivider extends ConsumerWidget {
           Visibility(
             visible: maxSelect != -1,
             child: Text(
-              '최대 $maxSelect개만큼 선택 가능',
+              'Max $maxSelect number of selections',
               style: ConstList.getFont("notoSans").copyWith(
                 fontSize: 18.0,
                 color: getColorButton(preset.backgroundColor),
@@ -245,7 +245,7 @@ class NodeDivider extends ConsumerWidget {
                 return [
                   const PopupMenuItem(
                     value: 0,
-                    child: Text('라인 설정'),
+                    child: Text('Line settings'),
                   ),
                 ];
               },
@@ -282,7 +282,7 @@ class NodeDivider extends ConsumerWidget {
           Visibility(
             visible: maxSelect != -1,
             child: Text(
-              '최대 $maxSelect개만큼 선택 가능',
+              'Max $maxSelect number of selections',
               style: ConstList.getFont("notoSans").copyWith(
                 fontSize: 18.0,
                 color: getColorButton(preset.backgroundColor),
@@ -478,13 +478,13 @@ class _NestedMapState extends ConsumerState<NestedMap> {
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('선택한 선택지가 없습니다.'),
+                          content: Text('No options selected'),
                           duration: Duration(seconds: 1),
                         ),
                       );
                     }
                   },
-                  child: const Text("요약"),
+                  child: const Text("Summary"),
                 ),
               ),
               const SizedBox(

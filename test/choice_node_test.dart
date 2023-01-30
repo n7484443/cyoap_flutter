@@ -15,8 +15,8 @@ void main() {
       pos0_0,
       ChoiceNode(
         4,
-        "디자인",
-        "[{\"insert\":\"레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.\\n\"}]",
+        "Design",
+        "[{\"insert\":\"Adjust and view layouts, fonts, designs, sizes, and more.\\n\"}]",
         "noImage",
       ));
 
@@ -54,16 +54,16 @@ void main() {
       pos1_0,
       ChoiceNode(
         4,
-        "디자인",
-        "[{\"insert\":\"레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.\\n\"}]",
+        "Design",
+        "[{\"insert\":\"Adjust and view layouts, fonts, designs, sizes, and more.\\n\"}]",
         "noImage",
       ));
   getPlatform.addData(
       pos1_1,
       ChoiceNode(
         4,
-        "디자인",
-        "[{\"insert\":\"레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.\\n\"}]",
+        "Design",
+        "[{\"insert\":\"Adjust and view layouts, fonts, designs, sizes, and more.\\n\"}]",
         "noImage",
       ));
 

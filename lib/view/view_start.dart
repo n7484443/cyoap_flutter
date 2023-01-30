@@ -47,7 +47,7 @@ class ViewStart extends ConsumerWidget {
                                   'https://github.com/n7484443/FlutterCyoap/releases');
                             }
                           },
-                          child: const Text('새로운 버전이 나왔습니다!',
+                          child: const Text('New version available!',
                               style: TextStyle(color: Colors.redAccent)),
                         ),
                       ),
@@ -73,7 +73,7 @@ class ViewStart extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 TextButton(
-                  child: const Text('파일 추가'),
+                  child: const Text('Add file'),
                   onPressed: () async {
                     if (await ref.read(pathListProvider.notifier).addFile() ==
                         0) {
@@ -84,7 +84,7 @@ class ViewStart extends ConsumerWidget {
                 Visibility(
                   visible: !ConstList.isWeb(),
                   child: TextButton(
-                    child: const Text('폴더 추가'),
+                    child: const Text('Add folder'),
                     onPressed: () async {
                       if (ConstList.isMobile()) {
                         showDialog(
@@ -273,7 +273,7 @@ class _ViewAddProjectDialogState extends ConsumerState<ViewAddProjectDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("프로젝트명"),
+      title: const Text("Project Name"),
       content: TextField(
         controller: _textEditingController,
       ),
@@ -282,7 +282,7 @@ class _ViewAddProjectDialogState extends ConsumerState<ViewAddProjectDialog> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text('취소'),
+          child: const Text('Cancel'),
         ),
         ElevatedButton(
           onPressed: () async {
@@ -294,7 +294,7 @@ class _ViewAddProjectDialogState extends ConsumerState<ViewAddProjectDialog> {
               await ref.read(pathListProvider.notifier).updateFromData();
             }
           },
-          child: const Text('생성'),
+          child: const Text('Create'),
         ),
       ],
     );
@@ -328,7 +328,7 @@ class ViewGlobalSettingDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
-      title: const Text('설정'),
+      title: const Text('Settings'),
       content: Column(
         children: [
           ViewSwitchLabel(
@@ -337,7 +337,7 @@ class ViewGlobalSettingDialog extends ConsumerWidget {
                   !ref.read(saveAsWebpProvider);
             },
             ref.watch(saveAsWebpProvider),
-            label: "저장 시 이미지를 webp 파일로 변환",
+            label: "Convert images to WEBP when saving",
           ),
           const Spacer(),
           TextButton(
@@ -345,7 +345,7 @@ class ViewGlobalSettingDialog extends ConsumerWidget {
                 Navigator.of(context).pop();
                 Navigator.of(context).pushReplacementNamed("/viewLicense");
               },
-              child: const Text("폰트 라이센스")),
+              child: const Text("Font licenses")),
         ],
       ),
     );

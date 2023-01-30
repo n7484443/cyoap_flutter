@@ -54,13 +54,13 @@ class ViewSelectedGrid extends ConsumerWidget {
           onPressed: () {
             saveAsImage(globalKey);
           },
-          child: const Text('이미지로 저장'),
+          child: const Text('Save as image'),
         ),
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text('확인'),
+          child: const Text('Confirm'),
         ),
       ],
     );
