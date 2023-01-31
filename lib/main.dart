@@ -186,6 +186,7 @@ const String sentryDsn =
     'https://300bedade0de419fb189b2c5634ca1d8@o1393272.ingest.sentry.io/6714767';
 
 final localeStateProvider = StateProvider<Locale?>((ref) {
+
   return I18n.locale;
 });
 

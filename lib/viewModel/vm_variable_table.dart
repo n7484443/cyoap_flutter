@@ -22,7 +22,7 @@ final isVisibleHideVariableProvider = StateProvider<bool>((ref) {
   return false;
 });
 
-final searchProvider = StateProvider<String>((ref) {
+final searchProvider = StateProvider.autoDispose<String>((ref) {
   return "";
 });
 

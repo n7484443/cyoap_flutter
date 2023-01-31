@@ -4,6 +4,7 @@ import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
+import 'package:cyoap_flutter/view/util/view_circle_button.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
@@ -108,21 +109,32 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
       addBuildDraggable(subWidget, i + 1);
       stack += size;
     }
-    Widget addButton = IconButton(
-      onPressed: () {
-        ref
-            .read(vmDraggableNestedMapProvider)
-            .addData(parentPos.addLast(children.length), ChoiceNode.empty()..width = 3);
-      },
-      icon: const Icon(Icons.add),
-      tooltip: 'create_tooltip'.i18n,
+    Widget addButton = Tooltip(
+      message: 'create_tooltip'.i18n,
+      child: CircleButton(
+        onPressed: () {
+          ref.read(vmDraggableNestedMapProvider).addData(
+              parentPos.addLast(children.length),
+              ChoiceNode.empty()..width = 3);
+        },
+        child: const Icon(Icons.add),
+      ),
     );
     bool check = false;
     if (0 < stack && stack < maxSize) {
-      subWidget.add(Expanded(
+      subWidget.add(
+        Expanded(
           flex: calculateFlexReverse(maxSize - stack),
-          child: addButton));
-    }else{
+          child: Stack(
+            children: [
+              Center(
+                child: addButton,
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
       check = true;
     }
     if (subWidget.isNotEmpty) {
@@ -135,7 +147,7 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
         ),
       );
     }
-    if(check){
+    if (check) {
       outputWidget.add(addButton);
     }
 
