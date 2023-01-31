@@ -228,19 +228,21 @@ class NodeDivider extends ConsumerWidget {
             child: PopupMenuButton<int>(
               icon: const Icon(Icons.more_vert),
               onSelected: (result) {
-                if (result == 0) {
-                  showDialog<String>(
-                          context: context,
-                          builder: (_) => NodeDividerDialog(y),
-                          barrierDismissible: false)
-                      .then((value) {
-                    getPlatform
-                        .getLineSetting(y)
-                        ?.recursiveStatus
-                        .conditionVisibleString = value!;
-                    ref.read(draggableNestedMapChangedProvider.notifier).state =
-                        true;
-                  });
+                switch(result){
+                  case 0:
+                    showDialog<String>(
+                        context: context,
+                        builder: (_) => NodeDividerDialog(y),
+                        barrierDismissible: false)
+                        .then((value) {
+                      getPlatform
+                          .getLineSetting(y)
+                          ?.recursiveStatus
+                          .conditionVisibleString = value!;
+                      ref.read(draggableNestedMapChangedProvider.notifier).state =
+                      true;
+                    });
+                    break;
                 }
               },
               itemBuilder: (BuildContext context) {
@@ -412,7 +414,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
     if (isEditable) {
       if (lineLength == 0) {
         sliverList = [
-          SliverToBoxAdapter(
+          const SliverToBoxAdapter(
             child: NodeDivider(0),
           ),
           SliverToBoxAdapter(
@@ -443,9 +445,11 @@ class _NestedMapState extends ConsumerState<NestedMap> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  NodeDragTarget(
-                    pos.addLast(0),
-                    isHorizontal: true,
+                  Flexible(
+                    child: NodeDragTarget(
+                      pos.addLast(0),
+                      isHorizontal: true,
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(32.0),
@@ -467,17 +471,20 @@ class _NestedMapState extends ConsumerState<NestedMap> {
             isInner: false,
           );
         });
-        sliverList.add(
+        sliverList.addAll([
           SliverToBoxAdapter(
             child: Visibility(
               visible: ref.watch(dragChoiceNodeProvider) != null,
-              child: NodeDragTarget(
-                Pos(data: [lineLength]).addLast(0),
-                isHorizontal: true,
-              ),
+              child: NodeDivider(lineLength),
             ),
           ),
-        );
+          SliverToBoxAdapter(
+            child: NodeDragTarget(
+              Pos(data: [lineLength]).addLast(0),
+              isHorizontal: true,
+            ),
+          ),
+        ]);
       }
     } else {
       for (int index = 0; index < lineList.length; index++) {

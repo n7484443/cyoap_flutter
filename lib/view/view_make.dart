@@ -79,16 +79,6 @@ class ViewMake extends ConsumerWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          DragTarget<Pos>(
-            builder: (BuildContext context, List<dynamic> accepted,
-                List<dynamic> rejected) {
-              return Tooltip(
-                  message: 'remove_tooltip'.i18n, child: const Icon(Icons.delete));
-            },
-            onAccept: (Pos data) {
-              ref.read(vmDraggableNestedMapProvider).removeData(data);
-            },
-          ),
           Visibility(
             visible: ref.watch(removedChoiceNode) != null,
             child: Draggable<Pos>(

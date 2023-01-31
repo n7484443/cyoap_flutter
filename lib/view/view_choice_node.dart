@@ -314,6 +314,9 @@ class ViewTitleWithEdit extends ConsumerWidget {
                       .read(vmDraggableNestedMapProvider)
                       .copyData(ref.watch(choiceNodeProvider(pos)).node!);
                   break;
+                case 2:
+                  ref.read(vmDraggableNestedMapProvider).removeData(pos);
+                  break;
               }
             },
             itemBuilder: (context) {
@@ -325,6 +328,10 @@ class ViewTitleWithEdit extends ConsumerWidget {
                 PopupMenuItem(
                   value: 1,
                   child: Text('copy'.i18n),
+                ),
+                PopupMenuItem(
+                  value: 2,
+                  child: Text('delete'.i18n),
                 ),
               ];
             },
