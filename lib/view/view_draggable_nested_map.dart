@@ -8,6 +8,7 @@ import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
+import 'package:cyoap_flutter/view/util/view_circle_button.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/view/view_selected_grid.dart';
@@ -228,19 +229,20 @@ class NodeDivider extends ConsumerWidget {
             child: PopupMenuButton<int>(
               icon: const Icon(Icons.more_vert),
               onSelected: (result) {
-                switch(result){
+                switch (result) {
                   case 0:
                     showDialog<String>(
-                        context: context,
-                        builder: (_) => NodeDividerDialog(y),
-                        barrierDismissible: false)
+                            context: context,
+                            builder: (_) => NodeDividerDialog(y),
+                            barrierDismissible: false)
                         .then((value) {
                       getPlatform
                           .getLineSetting(y)
                           ?.recursiveStatus
                           .conditionVisibleString = value!;
-                      ref.read(draggableNestedMapChangedProvider.notifier).state =
-                      true;
+                      ref
+                          .read(draggableNestedMapChangedProvider.notifier)
+                          .state = true;
                     });
                     break;
                 }
@@ -259,19 +261,21 @@ class NodeDivider extends ConsumerWidget {
             alignment: Alignment.centerLeft,
             child: Row(
               children: [
-                IconButton(
-                  icon: Icon(Icons.arrow_upward,
-                      color: getColorButton(preset.backgroundColor)),
+                CircleButton(
                   onPressed: () {
                     ref.read(vmDraggableNestedMapProvider).moveLine(y, y - 1);
                   },
+                  child: const Icon(
+                    Icons.arrow_upward,
+                  ),
                 ),
-                IconButton(
-                  icon: Icon(Icons.arrow_downward,
-                      color: getColorButton(preset.backgroundColor)),
+                CircleButton(
                   onPressed: () {
                     ref.read(vmDraggableNestedMapProvider).moveLine(y, y + 1);
                   },
+                  child: const Icon(
+                    Icons.arrow_downward,
+                  ),
                 ),
               ],
             ),

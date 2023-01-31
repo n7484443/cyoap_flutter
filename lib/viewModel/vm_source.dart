@@ -18,7 +18,7 @@ final textEditingControllerProvider =
     Provider.autoDispose.family<TextEditingController, String>((ref, name) {
   var textEditingController = TextEditingController();
   if (getPlatformFileSystem.hasSource(name)) {
-    textEditingController.text = getPlatformFileSystem.getSource(name)!;
+    textEditingController.text = getPlatformFileSystem.getSource(name) ?? '';
   }
   textEditingController.addListener(() {
     getPlatformFileSystem.addSource(name, textEditingController.text);
