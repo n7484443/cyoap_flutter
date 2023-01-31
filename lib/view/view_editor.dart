@@ -277,6 +277,7 @@ class _ViewTextContentsEditorState
           padding: const EdgeInsets.all(8.0),
           child: QuillToolbar.basic(
             controller: _quillController!,
+            locale: ref.watch(localeStateProvider),
             showListCheck: false,
             showInlineCode: false,
             showLink: false,
@@ -309,6 +310,7 @@ class _ViewTextContentsEditorState
           child: Card(
             elevation: ConstList.elevation,
             child: QuillEditor(
+              locale: ref.watch(localeStateProvider),
               padding: const EdgeInsets.all(3),
               controller: _quillController!,
               focusNode: _focusNode!,
@@ -520,6 +522,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
                 ),
               ),
               QuillEditor(
+                locale: ref.watch(localeStateProvider),
                 focusNode: _focusNode!,
                 scrollable: false,
                 readOnly: false,

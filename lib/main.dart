@@ -186,10 +186,8 @@ const String sentryDsn =
     'https://300bedade0de419fb189b2c5634ca1d8@o1393272.ingest.sentry.io/6714767';
 
 final localeStateProvider = StateProvider<Locale?>((ref) {
-
-  return I18n.locale;
+  return ConstList.currentLocale;
 });
-
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -203,32 +201,35 @@ void main() {
         appRunner: () =>
             runApp(
               ProviderScope(
-                child: Consumer(
-                  builder: (context, ref, child) => I18n(
-                    child: MaterialApp(
-                      locale: ref.watch(localeStateProvider),
-                      localizationsDelegates: [
-                        GlobalMaterialLocalizations.delegate,
-                        GlobalCupertinoLocalizations.delegate,
-                        GlobalWidgetsLocalizations.delegate,
-                      ],
-                      supportedLocales: [
-                        const Locale('en', "US"),
-                        const Locale('ko', "KR"),
-                      ],
-                      title: 'CYOAP',
-                      initialRoute: '/',
-                      routes: {
-                        '/': (context) => const ViewStart(),
-                        '/viewPlay': (context) => const ViewPlay(),
-                        '/viewMake': (context) => const ViewMakePlatform(),
-                        '/viewLicense': (context) => const ViewFontSource(),
-                      },
-                      theme: appThemeLight,
-                      darkTheme: appThemeDark,
-                      themeMode: ThemeMode.light,
-                      debugShowCheckedModeBanner: false,
-                    ),
+                child: I18n(
+                  initialLocale: ConstList.currentLocale,
+                  child: Consumer(
+                    builder: (context, ref, child){
+                      return MaterialApp(
+                        locale: ref.watch(localeStateProvider),
+                        localizationsDelegates: [
+                          GlobalMaterialLocalizations.delegate,
+                          GlobalCupertinoLocalizations.delegate,
+                          GlobalWidgetsLocalizations.delegate,
+                        ],
+                        supportedLocales: [
+                          const Locale('en', "US"),
+                          const Locale('ko', "KR"),
+                        ],
+                        title: 'CYOAP',
+                        initialRoute: '/',
+                        routes: {
+                          '/': (context) => const ViewStart(),
+                          '/viewPlay': (context) => const ViewPlay(),
+                          '/viewMake': (context) => const ViewMakePlatform(),
+                          '/viewLicense': (context) => const ViewFontSource(),
+                        },
+                        theme: appThemeLight,
+                        darkTheme: appThemeDark,
+                        themeMode: ThemeMode.light,
+                        debugShowCheckedModeBanner: false,
+                      );
+                    },
                   ),
                 ),
               ),

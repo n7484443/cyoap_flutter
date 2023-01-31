@@ -137,7 +137,7 @@ class ViewRefreshIcons extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return IconButton(
-      icon: const Icon(Icons.play_arrow),
+      icon: const Icon(Icons.refresh),
       tooltip: 'update_variable_tooltip'.i18n,
       onPressed: () {
         getPlatform.generateRecursiveParser();
