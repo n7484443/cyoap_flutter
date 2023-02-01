@@ -1,6 +1,6 @@
 use std::{fs, io};
 use std::io::Cursor;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use octocrab::models::repos::{Asset};
 
 #[tokio::main]
