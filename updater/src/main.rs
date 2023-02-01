@@ -50,6 +50,9 @@ async fn unzip(path:PathBuf){
                 }
             };
         }else{
+            if file.name().ends_with("updater.exe"){
+                continue;
+            }
             let mut outfile = fs::File::create(&outpath).unwrap();
             io::copy(&mut file, &mut outfile).unwrap();
         }
