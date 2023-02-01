@@ -335,34 +335,18 @@ class NestedScroll extends ConsumerWidget {
         backgroundBoxFit = BoxFit.fill;
         break;
     }
-    return ShaderMask(
-      shaderCallback: (Rect bounds) {
-        return LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Colors.white.withOpacity(0.05),
-            Colors.white,
-            Colors.white,
-            Colors.white.withOpacity(0.05),
-          ],
-          stops: [0, 0.08, 0.92, 1],
-          tileMode: TileMode.mirror,
-        ).createShader(bounds);
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          image: background != null
-              ? DecorationImage(
-                  image: Image.memory(ImageDB().getImage(background)!).image,
-                  fit: backgroundBoxFit,
-                  repeat: backgroundRepeat,
-                  filterQuality: FilterQuality.high,
-                )
-              : null,
-        ),
-        child: const NestedMap(),
+    return Container(
+      decoration: BoxDecoration(
+        image: background != null
+            ? DecorationImage(
+                image: Image.memory(ImageDB().getImage(background)!).image,
+                fit: backgroundBoxFit,
+                repeat: backgroundRepeat,
+                filterQuality: FilterQuality.high,
+              )
+            : null,
       ),
+      child: const NestedMap(),
     );
   }
 }
