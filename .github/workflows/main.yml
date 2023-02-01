@@ -53,15 +53,13 @@ jobs:
 
       - run: flutter build windows --release
 
-      - run: cd updater
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
       - uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --release
-      - run: cd ..
+          args: --release --manifest-path updater/Cargo.toml
       - run: MV "updater/target/release/updater.exe" "build/windows/runner/Release"
 
       - name: Get latest release version number
