@@ -216,12 +216,19 @@ class NodeDivider extends ConsumerWidget {
           divider,
           Visibility(
               visible: maxSelect != -1,
-              child: Text(
-                'lineSetting_tooltip_1'.fill([maxSelect]),
-                style: ConstList.getFont("notoSans").copyWith(
-                  fontSize: 18.0,
-                  color: getColorButton(preset.backgroundColor),
-                  fontWeight: FontWeight.bold,
+              child: Card(
+                elevation: 0,
+                color: getColorButton(preset.backgroundColor),
+                child: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Text(
+                    'lineSetting_tooltip_1'.i18n.fill([maxSelect.toString()]),
+                    style: ConstList.getFont("notoSans").copyWith(
+                      fontSize: 16.0,
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               )),
           Align(
