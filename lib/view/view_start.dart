@@ -38,7 +38,7 @@ class ViewStart extends ConsumerWidget {
                       Text(
                           '${'version'.i18n} : ${ref.watch(versionProvider).value ?? ""}'),
                       Visibility(
-                        visible: ref.watch(needUpdateStateProvider),
+                        visible: ref.watch(needUpdateStateProvider) != null,
                         child: TextButton(
                           onPressed: () {
                             if (ConstList.isMobile()) {
@@ -49,9 +49,14 @@ class ViewStart extends ConsumerWidget {
                                   'https://github.com/n7484443/FlutterCyoap/releases');
                             }
                           },
-                          child: const Text('New version available!',
-                              style: TextStyle(color: Colors.redAccent)),
+                          child: Text('version_check'.i18n,
+                              style: const TextStyle(color: Colors.redAccent)),
                         ),
+                      ),
+                      Visibility(
+                        visible: ref.watch(needUpdateStateProvider) != null,
+                        child: Text('version_latest'.i18n + (ref.watch(needUpdateStateProvider) ?? ''),
+                            style: const TextStyle(color: Colors.redAccent)),
                       ),
                     ],
                   ),

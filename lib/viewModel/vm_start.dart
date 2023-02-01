@@ -10,8 +10,8 @@ import '../model/device_preference.dart';
 import '../model/platform_system.dart';
 import '../util/check_update.dart';
 
-final needUpdateStateProvider = StateProvider<bool>((ref) {
-  return false;
+final needUpdateStateProvider = StateProvider<String?>((ref) {
+  return null;
 });
 
 final versionProvider = FutureProvider<String>((ref) async {

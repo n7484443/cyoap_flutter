@@ -14,6 +14,8 @@ extension Localization on String {
           'project_name': 'Project Name',
           'create': 'Create',
           'font_licenses': 'Font licenses',
+          'version_check': 'New version available!',
+          'version_latest': 'Latest version : ',
 
           //common
           'variable': 'Variable',
@@ -154,6 +156,8 @@ extension Localization on String {
           'project_name': '프로젝트명',
           'create': '생성',
           'font_licenses': '폰트 라이센스',
+          'version_check': '새로운 버전이 있습니다!',
+          'version_latest': '최신 버전 : ',
 
           //common
           'variable': '변수',
