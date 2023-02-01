@@ -53,6 +53,7 @@ jobs:
 
       - run: flutter build windows --release
 
+      - run: cd updater
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
@@ -60,6 +61,7 @@ jobs:
         with:
           command: build
           args: --release
+      - run: cd ..
       - run: MV "updater/target/release/updater.exe" "build/windows/runner/Release"
 
       - name: Get latest release version number
