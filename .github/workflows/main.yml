@@ -53,6 +53,15 @@ jobs:
 
       - run: flutter build windows --release
 
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release
+      - run: MV "updater/target/release/updater.exe" "build/windows/runner/Release"
+
       - name: Get latest release version number
         id: get_version
         uses: battila7/get-version-action@v2
