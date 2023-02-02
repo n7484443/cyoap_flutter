@@ -26,7 +26,7 @@ class ViewSaveDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
-      title: Text(asZip ? 'compress_process'.i18n : 'save_process'.i18n ),
+      title: Text(asZip ? 'compress_process'.i18n : 'save_process'.i18n),
       content: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -199,8 +199,7 @@ class ViewSaveIcons extends ConsumerWidget {
             ),
           PopupMenuItem(
             value: 1,
-            child: Text(
-                'extract'.i18n),
+            child: Text('extract'.i18n),
           ),
         ];
       },

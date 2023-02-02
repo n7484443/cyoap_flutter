@@ -70,9 +70,10 @@ extension Localization on String {
           'variable_add': 'Add default values',
           'variable_show_hidden': 'Hidden variables',
 
-          'unsaved' : 'There is something unsaved. Do you want to save it?',
-          'warning' : '!Warning!',
-          'warning_message' : 'This is a complete deletion of the selected project and cannot be recovered. Are you sure you want to delete it?',
+          'unsaved': 'There is something unsaved. Do you want to save it?',
+          'warning': '!Warning!',
+          'warning_message':
+              'This is a complete deletion of the selected project and cannot be recovered. Are you sure you want to delete it?',
 
           //image editor
           'crop_ratio_free': 'Free',
@@ -100,34 +101,34 @@ extension Localization on String {
           'show_result': 'Show \n in the final window',
           'slider_mode': 'Slider mode',
 
-          'default' : 'Default',
-          'random' : 'Randomize',
-          'multiple' : 'Multiple Selections',
-          'unselect' : 'Unable to select',
-          'onlyCode' : 'Use code only',
+          'default': 'Default',
+          'random': 'Randomize',
+          'multiple': 'Multiple Selections',
+          'unselect': 'Unable to select',
+          'onlyCode': 'Use code only',
 
-          'max_select' : 'MaxSelect',
-          'max_random' : 'Random number, 0 to n-1',
+          'max_select': 'MaxSelect',
+          'max_random': 'Random number, 0 to n-1',
 
           //preset
           'preset': 'Preset',
           'preset_setting': 'Preset settings',
-          'preset_new' : 'New preset',
-          'black_line' : 'visible black line',
-          'background_color' : 'Background color',
-          'color_select' : 'Select color',
-          'color_direct_select' : 'Direct selection',
-          'height' : 'Height',
-          'round' : 'Rounded corners',
-          'maximize_image' : 'Maximize images',
-          'hide_title' : 'Hide title',
-          'title_up' : 'Title up',
-          'horizontal_mode' : 'Horizontal mode',
-          'image_left' : 'Image left',
-          'node_color' : 'Node color',
-          'node_outline_color' : 'Outline color',
-          'font_title' : 'Title font',
-          'font_content' : 'Content font',
+          'preset_new': 'New preset',
+          'black_line': 'visible black line',
+          'background_color': 'Background color',
+          'color_select': 'Select color',
+          'color_direct_select': 'Direct selection',
+          'height': 'Height',
+          'round': 'Rounded corners',
+          'maximize_image': 'Maximize images',
+          'hide_title': 'Hide title',
+          'title_up': 'Title up',
+          'horizontal_mode': 'Horizontal mode',
+          'image_left': 'Image left',
+          'node_color': 'Node color',
+          'node_outline_color': 'Outline color',
+          'font_title': 'Title font',
+          'font_content': 'Content font',
 
           //design
           'location': 'Location',
@@ -135,14 +136,15 @@ extension Localization on String {
           'background': 'Background',
           'font_score': 'Score font',
           'margin_vertical': 'Vertical margin between choices',
-          'margin_default':'Default value',
+          'margin_default': 'Default value',
           'background_image': 'Background Image',
 
           'modify_size': 'Modify size',
           'random_show': 'Random',
           'copy': 'Copy',
-          'delete' : 'Delete',
-          'sample_node' : 'Adjust and view layouts, fonts, designs, sizes, and more.',
+          'delete': 'Delete',
+          'sample_node':
+              'Adjust and view layouts, fonts, designs, sizes, and more.',
           'sample_title': 'Design',
         },
         "ko_kr": {
@@ -211,9 +213,10 @@ extension Localization on String {
           'variable_add': '초기값 추가',
           'variable_show_hidden': '숨겨진 변수',
 
-          'unsaved' : '저장되지 않은 내용이 있습니다. 저장하시겠습니까?',
-          'warning' : '!경고!',
-          'warning_message' : '이것은 선택된 프로젝트를 완전히 삭제하는 것이며, 복구할 수 없습니다. 삭제하시겠습니까?',
+          'unsaved': '저장되지 않은 내용이 있습니다. 저장하시겠습니까?',
+          'warning': '!경고!',
+          'warning_message':
+              '이것은 선택된 프로젝트를 완전히 삭제하는 것이며, 복구할 수 없습니다. 삭제하시겠습니까?',
 
           //image editor
           'crop_ratio_free': '자유',
@@ -238,34 +241,34 @@ extension Localization on String {
           'show_result': '결론창에서 \n보이기',
           'slider_mode': '슬라이더 모드',
 
-          'default' : '기본',
-          'random' : '랜덤 선택',
-          'multiple' : '다중 선택',
-          'unselect' : '선택 불가',
-          'onlyCode' : '코드만 사용',
+          'default': '기본',
+          'random': '랜덤 선택',
+          'multiple': '다중 선택',
+          'unselect': '선택 불가',
+          'onlyCode': '코드만 사용',
 
-          'max_select' : '최대 선택',
-          'max_random' : '랜덤, 0 에서 n-1까지',
+          'max_select': '최대 선택',
+          'max_random': '랜덤, 0 에서 n-1까지',
 
           //preset
           'preset': '프리셋',
           'preset_setting': '프리셋 설정',
-          'preset_new' : '새 프리셋',
-          'black_line' : '검은 줄이 보임',
-          'background_color' : '배경 색상',
-          'color_select' : '색상 선택',
-          'color_direct_select' : '직접 선택',
-          'height' : '높이',
-          'round' : '라운드',
-          'maximize_image' : '이미지 최대화',
-          'hide_title' : '제목 숨기기',
-          'title_up' : '제목을 위로',
-          'horizontal_mode' : '가로 모드',
-          'image_left' : '이미지 왼쪽으로',
-          'node_color' : '선택지 색상',
-          'node_outline_color' : '외곽선 색상',
-          'font_title' : '제목 폰트',
-          'font_content' : '내용 폰트',
+          'preset_new': '새 프리셋',
+          'black_line': '검은 줄이 보임',
+          'background_color': '배경 색상',
+          'color_select': '색상 선택',
+          'color_direct_select': '직접 선택',
+          'height': '높이',
+          'round': '라운드',
+          'maximize_image': '이미지 최대화',
+          'hide_title': '제목 숨기기',
+          'title_up': '제목을 위로',
+          'horizontal_mode': '가로 모드',
+          'image_left': '이미지 왼쪽으로',
+          'node_color': '선택지 색상',
+          'node_outline_color': '외곽선 색상',
+          'font_title': '제목 폰트',
+          'font_content': '내용 폰트',
 
           //design
           'location': '위치',
@@ -273,19 +276,19 @@ extension Localization on String {
           'background': '배경',
           'font_score': '점수 폰트',
           'margin_vertical': '선택지 간 세로 여백',
-          'margin_default':'기본 값',
+          'margin_default': '기본 값',
           'background_image': '배경 이미지',
 
           'modify_size': '크기 수정',
           'random_show': '랜덤',
           'copy': '복사',
-          'delete' : '삭제',
-          'sample_node' : '레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.',
+          'delete': '삭제',
+          'sample_node': '레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.',
           'sample_title': '디자인',
         },
       };
 
-  String get i18n{
+  String get i18n {
     return localize(this, _t);
   }
 

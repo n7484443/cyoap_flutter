@@ -157,8 +157,8 @@ class WebpConverterImpAndroid implements WebpConverterImp {
     if (name.endsWith(".png")) {
       decodedImage = decodeImage(input)!;
     } else if (name.endsWith(".jpg") |
-    name.endsWith(".jpeg") |
-    name.endsWith(".bmp")) {
+        name.endsWith(".jpeg") |
+        name.endsWith(".bmp")) {
       decodedImage = decodeImage(input)!;
     } else {
       return Tuple2(name, input);

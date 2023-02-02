@@ -55,7 +55,9 @@ class ViewStart extends ConsumerWidget {
                       ),
                       Visibility(
                         visible: ref.watch(needUpdateStateProvider) != null,
-                        child: Text('version_latest'.i18n + (ref.watch(needUpdateStateProvider) ?? ''),
+                        child: Text(
+                            'version_latest'.i18n +
+                                (ref.watch(needUpdateStateProvider) ?? ''),
                             style: const TextStyle(color: Colors.redAccent)),
                       ),
                     ],
@@ -351,13 +353,14 @@ class ViewLanguageDialog extends ConsumerWidget {
         children: ConstList.localeMap.keys
             .map(
               (e) => ListTile(
-                  title: Text(e),
-                  onTap: () {
-                    I18n.of(context).locale = ConstList.localeMap[e];
-                    ref.read(localeStateProvider.notifier).state = ConstList.localeMap[e];
-                    DevicePreference.setLocaleName(e);
-                    Navigator.of(context).pop();
-                  },
+                title: Text(e),
+                onTap: () {
+                  I18n.of(context).locale = ConstList.localeMap[e];
+                  ref.read(localeStateProvider.notifier).state =
+                      ConstList.localeMap[e];
+                  DevicePreference.setLocaleName(e);
+                  Navigator.of(context).pop();
+                },
                 selected: ConstList.localeMap[e] == I18n.locale,
               ),
             )

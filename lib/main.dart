@@ -4,7 +4,7 @@ import 'dart:ui';
 
 import 'package:cyoap_core/option.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart'
-deferred as platform_specified;
+    deferred as platform_specified;
 import 'package:cyoap_flutter/util/platform_specified_util/webp_converter.dart';
 import 'package:cyoap_flutter/view/view_font_source.dart';
 import 'package:cyoap_flutter/view/view_make_platform.dart';
@@ -49,17 +49,11 @@ class ConstList {
   }
 
   static double getScreenWidth(BuildContext context) {
-    return MediaQuery
-        .of(context)
-        .size
-        .width;
+    return MediaQuery.of(context).size.width;
   }
 
   static double getScreenHeight(BuildContext context) {
-    return MediaQuery
-        .of(context)
-        .size
-        .height;
+    return MediaQuery.of(context).size.height;
   }
 
   static bool isSmallDisplay(BuildContext context) {
@@ -81,8 +75,8 @@ class ConstList {
       'platform': isWeb()
           ? 'web'
           : isMobile()
-          ? 'mobile'
-          : 'desktop',
+              ? 'mobile'
+              : 'desktop',
       'version': _version,
     };
     if (isMobile()) {
@@ -101,9 +95,7 @@ class ConstList {
 
   static DefaultStyles getDefaultThemeData(BuildContext context, double scale,
       {TextStyle? fontStyle}) {
-    var defaultTextStyle = fontStyle ?? DefaultTextStyle
-        .of(context)
-        .style;
+    var defaultTextStyle = fontStyle ?? DefaultTextStyle.of(context).style;
     var baseStyle = defaultTextStyle.copyWith(
       fontSize: 16 * scale,
       height: 1.3 * scale,
@@ -194,46 +186,45 @@ void main() {
   ConstList.preInit().then((value) async {
     runZonedGuarded(() async {
       await SentryFlutter.init(
-            (options) {
+        (options) {
           options.dsn = kDebugMode ? '' : sentryDsn;
           options.attachStacktrace = true;
         },
-        appRunner: () =>
-            runApp(
-              ProviderScope(
-                child: I18n(
-                  initialLocale: ConstList.currentLocale,
-                  child: Consumer(
-                    builder: (context, ref, child){
-                      return MaterialApp(
-                        locale: ref.watch(localeStateProvider),
-                        localizationsDelegates: [
-                          GlobalMaterialLocalizations.delegate,
-                          GlobalCupertinoLocalizations.delegate,
-                          GlobalWidgetsLocalizations.delegate,
-                        ],
-                        supportedLocales: [
-                          const Locale('en', "US"),
-                          const Locale('ko', "KR"),
-                        ],
-                        title: 'CYOAP',
-                        initialRoute: '/',
-                        routes: {
-                          '/': (context) => const ViewStart(),
-                          '/viewPlay': (context) => const ViewPlay(),
-                          '/viewMake': (context) => const ViewMakePlatform(),
-                          '/viewLicense': (context) => const ViewFontSource(),
-                        },
-                        theme: appThemeLight,
-                        darkTheme: appThemeDark,
-                        themeMode: ThemeMode.light,
-                        debugShowCheckedModeBanner: false,
-                      );
+        appRunner: () => runApp(
+          ProviderScope(
+            child: I18n(
+              initialLocale: ConstList.currentLocale,
+              child: Consumer(
+                builder: (context, ref, child) {
+                  return MaterialApp(
+                    locale: ref.watch(localeStateProvider),
+                    localizationsDelegates: [
+                      GlobalMaterialLocalizations.delegate,
+                      GlobalCupertinoLocalizations.delegate,
+                      GlobalWidgetsLocalizations.delegate,
+                    ],
+                    supportedLocales: [
+                      const Locale('en', "US"),
+                      const Locale('ko', "KR"),
+                    ],
+                    title: 'CYOAP',
+                    initialRoute: '/',
+                    routes: {
+                      '/': (context) => const ViewStart(),
+                      '/viewPlay': (context) => const ViewPlay(),
+                      '/viewMake': (context) => const ViewMakePlatform(),
+                      '/viewLicense': (context) => const ViewFontSource(),
                     },
-                  ),
-                ),
+                    theme: appThemeLight,
+                    darkTheme: appThemeDark,
+                    themeMode: ThemeMode.light,
+                    debugShowCheckedModeBanner: false,
+                  );
+                },
               ),
             ),
+          ),
+        ),
       );
     }, (error, stack) async {
       await Sentry.captureException(error, stackTrace: stack);

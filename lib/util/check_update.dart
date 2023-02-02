@@ -17,9 +17,10 @@ class CheckUpdate {
     }
     return lastRelease;
   }
+
   static Future<String?> needUpdateCheck() async {
     var lastRelease = await getLatestRelease();
-    if(lastRelease == null){
+    if (lastRelease == null) {
       return null;
     }
     if (kDebugMode) {

@@ -5,8 +5,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../main.dart';
-import '../model/image_db.dart';
 import '../model/device_preference.dart';
+import '../model/image_db.dart';
 import '../model/platform_system.dart';
 import '../util/check_update.dart';
 

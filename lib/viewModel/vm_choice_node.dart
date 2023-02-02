@@ -50,8 +50,8 @@ class ChoiceNodeNotifier extends ChangeNotifier {
         "noImage",
       )..currentPos = -1;
 
-      node!.choiceNodeOption = node!.choiceNodeOption
-          .copyWith(presetName: ref.read(choiceNodePresetCurrentEditProvider).name);
+      node!.choiceNodeOption = node!.choiceNodeOption.copyWith(
+          presetName: ref.read(choiceNodePresetCurrentEditProvider).name);
       node!.select = ref.read(choiceNodePresetTestSelectProvider) ? 1 : 0;
     } else {
       var node = getPlatform.getNode(pos);
@@ -69,7 +69,6 @@ final choiceNodeDesignSettingProvider =
   var node = ref.watch(choiceNodeProvider(pos));
   return node.node!.choiceNodeOption;
 });
-
 
 final imageStringProvider =
     Provider.family.autoDispose<String, Pos>((ref, pos) {
@@ -133,7 +132,7 @@ class ChoiceNodeSelectNotifier extends StateNotifier<int> {
     state = node.select;
   }
 
-  int maxSelect(){
+  int maxSelect() {
     var node = ref.read(choiceNodeProvider(pos)).node!;
     return node.maximumStatus;
   }

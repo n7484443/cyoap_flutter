@@ -163,7 +163,8 @@ final linePresetNameProvider =
   return ref.watch(lineProvider(pos))?.presetName ?? "default";
 });
 
-final linePresetProvider = Provider.family.autoDispose<ChoiceLineDesignPreset, int>((ref, pos) {
+final linePresetProvider =
+    Provider.family.autoDispose<ChoiceLineDesignPreset, int>((ref, pos) {
   var list = ref.watch(choiceLinePresetListProvider);
   var presetName = ref.watch(linePresetNameProvider(pos));
   return list.firstWhere((element) => element.name == presetName,

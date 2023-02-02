@@ -144,7 +144,8 @@ class SizeDialog extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('${'length'.i18n} : $str', style: Theme.of(context).textTheme.titleMedium),
+            Text('${'length'.i18n} : $str',
+                style: Theme.of(context).textTheme.titleMedium),
             Slider(
               onChanged: (double value) {
                 ref
@@ -378,9 +379,7 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
             icon: const Icon(Icons.chevron_left),
             onPressed: () {
               if (!isEditable) {
-                ref
-                    .read(choiceNodeSelectProvider(pos).notifier)
-                    .select(-1);
+                ref.read(choiceNodeSelectProvider(pos).notifier).select(-1);
               }
             },
           ),
@@ -397,9 +396,7 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
             icon: const Icon(Icons.chevron_right),
             onPressed: () {
               if (!isEditable) {
-                ref
-                    .read(choiceNodeSelectProvider(pos).notifier)
-                    .select(1);
+                ref.read(choiceNodeSelectProvider(pos).notifier).select(1);
               }
             },
           ),
@@ -569,7 +566,8 @@ class ViewChoiceNodeContent extends ConsumerWidget {
         TextButton(
           child: Text(
             'source'.i18n,
-            style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.w800),
+            style: const TextStyle(
+                color: Colors.blue, fontWeight: FontWeight.w800),
           ),
           onPressed: () {
             var url = getPlatformFileSystem

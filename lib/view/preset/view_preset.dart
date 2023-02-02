@@ -24,14 +24,14 @@ class ViewPresetTab extends ConsumerWidget {
         return ListTile(
           title: Text(tabName[index]),
           selected: ref.watch(currentPresetTab) == index,
-          onTap: (){
+          onTap: () {
             ref.read(currentPresetTab.notifier).state = index;
           },
         );
       },
       itemCount: tabName.length,
     );
-    if(currentIndex == 0){
+    if (currentIndex == 0) {
       return ViewPresetPosition(
         first: first,
         second: const ChoiceNodePresetList(),
@@ -54,10 +54,12 @@ class ViewPresetPosition extends ConsumerStatefulWidget {
   final Widget describe;
   final Widget? sample;
 
-  const ViewPresetPosition({required this.first,
-    required this.second,
-    required this.describe,
-    required this.sample, super.key});
+  const ViewPresetPosition(
+      {required this.first,
+      required this.second,
+      required this.describe,
+      required this.sample,
+      super.key});
 
   @override
   ConsumerState<ViewPresetPosition> createState() => _ViewPresetPositionState();
@@ -125,9 +127,9 @@ class PresetRenameDialog extends ConsumerStatefulWidget {
   final String name;
 
   const PresetRenameDialog(
-      this.name, {
-        super.key,
-      });
+    this.name, {
+    super.key,
+  });
 
   @override
   ConsumerState createState() => _PresetRenameDialogState();

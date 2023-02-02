@@ -18,7 +18,7 @@ import '../util/controller_adjustable_scroll.dart';
 import '../util/view_switch_label.dart';
 import '../view_choice_node.dart';
 
-class ChoiceNodeSample extends ConsumerWidget{
+class ChoiceNodeSample extends ConsumerWidget {
   const ChoiceNodeSample({super.key});
 
   @override
@@ -47,12 +47,11 @@ class ChoiceNodeSample extends ConsumerWidget{
       decoration: BoxDecoration(
         image: background != null
             ? DecorationImage(
-          image:
-          Image.memory(ImageDB().getImage(background)!).image,
-          fit: backgroundBoxFit,
-          repeat: backgroundRepeat,
-          filterQuality: FilterQuality.high,
-        )
+                image: Image.memory(ImageDB().getImage(background)!).image,
+                fit: backgroundBoxFit,
+                repeat: backgroundRepeat,
+                filterQuality: FilterQuality.high,
+              )
             : null,
       ),
       child: Row(
@@ -113,7 +112,9 @@ class ChoiceNodePresetList extends ConsumerWidget {
                   icon: Icon(Icons.delete,
                       size: (IconTheme.of(context).size ?? 18) * 0.8),
                   onPressed: () {
-                    ref.read(choiceNodePresetListProvider.notifier).deleteIndex(index);
+                    ref
+                        .read(choiceNodePresetListProvider.notifier)
+                        .deleteIndex(index);
                   },
                 ),
                 onTap: () {
@@ -154,11 +155,11 @@ class ViewTextFieldInput extends ConsumerStatefulWidget {
   final void Function(String) inputFunction;
 
   const ViewTextFieldInput(
-      this.text,
-      this.provider,
-      this.inputFunction, {
-        super.key,
-      });
+    this.text,
+    this.provider,
+    this.inputFunction, {
+    super.key,
+  });
 
   @override
   ConsumerState createState() => _ViewTextFieldInputState();
@@ -219,7 +220,8 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               minLines: 1,
               maxLines: 1,
               keyboardType: TextInputType.number,
-              controller: ref.watch(choiceNodePresetCurrentEditElevationProvider),
+              controller:
+                  ref.watch(choiceNodePresetCurrentEditElevationProvider),
               decoration: InputDecoration(labelText: 'height'.i18n),
             ),
             TextFormField(
@@ -231,27 +233,27 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               decoration: InputDecoration(labelText: 'round'.i18n),
             ),
             ViewSwitchLabel(
-                  () => ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+              () => ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                   presetIndex,
                   preset.copyWith(maximizingImage: !preset.maximizingImage)),
               preset.maximizingImage,
               label: 'maximize_image'.i18n,
             ),
             ViewSwitchLabel(
-                  () => ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+              () => ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                   presetIndex, preset.copyWith(hideTitle: !preset.hideTitle)),
               preset.hideTitle,
               label: 'hide_title'.i18n,
             ),
             ViewSwitchLabel(
-                  () => ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+              () => ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                   presetIndex,
                   preset.copyWith(titlePosition: !preset.titlePosition)),
               preset.titlePosition,
               label: 'title_up'.i18n,
             ),
             ViewSwitchLabel(
-                  () => ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+              () => ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                   presetIndex,
                   preset.copyWith(
                       imagePosition: preset.imagePosition == 0 ? 1 : 0)),
@@ -259,7 +261,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               label: 'horizontal_mode'.i18n,
             ),
             ViewSwitchLabel(
-                  () {
+              () {
                 if (preset.imagePosition == 1) {
                   ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                       presetIndex, preset.copyWith(imagePosition: 2));
@@ -341,8 +343,8 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               decoration: InputDecoration(labelText: 'font_title'.i18n),
               items: ConstList.textFontList.keys
                   .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
-                  value: name,
-                  child: Text(name, style: ConstList.getFont(name))))
+                      value: name,
+                      child: Text(name, style: ConstList.getFont(name))))
                   .toList(),
               onChanged: (String? t) {
                 if (t != null) {
@@ -358,8 +360,8 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               decoration: InputDecoration(labelText: 'font_content'.i18n),
               items: ConstList.textFontList.keys
                   .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
-                  value: name,
-                  child: Text(name, style: ConstList.getFont(name))))
+                      value: name,
+                      child: Text(name, style: ConstList.getFont(name))))
                   .toList(),
               onChanged: (String? t) {
                 if (t != null) {

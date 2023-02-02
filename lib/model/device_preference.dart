@@ -72,11 +72,12 @@ class DevicePreference {
     await prefs.setBool('saveAsWebp', data);
   }
 
-  static Future<String?> getLocaleName() async{
+  static Future<String?> getLocaleName() async {
     var prefs = await SharedPreferences.getInstance();
     return prefs.getString('cyoap_language');
   }
-  static void setLocaleName(String str) async{
+
+  static void setLocaleName(String str) async {
     var prefs = await SharedPreferences.getInstance();
     await prefs.setString('cyoap_language', str);
   }

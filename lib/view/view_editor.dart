@@ -39,7 +39,8 @@ class ViewEditor extends ConsumerWidget {
       const ViewNodeOptionEditor(),
       const ViewImageDraggable()
     ];
-    var childrenText = const ["content", "code", "setting", "image"].map((e) => e.i18n);
+    var childrenText =
+        const ["content", "code", "setting", "image"].map((e) => e.i18n);
     return WillPopScope(
       child: DefaultTabController(
         length: children.length,
@@ -377,7 +378,8 @@ class _ImageSourceDialogState extends ConsumerState<ImageSourceDialog> {
         ),
         TextButton(
           onPressed: () {
-            Navigator.pop(context, Tuple2(false, _sourceController?.text ?? ''));
+            Navigator.pop(
+                context, Tuple2(false, _sourceController?.text ?? ''));
           },
           child: Text('save'.i18n),
         ),
@@ -404,12 +406,9 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
       RegExp(r"(\b|}|\))(if|for|else|in|break|continue)(\b|{|\()");
   final regexBrace = RegExp(r"[{}()]");
   final regexComment = RegExp(r"//.*");
-  final regexFunction = RegExp("(${
-        FunctionListEnum.values
-            .where((e) => e.displayWithColor)
-            .map((e) => e.functionName ?? e.name)
-            .join('|')
-      })"r"\(");
+  final regexFunction = RegExp(
+      "(${FunctionListEnum.values.where((e) => e.displayWithColor).map((e) => e.functionName ?? e.name).join('|')})"
+      r"\(");
 
   @override
   void initState() {
@@ -435,8 +434,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
           var styleNull = Attribute.color;
           var styleDeepOrange =
               ColorAttribute('#${Colors.deepOrangeAccent.hex}');
-          var styleDeepPurple =
-          ColorAttribute('#${Colors.deepPurple.hex}');
+          var styleDeepPurple = ColorAttribute('#${Colors.deepPurple.hex}');
           var styleGrey = ColorAttribute('#${Colors.grey.hex}');
 
           _quillController?.formatText(0, plainText.length, styleNull);
@@ -448,7 +446,8 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
 
           match = regexFunction.allMatches(plainText);
           for (var m in match) {
-            _quillController?.formatText(m.start, m.end - m.start, styleDeepPurple);
+            _quillController?.formatText(
+                m.start, m.end - m.start, styleDeepPurple);
           }
 
           match = regexBrace.allMatches(plainText);
@@ -460,7 +459,6 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
           for (var m in match) {
             _quillController?.formatText(m.start, m.end - m.start, styleGrey);
           }
-
 
           ref
               .read(nodeEditorTargetProvider)
@@ -503,7 +501,8 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
                   child: TextField(
                     controller: ref.watch(controllerClickableProvider),
                     textAlign: TextAlign.left,
-                    decoration: InputDecoration(hintText: 'code_hint_execute_condition'.i18n),
+                    decoration: InputDecoration(
+                        hintText: 'code_hint_execute_condition'.i18n),
                   ),
                 ),
               ),
@@ -608,9 +607,8 @@ class ViewNodeOptionEditor extends ConsumerWidget {
     if (nodeMode == ChoiceNodeMode.multiSelect) {
       list.add(
         ViewSwitchLabel(
-              () => ref.read(nodeEditorDesignProvider.notifier).update((state) =>
-              state.copyWith(
-                  showAsSlider: !design.showAsSlider)),
+          () => ref.read(nodeEditorDesignProvider.notifier).update(
+              (state) => state.copyWith(showAsSlider: !design.showAsSlider)),
           design.showAsSlider,
           label: 'slider_mode'.i18n,
         ),
@@ -645,16 +643,20 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                 value: nodeMode,
                 items: [
                   DropdownMenuItem(
-                      value: ChoiceNodeMode.defaultMode, child: Text('default'.i18n)),
+                      value: ChoiceNodeMode.defaultMode,
+                      child: Text('default'.i18n)),
                   DropdownMenuItem(
-                      value: ChoiceNodeMode.randomMode, child: Text('random'.i18n)),
+                      value: ChoiceNodeMode.randomMode,
+                      child: Text('random'.i18n)),
                   DropdownMenuItem(
-                      value: ChoiceNodeMode.multiSelect, child: Text('multiple'.i18n)),
+                      value: ChoiceNodeMode.multiSelect,
+                      child: Text('multiple'.i18n)),
                   DropdownMenuItem(
                       value: ChoiceNodeMode.unSelectableMode,
                       child: Text('unselect'.i18n)),
                   DropdownMenuItem(
-                      value: ChoiceNodeMode.onlyCode, child: Text('onlyCode'.i18n)),
+                      value: ChoiceNodeMode.onlyCode,
+                      child: Text('onlyCode'.i18n)),
                 ],
                 onChanged: (ChoiceNodeMode? value) {
                   ref.read(nodeModeProvider.notifier).update((state) => value!);
@@ -669,7 +671,8 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                 child: SizedBox(
                   width: 120,
                   child: Column(children: [
-                    Text('variable_name'.i18n, style: Theme.of(context).textTheme.labelLarge),
+                    Text('variable_name'.i18n,
+                        style: Theme.of(context).textTheme.labelLarge),
                     Text(
                         '${title.replaceAll(" ", "")}:${nodeMode == ChoiceNodeMode.multiSelect ? 'multi' : 'random'}',
                         softWrap: true,

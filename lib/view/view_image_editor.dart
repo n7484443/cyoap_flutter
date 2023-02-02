@@ -17,12 +17,18 @@ class ViewImageEditor extends ConsumerWidget {
       body: const ViewImageEditorContents(),
       bottomNavigationBar: NavigationBar(
         destinations: [
-          NavigationDestination(icon: const Icon(Icons.close), label: "crop_ratio_free".i18n),
-          const NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "4:3"),
-          const NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "3:2"),
-          const NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "16:9"),
-          const NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "1:1"),
-          NavigationDestination(icon: const Icon(Icons.crop_rotate), label: "crop_rotate".i18n),
+          NavigationDestination(
+              icon: const Icon(Icons.close), label: "crop_ratio_free".i18n),
+          const NavigationDestination(
+              icon: Icon(Icons.aspect_ratio), label: "4:3"),
+          const NavigationDestination(
+              icon: Icon(Icons.aspect_ratio), label: "3:2"),
+          const NavigationDestination(
+              icon: Icon(Icons.aspect_ratio), label: "16:9"),
+          const NavigationDestination(
+              icon: Icon(Icons.aspect_ratio), label: "1:1"),
+          NavigationDestination(
+              icon: const Icon(Icons.crop_rotate), label: "crop_rotate".i18n),
         ],
         selectedIndex: ref.watch(imageCropIndexProvider),
         onDestinationSelected: (index) {
