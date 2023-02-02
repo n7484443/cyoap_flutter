@@ -134,7 +134,7 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
           ),
           DropdownButtonFormField<String>(
             decoration:
-                const InputDecoration(labelText: 'preset_setting_tooltip'),
+                InputDecoration(labelText: 'preset_setting_tooltip'.i18n),
             items: ref
                 .watch(choiceLinePresetListProvider)
                 .map<DropdownMenuItem<String>>((preset) => DropdownMenuItem(
