@@ -118,7 +118,7 @@ extension Localization on String {
           'background_color' : 'Background color',
           'color_select' : 'Select color',
           'color_direct_select' : 'Direct selection',
-          'height' : 'Height',
+          'height' : 'Shadow of the choice',
           'round' : 'Rounded corners',
           'maximize_image' : 'Maximize images',
           'hide_title' : 'Hide title',
