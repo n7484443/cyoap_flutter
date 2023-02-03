@@ -325,7 +325,7 @@ class VariableTiles extends ConsumerWidget {
       children: [
         if (isEditable)
           ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 200),
+            constraints: const BoxConstraints(maxWidth: 200, maxHeight: 25),
             child: ViewSwitchLabel(
               () {
                 ref

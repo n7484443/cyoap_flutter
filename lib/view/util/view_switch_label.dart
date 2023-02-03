@@ -14,7 +14,7 @@ class ViewSwitchLabel extends StatelessWidget {
       this.disable = false,
       this.labelSize = 14.0,
       this.color = Colors.black,
-        this.reverse = false,
+      this.reverse = false,
       super.key});
 
   @override
@@ -27,13 +27,15 @@ class ViewSwitchLabel extends StatelessWidget {
             .labelLarge
             ?.copyWith(fontSize: labelSize, color: color),
       ),
-      Switch(
-        onChanged:
-        (disable && !state) ? null : (bool value) => updateState(),
-        value: state,
+      FittedBox(
+        fit: BoxFit.fill,
+        child: Switch(
+          onChanged: (disable && !state) ? null : (bool value) => updateState(),
+          value: state,
+        ),
       ),
     ];
-    if(reverse){
+    if (reverse) {
       child = child.reversed.toList();
     }
     return InkWell(
