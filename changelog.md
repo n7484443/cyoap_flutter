@@ -1,3 +1,11 @@
+# 3.3.1
+## 디자인 수정
+* [라인 설정 아이콘 수정](https://github.com/n7484443/cyoap_flutter/issues/35)
+* [이미지 추가 버튼 위치 수정](https://github.com/n7484443/cyoap_flutter/issues/31)
+* [좌측 패널 수정 #1](https://github.com/n7484443/cyoap_flutter/issues/22) [#2](https://github.com/n7484443/cyoap_flutter/issues/17)
+## 의존성
+* Flutter 3.7.1
+
 # 3.3.0
 ## 편의성 추가
 * windows에서 updater 로 간편한 업데이트 구현
