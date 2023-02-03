@@ -64,6 +64,20 @@ class ViewStart extends ConsumerWidget {
                   ),
                   const Spacer(),
                   IconButton(
+                    icon: ref.watch(themeStateProvider) == ThemeMode.light
+                        ? const Icon(Icons.dark_mode)
+                        : const Icon(Icons.light_mode),
+                    onPressed: () {
+                      if (ref.watch(themeStateProvider) == ThemeMode.light) {
+                        ref.read(themeStateProvider.notifier).state =
+                            ThemeMode.dark;
+                      } else {
+                        ref.read(themeStateProvider.notifier).state =
+                            ThemeMode.light;
+                      }
+                    },
+                  ),
+                  IconButton(
                     icon: const Icon(Icons.language),
                     onPressed: () {
                       showDialog(

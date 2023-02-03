@@ -25,8 +25,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   project.set_dart_entrypoint_arguments(std::move(command_line_arguments));
 
   FlutterWindow window(project);
-  Win32Window::Point origin(40, 40);
-  Win32Window::Size size(1600, 900);
+  Win32Window::Point origin(30, 30);
+  Win32Window::Size size(1280, 720);
   if (!window.Create(L"cyoap_flutter", origin, size)) {
     return EXIT_FAILURE;
   }

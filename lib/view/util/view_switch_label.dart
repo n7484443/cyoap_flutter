@@ -6,14 +6,12 @@ class ViewSwitchLabel extends StatelessWidget {
   final bool disable;
   final String label;
   final double labelSize;
-  final Color color;
   final bool reverse;
 
   const ViewSwitchLabel(this.updateState, this.state,
       {this.label = '',
       this.disable = false,
       this.labelSize = 14.0,
-      this.color = Colors.black,
       this.reverse = false,
       super.key});
 
@@ -25,7 +23,7 @@ class ViewSwitchLabel extends StatelessWidget {
         style: Theme.of(context)
             .textTheme
             .labelLarge
-            ?.copyWith(fontSize: labelSize, color: color),
+            ?.copyWith(fontSize: labelSize),
       ),
       FittedBox(
         fit: BoxFit.fill,
