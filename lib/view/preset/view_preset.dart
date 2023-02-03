@@ -100,30 +100,52 @@ class _ViewPresetPositionState extends ConsumerState<ViewPresetPosition> {
         ),
       );
     }
+
+    if (widget.sample != null){
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: widget.first,
+                      ),
+                      Expanded(
+                        child: widget.second,
+                      )
+                    ],
+                  ),
+                ),
+                widget.sample!
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: widget.describe,
+          ),
+        ],
+      );
+    }
     return Row(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Expanded(
           flex: 2,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+          child: Row(
             children: [
               Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: widget.first,
-                    ),
-                    Expanded(
-                      child: widget.second,
-                    )
-                  ],
-                ),
+                child: widget.first,
               ),
-              if (widget.sample != null)
-                Expanded(
-                  child: widget.sample!,
-                )
+              Expanded(
+                child: widget.second,
+              )
             ],
           ),
         ),
