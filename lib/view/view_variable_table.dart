@@ -321,8 +321,12 @@ class VariableTiles extends ConsumerWidget {
     }
     return ExpansionTile(
       title: Text('variable'.i18n),
-      subtitle: isEditable
-          ? ViewSwitchLabel(
+      initiallyExpanded: true,
+      children: [
+        if (isEditable)
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 200),
+            child: ViewSwitchLabel(
               () {
                 ref
                     .read(isVisibleHideVariableProvider.notifier)
@@ -330,10 +334,10 @@ class VariableTiles extends ConsumerWidget {
               },
               isVisibleHideVariable,
               label: 'variable_show_hidden'.i18n,
-            )
-          : null,
-      initiallyExpanded: true,
-      children: variableList,
+            ),
+          ),
+        ...variableList
+      ],
     );
   }
 }
