@@ -141,6 +141,10 @@ class ConstList {
     return textFontList[font] ?? textFontList["notoSans"]!;
   }
 
+  static TextStyle getFontWithColor(String font) {
+    return getFont(font).copyWith(color: Colors.black);
+  }
+
   static Future<void> preInit() async {
     await platform_specified.loadLibrary();
     platform_specified.PlatformSpecified().preInit();

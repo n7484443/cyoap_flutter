@@ -456,7 +456,7 @@ class _ViewContentsState extends ConsumerState<ViewContents> {
       enableInteractiveSelection: false,
       customStyles: ConstList.getDefaultThemeData(
           context, ConstList.scale(context),
-          fontStyle: ConstList.getFont(preset.mainFont)),
+          fontStyle: ConstList.getFontWithColor(preset.mainFont)),
     );
   }
 }
