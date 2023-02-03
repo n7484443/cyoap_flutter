@@ -75,6 +75,8 @@ extension Localization on String {
           'warning_message':
               'This is a complete deletion of the selected project and cannot be recovered. Are you sure you want to delete it?',
 
+          'add_image': 'Add image',
+          'add_image_description': 'Drag here to add image or',
           //image editor
           'crop_ratio_free': 'Free',
           'crop_rotate': 'Rotate',
@@ -218,6 +220,8 @@ extension Localization on String {
           'warning_message':
               '이것은 선택된 프로젝트를 완전히 삭제하는 것이며, 복구할 수 없습니다. 삭제하시겠습니까?',
 
+          'add_image': '이미지 추가',
+          'add_image_description': '이미지를 추가하려면 드래그하세요. 혹은, ',
           //image editor
           'crop_ratio_free': '자유',
           'crop_rotate': '회전',

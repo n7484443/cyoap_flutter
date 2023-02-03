@@ -723,37 +723,59 @@ class ViewImageDraggable extends ConsumerWidget {
     if (!ConstList.isDesktop()) {
       return const ViewImageSelector();
     }
-    return DropTarget(
-      onDragDone: (detail) async {
-        for (var file in detail.files) {
-          var fileName = file.name;
-          if (!ImageDB.regCheckImage.hasMatch(fileName)) {
-            continue;
-          }
-          var fileData = await file.readAsBytes();
-          ref.read(lastImageProvider.notifier).update((state) => fileData);
-          ref.read(editorChangeProvider.notifier).needUpdate();
-          openImageEditor(ref, context, fileName);
-          break;
-        }
-      },
-      onDragEntered: (detail) {
-        ref.read(editorImageDragDropColorProvider.notifier).state =
-            Colors.lightBlueAccent;
-      },
-      onDragExited: (detail) {
-        ref.read(editorImageDragDropColorProvider.notifier).state =
-            Colors.black12;
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-              color: ref.watch(editorImageDragDropColorProvider), width: 5),
-          borderRadius: BorderRadius.circular(8),
+    return Column(
+      children: [
+        Row(
+          children: [
+            Text(
+              'add_image_description'.i18n,
+            ),
+            TextButton(
+              onPressed: () {
+                ref
+                    .read(imageListStateProvider.notifier)
+                    .addImage()
+                    .then((name) => openImageEditor(ref, context, name));
+              },
+              child: Text('add_image'.i18n),
+            ),
+          ],
         ),
-        padding: const EdgeInsets.all(4.0),
-        child: const ViewImageSelector(),
-      ),
+        Expanded(
+          child: DropTarget(
+            onDragDone: (detail) async {
+              for (var file in detail.files) {
+                var fileName = file.name;
+                if (!ImageDB.regCheckImage.hasMatch(fileName)) {
+                  continue;
+                }
+                var fileData = await file.readAsBytes();
+                ref.read(lastImageProvider.notifier).update((state) => fileData);
+                ref.read(editorChangeProvider.notifier).needUpdate();
+                openImageEditor(ref, context, fileName);
+                break;
+              }
+            },
+            onDragEntered: (detail) {
+              ref.read(editorImageDragDropColorProvider.notifier).state =
+                  Colors.lightBlueAccent;
+            },
+            onDragExited: (detail) {
+              ref.read(editorImageDragDropColorProvider.notifier).state =
+                  Colors.black12;
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                    color: ref.watch(editorImageDragDropColorProvider), width: 5),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              padding: const EdgeInsets.all(4.0),
+              child: const ViewImageSelector(),
+            ),
+          ),
+        )
+      ],
     );
   }
 
@@ -806,84 +828,45 @@ class _ViewImageSelectorState extends ConsumerState<ViewImageSelector> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        CustomScrollView(
-          controller: _controller,
-          slivers: [
-            SliverGrid(
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        width: 3,
-                        color: index == ref.watch(imageStateProvider)
-                            ? Colors.redAccent
-                            : Colors.white,
-                      ),
-                    ),
-                    child: GestureDetector(
-                      child: ViewImageLoading(
-                          ref.watch(imageListStateProvider)[index]),
-                      onDoubleTap: () {
-                        if (ref.read(imageStateProvider.notifier).state ==
-                            index) {
-                          ref.read(imageStateProvider.notifier).state = -1;
-                        } else {
-                          ref.read(imageStateProvider.notifier).state = index;
-                        }
-                        ref.read(editorChangeProvider.notifier).needUpdate();
-                      },
-                    ),
-                  );
-                },
-                childCount: ref.watch(imageListStateProvider).length,
-              ),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 4,
-                crossAxisSpacing: 3.0,
-                mainAxisSpacing: 3.0,
-              ),
-            ),
-          ],
-        ),
-        Positioned(
-          bottom: 5,
-          right: 5,
-          child: FloatingActionButton(
-            onPressed: () {
-              ref
-                  .read(imageListStateProvider.notifier)
-                  .addImage()
-                  .then((name) => openImageEditor(ref, context, name));
+    return CustomScrollView(
+      controller: _controller,
+      slivers: [
+        SliverGrid(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              return Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    width: 3,
+                    color: index == ref.watch(imageStateProvider)
+                        ? Colors.redAccent
+                        : Colors.white,
+                  ),
+                ),
+                child: GestureDetector(
+                  child: ViewImageLoading(
+                      ref.watch(imageListStateProvider)[index]),
+                  onDoubleTap: () {
+                    if (ref.read(imageStateProvider.notifier).state ==
+                        index) {
+                      ref.read(imageStateProvider.notifier).state = -1;
+                    } else {
+                      ref.read(imageStateProvider.notifier).state = index;
+                    }
+                    ref.read(editorChangeProvider.notifier).needUpdate();
+                  },
+                ),
+              );
             },
-            child: const Icon(Icons.add),
+            childCount: ref.watch(imageListStateProvider).length,
           ),
-        )
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 4,
+            crossAxisSpacing: 3.0,
+            mainAxisSpacing: 3.0,
+          ),
+        ),
       ],
     );
-  }
-
-  void openImageEditor(WidgetRef ref, BuildContext context, String name) {
-    if (name != '') {
-      showDialog<Tuple2<bool, String>>(
-        builder: (_) => ImageSourceDialog(name),
-        context: context,
-        barrierDismissible: false,
-      ).then((value) {
-        getPlatformFileSystem.addSource(name, value?.item2 ?? '');
-        if (value?.item1 ?? false) {
-          ref
-              .read(imageProvider.notifier)
-              .update((state) => Tuple2(name, ref.watch(lastImageProvider)!));
-          ref
-              .read(changeTabProvider.notifier)
-              .changePageString('viewImageEditor', context);
-        } else {
-          ref.read(imageListStateProvider.notifier).addImageToList(name);
-        }
-      });
-    }
   }
 }
