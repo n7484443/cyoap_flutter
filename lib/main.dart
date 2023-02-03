@@ -149,6 +149,7 @@ class ConstList {
     await platform_specified.loadLibrary();
     platform_specified.PlatformSpecified().preInit();
     currentLocaleName = (await DevicePreference.getLocaleName())?.trim();
+    currentThemeMode = await DevicePreference.getThemeMode();
     return;
   }
 
@@ -160,6 +161,8 @@ class ConstList {
 
   static Locale? get currentLocale =>
       currentLocaleName == null ? null : localeMap[currentLocaleName];
+
+  static ThemeMode currentThemeMode = ThemeMode.light;
 
   static Map<String, Locale> localeMap = const {
     'English': Locale('en', 'US'),
@@ -175,7 +178,10 @@ final localeStateProvider = StateProvider<Locale?>((ref) {
 });
 
 final themeStateProvider = StateProvider<ThemeMode>((ref){
-  return ThemeMode.light;
+  ref.listenSelf((previous, next) {
+    DevicePreference.setThemeMode(next);
+  });
+  return ConstList.currentThemeMode;
 });
 
 void main() {

@@ -99,7 +99,7 @@ class ViewLineOptionEditor extends ConsumerWidget {
             ),
           ]),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 4,
+            crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 3,
             crossAxisSpacing: 2,
             mainAxisExtent: 80,
             mainAxisSpacing: 2,
