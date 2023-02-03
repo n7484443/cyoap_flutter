@@ -233,58 +233,61 @@ class NodeDivider extends ConsumerWidget {
               )),
           Align(
             alignment: Alignment.centerRight,
-            child: PopupMenuButton<int>(
-              icon: const Icon(Icons.more_vert),
-              onSelected: (result) {
-                switch (result) {
-                  case 0:
-                    showDialog<String>(
-                            context: context,
-                            builder: (_) => NodeDividerDialog(y),
-                            barrierDismissible: false)
-                        .then((value) {
-                      getPlatform
-                          .getLineSetting(y)
-                          ?.recursiveStatus
-                          .conditionVisibleString = value!;
-                      ref
-                          .read(draggableNestedMapChangedProvider.notifier)
-                          .state = true;
-                    });
-                    break;
-                }
-              },
-              itemBuilder: (BuildContext context) {
-                return [
-                  PopupMenuItem(
-                    value: 0,
-                    child: Text('lineSetting'.i18n),
-                  ),
-                ];
-              },
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Row(
-              children: [
-                CircleButton(
-                  onPressed: () {
-                    ref.read(vmDraggableNestedMapProvider).moveLine(y, y - 1);
-                  },
-                  child: const Icon(
-                    Icons.arrow_upward,
-                  ),
+            child: IntrinsicWidth(
+              child: Card(
+                elevation: 0,
+                color: Colors.white,
+                child: Row(
+                  children: [
+                    CircleButton(
+                      onPressed: () {
+                        ref.read(vmDraggableNestedMapProvider).moveLine(y, y - 1);
+                      },
+                      child: const Icon(
+                        Icons.arrow_upward,
+                      ),
+                    ),
+                    CircleButton(
+                      onPressed: () {
+                        ref.read(vmDraggableNestedMapProvider).moveLine(y, y + 1);
+                      },
+                      child: const Icon(
+                        Icons.arrow_downward,
+                      ),
+                    ),
+                    PopupMenuButton<int>(
+                      icon: const Icon(Icons.more_vert),
+                      onSelected: (result) {
+                        switch (result) {
+                          case 0:
+                            showDialog<String>(
+                                context: context,
+                                builder: (_) => NodeDividerDialog(y),
+                                barrierDismissible: false)
+                                .then((value) {
+                              getPlatform
+                                  .getLineSetting(y)
+                                  ?.recursiveStatus
+                                  .conditionVisibleString = value!;
+                              ref
+                                  .read(draggableNestedMapChangedProvider.notifier)
+                                  .state = true;
+                            });
+                            break;
+                        }
+                      },
+                      itemBuilder: (BuildContext context) {
+                        return [
+                          PopupMenuItem(
+                            value: 0,
+                            child: Text('lineSetting'.i18n),
+                          ),
+                        ];
+                      },
+                    )
+                  ],
                 ),
-                CircleButton(
-                  onPressed: () {
-                    ref.read(vmDraggableNestedMapProvider).moveLine(y, y + 1);
-                  },
-                  child: const Icon(
-                    Icons.arrow_downward,
-                  ),
-                ),
-              ],
+              ),
             ),
           )
         ],

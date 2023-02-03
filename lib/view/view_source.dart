@@ -5,6 +5,7 @@ import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../model/platform_system.dart';
 import '../viewModel/vm_make_platform.dart';
 import '../viewModel/vm_source.dart';
 
@@ -35,7 +36,6 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
   @override
   Widget build(BuildContext context) {
     var data = ref.watch(vmSourceProvider);
-    var deleteList = ref.watch(deleteImageListProvider);
 
     Widget icon;
     if (!ref.watch(deleteModeProvider)) {
@@ -92,58 +92,7 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
                     var name = data[index];
-                    return Card(
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: Theme.of(context).colorScheme.outline,
-                        ),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(4)),
-                      ),
-                      color: deleteList.contains(name)
-                          ? Theme.of(context).colorScheme.secondaryContainer
-                          : null,
-                      child: Column(
-                        children: [
-                          Stack(children: [
-                            Align(
-                              alignment: Alignment.center,
-                              child: Text(name),
-                            ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Visibility(
-                                visible: ref.watch(deleteModeProvider),
-                                child: IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () {
-                                    ref
-                                        .read(vmSourceProvider.notifier)
-                                        .checkRemove(name);
-                                  },
-                                ),
-                              ),
-                            ),
-                          ]),
-                          Expanded(
-                            child: ViewImageLoading(name),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextField(
-                              textAlign: TextAlign.start,
-                              decoration: InputDecoration(
-                                hintText: 'source_hint'.i18n,
-                                alignLabelWithHint: true,
-                              ),
-                              controller: ref
-                                  .watch(textEditingControllerProvider(name)),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
+                    return ViewSourceItem(name: name);
                   },
                   childCount: data.length,
                 ),
@@ -156,6 +105,95 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
       onWillPop: () async {
         return false;
       },
+    );
+  }
+}
+
+class ViewSourceItem extends ConsumerStatefulWidget {
+  final String name;
+  const ViewSourceItem({
+    required this.name,
+    super.key,
+  });
+
+  @override
+  ConsumerState createState() => _ViewSourceItemState();
+}
+
+class _ViewSourceItemState extends ConsumerState<ViewSourceItem> {
+  TextEditingController? _textEditingController;
+
+  @override
+  void initState() {
+    _textEditingController = TextEditingController();
+    if (getPlatformFileSystem.hasSource(widget.name)) {
+      _textEditingController?.text = getPlatformFileSystem.getSource(widget.name) ?? '';
+    }
+    _textEditingController?.addListener(() {
+      getPlatformFileSystem.addSource(widget.name, _textEditingController?.text ?? '');
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _textEditingController?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var deleteList = ref.watch(deleteImageListProvider);
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        side: BorderSide(
+          color: Theme.of(context).colorScheme.outline,
+        ),
+        borderRadius:
+        const BorderRadius.all(Radius.circular(4)),
+      ),
+      color: deleteList.contains(widget.name)
+          ? Theme.of(context).colorScheme.secondaryContainer
+          : null,
+      child: Column(
+        children: [
+          Stack(children: [
+            Align(
+              alignment: Alignment.center,
+              child: Text(widget.name),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Visibility(
+                visible: ref.watch(deleteModeProvider),
+                child: IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    ref
+                        .read(vmSourceProvider.notifier)
+                        .checkRemove(widget.name);
+                  },
+                ),
+              ),
+            ),
+          ]),
+          Expanded(
+            child: ViewImageLoading(widget.name),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              textAlign: TextAlign.start,
+              decoration: InputDecoration(
+                hintText: 'source_hint'.i18n,
+                alignLabelWithHint: true,
+              ),
+              controller: _textEditingController,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
