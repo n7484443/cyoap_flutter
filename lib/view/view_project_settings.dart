@@ -200,7 +200,7 @@ class ViewProjectSetting extends ConsumerWidget {
             child: Text('variable_add'.i18n),
             onPressed: () {
               ref.read(valueTypeWrapperListProvider.notifier).addInitialValue(
-                  'point', ValueTypeWrapper(ValueType.int(0), visible: true));
+                  'point', ValueTypeWrapper(ValueType.int(0)));
             },
           )
         ],
