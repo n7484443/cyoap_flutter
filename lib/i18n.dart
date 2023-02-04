@@ -45,6 +45,7 @@ extension Localization on String {
           //make page
           'lineSetting_tooltip_0': 'Number of selections available',
           'lineSetting_tooltip_1': 'Allowed Choices %s',
+          'lineSetting_tooltip_2': "ChoiceLine's name",
           'lineSetting': 'Row settings',
           'preset_setting_tooltip': 'Preset settings',
           'visible_condition_tooltip':
@@ -188,6 +189,7 @@ extension Localization on String {
           //make page
           'lineSetting_tooltip_0': '선택 가능 개수',
           'lineSetting_tooltip_1': '최대 %s 개만큼 선택 가능',
+          'lineSetting_tooltip_2': "선택지 줄 명칭",
           'lineSetting': '라인 설정',
           'preset_setting_tooltip': '프리셋 설정',
           'visible_condition_tooltip': '보이는 조건(true 일 때 보임, 비어있을 시 true)',

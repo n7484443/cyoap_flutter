@@ -14,6 +14,7 @@ import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/view/view_selected_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tuple/tuple.dart';
 
 import '../model/image_db.dart';
 import '../viewModel/preset/vm_choice_line_preset.dart';
@@ -82,6 +83,7 @@ class NodeDividerDialog extends ConsumerStatefulWidget {
 
 class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
   TextEditingController? _textFieldController;
+  TextEditingController? _nameController;
 
   @override
   void initState() {
@@ -91,12 +93,15 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
                 ?.recursiveStatus
                 .conditionVisibleString ??
             "");
+    _nameController = TextEditingController(
+        text: ref.read(lineProvider(widget.y))?.name ?? "ChoiceLine_${widget.y}");
     super.initState();
   }
 
   @override
   void dispose() {
     _textFieldController?.dispose();
+    _nameController?.dispose();
     super.dispose();
   }
 
@@ -105,7 +110,6 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
     var maxSelect = ref.watch(lineMaxSelectProvider(widget.y));
     var maxSelectString = maxSelect == -1 ? "max" : maxSelect.toString();
     return AlertDialog(
-      title: Text('${'variable_name'.i18n}: lineSetting_${widget.y}'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -154,12 +158,17 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
             decoration:
                 InputDecoration(hintText: 'visible_condition_tooltip'.i18n),
           ),
+          TextField(
+            controller: _nameController,
+            decoration:
+                InputDecoration(hintText: 'lineSetting_tooltip_2'.i18n),
+          ),
         ],
       ),
       actions: [
         TextButton(
             onPressed: () {
-              Navigator.of(context).pop(_textFieldController!.text);
+              Navigator.of(context).pop(Tuple2(_textFieldController!.text, _nameController!.text));
             },
             child: Text("confirm".i18n))
       ],
@@ -263,7 +272,7 @@ class NodeDivider extends ConsumerWidget {
                       ),
                       CircleButton(
                         onPressed: () {
-                          showDialog<String>(
+                          showDialog<Tuple2<String, String>>(
                                   context: context,
                                   builder: (_) => NodeDividerDialog(y),
                                   barrierDismissible: false)
@@ -271,7 +280,10 @@ class NodeDivider extends ConsumerWidget {
                             getPlatform
                                 .getLineSetting(y)
                                 ?.recursiveStatus
-                                .conditionVisibleString = value!;
+                                .conditionVisibleString = value!.item1;
+                            getPlatform
+                                .getLineSetting(y)
+                                ?.name = value!.item2;
                             ref
                                 .read(
                                     draggableNestedMapChangedProvider.notifier)
