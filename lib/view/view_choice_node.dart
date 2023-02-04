@@ -300,42 +300,44 @@ class ViewTitleWithEdit extends ConsumerWidget {
         title,
         Align(
           alignment: Alignment.centerRight,
-          child: PopupMenuButton<int>(
-            icon: const Icon(Icons.more_vert),
-            onSelected: (result) {
-              switch (result) {
-                case 0:
-                  showDialog(
-                    context: context,
-                    builder: (builder) => SizeDialog(pos),
-                  );
-                  break;
-                case 1:
-                  ref
-                      .read(vmDraggableNestedMapProvider)
-                      .copyData(ref.watch(choiceNodeProvider(pos)).node!);
-                  break;
-                case 2:
-                  ref.read(vmDraggableNestedMapProvider).removeData(pos);
-                  break;
-              }
-            },
-            itemBuilder: (context) {
-              return [
-                PopupMenuItem(
-                  value: 0,
-                  child: Text('modify_size'.i18n),
-                ),
-                PopupMenuItem(
-                  value: 1,
-                  child: Text('copy'.i18n),
-                ),
-                PopupMenuItem(
-                  value: 2,
-                  child: Text('delete'.i18n),
-                ),
-              ];
-            },
+          child: CircleAvatar(
+            child: PopupMenuButton<int>(
+              icon: const Icon(Icons.more_vert),
+              onSelected: (result) {
+                switch (result) {
+                  case 0:
+                    showDialog(
+                      context: context,
+                      builder: (builder) => SizeDialog(pos),
+                    );
+                    break;
+                  case 1:
+                    ref
+                        .read(vmDraggableNestedMapProvider)
+                        .copyData(ref.watch(choiceNodeProvider(pos)).node!);
+                    break;
+                  case 2:
+                    ref.read(vmDraggableNestedMapProvider).removeData(pos);
+                    break;
+                }
+              },
+              itemBuilder: (context) {
+                return [
+                  PopupMenuItem(
+                    value: 0,
+                    child: Text('modify_size'.i18n),
+                  ),
+                  PopupMenuItem(
+                    value: 1,
+                    child: Text('copy'.i18n),
+                  ),
+                  PopupMenuItem(
+                    value: 2,
+                    child: Text('delete'.i18n),
+                  ),
+                ];
+              },
+            ),
           ),
         ),
       ],
