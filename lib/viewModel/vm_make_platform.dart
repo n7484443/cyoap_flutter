@@ -44,7 +44,7 @@ class ChangeTabNotifier extends StateNotifier<int> {
         }
         break;
       case 2:
-        if (ref.read(projectSettingChangedProvider)) {
+        if (ref.read(valueTypeWrapperListProvider.notifier).isDifferentFromOrigin()) {
           var out = await showDialog(
             context: context,
             builder: (_) => ViewBackDialog(

@@ -47,8 +47,6 @@ final valueTypeWrapperListProvider = StateNotifierProvider.autoDispose<
     (ref) =>
         ValueTypeWrapperListNotifier(ref, Map.from(getPlatform.globalSetting)));
 
-final projectSettingChangedProvider = StateProvider<bool>((ref) => false);
-
 final projectSettingVisibleSwitchProvider = StateProvider.family
     .autoDispose<bool, int>((ref, index) => ref
         .read(valueTypeWrapperListProvider.notifier)
@@ -76,12 +74,10 @@ class ValueTypeWrapperListNotifier
         }
       }
     }
-    ref.read(projectSettingChangedProvider.notifier).state = true;
   }
 
   void deleteInitialValue(int index) {
     state = Map.from(state)..remove(getKey(index));
-    ref.read(projectSettingChangedProvider.notifier).state = true;
   }
 
   void editInitialValue(int index, String name, ValueTypeWrapper value) {
@@ -89,7 +85,6 @@ class ValueTypeWrapperListNotifier
       deleteInitialValue(index);
     }
     addInitialValue(name, value);
-    ref.read(projectSettingChangedProvider.notifier).state = true;
   }
 
   String getKey(int index) {
@@ -103,7 +98,6 @@ class ValueTypeWrapperListNotifier
   void save() {
     getPlatform.setGlobalSetting(state);
     VariableDataBase().updateVariableTiles();
-    ref.read(projectSettingChangedProvider.notifier).state = false;
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
   }
 
@@ -113,5 +107,20 @@ class ValueTypeWrapperListNotifier
       return Tuple2(key, getValue(key)!);
     }
     return null;
+  }
+
+  bool isDifferentFromOrigin(){
+    if(state.length != getPlatform.globalSetting.length){
+      return true;
+    }
+    for(var key in state.keys){
+      if(!getPlatform.globalSetting.containsKey(key)){
+        return true;
+      }
+      if(state[key] != getPlatform.globalSetting[key]){
+        return true;
+      }
+    }
+    return false;
   }
 }
