@@ -171,6 +171,18 @@ class ViewSaveIcons extends ConsumerWidget {
         },
       );
     }
+    if (getPlatformFileSystem.openAsFile) {
+      return IconButton(
+        icon: const Icon(Icons.save),
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) => const ViewSaveDialog(true),
+              barrierDismissible: false);
+          savePlatform(ref, true).then((value) => Navigator.of(context).pop());
+        },
+      );
+    }
     return PopupMenuButton(
       icon: const Icon(Icons.save),
       tooltip: 'save_option'.i18n,
@@ -192,11 +204,10 @@ class ViewSaveIcons extends ConsumerWidget {
       },
       itemBuilder: (BuildContext context) {
         return [
-          if (!getPlatformFileSystem.openAsFile)
-            PopupMenuItem(
-              value: 0,
-              child: Text('save'.i18n),
-            ),
+          PopupMenuItem(
+            value: 0,
+            child: Text('save'.i18n),
+          ),
           PopupMenuItem(
             value: 1,
             child: Text('extract'.i18n),
