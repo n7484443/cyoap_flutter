@@ -83,59 +83,64 @@ class WebpConverterImpWindows implements WebpConverterImp {
     if (!saveAsWebp) {
       return Tuple2(name, input);
     }
-    Image decodedImage;
-    bool isLossless = true;
-    if (name.endsWith(".png")) {
-      decodedImage = decodeImage(input)!;
-      isLossless = true;
-    } else if (name.endsWith(".jpg") |
-        name.endsWith(".jpeg") |
-        name.endsWith(".bmp")) {
-      decodedImage = decodeImage(input)!;
-      isLossless = false;
-    } else {
+    try {
+      Image decodedImage;
+      bool isLossless = true;
+      if (name.endsWith(".png")) {
+        decodedImage = decodeImage(input)!;
+        isLossless = true;
+      } else if (name.endsWith(".jpg") |
+      name.endsWith(".jpeg") |
+      name.endsWith(".bmp")) {
+        decodedImage = decodeImage(input)!;
+        isLossless = false;
+      } else {
+        return Tuple2(name, input);
+      }
+      return using<Tuple2<String, Uint8List>>((Arena arena){
+        Pointer<Pointer<Uint8>> outputBuff = arena.allocate<Pointer<Uint8>>(0);
+        Pointer<Uint8> inputBuff;
+        Uint8List output;
+        int outputSize;
+        if (decodedImage.numChannels == 3) {
+          var inputBuffered = decodedImage.getBytes(order: ChannelOrder.rgb);
+          int size = inputBuffered.length;
+          inputBuff = arena.allocate<Uint8>(size);
+          for (int i = 0; i < inputBuffered.length; i++) {
+            inputBuff[i] = inputBuffered[i];
+          }
+          if (isLossless) {
+            outputSize = webPEncodeLosslessRGB(inputBuff, decodedImage.width,
+                decodedImage.height, decodedImage.width * 3, outputBuff);
+          } else {
+            outputSize = webPEncodeRGB(inputBuff, decodedImage.width,
+                decodedImage.height, decodedImage.width * 3, quality, outputBuff);
+          }
+        } else {
+          //rgba
+          var inputBuffered = decodedImage.getBytes(order: ChannelOrder.rgba);
+          int size = inputBuffered.length;
+          inputBuff = arena.allocate<Uint8>(size);
+          for (int i = 0; i < inputBuffered.length; i++) {
+            inputBuff[i] = inputBuffered[i];
+          }
+          if (isLossless) {
+            outputSize = webPEncodeLosslessRGBA(inputBuff, decodedImage.width,
+                decodedImage.height, decodedImage.width * 4, outputBuff);
+          } else {
+            outputSize = webPEncodeRGBA(inputBuff, decodedImage.width,
+                decodedImage.height, decodedImage.width * 4, quality, outputBuff);
+          }
+        }
+        if (outputSize == 0) throw 'encoding error!';
+        output = outputBuff.value.asTypedList(outputSize);
+        return Tuple2(
+            name.replaceAll(RegExp('[.](png|jpg|jpeg|bmp)'), '.webp'), output);
+      });
+    }catch(e){
+      print(e);
       return Tuple2(name, input);
     }
-    Pointer<Pointer<Uint8>> outputBuff = calloc.allocate<Pointer<Uint8>>(0);
-    Pointer<Uint8> inputBuff;
-    Uint8List output;
-    int outputSize;
-    if (decodedImage.numChannels == 3) {
-      var inputBuffered = decodedImage.getBytes(order: ChannelOrder.rgb);
-      int size = inputBuffered.length;
-      inputBuff = calloc.allocate<Uint8>(size);
-      for (int i = 0; i < inputBuffered.length; i++) {
-        inputBuff[i] = inputBuffered[i];
-      }
-      if (isLossless) {
-        outputSize = webPEncodeLosslessRGB(inputBuff, decodedImage.width,
-            decodedImage.height, decodedImage.width * 3, outputBuff);
-      } else {
-        outputSize = webPEncodeRGB(inputBuff, decodedImage.width,
-            decodedImage.height, decodedImage.width * 3, quality, outputBuff);
-      }
-    } else {
-      //rgba
-      var inputBuffered = decodedImage.getBytes(order: ChannelOrder.rgba);
-      int size = inputBuffered.length;
-      inputBuff = calloc.allocate<Uint8>(size);
-      for (int i = 0; i < inputBuffered.length; i++) {
-        inputBuff[i] = inputBuffered[i];
-      }
-      if (isLossless) {
-        outputSize = webPEncodeLosslessRGBA(inputBuff, decodedImage.width,
-            decodedImage.height, decodedImage.width * 4, outputBuff);
-      } else {
-        outputSize = webPEncodeRGBA(inputBuff, decodedImage.width,
-            decodedImage.height, decodedImage.width * 4, quality, outputBuff);
-      }
-    }
-    if (outputSize == 0) throw 'encoding error!';
-    output = outputBuff.value.asTypedList(outputSize);
-    calloc.free(inputBuff);
-    calloc.free(outputBuff);
-    return Tuple2(
-        name.replaceAll(RegExp('[.](png|jpg|jpeg|bmp)'), '.webp'), output);
   }
 
   @override
