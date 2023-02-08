@@ -231,6 +231,10 @@ void main() {
       );
     }, (error, stack) async {
       await Sentry.captureException(error, stackTrace: stack);
+      if(ConstList.isDesktop()){
+        var f = File('${Directory.current.path}/error-${DateTime.now().toString()}.log');
+        await f.writeAsString("$error \r\n $stack");
+      }
     });
   }).then((value) => ConstList.init());
 }

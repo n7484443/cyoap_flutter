@@ -75,10 +75,6 @@ class SaveProjectImp extends SaveProject {
     for (var name in map.keys) {
       var data = map[name]!;
       File f = File('$path/$name');
-      if (await f.exists()) {
-        await f.delete();
-      }
-      await f.create(recursive: true);
       await f.writeAsBytes(data);
     }
   }
