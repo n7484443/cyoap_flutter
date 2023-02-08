@@ -310,6 +310,7 @@ class _ViewTextContentsEditorState
           flex: 3,
           child: Card(
             elevation: ConstList.elevation,
+            color: Colors.blue.shade50,
             child: QuillEditor(
               locale: ref.watch(localeStateProvider),
               padding: const EdgeInsets.all(3),
@@ -322,7 +323,7 @@ class _ViewTextContentsEditorState
               showCursor: true,
               scrollController: _scrollController!,
               customStyles: ConstList.getDefaultThemeData(context, 1,
-                  fontStyle: ConstList.getFont(preset.mainFont)),
+                  fontStyle: ConstList.getFontWithColor(preset.mainFont)),
             ),
           ),
         ),
