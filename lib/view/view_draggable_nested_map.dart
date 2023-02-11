@@ -94,8 +94,8 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
                 .conditionVisibleString ??
             "");
     _nameController = TextEditingController(
-        text:
-            ref.read(lineProvider(widget.y))?.name ?? "ChoiceLine_${widget.y}");
+        text: ref.read(lineOptionProvider(widget.y)).name ??
+            "ChoiceLine_${widget.y}");
     super.initState();
   }
 
@@ -108,8 +108,9 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
 
   @override
   Widget build(BuildContext context) {
-    var maxSelect = ref.watch(lineMaxSelectProvider(widget.y));
-    var maxSelectString = maxSelect == -1 ? "max" : maxSelect.toString();
+    var lineOption = ref.watch(lineOptionProvider(widget.y));
+    var maxSelectString =
+        lineOption.maxSelect == -1 ? "max" : lineOption.maxSelect.toString();
     return AlertDialog(
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -121,18 +122,20 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
               IconButton(
                 icon: const Icon(Icons.chevron_left),
                 onPressed: () {
-                  ref
-                      .read(lineMaxSelectProvider(widget.y).notifier)
-                      .update((state) => state >= 0 ? state - 1 : state);
+                  ref.read(lineOptionProvider(widget.y).notifier).update(
+                      (state) => state.copyWith(
+                          maxSelect: state.maxSelect >= 0
+                              ? state.maxSelect - 1
+                              : state.maxSelect));
                 },
               ),
               Text(maxSelectString),
               IconButton(
                 icon: const Icon(Icons.chevron_right),
                 onPressed: () {
-                  ref
-                      .read(lineMaxSelectProvider(widget.y).notifier)
-                      .update((state) => state += 1);
+                  ref.read(lineOptionProvider(widget.y).notifier).update(
+                      (state) =>
+                          state.copyWith(maxSelect: state.maxSelect + 1));
                 },
               ),
             ],
@@ -148,11 +151,11 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
             onChanged: (String? t) {
               if (t != null) {
                 ref
-                    .read(linePresetNameProvider(widget.y).notifier)
-                    .update((state) => t);
+                    .read(lineOptionProvider(widget.y).notifier)
+                    .update((state) => state.copyWith(presetName: t));
               }
             },
-            value: ref.watch(linePresetNameProvider(widget.y)),
+            value: ref.watch(lineOptionProvider(widget.y)).presetName,
           ),
           TextField(
             controller: _textFieldController,
@@ -204,6 +207,7 @@ class NodeDivider extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var lineOption = ref.watch(lineOptionProvider(y));
     if (y >= getPlatform.lineSettings.length) {
       return const Divider(
         thickness: 4,
@@ -213,8 +217,6 @@ class NodeDivider extends ConsumerWidget {
     if (!preset.alwaysVisibleLine && !isEditable) {
       return const SizedBox.shrink();
     }
-    var maxSelect = ref.watch(lineMaxSelectProvider(y));
-    var name = ref.watch(lineProvider(y))?.name;
     var divider = Divider(
       thickness: 4,
       color: getColorLine(preset.alwaysVisibleLine, preset.backgroundColor),
@@ -225,14 +227,16 @@ class NodeDivider extends ConsumerWidget {
         alignment: Alignment.center,
         children: [
           divider,
-          if (maxSelect != -1)
+          if (lineOption.maxSelect != -1)
             Card(
               elevation: 0,
               color: getColorButton(preset.backgroundColor),
               child: Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Text(
-                  'lineSetting_tooltip_1'.i18n.fill([maxSelect.toString()]),
+                  'lineSetting_tooltip_1'
+                      .i18n
+                      .fill([lineOption.maxSelect.toString()]),
                   style: ConstList.getFont("notoSans").copyWith(
                     fontSize: 16.0,
                     color: Colors.blue,
@@ -241,7 +245,7 @@ class NodeDivider extends ConsumerWidget {
                 ),
               ),
             ),
-          if (name != null && isEditable)
+          if (lineOption.name != null && isEditable)
             Align(
               alignment: Alignment.centerLeft,
               child: Card(
@@ -250,7 +254,7 @@ class NodeDivider extends ConsumerWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: Text(
-                    name,
+                    lineOption.name!,
                     style: ConstList.getFont("notoSans").copyWith(
                       fontSize: 16.0,
                       color: Colors.blue,
@@ -297,11 +301,13 @@ class NodeDivider extends ConsumerWidget {
                                   builder: (_) => NodeDividerDialog(y),
                                   barrierDismissible: false)
                               .then((value) {
+                            ref.invalidate(lineProvider(y));
                             getPlatform
                                 .getLineSetting(y)
                                 ?.recursiveStatus
                                 .conditionVisibleString = value!.item1;
-                            getPlatform.getLineSetting(y)?.name = value!.item2;
+                            ref.read(lineOptionProvider(y).notifier).update(
+                                (state) => state.copyWith(name: value!.item2));
                             ref
                                 .read(
                                     draggableNestedMapChangedProvider.notifier)
@@ -326,9 +332,9 @@ class NodeDivider extends ConsumerWidget {
         children: [
           divider,
           Visibility(
-            visible: maxSelect != -1,
+            visible: lineOption.maxSelect != -1,
             child: Text(
-              'lineSetting_tooltip_1'.fill([maxSelect]),
+              'lineSetting_tooltip_1'.fill([lineOption.maxSelect]),
               style: ConstList.getFont("notoSans").copyWith(
                 fontSize: 18.0,
                 color: getColorButton(preset.backgroundColor),

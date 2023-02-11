@@ -85,7 +85,7 @@ class CheckListNotifier extends StateNotifier<List<CheckList>> {
         });
       }
       nodeList.add(CheckList(
-          name: line.name ?? "ChoiceLine_${line.currentPos}",
+          name: line.choiceLineOption.name ?? "ChoiceLine_${line.currentPos}",
           pos: line.pos,
           children: subWidgetList));
     }

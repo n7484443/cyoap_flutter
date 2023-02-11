@@ -135,8 +135,8 @@ class AbstractPlatform extends PlayablePlatform {
 
   void updateLinePresetNameAll(String before, String after) {
     for (var line in lineSettings) {
-      if (line.presetName == before) {
-        line.presetName = after;
+      if (line.choiceLineOption.presetName == before) {
+        line.choiceLineOption = line.choiceLineOption.copyWith(presetName: after);
       }
     }
   }

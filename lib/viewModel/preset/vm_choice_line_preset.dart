@@ -42,7 +42,7 @@ class ChoiceLinePresetListNotifier
     var before = state[index].name;
     updateIndex(index, state[index].copyWith(name: after));
     getPlatform.updateLinePresetNameAll(before, after);
-    ref.invalidate(linePresetNameProvider);
+    ref.invalidate(lineOptionProvider);
   }
 
   void updateName(String name, ChoiceLineDesignPreset preset) {

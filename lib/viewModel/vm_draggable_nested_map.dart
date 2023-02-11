@@ -154,30 +154,21 @@ class ChildrenNotifier extends StateNotifier<List<Choice>> {
   }
 }
 
-final linePresetNameProvider =
-    StateProvider.autoDispose.family<String, int>((ref, pos) {
-  ref.listenSelf((previous, String next) {
-    getPlatform.getLineSetting(pos)?.presetName = next;
+final lineOptionProvider =
+    StateProvider.autoDispose.family<ChoiceLineOption, int>((ref, pos) {
+  ref.listenSelf((previous, ChoiceLineOption next) {
+    getPlatform.getLineSetting(pos)?.choiceLineOption = next;
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
   });
-  return ref.watch(lineProvider(pos))?.presetName ?? "default";
+  return ref.watch(lineProvider(pos))?.choiceLineOption ?? const ChoiceLineOption();
 });
 
 final linePresetProvider =
     Provider.family.autoDispose<ChoiceLineDesignPreset, int>((ref, pos) {
   var list = ref.watch(choiceLinePresetListProvider);
-  var presetName = ref.watch(linePresetNameProvider(pos));
+  var presetName = ref.watch(lineOptionProvider(pos)).presetName;
   return list.firstWhere((element) => element.name == presetName,
       orElse: () => const ChoiceLineDesignPreset(name: 'default'));
-});
-
-final lineMaxSelectProvider =
-    StateProvider.autoDispose.family<int, int>((ref, pos) {
-  ref.listenSelf((previous, int next) {
-    getPlatform.getLineSetting(pos)!.maxSelect = next;
-    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-  });
-  return ref.watch(lineProvider(pos))!.maxSelect;
 });
 
 final lineLengthProvider =
