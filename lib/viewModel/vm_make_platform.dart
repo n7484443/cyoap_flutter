@@ -14,7 +14,6 @@ class ChangeTabNotifier extends StateNotifier<int> {
   final Ref ref;
 
   ChangeTabNotifier(this.ref) : super(0);
-  List<int> stack = List.empty(growable: true);
 
   void entryFunction(int index, BuildContext context) {
     switch (index) {
@@ -68,27 +67,17 @@ class ChangeTabNotifier extends StateNotifier<int> {
       if (value) {
         entryFunction(index, context);
         state = index;
-        if (stack.isEmpty || stack.last != index) {
-          stack.add(index);
-        }
       }
     });
   }
 
   void back(BuildContext context) {
-    if (stack.length <= 1) {
-      changePage(0, context);
-      stack.clear();
-      entryFunction(state, context);
-    } else {
-      removeFunction(state, context).then((value) {
-        if (value) {
-          stack.removeLast();
-          state = stack.last;
-          entryFunction(state, context);
-        }
-      });
-    }
+    changePage(0, context);
+    removeFunction(state, context).then((value) {
+      if (value) {
+        entryFunction(state, context);
+      }
+    });
   }
 
   void changePageString(String name, BuildContext context) {
