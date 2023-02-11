@@ -73,11 +73,6 @@ class ChangeTabNotifier extends StateNotifier<int> {
 
   void back(BuildContext context) {
     changePage(0, context);
-    removeFunction(state, context).then((value) {
-      if (value) {
-        entryFunction(state, context);
-      }
-    });
   }
 
   void changePageString(String name, BuildContext context) {
