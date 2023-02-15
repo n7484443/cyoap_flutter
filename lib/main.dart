@@ -149,6 +149,7 @@ class ConstList {
     await platform_specified.loadLibrary();
     platform_specified.PlatformSpecified().preInit();
     currentLocaleName = (await DevicePreference.getLocaleName())?.trim();
+    Option().locale = currentLocaleName?.toLowerCase();
     currentThemeMode = await DevicePreference.getThemeMode();
     return;
   }
@@ -174,6 +175,9 @@ const String sentryDsn =
     'https://300bedade0de419fb189b2c5634ca1d8@o1393272.ingest.sentry.io/6714767';
 
 final localeStateProvider = StateProvider<Locale?>((ref) {
+  ref.listenSelf((previous, next) {
+    Option().locale = next?.toString().toLowerCase();
+  });
   return ConstList.currentLocale;
 });
 
