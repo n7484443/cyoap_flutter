@@ -1,4 +1,5 @@
 import 'package:cyoap_core/preset/line_preset.dart';
+import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/viewModel/preset/vm_preset.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -57,7 +58,7 @@ class ChoiceLinePresetListNotifier
   }
 
   void create() {
-    var name = '새 프리셋';
+    var name = 'preset_new'.i18n;
     var rename = name;
     var i = 0;
     while (state.any((preset) => preset.name == rename)) {
