@@ -83,13 +83,16 @@ class DevicePreference {
     await prefs.setString('cyoap_language', str);
   }
 
-  static Future<ThemeMode> getThemeMode() async{
+  static Future<ThemeMode> getThemeMode() async {
     var prefs = await SharedPreferences.getInstance();
-    return prefs.getString('cyoap_theme') == 'dark' ? ThemeMode.dark : ThemeMode.light;
+    return prefs.getString('cyoap_theme') == 'dark'
+        ? ThemeMode.dark
+        : ThemeMode.light;
   }
 
   static void setThemeMode(ThemeMode mode) async {
     var prefs = await SharedPreferences.getInstance();
-    await prefs.setString('cyoap_theme', mode == ThemeMode.dark ? 'dark' : 'light');
+    await prefs.setString(
+        'cyoap_theme', mode == ThemeMode.dark ? 'dark' : 'light');
   }
 }

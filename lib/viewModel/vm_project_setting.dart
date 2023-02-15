@@ -109,15 +109,15 @@ class ValueTypeWrapperListNotifier
     return null;
   }
 
-  bool isDifferentFromOrigin(){
-    if(state.length != getPlatform.globalSetting.length){
+  bool isDifferentFromOrigin() {
+    if (state.length != getPlatform.globalSetting.length) {
       return true;
     }
-    for(var key in state.keys){
-      if(!getPlatform.globalSetting.containsKey(key)){
+    for (var key in state.keys) {
+      if (!getPlatform.globalSetting.containsKey(key)) {
         return true;
       }
-      if(state[key] != getPlatform.globalSetting[key]){
+      if (state[key] != getPlatform.globalSetting[key]) {
         return true;
       }
     }

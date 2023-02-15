@@ -90,14 +90,14 @@ class WebpConverterImpWindows implements WebpConverterImp {
         decodedImage = decodeImage(input)!;
         isLossless = true;
       } else if (name.endsWith(".jpg") |
-      name.endsWith(".jpeg") |
-      name.endsWith(".bmp")) {
+          name.endsWith(".jpeg") |
+          name.endsWith(".bmp")) {
         decodedImage = decodeImage(input)!;
         isLossless = false;
       } else {
         return Tuple2(name, input);
       }
-      return using<Tuple2<String, Uint8List>>((Arena arena){
+      return using<Tuple2<String, Uint8List>>((Arena arena) {
         Pointer<Pointer<Uint8>> outputBuff = arena.allocate<Pointer<Uint8>>(0);
         Pointer<Uint8> inputBuff;
         Uint8List output;
@@ -113,8 +113,13 @@ class WebpConverterImpWindows implements WebpConverterImp {
             outputSize = webPEncodeLosslessRGB(inputBuff, decodedImage.width,
                 decodedImage.height, decodedImage.width * 3, outputBuff);
           } else {
-            outputSize = webPEncodeRGB(inputBuff, decodedImage.width,
-                decodedImage.height, decodedImage.width * 3, quality, outputBuff);
+            outputSize = webPEncodeRGB(
+                inputBuff,
+                decodedImage.width,
+                decodedImage.height,
+                decodedImage.width * 3,
+                quality,
+                outputBuff);
           }
         } else {
           //rgba
@@ -128,8 +133,13 @@ class WebpConverterImpWindows implements WebpConverterImp {
             outputSize = webPEncodeLosslessRGBA(inputBuff, decodedImage.width,
                 decodedImage.height, decodedImage.width * 4, outputBuff);
           } else {
-            outputSize = webPEncodeRGBA(inputBuff, decodedImage.width,
-                decodedImage.height, decodedImage.width * 4, quality, outputBuff);
+            outputSize = webPEncodeRGBA(
+                inputBuff,
+                decodedImage.width,
+                decodedImage.height,
+                decodedImage.width * 4,
+                quality,
+                outputBuff);
           }
         }
         if (outputSize == 0) throw 'encoding error!';
@@ -137,7 +147,7 @@ class WebpConverterImpWindows implements WebpConverterImp {
         return Tuple2(
             name.replaceAll(RegExp('[.](png|jpg|jpeg|bmp)'), '.webp'), output);
       });
-    }catch(e){
+    } catch (e) {
       print(e);
       return Tuple2(name, input);
     }

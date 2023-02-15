@@ -160,7 +160,8 @@ final lineOptionProvider =
     getPlatform.getLineSetting(pos)?.choiceLineOption = next;
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
   });
-  return ref.watch(lineProvider(pos))?.choiceLineOption ?? const ChoiceLineOption();
+  return ref.watch(lineProvider(pos))?.choiceLineOption ??
+      const ChoiceLineOption();
 });
 
 final linePresetProvider =

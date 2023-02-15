@@ -101,7 +101,7 @@ class _ViewPresetPositionState extends ConsumerState<ViewPresetPosition> {
       );
     }
 
-    if (widget.sample != null){
+    if (widget.sample != null) {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

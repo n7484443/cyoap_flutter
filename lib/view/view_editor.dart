@@ -751,7 +751,9 @@ class ViewImageDraggable extends ConsumerWidget {
                   continue;
                 }
                 var fileData = await file.readAsBytes();
-                ref.read(lastImageProvider.notifier).update((state) => fileData);
+                ref
+                    .read(lastImageProvider.notifier)
+                    .update((state) => fileData);
                 ref.read(editorChangeProvider.notifier).needUpdate();
                 openImageEditor(ref, context, fileName);
                 break;
@@ -768,7 +770,8 @@ class ViewImageDraggable extends ConsumerWidget {
             child: Container(
               decoration: BoxDecoration(
                 border: Border.all(
-                    color: ref.watch(editorImageDragDropColorProvider), width: 5),
+                    color: ref.watch(editorImageDragDropColorProvider),
+                    width: 5),
                 borderRadius: BorderRadius.circular(8),
               ),
               padding: const EdgeInsets.all(4.0),
@@ -848,8 +851,7 @@ class _ViewImageSelectorState extends ConsumerState<ViewImageSelector> {
                   child: ViewImageLoading(
                       ref.watch(imageListStateProvider)[index]),
                   onDoubleTap: () {
-                    if (ref.read(imageStateProvider.notifier).state ==
-                        index) {
+                    if (ref.read(imageStateProvider.notifier).state == index) {
                       ref.read(imageStateProvider.notifier).state = -1;
                     } else {
                       ref.read(imageStateProvider.notifier).state = index;

@@ -127,10 +127,12 @@ class _ViewSourceItemState extends ConsumerState<ViewSourceItem> {
   void initState() {
     _textEditingController = TextEditingController();
     if (getPlatformFileSystem.hasSource(widget.name)) {
-      _textEditingController?.text = getPlatformFileSystem.getSource(widget.name) ?? '';
+      _textEditingController?.text =
+          getPlatformFileSystem.getSource(widget.name) ?? '';
     }
     _textEditingController?.addListener(() {
-      getPlatformFileSystem.addSource(widget.name, _textEditingController?.text ?? '');
+      getPlatformFileSystem.addSource(
+          widget.name, _textEditingController?.text ?? '');
     });
     super.initState();
   }
@@ -150,8 +152,7 @@ class _ViewSourceItemState extends ConsumerState<ViewSourceItem> {
         side: BorderSide(
           color: Theme.of(context).colorScheme.outline,
         ),
-        borderRadius:
-        const BorderRadius.all(Radius.circular(4)),
+        borderRadius: const BorderRadius.all(Radius.circular(4)),
       ),
       color: deleteList.contains(widget.name)
           ? Theme.of(context).colorScheme.secondaryContainer

@@ -177,7 +177,7 @@ final localeStateProvider = StateProvider<Locale?>((ref) {
   return ConstList.currentLocale;
 });
 
-final themeStateProvider = StateProvider<ThemeMode>((ref){
+final themeStateProvider = StateProvider<ThemeMode>((ref) {
   ref.listenSelf((previous, next) {
     DevicePreference.setThemeMode(next);
   });
@@ -231,8 +231,9 @@ void main() {
       );
     }, (error, stack) async {
       await Sentry.captureException(error, stackTrace: stack);
-      if(ConstList.isDesktop()){
-        var f = File('${Directory.current.path}/error-${DateTime.now().toString()}.log');
+      if (ConstList.isDesktop()) {
+        var f = File(
+            '${Directory.current.path}/error-${DateTime.now().toString()}.log');
         await f.writeAsString("$error \r\n $stack");
       }
     });
