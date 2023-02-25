@@ -1,4 +1,5 @@
 import 'package:cyoap_flutter/i18n.dart';
+import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_editor.dart';
 import 'package:cyoap_flutter/viewModel/vm_image_editor.dart';
 import 'package:extended_image/extended_image.dart';
@@ -110,6 +111,11 @@ class ViewImageEditorContents extends ConsumerWidget {
                 .addImageToList(image.item1,
                     data: await ref.read(cropImageProvider.future))
                 .then((value) {
+                  var pos = ref.read(nodeEditorTargetPosProvider);
+                  if(pos != null){
+                    ref.read(choiceNodeProvider(pos)).node?.imageString = image.item1;
+                    ref.invalidate(choiceNodeProvider(pos));
+                  }
               ref.read(changeTabProvider.notifier).back(context);
             });
           },

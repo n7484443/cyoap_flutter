@@ -582,6 +582,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
       );
     }
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: subWidget,
     );
   }
