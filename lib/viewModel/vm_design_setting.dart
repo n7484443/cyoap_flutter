@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:cyoap_core/design_setting.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/image_db.dart';
@@ -38,6 +41,19 @@ final backgroundAttributeProvider =
   });
   return getPlatform.designSetting.backgroundAttribute;
 });
+
+final backgroundColorProvider = StateProvider.autoDispose<Color>((ref) {
+  ref.listenSelf((previous, next) {
+    getPlatform.designSetting =
+        getPlatform.designSetting.copyWith(backgroundColor: next.value);
+    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+  });
+  if(getPlatform.designSetting.backgroundColor == null){
+    return Colors.white;
+  }
+  return Color(getPlatform.designSetting.backgroundColor!);
+});
+
 
 final marginVerticalProvider = StateProvider.autoDispose<double>((ref) {
   ref.listenSelf((previous, double next) {

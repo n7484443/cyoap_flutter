@@ -574,9 +574,12 @@ class _NestedMapState extends ConsumerState<NestedMap> {
       );
     }
 
-    return CustomScrollView(
-      controller: _scrollController,
-      slivers: sliverList,
+    return ColoredBox(
+      color: ref.watch(backgroundColorProvider),
+      child: CustomScrollView(
+        controller: _scrollController,
+        slivers: sliverList,
+      ),
     );
   }
 }

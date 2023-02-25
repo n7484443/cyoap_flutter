@@ -4,6 +4,7 @@ import 'package:cyoap_flutter/view/preset/view_preset.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:easy_debounce/easy_debounce.dart';
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -30,7 +31,7 @@ class ViewDesignSetting extends ConsumerWidget {
             unselectedLabelColor: Theme.of(context).colorScheme.primary,
             tabs: [
               Tab(text: 'location'.i18n),
-              Tab(text: 'font'.i18n),
+              Tab(text: 'general'.i18n),
               Tab(text: 'background'.i18n),
               Tab(text: 'preset'.i18n),
             ],
@@ -44,10 +45,7 @@ class ViewDesignSetting extends ConsumerWidget {
                 child: TabBarView(
                   children: [
                     const ViewPositionSetting(),
-                    ViewFontSelector(
-                      label: 'font_score'.i18n,
-                      provider: variableFontProvider,
-                    ),
+                    const ViewGeneralSettingTab(),
                     const ViewBackgroundSetting(),
                     ViewPresetTab(),
                   ],
@@ -57,6 +55,50 @@ class ViewDesignSetting extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class ViewGeneralSettingTab extends ConsumerWidget {
+  const ViewGeneralSettingTab({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: ViewFontSelector(
+            label: 'font_score'.i18n,
+            provider: variableFontProvider,
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: ColorPicker(
+            heading: Center(
+              child: Text('background_color'.i18n),
+            ),
+            color: ref.watch(backgroundColorProvider),
+            onColorChanged: (Color color) {
+              ref.read(backgroundColorProvider.notifier).state = color;
+            },
+            pickersEnabled: {
+              ColorPickerType.wheel: true,
+              ColorPickerType.accent: false
+            },
+            pickerTypeLabels: {
+              ColorPickerType.primary: "color_select".i18n,
+              ColorPickerType.wheel: "color_direct_select".i18n,
+            },
+            width: 22,
+            height: 22,
+            borderRadius: 22,
+          ),
+        )
+      ],
     );
   }
 }

@@ -134,7 +134,7 @@ extension Localization on String {
 
           //design
           'location': 'Layout',
-          'font': 'Font',
+          'general': 'General',
           'background': 'Background',
           'font_score': 'Score font',
           'margin_vertical': 'Vertical margin between choices',
@@ -276,7 +276,7 @@ extension Localization on String {
 
           //design
           'location': '위치',
-          'font': '폰트',
+          'general': '일반',
           'background': '배경',
           'font_score': '점수 폰트',
           'margin_vertical': '선택지 간 세로 여백',
