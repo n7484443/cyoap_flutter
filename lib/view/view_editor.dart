@@ -660,7 +660,9 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                       child: Text('onlyCode'.i18n)),
                 ],
                 onChanged: (ChoiceNodeMode? value) {
-                  ref.read(nodeModeProvider.notifier).update((state) => value!);
+                  if(value != null){
+                    ref.read(nodeModeProvider.notifier).update((state) => value);
+                  }
                 },
               ),
             ),
