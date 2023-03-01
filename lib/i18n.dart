@@ -133,7 +133,6 @@ extension Localization on String {
           'font_content': 'Content font',
 
           //design
-          'location': 'Layout',
           'general': 'General',
           'background': 'Background',
           'font_score': 'Score font',
@@ -275,7 +274,6 @@ extension Localization on String {
           'font_content': '내용 폰트',
 
           //design
-          'location': '위치',
           'general': '일반',
           'background': '배경',
           'font_score': '점수 폰트',

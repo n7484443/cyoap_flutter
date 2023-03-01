@@ -363,6 +363,7 @@ class NodeTiles extends ConsumerWidget {
                 (search.isNotEmpty && element.name.contains(search)))
             .map(
               (e) => ListTile(
+                dense: true,
                 title: Text(e.name),
                 onTap: () {
                   if (tabList[ref.watch(changeTabProvider)] == "viewEditor") {

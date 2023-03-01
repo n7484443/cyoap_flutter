@@ -169,6 +169,10 @@ class ConstList {
     'English': Locale('en', 'US'),
     '한국어': Locale('ko', 'KR'),
   };
+
+  static TextTheme getCurrentFont(BuildContext context){
+    return Theme.of(context).textTheme;
+  }
 }
 
 const String sentryDsn =

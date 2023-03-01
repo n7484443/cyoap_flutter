@@ -19,7 +19,7 @@ class ViewDesignSetting extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return DefaultTabController(
-      length: 4,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -30,7 +30,6 @@ class ViewDesignSetting extends ConsumerWidget {
             labelColor: Theme.of(context).colorScheme.secondary,
             unselectedLabelColor: Theme.of(context).colorScheme.primary,
             tabs: [
-              Tab(text: 'location'.i18n),
               Tab(text: 'general'.i18n),
               Tab(text: 'background'.i18n),
               Tab(text: 'preset'.i18n),
@@ -44,7 +43,6 @@ class ViewDesignSetting extends ConsumerWidget {
               Expanded(
                 child: TabBarView(
                   children: [
-                    const ViewPositionSetting(),
                     const ViewGeneralSettingTab(),
                     const ViewBackgroundSetting(),
                     ViewPresetTab(),
@@ -66,13 +64,50 @@ class ViewGeneralSettingTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if(ConstList.isSmallDisplay(context)){
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ViewFontSelector(
+            label: 'font_score'.i18n,
+            provider: variableFontProvider,
+          ),
+          const ViewPositionSetting(),
+          ColorPicker(
+            heading: Center(
+              child: Text('background_color'.i18n),
+            ),
+            color: ref.watch(backgroundColorProvider),
+            onColorChanged: (Color color) {
+              ref.read(backgroundColorProvider.notifier).state = color;
+            },
+            pickersEnabled: {
+              ColorPickerType.wheel: true,
+              ColorPickerType.accent: false
+            },
+            pickerTypeLabels: {
+              ColorPickerType.primary: "color_select".i18n,
+              ColorPickerType.wheel: "color_direct_select".i18n,
+            },
+            width: 22,
+            height: 22,
+            borderRadius: 22,
+          )
+        ],
+      );
+    }
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: ViewFontSelector(
-            label: 'font_score'.i18n,
-            provider: variableFontProvider,
+          child: Column(
+            children: [
+              ViewFontSelector(
+                label: 'font_score'.i18n,
+                provider: variableFontProvider,
+              ),
+              const ViewPositionSetting(),
+            ],
           ),
         ),
         Expanded(
@@ -139,30 +174,28 @@ class _ViewPositionSettingState extends ConsumerState<ViewPositionSetting> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('margin_vertical'.i18n,
-                style: Theme.of(context).textTheme.labelLarge),
-            SizedBox(
-              width: 100,
-              child: TextField(
-                textAlign: TextAlign.end,
-                maxLength: 4,
-                minLines: 1,
-                maxLines: 1,
-                keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true, signed: false),
-                controller: _controller,
-                decoration: InputDecoration(
-                  label: Text('${"margin_default".i18n} 12.0'),
-                ),
-              ),
+        Expanded(
+          child: Text('margin_vertical'.i18n,
+              style: Theme.of(context).textTheme.labelLarge),
+        ),
+        SizedBox(
+          width: 100,
+          child: TextField(
+            textAlign: TextAlign.end,
+            maxLength: 4,
+            minLines: 1,
+            maxLines: 1,
+            keyboardType: const TextInputType.numberWithOptions(
+                decimal: true, signed: false),
+            controller: _controller,
+            decoration: InputDecoration(
+              label: Text('${"margin_default".i18n} 12.0'),
             ),
-          ],
-        )
+          ),
+        ),
       ],
     );
   }
