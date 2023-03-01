@@ -267,6 +267,7 @@ class VariableTiles extends ConsumerWidget {
             (!isVisibleHideVariable && values.visible)) {
           if (search.isEmpty || (search.isNotEmpty && key.contains(search))) {
             variableList.add(ListTile(
+              dense: true,
               title: Text(key),
               subtitle:
                   values.displayName.isEmpty ? null : Text(values.displayName),
@@ -295,6 +296,7 @@ class VariableTiles extends ConsumerWidget {
         } else if (search.isEmpty ||
             (search.isNotEmpty && key.contains(search))) {
           variableList.add(ListTile(
+            dense: true,
             title: Text(name),
             subtitle: Text(values.valueType.data.toString()),
           ));
