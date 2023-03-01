@@ -271,7 +271,7 @@ class NodeDivider extends ConsumerWidget {
                 elevation: 0,
                 color: Colors.white,
                 child: Padding(
-                  padding: const EdgeInsets.all(1.0),
+                  padding: const EdgeInsets.all(2.0),
                   child: Row(
                     children: [
                       CircleButton(
