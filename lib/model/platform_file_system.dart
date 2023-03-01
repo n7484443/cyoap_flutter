@@ -241,4 +241,12 @@ class PlatformFileSystem {
   bool hasSource(String image) {
     return _imageSource[image]?.isNotEmpty ?? false;
   }
+
+  void clear(){
+    ImageDB().clearImageCache();
+    platform = null;
+    _imageSource.clear();
+    path = null;
+    openAsFile = false;
+  }
 }

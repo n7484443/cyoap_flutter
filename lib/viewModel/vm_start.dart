@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../main.dart';
 import '../model/device_preference.dart';
-import '../model/image_db.dart';
 import '../model/platform_system.dart';
 import '../util/check_update.dart';
 
@@ -72,7 +71,7 @@ class PathListNotifier extends StateNotifier<List<String>> {
   }
 
   Future<bool> openProject(void Function() dialog) async {
-    ImageDB().clearImageCache();
+    getPlatformFileSystem.clear();
     var index = ref.read(pathListSelectedProvider);
     if (ConstList.isWeb()) {
       PlatformSystem().openPlatformZipForWeb(ref.watch(pathListFileProvider));
