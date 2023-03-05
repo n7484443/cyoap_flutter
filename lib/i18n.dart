@@ -55,8 +55,10 @@ extension Localization on String {
           'compress_process': 'Compressing...',
           'save_process': 'Saving...',
           'create_tooltip': 'Create a choice',
+          'copy_tooltip':
+          'Drag and drop to make a copy a recently deleted choice',
           'recently_tooltip':
-              'Drag and drop to make a copy or restore a recently deleted choice',
+          'Drag and drop to make a restore a recently deleted choice',
           'update_variable_tooltip': 'Update the variable list',
           'save_option': 'Saving options',
           'extract': 'Save as Zip',
@@ -200,6 +202,7 @@ extension Localization on String {
           'save_process': '저장중...',
           'create_tooltip': '선택지 생성',
           'recently_tooltip': '드래그로 삭제된 선택지 생성',
+          'copy_tooltip': '드래그로 복사된 선택지 생성',
           'update_variable_tooltip': '변수 목록 갱신',
           'save_option': '저장 관련 옵션',
           'extract': 'zip 파일로 추출',

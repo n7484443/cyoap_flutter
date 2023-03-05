@@ -80,6 +80,39 @@ class ViewMake extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Visibility(
+            visible: ref.watch(copiedChoiceNode) != null,
+            child: Draggable<Pos>(
+              data: Pos(data: [copiedPositioned, copiedPositioned]),
+              feedback: Transform.scale(
+                scale: 0.9,
+                child: Opacity(
+                  opacity: 0.6,
+                  child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        maxWidth: 400,
+                      ),
+                      child: ViewChoiceNode(
+                          Pos(data: [copiedPositioned, copiedPositioned]))),
+                ),
+              ),
+              onDragStarted: () {
+                ref
+                    .read(dragChoiceNodeProvider.notifier)
+                    .dragStart(Pos(data: [copiedPositioned, copiedPositioned]));
+              },
+              onDragEnd: (DraggableDetails data) {
+                ref.read(dragChoiceNodeProvider.notifier).dragEnd();
+              },
+              onDragUpdate: (DragUpdateDetails details) => ref
+                  .read(dragPositionProvider.notifier)
+                  .state = details.localPosition.dy,
+              child: Tooltip(
+                message: 'recently_tooltip'.i18n,
+                child: const Icon(Icons.paste),
+              ),
+            ),
+          ),
+          Visibility(
             visible: ref.watch(removedChoiceNode) != null,
             child: Draggable<Pos>(
               data: Pos(data: [removedPositioned, removedPositioned]),
@@ -107,7 +140,7 @@ class ViewMake extends ConsumerWidget {
                   .state = details.localPosition.dy,
               child: Tooltip(
                 message: 'recently_tooltip'.i18n,
-                child: const Icon(Icons.paste),
+                child: const Icon(Icons.restore_from_trash),
               ),
             ),
           ),

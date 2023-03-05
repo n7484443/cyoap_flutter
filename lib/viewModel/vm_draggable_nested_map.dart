@@ -20,6 +20,7 @@ final vmDraggableNestedMapProvider =
     Provider.autoDispose((ref) => VMDraggableNestedMap(ref));
 
 final removedChoiceNode = StateProvider<ChoiceNode?>((ref) => null);
+final copiedChoiceNode = StateProvider<ChoiceNode?>((ref) => null);
 final dragPositionProvider = StateProvider<double?>((ref) => null);
 
 final dragChoiceNodeProvider =
@@ -46,14 +47,14 @@ class VMDraggableNestedMap {
   VMDraggableNestedMap(this.ref);
 
   void copyData(ChoiceNode choiceNode) {
-    ref.read(removedChoiceNode.notifier).state = choiceNode.clone();
+    ref.read(copiedChoiceNode.notifier).state = choiceNode.clone();
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     refreshPage(ref);
   }
 
   void removeData(Pos pos) {
     var choiceNode = getPlatform.removeData(pos);
-    copyData(choiceNode);
+    ref.read(removedChoiceNode.notifier).state = choiceNode.clone();
     VariableDataBase().updateCheckList();
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     refreshPage(ref);

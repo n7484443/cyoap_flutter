@@ -18,6 +18,7 @@ import '../model/platform.dart';
 import '../model/platform_system.dart';
 
 const double nodeBaseHeight = 200;
+const int copiedPositioned = -1;
 const int removedPositioned = -2;
 
 void refreshChild(Ref ref, Choice node) {
@@ -40,9 +41,11 @@ class ChoiceNodeNotifier extends ChangeNotifier {
   Pos pos;
 
   ChoiceNodeNotifier(this.ref, this.pos) {
-    if (pos.last == removedPositioned) {
+    if (pos.last == copiedPositioned) {
+      node = ref.read(copiedChoiceNode);
+    }else if (pos.last == removedPositioned) {
       node = ref.read(removedChoiceNode);
-    } else if (pos.last == designSamplePosition) {
+    }else if (pos.last == designSamplePosition) {
       node = ChoiceNode(
         1,
         "sample_title".i18n,
