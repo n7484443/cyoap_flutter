@@ -132,11 +132,11 @@ class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
                     .read(changeTabProvider.notifier)
                     .changePageString('viewDesignSetting', context);
               },
-              leading: const Icon(Icons.settings),
+              leading: const Icon(Icons.layers),
               title: Text('design_settings'.i18n),
             ),
             ListTile(
-              leading: const Icon(Icons.settings),
+              leading: const Icon(Icons.image),
               title: Text('image_settings'.i18n),
               onTap: () => ref
                   .read(changeTabProvider.notifier)
