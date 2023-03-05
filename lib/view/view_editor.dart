@@ -660,8 +660,10 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                       child: Text('onlyCode'.i18n)),
                 ],
                 onChanged: (ChoiceNodeMode? value) {
-                  if(value != null){
-                    ref.read(nodeModeProvider.notifier).update((state) => value);
+                  if (value != null) {
+                    ref
+                        .read(nodeModeProvider.notifier)
+                        .update((state) => value);
                   }
                 },
               ),
@@ -724,7 +726,20 @@ class ViewImageDraggable extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (!ConstList.isDesktop()) {
-      return const ViewImageSelector();
+      return Column(
+        children: [
+          TextButton(
+            onPressed: () {
+              ref
+                  .read(imageListStateProvider.notifier)
+                  .addImage()
+                  .then((name) => openImageEditor(ref, context, name));
+            },
+            child: Text('add_image'.i18n),
+          ),
+          const Expanded(child: ViewImageSelector()),
+        ],
+      );
     }
     return Column(
       children: [
