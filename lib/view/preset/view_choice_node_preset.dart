@@ -232,6 +232,14 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               controller: ref.watch(choiceNodePresetCurrentEditRoundProvider),
               decoration: InputDecoration(labelText: 'round'.i18n),
             ),
+            TextFormField(
+              textAlign: TextAlign.end,
+              minLines: 1,
+              maxLines: 1,
+              keyboardType: TextInputType.number,
+              controller: ref.watch(choiceNodePresetCurrentEditPaddingProvider),
+              decoration: InputDecoration(labelText: 'padding'.i18n),
+            ),
             ViewSwitchLabel(
               () => ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                   presetIndex,

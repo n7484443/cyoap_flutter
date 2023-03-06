@@ -68,6 +68,26 @@ final choiceNodePresetCurrentEditRoundProvider =
   return controller;
 });
 
+final choiceNodePresetCurrentEditPaddingProvider =
+Provider.autoDispose<TextEditingController>((ref) {
+  var controller = TextEditingController(
+      text: ref.watch(choiceNodePresetCurrentEditProvider).padding.toString());
+  controller.addListener(() {
+    EasyDebounce.debounce('Padding Input', const Duration(milliseconds: 500), () {
+      ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+          ref.watch(currentPresetIndexProvider),
+          ref
+              .read(choiceNodePresetCurrentEditProvider)
+              .copyWith(padding: double.tryParse(controller.text) ?? 0.0));
+    });
+  });
+  ref.onDispose(() {
+    EasyDebounce.cancel('Padding Input');
+    controller.dispose();
+  });
+  return controller;
+});
+
 final choiceNodePresetListProvider = StateNotifierProvider.autoDispose<
     ChoiceNodePresetListNotifier, List<ChoiceNodeDesignPreset>>((ref) {
   ref.listenSelf((previous, next) {

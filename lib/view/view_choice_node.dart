@@ -84,8 +84,8 @@ class ViewChoiceNodeMain extends ConsumerWidget {
       color: defaultColor,
       child: Padding(
         padding: ConstList.isSmallDisplay(context)
-            ? const EdgeInsets.all(2.0)
-            : const EdgeInsets.all(4.0),
+            ? EdgeInsets.all(preset.padding + 2.0)
+            : EdgeInsets.all(preset.padding + 4.0),
         child: InkWell(
           onDoubleTap: isEditable
               ? () {
