@@ -69,11 +69,12 @@ final choiceNodePresetCurrentEditRoundProvider =
 });
 
 final choiceNodePresetCurrentEditPaddingProvider =
-Provider.autoDispose<TextEditingController>((ref) {
+    Provider.autoDispose<TextEditingController>((ref) {
   var controller = TextEditingController(
       text: ref.watch(choiceNodePresetCurrentEditProvider).padding.toString());
   controller.addListener(() {
-    EasyDebounce.debounce('Padding Input', const Duration(milliseconds: 500), () {
+    EasyDebounce.debounce('Padding Input', const Duration(milliseconds: 500),
+        () {
       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
           ref.watch(currentPresetIndexProvider),
           ref

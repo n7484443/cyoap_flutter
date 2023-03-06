@@ -43,9 +43,9 @@ class ChoiceNodeNotifier extends ChangeNotifier {
   ChoiceNodeNotifier(this.ref, this.pos) {
     if (pos.last == copiedPositioned) {
       node = ref.read(copiedChoiceNode);
-    }else if (pos.last == removedPositioned) {
+    } else if (pos.last == removedPositioned) {
       node = ref.read(removedChoiceNode);
-    }else if (pos.last == designSamplePosition) {
+    } else if (pos.last == designSamplePosition) {
       node = ChoiceNode(
         1,
         "sample_title".i18n,

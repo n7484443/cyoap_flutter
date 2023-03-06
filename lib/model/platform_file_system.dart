@@ -242,7 +242,7 @@ class PlatformFileSystem {
     return _imageSource[image]?.isNotEmpty ?? false;
   }
 
-  void clear(){
+  void clear() {
     ImageDB().clearImageCache();
     platform = null;
     _imageSource.clear();

@@ -64,7 +64,7 @@ class ViewGeneralSettingTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if(ConstList.isSmallDisplay(context)){
+    if (ConstList.isSmallDisplay(context)) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

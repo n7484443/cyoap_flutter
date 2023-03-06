@@ -56,11 +56,27 @@ final nodeEditorDesignProvider =
 final nodeModeProvider = StateProvider.autoDispose<ChoiceNodeMode>((ref) {
   ref.listenSelf((previous, ChoiceNodeMode next) {
     ref.read(nodeEditorTargetProvider).node.choiceNodeMode = next;
-    if(next == ChoiceNodeMode.onlyCode){
-      ref.read(nodeEditorTargetProvider.notifier).node.recursiveStatus.conditionClickableCode = [];
-      ref.read(nodeEditorTargetProvider.notifier).node.recursiveStatus.conditionVisibleCode = [];
-      ref.read(nodeEditorTargetProvider.notifier).node.recursiveStatus.conditionClickableString = null;
-      ref.read(nodeEditorTargetProvider.notifier).node.recursiveStatus.conditionVisibleString = null;
+    if (next == ChoiceNodeMode.onlyCode) {
+      ref
+          .read(nodeEditorTargetProvider.notifier)
+          .node
+          .recursiveStatus
+          .conditionClickableCode = [];
+      ref
+          .read(nodeEditorTargetProvider.notifier)
+          .node
+          .recursiveStatus
+          .conditionVisibleCode = [];
+      ref
+          .read(nodeEditorTargetProvider.notifier)
+          .node
+          .recursiveStatus
+          .conditionClickableString = null;
+      ref
+          .read(nodeEditorTargetProvider.notifier)
+          .node
+          .recursiveStatus
+          .conditionVisibleString = null;
     }
     ref.read(editorChangeProvider.notifier).needUpdate();
   });

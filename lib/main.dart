@@ -170,7 +170,7 @@ class ConstList {
     '한국어': Locale('ko', 'KR'),
   };
 
-  static TextTheme getCurrentFont(BuildContext context){
+  static TextTheme getCurrentFont(BuildContext context) {
     return Theme.of(context).textTheme;
   }
 }

@@ -7,7 +7,11 @@ class CircleButton extends StatelessWidget {
   final Widget child;
   final Tuple2<double, double> size;
 
-  const CircleButton({required this.onPressed, required this.child, this.size = const Tuple2(36, 42), super.key});
+  const CircleButton(
+      {required this.onPressed,
+      required this.child,
+      this.size = const Tuple2(36, 42),
+      super.key});
 
   @override
   Widget build(BuildContext context) {

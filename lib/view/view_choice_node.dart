@@ -110,49 +110,50 @@ class ViewChoiceNodeMain extends ConsumerWidget {
               : null,
           child: Stack(children: [
             ViewChoiceNodeContent(pos, ignoreChild: ignoreChild),
-            if(isEditable)
-            Align(
-              alignment: Alignment.topRight,
-              child: CircleAvatar(
-                child: PopupMenuButton<int>(
-                  icon: const Icon(Icons.more_vert),
-                  onSelected: (result) {
-                    switch (result) {
-                      case 0:
-                        showDialog(
-                          context: context,
-                          builder: (builder) => SizeDialog(pos),
-                        );
-                        break;
-                      case 1:
-                        ref
-                            .read(vmDraggableNestedMapProvider)
-                            .copyData(ref.watch(choiceNodeProvider(pos)).node!);
-                        break;
-                      case 2:
-                        ref.read(vmDraggableNestedMapProvider).removeData(pos);
-                        break;
-                    }
-                  },
-                  itemBuilder: (context) {
-                    return [
-                      PopupMenuItem(
-                        value: 0,
-                        child: Text('modify_size'.i18n),
-                      ),
-                      PopupMenuItem(
-                        value: 1,
-                        child: Text('copy'.i18n),
-                      ),
-                      PopupMenuItem(
-                        value: 2,
-                        child: Text('delete'.i18n),
-                      ),
-                    ];
-                  },
+            if (isEditable)
+              Align(
+                alignment: Alignment.topRight,
+                child: CircleAvatar(
+                  child: PopupMenuButton<int>(
+                    icon: const Icon(Icons.more_vert),
+                    onSelected: (result) {
+                      switch (result) {
+                        case 0:
+                          showDialog(
+                            context: context,
+                            builder: (builder) => SizeDialog(pos),
+                          );
+                          break;
+                        case 1:
+                          ref.read(vmDraggableNestedMapProvider).copyData(
+                              ref.watch(choiceNodeProvider(pos)).node!);
+                          break;
+                        case 2:
+                          ref
+                              .read(vmDraggableNestedMapProvider)
+                              .removeData(pos);
+                          break;
+                      }
+                    },
+                    itemBuilder: (context) {
+                      return [
+                        PopupMenuItem(
+                          value: 0,
+                          child: Text('modify_size'.i18n),
+                        ),
+                        PopupMenuItem(
+                          value: 1,
+                          child: Text('copy'.i18n),
+                        ),
+                        PopupMenuItem(
+                          value: 2,
+                          child: Text('delete'.i18n),
+                        ),
+                      ];
+                    },
+                  ),
                 ),
               ),
-            ),
           ]),
         ),
       ),
@@ -324,7 +325,8 @@ class ViewTitleWithEdit extends ConsumerWidget {
     var design = ref.watch(choiceNodeDesignSettingProvider(pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     if (!preset.hideTitle) {
-      return Center(child: Text(
+      return Center(
+          child: Text(
         ref.watch(titleStringProvider(pos)),
         style: ConstList.getFont(preset.titleFont).copyWith(
           fontSize: 20 * ConstList.scale(context),

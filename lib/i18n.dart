@@ -56,9 +56,9 @@ extension Localization on String {
           'save_process': 'Saving...',
           'create_tooltip': 'Create a choice',
           'copy_tooltip':
-          'Drag and drop to make a copy a recently deleted choice',
+              'Drag and drop to make a copy a recently deleted choice',
           'recently_tooltip':
-          'Drag and drop to make a restore a recently deleted choice',
+              'Drag and drop to make a restore a recently deleted choice',
           'update_variable_tooltip': 'Update the variable list',
           'save_option': 'Saving options',
           'extract': 'Save as Zip',

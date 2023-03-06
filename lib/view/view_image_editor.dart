@@ -111,11 +111,12 @@ class ViewImageEditorContents extends ConsumerWidget {
                 .addImageToList(image.item1,
                     data: await ref.read(cropImageProvider.future))
                 .then((value) {
-                  var pos = ref.read(nodeEditorTargetPosProvider);
-                  if(pos != null){
-                    ref.read(choiceNodeProvider(pos)).node?.imageString = image.item1;
-                    ref.invalidate(choiceNodeProvider(pos));
-                  }
+              var pos = ref.read(nodeEditorTargetPosProvider);
+              if (pos != null) {
+                ref.read(choiceNodeProvider(pos)).node?.imageString =
+                    image.item1;
+                ref.invalidate(choiceNodeProvider(pos));
+              }
               ref.read(changeTabProvider.notifier).back(context);
             });
           },
