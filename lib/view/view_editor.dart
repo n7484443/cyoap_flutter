@@ -23,13 +23,32 @@ import '../viewModel/vm_editor.dart';
 import '../viewModel/vm_image_editor.dart';
 import '../viewModel/vm_make_platform.dart';
 
-class ViewEditor extends ConsumerWidget {
+class ViewEditor extends ConsumerStatefulWidget {
   const ViewEditor({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState createState() => _ViewEditorState();
+}
+
+class _ViewEditorState extends ConsumerState<ViewEditor> with TickerProviderStateMixin {
+  TabController? _tabController;
+
+  @override
+  void initState() {
+    _tabController = TabController(length: 4, vsync: this);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _tabController?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     if (ref.watch(nodeEditorTargetPosProvider) == null) {
       return const SizedBox.shrink();
     }
@@ -42,51 +61,49 @@ class ViewEditor extends ConsumerWidget {
     var childrenText =
         const ["content", "code", "setting", "image"].map((e) => e.i18n);
     return WillPopScope(
-      child: DefaultTabController(
-        length: children.length,
-        initialIndex: 0,
-        child: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                if (ref.watch(nodeTitleProvider).isNotEmpty) {
-                  ref.read(changeTabProvider.notifier).back(context);
-                }
-                DefaultTabController.of(context).index = 0;
-              },
-            ),
-            title: ScrollConfiguration(
-              behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
-                PointerDeviceKind.touch,
-                PointerDeviceKind.mouse,
-              }),
-              child: TabBar(
-                labelColor: Theme.of(context).colorScheme.secondary,
-                unselectedLabelColor: Theme.of(context).colorScheme.primary,
-                tabs: childrenText.map((String e) => Tab(text: e)).toList(),
-                isScrollable: true,
-                physics: const AlwaysScrollableScrollPhysics(),
-              ),
-            ),
-            actions: ConstList.isMobile()
-                ? [
-                    IconButton(
-                      icon: const Icon(Icons.save),
-                      onPressed: () {
-                        ref.read(editorChangeProvider.notifier).save();
-                      },
-                    ),
-                  ]
-                : null,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              _tabController?.index = 0;
+              if (ref.watch(nodeTitleProvider).isNotEmpty) {
+                ref.read(changeTabProvider.notifier).home(context);
+              }
+            },
           ),
-          body: TabBarView(
-            children: children,
+          title: ScrollConfiguration(
+            behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
+              PointerDeviceKind.touch,
+              PointerDeviceKind.mouse,
+            }),
+            child: TabBar(
+              controller: _tabController,
+              labelColor: Theme.of(context).colorScheme.secondary,
+              unselectedLabelColor: Theme.of(context).colorScheme.primary,
+              tabs: childrenText.map((String e) => Tab(text: e)).toList(),
+              isScrollable: true,
+              physics: const AlwaysScrollableScrollPhysics(),
+            ),
           ),
+          actions: ConstList.isMobile()
+              ? [
+                  IconButton(
+                    icon: const Icon(Icons.save),
+                    onPressed: () {
+                      ref.read(editorChangeProvider.notifier).save();
+                    },
+                  ),
+                ]
+              : null,
+        ),
+        body: TabBarView(
+          controller: _tabController,
+          children: children,
         ),
       ),
       onWillPop: () async {
-        ref.read(changeTabProvider.notifier).back(context);
+        ref.read(changeTabProvider.notifier).home(context);
         return false;
       },
     );

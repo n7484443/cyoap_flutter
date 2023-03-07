@@ -81,7 +81,7 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              ref.read(changeTabProvider.notifier).back(context);
+              ref.read(changeTabProvider.notifier).home(context);
             },
           ),
           title: icon,

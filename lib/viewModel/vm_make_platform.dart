@@ -73,7 +73,7 @@ class ChangeTabNotifier extends StateNotifier<int> {
     });
   }
 
-  void back(BuildContext context) {
+  void home(BuildContext context) {
     changePage(0, context);
   }
 

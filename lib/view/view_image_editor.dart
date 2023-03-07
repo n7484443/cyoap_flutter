@@ -117,7 +117,7 @@ class ViewImageEditorContents extends ConsumerWidget {
                     image.item1;
                 ref.invalidate(choiceNodeProvider(pos));
               }
-              ref.read(changeTabProvider.notifier).back(context);
+              ref.read(changeTabProvider.notifier).home(context);
             });
           },
         ),
