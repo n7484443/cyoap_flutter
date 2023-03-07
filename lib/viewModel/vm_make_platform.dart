@@ -27,7 +27,7 @@ class ChangeTabNotifier extends StateNotifier<int> {
     switch (index) {
       case 1:
         if (ref.read(editorChangeProvider)) {
-          var out = await showDialog(
+          bool out = await showDialog(
             context: context,
             builder: (_) => ViewBackDialog(
               () async => ref.read(editorChangeProvider.notifier).save(),
@@ -35,7 +35,7 @@ class ChangeTabNotifier extends StateNotifier<int> {
               cancelFunction: () =>
                   ref.read(editorChangeProvider.notifier).update(),
             ),
-          );
+          ) ?? false;
           if (!out) {
             return false;
           }
