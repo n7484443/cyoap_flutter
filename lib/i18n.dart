@@ -3,7 +3,7 @@ import 'package:i18n_extension/i18n_extension.dart';
 extension Localization on String {
   static final _t = Translations.byLocale("en_us") +
       const {
-        "en_us": {
+        "en": {
           'language': 'Language Setting',
 
           //first page
@@ -150,7 +150,7 @@ extension Localization on String {
           'sample_node': 'Adjust and view layouts, fonts, designs and more.',
           'sample_title': 'Design',
         },
-        "ko_kr": {
+        "ko": {
           'language': '언어 설정',
 
           //first page

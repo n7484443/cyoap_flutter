@@ -166,8 +166,8 @@ class ConstList {
   static ThemeMode currentThemeMode = ThemeMode.light;
 
   static Map<String, Locale> localeMap = const {
-    'English': Locale('en', 'US'),
-    '한국어': Locale('ko', 'KR'),
+    'English': Locale('en'),
+    '한국어': Locale('ko'),
   };
 
   static TextTheme getCurrentFont(BuildContext context) {
@@ -215,8 +215,8 @@ void main() {
                       GlobalWidgetsLocalizations.delegate,
                     ],
                     supportedLocales: [
-                      const Locale('en', "US"),
-                      const Locale('ko', "KR"),
+                      const Locale('en'),
+                      const Locale('ko'),
                     ],
                     title: 'CYOAP',
                     initialRoute: '/',
