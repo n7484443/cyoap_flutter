@@ -381,6 +381,7 @@ class NestedScroll extends ConsumerWidget {
     }
     return Container(
       decoration: BoxDecoration(
+        color: ref.watch(backgroundColorProvider),
         image: background != null
             ? DecorationImage(
                 image: Image.memory(ImageDB().getImage(background)!).image,
@@ -574,12 +575,9 @@ class _NestedMapState extends ConsumerState<NestedMap> {
       );
     }
 
-    return ColoredBox(
-      color: ref.watch(backgroundColorProvider),
-      child: CustomScrollView(
-        controller: _scrollController,
-        slivers: sliverList,
-      ),
+    return CustomScrollView(
+      controller: _scrollController,
+      slivers: sliverList,
     );
   }
 }
