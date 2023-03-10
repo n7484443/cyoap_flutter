@@ -1,4 +1,3 @@
-
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/grammar/function_list.dart';
 import 'package:cyoap_flutter/i18n.dart';
@@ -28,7 +27,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
   ScrollController? _scrollController;
 
   final regexSpace =
-  RegExp(r"(\b|}|\))(if|for|else|in|break|continue)(\b|{|\()");
+      RegExp(r"(\b|}|\))(if|for|else|in|break|continue)(\b|{|\()");
   final regexBrace = RegExp(r"[{}()]");
   final regexComment = RegExp(r"//.*");
   final regexFunction = RegExp(
@@ -41,7 +40,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
     var data = [
       {
         "insert":
-        "${ref.read(nodeEditorTargetProvider).node.recursiveStatus.executeCodeString ?? ''}\n"
+            "${ref.read(nodeEditorTargetProvider).node.recursiveStatus.executeCodeString ?? ''}\n"
       }
     ];
     _quillController = QuillController(
@@ -51,14 +50,14 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
       EasyDebounce.debounce('code-ide', const Duration(milliseconds: 500), () {
         var plainText = _quillController?.document.toPlainText() ?? '';
         if (ref
-            .read(nodeEditorTargetProvider)
-            .node
-            .recursiveStatus
-            .executeCodeString !=
+                .read(nodeEditorTargetProvider)
+                .node
+                .recursiveStatus
+                .executeCodeString !=
             plainText) {
           var styleNull = Attribute.color;
           var styleDeepOrange =
-          ColorAttribute('#${Colors.deepOrangeAccent.hex}');
+              ColorAttribute('#${Colors.deepOrangeAccent.hex}');
           var styleDeepPurple = ColorAttribute('#${Colors.deepPurple.hex}');
           var styleGrey = ColorAttribute('#${Colors.grey.hex}');
 
@@ -118,7 +117,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
             children: [
               Visibility(
                 visible:
-                ref.watch(nodeEditorTargetProvider).node.isSelectableMode,
+                    ref.watch(nodeEditorTargetProvider).node.isSelectableMode,
                 child: Focus(
                   onFocusChange: (bool hasFocus) => ref
                       .read(editorChangeProvider.notifier)
@@ -165,7 +164,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
           child: Column(
             children: [
               ViewSwitchLabel(
-                    () {
+                () {
                   ref.read(nodeEditorDesignProvider.notifier).state =
                       design.copyWith(isOccupySpace: !design.isOccupySpace);
                 },
@@ -178,7 +177,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
                 onPressed: () {
                   var text = _quillController?.document.toPlainText() ?? '';
                   var output =
-                  ref.read(editorChangeProvider.notifier).formatting(text);
+                      ref.read(editorChangeProvider.notifier).formatting(text);
                   if (output.item2) {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text("sort_error".i18n),

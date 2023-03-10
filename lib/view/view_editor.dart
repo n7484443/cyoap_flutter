@@ -32,7 +32,8 @@ class ViewEditor extends ConsumerStatefulWidget {
   ConsumerState createState() => _ViewEditorState();
 }
 
-class _ViewEditorState extends ConsumerState<ViewEditor> with TickerProviderStateMixin {
+class _ViewEditorState extends ConsumerState<ViewEditor>
+    with TickerProviderStateMixin {
   TabController? _tabController;
 
   @override
@@ -405,7 +406,6 @@ class _ImageSourceDialogState extends ConsumerState<ImageSourceDialog> {
     );
   }
 }
-
 
 class ViewNodeOptionEditor extends ConsumerWidget {
   const ViewNodeOptionEditor({
