@@ -114,7 +114,9 @@ class ViewChoiceNodeMain extends ConsumerWidget {
               Align(
                 alignment: Alignment.topRight,
                 child: CircleAvatar(
+                  radius: 16,
                   child: PopupMenuButton<int>(
+                    padding: EdgeInsets.zero,
                     icon: const Icon(Icons.more_vert),
                     onSelected: (result) {
                       switch (result) {

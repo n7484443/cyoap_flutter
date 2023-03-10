@@ -284,6 +284,7 @@ class NodeDivider extends ConsumerWidget {
                           Icons.arrow_upward,
                         ),
                       ),
+                      const SizedBox.square(dimension: 5,),
                       CircleButton(
                         onPressed: () {
                           ref
@@ -294,6 +295,7 @@ class NodeDivider extends ConsumerWidget {
                           Icons.arrow_downward,
                         ),
                       ),
+                      const SizedBox.square(dimension: 5,),
                       CircleButton(
                         onPressed: () {
                           showDialog<Tuple2<String, String>>(
