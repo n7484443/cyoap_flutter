@@ -382,7 +382,7 @@ class NestedScroll extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         color: ref.watch(backgroundColorProvider),
-        image: background != null
+        image: background != null && ImageDB().getImage(background) != null
             ? DecorationImage(
                 image: Image.memory(ImageDB().getImage(background)!).image,
                 fit: backgroundBoxFit,

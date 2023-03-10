@@ -3,12 +3,11 @@ import 'dart:ui';
 
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/i18n.dart';
-import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
+import 'package:cyoap_flutter/view/util/view_image_selector.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/view/view_ide.dart';
-import 'package:desktop_drop/desktop_drop.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
@@ -17,10 +16,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
 import '../main.dart';
-import '../model/platform_system.dart';
 import '../viewModel/preset/vm_choice_node_preset.dart';
 import '../viewModel/vm_editor.dart';
-import '../viewModel/vm_image_editor.dart';
 import '../viewModel/vm_make_platform.dart';
 
 class ViewEditor extends ConsumerStatefulWidget {
@@ -57,10 +54,48 @@ class _ViewEditorState extends ConsumerState<ViewEditor>
       const ViewContentsEditor(),
       const ViewCodeIde(),
       const ViewNodeOptionEditor(),
-      const ViewImageDraggable()
+      ViewImageDraggable(
+        addImageFunction: (ref, name) {
+          ref
+              .read(nodeEditorTargetProvider)
+              .node
+              .imageString = name;
+        },
+        widgetBuilder: (ref, index) {
+          return Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                width: 3,
+                color: index == ref.watch(imageStateProvider)
+                    ? Colors.redAccent
+                    : Colors.white,
+              ),
+            ),
+            child: GestureDetector(
+              child: ViewImageLoading(
+                  ref.watch(imageListStateProvider)[index]),
+              onDoubleTap: (){
+                if (ref
+                    .read(imageStateProvider.notifier)
+                    .state == index) {
+                  ref
+                      .read(imageStateProvider.notifier)
+                      .state = -1;
+                } else {
+                  ref
+                      .read(imageStateProvider.notifier)
+                      .state = index;
+                }
+                ref.read(editorChangeProvider.notifier).needUpdate();
+              },
+            ),
+          );
+        },
+        widgetLength: (ref) => ref.watch(imageListStateProvider).length,
+      ),
     ];
     var childrenText =
-        const ["content", "code", "setting", "image"].map((e) => e.i18n);
+    const ["content", "code", "setting", "image"].map((e) => e.i18n);
     return WillPopScope(
       child: Scaffold(
         appBar: AppBar(
@@ -68,7 +103,9 @@ class _ViewEditorState extends ConsumerState<ViewEditor>
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
               _tabController?.index = 0;
-              if (ref.watch(nodeTitleProvider).isNotEmpty) {
+              if (ref
+                  .watch(nodeTitleProvider)
+                  .isNotEmpty) {
                 ref.read(changeTabProvider.notifier).home(context);
               }
             },
@@ -80,8 +117,14 @@ class _ViewEditorState extends ConsumerState<ViewEditor>
             }),
             child: TabBar(
               controller: _tabController,
-              labelColor: Theme.of(context).colorScheme.secondary,
-              unselectedLabelColor: Theme.of(context).colorScheme.primary,
+              labelColor: Theme
+                  .of(context)
+                  .colorScheme
+                  .secondary,
+              unselectedLabelColor: Theme
+                  .of(context)
+                  .colorScheme
+                  .primary,
               tabs: childrenText.map((String e) => Tab(text: e)).toList(),
               isScrollable: true,
               physics: const AlwaysScrollableScrollPhysics(),
@@ -89,13 +132,13 @@ class _ViewEditorState extends ConsumerState<ViewEditor>
           ),
           actions: ConstList.isMobile()
               ? [
-                  IconButton(
-                    icon: const Icon(Icons.save),
-                    onPressed: () {
-                      ref.read(editorChangeProvider.notifier).save();
-                    },
-                  ),
-                ]
+            IconButton(
+              icon: const Icon(Icons.save),
+              onPressed: () {
+                ref.read(editorChangeProvider.notifier).save();
+              },
+            ),
+          ]
               : null,
         ),
         body: TabBarView(
@@ -150,11 +193,15 @@ class _ViewTitleTextFieldInputState
 
   @override
   void initState() {
-    var node = ref.read(nodeEditorTargetProvider).node;
+    var node = ref
+        .read(nodeEditorTargetProvider)
+        .node;
     _controller = TextEditingController(text: node.title);
     _controller!.addListener(() {
       node.title = _controller!.text;
-      ref.read(nodeTitleProvider.notifier).state = node.title;
+      ref
+          .read(nodeTitleProvider.notifier)
+          .state = node.title;
       ref.read(editorChangeProvider.notifier).needUpdate();
     });
     super.initState();
@@ -204,7 +251,9 @@ class _ViewTextContentsEditorState
   @override
   void initState() {
     _focusNode = FocusNode();
-    var node = ref.read(nodeEditorTargetProvider).node;
+    var node = ref
+        .read(nodeEditorTargetProvider)
+        .node;
     if (node.contentsString.isEmpty) {
       _quillController = QuillController.basic();
     } else {
@@ -214,11 +263,14 @@ class _ViewTextContentsEditorState
     }
     _quillController?.addListener(() {
       EasyDebounce.debounce('content-editor', const Duration(milliseconds: 500),
-          () {
-        ref.read(nodeEditorTargetProvider).node.contentsString =
-            jsonEncode(_quillController?.document.toDelta().toJson());
-        ref.read(editorChangeProvider.notifier).needUpdate();
-      });
+              () {
+            ref
+                .read(nodeEditorTargetProvider)
+                .node
+                .contentsString =
+                jsonEncode(_quillController?.document.toDelta().toJson());
+            ref.read(editorChangeProvider.notifier).needUpdate();
+          });
     });
     _scrollController = AdjustableScrollController();
     super.initState();
@@ -249,42 +301,45 @@ class _ViewTextContentsEditorState
       Color newColor = const Color(0x00000000);
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Select Color'),
-          backgroundColor: Theme.of(context).canvasColor,
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ColorPicker(
-                pickersEnabled: {
-                  ColorPickerType.both: true,
-                  ColorPickerType.primary: false,
-                  ColorPickerType.accent: false
-                },
-                color: const Color(0x00000000),
-                onColorChanged: (color) {
-                  newColor = color;
-                },
+        builder: (context) =>
+            AlertDialog(
+              title: const Text('Select Color'),
+              backgroundColor: Theme
+                  .of(context)
+                  .canvasColor,
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ColorPicker(
+                    pickersEnabled: {
+                      ColorPickerType.both: true,
+                      ColorPickerType.primary: false,
+                      ColorPickerType.accent: false
+                    },
+                    color: const Color(0x00000000),
+                    onColorChanged: (color) {
+                      newColor = color;
+                    },
+                  ),
+                ],
               ),
-            ],
-          ),
-          actionsAlignment: MainAxisAlignment.spaceEvenly,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () {
-                Navigator.pop(context);
-              },
+              actionsAlignment: MainAxisAlignment.spaceEvenly,
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.check),
+                  onPressed: () {
+                    changeColor(_quillController!, newColor, background);
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
             ),
-            IconButton(
-              icon: const Icon(Icons.check),
-              onPressed: () {
-                changeColor(_quillController!, newColor, background);
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
       );
     }
 
@@ -353,8 +408,7 @@ class _ViewTextContentsEditorState
 class ImageSourceDialog extends ConsumerStatefulWidget {
   final String name;
 
-  const ImageSourceDialog(
-    this.name, {
+  const ImageSourceDialog(this.name, {
     super.key,
   });
 
@@ -422,9 +476,10 @@ class ViewNodeOptionEditor extends ConsumerWidget {
     if (nodeMode != ChoiceNodeMode.unSelectableMode) {
       list.add(
         ViewSwitchLabel(
-          () => ref.read(nodeEditorDesignProvider.notifier).update((state) =>
-              state.copyWith(
-                  hideAsResult: !design.hideAsResult, showAsResult: false)),
+              () =>
+              ref.read(nodeEditorDesignProvider.notifier).update((state) =>
+                  state.copyWith(
+                      hideAsResult: !design.hideAsResult, showAsResult: false)),
           design.hideAsResult,
           label: 'hide_result'.i18n,
         ),
@@ -432,9 +487,10 @@ class ViewNodeOptionEditor extends ConsumerWidget {
     } else {
       list.add(
         ViewSwitchLabel(
-          () => ref.read(nodeEditorDesignProvider.notifier).update((state) =>
-              state.copyWith(
-                  showAsResult: !design.showAsResult, hideAsResult: false)),
+              () =>
+              ref.read(nodeEditorDesignProvider.notifier).update((state) =>
+                  state.copyWith(
+                      showAsResult: !design.showAsResult, hideAsResult: false)),
           design.showAsResult,
           label: 'show_result'.i18n,
         ),
@@ -443,8 +499,10 @@ class ViewNodeOptionEditor extends ConsumerWidget {
     if (nodeMode == ChoiceNodeMode.multiSelect) {
       list.add(
         ViewSwitchLabel(
-          () => ref.read(nodeEditorDesignProvider.notifier).update(
-              (state) => state.copyWith(showAsSlider: !design.showAsSlider)),
+              () =>
+              ref.read(nodeEditorDesignProvider.notifier).update(
+                      (state) =>
+                      state.copyWith(showAsSlider: !design.showAsSlider)),
           design.showAsSlider,
           label: 'slider_mode'.i18n,
         ),
@@ -455,7 +513,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
       items: ref
           .watch(choiceNodePresetListProvider)
           .map<DropdownMenuItem<String>>((preset) =>
-              DropdownMenuItem(value: preset.name, child: Text(preset.name)))
+          DropdownMenuItem(value: preset.name, child: Text(preset.name)))
           .toList(),
       onChanged: (String? t) {
         if (t != null) {
@@ -472,7 +530,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
       slivers: [
         SliverToBoxAdapter(
           child:
-              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: DropdownButton<ChoiceNodeMode>(
@@ -512,11 +570,18 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                   width: 120,
                   child: Column(children: [
                     Text('variable_name'.i18n,
-                        style: Theme.of(context).textTheme.labelLarge),
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .labelLarge),
                     Text(
-                        '${title.replaceAll(" ", "")}:${nodeMode == ChoiceNodeMode.multiSelect ? 'multi' : 'random'}',
+                        '${title.replaceAll(" ", "")}:${nodeMode ==
+                            ChoiceNodeMode.multiSelect ? 'multi' : 'random'}',
                         softWrap: true,
-                        style: Theme.of(context).textTheme.bodySmall),
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .bodySmall),
                     TextField(
                       textAlign: TextAlign.end,
                       maxLength: 3,
@@ -547,179 +612,6 @@ class ViewNodeOptionEditor extends ConsumerWidget {
         ),
         const SliverToBoxAdapter(
           child: Divider(),
-        ),
-      ],
-    );
-  }
-}
-
-class ViewImageDraggable extends ConsumerWidget {
-  const ViewImageDraggable({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    if (!ConstList.isDesktop()) {
-      return Column(
-        children: [
-          TextButton(
-            onPressed: () {
-              ref
-                  .read(imageListStateProvider.notifier)
-                  .addImage()
-                  .then((name) => openImageEditor(ref, context, name));
-            },
-            child: Text('add_image'.i18n),
-          ),
-          const Expanded(child: ViewImageSelector()),
-        ],
-      );
-    }
-    return Column(
-      children: [
-        Row(
-          children: [
-            Text(
-              'add_image_description'.i18n,
-            ),
-            TextButton(
-              onPressed: () {
-                ref
-                    .read(imageListStateProvider.notifier)
-                    .addImage()
-                    .then((name) => openImageEditor(ref, context, name));
-              },
-              child: Text('add_image'.i18n),
-            ),
-          ],
-        ),
-        Expanded(
-          child: DropTarget(
-            onDragDone: (detail) async {
-              for (var file in detail.files) {
-                var fileName = file.name;
-                if (!ImageDB.regCheckImage.hasMatch(fileName)) {
-                  continue;
-                }
-                var fileData = await file.readAsBytes();
-                ref
-                    .read(lastImageProvider.notifier)
-                    .update((state) => fileData);
-                ref.read(editorChangeProvider.notifier).needUpdate();
-                openImageEditor(ref, context, fileName);
-                break;
-              }
-            },
-            onDragEntered: (detail) {
-              ref.read(editorImageDragDropColorProvider.notifier).state =
-                  Colors.lightBlueAccent;
-            },
-            onDragExited: (detail) {
-              ref.read(editorImageDragDropColorProvider.notifier).state =
-                  Colors.black12;
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                    color: ref.watch(editorImageDragDropColorProvider),
-                    width: 5),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              padding: const EdgeInsets.all(4.0),
-              child: const ViewImageSelector(),
-            ),
-          ),
-        )
-      ],
-    );
-  }
-
-  void openImageEditor(WidgetRef ref, BuildContext context, String name) {
-    if (name != '') {
-      showDialog<Tuple2<bool, String>>(
-        builder: (_) => ImageSourceDialog(name),
-        context: context,
-        barrierDismissible: false,
-      ).then((value) {
-        getPlatformFileSystem.addSource(name, value?.item2 ?? '');
-        if (value?.item1 ?? false) {
-          ref
-              .read(imageProvider.notifier)
-              .update((state) => Tuple2(name, ref.watch(lastImageProvider)!));
-          ref
-              .read(changeTabProvider.notifier)
-              .changePageString('viewImageEditor', context);
-        } else {
-          ref.read(imageListStateProvider.notifier).addImageToList(name);
-        }
-      });
-    }
-  }
-}
-
-class ViewImageSelector extends ConsumerStatefulWidget {
-  const ViewImageSelector({
-    super.key,
-  });
-
-  @override
-  ConsumerState createState() => _ViewImageSelectorState();
-}
-
-class _ViewImageSelectorState extends ConsumerState<ViewImageSelector> {
-  ScrollController? _controller;
-
-  @override
-  void initState() {
-    _controller = AdjustableScrollController();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controller?.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomScrollView(
-      controller: _controller,
-      slivers: [
-        SliverGrid(
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-              return Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: 3,
-                    color: index == ref.watch(imageStateProvider)
-                        ? Colors.redAccent
-                        : Colors.white,
-                  ),
-                ),
-                child: GestureDetector(
-                  child: ViewImageLoading(
-                      ref.watch(imageListStateProvider)[index]),
-                  onDoubleTap: () {
-                    if (ref.read(imageStateProvider.notifier).state == index) {
-                      ref.read(imageStateProvider.notifier).state = -1;
-                    } else {
-                      ref.read(imageStateProvider.notifier).state = index;
-                    }
-                    ref.read(editorChangeProvider.notifier).needUpdate();
-                  },
-                ),
-              );
-            },
-            childCount: ref.watch(imageListStateProvider).length,
-          ),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 4,
-            crossAxisSpacing: 3.0,
-            mainAxisSpacing: 3.0,
-          ),
         ),
       ],
     );

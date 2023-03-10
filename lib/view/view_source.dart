@@ -1,7 +1,7 @@
 import 'package:cyoap_flutter/i18n.dart';
-import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
+import 'package:cyoap_flutter/view/util/view_image_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -35,8 +35,6 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
 
   @override
   Widget build(BuildContext context) {
-    var data = ref.watch(vmSourceProvider);
-
     Widget icon;
     if (!ref.watch(deleteModeProvider)) {
       icon = Row(
@@ -86,20 +84,11 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
           ),
           title: icon,
         ),
-        body: CustomScrollView(
-          slivers: [
-            SliverGrid(
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    var name = data[index];
-                    return ViewSourceItem(name: name);
-                  },
-                  childCount: data.length,
-                ),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 3)),
-          ],
-          controller: _controller,
+        body: ViewImageDraggable(
+          addImageFunction: (ref, name) {},
+          widgetBuilder: (ref, index) =>
+              ViewSourceItem(name: ref.watch(vmSourceProvider)[index]),
+          widgetLength: (ref) => ref.watch(vmSourceProvider).length,
         ),
       ),
       onWillPop: () async {
@@ -111,6 +100,7 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
 
 class ViewSourceItem extends ConsumerStatefulWidget {
   final String name;
+
   const ViewSourceItem({
     required this.name,
     super.key,
@@ -159,26 +149,26 @@ class _ViewSourceItemState extends ConsumerState<ViewSourceItem> {
           : null,
       child: Column(
         children: [
-          Stack(children: [
-            Align(
-              alignment: Alignment.center,
-              child: Text(widget.name),
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Visibility(
-                visible: ref.watch(deleteModeProvider),
-                child: IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () {
-                    ref
-                        .read(vmSourceProvider.notifier)
-                        .checkRemove(widget.name);
-                  },
-                ),
+          Stack(
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: Text(widget.name),
               ),
-            ),
-          ]),
+              if (ref.watch(deleteModeProvider))
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () {
+                      ref
+                          .read(vmSourceProvider.notifier)
+                          .checkRemove(widget.name);
+                    },
+                  ),
+                ),
+            ],
+          ),
           Expanded(
             child: ViewImageLoading(widget.name),
           ),

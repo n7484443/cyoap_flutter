@@ -3,6 +3,7 @@ import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/preset/view_preset.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
+import 'package:cyoap_flutter/view/util/view_image_selector.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
@@ -252,26 +253,25 @@ class _ViewBackgroundSettingState extends ConsumerState<ViewBackgroundSetting> {
     var widget = ImageAttribute.values
         .map((e) => DropdownMenuItem(value: e, child: Text(e.name)))
         .toList();
-    return CustomScrollView(
-      controller: _scrollController,
-      slivers: [
-        SliverToBoxAdapter(
-          child: DropdownButtonFormField<ImageAttribute>(
-            decoration: InputDecoration(labelText: 'background_image'.i18n),
-            items: widget,
-            onChanged: (ImageAttribute? t) {
-              if (t != null) {
-                ref
-                    .read(backgroundAttributeProvider.notifier)
-                    .update((state) => t);
-              }
-            },
-            value: ref.watch(backgroundAttributeProvider),
-          ),
+    return Column(
+      children: [
+        DropdownButtonFormField<ImageAttribute>(
+          decoration: InputDecoration(labelText: 'background_image'.i18n),
+          items: widget,
+          onChanged: (ImageAttribute? t) {
+            if (t != null) {
+              ref
+                  .read(backgroundAttributeProvider.notifier)
+                  .update((state) => t);
+            }
+          },
+          value: ref.watch(backgroundAttributeProvider),
         ),
-        SliverGrid(
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
+        Expanded(
+          child: ViewImageDraggable(
+            addImageFunction: (WidgetRef ref, String name) {
+            },
+            widgetBuilder: (WidgetRef ref, int index) {
               return Container(
                 decoration: BoxDecoration(
                   border: Border.all(
@@ -282,12 +282,11 @@ class _ViewBackgroundSettingState extends ConsumerState<ViewBackgroundSetting> {
                   ),
                 ),
                 child: GestureDetector(
-                  child: ViewImageLoading(
+                  child:
+                  ViewImageLoading(
                       ref.watch(imageListStateProvider)[index]),
                   onDoubleTap: () {
-                    if (ref
-                            .read(backgroundCurrentStateProvider.notifier)
-                            .state ==
+                    if (ref.read(backgroundCurrentStateProvider.notifier).state ==
                         index) {
                       ref.read(backgroundCurrentStateProvider.notifier).state =
                           -1;
@@ -303,12 +302,8 @@ class _ViewBackgroundSettingState extends ConsumerState<ViewBackgroundSetting> {
                 ),
               );
             },
-            childCount: ref.watch(imageListStateProvider).length,
-          ),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 4,
-            crossAxisSpacing: 3.0,
-            mainAxisSpacing: 3.0,
+            widgetLength: (WidgetRef ref) =>
+                ref.watch(imageListStateProvider).length,
           ),
         ),
       ],

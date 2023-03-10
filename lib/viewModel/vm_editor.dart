@@ -128,7 +128,6 @@ class ImageListStateNotifier extends StateNotifier<List<String>> {
     var out = await WebpConverter.instance!.convert(before, name);
 
     ImageDB().uploadImages(out.item1, out.item2);
-    ref.read(nodeEditorTargetProvider).node.imageString = out.item1;
     ref.read(imageStateProvider.notifier).state =
         ImageDB().getImageIndex(out.item1);
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
