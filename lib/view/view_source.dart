@@ -1,3 +1,4 @@
+import 'package:cyoap_core/design_setting.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
@@ -6,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/platform_system.dart';
+import '../viewModel/vm_design_setting.dart';
+import '../viewModel/vm_editor.dart';
 import '../viewModel/vm_make_platform.dart';
 import '../viewModel/vm_source.dart';
 
@@ -84,12 +87,29 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
           ),
           title: icon,
         ),
-        body: ViewImageDraggable(
-          addImageFunction: (ref, name) {},
-          widgetBuilder: (ref, index) =>
-              ViewSourceItem(name: ref.watch(vmSourceProvider)[index]),
-          widgetLength: (ref) => ref.watch(vmSourceProvider).length,
-        ),
+        body: Column(children: [
+          DropdownButtonFormField<ImageAttribute>(
+            decoration: InputDecoration(labelText: 'background_image'.i18n),
+            items: ImageAttribute.values
+                .map((e) => DropdownMenuItem(value: e, child: Text(e.name)))
+                .toList(),
+            onChanged: (ImageAttribute? t) {
+              if (t != null) {
+                ref
+                    .read(backgroundAttributeProvider.notifier)
+                    .update((state) => t);
+              }
+            },
+            value: ref.watch(backgroundAttributeProvider),
+          ),
+          Expanded(
+            child: ViewImageDraggable(
+              addImageFunction: (ref, name) {},
+              widgetBuilder: (ref, index) => ViewSourceItem(index: index),
+              widgetLength: (ref) => ref.watch(vmSourceProvider).length,
+            ),
+          ),
+        ]),
       ),
       onWillPop: () async {
         return false;
@@ -99,10 +119,10 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
 }
 
 class ViewSourceItem extends ConsumerStatefulWidget {
-  final String name;
+  final int index;
 
   const ViewSourceItem({
-    required this.name,
+    required this.index,
     super.key,
   });
 
@@ -115,14 +135,14 @@ class _ViewSourceItemState extends ConsumerState<ViewSourceItem> {
 
   @override
   void initState() {
+    var name = ref.read(vmSourceProvider)[widget.index];
     _textEditingController = TextEditingController();
-    if (getPlatformFileSystem.hasSource(widget.name)) {
+    if (getPlatformFileSystem.hasSource(name)) {
       _textEditingController?.text =
-          getPlatformFileSystem.getSource(widget.name) ?? '';
+          getPlatformFileSystem.getSource(name) ?? '';
     }
     _textEditingController?.addListener(() {
-      getPlatformFileSystem.addSource(
-          widget.name, _textEditingController?.text ?? '');
+      getPlatformFileSystem.addSource(name, _textEditingController?.text ?? '');
     });
     super.initState();
   }
@@ -135,55 +155,74 @@ class _ViewSourceItemState extends ConsumerState<ViewSourceItem> {
 
   @override
   Widget build(BuildContext context) {
+    var name = ref.watch(vmSourceProvider)[widget.index];
     var deleteList = ref.watch(deleteImageListProvider);
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        side: BorderSide(
-          color: Theme.of(context).colorScheme.outline,
+    return InkWell(
+      onDoubleTap: () {
+        if (ref.read(backgroundCurrentStateProvider) == widget.index) {
+          ref.read(backgroundCurrentStateProvider.notifier).state = -1;
+          ref.read(backgroundProvider.notifier).state = null;
+        } else {
+          ref.read(backgroundCurrentStateProvider.notifier).state =
+              widget.index;
+          ref.read(backgroundProvider.notifier).state =
+              ref.read(imageListStateProvider)[widget.index];
+        }
+        ref.read(editorChangeProvider.notifier).needUpdate();
+      },
+      child: Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(
+            color: ref.watch(backgroundCurrentStateProvider) == widget.index
+                ? Colors.red
+                : Theme.of(context).colorScheme.outline,
+            width: 4,
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(4)),
         ),
-        borderRadius: const BorderRadius.all(Radius.circular(4)),
-      ),
-      color: deleteList.contains(widget.name)
-          ? Theme.of(context).colorScheme.secondaryContainer
-          : null,
-      child: Column(
-        children: [
-          Stack(
+        color: deleteList.contains(name)
+            ? Theme.of(context).colorScheme.secondaryContainer
+            : null,
+        child: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Column(
             children: [
-              Align(
-                alignment: Alignment.center,
-                child: Text(widget.name),
-              ),
-              if (ref.watch(deleteModeProvider))
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () {
-                      ref
-                          .read(vmSourceProvider.notifier)
-                          .checkRemove(widget.name);
-                    },
+              Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(name),
                   ),
+                  if (ref.watch(deleteModeProvider))
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {
+                          ref.read(vmSourceProvider.notifier).checkRemove(name);
+                        },
+                      ),
+                    ),
+                ],
+              ),
+              Expanded(
+                child: ViewImageLoading(name),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  textAlign: TextAlign.start,
+                  decoration: InputDecoration(
+                    hintText: 'source_hint'.i18n,
+                    alignLabelWithHint: true,
+                  ),
+                  controller: _textEditingController,
                 ),
+              ),
             ],
           ),
-          Expanded(
-            child: ViewImageLoading(widget.name),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              textAlign: TextAlign.start,
-              decoration: InputDecoration(
-                hintText: 'source_hint'.i18n,
-                alignLabelWithHint: true,
-              ),
-              controller: _textEditingController,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
