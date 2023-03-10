@@ -107,7 +107,7 @@ class ViewMake extends ConsumerWidget {
                   .read(dragPositionProvider.notifier)
                   .state = details.localPosition.dy,
               child: Tooltip(
-                message: 'recently_tooltip'.i18n,
+                message: 'copy_tooltip'.i18n,
                 child: const Icon(Icons.paste),
               ),
             ),

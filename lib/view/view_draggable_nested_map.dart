@@ -55,6 +55,10 @@ class NodeDragTarget extends ConsumerWidget {
             ref
                 .read(vmDraggableNestedMapProvider)
                 .addData(pos, ref.read(removedChoiceNode)!.clone());
+          } else if (drag.last == copiedPositioned) {
+            ref
+                .read(vmDraggableNestedMapProvider)
+                .addData(pos, ref.read(copiedChoiceNode)!.clone());
           } else if (pos.equalExceptLast(drag) &&
               (pos.data.last - 1) >= drag.last) {
             ref

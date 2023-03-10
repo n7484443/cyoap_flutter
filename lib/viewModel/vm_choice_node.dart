@@ -18,8 +18,8 @@ import '../model/platform.dart';
 import '../model/platform_system.dart';
 
 const double nodeBaseHeight = 200;
-const int copiedPositioned = -1;
 const int removedPositioned = -2;
+const int copiedPositioned = -3;
 
 void refreshChild(Ref ref, Choice node) {
   ref.invalidate(choiceNodeProvider(node.pos));

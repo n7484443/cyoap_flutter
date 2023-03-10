@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:cyoap_core/choiceNode/choice_node.dart';
+import 'package:cyoap_core/choiceNode/recursive_status.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
@@ -264,6 +265,10 @@ class _ViewTextContentsEditorState
     _quillController?.addListener(() {
       EasyDebounce.debounce('content-editor', const Duration(milliseconds: 500),
               () {
+        if(_quillController?.document.toPlainText().contains(textFinder) ?? false){
+          var patternMatched = _quillController?.document.search(textFinder);
+          // print(_quillController?.document.getPlainText(patternMatched?.first ?? 0, 5));
+        }
             ref
                 .read(nodeEditorTargetProvider)
                 .node
