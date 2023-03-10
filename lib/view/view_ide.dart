@@ -112,49 +112,70 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
     return Row(
       children: [
         Expanded(
-          child: ListView(
+          child: CustomScrollView(
             controller: _scrollController,
-            children: [
-              Visibility(
-                visible:
-                    ref.watch(nodeEditorTargetProvider).node.isSelectableMode,
-                child: Focus(
-                  onFocusChange: (bool hasFocus) => ref
-                      .read(editorChangeProvider.notifier)
-                      .lastFocus = ref.watch(controllerClickableProvider),
-                  child: TextField(
-                    controller: ref.watch(controllerClickableProvider),
-                    textAlign: TextAlign.left,
-                    decoration: InputDecoration(
-                        hintText: 'code_hint_execute_condition'.i18n),
+            slivers: [
+              // Todo 개발중
+              // SliverAppBar(
+              //   title: SizedBox(
+              //     height: 44,
+              //     child: HorizontalScroll(
+              //       itemBuilder: (BuildContext context, int index) {
+              //         return TextButton(
+              //           onPressed: () {},
+              //           child: Text(
+              //             'test',
+              //             style: ConstList.getCurrentFont(context).bodyLarge,
+              //           ),
+              //         );
+              //       },
+              //       itemCount: 100,
+              //     ),
+              //   ),
+              //   floating: true,
+              //   pinned: true,
+              //   expandedHeight: 44.0,
+              //   toolbarHeight: 44.0,
+              // ),
+              SliverList(
+                delegate: SliverChildListDelegate([
+                  if (ref.watch(nodeEditorTargetProvider).node.isSelectableMode)
+                    Focus(
+                      onFocusChange: (bool hasFocus) => ref
+                          .read(editorChangeProvider.notifier)
+                          .lastFocus = ref.watch(controllerClickableProvider),
+                      child: TextField(
+                        controller: ref.watch(controllerClickableProvider),
+                        textAlign: TextAlign.left,
+                        decoration: InputDecoration(
+                            hintText: 'code_hint_execute_condition'.i18n),
+                      ),
+                    ),
+                  if (ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode)
+                    Focus(
+                      onFocusChange: (bool hasFocus) => ref
+                          .read(editorChangeProvider.notifier)
+                          .lastFocus = ref.watch(controllerVisibleProvider),
+                      child: TextField(
+                        controller: ref.watch(controllerVisibleProvider),
+                        textAlign: TextAlign.left,
+                        decoration: InputDecoration(
+                            hintText: 'code_hint_visible_condition'.i18n),
+                      ),
+                    ),
+                  QuillEditor(
+                    locale: ref.watch(localeStateProvider),
+                    focusNode: _focusNode!,
+                    scrollable: false,
+                    readOnly: false,
+                    autoFocus: false,
+                    scrollController: _scrollController!,
+                    controller: _quillController!,
+                    padding: EdgeInsets.zero,
+                    expands: false,
+                    placeholder: "code_hint_execute".i18n,
                   ),
-                ),
-              ),
-              Visibility(
-                visible: ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode,
-                child: Focus(
-                  onFocusChange: (bool hasFocus) => ref
-                      .read(editorChangeProvider.notifier)
-                      .lastFocus = ref.watch(controllerVisibleProvider),
-                  child: TextField(
-                    controller: ref.watch(controllerVisibleProvider),
-                    textAlign: TextAlign.left,
-                    decoration: InputDecoration(
-                        hintText: 'code_hint_visible_condition'.i18n),
-                  ),
-                ),
-              ),
-              QuillEditor(
-                locale: ref.watch(localeStateProvider),
-                focusNode: _focusNode!,
-                scrollable: false,
-                readOnly: false,
-                autoFocus: false,
-                scrollController: _scrollController!,
-                controller: _quillController!,
-                padding: EdgeInsets.zero,
-                expands: false,
-                placeholder: "code_hint_execute".i18n,
+                ]),
               ),
             ],
           ),

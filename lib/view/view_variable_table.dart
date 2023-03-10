@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
@@ -289,7 +287,7 @@ class VariableTiles extends ConsumerWidget {
         if (asBottom) {
           variableList.add(
             Chip(
-              label: Text("$name  ${values.valueType.data.toString()}",
+              label: Text("$name   ${values.valueType.data.toString()}",
                   style: ConstList.getFont(ref.watch(variableFontProvider))),
             ),
           );
@@ -304,20 +302,13 @@ class VariableTiles extends ConsumerWidget {
       }
     }
     if (asBottom) {
-      return ScrollConfiguration(
-        behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
-          PointerDeviceKind.touch,
-          PointerDeviceKind.mouse,
-        }),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Wrap(
-              spacing: 10,
-              children: variableList,
-            ),
-          ),
+      return SizedBox(
+        height: 48,
+        child: HorizontalScroll(
+          itemBuilder: (BuildContext context, int index) {
+            return variableList[index];
+          },
+          itemCount: variableList.length,
         ),
       );
     }
