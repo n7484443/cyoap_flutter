@@ -96,18 +96,9 @@ class ConstList {
   static DefaultStyles getDefaultThemeData(BuildContext context, double scale,
       {TextStyle? fontStyle}) {
     var defaultTextStyle = fontStyle ?? DefaultTextStyle.of(context).style;
-    var baseStyle = defaultTextStyle.copyWith(
-      fontSize: 16 * scale,
-      height: 1.3 * scale,
-    );
-    var baseStyle2 = defaultTextStyle.copyWith(
-      fontSize: 16 * scale * 0.75,
-      height: 1.3 * scale,
-    );
     return DefaultStyles(
       paragraph: DefaultTextBlockStyle(
-          baseStyle, const Tuple2(0, 0), const Tuple2(0, 0), null),
-      small: baseStyle2,
+          defaultTextStyle, const Tuple2(0, 0), const Tuple2(0, 0), null),
     );
   }
 
