@@ -27,7 +27,7 @@ class AdjustableScrollController extends ScrollController {
 
 class HorizontalScroll extends StatefulWidget {
   final int itemCount;
-  final Widget? Function(BuildContext, int) itemBuilder;
+  final Widget? Function(BuildContext context, int index) itemBuilder;
 
   const HorizontalScroll(
       {required this.itemCount, required this.itemBuilder, super.key});
@@ -63,6 +63,42 @@ class _HorizontalScrollState extends State<HorizontalScroll> {
           separatorBuilder: (BuildContext context, int index) {
             return const VerticalDivider();
           },
+        ),
+      ),
+    );
+  }
+}
+
+class HorizontalScrollSingleChild extends StatefulWidget {
+  final Widget child;
+  const HorizontalScrollSingleChild({required this.child, super.key});
+
+  @override
+  State<HorizontalScrollSingleChild> createState() => _HorizontalScrollSingleChildState();
+}
+
+class _HorizontalScrollSingleChildState extends State<HorizontalScrollSingleChild> {
+
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scrollbar(
+      controller: _scrollController,
+      child: ScrollConfiguration(
+        behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
+          PointerDeviceKind.touch,
+          PointerDeviceKind.mouse,
+        }),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: widget.child,
         ),
       ),
     );
