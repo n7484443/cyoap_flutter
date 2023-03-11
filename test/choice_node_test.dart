@@ -12,13 +12,15 @@ void main() {
   getPlatformFileSystem.isEditable = false;
   var pos0_0 = Pos(data: [0, 0]);
   getPlatform.addData(
-      pos0_0,
-      ChoiceNode(
-        4,
-        "Design",
-        "[{\"insert\":\"Adjust and view layouts, fonts, designs, sizes, and more.\\n\"}]",
-        "noImage",
-      ));
+    pos0_0,
+    ChoiceNode(
+      width: 4,
+      title: "Design",
+      contents:
+          "[{\"insert\":\"Adjust and view layouts, fonts, designs, sizes, and more.\\n\"}]",
+      imageString: "noImage",
+    ),
+  );
 
   //todo 새로 작성하기
   /*testWidgets('ViewChoiceNodeMain', (WidgetTester tester) async {
@@ -53,18 +55,20 @@ void main() {
   getPlatform.addData(
       pos1_0,
       ChoiceNode(
-        4,
-        "Design",
-        "[{\"insert\":\"Adjust and view layouts, fonts, designs, sizes, and more.\\n\"}]",
-        "noImage",
+        width: 4,
+        title: "Design",
+        contents:
+            "[{\"insert\":\"Adjust and view layouts, fonts, designs, sizes, and more.\\n\"}]",
+        imageString: "noImage",
       ));
   getPlatform.addData(
       pos1_1,
       ChoiceNode(
-        4,
-        "Design",
-        "[{\"insert\":\"Adjust and view layouts, fonts, designs, sizes, and more.\\n\"}]",
-        "noImage",
+        width: 4,
+        title: "Design",
+        contents:
+            "[{\"insert\":\"Adjust and view layouts, fonts, designs, sizes, and more.\\n\"}]",
+        imageString: "noImage",
       ));
 
   testWidgets('OccupySpace', (WidgetTester tester) async {

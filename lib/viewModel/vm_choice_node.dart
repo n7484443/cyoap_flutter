@@ -47,10 +47,10 @@ class ChoiceNodeNotifier extends ChangeNotifier {
       node = ref.read(removedChoiceNode);
     } else if (pos.last == designSamplePosition) {
       node = ChoiceNode(
-        1,
-        "sample_title".i18n,
-        "[{\"insert\":\"${'sample_node'.i18n}\\n\"}]",
-        "noImage",
+        width: 1,
+        title: "sample_title".i18n,
+        contents: "[{\"insert\":\"${'sample_node'.i18n}\\n\"}]",
+        imageString: "noImage",
       )..currentPos = -1;
 
       node!.choiceNodeOption = node!.choiceNodeOption.copyWith(

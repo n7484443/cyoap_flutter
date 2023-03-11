@@ -232,11 +232,11 @@ class _ViewTextContentsEditorState
   void initState() {
     _focusNode = FocusNode();
     var node = ref.read(nodeEditorTargetProvider).node;
-    if (node.contentsString.isEmpty) {
+    if (node.contentsOriginalString.isEmpty) {
       _quillController = QuillController.basic();
     } else {
       _quillController = QuillController(
-          document: Document.fromJson(jsonDecode(node.contentsString)),
+          document: Document.fromJson(jsonDecode(node.contentsOriginalString)),
           selection: const TextSelection.collapsed(offset: 0));
     }
     _quillController?.addListener(() {

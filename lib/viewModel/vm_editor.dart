@@ -179,7 +179,7 @@ class EditorChangeNotifier extends StateNotifier<bool> {
     var origin = getPlatform.getChoiceNode(pos)!;
     var changed = ref.read(nodeEditorTargetProvider).node;
     origin.title = changed.title;
-    origin.contentsString = changed.contentsString;
+    origin.contentsString = changed.contentsOriginalString;
     origin.maximumStatus = changed.maximumStatus;
     origin.choiceNodeMode = changed.choiceNodeMode;
     origin.imageString = changed.imageString;

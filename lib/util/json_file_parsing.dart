@@ -31,8 +31,8 @@ class JsonProjectParser {
         imageList[imageName] = out.item2!;
       }
       var lineSetting = ChoiceLine(i);
-      lineSetting.addChildren(ChoiceNode(0, rowTitle,
-          toContent(row["titleText"] ?? parsed['defaultRowText']), imageName));
+      lineSetting.addChildren(ChoiceNode(width: 0, title: rowTitle,
+          contents: toContent(row["titleText"] ?? parsed['defaultRowText']), imageString: imageName));
       /*..choiceNodeDesign.copyWith(
             imagePosition: parseAsInt(row["template"]) == 4
                 ? 1
@@ -48,8 +48,8 @@ class JsonProjectParser {
         if (out != null && out.item2 != null) {
           imageList[imageName] = out.item2!;
         }
-        var choiceNode = ChoiceNode(0, objectTitle,
-            toContent(object["text"] ?? parsed['defaultChoiceText']), imageName)
+        var choiceNode = ChoiceNode(width: 0, title: objectTitle,
+            contents: toContent(object["text"] ?? parsed['defaultChoiceText']), imageString: imageName)
           ..width = width;
         /*..choiceNodeDesign
               .copyWith(imagePosition: parseAsInt(object["template"]));*/
@@ -61,10 +61,10 @@ class JsonProjectParser {
             imageList[imageName] = out.item2!;
           }
           choiceNode.addChildren(ChoiceNode(
-              0,
-              addonTitle,
-              toContent(addon["text"] ?? parsed['defaultAddonText']),
-              imageName));
+              width: 0,
+              title: addonTitle,
+              contents: toContent(addon["text"] ?? parsed['defaultAddonText']),
+              imageString: imageName));
           /*..choiceNodeDesign
                 .copyWith(imagePosition: parseAsInt(addon["template"])));*/
         }
