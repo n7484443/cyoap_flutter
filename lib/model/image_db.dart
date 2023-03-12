@@ -69,7 +69,7 @@ class ImageDB {
     _dirImageUint8Map.clear();
   }
 
-  Image noImage = Image.asset('images/noImage.png');
+  Image noImage = Image.asset('images/sample.png');
 
   Future<void> removeImage(String name) async {
     _dirImageUint8Map.remove(name);
