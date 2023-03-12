@@ -589,6 +589,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
       return HorizontalScrollSingleChild(
         isAnimatedFront: true,
         child: Scrollbar(
+          trackVisibility: true,
           controller: _scrollController,
           child: SizedBox(
             width: 1000,
