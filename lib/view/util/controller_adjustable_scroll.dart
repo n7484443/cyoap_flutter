@@ -71,7 +71,8 @@ class _HorizontalScrollState extends State<HorizontalScroll> {
 
 class HorizontalScrollSingleChild extends StatefulWidget {
   final Widget child;
-  const HorizontalScrollSingleChild({required this.child, super.key});
+  final bool isAnimatedFront;
+  const HorizontalScrollSingleChild({required this.child, this.isAnimatedFront = false, super.key});
 
   @override
   State<HorizontalScrollSingleChild> createState() => _HorizontalScrollSingleChildState();
@@ -91,6 +92,9 @@ class _HorizontalScrollSingleChildState extends State<HorizontalScrollSingleChil
   Widget build(BuildContext context) {
     return Scrollbar(
       controller: _scrollController,
+      radius: const Radius.circular(20.0),
+      thickness: 12.0,
+      thumbVisibility: true,
       child: ScrollConfiguration(
         behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
           PointerDeviceKind.touch,
@@ -98,6 +102,7 @@ class _HorizontalScrollSingleChildState extends State<HorizontalScrollSingleChil
         }),
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
+          controller: _scrollController,
           child: widget.child,
         ),
       ),

@@ -587,6 +587,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
 
     if (ConstList.isSmallDisplay(context)) {
       return HorizontalScrollSingleChild(
+        isAnimatedFront: true,
         child: SizedBox(
           width: 1000,
           child: CustomScrollView(
