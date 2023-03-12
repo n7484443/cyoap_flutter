@@ -20,7 +20,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:tuple/tuple.dart';
 
 import 'color_schemes.g.dart';
 import 'model/device_preference.dart';
@@ -98,7 +97,7 @@ class ConstList {
     var defaultTextStyle = fontStyle ?? DefaultTextStyle.of(context).style;
     return DefaultStyles(
       paragraph: DefaultTextBlockStyle(
-          defaultTextStyle, const Tuple2(0, 0), const Tuple2(0, 0), null),
+          defaultTextStyle, const VerticalSpacing(0, 0), const VerticalSpacing(0, 0), null),
     );
   }
 
