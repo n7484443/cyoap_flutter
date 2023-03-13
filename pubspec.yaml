@@ -39,7 +39,7 @@ dependencies:
   shared_preferences: ^2.0.15
   google_fonts: ^4.0.0
   archive: ^3.3.1
-  flutter_quill: ^7.0.0
+  flutter_quill: ^7.0.1
   package_info_plus: ^3.0.2
   github: ^9.4.0
   flex_color_picker: ^3.0.2
@@ -52,16 +52,16 @@ dependencies:
   animated_flip_counter: ^0.2.5
   url_strategy: ^0.2.0
   path_provider: ^2.0.11
-  path: any
-  flutter_riverpod: ^2.0.0-dev.9
+  path: ^1.8.2
+  flutter_riverpod: ^2.3.2
   freezed_annotation: any
   json_annotation: any
-  js: any
+  js: ^0.6.5
   sentry_flutter: ^6.9.1
   easy_debounce: ^2.0.2+1
   desktop_drop: ^0.4.0
   shared_storage: ^0.7.0
-  i18n_extension: ^6.0.0
+  i18n_extension: ^8.0.0
   flutter_localizations:
     sdk: flutter
 
