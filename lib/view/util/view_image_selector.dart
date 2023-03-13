@@ -21,7 +21,7 @@ class ViewImageDraggable extends ConsumerWidget {
   const ViewImageDraggable(
       {required this.addImageFunction,
       required this.widgetBuilder,
-        required this.widgetLength,
+      required this.widgetLength,
       super.key});
 
   @override
@@ -39,7 +39,8 @@ class ViewImageDraggable extends ConsumerWidget {
             child: Text('add_image'.i18n),
           ),
           Expanded(
-              child: ViewImageSelector(widgetBuilder: widgetBuilder, widgetLength: widgetLength)),
+              child: ViewImageSelector(
+                  widgetBuilder: widgetBuilder, widgetLength: widgetLength)),
         ],
       );
     }
@@ -94,7 +95,8 @@ class ViewImageDraggable extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               padding: const EdgeInsets.all(4.0),
-              child: ViewImageSelector(widgetBuilder: widgetBuilder, widgetLength: widgetLength),
+              child: ViewImageSelector(
+                  widgetBuilder: widgetBuilder, widgetLength: widgetLength),
             ),
           ),
         )
@@ -162,7 +164,8 @@ class _ViewImageSelectorState extends ConsumerState<ViewImageSelector> {
       slivers: [
         SliverGrid(
           delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) => widget.widgetBuilder(ref, index),
+            (BuildContext context, int index) =>
+                widget.widgetBuilder(ref, index),
             childCount: widget.widgetLength(ref),
           ),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

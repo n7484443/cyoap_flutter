@@ -138,79 +138,79 @@ class ViewProjectSetting extends ConsumerWidget {
           )
       ],
     );
-
-    var initialValueList = Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          Expanded(
-            flex: 18,
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(width: 2),
-              ),
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 4,
-                  crossAxisSpacing: 2,
-                  mainAxisExtent: 60,
-                  mainAxisSpacing: 2,
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  var key = ref
-                      .watch(valueTypeWrapperListProvider.notifier)
-                      .getKey(index);
-                  var data = ref.watch(valueTypeWrapperListProvider)[key]!;
-                  var visible = data.visible;
-                  return ListTile(
-                    //If not visible, it will be colored blue
-                    tileColor: visible ? Colors.lightBlue : null,
-                    onTap: () {
-                      showDialog(
-                          builder: (BuildContext context) =>
-                              ViewInitialValueEditDialog(index),
-                          context: context);
-                    },
-                    title: Text(key,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
-                            ?.copyWith(color: visible ? Colors.white : null), overflow: TextOverflow.ellipsis, softWrap: false),
-                    subtitle: Text(data.valueType.data.toString(),
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: visible ? Colors.white : null), overflow: TextOverflow.ellipsis, softWrap: false),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete,
-                          color: visible ? Colors.white : null),
-                      onPressed: () {
-                        ref
-                            .read(valueTypeWrapperListProvider.notifier)
-                            .deleteInitialValue(index);
-                      },
-                    ),
-                  );
-                },
-                itemCount: ref.watch(valueTypeWrapperListProvider).length,
-              ),
-            ),
-          ),
-          TextButton(
-            child: Text('variable_add'.i18n),
-            onPressed: () {
-              ref
-                  .read(valueTypeWrapperListProvider.notifier)
-                  .addInitialValue('point', ValueTypeWrapper(ValueType.int(0)));
-            },
-          )
-        ],
-      ),
-    );
-
     return Scaffold(
       appBar: appbarWidget,
-      body: initialValueList,
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Expanded(
+              flex: 18,
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(width: 2),
+                ),
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 4,
+                    crossAxisSpacing: 2,
+                    mainAxisExtent: 60,
+                    mainAxisSpacing: 2,
+                  ),
+                  itemBuilder: (BuildContext context, int index) {
+                    var key = ref
+                        .watch(valueTypeWrapperListProvider.notifier)
+                        .getKey(index);
+                    var data = ref.watch(valueTypeWrapperListProvider)[key]!;
+                    var visible = data.visible;
+                    return ListTile(
+                      //If not visible, it will be colored blue
+                      tileColor: visible ? Colors.lightBlue : null,
+                      onTap: () {
+                        showDialog(
+                            builder: (BuildContext context) =>
+                                ViewInitialValueEditDialog(index),
+                            context: context);
+                      },
+                      title: Text(key,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(color: visible ? Colors.white : null),
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: false),
+                      subtitle: Text(data.valueType.data.toString(),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(color: visible ? Colors.white : null),
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: false),
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete,
+                            color: visible ? Colors.white : null),
+                        onPressed: () {
+                          ref
+                              .read(valueTypeWrapperListProvider.notifier)
+                              .deleteInitialValue(index);
+                        },
+                      ),
+                    );
+                  },
+                  itemCount: ref.watch(valueTypeWrapperListProvider).length,
+                ),
+              ),
+            ),
+            TextButton(
+              child: Text('variable_add'.i18n),
+              onPressed: () {
+                ref.read(valueTypeWrapperListProvider.notifier).addInitialValue(
+                    'point', ValueTypeWrapper(ValueType.int(0)));
+              },
+            )
+          ],
+        ),
+      ),
     );
   }
 }

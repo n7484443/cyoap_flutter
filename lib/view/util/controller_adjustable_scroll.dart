@@ -72,14 +72,16 @@ class _HorizontalScrollState extends State<HorizontalScroll> {
 class HorizontalScrollSingleChild extends StatefulWidget {
   final Widget child;
   final bool isAnimatedFront;
-  const HorizontalScrollSingleChild({required this.child, this.isAnimatedFront = false, super.key});
+  const HorizontalScrollSingleChild(
+      {required this.child, this.isAnimatedFront = false, super.key});
 
   @override
-  State<HorizontalScrollSingleChild> createState() => _HorizontalScrollSingleChildState();
+  State<HorizontalScrollSingleChild> createState() =>
+      _HorizontalScrollSingleChildState();
 }
 
-class _HorizontalScrollSingleChildState extends State<HorizontalScrollSingleChild> {
-
+class _HorizontalScrollSingleChildState
+    extends State<HorizontalScrollSingleChild> {
   final ScrollController _scrollController = ScrollController();
 
   @override

@@ -96,8 +96,8 @@ class ConstList {
       {TextStyle? fontStyle}) {
     var defaultTextStyle = fontStyle ?? DefaultTextStyle.of(context).style;
     return DefaultStyles(
-      paragraph: DefaultTextBlockStyle(
-          defaultTextStyle, const VerticalSpacing(0, 0), const VerticalSpacing(0, 0), null),
+      paragraph: DefaultTextBlockStyle(defaultTextStyle,
+          const VerticalSpacing(0, 0), const VerticalSpacing(0, 0), null),
     );
   }
 

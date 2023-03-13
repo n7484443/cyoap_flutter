@@ -246,9 +246,9 @@ class _ViewTextContentsEditorState
             .allMatches(_quillController?.document.toPlainText() ?? '');
         if (pos.isNotEmpty) {
           for (var data in pos) {
-            final styles = _quillController?.document.collectAllStyles(
-                data.start, data.end - data.start);
-            if(styles == null){
+            final styles = _quillController?.document
+                .collectAllStyles(data.start, data.end - data.start);
+            if (styles == null) {
               continue;
             }
             final attrs = <Attribute>{};
@@ -258,7 +258,8 @@ class _ViewTextContentsEditorState
               }
             }
             for (final attr in attrs) {
-              _quillController?.formatText(data.start, data.end - data.start, Attribute.clone(attr, null));
+              _quillController?.formatText(data.start, data.end - data.start,
+                  Attribute.clone(attr, null));
             }
           }
         }
