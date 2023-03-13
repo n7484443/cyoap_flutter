@@ -175,12 +175,12 @@ class ViewProjectSetting extends ConsumerWidget {
                         style: Theme.of(context)
                             .textTheme
                             .titleMedium
-                            ?.copyWith(color: visible ? Colors.white : null)),
+                            ?.copyWith(color: visible ? Colors.white : null), overflow: TextOverflow.ellipsis, softWrap: false),
                     subtitle: Text(data.valueType.data.toString(),
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium
-                            ?.copyWith(color: visible ? Colors.white : null)),
+                            ?.copyWith(color: visible ? Colors.white : null), overflow: TextOverflow.ellipsis, softWrap: false),
                     trailing: IconButton(
                       icon: Icon(Icons.delete,
                           color: visible ? Colors.white : null),
