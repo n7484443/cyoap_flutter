@@ -158,11 +158,10 @@ class ViewProjectSetting extends ConsumerWidget {
                     mainAxisSpacing: 2,
                   ),
                   itemBuilder: (BuildContext context, int index) {
-                    var key = ref
+                    var target = ref
                         .watch(valueTypeWrapperListProvider.notifier)
-                        .getKey(index);
-                    var data = ref.watch(valueTypeWrapperListProvider)[key]!;
-                    var visible = data.visible;
+                        .getEditTarget(index)!;
+                    var visible = target.item2.visible;
                     return ListTile(
                       //If not visible, it will be colored blue
                       tileColor: visible ? Colors.lightBlue : null,
@@ -172,14 +171,14 @@ class ViewProjectSetting extends ConsumerWidget {
                                 ViewInitialValueEditDialog(index),
                             context: context);
                       },
-                      title: Text(key,
+                      title: Text(target.item1,
                           style: Theme.of(context)
                               .textTheme
                               .titleMedium
                               ?.copyWith(color: visible ? Colors.white : null),
                           overflow: TextOverflow.ellipsis,
                           softWrap: false),
-                      subtitle: Text(data.valueType.data.toString(),
+                      subtitle: Text(target.item2.valueType.data.toString(),
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium

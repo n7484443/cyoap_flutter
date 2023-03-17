@@ -2,10 +2,10 @@ import 'package:cyoap_core/choiceNode/choice.dart';
 import 'package:cyoap_core/choiceNode/choice_line.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
-import 'package:cyoap_core/design_setting.dart';
 import 'package:cyoap_core/grammar/value_type.dart';
 import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
+import 'package:tuple/tuple.dart';
 
 const int designSamplePosition = -100;
 
@@ -21,13 +21,7 @@ class AbstractPlatform extends PlayablePlatform {
   AbstractPlatform();
 
   AbstractPlatform.none();
-
-  AbstractPlatform.fromJson(Map<String, dynamic> json) {
-    stringImageName = json['stringImageName'] ?? '';
-    globalSetting = (json['globalSetting'] as Map)
-        .map((k, v) => MapEntry(k, ValueTypeWrapper.fromJson(v)));
-    designSetting = PlatformDesignSetting.fromJson(json);
-  }
+  AbstractPlatform.fromJson(super.json) : super.fromJson();
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> out = {
@@ -114,8 +108,11 @@ class AbstractPlatform extends PlayablePlatform {
     }
   }
 
-  void setGlobalSetting(Map<String, ValueTypeWrapper> units) {
-    globalSetting = Map.from(units);
+  void setGlobalSetting(List<Tuple2<String, ValueTypeWrapper>> units) {
+    clearGlobalSetting();
+    for(var unit in units){
+      addGlobalSetting(unit.item1, unit.item2);
+    }
     generateRecursiveParser();
     updateStatusAll();
   }

@@ -42,34 +42,36 @@ final projectSettingDisplayNameTextEditingProvider =
   return controller;
 });
 
-final valueTypeWrapperListProvider = StateNotifierProvider.autoDispose<
-        ValueTypeWrapperListNotifier, Map<String, ValueTypeWrapper>>(
-    (ref) =>
-        ValueTypeWrapperListNotifier(ref, Map.from(getPlatform.globalSetting)));
-
 final projectSettingVisibleSwitchProvider = StateProvider.family
     .autoDispose<bool, int>((ref, index) => ref
-        .read(valueTypeWrapperListProvider.notifier)
-        .getEditTarget(index)!
-        .item2
-        .visible);
+    .read(valueTypeWrapperListProvider.notifier)
+    .getEditTarget(index)!
+    .item2
+    .visible);
+
+final valueTypeWrapperListProvider = StateNotifierProvider.autoDispose<
+        ValueTypeWrapperListNotifier, List<Tuple2<String, ValueTypeWrapper>>>(
+    (ref) =>
+        ValueTypeWrapperListNotifier(ref, List.from(getPlatform.globalSetting)));
 
 class ValueTypeWrapperListNotifier
-    extends StateNotifier<Map<String, ValueTypeWrapper>> {
+    extends StateNotifier<List<Tuple2<String, ValueTypeWrapper>>> {
   Ref ref;
 
   ValueTypeWrapperListNotifier(this.ref, super.state);
 
   void addInitialValue(String name, ValueTypeWrapper type) {
     int t = 0;
-    if (!state.containsKey(name)) {
-      state = Map.from(state)..putIfAbsent(name, () => type);
+    var pos = state.indexWhere((element) => element.item1 == name);
+    if (pos == -1) {
+      state = [...state, Tuple2(name, type)];
     } else {
       while (true) {
-        if (state.containsKey(name + t.toString())) {
+        pos = state.indexWhere((element) => element.item1 == (name + t.toString()));
+        if (pos != -1) {
           t += 1;
         } else {
-          state = Map.from(state)..putIfAbsent(name + t.toString(), () => type);
+          state = [...state, Tuple2((name + t.toString()), type)];
           break;
         }
       }
@@ -77,22 +79,14 @@ class ValueTypeWrapperListNotifier
   }
 
   void deleteInitialValue(int index) {
-    state = Map.from(state)..remove(getKey(index));
+    state = [...state]..removeAt(index);
   }
 
   void editInitialValue(int index, String name, ValueTypeWrapper value) {
     if (index != -1) {
       deleteInitialValue(index);
     }
-    addInitialValue(name, value);
-  }
-
-  String getKey(int index) {
-    return state.keys.elementAt(index);
-  }
-
-  ValueTypeWrapper? getValue(String key) {
-    return state[key];
+    state = [...state]..insert(index, Tuple2(name, value));
   }
 
   void save() {
@@ -103,8 +97,7 @@ class ValueTypeWrapperListNotifier
 
   Tuple2<String, ValueTypeWrapper>? getEditTarget(int index) {
     if (index != -1) {
-      var key = getKey(index);
-      return Tuple2(key, getValue(key)!);
+      return state[index];
     }
     return null;
   }
@@ -113,11 +106,11 @@ class ValueTypeWrapperListNotifier
     if (state.length != getPlatform.globalSetting.length) {
       return true;
     }
-    for (var key in state.keys) {
-      if (!getPlatform.globalSetting.containsKey(key)) {
+    for(int i = 0; i < state.length; i++){
+      if(state[i].item1 != getPlatform.globalSetting[i].item1){
         return true;
       }
-      if (state[key] != getPlatform.globalSetting[key]) {
+      if(state[i].item2 != getPlatform.globalSetting[i].item2){
         return true;
       }
     }
