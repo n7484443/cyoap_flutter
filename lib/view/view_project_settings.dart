@@ -5,6 +5,7 @@ import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/viewModel/vm_project_setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reorderable_grid_view/reorderable_grid_view.dart';
 
 import '../viewModel/vm_make_platform.dart';
 
@@ -150,7 +151,7 @@ class ViewProjectSetting extends ConsumerWidget {
                 decoration: BoxDecoration(
                   border: Border.all(width: 2),
                 ),
-                child: GridView.builder(
+                child: ReorderableGridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 4,
                     crossAxisSpacing: 2,
@@ -163,6 +164,7 @@ class ViewProjectSetting extends ConsumerWidget {
                         .getEditTarget(index)!;
                     var visible = target.item2.visible;
                     return ListTile(
+                      key: Key(target.item1),
                       //If not visible, it will be colored blue
                       tileColor: visible ? Colors.lightBlue : null,
                       onTap: () {
@@ -197,6 +199,11 @@ class ViewProjectSetting extends ConsumerWidget {
                     );
                   },
                   itemCount: ref.watch(valueTypeWrapperListProvider).length,
+                  onReorder: (int oldIndex, int newIndex) {
+                    ref
+                        .read(valueTypeWrapperListProvider.notifier)
+                        .reorder(oldIndex, newIndex);
+                  },
                 ),
               ),
             ),

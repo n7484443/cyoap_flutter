@@ -102,6 +102,11 @@ class ValueTypeWrapperListNotifier
     return null;
   }
 
+  void reorder(int oldIndex, int newIndex) {
+    var element = state.removeAt(oldIndex);
+    state = [...state]..insert(newIndex, element);
+  }
+
   bool isDifferentFromOrigin() {
     if (state.length != getPlatform.globalSetting.length) {
       return true;
