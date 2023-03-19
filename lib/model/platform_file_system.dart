@@ -12,7 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart';
 
 import '../main.dart';
-import '../util/json_file_parsing.dart';
+import '../util/icc_file_parsing.dart';
 import '../util/platform_specified_util/platform_specified.dart';
 import 'platform.dart';
 
@@ -170,7 +170,7 @@ class PlatformFileSystem {
   }
 
   Future<void> createFromJson(String input, Ref ref) async {
-    var jsonParser = JsonProjectParser(path!);
+    var jsonParser = IccProjectParser(path!);
     var output = await jsonParser.getPlatform(input, ref);
     for (var key in output.item2.keys) {
       ImageDB().uploadImages(key, output.item2[key]!);

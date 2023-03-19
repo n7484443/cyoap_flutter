@@ -13,10 +13,10 @@ import '../model/platform.dart';
 import '../viewModel/vm_start.dart';
 import 'base64_to_image.dart';
 
-class JsonProjectParser {
+class IccProjectParser {
   String path;
 
-  JsonProjectParser(this.path);
+  IccProjectParser(this.path);
 
   //todo : Requires partial rewrite of comments
   Future<Tuple2<AbstractPlatform, Map<String, Uint8List>>> getPlatform(
