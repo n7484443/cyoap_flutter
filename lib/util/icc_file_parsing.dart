@@ -18,7 +18,6 @@ class IccProjectParser {
 
   IccProjectParser(this.path);
 
-  //todo : Requires partial rewrite of comments
   Future<Tuple2<AbstractPlatform, Map<String, Uint8List>>> getPlatform(
       String input, Ref ref) async {
     Map<String, dynamic> parsed = jsonDecode(input);
