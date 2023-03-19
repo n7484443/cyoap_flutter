@@ -24,7 +24,6 @@ class AbstractPlatform extends PlayablePlatform {
   AbstractPlatform.fromJson(super.json) : super.fromJson();
 
   Map<String, dynamic> toJson() {
-    print(globalSetting.map((e) => [e.item1, e.item2.toJson()]).toList());
     Map<String, dynamic> out = {
       'stringImageName': stringImageName,
       'globalSetting': globalSetting.map((e) => [e.item1, e.item2.toJson()]).toList(),

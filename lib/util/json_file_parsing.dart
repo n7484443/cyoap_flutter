@@ -3,7 +3,9 @@ import 'dart:math';
 
 import 'package:cyoap_core/choiceNode/choice_line.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
+import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
@@ -15,6 +17,7 @@ class JsonProjectParser {
   String path;
 
   JsonProjectParser(this.path);
+
   //todo : Requires partial rewrite of comments
   Future<Tuple2<AbstractPlatform, Map<String, Uint8List>>> getPlatform(
       String input, Ref ref) async {
@@ -22,6 +25,18 @@ class JsonProjectParser {
     Map<String, Uint8List> imageList = {};
     var rows = parsed['rows'] as List;
     var platform = AbstractPlatform();
+    List<ChoiceNodeDesignPreset> nodePresets = [];
+    var styles = parsed['styling'];
+
+    int backgroundColor =
+        HexColor.fromHex(styles['backgroundColor']).value; //background color
+    int objectBackgroundColor =
+        HexColor.fromHex(styles['objectBgColor']).value; //object color
+    int rowBackgroundColor =
+        HexColor.fromHex(styles['rowBgColor']).value; //row color
+    int objectSelectBackgroundColor =
+        HexColor.fromHex(styles['selFilterBgColor']).value; //select color
+
     for (int i = 0; i < rows.length; i++) {
       var row = rows[i];
       var rowTitle = row["title"] ?? parsed['defaultRowTitle'];
@@ -30,20 +45,31 @@ class JsonProjectParser {
       if (out != null && out.item2 != null) {
         imageList[imageName] = out.item2!;
       }
-      var lineSetting = ChoiceLine(i);
-      lineSetting.addChildren(ChoiceNode(
-          width: 0,
-          title: rowTitle,
-          contents: toContent(row["titleText"] ?? parsed['defaultRowText']),
-          imageString: imageName));
-      /*..choiceNodeDesign.copyWith(
-            imagePosition: parseAsInt(row["template"]) == 4
-                ? 1
-                : parseAsInt(row["template"])));*/
-      var objectWidth = row['objectWidth'] as String? ?? '';
-      var width = int.tryParse(
-              objectWidth.replaceAll("md-", "").replaceAll("col-", "")) ??
+      var preset = checkContained(
+        nodePresets,
+        parseStyle(
+          row["styling"],
+          template: parseAsInt(row["template"]),
+          isRow: true,
+          globalSelectFilterBgColor: objectSelectBackgroundColor,
+          globalObjectBackgroundColor: objectBackgroundColor,
+          globalRowBackgroundColor: rowBackgroundColor,
+        ),
+      );
+      var choiceRow = ChoiceNode(
+        width: 0,
+        title: rowTitle,
+        contents: toContent(row["titleText"] ?? parsed['defaultRowText']),
+        imageString: imageName,
+      );
+      choiceRow.choiceNodeOption =
+          choiceRow.choiceNodeOption.copyWith(presetName: preset.name);
+      var lineSetting = ChoiceLine(i)..addChildren(choiceRow);
+      var rowWidth = int.tryParse((row['objectWidth'] as String? ?? '')
+              .replaceAll("md-", "")
+              .replaceAll("col-", "")) ??
           0;
+
       for (var object in row["objects"]) {
         var objectTitle = object["title"] ?? parsed['defaultChoiceTitle'];
         var out = await checkImage(object, object["id"], objectTitle, ref);
@@ -51,14 +77,30 @@ class JsonProjectParser {
         if (out != null && out.item2 != null) {
           imageList[imageName] = out.item2!;
         }
+        var preset = checkContained(
+          nodePresets,
+          parseStyle(
+            object["styling"],
+            template: parseAsInt(object["template"]),
+            isRow: false,
+            globalSelectFilterBgColor: objectSelectBackgroundColor,
+            globalObjectBackgroundColor: objectBackgroundColor,
+            globalRowBackgroundColor: rowBackgroundColor,
+          ),
+        );
+        int width;
+        if (object['objectWidth'] == null || object['objectWidth'].isEmpty) {
+          width = rowWidth;
+        } else {
+          var str = object['objectWidth'] as String? ?? '';
+          width = int.tryParse(str[str.length - 1]) ?? 0;
+        }
         var choiceNode = ChoiceNode(
-            width: 0,
+            width: width,
             title: objectTitle,
             contents: toContent(object["text"] ?? parsed['defaultChoiceText']),
-            imageString: imageName)
-          ..width = width;
-        /*..choiceNodeDesign
-              .copyWith(imagePosition: parseAsInt(object["template"]));*/
+            imageString: imageName);
+        choiceNode.choiceNodeOption = choiceNode.choiceNodeOption.copyWith(presetName: preset.name);
         for (var addon in object['addons']) {
           var addonTitle = addon["title"] ?? parsed['defaultAddonTitle'];
           var out = await checkImage(addon, addon["id"], addonTitle, ref);
@@ -66,18 +108,22 @@ class JsonProjectParser {
           if (out != null && out.item2 != null) {
             imageList[imageName] = out.item2!;
           }
-          choiceNode.addChildren(ChoiceNode(
+          var addonNode = ChoiceNode(
               width: 0,
               title: addonTitle,
               contents: toContent(addon["text"] ?? parsed['defaultAddonText']),
-              imageString: imageName));
-          /*..choiceNodeDesign
-                .copyWith(imagePosition: parseAsInt(addon["template"])));*/
+              imageString: imageName);
+          addonNode.choiceNodeOption = addonNode.choiceNodeOption.copyWith(presetName: preset.name);
+          choiceNode.addChildren(addonNode);
         }
         lineSetting.addChildren(choiceNode);
       }
       platform.lineSettings.add(lineSetting);
     }
+    platform.designSetting = platform.designSetting.copyWith(
+      backgroundColor: backgroundColor,
+      choiceNodePresetList: nodePresets,
+    );
 
     return Tuple2(platform, imageList);
   }
@@ -119,4 +165,94 @@ class JsonProjectParser {
       {'insert': '$input\n'}
     ]);
   }
+
+  ChoiceNodeDesignPreset checkContained(
+      List<ChoiceNodeDesignPreset> lists, ChoiceNodeDesignPreset target) {
+    var targetJson = target.toJson();
+    targetJson.remove("name");
+    for (var item in lists) {
+      var itemJson = item.toJson();
+      itemJson.remove("name");
+      if (mapEquals(targetJson, itemJson)) {
+        return item;
+      }
+    }
+
+    lists.add(target);
+    return target;
+  }
+
+  ChoiceNodeDesignPreset parseStyle(Map<String, dynamic>? styles,
+      {required int template,
+      required bool isRow,
+      required globalObjectBackgroundColor,
+      required globalRowBackgroundColor,
+      required globalSelectFilterBgColor}) {
+    if(styles == null){
+      return ChoiceNodeDesignPreset(
+        name: generateRandomString(10),
+        imagePosition: template == 4 ? 1 : template,
+        colorNode: isRow ? globalRowBackgroundColor : globalObjectBackgroundColor,
+        colorSelectNode: isRow ? globalRowBackgroundColor : globalSelectFilterBgColor,
+      );
+    }
+    // var backgroundColor =
+    //     HexColor.fromHex(styles['backgroundColor']).value; //selected color
+    var objectBackgroundColor =
+        HexColor.fromHex(styles['objectBgColor']).value; //required color
+    var rowBackgroundColor =
+        HexColor.fromHex(styles['rowBgColor']).value; //required color
+    var objectSelectBackgroundColor =
+        HexColor.fromHex(styles['selFilterBgColor']).value; //required color
+    if (isRow) {
+      return ChoiceNodeDesignPreset(
+        name: generateRandomString(10),
+        imagePosition: template == 4 ? 1 : template,
+        colorNode: rowBackgroundColor == 0xFFFFFFFF
+            ? globalRowBackgroundColor
+            : rowBackgroundColor,
+        colorSelectNode: rowBackgroundColor == 0xFFFFFFFF
+            ? globalRowBackgroundColor
+            : rowBackgroundColor,
+      );
+    }
+    return ChoiceNodeDesignPreset(
+      name: generateRandomString(10),
+      imagePosition: template == 4 ? 1 : template,
+      colorNode: objectBackgroundColor == 0xFFFFFFFF
+          ? globalObjectBackgroundColor
+          : objectBackgroundColor,
+      colorSelectNode: objectSelectBackgroundColor == 0xFFFFFFFF
+          ? globalSelectFilterBgColor
+          : objectSelectBackgroundColor,
+    );
+  }
+}
+
+String generateRandomString(int len) {
+  var r = Random();
+  const chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  return List.generate(len, (index) => chars[r.nextInt(chars.length)]).join();
+}
+
+extension HexColor on Color {
+  /// String is in the format "aabbcc" or "aabbccff" with an optional leading "#".
+  static Color fromHex(String hexString) {
+    final buffer = StringBuffer();
+    if (hexString.length == 7){
+      buffer.write('ff');
+      buffer.write(hexString.replaceFirst('#', ''));
+    }else{
+      buffer.write(hexString.substring(7, 9));
+      buffer.write(hexString.substring(1, 7));
+    }
+    return Color(int.parse(buffer.toString(), radix: 16));
+  }
+
+  /// Prefixes a hash sign if [leadingHashSign] is set to `true` (default is `true`).
+  String toHex({bool leadingHashSign = true}) => '${leadingHashSign ? '#' : ''}'
+      '${alpha.toRadixString(16).padLeft(2, '0')}'
+      '${red.toRadixString(16).padLeft(2, '0')}'
+      '${green.toRadixString(16).padLeft(2, '0')}'
+      '${blue.toRadixString(16).padLeft(2, '0')}';
 }
