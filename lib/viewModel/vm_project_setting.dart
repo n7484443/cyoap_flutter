@@ -103,8 +103,12 @@ class ValueTypeWrapperListNotifier
   }
 
   void reorder(int oldIndex, int newIndex) {
+    if(oldIndex < newIndex){
+      newIndex -= 1;
+    }
     var element = state.removeAt(oldIndex);
-    state = [...state]..insert(newIndex, element);
+    state.insert(newIndex, element);
+    state = [...state];
   }
 
   bool isDifferentFromOrigin() {
