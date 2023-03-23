@@ -8,7 +8,7 @@ const RESOURCES = {
 "assets/fonts/MaterialIcons-Regular.otf": "e7069dfd19b331be16bed984668fe080",
 "assets/fonts/NeoDGM/NeoDGM.ttf": "fb933425ff4ed74ed3b810b399b7946f",
 "assets/images/sample.png": "c92e1697d57a0d1e7007fe33d76ea125",
-"assets/NOTICES": "f05bb05f0fca1425d4bb83c365d5d62a",
+"assets/NOTICES": "81c533f35712942f8bdb0b5f0005d6ef",
 "assets/packages/flex_color_picker/assets/opacity.png": "49c4f3bcb1b25364bb4c255edcaaf5b2",
 "canvaskit/canvaskit.js": "97937cb4c2c2073c968525a3e08c86a3",
 "canvaskit/canvaskit.wasm": "3de12d898ec208a5f31362cc00f09b9e",
@@ -23,10 +23,10 @@ const RESOURCES = {
 "index.html": "58f905882ef645859ad24d2c84419dde",
 "/": "58f905882ef645859ad24d2c84419dde",
 "jszip.js": "418ea325c68eb099ef2ccc8823771a63",
-"main.dart.js": "8aedb8fe6d77358b3c9114f6325f5c61",
+"main.dart.js": "7cc3ef7d42d1d4544ab392041ab231b0",
 "manifest.json": "ebc04e4594e86d4e5763ccf0df7285b3",
 "save_web.js": "6d7f19b0443d2ca2a960f0532299e5d7",
-"version.json": "36efdaa270fa3e672d8fb85f8e0488ae",
+"version.json": "a5622e82575306817f0ddd6cf7de5b64",
 "worker.js": "55118d4a43a00cedd42f65ca3b0b0d2a"
 };
 
