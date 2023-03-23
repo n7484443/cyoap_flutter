@@ -169,7 +169,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
       ),
     );
 
-    if (preset.outline == Outline.dotted) {
+    if (preset.outline == Outline.dotted || preset.outline == Outline.dashed) {
       var borderSide = BorderSide(
           color: borderColor,
           width: preset.outlineWidth,
@@ -181,7 +181,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
       return DottedBorder(
         borderType: BorderType.RRect,
         strokeWidth: preset.outlineWidth,
-        dashPattern: [6, 2],
+        dashPattern: preset.outline == Outline.dashed ? [6, 2] : [3, 1],
         radius: Radius.circular(preset.round),
         color: borderColor,
         padding: EdgeInsets.all(preset.outlinePadding),
