@@ -19,6 +19,52 @@ final choiceNodePresetCurrentEditProvider =
   return list[index];
 });
 
+final choiceNodePresetCurrentEditOutlinePaddingProvider =
+    Provider.autoDispose<TextEditingController>((ref) {
+  var controller = TextEditingController(
+      text: ref
+          .watch(choiceNodePresetCurrentEditProvider)
+          .outlinePadding
+          .toString());
+  controller.addListener(() {
+    EasyDebounce.debounce(
+        'Outline Padding Input', const Duration(milliseconds: 500), () {
+      ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+          ref.watch(currentPresetIndexProvider),
+          ref.read(choiceNodePresetCurrentEditProvider).copyWith(
+              outlinePadding: double.tryParse(controller.text) ?? 0.0));
+    });
+  });
+  ref.onDispose(() {
+    EasyDebounce.cancel('Outline Padding Input');
+    controller.dispose();
+  });
+  return controller;
+});
+
+final choiceNodePresetCurrentEditOutlineWidthProvider =
+Provider.autoDispose<TextEditingController>((ref) {
+  var controller = TextEditingController(
+      text: ref
+          .watch(choiceNodePresetCurrentEditProvider)
+          .outlineWidth
+          .toString());
+  controller.addListener(() {
+    EasyDebounce.debounce(
+        'Outline Width Input', const Duration(milliseconds: 500), () {
+      ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+          ref.watch(currentPresetIndexProvider),
+          ref.read(choiceNodePresetCurrentEditProvider).copyWith(
+              outlineWidth: double.tryParse(controller.text) ?? 0.0));
+    });
+  });
+  ref.onDispose(() {
+    EasyDebounce.cancel('Outline Width Input');
+    controller.dispose();
+  });
+  return controller;
+});
+
 final choiceNodePresetCurrentEditElevationProvider =
     Provider.autoDispose<TextEditingController>((ref) {
   var controller = TextEditingController(

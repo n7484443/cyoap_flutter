@@ -142,6 +142,9 @@ extension Localization on String {
           'margin_vertical': 'Vertical margin between choices',
           'margin_default': 'Default value',
           'background_image': 'Background Image',
+          'outline_shape': 'Outline shape',
+          'outline_padding': 'Outline padding',
+          'outline_width': 'Outline width',
 
           'modify_size': 'Modify size',
           'random_show': 'Random',
@@ -285,6 +288,9 @@ extension Localization on String {
           'margin_vertical': '선택지 간 세로 여백',
           'margin_default': '기본 값',
           'background_image': '배경 이미지',
+          'outline_shape': '외곽선',
+          'outline_padding': '외곽선 여백',
+          'outline_width': '외곽선 두께',
 
           'modify_size': '크기 수정',
           'random_show': '랜덤',
