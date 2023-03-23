@@ -30,7 +30,7 @@ jobs:
           encodedString: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
       - run: flutter build appbundle
       - run: |
-          $version= ${{ github.ref_name }} -replace 'v', ''
+          $version= "${{ github.ref_name }}".replace('v', '')
           Rename-Item "build/app/outputs/bundle/release/app-release.aab" "cyoap_android_$version.aab"
 
       - name: Release
@@ -62,7 +62,7 @@ jobs:
       - run: MV "updater/target/release/updater.exe" "build/windows/runner/Release"
 
       - run: |
-          $version= ${{ github.ref_name }} -replace 'v', ''
+          $version= "${{ github.ref_name }}".replace('v', '')
           7z a build/windows/cyoap_windows_$version.zip ./build/windows/runner/Release/*
 
       - name: Release
@@ -86,7 +86,7 @@ jobs:
 
       - name: modify version of index.html
         run: |
-          $version= ${{ github.ref_name }} -replace 'v', ''
+          $version= "${{ github.ref_name }}".replace('v', '')
           (get-content ./build/web/index.html) -replace 'service_version', $version | Out-File ./build/web/index_replaced.html
           Remove-Item ./build/web/index.html
           Rename-Item ./build/web/index_replaced.html index.html
