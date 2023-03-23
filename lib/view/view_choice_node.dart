@@ -35,18 +35,11 @@ class ViewChoiceNode extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     if (pos.last == nonPositioned) {
       var presetName =
-          ref
-              .watch(choiceNodeDesignSettingProvider(pos))
-              .presetName;
+          ref.watch(choiceNodeDesignSettingProvider(pos)).presetName;
       return Card(
-        color: Color(ref
-            .watch(choiceNodePresetProvider(presetName))
-            .colorNode),
+        color: Color(ref.watch(choiceNodePresetProvider(presetName)).colorNode),
         child: SizedBox(
-          width: MediaQuery
-              .of(context)
-              .size
-              .width /
+          width: MediaQuery.of(context).size.width /
               defaultMaxSize *
               3 *
               ConstList.scale(context),
@@ -75,44 +68,37 @@ class ViewChoiceNodeMain extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var node = ref
-        .watch(choiceNodeProvider(pos))
-        .node!;
+    var node = ref.watch(choiceNodeProvider(pos)).node!;
     var design = ref.watch(choiceNodeDesignSettingProvider(pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     var defaultColor = Color(preset.colorNode);
     var borderColor =
-    node.select > 0 ? Color(preset.colorSelectNode) : defaultColor;
+        node.select > 0 ? Color(preset.colorSelectNode) : defaultColor;
     var innerWidget = Ink(
       color: defaultColor,
       child: Padding(
-        padding: ConstList.isSmallDisplay(context)
-            ? EdgeInsets.all(preset.padding + 2.0)
-            : EdgeInsets.all(preset.padding + 4.0),
+        padding: EdgeInsets.all(preset.padding),
         child: InkWell(
           onDoubleTap: isEditable
               ? () {
-            ref
-                .read(nodeEditorTargetPosProvider.notifier)
-                .state =
-                node.pos;
-            ref
-                .read(changeTabProvider.notifier)
-                .changePageString("viewEditor", context);
-          }
+                  ref.read(nodeEditorTargetPosProvider.notifier).state =
+                      node.pos;
+                  ref
+                      .read(changeTabProvider.notifier)
+                      .changePageString("viewEditor", context);
+                }
               : null,
           onTap: !isEditable
               ? () {
-            ref.read(choiceNodeSelectProvider(pos).notifier).select(
-              0,
-              showDialogFunction: () =>
-                  showDialog(
-                    context: context,
-                    builder: (builder) => RandomDialog(pos),
-                    barrierDismissible: false,
-                  ),
-            );
-          }
+                  ref.read(choiceNodeSelectProvider(pos).notifier).select(
+                        0,
+                        showDialogFunction: () => showDialog(
+                          context: context,
+                          builder: (builder) => RandomDialog(pos),
+                          barrierDismissible: false,
+                        ),
+                      );
+                }
               : null,
           child: Stack(children: [
             ViewChoiceNodeContent(pos, ignoreChild: ignoreChild),
@@ -134,9 +120,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
                           break;
                         case 1:
                           ref.read(vmDraggableNestedMapProvider).copyData(
-                              ref
-                                  .watch(choiceNodeProvider(pos))
-                                  .node!);
+                              ref.watch(choiceNodeProvider(pos)).node!);
                           break;
                         case 2:
                           ref
@@ -190,6 +174,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
           clipBehavior: Clip.antiAlias,
           elevation: preset.elevation,
           color: defaultColor,
+          margin: EdgeInsets.zero,
           child: innerWidget,
         ),
       );
@@ -213,13 +198,11 @@ class ViewChoiceNodeMain extends ConsumerWidget {
             width: preset.outlineWidth,
           ),
         ),
-        child: Padding(
-          padding: EdgeInsets.all(preset.outlinePadding),
-          child: Card(
-            elevation: preset.elevation,
-            color: defaultColor,
-            child: innerWidget,
-          ),
+        child: Card(
+          elevation: preset.elevation,
+          color: defaultColor,
+          margin: EdgeInsets.all(preset.outlinePadding),
+          child: innerWidget,
         ),
       );
     }
@@ -254,10 +237,7 @@ class SizeDialog extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('${'length'.i18n} : $str',
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .titleMedium),
+                style: Theme.of(context).textTheme.titleMedium),
             Slider(
               onChanged: (double value) {
                 ref
@@ -290,16 +270,9 @@ class RandomDialog extends ConsumerWidget {
         content: AnimatedFlipCounter(
             value: ref.watch(randomStateNotifierProvider(pos)),
             duration: const Duration(milliseconds: 500),
-            textStyle: Theme
-                .of(context)
-                .textTheme
-                .displayLarge
-                ?.copyWith(
-              color: Theme
-                  .of(context)
-                  .colorScheme
-                  .secondary,
-            )),
+            textStyle: Theme.of(context).textTheme.displayLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.secondary,
+                )),
         actions: [
           Visibility(
             visible: !ref.watch(randomProcessExecutedProvider),
@@ -321,27 +294,21 @@ class NodeDraggable extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var node = ref
-        .watch(choiceNodeProvider(pos))
-        .node;
+    var node = ref.watch(choiceNodeProvider(pos)).node;
     if (node == null) {
       return const SizedBox.shrink();
     }
     var widget = ViewChoiceNode(pos);
     if (ConstList.isMobile()) {
       return LongPressDraggable<Pos>(
-        onDragUpdate: (details) =>
-        ref
+        onDragUpdate: (details) => ref
             .read(dragPositionProvider.notifier)
             .state = details.localPosition.dy,
         data: pos,
         feedback: Opacity(
           opacity: 0.5,
           child: SizedBox(
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width /
+              width: MediaQuery.of(context).size.width /
                   (defaultMaxSize + 3) *
                   (node.width == 0 ? defaultMaxSize : node.width),
               child: widget),
@@ -351,9 +318,9 @@ class NodeDraggable extends ConsumerWidget {
         },
         child: ref.watch(dragChoiceNodeProvider) == pos
             ? Opacity(
-          opacity: 0.2,
-          child: widget,
-        )
+                opacity: 0.2,
+                child: widget,
+              )
             : widget,
         onDragEnd: (DraggableDetails data) {
           ref.read(dragChoiceNodeProvider.notifier).dragEnd();
@@ -364,18 +331,14 @@ class NodeDraggable extends ConsumerWidget {
       );
     } else {
       return Draggable<Pos>(
-        onDragUpdate: (details) =>
-        ref
+        onDragUpdate: (details) => ref
             .read(dragPositionProvider.notifier)
             .state = details.localPosition.dy,
         data: pos,
         feedback: Opacity(
           opacity: 0.5,
           child: SizedBox(
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width /
+              width: MediaQuery.of(context).size.width /
                   (defaultMaxSize + 3) *
                   (node.width == 0 ? defaultMaxSize : node.width),
               child: widget),
@@ -410,12 +373,12 @@ class ViewTitleWithEdit extends ConsumerWidget {
     if (!preset.hideTitle) {
       return Center(
           child: Text(
-            ref.watch(titleStringProvider(pos)),
-            style: ConstList.getFont(preset.titleFont).copyWith(
-              fontSize: 20 * ConstList.scale(context),
-              color: Color(preset.colorTitle),
-            ),
-          ));
+        ref.watch(titleStringProvider(pos)),
+        style: ConstList.getFont(preset.titleFont).copyWith(
+          fontSize: 20 * ConstList.scale(context),
+          color: Color(preset.colorTitle),
+        ),
+      ));
     } else {
       return const SizedBox.shrink();
     }
@@ -466,10 +429,7 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
         ),
         Text(
           ref.watch(choiceNodeSelectProvider(pos)).toString(),
-          style: Theme
-              .of(context)
-              .textTheme
-              .headlineSmall,
+          style: Theme.of(context).textTheme.headlineSmall,
           textAlign: TextAlign.center,
         ),
         SizedBox(
@@ -492,7 +452,8 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
 class ViewContents extends ConsumerStatefulWidget {
   final Pos pos;
 
-  const ViewContents(this.pos, {
+  const ViewContents(
+    this.pos, {
     super.key,
   });
 
@@ -520,10 +481,7 @@ class _ViewContentsState extends ConsumerState<ViewContents> {
 
   @override
   Widget build(BuildContext context) {
-    if (ref
-        .watch(contentsQuillProvider(widget.pos))
-        .document
-        .isEmpty()) {
+    if (ref.watch(contentsQuillProvider(widget.pos)).document.isEmpty()) {
       return const SizedBox.shrink();
     }
     var design = ref.watch(choiceNodeDesignSettingProvider(widget.pos));
@@ -554,26 +512,16 @@ class ViewChoiceNodeContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var node = ref
-        .watch(choiceNodeProvider(pos))
-        .node ?? ChoiceNode.empty();
+    var node = ref.watch(choiceNodeProvider(pos)).node ?? ChoiceNode.empty();
     var design = ref.watch(choiceNodeDesignSettingProvider(pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     Widget image;
-    if (ref
-        .watch(imageStringProvider(pos))
-        .isNotEmpty) {
+    if (ref.watch(imageStringProvider(pos)).isNotEmpty) {
       image = ConstrainedBox(
         constraints: BoxConstraints(
           maxHeight: preset.maximizingImage
-              ? MediaQuery
-              .of(context)
-              .size
-              .height / 1.25
-              : MediaQuery
-              .of(context)
-              .size
-              .height / 2,
+              ? MediaQuery.of(context).size.height / 1.25
+              : MediaQuery.of(context).size.height / 2,
         ),
         child: ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(5)),
@@ -594,7 +542,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
       } else if (!ignoreChild) {
         child = ViewWrapCustom(
           pos,
-              (i) => ViewChoiceNode(pos.addLast(i)),
+          (i) => ViewChoiceNode(pos.addLast(i)),
           maxSize: node.getMaxSize(true),
         );
       }
@@ -639,13 +587,13 @@ class ViewChoiceNodeContent extends ConsumerWidget {
     }
     List<Widget> subWidget = preset.titlePosition
         ? [
-      ViewTitleWithEdit(pos),
-      image,
-    ]
+            ViewTitleWithEdit(pos),
+            image,
+          ]
         : [
-      image,
-      ViewTitleWithEdit(pos),
-    ];
+            image,
+            ViewTitleWithEdit(pos),
+          ];
 
     subWidget.addAll([
       ViewContents(pos),
