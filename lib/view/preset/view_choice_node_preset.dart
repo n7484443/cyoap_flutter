@@ -1,4 +1,5 @@
 import 'package:cyoap_core/choiceNode/pos.dart';
+import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/preset/view_preset.dart';
 import 'package:easy_debounce/easy_debounce.dart';
@@ -354,7 +355,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
             mainAxisSpacing: 2,
           ),
         ),
-        /*SliverToBoxAdapter(
+        SliverToBoxAdapter(
           child: DropdownButtonFormField<Outline>(
             decoration: const InputDecoration(labelText: 'Outline Shape'),
             items: Outline.values
@@ -363,15 +364,15 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                 .toList(),
             onChanged: (Outline? t) {
               if (t != null) {
-                var index = ref.read(presetCurrentEditIndexProvider);
+                var index = ref.read(currentPresetIndexProvider);
                 ref
-                    .read(presetListProvider.notifier)
+                    .read(choiceNodePresetListProvider.notifier)
                     .updateIndex(index, preset.copyWith(outline: t));
               }
             },
             value: preset.outline,
           ),
-        )*/
+        )
       ],
     );
   }

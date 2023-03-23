@@ -2,6 +2,7 @@ import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/playable_platform.dart';
+import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
@@ -10,6 +11,7 @@ import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_editor.dart'
     show nodeEditorTargetPosProvider;
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -72,14 +74,6 @@ class ViewChoiceNodeMain extends ConsumerWidget {
     var defaultColor = Color(preset.colorNode);
     var borderColor =
         node.select > 0 ? Color(preset.colorSelectNode) : defaultColor;
-    var borderSide = BorderSide(
-        color: borderColor,
-        width: ConstList.isSmallDisplay(context) ? 2 : 4,
-        style: BorderStyle.solid);
-    var shape = RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(preset.round),
-      side: borderSide,
-    );
     var innerWidget = Ink(
       color: defaultColor,
       child: Padding(
@@ -160,15 +154,41 @@ class ViewChoiceNodeMain extends ConsumerWidget {
         ),
       ),
     );
+
+    var borderSide = BorderSide(
+        color: borderColor,
+        width: ConstList.isSmallDisplay(context) ? 2 : 4,
+        style: BorderStyle.solid);
+    var shape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(preset.round),
+      side: borderSide,
+    );
+
+    var innerCardWidget = Card(
+      shape: shape,
+      clipBehavior: Clip.antiAlias,
+      elevation: preset.elevation,
+      color: defaultColor,
+      child: innerWidget,
+    );
+
+    if(preset.outline == Outline.dotted){
+      return Padding(
+        padding: const EdgeInsets.all(1.0),
+        child: DottedBorder(
+          borderType: BorderType.RRect,
+          strokeWidth: 2,
+          dashPattern: [6, 2, 6, 2],
+          radius: Radius.circular(preset.round),
+          color: borderColor,
+          child: innerCardWidget,
+        ),
+      );
+    }
+
     return Padding(
       padding: const EdgeInsets.all(1.4),
-      child: Card(
-        shape: shape,
-        clipBehavior: Clip.antiAlias,
-        elevation: preset.elevation,
-        color: defaultColor,
-        child: innerWidget,
-      ),
+      child: innerCardWidget,
     );
   }
 }
