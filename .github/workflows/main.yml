@@ -3,6 +3,7 @@ on:
   push:
     tags:
       - "v*.*.*"
+
 jobs:
   build_android:
     runs-on: windows-latest
@@ -21,10 +22,6 @@ jobs:
           distribution: 'zulu'
           java-version: '11'
 
-      - name: Get latest release version number
-        id: get_version
-        uses: battila7/get-version-action@v2.2.1
-
       - name: base64-to-file
         uses: timheuer/base64-to-file@v1.1
         with:
@@ -32,13 +29,15 @@ jobs:
           fileDir: './android/'
           encodedString: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
       - run: flutter build appbundle
-      - run: Rename-Item "build/app/outputs/bundle/release/app-release.aab" "cyoap_android_${{ steps.get_version.outputs.version-without-v }}.aab"
+      - run: |
+          $version= ${{ github.ref_name }} -replace 'v', ''
+          Rename-Item "build/app/outputs/bundle/release/app-release.aab" "cyoap_android_$version.aab"
 
       - name: Release
         uses: softprops/action-gh-release@v0.1.15
         with:
           files: |
-            build/app/outputs/bundle/release/cyoap_android_${{ steps.get_version.outputs.version-without-v }}.aab
+            build/app/outputs/bundle/release/cyoap_android_$version.aab
   build_windows:
     runs-on: windows-latest
     steps:
@@ -62,17 +61,15 @@ jobs:
           args: --release --manifest-path updater/Cargo.toml
       - run: MV "updater/target/release/updater.exe" "build/windows/runner/Release"
 
-      - name: Get latest release version number
-        id: get_version
-        uses: battila7/get-version-action@v2.2.1
-
-      - run: 7z a build/windows/cyoap_windows_${{ steps.get_version.outputs.version-without-v }}.zip ./build/windows/runner/Release/*
+      - run: |
+          $version= ${{ github.ref_name }} -replace 'v', ''
+          7z a build/windows/cyoap_windows_$version.zip ./build/windows/runner/Release/*
 
       - name: Release
         uses: softprops/action-gh-release@v0.1.15
         with:
           files: |
-            build/windows/cyoap_windows_${{ steps.get_version.outputs.version-without-v }}.zip
+            build/windows/cyoap_windows_$version.zip
   build_webs:
     runs-on: windows-latest
     steps:
@@ -85,15 +82,12 @@ jobs:
           cache-key: flutter
           cache-path: ${{ runner.tool_cache }}/flutter
 
-      - name: Get latest release version number
-        id: get_version
-        uses: battila7/get-version-action@v2.2.1
-
       - run: flutter build web --web-renderer canvaskit --base-href=/cyoap_flutter/ --release
 
       - name: modify version of index.html
         run: |
-          (get-content ./build/web/index.html) -replace 'service_version', '${{ steps.get_version.outputs.version-without-v }}' | Out-File ./build/web/index_replaced.html
+          $version= ${{ github.ref_name }} -replace 'v', ''
+          (get-content ./build/web/index.html) -replace 'service_version', $version | Out-File ./build/web/index_replaced.html
           Remove-Item ./build/web/index.html
           Rename-Item ./build/web/index_replaced.html index.html
 
