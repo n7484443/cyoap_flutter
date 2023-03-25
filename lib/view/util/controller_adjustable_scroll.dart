@@ -7,7 +7,7 @@ import 'package:flutter/rendering.dart';
 import '../../main.dart';
 
 class AdjustableScrollController extends ScrollController {
-  AdjustableScrollController([int extraScrollSpeed = 20]) {
+  AdjustableScrollController({int extraScrollSpeed = 20}) {
     if (ConstList.isDesktop()) {
       super.addListener(() {
         ScrollDirection scrollDirection = super.position.userScrollDirection;

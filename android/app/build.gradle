@@ -47,7 +47,7 @@ android {
     defaultConfig {
         applicationId "com.clearApple.cyoap_flutter"
         minSdkVersion 23
-        targetSdkVersion 32
+        targetSdkVersion 33
         compileSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
