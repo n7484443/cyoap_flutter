@@ -6,7 +6,6 @@ import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_source.dart';
-import 'package:easy_debounce/easy_debounce.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -214,48 +213,6 @@ class EditorChangeNotifier extends StateNotifier<bool> {
 }
 
 final lastImageProvider = StateProvider<Uint8List?>((ref) => null);
-
-final controllerClickableProvider =
-    Provider.autoDispose<TextEditingController>((ref) {
-  var node = ref.watch(nodeEditorTargetProvider).node;
-  var controller = TextEditingController(
-      text: node.recursiveStatus.conditionClickableString);
-  controller.addListener(() {
-    EasyDebounce.debounce(
-        'conditionClickableString', const Duration(milliseconds: 500), () {
-      ref
-          .read(nodeEditorTargetProvider)
-          .node
-          .recursiveStatus
-          .conditionClickableString = controller.text;
-      ref.read(editorChangeProvider.notifier).needUpdate();
-    });
-  });
-  ref.onDispose(() {
-    controller.dispose();
-    EasyDebounce.cancel('conditionClickableString');
-  });
-  return controller;
-});
-
-final controllerVisibleProvider =
-    Provider.autoDispose<TextEditingController>((ref) {
-  var node = ref.watch(nodeEditorTargetProvider).node;
-  var controller =
-      TextEditingController(text: node.recursiveStatus.conditionVisibleString);
-  controller.addListener(() {
-    EasyDebounce.debounce(
-        'conditionVisibleString', const Duration(milliseconds: 500), () {
-      node.recursiveStatus.conditionVisibleString = controller.text;
-      ref.read(editorChangeProvider.notifier).needUpdate();
-    });
-  });
-  ref.onDispose(() {
-    controller.dispose();
-    EasyDebounce.cancel('conditionVisibleString');
-  });
-  return controller;
-});
 
 final editorImageDragDropColorProvider =
     StateProvider.autoDispose<Color>((ref) => Colors.black12);

@@ -11,6 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../main.dart';
 import '../viewModel/vm_editor.dart';
+import '../viewModel/vm_ide.dart';
 
 class ViewCodeIde extends ConsumerStatefulWidget {
   const ViewCodeIde({
@@ -23,7 +24,7 @@ class ViewCodeIde extends ConsumerStatefulWidget {
 
 class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
   FocusNode? _focusNode;
-  QuillController? _quillController;
+  QuillController? _quillExecuteCodeController;
   ScrollController? _scrollController;
 
   final regexSpace =
@@ -33,6 +34,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
   final regexFunction = RegExp(
       "(${FunctionListEnum.values.where((e) => e.displayWithColor).map((e) => e.functionName ?? e.name).join('|')})"
       r"\(");
+  String currentTargetVariable = '';
 
   @override
   void initState() {
@@ -43,12 +45,13 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
             "${ref.read(nodeEditorTargetProvider).node.recursiveStatus.executeCodeString ?? ''}\n"
       }
     ];
-    _quillController = QuillController(
+    _quillExecuteCodeController = QuillController(
         document: Document.fromJson(data),
         selection: const TextSelection.collapsed(offset: 0));
-    _quillController?.addListener(() {
+    _quillExecuteCodeController?.addListener(() {
       EasyDebounce.debounce('code-ide', const Duration(milliseconds: 500), () {
-        var plainText = _quillController?.document.toPlainText() ?? '';
+        var plainText =
+            _quillExecuteCodeController?.document.toPlainText() ?? '';
         if (ref
                 .read(nodeEditorTargetProvider)
                 .node
@@ -61,27 +64,30 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
           var styleDeepPurple = ColorAttribute('#${Colors.deepPurple.hex}');
           var styleGrey = ColorAttribute('#${Colors.grey.hex}');
 
-          _quillController?.formatText(0, plainText.length, styleNull);
+          _quillExecuteCodeController?.formatText(
+              0, plainText.length, styleNull);
           var match = regexSpace.allMatches(plainText);
           for (var m in match) {
-            _quillController?.formatText(
+            _quillExecuteCodeController?.formatText(
                 m.start, m.end - m.start, styleDeepOrange);
           }
 
           match = regexFunction.allMatches(plainText);
           for (var m in match) {
-            _quillController?.formatText(
+            _quillExecuteCodeController?.formatText(
                 m.start, m.end - m.start, styleDeepPurple);
           }
 
           match = regexBrace.allMatches(plainText);
           for (var m in match) {
-            _quillController?.formatText(m.start, m.end - m.start, styleNull);
+            _quillExecuteCodeController?.formatText(
+                m.start, m.end - m.start, styleNull);
           }
 
           match = regexComment.allMatches(plainText);
           for (var m in match) {
-            _quillController?.formatText(m.start, m.end - m.start, styleGrey);
+            _quillExecuteCodeController?.formatText(
+                m.start, m.end - m.start, styleGrey);
           }
 
           ref
@@ -93,6 +99,16 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
         }
       });
     });
+
+    _quillExecuteCodeController?.onReplaceText =
+        (int index, int len, Object? data) {
+      ref.read(ideCurrentInputProvider.notifier).addText(
+          _quillExecuteCodeController!.document.toPlainText(),
+          index,
+          len,
+          data);
+      return true;
+    };
     _scrollController = AdjustableScrollController();
     super.initState();
   }
@@ -100,7 +116,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
   @override
   void dispose() {
     _focusNode?.dispose();
-    _quillController?.dispose();
+    _quillExecuteCodeController?.dispose();
     _scrollController?.dispose();
     EasyDebounce.cancel('code-ide');
     super.dispose();
@@ -115,28 +131,27 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
           child: CustomScrollView(
             controller: _scrollController,
             slivers: [
-              // Todo 개발중
-              // SliverAppBar(
-              //   title: SizedBox(
-              //     height: 44,
-              //     child: HorizontalScroll(
-              //       itemBuilder: (BuildContext context, int index) {
-              //         return TextButton(
-              //           onPressed: () {},
-              //           child: Text(
-              //             'test',
-              //             style: ConstList.getCurrentFont(context).bodyLarge,
-              //           ),
-              //         );
-              //       },
-              //       itemCount: 100,
-              //     ),
-              //   ),
-              //   floating: true,
-              //   pinned: true,
-              //   expandedHeight: 44.0,
-              //   toolbarHeight: 44.0,
-              // ),
+              SliverAppBar(
+                title: SizedBox(
+                  height: 44,
+                  child: HorizontalScroll(
+                    itemBuilder: (BuildContext context, int index) {
+                      return TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          ref.watch(ideVariableListProvider)[index],
+                          style: ConstList.getCurrentFont(context).bodyLarge,
+                        ),
+                      );
+                    },
+                    itemCount: ref.watch(ideVariableListProvider).length,
+                  ),
+                ),
+                floating: true,
+                pinned: true,
+                expandedHeight: 44.0,
+                toolbarHeight: 44.0,
+              ),
               SliverList(
                 delegate: SliverChildListDelegate([
                   if (ref.watch(nodeEditorTargetProvider).node.isSelectableMode)
@@ -170,7 +185,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
                     readOnly: false,
                     autoFocus: false,
                     scrollController: _scrollController!,
-                    controller: _quillController!,
+                    controller: _quillExecuteCodeController!,
                     padding: EdgeInsets.zero,
                     expands: false,
                     placeholder: "code_hint_execute".i18n,
@@ -196,7 +211,8 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
                 icon: const Icon(Icons.start),
                 tooltip: "sort".i18n,
                 onPressed: () {
-                  var text = _quillController?.document.toPlainText() ?? '';
+                  var text =
+                      _quillExecuteCodeController?.document.toPlainText() ?? '';
                   var output =
                       ref.read(editorChangeProvider.notifier).formatting(text);
                   if (output.item2) {
@@ -204,8 +220,8 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
                       content: Text("sort_error".i18n),
                     ));
                   }
-                  _quillController?.clear();
-                  _quillController?.document.insert(0, output.item1);
+                  _quillExecuteCodeController?.clear();
+                  _quillExecuteCodeController?.document.insert(0, output.item1);
                 },
               ),
             ],

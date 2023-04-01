@@ -23,13 +23,13 @@ class ViewMakePlatform extends ConsumerStatefulWidget {
 class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
   @override
   Widget build(BuildContext context) {
-    const children = [
-      ViewMake(),
-      ViewEditor(),
-      ViewProjectSetting(),
-      ViewSource(),
-      ViewImageEditor(),
-      ViewDesignSetting(),
+    const defaultMap = ViewMake();
+    var childrenFunction = [
+      () => const ViewEditor(),
+      () => const ViewProjectSetting(),
+      () => const ViewSource(),
+      () => const ViewImageEditor(),
+      () => const ViewDesignSetting(),
     ];
     if (ConstList.isSmallDisplay(context)) {
       return WillPopScope(
@@ -40,10 +40,14 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
           drawer: const Drawer(
             child: ViewEditDrawer(),
           ),
-          body: IndexedStack(
-            index: ref.watch(changeTabProvider),
-            children: children,
-          ),
+          body: ref.watch(changeTabProvider) == 0
+              ? defaultMap
+              : Stack(
+                  children: [
+                    defaultMap,
+                    childrenFunction[ref.watch(changeTabProvider) - 1]()
+                  ],
+                ),
         ),
       );
     }
@@ -59,10 +63,14 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
               child: ViewEditDrawer(),
             ),
             Flexible(
-              child: IndexedStack(
-                index: ref.watch(changeTabProvider),
-                children: children,
-              ),
+              child: ref.watch(changeTabProvider) == 0
+                  ? defaultMap
+                  : Stack(
+                      children: [
+                        defaultMap,
+                        childrenFunction[ref.watch(changeTabProvider) - 1]()
+                      ],
+                    ),
             ),
           ],
         ),
