@@ -74,10 +74,12 @@ class IdeCurrentInputNotifier extends StateNotifier<String> {
   QuillController? lastFocusQuill;
 
   int len = 0;
+  bool reformat = false;
 
   IdeCurrentInputNotifier(this.ref) : super('');
 
   void addText(String plainText, int index, int len, Object? data) {
+    if(reformat) return;
     if (data == null) return;
     if (data is! String) return;
     var carrot = index;
@@ -87,9 +89,7 @@ class IdeCurrentInputNotifier extends StateNotifier<String> {
   }
 
   void addCheckText(String plainText, int index) {
-    if (plainText.length <= index) {
-      index = plainText.length;
-    }
+    index = index.clamp(0, plainText.length - 1);
     var spacePos = plainText.substring(0, index).lastIndexOf(regexNonAlphabet);
     if (spacePos == -1) {
       spacePos = 0;

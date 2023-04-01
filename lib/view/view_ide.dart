@@ -215,9 +215,8 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
                         icon: const Icon(Icons.reorder),
                         tooltip: "sort".i18n,
                         onPressed: () {
-                          var text = _quillExecuteCodeController?.document
-                                  .toPlainText() ??
-                              '';
+                          var text = _quillExecuteCodeController!.document
+                              .toPlainText();
                           var output = ref
                               .read(ideCurrentInputProvider.notifier)
                               .formatting(text);
@@ -226,9 +225,13 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
                               content: Text("sort_error".i18n),
                             ));
                           }
-                          _quillExecuteCodeController?.clear();
-                          _quillExecuteCodeController?.document
+                          ref.read(ideCurrentInputProvider.notifier).reformat =
+                              true;
+                          _quillExecuteCodeController!.clear();
+                          _quillExecuteCodeController!.document
                               .insert(0, output.item1);
+                          ref.read(ideCurrentInputProvider.notifier).reformat =
+                              false;
                         },
                       ),
                     ],
