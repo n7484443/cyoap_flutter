@@ -466,55 +466,6 @@ class ViewNodeOptionEditor extends ConsumerWidget {
     var design = ref.watch(nodeEditorDesignProvider);
     var nodeMode = ref.watch(nodeModeProvider);
 
-    List<Widget> list = [];
-    if (nodeMode != ChoiceNodeMode.unSelectableMode) {
-      list.add(
-        ViewSwitchLabel(
-          () => ref.read(nodeEditorDesignProvider.notifier).update((state) =>
-              state.copyWith(
-                  hideAsResult: !design.hideAsResult, showAsResult: false)),
-          design.hideAsResult,
-          label: 'hide_result'.i18n,
-        ),
-      );
-    } else {
-      list.add(
-        ViewSwitchLabel(
-          () => ref.read(nodeEditorDesignProvider.notifier).update((state) =>
-              state.copyWith(
-                  showAsResult: !design.showAsResult, hideAsResult: false)),
-          design.showAsResult,
-          label: 'show_result'.i18n,
-        ),
-      );
-    }
-    if (nodeMode == ChoiceNodeMode.multiSelect) {
-      list.add(
-        ViewSwitchLabel(
-          () => ref.read(nodeEditorDesignProvider.notifier).update(
-              (state) => state.copyWith(showAsSlider: !design.showAsSlider)),
-          design.showAsSlider,
-          label: 'slider_mode'.i18n,
-        ),
-      );
-    }
-    list.add(DropdownButtonFormField<String>(
-      decoration: InputDecoration(labelText: 'preset_setting'.i18n),
-      items: ref
-          .watch(choiceNodePresetListProvider)
-          .map<DropdownMenuItem<String>>((preset) =>
-              DropdownMenuItem(value: preset.name, child: Text(preset.name)))
-          .toList(),
-      onChanged: (String? t) {
-        if (t != null) {
-          ref
-              .read(nodeEditorDesignProvider.notifier)
-              .update((state) => state.copyWith(presetName: t));
-        }
-      },
-      value: design.presetName,
-    ));
-
     return CustomScrollView(
       controller: ScrollController(),
       slivers: [
@@ -585,7 +536,60 @@ class ViewNodeOptionEditor extends ConsumerWidget {
           ]),
         ),
         SliverGrid(
-          delegate: SliverChildListDelegate(list),
+          delegate: SliverChildListDelegate([
+            if (nodeMode != ChoiceNodeMode.unSelectableMode)
+              ViewSwitchLabel(
+                () => ref.read(nodeEditorDesignProvider.notifier).update(
+                    (state) => state.copyWith(
+                        hideAsResult: !design.hideAsResult,
+                        showAsResult: false)),
+                design.hideAsResult,
+                label: 'hide_result'.i18n,
+              ),
+            if (nodeMode != ChoiceNodeMode.unSelectableMode &&
+                nodeMode != ChoiceNodeMode.onlyCode)
+              ViewSwitchLabel(
+                () => ref.read(nodeEditorDesignProvider.notifier).update(
+                    (state) => state.copyWith(
+                        hideAsResult: !design.hideAsResult,
+                        showAsResult: false)),
+                design.hideAsResult,
+                label: 'hide_result'.i18n,
+              ),
+            if (nodeMode == ChoiceNodeMode.unSelectableMode)
+              ViewSwitchLabel(
+                () => ref.read(nodeEditorDesignProvider.notifier).update(
+                    (state) => state.copyWith(
+                        showAsResult: !design.showAsResult,
+                        hideAsResult: false)),
+                design.showAsResult,
+                label: 'show_result'.i18n,
+              ),
+            if (nodeMode == ChoiceNodeMode.multiSelect)
+              ViewSwitchLabel(
+                () => ref.read(nodeEditorDesignProvider.notifier).update(
+                    (state) =>
+                        state.copyWith(showAsSlider: !design.showAsSlider)),
+                design.showAsSlider,
+                label: 'slider_mode'.i18n,
+              ),
+            DropdownButtonFormField<String>(
+              decoration: InputDecoration(labelText: 'preset_setting'.i18n),
+              items: ref
+                  .watch(choiceNodePresetListProvider)
+                  .map<DropdownMenuItem<String>>((preset) => DropdownMenuItem(
+                      value: preset.name, child: Text(preset.name)))
+                  .toList(),
+              onChanged: (String? t) {
+                if (t != null) {
+                  ref
+                      .read(nodeEditorDesignProvider.notifier)
+                      .update((state) => state.copyWith(presetName: t));
+                }
+              },
+              value: design.presetName,
+            ),
+          ]),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 4,
             crossAxisSpacing: 2,

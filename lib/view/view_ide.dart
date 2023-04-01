@@ -2,7 +2,6 @@ import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/grammar/function_list.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
-import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
@@ -124,61 +123,62 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
 
   @override
   Widget build(BuildContext context) {
-    var design = ref.watch(nodeEditorDesignProvider);
-    return Row(
-      children: [
-        Expanded(
-          child: CustomScrollView(
-            controller: _scrollController,
-            slivers: [
-              SliverAppBar(
-                title: SizedBox(
-                  height: 44,
-                  child: HorizontalScroll(
-                    itemBuilder: (BuildContext context, int index) {
-                      return TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          ref.watch(ideVariableListProvider)[index],
-                          style: ConstList.getCurrentFont(context).bodyLarge,
-                        ),
-                      );
-                    },
-                    itemCount: ref.watch(ideVariableListProvider).length,
+    return CustomScrollView(
+      controller: _scrollController,
+      slivers: [
+        SliverAppBar(
+          title: SizedBox(
+            height: 44,
+            child: HorizontalScroll(
+              itemBuilder: (BuildContext context, int index) {
+                return TextButton(
+                  onPressed: () {
+
+                  },
+                  child: Text(
+                    ref.watch(ideVariableListProvider)[index],
+                    style: ConstList.getCurrentFont(context).bodyLarge,
                   ),
+                );
+              },
+              itemCount: ref.watch(ideVariableListProvider).length,
+            ),
+          ),
+          floating: true,
+          pinned: true,
+          expandedHeight: 44.0,
+          toolbarHeight: 44.0,
+        ),
+        SliverList(
+          delegate: SliverChildListDelegate([
+            if (ref.watch(nodeEditorTargetProvider).node.isSelectableMode)
+              Focus(
+                onFocusChange: (bool hasFocus) => ref
+                    .read(editorChangeProvider.notifier)
+                    .lastFocus = ref.watch(controllerClickableProvider),
+                child: TextField(
+                  controller: ref.watch(controllerClickableProvider),
+                  textAlign: TextAlign.left,
+                  decoration: InputDecoration(
+                      hintText: 'code_hint_execute_condition'.i18n),
                 ),
-                floating: true,
-                pinned: true,
-                expandedHeight: 44.0,
-                toolbarHeight: 44.0,
               ),
-              SliverList(
-                delegate: SliverChildListDelegate([
-                  if (ref.watch(nodeEditorTargetProvider).node.isSelectableMode)
-                    Focus(
-                      onFocusChange: (bool hasFocus) => ref
-                          .read(editorChangeProvider.notifier)
-                          .lastFocus = ref.watch(controllerClickableProvider),
-                      child: TextField(
-                        controller: ref.watch(controllerClickableProvider),
-                        textAlign: TextAlign.left,
-                        decoration: InputDecoration(
-                            hintText: 'code_hint_execute_condition'.i18n),
-                      ),
-                    ),
-                  if (ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode)
-                    Focus(
-                      onFocusChange: (bool hasFocus) => ref
-                          .read(editorChangeProvider.notifier)
-                          .lastFocus = ref.watch(controllerVisibleProvider),
-                      child: TextField(
-                        controller: ref.watch(controllerVisibleProvider),
-                        textAlign: TextAlign.left,
-                        decoration: InputDecoration(
-                            hintText: 'code_hint_visible_condition'.i18n),
-                      ),
-                    ),
-                  QuillEditor(
+            if (ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode)
+              Focus(
+                onFocusChange: (bool hasFocus) => ref
+                    .read(editorChangeProvider.notifier)
+                    .lastFocus = ref.watch(controllerVisibleProvider),
+                child: TextField(
+                  controller: ref.watch(controllerVisibleProvider),
+                  textAlign: TextAlign.left,
+                  decoration: InputDecoration(
+                      hintText: 'code_hint_visible_condition'.i18n),
+                ),
+              ),
+            Row(
+              children: [
+                Expanded(
+                  child: QuillEditor(
                     locale: ref.watch(localeStateProvider),
                     focusNode: _focusNode!,
                     scrollable: false,
@@ -190,42 +190,34 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
                     expands: false,
                     placeholder: "code_hint_execute".i18n,
                   ),
-                ]),
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(2.0),
-          child: Column(
-            children: [
-              ViewSwitchLabel(
-                () {
-                  ref.read(nodeEditorDesignProvider.notifier).state =
-                      design.copyWith(isOccupySpace: !design.isOccupySpace);
-                },
-                design.isOccupySpace,
-                label: 'space_hide'.i18n,
-              ),
-              IconButton(
-                icon: const Icon(Icons.start),
-                tooltip: "sort".i18n,
-                onPressed: () {
-                  var text =
-                      _quillExecuteCodeController?.document.toPlainText() ?? '';
-                  var output =
-                      ref.read(editorChangeProvider.notifier).formatting(text);
-                  if (output.item2) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text("sort_error".i18n),
-                    ));
-                  }
-                  _quillExecuteCodeController?.clear();
-                  _quillExecuteCodeController?.document.insert(0, output.item1);
-                },
-              ),
-            ],
-          ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Column(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.reorder),
+                        tooltip: "sort".i18n,
+                        onPressed: () {
+                          var text =
+                              _quillExecuteCodeController?.document.toPlainText() ?? '';
+                          var output =
+                          ref.read(editorChangeProvider.notifier).formatting(text);
+                          if (output.item2) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text("sort_error".i18n),
+                            ));
+                          }
+                          _quillExecuteCodeController?.clear();
+                          _quillExecuteCodeController?.document.insert(0, output.item1);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ]),
         ),
       ],
     );
