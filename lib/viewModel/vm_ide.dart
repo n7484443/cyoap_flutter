@@ -2,7 +2,9 @@ import 'package:cyoap_core/variable_db.dart';
 import 'package:cyoap_flutter/viewModel/vm_editor.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tuple/tuple.dart';
 
 final controllerClickableProvider =
     Provider.autoDispose<TextEditingController>((ref) {
@@ -10,11 +12,9 @@ final controllerClickableProvider =
   var controller = TextEditingController(
       text: node.recursiveStatus.conditionClickableString);
   controller.addListener(() {
-    ref.read(ideCurrentInputProvider.notifier).addText(
-        controller.text,
-        controller.selection.start,
-        controller.selection.end - controller.selection.start,
-        controller.selection.textInside(controller.text));
+    ref
+        .read(ideCurrentInputProvider.notifier)
+        .addCheckText(controller.text, controller.selection.end);
     EasyDebounce.debounce(
         'conditionClickableString', const Duration(milliseconds: 500), () {
       ref
@@ -38,11 +38,9 @@ final controllerVisibleProvider =
   var controller =
       TextEditingController(text: node.recursiveStatus.conditionVisibleString);
   controller.addListener(() {
-    ref.read(ideCurrentInputProvider.notifier).addText(
-        controller.text,
-        controller.selection.start,
-        controller.selection.end - controller.selection.start,
-        controller.selection.textInside(controller.text));
+    ref
+        .read(ideCurrentInputProvider.notifier)
+        .addCheckText(controller.text, controller.selection.end);
     EasyDebounce.debounce(
         'conditionVisibleString', const Duration(milliseconds: 500), () {
       node.recursiveStatus.conditionVisibleString = controller.text;
@@ -69,32 +67,73 @@ final ideCurrentInputProvider =
         (ref) => IdeCurrentInputNotifier(ref));
 
 class IdeCurrentInputNotifier extends StateNotifier<String> {
-  final regexAlphabet = RegExp(r"^[a-zA-Z0-9_]+$");
-  final regexNonAlphabet = RegExp(r"[{}\[\]().\s\n]");
+  final regexNonAlphabet = RegExp(r"[=<>{}\[\]().\s\n]");
   final Ref ref;
+
+  TextEditingController? lastFocusText;
+  QuillController? lastFocusQuill;
+
+  int len = 0;
 
   IdeCurrentInputNotifier(this.ref) : super('');
 
   void addText(String plainText, int index, int len, Object? data) {
     if (data == null) return;
     if (data is! String) return;
-
     var carrot = index;
+    plainText = plainText.replaceRange(index, index + len, data);
+    carrot = carrot - len + data.length;
+    addCheckText(plainText, carrot);
+  }
+
+  void addCheckText(String plainText, int index) {
     if (plainText.length <= index) {
-      carrot = plainText.length;
+      index = plainText.length;
     }
-    var spacePos = plainText.substring(0, carrot).lastIndexOf(regexNonAlphabet);
+    var spacePos = plainText.substring(0, index).lastIndexOf(regexNonAlphabet);
     if (spacePos == -1) {
       spacePos = 0;
     } else {
       spacePos += 1;
     }
-    var output = plainText.substring(spacePos, carrot).trim();
-    if (regexAlphabet.hasMatch(data.toString())) {
-      output = plainText.substring(spacePos, carrot).trim() + data.toString();
-    }
-
-    ref.read(ideCurrentInputProvider.notifier).state = output.trim();
+    var output = plainText.substring(spacePos, index);
+    state = output.trim();
+    len = index - spacePos;
     return;
+  }
+
+  void insertText(String text) {
+    if (lastFocusText != null) {
+      int end = lastFocusText!.selection.end;
+      String input = lastFocusText!.text.replaceRange(end - len, end, "$text ");
+      lastFocusText!.value = TextEditingValue(
+          text: input,
+          selection: TextSelection.collapsed(offset: end - len + text.length + 1)
+      );
+    } else if (lastFocusQuill != null) {
+      int end = lastFocusQuill!.selection.end;
+      lastFocusQuill!.document.replace(end - len, len, "$text ");
+      lastFocusQuill!.moveCursorToPosition(end - len + text.length + 1);
+    }
+    state = "";
+    len = 0;
+  }
+
+  Tuple2<String, bool> formatting(String input) {
+    var text = input.split("\n");
+    var stack = 0;
+    var output = [];
+    var regexSpace = RegExp(r"if +\(");
+    for (var code in text) {
+      stack -= "}".allMatches(code).length;
+      var outputCode = code.trim().replaceAll(regexSpace, "if(");
+
+      for (var i = 0; i < stack; i++) {
+        outputCode = "  $outputCode";
+      }
+      output.add(outputCode);
+      stack += "{".allMatches(code).length;
+    }
+    return Tuple2(output.join("\n").trim(), stack != 0);
   }
 }

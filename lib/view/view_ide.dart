@@ -22,7 +22,7 @@ class ViewCodeIde extends ConsumerStatefulWidget {
 }
 
 class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
-  FocusNode? _focusNode;
+  final FocusNode _focusNode = FocusNode();
   QuillController? _quillExecuteCodeController;
   ScrollController? _scrollController;
 
@@ -37,7 +37,6 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
 
   @override
   void initState() {
-    _focusNode = FocusNode();
     var data = [
       {
         "insert":
@@ -114,7 +113,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
 
   @override
   void dispose() {
-    _focusNode?.dispose();
+    _focusNode.dispose();
     _quillExecuteCodeController?.dispose();
     _scrollController?.dispose();
     EasyDebounce.cancel('code-ide');
@@ -131,12 +130,13 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
             height: 44,
             child: HorizontalScroll(
               itemBuilder: (BuildContext context, int index) {
+                var text = ref.watch(ideVariableListProvider)[index];
                 return TextButton(
                   onPressed: () {
-
+                    ref.read(ideCurrentInputProvider.notifier).insertText(text);
                   },
                   child: Text(
-                    ref.watch(ideVariableListProvider)[index],
+                    text,
                     style: ConstList.getCurrentFont(context).bodyLarge,
                   ),
                 );
@@ -153,9 +153,12 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
           delegate: SliverChildListDelegate([
             if (ref.watch(nodeEditorTargetProvider).node.isSelectableMode)
               Focus(
-                onFocusChange: (bool hasFocus) => ref
-                    .read(editorChangeProvider.notifier)
-                    .lastFocus = ref.watch(controllerClickableProvider),
+                onFocusChange: (bool hasFocus) {
+                  ref.read(ideCurrentInputProvider.notifier).lastFocusText =
+                      ref.watch(controllerClickableProvider);
+                  ref.read(ideCurrentInputProvider.notifier).lastFocusQuill =
+                      null;
+                },
                 child: TextField(
                   controller: ref.watch(controllerClickableProvider),
                   textAlign: TextAlign.left,
@@ -165,9 +168,12 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
               ),
             if (ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode)
               Focus(
-                onFocusChange: (bool hasFocus) => ref
-                    .read(editorChangeProvider.notifier)
-                    .lastFocus = ref.watch(controllerVisibleProvider),
+                onFocusChange: (bool hasFocus) {
+                  ref.read(ideCurrentInputProvider.notifier).lastFocusText =
+                      ref.watch(controllerVisibleProvider);
+                  ref.read(ideCurrentInputProvider.notifier).lastFocusQuill =
+                      null;
+                },
                 child: TextField(
                   controller: ref.watch(controllerVisibleProvider),
                   textAlign: TextAlign.left,
@@ -176,19 +182,29 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
                 ),
               ),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: QuillEditor(
-                    locale: ref.watch(localeStateProvider),
-                    focusNode: _focusNode!,
-                    scrollable: false,
-                    readOnly: false,
-                    autoFocus: false,
-                    scrollController: _scrollController!,
-                    controller: _quillExecuteCodeController!,
-                    padding: EdgeInsets.zero,
-                    expands: false,
-                    placeholder: "code_hint_execute".i18n,
+                  child: Focus(
+                    onFocusChange: (bool hasFocus) {
+                      ref.read(ideCurrentInputProvider.notifier).lastFocusText =
+                          null;
+                      ref
+                          .read(ideCurrentInputProvider.notifier)
+                          .lastFocusQuill = _quillExecuteCodeController!;
+                    },
+                    child: QuillEditor(
+                      locale: ref.watch(localeStateProvider),
+                      focusNode: _focusNode,
+                      scrollable: false,
+                      readOnly: false,
+                      autoFocus: false,
+                      scrollController: _scrollController!,
+                      controller: _quillExecuteCodeController!,
+                      padding: EdgeInsets.zero,
+                      expands: false,
+                      placeholder: "code_hint_execute".i18n,
+                    ),
                   ),
                 ),
                 Padding(
@@ -199,17 +215,20 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
                         icon: const Icon(Icons.reorder),
                         tooltip: "sort".i18n,
                         onPressed: () {
-                          var text =
-                              _quillExecuteCodeController?.document.toPlainText() ?? '';
-                          var output =
-                          ref.read(editorChangeProvider.notifier).formatting(text);
+                          var text = _quillExecuteCodeController?.document
+                                  .toPlainText() ??
+                              '';
+                          var output = ref
+                              .read(ideCurrentInputProvider.notifier)
+                              .formatting(text);
                           if (output.item2) {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text("sort_error".i18n),
                             ));
                           }
                           _quillExecuteCodeController?.clear();
-                          _quillExecuteCodeController?.document.insert(0, output.item1);
+                          _quillExecuteCodeController?.document
+                              .insert(0, output.item1);
                         },
                       ),
                     ],

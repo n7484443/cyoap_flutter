@@ -9,7 +9,6 @@ import 'package:cyoap_flutter/viewModel/vm_source.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tuple/tuple.dart';
 
 import '../util/platform_specified_util/webp_converter.dart';
 
@@ -155,16 +154,6 @@ class EditorChangeNotifier extends StateNotifier<bool> {
 
   EditorChangeNotifier(this.ref) : super(false);
 
-  TextEditingController? lastFocus;
-
-  void insertText(TextEditingController controller, String text) {
-    var selection = controller.selection;
-    controller.text =
-        controller.text.replaceRange(selection.start, selection.end, text);
-    controller.selection =
-        TextSelection.collapsed(offset: selection.start + text.length);
-  }
-
   void needUpdate() {
     state = true;
   }
@@ -184,32 +173,11 @@ class EditorChangeNotifier extends StateNotifier<bool> {
     origin.imageString = changed.imageString;
     origin.recursiveStatus = changed.recursiveStatus;
     origin.choiceNodeOption = ref.read(nodeEditorDesignProvider);
-    if (origin.recursiveStatus.executeCodeString != null) {
-      origin.recursiveStatus.executeCodeString =
-          formatting(origin.recursiveStatus.executeCodeString!).item1;
-    }
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     state = false;
     refreshLine(ref, pos.first);
   }
 
-  Tuple2<String, bool> formatting(String input) {
-    var text = input.split("\n");
-    var stack = 0;
-    var output = [];
-    var regexSpace = RegExp(r"if +\(");
-    for (var code in text) {
-      stack -= "}".allMatches(code).length;
-      var outputCode = code.trim().replaceAll(regexSpace, "if(");
-
-      for (var i = 0; i < stack; i++) {
-        outputCode = "  $outputCode";
-      }
-      output.add(outputCode);
-      stack += "{".allMatches(code).length;
-    }
-    return Tuple2(output.join("\n"), stack != 0);
-  }
 }
 
 final lastImageProvider = StateProvider<Uint8List?>((ref) => null);

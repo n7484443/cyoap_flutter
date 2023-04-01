@@ -270,15 +270,6 @@ class VariableTiles extends ConsumerWidget {
               subtitle:
                   values.displayName.isEmpty ? null : Text(values.displayName),
               trailing: Text(values.valueType.type.name),
-              onTap: () {
-                if (ref.watch(changeTabProvider) == 2) {
-                  var vmCodeEditor = ref.read(editorChangeProvider.notifier);
-                  if (vmCodeEditor.lastFocus != null) {
-                    vmCodeEditor.insertText(
-                        vmCodeEditor.lastFocus!, key.trim());
-                  }
-                }
-              },
             ));
           }
         }
@@ -359,13 +350,7 @@ class NodeTiles extends ConsumerWidget {
                 dense: true,
                 title: Text(e.name),
                 onTap: () {
-                  if (tabList[ref.watch(changeTabProvider)] == "viewEditor") {
-                    var vmCodeEditor = ref.read(editorChangeProvider.notifier);
-                    if (vmCodeEditor.lastFocus != null) {
-                      vmCodeEditor.insertText(vmCodeEditor.lastFocus!,
-                          e.name.replaceAll(" ", "").trim());
-                    }
-                  } else if (e.pos.length > 1) {
+                  if (e.pos.length > 1) {
                     ref.read(nodeEditorTargetPosProvider.notifier).state =
                         e.pos;
                     ref
