@@ -65,22 +65,21 @@ class ChangeTabNotifier extends StateNotifier<int> {
     return true;
   }
 
-  void changePage(int index, BuildContext context) {
-    removeFunction(state, context).then((value) {
-      if (value) {
-        entryFunction(index, context);
-        state = index;
-      }
-    });
+  Future<void> changePage(int index, BuildContext context) async{
+    var value = await removeFunction(state, context);
+    if (value) {
+      entryFunction(index, context);
+      state = index;
+    }
   }
 
-  void home(BuildContext context) {
-    changePage(0, context);
+  Future<void> home(BuildContext context) async{
+    await changePage(0, context);
   }
 
-  void changePageString(String name, BuildContext context) {
+  Future<void> changePageString(String name, BuildContext context) async{
     var index = tabList.indexOf(name).clamp(0, tabList.length);
-    changePage(index, context);
+    await changePage(index, context);
   }
 }
 
