@@ -101,6 +101,7 @@ extension Localization on String {
           'sort': 'Sort',
           'sort_error':
               'The number of {\'s and }\'s in the code are not equal.',
+          'auto_complete': 'Auto Complete',
           'hide_result': 'Hide \n in viewer',
           'show_result': 'Show \n in viewer',
           'slider_mode': 'Slider mode',
@@ -247,6 +248,7 @@ extension Localization on String {
           'space_hide': '숨김 시 공간 차지',
           'sort': '정렬',
           'sort_error': '코드의 {의 개수와 }의 개수가 같지 않습니다.',
+          'auto_complete': '자동 완성',
           'hide_result': '결론창에서 \n숨기기',
           'show_result': '결론창에서 \n보이기',
           'slider_mode': '슬라이더 모드',

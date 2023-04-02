@@ -128,20 +128,33 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
         SliverAppBar(
           title: SizedBox(
             height: 44,
-            child: HorizontalScroll(
-              itemBuilder: (BuildContext context, int index) {
-                var text = ref.watch(ideVariableListProvider)[index];
-                return TextButton(
-                  onPressed: () {
-                    ref.read(ideCurrentInputProvider.notifier).insertText(text);
-                  },
-                  child: Text(
-                    text,
-                    style: ConstList.getCurrentFont(context).bodyLarge,
+            child: Row(
+              children: [
+                Text(
+                  'auto_complete'.i18n,
+                  style: ConstList.getCurrentFont(context).bodyMedium,
+                ),
+                const VerticalDivider(),
+                Expanded(
+                  child: HorizontalScroll(
+                    itemBuilder: (BuildContext context, int index) {
+                      var text = ref.watch(ideVariableListProvider)[index];
+                      return TextButton(
+                        onPressed: () {
+                          ref
+                              .read(ideCurrentInputProvider.notifier)
+                              .insertText(text);
+                        },
+                        child: Text(
+                          text,
+                          style: ConstList.getCurrentFont(context).bodyLarge,
+                        ),
+                      );
+                    },
+                    itemCount: ref.watch(ideVariableListProvider).length,
                   ),
-                );
-              },
-              itemCount: ref.watch(ideVariableListProvider).length,
+                ),
+              ],
             ),
           ),
           floating: true,
