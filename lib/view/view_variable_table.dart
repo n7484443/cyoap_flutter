@@ -349,13 +349,23 @@ class NodeTiles extends ConsumerWidget {
               (e) => ListTile(
                 dense: true,
                 title: Text(e.name),
-                onTap: () {
-                  if (e.pos.length > 1) {
+                onTap: () async {
+                  if (ref.read(changeTabProvider) ==
+                      tabList.indexOf("viewEditor")) {
+                    await ref
+                        .read(changeTabProvider.notifier)
+                        .removeFunction(ref.read(changeTabProvider), context);
                     ref.read(nodeEditorTargetPosProvider.notifier).state =
                         e.pos;
-                    ref
-                        .read(changeTabProvider.notifier)
-                        .changePageString("viewEditor", context);
+                    ref.invalidate(nodeEditorTargetProvider);
+                  }else{
+                    if (e.pos.length > 1) {
+                      ref.read(nodeEditorTargetPosProvider.notifier).state =
+                          e.pos;
+                      ref
+                          .read(changeTabProvider.notifier)
+                          .changePageString("viewEditor", context);
+                    }
                   }
                 },
               ),

@@ -89,6 +89,7 @@ class IdeCurrentInputNotifier extends StateNotifier<String> {
   }
 
   void addCheckText(String plainText, int index) {
+    if(plainText.isEmpty) return;
     index = index.clamp(0, plainText.length - 1);
     var spacePos = plainText.substring(0, index).lastIndexOf(regexNonAlphabet);
     if (spacePos == -1) {
