@@ -38,7 +38,7 @@ jobs:
         uses: softprops/action-gh-release@v0.1.15
         with:
           files: |
-            'build/app/outputs/bundle/release/cyoap_android_${{ github.ref_name }}.aab'
+            build/app/outputs/bundle/release/cyoap_android_${{ github.ref_name }}.aab
   build_windows:
     runs-on: windows-latest
     steps:
@@ -68,7 +68,7 @@ jobs:
         uses: softprops/action-gh-release@v0.1.15
         with:
           files: |
-            'build/windows/cyoap_windows_${{ github.ref_name }}.zip'
+            build/windows/cyoap_windows_${{ github.ref_name }}.zip
   build_webs:
     runs-on: windows-latest
     steps:
