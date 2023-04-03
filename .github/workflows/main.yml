@@ -8,9 +8,6 @@ jobs:
   build_android:
     runs-on: windows-latest
     steps:
-      - run: |
-          $version= "${{ github.ref_name }}".replace('v', '')
-          echo "version=$version" >> $GITHUB_ENV
       - uses: actions/checkout@v3.3.0
       - uses: subosito/flutter-action@v2.8.0
         with:
@@ -35,19 +32,16 @@ jobs:
       - run: flutter build appbundle
 
       - run: |
-          Rename-Item "build/app/outputs/bundle/release/app-release.aab" "cyoap_android_${{ env.version }}.aab"
+          Rename-Item "build/app/outputs/bundle/release/app-release.aab" "cyoap_android_${{ github.ref_name }}.aab"
 
       - name: Release
         uses: softprops/action-gh-release@v0.1.15
         with:
           files: |
-            'build/app/outputs/bundle/release/cyoap_android_${{ env.version }}.aab'
+            'build/app/outputs/bundle/release/cyoap_android_${{ github.ref_name }}.aab'
   build_windows:
     runs-on: windows-latest
     steps:
-      - run: |
-          $version= "${{ github.ref_name }}".replace('v', '')
-          echo "version=$version" >> $GITHUB_ENV
       - uses: actions/checkout@v3.3.0
       - uses: subosito/flutter-action@v2.8.0
         with:
@@ -68,13 +62,13 @@ jobs:
           args: --release --manifest-path updater/Cargo.toml
       - run: MV "updater/target/release/updater.exe" "build/windows/runner/Release"
       - run: |
-          7z a build/windows/cyoap_windows_{{ env.version }}.zip ./build/windows/runner/Release/*
+          7z a build/windows/cyoap_windows_${{ github.ref_name }}.zip ./build/windows/runner/Release/*
 
       - name: Release
         uses: softprops/action-gh-release@v0.1.15
         with:
           files: |
-            'build/windows/cyoap_windows_${{ env.version }}.zip'
+            'build/windows/cyoap_windows_${{ github.ref_name }}.zip'
   build_webs:
     runs-on: windows-latest
     steps:
