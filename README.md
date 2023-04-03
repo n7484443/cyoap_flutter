@@ -9,6 +9,8 @@
 
 [web 배포용 뷰어](https://github.com/n7484443/cyoap_vue/releases/tag/v0.1.0)
 
+[문법](https://github.com/n7484443/cyoap_core/blob/main/README.md)
+
 ## 목차
 1. [프로젝트 파일 형식](#프로젝트-파일-형식)
 2. [Windows 에서 알수 없는 개발자라는 경고가 떠요!](#Windows-경고)
