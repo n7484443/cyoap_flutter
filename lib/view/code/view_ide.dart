@@ -1,6 +1,7 @@
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/grammar/function_list.dart';
 import 'package:cyoap_flutter/i18n.dart';
+import 'package:cyoap_flutter/view/code/view_ide_gui.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
@@ -8,12 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../main.dart';
-import '../viewModel/vm_editor.dart';
-import '../viewModel/vm_ide.dart';
+import '../../main.dart';
+import '../../viewModel/vm_editor.dart';
+import '../../viewModel/code/vm_ide.dart';
 
-class ViewCodeIde extends ConsumerStatefulWidget {
-  const ViewCodeIde({
+class ViewIde extends ConsumerStatefulWidget {
+  const ViewIde({
     super.key,
   });
 
@@ -21,7 +22,7 @@ class ViewCodeIde extends ConsumerStatefulWidget {
   ConsumerState createState() => _ViewCodeIdeState();
 }
 
-class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
+class _ViewCodeIdeState extends ConsumerState<ViewIde> {
   final FocusNode _focusNode = FocusNode();
   QuillController? _quillExecuteCodeController;
   ScrollController? _scrollController;
@@ -122,6 +123,9 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
 
   @override
   Widget build(BuildContext context) {
+    if (!ref.watch(currentIdeOpenProvider)) {
+      return const ViewIdeGui();
+    }
     return CustomScrollView(
       controller: _scrollController,
       slivers: [
@@ -245,6 +249,15 @@ class _ViewCodeIdeState extends ConsumerState<ViewCodeIde> {
                               .insert(0, output.item1);
                           ref.read(ideCurrentInputProvider.notifier).reformat =
                               false;
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.dns_rounded),
+                        tooltip: "gui".i18n,
+                        onPressed: () {
+                          ref
+                              .read(currentIdeOpenProvider.notifier)
+                              .update((state) => !state);
                         },
                       ),
                     ],

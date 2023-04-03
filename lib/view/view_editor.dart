@@ -7,7 +7,7 @@ import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_image_selector.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
-import 'package:cyoap_flutter/view/view_ide.dart';
+import 'package:cyoap_flutter/view/code/view_ide.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +52,7 @@ class _ViewEditorState extends ConsumerState<ViewEditor>
     }
     var children = [
       const ViewContentsEditor(),
-      const ViewCodeIde(),
+      const ViewIde(),
       const ViewNodeOptionEditor(),
       ViewImageDraggable(
         addImageFunction: (ref, name) {

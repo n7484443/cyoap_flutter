@@ -587,7 +587,6 @@ class _NestedMapState extends ConsumerState<NestedMap> {
 
     if (ConstList.isSmallDisplay(context)) {
       return HorizontalScrollSingleChild(
-        isAnimatedFront: true,
         child: Scrollbar(
           trackVisibility: true,
           controller: _scrollController,

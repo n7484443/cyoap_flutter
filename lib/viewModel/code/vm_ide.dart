@@ -138,3 +138,7 @@ class IdeCurrentInputNotifier extends StateNotifier<String> {
     return Tuple2(output.join("\n").trim(), stack != 0);
   }
 }
+
+final currentIdeOpenProvider = StateProvider<bool>((ref) {
+  return true;
+});
