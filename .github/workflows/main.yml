@@ -8,6 +8,9 @@ jobs:
   build_android:
     runs-on: windows-latest
     steps:
+      - run: |
+          $ver={{ github.ref_name }}.replace('v', '')
+          echo "version=$ver" >> $GITHUB_ENV
       - uses: actions/checkout@v3.3.0
       - uses: subosito/flutter-action@v2.8.0
         with:
@@ -32,8 +35,6 @@ jobs:
       - run: flutter build appbundle
 
       - run: |
-          echo "version={{ github.ref_name }}.replace('v', '')" >> $GITHUB_ENV
-      - run: |
           Rename-Item "build/app/outputs/bundle/release/app-release.aab" "cyoap_android_${{ env.version }}.aab"
 
       - name: Release
@@ -44,6 +45,9 @@ jobs:
   build_windows:
     runs-on: windows-latest
     steps:
+      - run: |
+          $ver={{ github.ref_name }}.replace('v', '')
+          echo "version=$ver" >> $GITHUB_ENV
       - uses: actions/checkout@v3.3.0
       - uses: subosito/flutter-action@v2.8.0
         with:
@@ -63,10 +67,6 @@ jobs:
           command: build
           args: --release --manifest-path updater/Cargo.toml
       - run: MV "updater/target/release/updater.exe" "build/windows/runner/Release"
-
-
-      - run: |
-          echo "version={{ github.ref_name }}.replace('v', '')" >> $GITHUB_ENV
       - run: |
           7z a build/windows/cyoap_windows_{{ env.version }}.zip ./build/windows/runner/Release/*
 
