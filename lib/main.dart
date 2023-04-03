@@ -122,6 +122,8 @@ class ConstList {
         fontFeatures: const [FontFeature.proportionalFigures()]),
     "Black And White Picture": GoogleFonts.blackAndWhitePicture(
         fontFeatures: const [FontFeature.proportionalFigures()]),
+    "IBM Plex Sans KR": GoogleFonts.ibmPlexSansKr(
+        fontFeatures: const [FontFeature.proportionalFigures()]),
     "Neo 둥근모": const TextStyle(
         fontFamily: 'NeoDGM',
         fontFeatures: [FontFeature.proportionalFigures()]),
