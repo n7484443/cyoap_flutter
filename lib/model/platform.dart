@@ -26,7 +26,8 @@ class AbstractPlatform extends PlayablePlatform {
   Map<String, dynamic> toJson() {
     Map<String, dynamic> out = {
       'stringImageName': stringImageName,
-      'globalSetting': globalSetting.map((e) => [e.item1, e.item2.toJson()]).toList(),
+      'globalSetting':
+          globalSetting.map((e) => [e.item1, e.item2.toJson()]).toList(),
     };
     out.addAll(designSetting.toJson());
     return out;
@@ -110,7 +111,7 @@ class AbstractPlatform extends PlayablePlatform {
 
   void setGlobalSetting(List<Tuple2<String, ValueTypeWrapper>> units) {
     clearGlobalSetting();
-    for(var unit in units){
+    for (var unit in units) {
       addGlobalSetting(unit.item1, unit.item2);
     }
     generateRecursiveParser();

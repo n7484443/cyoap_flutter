@@ -10,7 +10,7 @@ class CodeBlock {
     return "\n$code";
   }
 
-  void update(Pos parent, int index){
+  void update(Pos parent, int index) {
     pos = parent.addLast(index);
   }
 }
@@ -27,7 +27,9 @@ class CodeBlockIf extends CodeBlock {
       this.childTrue.add(childTrue[i]..pos = pos.addLast(i));
     }
     for (int i = 0; i < childFalse.length; i++) {
-      this.childFalse.add(childFalse[i]..pos = pos.addLast(childTrue.length + i));
+      this
+          .childFalse
+          .add(childFalse[i]..pos = pos.addLast(childTrue.length + i));
     }
   }
 
@@ -46,7 +48,7 @@ class CodeBlockIf extends CodeBlock {
   }
 
   @override
-  void update(Pos parent, int index){
+  void update(Pos parent, int index) {
     pos = parent.addLast(index);
     for (int i = 0; i < childTrue.length; i++) {
       childTrue[i].update(pos, i);
@@ -66,7 +68,7 @@ class CodeBlockFor extends CodeBlock {
       required this.range,
       required List<CodeBlock> codeBlock}) {
     for (int i = 0; i < codeBlock.length; i++) {
-      this.child.add(codeBlock[i]..pos = pos.addLast(i));
+      child.add(codeBlock[i]..pos = pos.addLast(i));
     }
   }
 
@@ -82,7 +84,7 @@ class CodeBlockFor extends CodeBlock {
   }
 
   @override
-  void update(Pos parent, int index){
+  void update(Pos parent, int index) {
     pos = parent.addLast(index);
     for (int i = 0; i < child.length; i++) {
       child[i].update(pos, i);

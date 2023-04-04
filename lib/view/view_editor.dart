@@ -3,11 +3,11 @@ import 'dart:ui';
 
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/i18n.dart';
+import 'package:cyoap_flutter/view/code/view_ide.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_image_selector.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
-import 'package:cyoap_flutter/view/code/view_ide.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';

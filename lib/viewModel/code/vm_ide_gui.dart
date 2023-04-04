@@ -30,7 +30,7 @@ final codeBlockProvider = StateProvider<List<CodeBlock>>((ref) {
     CodeBlockFor(code: 'a', range: '1..3', codeBlock: [
       CodeBlock(code: 'let a = 3'),
     ]),
-    CodeBlockFor(code: 'a', range: '1..3', codeBlock: [
+    CodeBlockFor(code: 'a', range: '2..5', codeBlock: [
       CodeBlock(code: 'let a = 3'),
     ]),
     CodeBlockFor(code: 'a', range: '1..3', codeBlock: [
