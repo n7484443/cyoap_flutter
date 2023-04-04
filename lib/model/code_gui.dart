@@ -9,6 +9,10 @@ class CodeBlock {
   String build() {
     return "\n$code";
   }
+
+  void update(Pos parent, int index){
+    pos = parent.addLast(index);
+  }
 }
 
 class CodeBlockIf extends CodeBlock {
@@ -19,11 +23,11 @@ class CodeBlockIf extends CodeBlock {
       {required super.code,
       required List<CodeBlock> childTrue,
       required List<CodeBlock> childFalse}) {
-    for (int i = 0; i < childFalse.length; i++) {
-      this.childFalse.add(childFalse[i]..pos = pos.addLast(i));
-    }
     for (int i = 0; i < childTrue.length; i++) {
       this.childTrue.add(childTrue[i]..pos = pos.addLast(i));
+    }
+    for (int i = 0; i < childFalse.length; i++) {
+      this.childFalse.add(childFalse[i]..pos = pos.addLast(childTrue.length + i));
     }
   }
 
@@ -39,6 +43,17 @@ class CodeBlockIf extends CodeBlock {
       $childFalseCode
     }
     """;
+  }
+
+  @override
+  void update(Pos parent, int index){
+    pos = parent.addLast(index);
+    for (int i = 0; i < childTrue.length; i++) {
+      childTrue[i].update(pos, i);
+    }
+    for (int i = 0; i < childFalse.length; i++) {
+      childFalse[i].update(pos, childTrue.length + i);
+    }
   }
 }
 
@@ -64,5 +79,13 @@ class CodeBlockFor extends CodeBlock {
       $childCode
     }
     """;
+  }
+
+  @override
+  void update(Pos parent, int index){
+    pos = parent.addLast(index);
+    for (int i = 0; i < child.length; i++) {
+      child[i].update(pos, i);
+    }
   }
 }
