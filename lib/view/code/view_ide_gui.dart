@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../main.dart';
+import '../../model/code_gui.dart';
+import '../../viewModel/code/vm_ide_gui.dart';
 
 class ViewIdeGui extends ConsumerWidget {
   const ViewIdeGui({
@@ -10,60 +12,39 @@ class ViewIdeGui extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var list = const [
-      ViewCodeNodeSetter(
-        type: "define local",
-        leftSide: "t",
-        rightSide: "0",
-      ),
-      ViewCodeNodeSetter(
-        type: "설정",
-        leftSide: "t",
-        rightSide: "0",
-      ),
-      ViewIfNode(
-        condition: "test {b equal} 3",
-        innerTrue: ViewCodeNodeSetter(
-          type: "set",
-          leftSide: "t",
-          rightSide: "30",
-        ),
-        innerFalse: ViewIfNode(
-          condition: "test {b smaller} 3",
-          innerTrue: ViewCodeNodeSetter(
-            type: "set",
-            leftSide: "t",
-            rightSide: "2",
-          ),
-          innerFalse: ViewCodeNodeSetter(
-            type: "지역 변수 정의",
-            leftSide: "a",
-            rightSide: "30",
-          ),
-        ),
-      ),
-      ViewForNode(
-        variable: "test",
-        range: "1..3",
-        inner: ViewCodeNodeSetter(
-          type: "set",
-          leftSide: "t",
-          rightSide: "0",
-        ),
-      ),
-    ];
-    list = [...list, ...list, ...list];
-    list = [...list, ...list, ...list];
+    var list = ref.watch(codeBlockProvider);
+    var widgetList = list.map((e) => getWidgetFromCodeBlock(e)).toList();
     return Card(
       child: ListView.builder(
-        itemCount: list.length,
+        itemCount: widgetList.length,
         itemBuilder: (context, index) => Align(
           alignment: Alignment.centerLeft,
-          child: list[index],
+          child: widgetList[index],
         ),
       ),
     );
   }
+}
+
+Widget getWidgetFromCodeBlock(CodeBlock codeBlock) {
+  if (codeBlock is CodeBlockIf) {
+    return ViewIfNode(
+      condition: codeBlock.code,
+      innerTrue: codeBlock.childTrue.map((e) => getWidgetFromCodeBlock(e)).toList(),
+      innerFalse: codeBlock.childFalse.map((e) => getWidgetFromCodeBlock(e)).toList(),
+    );
+  }
+  if (codeBlock is CodeBlockFor) {
+    return ViewForNode(
+      variable: codeBlock.code,
+      range: codeBlock.range,
+      inner: codeBlock.child.map((e) => getWidgetFromCodeBlock(e)).toList(),
+    );
+  }
+
+  return ViewCodeText(
+    code: codeBlock.code,
+  );
 }
 
 final RegExp checkColorReg = RegExp(r"\{.*?\}");
@@ -136,7 +117,7 @@ class ViewCodeText extends ConsumerWidget {
 
 class ViewBranchNode extends ConsumerWidget {
   final String code;
-  final Widget? inner;
+  final List<Widget>? inner;
 
   const ViewBranchNode({
     required this.code,
@@ -146,23 +127,18 @@ class ViewBranchNode extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var innerWidget = inner ??
-        DragTarget(
-          builder: (BuildContext context, List<dynamic> accepted,
-                  List<dynamic> rejected) =>
-              const SizedBox(
-            height: 40,
-            width: 40,
-          ),
-        );
     var widget = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ViewCodeText(code: code),
-        Padding(
-          padding: const EdgeInsets.only(left: 20.0),
-          child: innerWidget,
-        ),
+        if(inner != null)
+          Padding(
+            padding: const EdgeInsets.only(left: 20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: inner!,
+            ),
+          ),
       ],
     );
     return Draggable(
@@ -183,8 +159,8 @@ class ViewForNode extends ViewBranchNode {
 
 class ViewIfNode extends ConsumerWidget {
   final String condition;
-  final Widget? innerTrue;
-  final Widget? innerFalse;
+  final List<Widget>? innerTrue;
+  final List<Widget>? innerFalse;
 
   const ViewIfNode(
       {required this.condition, this.innerTrue, this.innerFalse, super.key});
@@ -195,37 +171,28 @@ class ViewIfNode extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ViewCodeText(code: "{r if} $condition"),
-        Padding(
-          padding: const EdgeInsets.only(left: 20.0),
-          child: innerTrue,
-        ),
+        if(innerTrue != null)
+          Padding(
+            padding: const EdgeInsets.only(left: 20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: innerTrue!,
+            ),
+          ),
         const ViewCodeText(code: "{r else}"),
-        Padding(
-          padding: const EdgeInsets.only(left: 20.0),
-          child: innerFalse,
-        ),
+        if(innerFalse != null)
+          Padding(
+            padding: const EdgeInsets.only(left: 20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: innerFalse!,
+            ),
+          ),
       ],
     );
     return Draggable(
       feedback: Transform.scale(scale: 0.9, child: widget),
       child: widget,
     );
-  }
-}
-
-class ViewCodeNodeSetter extends ConsumerWidget {
-  final String type;
-  final String leftSide;
-  final String rightSide;
-
-  const ViewCodeNodeSetter(
-      {required this.type,
-      required this.leftSide,
-      required this.rightSide,
-      super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return ViewCodeText(code: "{$type} $leftSide {b to} $rightSide");
   }
 }
