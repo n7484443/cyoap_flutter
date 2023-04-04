@@ -28,16 +28,17 @@ jobs:
           fileName: 'key.properties'
           fileDir: './android/'
           encodedString: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+
       - run: flutter build appbundle
+
       - run: |
-          $version= "${{ github.ref_name }}".replace('v', '')
-          Rename-Item "build/app/outputs/bundle/release/app-release.aab" "cyoap_android_$version.aab"
+          Rename-Item "build/app/outputs/bundle/release/app-release.aab" "cyoap_android_${{ github.ref_name }}.aab"
 
       - name: Release
         uses: softprops/action-gh-release@v0.1.15
         with:
           files: |
-            build/app/outputs/bundle/release/cyoap_android_$version.aab
+            build/app/outputs/bundle/release/cyoap_android_${{ github.ref_name }}.aab
   build_windows:
     runs-on: windows-latest
     steps:
@@ -60,16 +61,14 @@ jobs:
           command: build
           args: --release --manifest-path updater/Cargo.toml
       - run: MV "updater/target/release/updater.exe" "build/windows/runner/Release"
-
       - run: |
-          $version= "${{ github.ref_name }}".replace('v', '')
-          7z a build/windows/cyoap_windows_$version.zip ./build/windows/runner/Release/*
+          7z a build/windows/cyoap_windows_${{ github.ref_name }}.zip ./build/windows/runner/Release/*
 
       - name: Release
         uses: softprops/action-gh-release@v0.1.15
         with:
           files: |
-            build/windows/cyoap_windows_$version.zip
+            build/windows/cyoap_windows_${{ github.ref_name }}.zip
   build_webs:
     runs-on: windows-latest
     steps:

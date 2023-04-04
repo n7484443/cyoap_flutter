@@ -40,14 +40,13 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
           drawer: const Drawer(
             child: ViewEditDrawer(),
           ),
-          body: ref.watch(changeTabProvider) == 0
-              ? defaultMap
-              : Stack(
-                  children: [
-                    defaultMap,
-                    childrenFunction[ref.watch(changeTabProvider) - 1]()
-                  ],
-                ),
+          body: Stack(
+            children: [
+              defaultMap,
+              if (ref.watch(changeTabProvider) != 0)
+                childrenFunction[ref.watch(changeTabProvider) - 1]()
+            ],
+          ),
         ),
       );
     }
@@ -63,14 +62,13 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
               child: ViewEditDrawer(),
             ),
             Flexible(
-              child: ref.watch(changeTabProvider) == 0
-                  ? defaultMap
-                  : Stack(
-                      children: [
-                        defaultMap,
-                        childrenFunction[ref.watch(changeTabProvider) - 1]()
-                      ],
-                    ),
+              child: Stack(
+                children: [
+                  defaultMap,
+                  if (ref.watch(changeTabProvider) != 0)
+                    childrenFunction[ref.watch(changeTabProvider) - 1]()
+                ],
+              ),
             ),
           ],
         ),
