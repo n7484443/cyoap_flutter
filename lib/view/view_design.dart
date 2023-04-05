@@ -22,13 +22,16 @@ class ViewDesignSetting extends ConsumerWidget {
             icon: const Icon(Icons.arrow_back),
             onPressed: () => ref.read(changeTabProvider.notifier).home(context),
           ),
-          title: TabBar(
-            labelColor: Theme.of(context).colorScheme.secondary,
-            unselectedLabelColor: Theme.of(context).colorScheme.primary,
-            tabs: [
-              Tab(text: 'general'.i18n),
-              Tab(text: 'preset'.i18n),
-            ],
+          title: SizedBox(
+            height: ConstList.appBarSize,
+            child: TabBar(
+              labelColor: Theme.of(context).colorScheme.secondary,
+              unselectedLabelColor: Theme.of(context).colorScheme.primary,
+              tabs: [
+                Tab(text: 'general'.i18n),
+                Tab(text: 'preset'.i18n),
+              ],
+            ),
           ),
         ),
         body: Padding(

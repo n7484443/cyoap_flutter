@@ -103,13 +103,16 @@ class _ViewEditorState extends ConsumerState<ViewEditor>
               PointerDeviceKind.touch,
               PointerDeviceKind.mouse,
             }),
-            child: TabBar(
-              controller: _tabController,
-              labelColor: Theme.of(context).colorScheme.secondary,
-              unselectedLabelColor: Theme.of(context).colorScheme.primary,
-              tabs: childrenText.map((String e) => Tab(text: e)).toList(),
-              isScrollable: true,
-              physics: const AlwaysScrollableScrollPhysics(),
+            child: SizedBox(
+              height: ConstList.appBarSize,
+              child: TabBar(
+                controller: _tabController,
+                labelColor: Theme.of(context).colorScheme.secondary,
+                unselectedLabelColor: Theme.of(context).colorScheme.primary,
+                tabs: childrenText.map((String e) => Tab(text: e)).toList(),
+                isScrollable: true,
+                physics: const AlwaysScrollableScrollPhysics(),
+              ),
             ),
           ),
           actions: ConstList.isMobile()
