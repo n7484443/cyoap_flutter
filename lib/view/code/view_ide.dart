@@ -251,15 +251,15 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                               false;
                         },
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.dns_rounded),
-                        tooltip: "gui".i18n,
-                        onPressed: () {
-                          ref
-                              .read(currentIdeOpenProvider.notifier)
-                              .update((state) => !state);
-                        },
-                      ),
+                      // IconButton(
+                      //   icon: const Icon(Icons.dns_rounded),
+                      //   tooltip: "gui".i18n,
+                      //   onPressed: () {
+                      //     ref
+                      //         .read(currentIdeOpenProvider.notifier)
+                      //         .update((state) => !state);
+                      //   },
+                      // ),
                     ],
                   ),
                 ),
