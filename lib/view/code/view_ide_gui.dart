@@ -1,8 +1,11 @@
+import 'package:cyoap_core/choiceNode/pos.dart';
+import 'package:cyoap_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../main.dart';
 import '../../model/code_gui.dart';
+import '../../viewModel/code/vm_ide.dart';
 import '../../viewModel/code/vm_ide_gui.dart';
 
 class ViewIdeGui extends ConsumerWidget {
@@ -13,37 +16,112 @@ class ViewIdeGui extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var list = ref.watch(codeBlockProvider);
-    var widgetList = list.map((e) => getWidgetFromCodeBlock(e)).toList();
+    var widgetList = list.codeBlocks
+        .map((e) => getWidgetFromCodeBlock(codeBlock: e))
+        .toList();
     return Card(
-      child: ListView.builder(
-        itemCount: widgetList.length,
-        itemBuilder: (context, index) => Align(
-          alignment: Alignment.centerLeft,
-          child: widgetList[index],
-        ),
+      child: Row(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: widgetList.length,
+              itemBuilder: (context, index) => Align(
+                alignment: Alignment.centerLeft,
+                child: widgetList[index],
+              ),
+            ),
+          ),
+          const VerticalDivider(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.dns_rounded),
+                    tooltip: "gui".i18n,
+                    onPressed: () {
+                      ref
+                          .read(currentIdeOpenProvider.notifier)
+                          .update((state) => !state);
+                    },
+                  ),
+                ],
+              ),
+              Expanded(
+                child: SizedBox(
+                  width: 200,
+                  child: ListView.builder(
+                    itemCount: CodeBlockType.values.length,
+                    itemBuilder: (context, index) {
+                      var inner = Card(
+                        elevation: 3.0,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(CodeBlockType.values[index].name),
+                        ),
+                      );
+                      return Align(
+                        alignment: Alignment.centerLeft,
+                        child: Draggable<Pos>(
+                          data: Pos(data: [-(index + 1)]),
+                          feedback: Transform.scale(scale: 0.9, child: inner),
+                          child: inner,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
 }
 
-Widget getWidgetFromCodeBlock(CodeBlock codeBlock) {
+Widget getWidgetFromCodeBlock(
+    {CodeBlockBuild? codeBlock, CodeBlockType? type}) {
   if (codeBlock is CodeBlockIf) {
     return ViewIfNode(
       condition: codeBlock.code,
-      innerTrue: codeBlock.childTrue.map((e) => getWidgetFromCodeBlock(e)).toList(),
-      innerFalse: codeBlock.childFalse.map((e) => getWidgetFromCodeBlock(e)).toList(),
+      innerTrue: codeBlock.childTrue
+          .map((e) => getWidgetFromCodeBlock(codeBlock: e))
+          .toList(),
+      innerFalse: codeBlock.childFalse
+          .map((e) => getWidgetFromCodeBlock(codeBlock: e))
+          .toList(),
+    );
+  } else if (type == CodeBlockType.ifBlock) {
+    return const ViewIfNode(
+      condition: '',
     );
   }
+
   if (codeBlock is CodeBlockFor) {
     return ViewForNode(
       variable: codeBlock.code,
       range: codeBlock.range,
-      inner: codeBlock.child.map((e) => getWidgetFromCodeBlock(e)).toList(),
+      inner: codeBlock.childFor
+          .map((e) => getWidgetFromCodeBlock(codeBlock: e))
+          .toList(),
+    );
+  } else if (type == CodeBlockType.forBlock) {
+    return const ViewForNode(
+      variable: '',
+      range: '',
     );
   }
 
-  return ViewCodeText(
-    code: codeBlock.code,
+  if (codeBlock is CodeBlock) {
+    return ViewCodeText(
+      code: codeBlock.code,
+    );
+  }
+  return const ViewCodeText(
+    code: '',
   );
 }
 
@@ -131,7 +209,7 @@ class ViewBranchNode extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ViewCodeText(code: code),
-        if(inner != null)
+        if (inner != null)
           Padding(
             padding: const EdgeInsets.only(left: 20.0),
             child: Column(
@@ -171,7 +249,7 @@ class ViewIfNode extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ViewCodeText(code: "{r if} $condition"),
-        if(innerTrue != null)
+        if (innerTrue != null)
           Padding(
             padding: const EdgeInsets.only(left: 20.0),
             child: Column(
@@ -179,8 +257,28 @@ class ViewIfNode extends ConsumerWidget {
               children: innerTrue!,
             ),
           ),
+        DragTarget<Pos>(
+          builder: (BuildContext context, List<Pos?> candidateData,
+              List<dynamic> rejectedData) {
+            return const ColoredBox(
+              color: Colors.red,
+              child: SizedBox(
+                height: 20.0,
+                width: 100.0,
+              ),
+            );
+          },
+          onAccept: (Pos? data) {
+            print(data);
+            if (data != null) {
+              innerTrue?.add(const ViewCodeText(
+                code: "test",
+              ));
+            }
+          },
+        ),
         const ViewCodeText(code: "{r else}"),
-        if(innerFalse != null)
+        if (innerFalse != null)
           Padding(
             padding: const EdgeInsets.only(left: 20.0),
             child: Column(
