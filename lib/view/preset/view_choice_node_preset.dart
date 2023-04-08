@@ -24,7 +24,7 @@ class ChoiceNodeSample extends ConsumerWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
+        const Expanded(
           child: IgnorePointer(
             child: ViewChoiceNode(
               Pos(data: [designSamplePosition]),
@@ -36,7 +36,7 @@ class ChoiceNodeSample extends ConsumerWidget {
               ref
                   .read(choiceNodePresetTestSelectProvider.notifier)
                   .update((state) => !state);
-              var pos = Pos(data: [designSamplePosition]);
+              var pos = const Pos(data: [designSamplePosition]);
               ref.invalidate(choiceNodeProvider(pos));
             },
             icon: const Icon(Icons.border_style)),
@@ -74,23 +74,26 @@ class ChoiceNodePresetList extends ConsumerWidget {
               return ListTile(
                 key: Key('$index'),
                 title: Text(preset.name),
-                trailing: IconButton(
-                  icon: Icon(Icons.delete,
-                      size: (IconTheme.of(context).size ?? 18) * 0.8),
-                  onPressed: () {
-                    ref
-                        .read(choiceNodePresetListProvider.notifier)
-                        .deleteIndex(index);
-                  },
-                ),
+                trailing: preset.name == "default"
+                    ? null
+                    : IconButton(
+                        icon: Icon(Icons.delete,
+                            size: (IconTheme.of(context).size ?? 18) * 0.8),
+                        onPressed: () {
+                          ref
+                              .read(choiceNodePresetListProvider.notifier)
+                              .deleteIndex(index);
+                        },
+                      ),
                 onTap: () {
                   ref
                       .read(currentPresetIndexProvider.notifier)
                       .update((state) => index);
-                  var pos = Pos(data: [designSamplePosition]);
+                  var pos = const Pos(data: [designSamplePosition]);
                   ref.invalidate(choiceNodeProvider(pos));
                 },
                 onLongPress: () async {
+                  if (preset.name == "default") return;
                   var text = await showDialog(
                       context: context,
                       builder: (context) {
@@ -101,7 +104,7 @@ class ChoiceNodePresetList extends ConsumerWidget {
                     ref
                         .read(choiceNodePresetListProvider.notifier)
                         .rename(index, text.trim());
-                    var pos = Pos(data: [designSamplePosition]);
+                    var pos = const Pos(data: [designSamplePosition]);
                     ref.invalidate(choiceNodeProvider(pos));
                   }
                 },
@@ -188,6 +191,7 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
     _scrollController?.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     var presetIndex = ref.watch(currentPresetIndexProvider);
@@ -224,34 +228,43 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
                 minLines: 1,
                 maxLines: 1,
                 keyboardType: TextInputType.number,
-                controller: ref.watch(choiceNodePresetCurrentEditPaddingProvider),
+                controller:
+                    ref.watch(choiceNodePresetCurrentEditPaddingProvider),
                 decoration: InputDecoration(labelText: 'padding'.i18n),
               ),
               ViewSwitchLabel(
-                () => ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                    presetIndex,
-                    preset.copyWith(maximizingImage: !preset.maximizingImage)),
+                () => ref
+                    .read(choiceNodePresetListProvider.notifier)
+                    .updateIndex(
+                        presetIndex,
+                        preset.copyWith(
+                            maximizingImage: !preset.maximizingImage)),
                 preset.maximizingImage,
                 label: 'maximize_image'.i18n,
               ),
               ViewSwitchLabel(
-                () => ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                    presetIndex, preset.copyWith(hideTitle: !preset.hideTitle)),
+                () => ref
+                    .read(choiceNodePresetListProvider.notifier)
+                    .updateIndex(presetIndex,
+                        preset.copyWith(hideTitle: !preset.hideTitle)),
                 preset.hideTitle,
                 label: 'hide_title'.i18n,
               ),
               ViewSwitchLabel(
-                () => ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                    presetIndex,
-                    preset.copyWith(titlePosition: !preset.titlePosition)),
+                () => ref
+                    .read(choiceNodePresetListProvider.notifier)
+                    .updateIndex(presetIndex,
+                        preset.copyWith(titlePosition: !preset.titlePosition)),
                 preset.titlePosition,
                 label: 'title_up'.i18n,
               ),
               ViewSwitchLabel(
-                () => ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                    presetIndex,
-                    preset.copyWith(
-                        imagePosition: preset.imagePosition == 0 ? 1 : 0)),
+                () => ref
+                    .read(choiceNodePresetListProvider.notifier)
+                    .updateIndex(
+                        presetIndex,
+                        preset.copyWith(
+                            imagePosition: preset.imagePosition == 0 ? 1 : 0)),
                 preset.imagePosition != 0,
                 label: 'horizontal_mode'.i18n,
               ),
@@ -396,8 +409,8 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
                 minLines: 1,
                 maxLines: 1,
                 keyboardType: TextInputType.number,
-                controller:
-                    ref.watch(choiceNodePresetCurrentEditOutlinePaddingProvider),
+                controller: ref
+                    .watch(choiceNodePresetCurrentEditOutlinePaddingProvider),
                 decoration: InputDecoration(labelText: 'outline_padding'.i18n),
               ),
               TextFormField(

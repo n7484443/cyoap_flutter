@@ -39,21 +39,24 @@ class ChoiceLinePresetList extends ConsumerWidget {
               return ListTile(
                 key: Key('$index'),
                 title: Text(preset.name),
-                trailing: IconButton(
-                  icon: Icon(Icons.delete,
-                      size: (IconTheme.of(context).size ?? 18) * 0.8),
-                  onPressed: () {
-                    ref
-                        .read(choiceLinePresetListProvider.notifier)
-                        .deleteIndex(index);
-                  },
-                ),
+                trailing: preset.name == "default"
+                    ? null
+                    : IconButton(
+                        icon: Icon(Icons.delete,
+                            size: (IconTheme.of(context).size ?? 18) * 0.8),
+                        onPressed: () {
+                          ref
+                              .read(choiceLinePresetListProvider.notifier)
+                              .deleteIndex(index);
+                        },
+                      ),
                 onTap: () {
                   ref
                       .read(currentPresetIndexProvider.notifier)
                       .update((state) => index);
                 },
                 onLongPress: () async {
+                  if (preset.name == "default") return;
                   var text = await showDialog(
                       context: context,
                       builder: (context) {
