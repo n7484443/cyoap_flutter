@@ -4,6 +4,7 @@ import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/grammar/value_type.dart';
 import 'package:cyoap_core/playable_platform.dart';
+import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:tuple/tuple.dart';
 
@@ -28,6 +29,7 @@ class AbstractPlatform extends PlayablePlatform {
       'stringImageName': stringImageName,
       'globalSetting':
           globalSetting.map((e) => [e.item1, e.item2.toJson()]).toList(),
+      'version': ConstList.version,
     };
     out.addAll(designSetting.toJson());
     return out;

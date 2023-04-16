@@ -3,9 +3,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'code_gui.freezed.dart';
 
-class CodePosSet{
+class CodePosSet {
   Pos pos;
   List<CodePosSet>? codePosSets;
+
   CodePosSet({
     required this.pos,
     this.codePosSets,
@@ -22,16 +23,16 @@ enum CodeBlockType {
 
   final String name;
 
-  Type toCodeBlock() {
+  CodeBlockBuild Function() toCodeBlock() {
     switch (this) {
       case CodeBlockType.ifBlock:
-        return CodeBlockIf;
+        return () => CodeBlockIf();
       case CodeBlockType.forBlock:
-        return CodeBlockFor;
+        return () => CodeBlockFor();
       case CodeBlockType.conditionBlock:
-        return CodeBlock;
+        return () => CodeBlock();
       case CodeBlockType.codeBlock:
-        return CodeBlock;
+        return () => CodeBlock();
     }
   }
 }
@@ -40,16 +41,43 @@ mixin CodeBlockBuild {
   String build();
 
   List<CodeBlockBuild>? get child;
+
+  CodeBlockBuild? parent;
+  Pos? pos;
+
+  CodeBlockBuild search(Pos pos) {
+    if (pos.isEmpty) {
+      return this;
+    }
+    return child![pos.first].search(pos.removeFirst());
+  }
+
+  void add(CodeBlockBuild codeBlock, {bool option = true}) {
+    child?.add(codeBlock);
+    codeBlock.parent = this;
+  }
+
+  CodeBlockBuild? remove(int index) {
+    return child?.removeAt(index);
+  }
+
+  void updatePos(Pos pos) {
+    this.pos = pos;
+    if (child != null) {
+      for (int i = 0; i < child!.length; i++) {
+        child![i].updatePos(pos.addLast(i));
+      }
+    }
+  }
 }
 
-@freezed
+@unfreezed
 class CodeBlockSet with _$CodeBlockSet, CodeBlockBuild {
-  const factory CodeBlockSet({
-    @Default([]) List<CodeBlockBuild> codeBlocks,
-    @Default(null) CodeBlockBuild? parentCodeBlock,
+  factory CodeBlockSet({
+    @Default([]) final List<CodeBlockBuild> codeBlocks,
   }) = _CodeBlockSet;
 
-  const CodeBlockSet._();
+  CodeBlockSet._();
 
   @override
   String build() {
@@ -60,14 +88,13 @@ class CodeBlockSet with _$CodeBlockSet, CodeBlockBuild {
   List<CodeBlockBuild>? get child => codeBlocks;
 }
 
-@freezed
+@unfreezed
 class CodeBlock with _$CodeBlock, CodeBlockBuild {
-  const factory CodeBlock({
+  factory CodeBlock({
     @Default('') String code,
-    @Default(null) CodeBlockBuild? parentCodeBlock,
   }) = _CodeBlock;
 
-  const CodeBlock._();
+  CodeBlock._();
 
   @override
   String build() {
@@ -78,45 +105,74 @@ class CodeBlock with _$CodeBlock, CodeBlockBuild {
   List<CodeBlockBuild>? get child => null;
 }
 
-@freezed
-class CodeBlockIf with _$CodeBlockIf, CodeBlockBuild {
-  const factory CodeBlockIf({
-    @Default('') String code,
-    @Default(null) CodeBlockBuild? parentCodeBlock,
-    @Default([]) List<CodeBlockBuild> childTrue,
-    @Default([]) List<CodeBlockBuild> childFalse,
-  }) = _CodeBlockIf;
-
-  const CodeBlockIf._();
+class CodeBlockIf with CodeBlockBuild {
+  final String code;
+  final List<CodeBlockBuild> childTrue = [];
+  final List<CodeBlockBuild> childFalse = [];
+  CodeBlockIf({
+    this.code = '',
+    List<CodeBlockBuild>? childT,
+    List<CodeBlockBuild>? childF,
+  }){
+    if(childT != null){
+      childTrue.addAll(childT);
+    }
+    if(childF != null){
+      childFalse.addAll(childF);
+    }
+  }
 
   @override
   String build() {
-    var childTrueCode = childTrue.map((e) => e.build()).join("\n");
-    var childFalseCode = childFalse.map((e) => e.build()).join("\n");
+    String trueCode = '';
+    String falseCode = '';
+    trueCode = childTrue.map((e) => e.build()).join("\n");
+    falseCode = childFalse.map((e) => e.build()).join("\n");
     return """
     \n
     if $code {
-      $childTrueCode
+      $trueCode
     } else {
-      $childFalseCode
+      $falseCode
     }
     """;
+  }
+
+  @override
+  void add(CodeBlockBuild codeBlock, {bool option = true}) {
+    if(option){
+      childTrue.add(codeBlock);
+    }else{
+      childFalse.add(codeBlock);
+    }
+    codeBlock.parent = this;
+  }
+
+  @override
+  CodeBlockBuild? remove(int index) {
+    if(index < childTrue.length){
+      return childTrue.removeAt(index);
+    }
+    return childFalse.removeAt(index - childTrue.length);
   }
 
   @override
   List<CodeBlockBuild>? get child => [...childTrue, ...childFalse];
 }
 
-@freezed
-class CodeBlockFor with _$CodeBlockFor, CodeBlockBuild {
-  const factory CodeBlockFor({
-    @Default('') String code,
-    @Default('') String range,
-    @Default(null) CodeBlockBuild? parentCodeBlock,
-    @Default([]) List<CodeBlockBuild> childFor,
-  }) = _CodeBlockFor;
-
-  const CodeBlockFor._();
+class CodeBlockFor with CodeBlockBuild {
+  final String code;
+  final String range;
+  final List<CodeBlockBuild> childFor = [];
+  CodeBlockFor({
+    this.code = '',
+    this.range = '',
+    List<CodeBlockBuild>? child,
+  }){
+    if(child != null){
+      childFor.addAll(child);
+    }
+  }
 
   @override
   String build() {

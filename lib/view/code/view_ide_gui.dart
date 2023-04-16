@@ -15,10 +15,11 @@ class ViewIdeGui extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var list = ref.watch(codeBlockProvider);
-    var widgetList = list.codeBlocks
-        .map((e) => getWidgetFromCodeBlock(codeBlock: e))
-        .toList();
+    var list = ref.watch(codeBlockProvider).state;
+    var widgetList = <Widget>[];
+    for (int i = 0; i < list.codeBlocks.length; i++) {
+      widgetList.add(ViewCodeBlockWrapper(pos: Pos(data: [i])));
+    }
     return Card(
       child: Row(
         children: [
@@ -32,26 +33,38 @@ class ViewIdeGui extends ConsumerWidget {
             ),
           ),
           const VerticalDivider(),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.dns_rounded),
-                    tooltip: "gui".i18n,
-                    onPressed: () {
-                      ref
-                          .read(currentIdeOpenProvider.notifier)
-                          .update((state) => !state);
-                    },
-                  ),
-                ],
-              ),
-              Expanded(
-                child: SizedBox(
-                  width: 200,
+          SizedBox(
+            width: 200,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    DragTarget<Pos>(
+                      onAccept: (Pos? pos) {
+                        if (pos == null) return;
+                        if (pos.first < 0) return;
+                        ref.read(codeBlockProvider.notifier).removeBlock(pos);
+                      },
+                      builder: (BuildContext context,
+                          List<Object?> candidateData,
+                          List<dynamic> rejectedData) {
+                        return const Icon(Icons.delete);
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.dns_rounded),
+                      tooltip: "gui".i18n,
+                      onPressed: () {
+                        ref
+                            .read(currentIdeOpenProvider.notifier)
+                            .update((state) => !state);
+                      },
+                    ),
+                  ],
+                ),
+                Expanded(
                   child: ListView.builder(
                     itemCount: CodeBlockType.values.length,
                     itemBuilder: (context, index) {
@@ -64,17 +77,16 @@ class ViewIdeGui extends ConsumerWidget {
                       );
                       return Align(
                         alignment: Alignment.centerLeft,
-                        child: Draggable<Pos>(
-                          data: Pos(data: [-(index + 1)]),
-                          feedback: Transform.scale(scale: 0.9, child: inner),
+                        child: ViewDraggableNode(
+                          pos: Pos(data: [-(index + 1)]),
                           child: inner,
                         ),
                       );
                     },
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -82,47 +94,48 @@ class ViewIdeGui extends ConsumerWidget {
   }
 }
 
-Widget getWidgetFromCodeBlock(
-    {CodeBlockBuild? codeBlock, CodeBlockType? type}) {
-  if (codeBlock is CodeBlockIf) {
-    return ViewIfNode(
-      condition: codeBlock.code,
-      innerTrue: codeBlock.childTrue
-          .map((e) => getWidgetFromCodeBlock(codeBlock: e))
-          .toList(),
-      innerFalse: codeBlock.childFalse
-          .map((e) => getWidgetFromCodeBlock(codeBlock: e))
-          .toList(),
-    );
-  } else if (type == CodeBlockType.ifBlock) {
-    return const ViewIfNode(
-      condition: '',
-    );
-  }
+class ViewCodeBlockWrapper extends ConsumerWidget {
+  final Pos pos;
 
-  if (codeBlock is CodeBlockFor) {
-    return ViewForNode(
-      variable: codeBlock.code,
-      range: codeBlock.range,
-      inner: codeBlock.childFor
-          .map((e) => getWidgetFromCodeBlock(codeBlock: e))
-          .toList(),
-    );
-  } else if (type == CodeBlockType.forBlock) {
-    return const ViewForNode(
-      variable: '',
-      range: '',
-    );
-  }
+  const ViewCodeBlockWrapper({required this.pos, super.key});
 
-  if (codeBlock is CodeBlock) {
-    return ViewCodeText(
-      code: codeBlock.code,
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    var block = ref.watch(codeBlockProvider).searchBlock(pos);
+    Widget widget = const ViewCodeText(
+      code: '',
+    );
+    if (block is CodeBlockIf) {
+      widget = ViewIfNode(
+        pos: pos,
+      );
+    } else if (block is CodeBlockFor) {
+      widget = ViewForNode(
+        variable: block.code,
+        range: block.range,
+        pos: pos,
+      );
+    } else if (block is CodeBlock) {
+      widget = ViewCodeText(
+        code: block.code,
+      );
+    }
+
+    return ViewDraggableNode(
+      pos: pos,
+      child: InkWell(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return ViewNodeEditDialog(pos: pos);
+            },
+          );
+        },
+        child: widget,
+      ),
     );
   }
-  return const ViewCodeText(
-    code: '',
-  );
 }
 
 final RegExp checkColorReg = RegExp(r"\{.*?\}");
@@ -195,33 +208,52 @@ class ViewCodeText extends ConsumerWidget {
 
 class ViewBranchNode extends ConsumerWidget {
   final String code;
-  final List<Widget>? inner;
+  final Pos pos;
 
   const ViewBranchNode({
     required this.code,
-    this.inner,
+    required this.pos,
     super.key,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var widget = Column(
+    var block = ref.watch(codeBlockProvider).searchBlock(pos);
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ViewCodeText(code: code),
-        if (inner != null)
+        if (block.child != null)
           Padding(
             padding: const EdgeInsets.only(left: 20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: inner!,
+              children: List.generate(
+                block.child!.length,
+                (index) {
+                  return ViewCodeBlockWrapper(
+                    pos: pos.addLast(index),
+                  );
+                },
+              ),
             ),
           ),
+        ViewDragTargetNode(
+          onAccept: (Pos data) {
+            if (data.first >= 0) {
+              var removed = ref.read(codeBlockProvider).removeBlock(data);
+              if (removed == null) {
+                return;
+              }
+              ref.read(codeBlockProvider).addBlock(pos, removed);
+            } else {
+              var codeBlockBuild =
+                  CodeBlockType.values[-(data.first + 1)].toCodeBlock();
+              ref.read(codeBlockProvider).addBlock(pos, codeBlockBuild());
+            }
+          },
+        ),
       ],
-    );
-    return Draggable(
-      feedback: Transform.scale(scale: 0.9, child: widget),
-      child: widget,
     );
   }
 }
@@ -231,66 +263,188 @@ class ViewForNode extends ViewBranchNode {
   final String range;
 
   const ViewForNode(
-      {required this.variable, required this.range, super.inner, super.key})
+      {required this.variable,
+      required this.range,
+      required super.pos,
+      super.key})
       : super(code: "{r for} $variable {b until} $range");
 }
 
 class ViewIfNode extends ConsumerWidget {
-  final String condition;
-  final List<Widget>? innerTrue;
-  final List<Widget>? innerFalse;
+  final Pos pos;
 
-  const ViewIfNode(
-      {required this.condition, this.innerTrue, this.innerFalse, super.key});
+  const ViewIfNode({required this.pos, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var widget = Column(
+    var block = ref.watch(codeBlockProvider).searchBlock(pos) as CodeBlockIf;
+    var blockTrue = block.childTrue;
+    var blockFalse = block.childFalse;
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ViewCodeText(code: "{r if} $condition"),
-        if (innerTrue != null)
+        ViewCodeText(code: "{r if} ${block.code}"),
+        if (blockTrue.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(left: 20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: innerTrue!,
+              children: List.generate(
+                blockTrue.length,
+                (index) {
+                  return ViewCodeBlockWrapper(
+                    pos: pos.addLast(index),
+                  );
+                },
+              ),
             ),
           ),
-        DragTarget<Pos>(
-          builder: (BuildContext context, List<Pos?> candidateData,
-              List<dynamic> rejectedData) {
-            return const ColoredBox(
-              color: Colors.red,
-              child: SizedBox(
-                height: 20.0,
-                width: 100.0,
-              ),
-            );
-          },
-          onAccept: (Pos? data) {
-            print(data);
-            if (data != null) {
-              innerTrue?.add(const ViewCodeText(
-                code: "test",
-              ));
+        ViewDragTargetNode(
+          onAccept: (Pos data) {
+            if (data.first >= 0) {
+              var removed = ref.read(codeBlockProvider).removeBlock(data);
+              if (removed == null) {
+                return;
+              }
+              ref.read(codeBlockProvider).addBlock(pos, removed, option: true);
+            } else {
+              var codeBlockBuild =
+                  CodeBlockType.values[-(data.first + 1)].toCodeBlock();
+              ref
+                  .read(codeBlockProvider)
+                  .addBlock(pos, codeBlockBuild(), option: true);
             }
           },
         ),
         const ViewCodeText(code: "{r else}"),
-        if (innerFalse != null)
+        if (blockFalse.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(left: 20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: innerFalse!,
+              children: List.generate(
+                blockFalse.length,
+                (index) {
+                  return ViewCodeBlockWrapper(
+                    pos: pos.addLast(blockFalse.length + index),
+                  );
+                },
+              ),
             ),
           ),
+        ViewDragTargetNode(
+          onAccept: (Pos data) {
+            if (data.first >= 0) {
+              var removed = ref.read(codeBlockProvider).removeBlock(data);
+              if (removed == null) {
+                return;
+              }
+              ref.read(codeBlockProvider).addBlock(pos, removed, option: false);
+            } else {
+              var codeBlockBuild =
+                  CodeBlockType.values[-(data.first + 1)].toCodeBlock();
+              ref
+                  .read(codeBlockProvider)
+                  .addBlock(pos, codeBlockBuild(), option: false);
+            }
+          },
+        ),
       ],
     );
-    return Draggable(
-      feedback: Transform.scale(scale: 0.9, child: widget),
-      child: widget,
+  }
+}
+
+class ViewDragTargetNode extends ConsumerWidget {
+  final void Function(Pos) onAccept;
+
+  const ViewDragTargetNode({
+    required this.onAccept,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return DragTarget<Pos>(
+      builder: (BuildContext context, List<Pos?> candidateData,
+          List<dynamic> rejectedData) {
+        if (ref.watch(codeBlockPosProvider) == null) {
+          return const Opacity(
+            opacity: 0.0,
+            child: Card(
+              child: SizedBox(
+                height: 20.0,
+                width: 100.0,
+              ),
+            ),
+          );
+        }
+        return const Card(
+          color: Colors.blue,
+          child: SizedBox(
+            height: 20.0,
+            width: 100.0,
+          ),
+        );
+      },
+      onAccept: (Pos? pos) {
+        if (pos == null) {
+          return;
+        }
+        onAccept(pos);
+      },
+    );
+  }
+}
+
+class ViewDraggableNode extends ConsumerWidget {
+  final Widget child;
+  final Pos pos;
+
+  const ViewDraggableNode({
+    required this.child,
+    required this.pos,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Draggable<Pos>(
+      feedback: Transform.scale(scale: 0.9, child: Material(child: child)),
+      data: pos,
+      child: child,
+      onDragStarted: () {
+        ref.read(codeBlockPosProvider.notifier).state = pos;
+      },
+      onDragEnd: (DraggableDetails details) {
+        ref.read(codeBlockPosProvider.notifier).state = null;
+      },
+    );
+  }
+}
+
+class ViewNodeEditDialog extends ConsumerWidget {
+  final Pos pos;
+
+  const ViewNodeEditDialog({required this.pos, super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return AlertDialog(
+      title: Text('edit'.i18n),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('cancel'.i18n),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('ok'.i18n),
+        ),
+      ],
     );
   }
 }
