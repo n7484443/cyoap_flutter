@@ -60,11 +60,27 @@ class CodeBlockChangeNotifier extends ChangeNotifier {
     updatePos();
     notifyListeners();
   }
+
   CodeBlockBuild? removeBlock(Pos pos) {
     var removed = searchBlock(pos.removeLast()).remove(pos.last);
     updatePos();
     notifyListeners();
     return removed;
+  }
+
+  void moveBlock(Pos from, Pos to) {
+    if(from.equalExceptLast(to)){
+      var index = from.last;
+      var toIndex = to.last;
+      if(index < toIndex){
+        toIndex--;
+      }
+      to = to.removeLast().addLast(toIndex);
+    }
+    var removed = removeBlock(from);
+    if (removed != null) {
+      addBlock(to, removed);
+    }
   }
 
   CodeBlockBuild searchBlock(Pos pos) {

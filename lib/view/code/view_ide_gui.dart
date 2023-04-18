@@ -7,6 +7,7 @@ import '../../main.dart';
 import '../../model/code_gui.dart';
 import '../../viewModel/code/vm_ide.dart';
 import '../../viewModel/code/vm_ide_gui.dart';
+import '../../viewModel/vm_editor.dart';
 
 class ViewIdeGui extends ConsumerWidget {
   const ViewIdeGui({
@@ -57,6 +58,15 @@ class ViewIdeGui extends ConsumerWidget {
                       icon: const Icon(Icons.dns_rounded),
                       tooltip: "gui".i18n,
                       onPressed: () {
+                        var code = ref.read(codeBlockProvider).state.build();
+                        var out = ref
+                            .read(ideCurrentInputProvider.notifier)
+                            .formatting(code);
+                        ref
+                            .read(nodeEditorTargetProvider)
+                            .node
+                            .recursiveStatus
+                            .executeCodeString = out.item1;
                         ref
                             .read(currentIdeOpenProvider.notifier)
                             .update((state) => !state);
@@ -238,21 +248,7 @@ class ViewBranchNode extends ConsumerWidget {
               ),
             ),
           ),
-        ViewDragTargetNode(
-          onAccept: (Pos data) {
-            if (data.first >= 0) {
-              var removed = ref.read(codeBlockProvider).removeBlock(data);
-              if (removed == null) {
-                return;
-              }
-              ref.read(codeBlockProvider).addBlock(pos, removed);
-            } else {
-              var codeBlockBuild =
-                  CodeBlockType.values[-(data.first + 1)].toCodeBlock();
-              ref.read(codeBlockProvider).addBlock(pos, codeBlockBuild());
-            }
-          },
-        ),
+        ViewDragTargetNode(pos: pos),
       ],
     );
   }
@@ -315,6 +311,7 @@ class ViewIfNode extends ConsumerWidget {
                   .addBlock(pos, codeBlockBuild(), option: true);
             }
           },
+          pos: pos,
         ),
         const ViewCodeText(code: "{r else}"),
         if (blockFalse.isNotEmpty)
@@ -348,6 +345,7 @@ class ViewIfNode extends ConsumerWidget {
                   .addBlock(pos, codeBlockBuild(), option: false);
             }
           },
+          pos: pos,
         ),
       ],
     );
@@ -355,10 +353,12 @@ class ViewIfNode extends ConsumerWidget {
 }
 
 class ViewDragTargetNode extends ConsumerWidget {
-  final void Function(Pos) onAccept;
+  final void Function(Pos)? onAccept;
+  final Pos pos;
 
   const ViewDragTargetNode({
-    required this.onAccept,
+    this.onAccept,
+    required this.pos,
     super.key,
   });
 
@@ -386,11 +386,25 @@ class ViewDragTargetNode extends ConsumerWidget {
           ),
         );
       },
-      onAccept: (Pos? pos) {
-        if (pos == null) {
+      onAccept: (Pos? data) {
+        if (data == null) {
           return;
         }
-        onAccept(pos);
+        if (onAccept == null) {
+          if (data.first >= 0) {
+            var removed = ref.read(codeBlockProvider).removeBlock(data);
+            if (removed == null) {
+              return;
+            }
+            ref.read(codeBlockProvider).addBlock(pos, removed);
+          } else {
+            var codeBlockBuild =
+                CodeBlockType.values[-(data.first + 1)].toCodeBlock();
+            ref.read(codeBlockProvider).addBlock(pos, codeBlockBuild());
+          }
+          return;
+        }
+        onAccept!(data);
       },
     );
   }
@@ -422,15 +436,69 @@ class ViewDraggableNode extends ConsumerWidget {
   }
 }
 
-class ViewNodeEditDialog extends ConsumerWidget {
+class ViewNodeEditDialog extends ConsumerStatefulWidget {
   final Pos pos;
 
-  const ViewNodeEditDialog({required this.pos, super.key});
+  const ViewNodeEditDialog({
+    required this.pos,
+    super.key,
+  });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState createState() => _ViewNodeEditDialogState();
+}
+
+class _ViewNodeEditDialogState extends ConsumerState<ViewNodeEditDialog> {
+  TextEditingController? _controller;
+
+  @override
+  void initState() {
+    var block = ref.read(codeBlockProvider).searchBlock(widget.pos);
+    if (block is CodeBlockIf) {
+      _controller = TextEditingController(text: block.code);
+    } else {
+      _controller = TextEditingController();
+    }
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var block = ref.watch(codeBlockProvider).searchBlock(widget.pos);
+    if (block is CodeBlockIf) {
+      return AlertDialog(
+        scrollable: true,
+        title: Text('edit'.i18n),
+        content: Column(
+          children: [
+            TextField(controller: _controller),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('cancel'.i18n),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('ok'.i18n),
+          ),
+        ],
+      );
+    }
     return AlertDialog(
       title: Text('edit'.i18n),
+      content: Text(block.toString()),
       actions: [
         TextButton(
           onPressed: () {

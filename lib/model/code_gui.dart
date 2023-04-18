@@ -98,7 +98,7 @@ class CodeBlock with _$CodeBlock, CodeBlockBuild {
 
   @override
   String build() {
-    return "\n$code";
+    return "$code";
   }
 
   @override

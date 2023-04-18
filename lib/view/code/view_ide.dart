@@ -1,10 +1,7 @@
 import 'package:cyoap_core/choiceNode/choice_node.dart';
-import 'package:cyoap_core/grammar/function_list.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/code/view_ide_gui.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
-import 'package:easy_debounce/easy_debounce.dart';
-import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,90 +21,12 @@ class ViewIde extends ConsumerStatefulWidget {
 
 class _ViewCodeIdeState extends ConsumerState<ViewIde> {
   final FocusNode _focusNode = FocusNode();
-  QuillController? _quillExecuteCodeController;
   ScrollController? _scrollController;
 
-  final regexSpace =
-      RegExp(r"(\b|}|\))(if|for|else|in|break|continue)(\b|{|\()");
-  final regexBrace = RegExp(r"[{}()]");
-  final regexComment = RegExp(r"//.*");
-  final regexFunction = RegExp(
-      "(${FunctionListEnum.values.where((e) => e.displayWithColor).map((e) => e.functionName ?? e.name).join('|')})"
-      r"\(");
   String currentTargetVariable = '';
 
   @override
   void initState() {
-    var data = [
-      {
-        "insert":
-            "${ref.read(nodeEditorTargetProvider).node.recursiveStatus.executeCodeString ?? ''}\n"
-      }
-    ];
-    _quillExecuteCodeController = QuillController(
-        document: Document.fromJson(data),
-        selection: const TextSelection.collapsed(offset: 0));
-    _quillExecuteCodeController?.addListener(() {
-      EasyDebounce.debounce('code-ide', const Duration(milliseconds: 500), () {
-        var plainText =
-            _quillExecuteCodeController?.document.toPlainText() ?? '';
-        if (ref
-                .read(nodeEditorTargetProvider)
-                .node
-                .recursiveStatus
-                .executeCodeString !=
-            plainText) {
-          var styleNull = Attribute.color;
-          var styleDeepOrange =
-              ColorAttribute('#${Colors.deepOrangeAccent.hex}');
-          var styleDeepPurple = ColorAttribute('#${Colors.deepPurple.hex}');
-          var styleGrey = ColorAttribute('#${Colors.grey.hex}');
-
-          _quillExecuteCodeController?.formatText(
-              0, plainText.length, styleNull);
-          var match = regexSpace.allMatches(plainText);
-          for (var m in match) {
-            _quillExecuteCodeController?.formatText(
-                m.start, m.end - m.start, styleDeepOrange);
-          }
-
-          match = regexFunction.allMatches(plainText);
-          for (var m in match) {
-            _quillExecuteCodeController?.formatText(
-                m.start, m.end - m.start, styleDeepPurple);
-          }
-
-          match = regexBrace.allMatches(plainText);
-          for (var m in match) {
-            _quillExecuteCodeController?.formatText(
-                m.start, m.end - m.start, styleNull);
-          }
-
-          match = regexComment.allMatches(plainText);
-          for (var m in match) {
-            _quillExecuteCodeController?.formatText(
-                m.start, m.end - m.start, styleGrey);
-          }
-
-          ref
-              .read(nodeEditorTargetProvider)
-              .node
-              .recursiveStatus
-              .executeCodeString = plainText;
-          ref.read(editorChangeProvider.notifier).needUpdate();
-        }
-      });
-    });
-
-    _quillExecuteCodeController?.onReplaceText =
-        (int index, int len, Object? data) {
-      ref.read(ideCurrentInputProvider.notifier).addText(
-          _quillExecuteCodeController!.document.toPlainText(),
-          index,
-          len,
-          data);
-      return true;
-    };
     _scrollController = AdjustableScrollController();
     super.initState();
   }
@@ -115,9 +34,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
   @override
   void dispose() {
     _focusNode.dispose();
-    _quillExecuteCodeController?.dispose();
     _scrollController?.dispose();
-    EasyDebounce.cancel('code-ide');
     super.dispose();
   }
 
@@ -208,7 +125,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                           null;
                       ref
                           .read(ideCurrentInputProvider.notifier)
-                          .lastFocusQuill = _quillExecuteCodeController!;
+                          .lastFocusQuill = ref.watch(controllerIdeProvider);
                     },
                     child: QuillEditor(
                       locale: ref.watch(localeStateProvider),
@@ -217,7 +134,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                       readOnly: false,
                       autoFocus: false,
                       scrollController: _scrollController!,
-                      controller: _quillExecuteCodeController!,
+                      controller: ref.watch(controllerIdeProvider),
                       padding: EdgeInsets.zero,
                       expands: false,
                       placeholder: "code_hint_execute".i18n,
@@ -232,7 +149,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                         icon: const Icon(Icons.reorder),
                         tooltip: "sort".i18n,
                         onPressed: () {
-                          var text = _quillExecuteCodeController!.document
+                          var text = ref.read(controllerIdeProvider).document
                               .toPlainText();
                           var output = ref
                               .read(ideCurrentInputProvider.notifier)
@@ -244,8 +161,8 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                           }
                           ref.read(ideCurrentInputProvider.notifier).reformat =
                               true;
-                          _quillExecuteCodeController!.clear();
-                          _quillExecuteCodeController!.document
+                          ref.read(controllerIdeProvider).clear();
+                          ref.read(controllerIdeProvider).document
                               .insert(0, output.item1);
                           ref.read(ideCurrentInputProvider.notifier).reformat =
                               false;
