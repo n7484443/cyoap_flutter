@@ -168,7 +168,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                               false;
                         },
                       ),
-                      IconButton(
+                      /*IconButton(
                         icon: const Icon(Icons.dns_rounded),
                         tooltip: "gui".i18n,
                         onPressed: () {
@@ -176,7 +176,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                               .read(currentIdeOpenProvider.notifier)
                               .update((state) => !state);
                         },
-                      ),
+                      ),*/
                     ],
                   ),
                 ),
