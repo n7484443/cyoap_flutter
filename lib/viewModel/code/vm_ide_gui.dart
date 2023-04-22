@@ -1,10 +1,12 @@
 import 'package:cyoap_core/choiceNode/pos.dart';
+import 'package:cyoap_core/grammar/recursive_parser.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../model/code_gui.dart';
 
-final codeBlockProvider = ChangeNotifierProvider<CodeBlockChangeNotifier>((ref) {
+final codeBlockProvider =
+    ChangeNotifierProvider<CodeBlockChangeNotifier>((ref) {
   return CodeBlockChangeNotifier(ref);
 });
 
@@ -52,9 +54,11 @@ class CodeBlockChangeNotifier extends ChangeNotifier {
             ]),
           ],
         );
-  void updatePos(){
+
+  void updatePos() {
     state.updatePos(const Pos(data: [0]));
   }
+
   void addBlock(Pos pos, CodeBlockBuild codeBlock, {bool option = true}) {
     searchBlock(pos).add(codeBlock, option: option);
     updatePos();
@@ -69,10 +73,10 @@ class CodeBlockChangeNotifier extends ChangeNotifier {
   }
 
   void moveBlock(Pos from, Pos to) {
-    if(from.equalExceptLast(to)){
+    if (from.equalExceptLast(to)) {
       var index = from.last;
       var toIndex = to.last;
-      if(index < toIndex){
+      if (index < toIndex) {
         toIndex--;
       }
       to = to.removeLast().addLast(toIndex);
@@ -85,6 +89,14 @@ class CodeBlockChangeNotifier extends ChangeNotifier {
 
   CodeBlockBuild searchBlock(Pos pos) {
     return state.search(pos);
+  }
+
+  void updateFromAst(RecursiveUnit? unit) {
+    if (unit == null) {
+      return;
+    }
+    state = CodeBlockSet(codeBlocks: CodeBlockType.fromAst(unit) ?? []);
+    notifyListeners();
   }
 }
 

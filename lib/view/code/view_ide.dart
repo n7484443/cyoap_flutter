@@ -1,4 +1,5 @@
 import 'package:cyoap_core/choiceNode/choice_node.dart';
+import 'package:cyoap_core/grammar/analyser.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/code/view_ide_gui.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../main.dart';
 import '../../viewModel/code/vm_ide.dart';
+import '../../viewModel/code/vm_ide_gui.dart';
 import '../../viewModel/vm_editor.dart';
 
 class ViewIde extends ConsumerStatefulWidget {
@@ -168,15 +170,18 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                               false;
                         },
                       ),
-                      /*IconButton(
+                      IconButton(
                         icon: const Icon(Icons.dns_rounded),
                         tooltip: "gui".i18n,
                         onPressed: () {
+                          var ast = Analyser().toAst(ref.read(controllerIdeProvider).document
+                              .toPlainText());
+                          ref.read(codeBlockProvider.notifier).updateFromAst(ast);
                           ref
                               .read(currentIdeOpenProvider.notifier)
                               .update((state) => !state);
                         },
-                      ),*/
+                      ),
                     ],
                   ),
                 ),
