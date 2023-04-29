@@ -107,6 +107,7 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
               addImageFunction: (ref, name) {},
               widgetBuilder: (ref, index) => ViewSourceItem(index: index),
               widgetLength: (ref) => ref.watch(vmSourceProvider).length,
+              imageName: (ref, index) => ref.read(vmSourceProvider)[index],
             ),
           ),
         ]),

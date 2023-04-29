@@ -82,6 +82,7 @@ class _ViewEditorState extends ConsumerState<ViewEditor>
           );
         },
         widgetLength: (ref) => ref.watch(imageListStateProvider).length,
+        imageName: (ref, index) => ref.watch(imageListStateProvider)[index],
       ),
     ];
     var childrenText =
@@ -359,6 +360,7 @@ class _ViewTextContentsEditorState
             showFontFamily: false,
             showSearchButton: false,
             showIndent: false,
+            multiRowsDisplay: false,
             customButtons: [
               QuillCustomButton(
                 icon: Icons.color_lens,

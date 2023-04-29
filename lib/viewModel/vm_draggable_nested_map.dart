@@ -46,6 +46,10 @@ class VMDraggableNestedMap {
 
   VMDraggableNestedMap(this.ref);
 
+  void refresh(){
+    refreshPage(ref);
+  }
+
   void copyData(ChoiceNode choiceNode) {
     ref.read(copiedChoiceNode.notifier).state = choiceNode.clone();
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;

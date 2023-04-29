@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
@@ -17,15 +19,38 @@ class ViewImageDraggable extends ConsumerWidget {
   final void Function(WidgetRef, String) addImageFunction;
   final Widget Function(WidgetRef, int) widgetBuilder;
   final int Function(WidgetRef) widgetLength;
+  final String Function(WidgetRef, int) imageName;
 
   const ViewImageDraggable(
       {required this.addImageFunction,
       required this.widgetBuilder,
       required this.widgetLength,
+      required this.imageName,
       super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    widgetBuilderEdit(ref, index) {
+      return Stack(children: [
+        Positioned(
+            top: 0,
+            right: 0,
+            left: 0,
+            bottom: 0,
+            child: widgetBuilder(ref, index)),
+        Positioned(
+          top: 0,
+          right: 0,
+          child: IconButton(
+            icon: const Icon(Icons.crop),
+            onPressed: () {
+              openImageEditor(ref, context, imageName(ref, index), change: true);
+            },
+          ),
+        ),
+      ]);
+    }
+
     if (!ConstList.isDesktop()) {
       return Column(
         children: [
@@ -40,7 +65,8 @@ class ViewImageDraggable extends ConsumerWidget {
           ),
           Expanded(
               child: ViewImageSelector(
-                  widgetBuilder: widgetBuilder, widgetLength: widgetLength)),
+                  widgetBuilder: widgetBuilderEdit,
+                  widgetLength: widgetLength)),
         ],
       );
     }
@@ -96,7 +122,7 @@ class ViewImageDraggable extends ConsumerWidget {
               ),
               padding: const EdgeInsets.all(4.0),
               child: ViewImageSelector(
-                  widgetBuilder: widgetBuilder, widgetLength: widgetLength),
+                  widgetBuilder: widgetBuilderEdit, widgetLength: widgetLength),
             ),
           ),
         )
@@ -104,26 +130,45 @@ class ViewImageDraggable extends ConsumerWidget {
     );
   }
 
-  void openImageEditor(WidgetRef ref, BuildContext context, String name) {
+  void openImageEditor(WidgetRef ref, BuildContext context, String name,
+      {bool change = false}) {
     if (name != '') {
-      showDialog<Tuple2<bool, String>>(
-        builder: (_) => ImageSourceDialog(name),
-        context: context,
-        barrierDismissible: false,
-      ).then((value) {
-        getPlatformFileSystem.addSource(name, value?.item2 ?? '');
-        if (value?.item1 ?? false) {
-          ref
-              .read(imageProvider.notifier)
-              .update((state) => Tuple2(name, ref.watch(lastImageProvider)!));
-          ref
-              .read(changeTabProvider.notifier)
-              .changePageString('viewImageEditor', context);
-        } else {
-          ref.read(imageListStateProvider.notifier).addImageToList(name);
-        }
+      if (change) {
+        ref
+            .read(imageProvider.notifier)
+            .update((state) => Tuple2(name, ImageDB().getImage(name)!));
+        ref
+            .read(changeTabProvider.notifier)
+            .changePageString('viewImageEditor', context);
         addImageFunction(ref, name);
-      });
+      }else{
+        var defaultName = name;
+        while (ImageDB().imageList.contains(name) ||
+            ImageDB()
+                .imageList
+                .contains(name.replaceAll(ImageDB.regCheckImage, ".webp"))) {
+          name = defaultName + Random().nextInt(999999).toString();
+        }
+        showDialog<Tuple2<bool, String>>(
+          builder: (_) => ImageSourceDialog(name),
+          context: context,
+          barrierDismissible: false,
+        ).then((value) {
+          getPlatformFileSystem.addSource(name, value?.item2 ?? '');
+          if (value?.item1 ?? false) {
+            ref
+                .read(imageProvider.notifier)
+                .update((state) => Tuple2(name, ref.watch(lastImageProvider)!));
+            ref
+                .read(changeTabProvider.notifier)
+                .changePageString('viewImageEditor', context);
+          } else {
+            ref.read(imageListStateProvider.notifier).addImageToList(name);
+          }
+          addImageFunction(ref, name);
+        });
+      }
+
     }
   }
 }

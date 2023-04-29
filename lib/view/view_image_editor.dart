@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
+import '../viewModel/vm_draggable_nested_map.dart';
 import '../viewModel/vm_make_platform.dart';
 
 class ViewImageEditor extends ConsumerWidget {
@@ -115,8 +116,8 @@ class ViewImageEditorContents extends ConsumerWidget {
               if (pos != null) {
                 ref.read(choiceNodeProvider(pos)).node?.imageString =
                     image.item1;
-                ref.invalidate(choiceNodeProvider(pos));
               }
+              ref.read(vmDraggableNestedMapProvider).refresh();
               ref.read(changeTabProvider.notifier).home(context);
             });
           },

@@ -27,16 +27,10 @@ class ImageDB {
   }
 
   Future<void> uploadImages(String name, Uint8List data) async {
-    if (_dirImageUint8Map.containsKey(name)) {
-      return;
-    }
     _dirImageUint8Map[name] = data;
   }
 
   Future<void> uploadImagesFuture(String name, Future<Uint8List> data) async {
-    if (_dirImageUint8Map.containsKey(name)) {
-      return;
-    }
     _dirImageUint8Map[name] = null;
     data.then((value) async {
       _dirImageUint8Map[name] = value;

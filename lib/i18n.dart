@@ -40,7 +40,7 @@ extension Localization on String {
 
           'save_as_image': 'Save as image',
 
-          'copy_clipboard': 'Copy to clipboard',
+          'copy_clipboard': 'Copy to clipboard and close',
 
           //make page
           'lineSetting_tooltip_0': 'Number of selections available',
@@ -191,7 +191,7 @@ extension Localization on String {
 
           'save_as_image': '이미지로 저장',
 
-          'copy_clipboard': '클립보드로 복사',
+          'copy_clipboard': '클립보드로 복사 후 닫기',
 
           //make page
           'lineSetting_tooltip_0': '선택 가능 개수',
