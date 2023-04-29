@@ -3,6 +3,7 @@ import 'package:cyoap_core/grammar/analyser.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/code/view_ide_gui.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -170,6 +171,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                               false;
                         },
                       ),
+                      if(kDebugMode)
                       IconButton(
                         icon: const Icon(Icons.dns_rounded),
                         tooltip: "gui".i18n,
