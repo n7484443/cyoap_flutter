@@ -364,24 +364,25 @@ class ViewDragTargetNode extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var dragPos = ref.watch(codeBlockPosProvider);
+    if (dragPos == null || dragPos.isParent(pos) || dragPos == pos) {
+      return const Opacity(
+        opacity: 0.0,
+        child: Card(
+          child: SizedBox(
+            height: 18.0,
+            width: 100.0,
+          ),
+        ),
+      );
+    }
     return DragTarget<Pos>(
       builder: (BuildContext context, List<Pos?> candidateData,
           List<dynamic> rejectedData) {
-        if (ref.watch(codeBlockPosProvider) == null) {
-          return const Opacity(
-            opacity: 0.0,
-            child: Card(
-              child: SizedBox(
-                height: 20.0,
-                width: 100.0,
-              ),
-            ),
-          );
-        }
         return const Card(
           color: Colors.blue,
           child: SizedBox(
-            height: 20.0,
+            height: 18.0,
             width: 100.0,
           ),
         );
