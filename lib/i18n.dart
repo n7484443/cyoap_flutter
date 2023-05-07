@@ -3,21 +3,9 @@ import 'package:i18n_extension/i18n_extension.dart';
 extension Localization on String {
   static final _t = Translations.byLocale("en_us") +
       const {
+        //common
         "en": {
           'language': 'Language Setting',
-
-          //first page
-          'add_file': 'Add file',
-          'add_folder': 'Add folder',
-          'save_as_webp': 'Convert images to WEBP when saving',
-          'settings': 'Settings',
-          'project_name': 'Project Name',
-          'create': 'Create',
-          'font_licenses': 'Font licenses',
-          'version_check': 'New version available!',
-          'version_latest': 'Latest version : ',
-
-          //common
           'variable': 'Variable',
           'variable_name': 'Row name',
           'version': 'Version',
@@ -31,8 +19,51 @@ extension Localization on String {
           'yes': 'Yes',
           'no': 'No',
           'length': 'Width',
+        },
+        "ko": {
+          'language': '언어 설정',
+          'variable': '변수',
+          'version': '버전',
+          'variable_name': '변수명',
+          'confirm': '확인',
+          'cancel': '취소',
+          'back': '뒤로가기',
+          'save': '저장',
+          'search': '검색',
+          'node': '선택지',
+          'line': '라인',
+          'yes': '예',
+          'no': '아니오',
+          'length': '크기',
+        }
+      } +
+      const {
+        //first page
+        "en": {
+          'add_file': 'Add file',
+          'add_folder': 'Add folder',
+          'save_as_webp': 'Convert images to WEBP when saving',
+          'settings': 'Settings',
+          'project_name': 'Project Name',
+          'create': 'Create',
+          'font_licenses': 'Font licenses',
+          'version_check': 'New version available!',
+          'version_latest': 'Latest version : ',
+        },
+        "ko": {
+          'summary': '요약',
+          'summary_error': '선택한 선택지가 없습니다.',
+          'show_image_source': '이미지 출처 보기',
+          'debug_mode': '디버그 모드 활성화',
 
-          //play page
+          'save_as_image': '이미지로 저장',
+
+          'copy_clipboard': '클립보드로 복사 후 닫기',
+        }
+      } +
+      const {
+        //play page
+        "en": {
           'summary': 'Summary',
           'summary_error': 'No options selected',
           'show_image_source': 'View source',
@@ -41,7 +72,21 @@ extension Localization on String {
           'save_as_image': 'Save as image',
 
           'copy_clipboard': 'Copy to clipboard and close',
-
+        },
+        "ko": {
+          'add_file': '파일 추가',
+          'add_folder': '폴더 추가',
+          'save_as_webp': '저장 시 이미지를 webp 파일로 변환',
+          'settings': '설정',
+          'project_name': '프로젝트명',
+          'create': '생성',
+          'font_licenses': '폰트 라이센스',
+          'version_check': '새로운 버전이 있습니다!',
+          'version_latest': '최신 버전 : ',
+        }
+      } +
+      const {
+        "en": {
           //make page
           'lineSetting_tooltip_0': 'Number of selections available',
           'lineSetting_tooltip_1': 'Allowed Choices %s',
@@ -114,6 +159,8 @@ extension Localization on String {
 
           'max_select': 'MaxSelect',
           'max_random': 'Random number, 0 to n-1',
+          
+          'gui': 'Change editing type',
 
           //preset
           'preset': 'Preset',
@@ -155,44 +202,6 @@ extension Localization on String {
           'sample_title': 'Design',
         },
         "ko": {
-          'language': '언어 설정',
-
-          //first page
-          'add_file': '파일 추가',
-          'add_folder': '폴더 추가',
-          'save_as_webp': '저장 시 이미지를 webp 파일로 변환',
-          'settings': '설정',
-          'project_name': '프로젝트명',
-          'create': '생성',
-          'font_licenses': '폰트 라이센스',
-          'version_check': '새로운 버전이 있습니다!',
-          'version_latest': '최신 버전 : ',
-
-          //common
-          'variable': '변수',
-          'version': '버전',
-          'variable_name': '변수명',
-          'confirm': '확인',
-          'cancel': '취소',
-          'back': '뒤로가기',
-          'save': '저장',
-          'search': '검색',
-          'node': '선택지',
-          'line': '라인',
-          'yes': '예',
-          'no': '아니오',
-          'length': '크기',
-
-          //play page
-          'summary': '요약',
-          'summary_error': '선택한 선택지가 없습니다.',
-          'show_image_source': '이미지 출처 보기',
-          'debug_mode': '디버그 모드 활성화',
-
-          'save_as_image': '이미지로 저장',
-
-          'copy_clipboard': '클립보드로 복사 후 닫기',
-
           //make page
           'lineSetting_tooltip_0': '선택 가능 개수',
           'lineSetting_tooltip_1': '최대 %s 개만큼 선택 가능',
@@ -261,6 +270,8 @@ extension Localization on String {
 
           'max_select': '최대 선택',
           'max_random': '랜덤, 0 에서 n-1까지',
+
+          'gui': '에디터 변경',
 
           //preset
           'preset': '프리셋',

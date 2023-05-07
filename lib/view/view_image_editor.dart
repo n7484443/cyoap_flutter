@@ -17,6 +17,49 @@ class ViewImageEditor extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: const ViewImageEditorContents(),
+      appBar: AppBar(
+        title: ref.watch(imageCropIndexProvider) == 0
+            ? Center(
+                child: SizedBox(
+                  width: 300,
+                  height: 25,
+                  child: Row(
+                    children: [
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: TextField(
+                            textAlign: TextAlign.center,
+                            controller: ref.watch(textFieldWidthRatioProvider),
+                            decoration: const InputDecoration(
+                              hintText: 'Width Ratio',
+                            ),
+                          ),
+                        ),
+                      ),
+                      const FittedBox(
+                        child: Text(
+                          ':',
+                        ),
+                      ),
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: TextField(
+                            textAlign: TextAlign.center,
+                            controller: ref.watch(textFieldHeightRatioProvider),
+                            decoration: const InputDecoration(
+                              hintText: 'Height Ratio',
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            : null,
+      ),
       bottomNavigationBar: NavigationBar(
         destinations: [
           NavigationDestination(
@@ -79,6 +122,9 @@ class ViewImageEditorContents extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var data = ref.watch(imageCropRatioProvider);
+    if(data == null || data.item1 == null || data.item2 == null){
+      data = null;
+    }
     var image = ref.watch(imageProvider);
     if (image == null) {
       return const SizedBox.shrink();
@@ -97,7 +143,7 @@ class ViewImageEditorContents extends ConsumerWidget {
                   hitTestSize: 20.0,
                   cropRectPadding: const EdgeInsets.all(10.0),
                   cropAspectRatio:
-                      data == null ? null : data.item1 / data.item2,
+                      data == null ? null : data.item1! / data.item2!,
                   initCropRectType: InitCropRectType.imageRect,
                   editActionDetailsIsChanged: (EditActionDetails? details) {});
             },

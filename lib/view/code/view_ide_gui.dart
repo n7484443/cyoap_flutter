@@ -21,6 +21,11 @@ class ViewIdeGui extends ConsumerWidget {
     for (int i = 0; i < list.codeBlocks.length; i++) {
       widgetList.add(ViewCodeBlockWrapper(pos: Pos(data: [i])));
     }
+    widgetList.add(
+      const ViewDragTargetNode(
+        pos: Pos(data: []),
+      ),
+    );
     return Card(
       child: Row(
         children: [

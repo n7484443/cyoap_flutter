@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:extended_image/extended_image.dart';
-import 'package:flutter/material.dart' show GlobalKey;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image/image.dart';
 import 'package:tuple/tuple.dart';
@@ -25,5 +25,31 @@ final cropImageProvider = FutureProvider.autoDispose<Uint8List>((ref) async {
 });
 
 final imageCropRatioProvider =
-    StateProvider<Tuple2<double, double>?>((ref) => null);
+    StateProvider<Tuple2<double?, double?>?>((ref) => null);
 final imageCropIndexProvider = StateProvider<int>((ref) => 0);
+
+final textFieldWidthRatioProvider = StateProvider.autoDispose<TextEditingController>((ref) {
+  var controller = TextEditingController();
+  ref.onDispose(() {
+    controller.dispose();
+  });
+  controller.addListener(() {
+    var w = double.tryParse(controller.text);
+    var h = ref.read(imageCropRatioProvider)?.item2;
+    ref.read(imageCropRatioProvider.notifier).state = Tuple2(w, h);
+  });
+  return controller;
+});
+
+final textFieldHeightRatioProvider = StateProvider.autoDispose<TextEditingController>((ref) {
+  var controller = TextEditingController();
+  ref.onDispose(() {
+    controller.dispose();
+  });
+  controller.addListener(() {
+    var w = ref.read(imageCropRatioProvider)?.item1;
+    var h = double.tryParse(controller.text);
+    ref.read(imageCropRatioProvider.notifier).state = Tuple2(w, h);
+  });
+  return controller;
+});
