@@ -461,7 +461,7 @@ class _ViewNodeEditDialogState extends ConsumerState<ViewNodeEditDialog> {
   void initState() {
     var block = ref.read(codeBlockProvider).searchBlock(widget.pos);
     if (block is CodeBlockIf) {
-      _controller = TextEditingController(text: block.code);
+      _controller = TextEditingController(text: block.code.toString());
     } else {
       _controller = TextEditingController();
     }

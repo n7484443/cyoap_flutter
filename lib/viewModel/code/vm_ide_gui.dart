@@ -1,12 +1,14 @@
 import 'package:cyoap_core/choiceNode/pos.dart';
+import 'package:cyoap_core/grammar/analyser.dart';
 import 'package:cyoap_core/grammar/recursive_parser.dart';
+import 'package:cyoap_flutter/viewModel/code/vm_ide.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../model/code_gui.dart';
 
 final codeBlockProvider =
-    ChangeNotifierProvider<CodeBlockChangeNotifier>((ref) {
+    ChangeNotifierProvider.autoDispose<CodeBlockChangeNotifier>((ref) {
   return CodeBlockChangeNotifier(ref);
 });
 
@@ -14,46 +16,11 @@ class CodeBlockChangeNotifier extends ChangeNotifier {
   CodeBlockSet state;
   Ref ref;
 
-  CodeBlockChangeNotifier(this.ref)
-      : state = CodeBlockSet(
-          codeBlocks: [
-            CodeBlock(code: 'let t = 3'),
-            CodeBlockIf(
-              code: 'test == 3',
-              childT: [
-                CodeBlock(code: 'let t = 3'),
-                CodeBlock(code: 'let a = 3'),
-                CodeBlockIf(
-                  code: 'test == 3',
-                  childT: [
-                    CodeBlock(code: 'let t = 3'),
-                    CodeBlockFor(code: 'a', range: '1..3', child: [
-                      CodeBlock(code: 'let a = 3'),
-                    ]),
-                  ],
-                  childF: [],
-                )
-              ],
-              childF: [],
-            ),
-            CodeBlock(code: 'let t = 3'),
-            CodeBlockFor(code: 'a', range: '1..3', child: [
-              CodeBlock(code: 'let a = 3'),
-            ]),
-            CodeBlockFor(code: 'a', range: '1..3', child: [
-              CodeBlock(code: 'let a = 3'),
-            ]),
-            CodeBlockFor(code: 'a', range: '2..5', child: [
-              CodeBlock(code: 'let a = 3'),
-            ]),
-            CodeBlockFor(code: 'a', range: '1..3', child: [
-              CodeBlock(code: 'let a = 3'),
-            ]),
-            CodeBlockFor(code: 'a', range: '1..3', child: [
-              CodeBlock(code: 'let a = 3'),
-            ]),
-          ],
-        );
+  CodeBlockChangeNotifier(this.ref) : state = CodeBlockSet(codeBlocks: []) {
+    var ast = Analyser()
+        .toAst(ref.read(controllerIdeProvider).document.toPlainText());
+    updateFromAst(ast);
+  }
 
   void updatePos() {
     state.updatePos(const Pos(data: [0]));
@@ -95,7 +62,7 @@ class CodeBlockChangeNotifier extends ChangeNotifier {
     if (unit == null) {
       return;
     }
-    state = CodeBlockSet(codeBlocks: CodeBlockType.fromAst(unit) ?? []);
+    state = CodeBlockType.fromAst(unit) as CodeBlockSet;
     notifyListeners();
   }
 }

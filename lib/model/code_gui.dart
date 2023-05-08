@@ -39,47 +39,46 @@ enum CodeBlockType {
     }
   }
 
-  static List<CodeBlockBuild>? fromAst(RecursiveUnit unit) {
+  static CodeBlockBuild fromAst(RecursiveUnit unit) {
     if (unit is RecursiveData) {
-      return [CodeBlock(code: unit.body.data)];
+      return CodeBlock(code: unit.body.data);
     }
     unit = unit as RecursiveFunction;
     var body = unit.body;
     if (body.type.isString && body.data == "doLines") {
-      return unit.child
-          .expand<CodeBlockBuild>((e) => fromAst(e) ?? [])
-          .toList();
+      return CodeBlockSet(
+          codeBlocks: unit.child
+              .map((e) => fromAst(e))
+              .toList(),
+      );
     }
     if (body.type.isString && body.data == "if") {
       var block = CodeBlockIf(
-        code: fromAst(unit.child[0])?.first.toString() ?? '',
-        childT: [
-          ...?fromAst(unit.child[1]),
-        ],
-        childF: [
-          ...?fromAst(unit.child[2]),
-        ],
+        code: fromAst(unit.child[0]),
+        childT: fromAst(unit.child[1]),
+        childF: unit.child.length == 3
+            ? fromAst(unit.child[2])
+            : null,
       );
-      return [block];
+      return block;
     }
     if (body.type.isString && body.data == "for") {
       var variable = fromAst(unit.child[0].child[0]);
       var range = fromAst(unit.child[0].child[1]);
-      var block = CodeBlockFor(
-        code: variable?.first.toString() ?? '',
-        range: range?.first.toString() ?? '',
+      return CodeBlockFor(
+        code: variable.toString(),
+        range: range.toString(),
         child: [
-          ...?fromAst(unit.child[1]),
+          ...?(fromAst(unit.child[1]) as CodeBlockSet?)?.child,
         ],
       );
-      return [block];
     }
     if (body.type.isString && body.data == "to") {
       var block = CodeBlock(
         code:
-            '${fromAst(unit.child[0])?.first.toString()}..${fromAst(unit.child[1])?.first.toString()}',
+            '${fromAst(unit.child[0]).toString()}..${fromAst(unit.child[1]).toString()}',
       );
-      return [block];
+      return block;
     }
     if (body.type.isString &&
         (body.data == "loadVariable" || body.data == "in")) {
@@ -95,19 +94,38 @@ enum CodeBlockType {
               ? SetterType.setLocal
               : SetterType.setVariable;
       var block = CodeBlockSetter(
-        left: fromAst(unit.child[0])?.first.toString(),
-        right: fromAst(unit.child[1])?.first.toString(),
+        left: fromAst(unit.child[0]).toString(),
+        right: fromAst(unit.child[1]).toString(),
         type: setterType,
       );
-      return [block];
+      return block;
     }
     if (body.type.isString) {
-      var block = CodeBlock(
-          code:
-              '${fromAst(unit.child[0])?.first.toString()} ${body.data} ${fromAst(unit.child[0])?.first.toString()}');
-      return [block];
+      //function
+      var arg = unit.child.map((e){
+        var ast = fromAst(e);
+        if(ast is! CodeBlockSet){
+          return ast;
+        }
+        return ast;
+      }).toList();
+      var function = body.data;
+      if (unit.child.length == 1) {
+        return CodeBlock(
+          code: '${arg[0].toString()} $function',
+        );
+      }
+      if (unit.child.length == 2) {
+        return CodeBlock(
+          code: '${arg[0].toString()} $function ${arg[1].toString()}',
+        );
+      }
+      var code = arg.map((e) => e.toString()).join(" $function ");
+      return CodeBlock(
+        code: code,
+      );
     }
-    return [CodeBlock(code: unit.toString())];
+    return CodeBlock(code: unit.toString());
   }
 }
 
@@ -190,20 +208,28 @@ class CodeBlock extends CodeBlockBuild {
 }
 
 class CodeBlockIf extends CodeBlockBuild {
-  final String code;
+  final CodeBlockBuild? code;
   final List<CodeBlockBuild> childTrue = [];
   final List<CodeBlockBuild> childFalse = [];
 
   CodeBlockIf({
-    this.code = '',
-    List<CodeBlockBuild>? childT,
-    List<CodeBlockBuild>? childF,
+    this.code,
+    CodeBlockBuild? childT,
+    CodeBlockBuild? childF,
   }) {
     if (childT != null) {
-      childTrue.addAll(childT);
+      if(childT is CodeBlockSet){
+        childTrue.addAll(childT.child!);
+      }else{
+        childTrue.add(childT);
+      }
     }
     if (childF != null) {
-      childFalse.addAll(childF);
+      if(childF is CodeBlockSet){
+        childFalse.addAll(childF.child!);
+      }else{
+        childFalse.add(childF);
+      }
     }
   }
 
@@ -212,9 +238,15 @@ class CodeBlockIf extends CodeBlockBuild {
     String trueCode = '';
     String falseCode = '';
     trueCode = childTrue.map((e) => e.build()).join("\n");
+    if (childFalse.isEmpty) {
+      return """
+      if($code){
+        $trueCode
+      }
+      """;
+    }
     falseCode = childFalse.map((e) => e.build()).join("\n");
     return """
-    \n
     if($code){
       $trueCode
     } else {
@@ -289,9 +321,9 @@ class CodeBlockSetter extends CodeBlock {
   }) {
     if (type == SetterType.setVariable) {
       super.code = '{r set} $left as $right';
-    }else if (type == SetterType.setGlobal) {
+    } else if (type == SetterType.setGlobal) {
       super.code = '{r create} {b global} $left as $right';
-    }else{
+    } else {
       super.code = '{r create} {b local} $left as $right';
     }
   }
