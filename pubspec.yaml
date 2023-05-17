@@ -40,7 +40,7 @@ dependencies:
   google_fonts: ^4.0.0
   archive: ^3.3.1
   flutter_quill: ^7.1.18
-  package_info_plus: ^3.0.2
+  package_info_plus: ^4.0.0
   github: ^9.14.0
   flex_color_picker: ^3.0.2
   tuple: ^2.0.0
@@ -57,7 +57,7 @@ dependencies:
   freezed_annotation: any
   json_annotation: any
   js: ^0.6.7
-  sentry_flutter: ^7.5.2
+  sentry_flutter: ^7.6.1
   easy_debounce: ^2.0.2+1
   desktop_drop: ^0.4.0
   shared_storage: ^0.7.0

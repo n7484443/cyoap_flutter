@@ -20,12 +20,16 @@ class ViewImageDraggable extends ConsumerWidget {
   final Widget Function(WidgetRef, int) widgetBuilder;
   final int Function(WidgetRef) widgetLength;
   final String Function(WidgetRef, int) imageName;
+  final bool isRemovable;
+  final void Function(WidgetRef, int)? removeFunction;
 
   const ViewImageDraggable(
       {required this.addImageFunction,
       required this.widgetBuilder,
       required this.widgetLength,
       required this.imageName,
+      this.isRemovable = false,
+      this.removeFunction,
       super.key});
 
   @override
@@ -44,10 +48,24 @@ class ViewImageDraggable extends ConsumerWidget {
           child: IconButton(
             icon: const Icon(Icons.crop),
             onPressed: () {
-              openImageEditor(ref, context, imageName(ref, index), change: true);
+              openImageEditor(ref, context, imageName(ref, index),
+                  change: true);
             },
           ),
         ),
+        if (isRemovable)
+          Positioned(
+            top: 0,
+            left: 0,
+            child: IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: () {
+                if(removeFunction != null){
+                  removeFunction!(ref, index);
+                }
+              },
+            ),
+          ),
       ]);
     }
 
@@ -141,7 +159,7 @@ class ViewImageDraggable extends ConsumerWidget {
             .read(changeTabProvider.notifier)
             .changePageString('viewImageEditor', context);
         addImageFunction(ref, name);
-      }else{
+      } else {
         var defaultName = name;
         while (ImageDB().imageList.contains(name) ||
             ImageDB()
@@ -168,7 +186,6 @@ class ViewImageDraggable extends ConsumerWidget {
           addImageFunction(ref, name);
         });
       }
-
     }
   }
 }

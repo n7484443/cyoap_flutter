@@ -16,7 +16,8 @@ class VMSource extends StateNotifier<List<String>> {
 
   VMSource(this.ref, super.state);
 
-  void checkRemove(String name) {
+  void checkRemove(int index) {
+    var name = state[index];
     ref
         .read(deleteImageListProvider.notifier)
         .update((state) => [...state, name]);

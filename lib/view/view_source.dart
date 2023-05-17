@@ -108,6 +108,9 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
               widgetBuilder: (ref, index) => ViewSourceItem(index: index),
               widgetLength: (ref) => ref.watch(vmSourceProvider).length,
               imageName: (ref, index) => ref.read(vmSourceProvider)[index],
+              isRemovable: ref.watch(deleteModeProvider),
+              removeFunction: (ref, index) =>
+                  ref.read(vmSourceProvider.notifier).checkRemove(index),
             ),
           ),
         ]),
@@ -189,29 +192,13 @@ class _ViewSourceItemState extends ConsumerState<ViewSourceItem> {
           padding: const EdgeInsets.all(4.0),
           child: Column(
             children: [
-              Stack(
-                children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: Text(name),
-                  ),
-                  if (ref.watch(deleteModeProvider))
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          ref.read(vmSourceProvider.notifier).checkRemove(name);
-                        },
-                      ),
-                    ),
-                ],
-              ),
               Expanded(
                 child: ViewImageLoading(name),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
+              Text(name),
+              const Divider(),
+              SizedBox(
+                height: 24,
                 child: TextField(
                   textAlign: TextAlign.start,
                   decoration: InputDecoration(
