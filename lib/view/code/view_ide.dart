@@ -13,6 +13,119 @@ import '../../viewModel/code/vm_ide.dart';
 import '../../viewModel/code/vm_ide_gui.dart';
 import '../../viewModel/vm_editor.dart';
 
+class ViewIdeTab extends ConsumerStatefulWidget {
+  const ViewIdeTab({
+    super.key,
+  });
+
+  @override
+  ConsumerState createState() => _ViewIdeTabState();
+}
+
+class _ViewIdeTabState extends ConsumerState<ViewIdeTab>
+    with TickerProviderStateMixin {
+  TabController? _tabController;
+
+  @override
+  void initState() {
+    _tabController = TabController(length: 2, vsync: this);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _tabController?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: TabBar(
+        controller: _tabController,
+        tabs: [Tab(text: "editor_simple".i18n), Tab(text: "editor_code".i18n)],
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          if(kDebugMode)const ViewIdeSimple(),
+          const ViewIde(),
+        ],
+      ),
+    );
+  }
+}
+
+class ViewIdeSimple extends ConsumerStatefulWidget {
+  const ViewIdeSimple({
+    super.key,
+  });
+
+  @override
+  ConsumerState createState() => _ViewIdeSimpleState();
+}
+
+class _ViewIdeSimpleState extends ConsumerState<ViewIdeSimple> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: ListView(
+            children: [
+              Center(
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<int>(
+                    value: 0,
+                    onChanged: (index) {},
+                    items: [
+                      const DropdownMenuItem(value: 0, child: Text('and')),
+                      const DropdownMenuItem(value: 1, child: Text('or')),
+                    ],
+                  ),
+                ),
+              ),
+              const TextField(),
+              IconButton(onPressed: () {}, icon: const Icon(Icons.add))
+            ],
+          ),
+        ),
+        const VerticalDivider(),
+        Expanded(
+          child: ListView(
+            children: [
+              Center(
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<int>(
+                    value: 0,
+                    onChanged: (index) {},
+                    items: [
+                      const DropdownMenuItem(value: 0, child: Text('and')),
+                      const DropdownMenuItem(value: 1, child: Text('or')),
+                    ],
+                  ),
+                ),
+              ),
+              const TextField(),
+              IconButton(onPressed: () {}, icon: const Icon(Icons.add))
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class ViewIde extends ConsumerStatefulWidget {
   const ViewIde({
     super.key,
@@ -152,7 +265,9 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                         icon: const Icon(Icons.reorder),
                         tooltip: "sort".i18n,
                         onPressed: () {
-                          var text = ref.read(controllerIdeProvider).document
+                          var text = ref
+                              .read(controllerIdeProvider)
+                              .document
                               .toPlainText();
                           var output = ref
                               .read(ideCurrentInputProvider.notifier)
@@ -165,25 +280,31 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                           ref.read(ideCurrentInputProvider.notifier).reformat =
                               true;
                           ref.read(controllerIdeProvider).clear();
-                          ref.read(controllerIdeProvider).document
+                          ref
+                              .read(controllerIdeProvider)
+                              .document
                               .insert(0, output.item1);
                           ref.read(ideCurrentInputProvider.notifier).reformat =
                               false;
                         },
                       ),
-                      if(kDebugMode)
-                      IconButton(
-                        icon: const Icon(Icons.dns_rounded),
-                        tooltip: "gui".i18n,
-                        onPressed: () {
-                          var ast = Analyser().toAst(ref.read(controllerIdeProvider).document
-                              .toPlainText());
-                          ref.read(codeBlockProvider.notifier).updateFromAst(ast);
-                          ref
-                              .read(currentIdeOpenProvider.notifier)
-                              .update((state) => !state);
-                        },
-                      ),
+                      if (kDebugMode)
+                        IconButton(
+                          icon: const Icon(Icons.dns_rounded),
+                          tooltip: "gui".i18n,
+                          onPressed: () {
+                            var ast = Analyser().toAst(ref
+                                .read(controllerIdeProvider)
+                                .document
+                                .toPlainText());
+                            ref
+                                .read(codeBlockProvider.notifier)
+                                .updateFromAst(ast);
+                            ref
+                                .read(currentIdeOpenProvider.notifier)
+                                .update((state) => !state);
+                          },
+                        ),
                     ],
                   ),
                 ),

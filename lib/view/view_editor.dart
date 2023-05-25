@@ -52,7 +52,7 @@ class _ViewEditorState extends ConsumerState<ViewEditor>
     }
     var children = [
       const ViewContentsEditor(),
-      const ViewIde(),
+      const ViewIdeTab(),
       const ViewNodeOptionEditor(),
       ViewImageDraggable(
         addImageFunction: (ref, name) {

@@ -34,7 +34,7 @@ dependencies:
       url: https://github.com/n7484443/cyoap_core.git
   image: ^4.0.12
   extended_image: ^8.0.1
-  file_picker : ^5.0.0
+  file_picker : ^5.3.1
   http: ^0.13.4
   shared_preferences: ^2.0.15
   google_fonts: ^4.0.0
@@ -57,7 +57,7 @@ dependencies:
   freezed_annotation: any
   json_annotation: any
   js: ^0.6.7
-  sentry_flutter: ^7.6.1
+  sentry_flutter: ^7.6.2
   easy_debounce: ^2.0.2+1
   desktop_drop: ^0.4.0
   shared_storage: ^0.7.0

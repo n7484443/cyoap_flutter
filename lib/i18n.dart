@@ -161,6 +161,8 @@ extension Localization on String {
           'max_random': 'Random number, 0 to n-1',
           
           'gui': 'Change editing type',
+          'editor_simple': 'Simple',
+          'editor_code': 'Code',
 
           //preset
           'preset': 'Preset',
@@ -272,6 +274,8 @@ extension Localization on String {
           'max_random': '랜덤, 0 에서 n-1까지',
 
           'gui': '에디터 변경',
+          'editor_simple': '간편',
+          'editor_code': '코드',
 
           //preset
           'preset': '프리셋',
