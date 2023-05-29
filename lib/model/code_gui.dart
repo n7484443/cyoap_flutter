@@ -47,18 +47,14 @@ enum CodeBlockType {
     var body = unit.body;
     if (body.type.isString && body.data == "doLines") {
       return CodeBlockSet(
-          codeBlocks: unit.child
-              .map((e) => fromAst(e))
-              .toList(),
+        codeBlocks: unit.child.map((e) => fromAst(e)).toList(),
       );
     }
     if (body.type.isString && body.data == "if") {
       var block = CodeBlockIf(
         code: fromAst(unit.child[0]),
         childT: fromAst(unit.child[1]),
-        childF: unit.child.length == 3
-            ? fromAst(unit.child[2])
-            : null,
+        childF: unit.child.length == 3 ? fromAst(unit.child[2]) : null,
       );
       return block;
     }
@@ -102,9 +98,9 @@ enum CodeBlockType {
     }
     if (body.type.isString) {
       //function
-      var arg = unit.child.map((e){
+      var arg = unit.child.map((e) {
         var ast = fromAst(e);
-        if(ast is! CodeBlockSet){
+        if (ast is! CodeBlockSet) {
           return ast;
         }
         return ast;
@@ -208,26 +204,26 @@ class CodeBlock extends CodeBlockBuild {
 }
 
 class CodeBlockIf extends CodeBlockBuild {
-  final CodeBlockBuild? code;
+  final CodeBlockBuild code;
   final List<CodeBlockBuild> childTrue = [];
   final List<CodeBlockBuild> childFalse = [];
 
   CodeBlockIf({
-    this.code,
+    CodeBlockBuild? code,
     CodeBlockBuild? childT,
     CodeBlockBuild? childF,
-  }) {
+  }) : code = code ?? CodeBlock(code: '') {
     if (childT != null) {
-      if(childT is CodeBlockSet){
+      if (childT is CodeBlockSet) {
         childTrue.addAll(childT.child!);
-      }else{
+      } else {
         childTrue.add(childT);
       }
     }
     if (childF != null) {
-      if(childF is CodeBlockSet){
+      if (childF is CodeBlockSet) {
         childFalse.addAll(childF.child!);
-      }else{
+      } else {
         childFalse.add(childF);
       }
     }

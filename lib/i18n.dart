@@ -18,6 +18,7 @@ extension Localization on String {
           'line': 'Row',
           'yes': 'Yes',
           'no': 'No',
+          'edit': 'Edit',
           'length': 'Width',
         },
         "ko": {
@@ -34,6 +35,7 @@ extension Localization on String {
           'line': '라인',
           'yes': '예',
           'no': '아니오',
+          'edit': '편집',
           'length': '크기',
         }
       } +

@@ -24,6 +24,7 @@ class CodeBlockChangeNotifier extends ChangeNotifier {
 
   void updatePos() {
     state.updatePos(const Pos(data: [0]));
+    notifyListeners();
   }
 
   void addBlock(Pos pos, CodeBlockBuild codeBlock, {bool option = true}) {

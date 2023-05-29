@@ -491,13 +491,15 @@ class _ViewNodeEditDialogState extends ConsumerState<ViewNodeEditDialog> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text('cancel'.i18n),
+            child: Text('no'.i18n),
           ),
           TextButton(
             onPressed: () {
+              (block.code as CodeBlock).code = _controller!.text;
               Navigator.of(context).pop();
+              ref.read(codeBlockProvider).updatePos();
             },
-            child: Text('ok'.i18n),
+            child: Text('yes'.i18n),
           ),
         ],
       );
@@ -510,13 +512,14 @@ class _ViewNodeEditDialogState extends ConsumerState<ViewNodeEditDialog> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text('cancel'.i18n),
+          child: Text('no'.i18n),
         ),
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
+            ref.read(codeBlockProvider).updatePos();
           },
-          child: Text('ok'.i18n),
+          child: Text('yes'.i18n),
         ),
       ],
     );
