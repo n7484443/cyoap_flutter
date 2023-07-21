@@ -451,7 +451,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
               child: IconButton(
                 onPressed: () {
                   ref.read(vmDraggableNestedMapProvider).addData(
-                      Pos(data: [0, 0]), ChoiceNode.empty()..width = 3);
+                      const Pos(data: [0, 0]), ChoiceNode.empty()..width = 3);
                 },
                 icon: const Icon(Icons.add),
                 tooltip: 'create_tooltip'.i18n,
