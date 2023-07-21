@@ -5,7 +5,6 @@ import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
-import 'package:shared_storage/saf.dart' as saf;
 import 'package:shared_storage/shared_storage.dart';
 
 class SaveProjectImp extends SaveProject {
@@ -27,7 +26,7 @@ class SaveProjectImp extends SaveProject {
 
     if (ConstList.isMobile()) {
       var grantedUri = (await openDocumentTree())!;
-      await saf.createFile(grantedUri,
+      await createFile(grantedUri,
           mimeType: 'application/zip',
           displayName: 'extract.zip',
           bytes: uint8data);

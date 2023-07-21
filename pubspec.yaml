@@ -35,9 +35,9 @@ dependencies:
   image: ^4.0.12
   extended_image: ^8.0.1
   file_picker : ^5.3.1
-  http: ^0.13.4
+  http: ^1.1.0
   shared_preferences: ^2.0.15
-  google_fonts: ^4.0.0
+  google_fonts: ^5.1.0
   archive: ^3.3.1
   flutter_quill: ^7.1.18
   package_info_plus: ^4.0.0
@@ -60,15 +60,12 @@ dependencies:
   sentry_flutter: ^7.6.2
   easy_debounce: ^2.0.2+1
   desktop_drop: ^0.4.0
-  shared_storage: ^0.7.0
-  i18n_extension: ^8.0.0
+  shared_storage: ^0.8.0
+  i18n_extension: ^9.0.2
   reorderable_grid_view: ^2.2.6
   dotted_border: ^2.0.0+3
   flutter_localizations:
     sdk: flutter
-
-dependency_overrides:
-  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:

@@ -251,6 +251,11 @@ final ThemeData appThemeLight = ThemeData.from(
   sliderTheme: const SliderThemeData(
     showValueIndicator: ShowValueIndicator.always,
   ),
+  dialogTheme: const DialogTheme(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+    ),
+  ),
 );
 
 final ThemeData appThemeDark = ThemeData.from(
@@ -266,5 +271,10 @@ final ThemeData appThemeDark = ThemeData.from(
   ),
   sliderTheme: const SliderThemeData(
     showValueIndicator: ShowValueIndicator.always,
+  ),
+  dialogTheme: const DialogTheme(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+    ),
   ),
 );
