@@ -249,88 +249,73 @@ class NodeDivider extends ConsumerWidget {
                 ),
               ),
             ),
-          if (lineOption.name != null && isEditable)
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Card(
-                elevation: 0,
-                color: getColorButton(preset.backgroundColor),
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Text(
-                    lineOption.name!,
-                    style: ConstList.getFont("notoSans").copyWith(
-                      fontSize: 16.0,
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
+          Card(
+            elevation: 0,
+            color: ref.watch(themeStateProvider) == ThemeMode.light
+                ? Colors.white70
+                : Colors.black54,
+            child: Padding(
+              padding: const EdgeInsets.all(1.0),
+              child: Row(
+                children: [
+                  if (lineOption.name != null && isEditable)
+                    Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Text(
+                        lineOption.name!,
+                        style: ConstList.getFont("notoSans").copyWith(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  const Spacer(),
+                  CircleButton(
+                    onPressed: () {
+                      ref.read(vmDraggableNestedMapProvider).moveLine(y, y - 1);
+                    },
+                    child: const Icon(
+                      Icons.arrow_upward,
                     ),
                   ),
-                ),
-              ),
-            ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: IntrinsicWidth(
-              child: Card(
-                elevation: 0,
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: Row(
-                    children: [
-                      CircleButton(
-                        onPressed: () {
-                          ref
-                              .read(vmDraggableNestedMapProvider)
-                              .moveLine(y, y - 1);
-                        },
-                        child: const Icon(
-                          Icons.arrow_upward,
-                        ),
-                      ),
-                      const SizedBox.square(
-                        dimension: 5,
-                      ),
-                      CircleButton(
-                        onPressed: () {
-                          ref
-                              .read(vmDraggableNestedMapProvider)
-                              .moveLine(y, y + 1);
-                        },
-                        child: const Icon(
-                          Icons.arrow_downward,
-                        ),
-                      ),
-                      const SizedBox.square(
-                        dimension: 5,
-                      ),
-                      CircleButton(
-                        onPressed: () {
-                          showDialog<Tuple2<String, String>>(
-                                  context: context,
-                                  builder: (_) => NodeDividerDialog(y),
-                                  barrierDismissible: false)
-                              .then((value) {
-                            ref.invalidate(lineProvider(y));
-                            getPlatform
-                                .getLineSetting(y)
-                                ?.recursiveStatus
-                                .conditionVisibleString = value!.item1;
-                            ref.read(lineOptionProvider(y).notifier).update(
-                                (state) => state.copyWith(name: value!.item2));
-                            ref
-                                .read(
-                                    draggableNestedMapChangedProvider.notifier)
-                                .state = true;
-                          });
-                        },
-                        child: const Icon(
-                          Icons.settings,
-                        ),
-                      ),
-                    ],
+                  const SizedBox.square(
+                    dimension: 5,
                   ),
-                ),
+                  CircleButton(
+                    onPressed: () {
+                      ref.read(vmDraggableNestedMapProvider).moveLine(y, y + 1);
+                    },
+                    child: const Icon(
+                      Icons.arrow_downward,
+                    ),
+                  ),
+                  const SizedBox.square(
+                    dimension: 5,
+                  ),
+                  CircleButton(
+                    onPressed: () {
+                      showDialog<Tuple2<String, String>>(
+                              context: context,
+                              builder: (_) => NodeDividerDialog(y),
+                              barrierDismissible: false)
+                          .then((value) {
+                        ref.invalidate(lineProvider(y));
+                        getPlatform
+                            .getLineSetting(y)
+                            ?.recursiveStatus
+                            .conditionVisibleString = value!.item1;
+                        ref.read(lineOptionProvider(y).notifier).update(
+                            (state) => state.copyWith(name: value!.item2));
+                        ref
+                            .read(draggableNestedMapChangedProvider.notifier)
+                            .state = true;
+                      });
+                    },
+                    child: const Icon(
+                      Icons.settings,
+                    ),
+                  ),
+                ],
               ),
             ),
           )
