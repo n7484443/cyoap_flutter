@@ -11,7 +11,7 @@ class ViewSwitchLabel extends StatelessWidget {
   const ViewSwitchLabel(this.updateState, this.state,
       {this.label = '',
       this.disable = false,
-      this.labelSize = 14.0,
+      this.labelSize = 12.0,
       this.reverse = false,
       super.key});
 
@@ -25,18 +25,16 @@ class ViewSwitchLabel extends StatelessWidget {
             .labelLarge
             ?.copyWith(fontSize: labelSize),
       ),
-      Flexible(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxHeight: 28,
-          ),
-          child: FittedBox(
-            fit: BoxFit.fill,
-            child: Switch(
-              onChanged:
-                  (disable && !state) ? null : (bool value) => updateState(),
-              value: state,
-            ),
+      ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxHeight: 28,
+        ),
+        child: FittedBox(
+          fit: BoxFit.fill,
+          child: Switch(
+            onChanged:
+                (disable && !state) ? null : (bool value) => updateState(),
+            value: state,
           ),
         ),
       ),

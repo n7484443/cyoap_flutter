@@ -12,8 +12,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/platform_system.dart';
 
-const int maxWidthSize = 12;
-
 final draggableNestedMapChangedProvider = StateProvider<bool>((ref) => false);
 
 final vmDraggableNestedMapProvider =

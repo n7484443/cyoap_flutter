@@ -67,14 +67,14 @@ class DevicePreference {
     return prefs.setStringList('cyoap_frequent_path', pathList);
   }
 
-  Future<bool> getSaveAsWebp() async {
+  Future<bool> getVariable(String option, {isEmpty = true}) async {
     var prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('saveAsWebp') ?? true;
+    return prefs.getBool(option) ?? isEmpty;
   }
 
-  Future<void> setSaveAsWebp(bool data) async {
+  Future<void> setVariable(String option, bool data) async {
     var prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('saveAsWebp', data);
+    await prefs.setBool(option, data);
   }
 
   static Future<String?> getLocaleName() async {

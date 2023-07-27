@@ -45,6 +45,7 @@ extension Localization on String {
           'add_file': 'Add file',
           'add_folder': 'Add folder',
           'save_as_webp': 'Convert images to WEBP when saving',
+          'force_wide': 'Forced wide mode',
           'settings': 'Settings',
           'project_name': 'Project Name',
           'create': 'Create',
@@ -53,14 +54,16 @@ extension Localization on String {
           'version_latest': 'Latest version : ',
         },
         "ko": {
-          'summary': '요약',
-          'summary_error': '선택한 선택지가 없습니다.',
-          'show_image_source': '이미지 출처 보기',
-          'debug_mode': '디버그 모드 활성화',
-
-          'save_as_image': '이미지로 저장',
-
-          'copy_clipboard': '클립보드로 복사 후 닫기',
+          'add_file': '파일 추가',
+          'add_folder': '폴더 추가',
+          'save_as_webp': '저장 시 이미지를 webp 파일로 변환',
+          'force_wide': '항상 최대 칸수로 보기',
+          'settings': '설정',
+          'project_name': '프로젝트명',
+          'create': '생성',
+          'font_licenses': '폰트 라이센스',
+          'version_check': '새로운 버전이 있습니다!',
+          'version_latest': '최신 버전 : ',
         }
       } +
       const {
@@ -76,15 +79,14 @@ extension Localization on String {
           'copy_clipboard': 'Copy to clipboard and close',
         },
         "ko": {
-          'add_file': '파일 추가',
-          'add_folder': '폴더 추가',
-          'save_as_webp': '저장 시 이미지를 webp 파일로 변환',
-          'settings': '설정',
-          'project_name': '프로젝트명',
-          'create': '생성',
-          'font_licenses': '폰트 라이센스',
-          'version_check': '새로운 버전이 있습니다!',
-          'version_latest': '최신 버전 : ',
+          'summary': '요약',
+          'summary_error': '선택한 선택지가 없습니다.',
+          'show_image_source': '이미지 출처 보기',
+          'debug_mode': '디버그 모드 활성화',
+
+          'save_as_image': '이미지로 저장',
+
+          'copy_clipboard': '클립보드로 복사 후 닫기',
         }
       } +
       const {

@@ -21,6 +21,7 @@ import '../viewModel/preset/vm_choice_line_preset.dart';
 import '../viewModel/vm_choice_node.dart';
 import '../viewModel/vm_design_setting.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
+import '../viewModel/vm_global_setting.dart';
 import '../viewModel/vm_selected_grid.dart';
 
 class NodeDragTarget extends ConsumerWidget {
@@ -497,6 +498,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
           return ViewWrapCustomReorderable(
             pos,
             isInner: false,
+            maxSize: ref.watch(maximumSizeProvider),
           );
         });
         sliverList.addAll([
@@ -533,6 +535,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
             pos,
             (i) => ViewChoiceNode(pos.addLast(i)),
             isInner: false,
+            maxSize: ref.watch(maximumSizeProvider),
           ),
         );
       }
@@ -570,7 +573,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
       );
     }
 
-    if (ConstList.isSmallDisplay(context)) {
+    if (ConstList.isSmallDisplay(context) && ref.watch(forceWideProvider)) {
       return HorizontalScrollSingleChild(
         child: Scrollbar(
           trackVisibility: true,

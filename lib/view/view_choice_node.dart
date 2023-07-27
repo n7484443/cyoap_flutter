@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
@@ -20,6 +22,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 import '../main.dart';
 import '../model/platform_system.dart';
 import '../viewModel/preset/vm_choice_node_preset.dart';
+import '../viewModel/vm_global_setting.dart';
 import '../viewModel/vm_make_platform.dart';
 import '../viewModel/vm_variable_table.dart';
 
@@ -537,13 +540,13 @@ class ViewChoiceNodeContent extends ConsumerWidget {
       if (isEditable) {
         child = ViewWrapCustomReorderable(
           pos,
-          maxSize: node.getMaxSize(true),
+          maxSize: min(ref.watch(maximumSizeProvider), node.getMaxSize(true)),
         );
       } else if (!ignoreChild) {
         child = ViewWrapCustom(
           pos,
           (i) => ViewChoiceNode(pos.addLast(i)),
-          maxSize: node.getMaxSize(true),
+          maxSize: min(ref.watch(maximumSizeProvider), node.getMaxSize(true)),
         );
       }
     }

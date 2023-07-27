@@ -404,6 +404,13 @@ class ViewGlobalSettingDialog extends ConsumerWidget {
             ref.watch(saveAsWebpProvider),
             label: "save_as_webp".i18n,
           ),
+          ViewSwitchLabel(
+                () {
+              ref.read(forceWideProvider.notifier).rev();
+            },
+            ref.watch(forceWideProvider),
+            label: "force_wide".i18n,
+          ),
           TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
