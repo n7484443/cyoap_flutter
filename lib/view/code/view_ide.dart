@@ -176,15 +176,17 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                   child: HorizontalScroll(
                     itemBuilder: (BuildContext context, int index) {
                       var text = ref.watch(ideVariableListProvider)[index];
-                      return TextButton(
-                        onPressed: () {
-                          ref
-                              .read(ideCurrentInputProvider.notifier)
-                              .insertText(text);
-                        },
-                        child: Text(
-                          text,
-                          style: ConstList.getCurrentFont(context).bodyLarge,
+                      return FittedBox(
+                        child: TextButton(
+                          onPressed: () {
+                            ref
+                                .read(ideCurrentInputProvider.notifier)
+                                .insertText(text);
+                          },
+                          child: Text(
+                            text,
+                            style: ConstList.getCurrentFont(context).bodyLarge,
+                          ),
                         ),
                       );
                     },
