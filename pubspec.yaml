@@ -33,7 +33,7 @@ dependencies:
     git:
       url: https://github.com/n7484443/cyoap_core.git
   image: ^4.0.12
-  extended_image: ^8.0.1
+  extended_image: ^8.1.0
   file_picker : ^5.3.1
   http: ^1.1.0
   shared_preferences: ^2.0.15

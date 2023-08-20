@@ -6,7 +6,6 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tuple/tuple.dart';
 
 final controllerClickableProvider =
     Provider.autoDispose<TextEditingController>((ref) {
@@ -197,7 +196,7 @@ class IdeCurrentInputNotifier extends StateNotifier<String> {
     len = 0;
   }
 
-  Tuple2<String, bool> formatting(String input) {
+  (String, bool) formatting(String input) {
     var text = input.split("\n");
     var stack = 0;
     var output = [];
@@ -212,7 +211,7 @@ class IdeCurrentInputNotifier extends StateNotifier<String> {
       output.add(outputCode);
       stack += "{".allMatches(code).length;
     }
-    return Tuple2(output.join("\n").trim(), stack != 0);
+    return (output.join("\n").trim(), stack != 0);
   }
 }
 

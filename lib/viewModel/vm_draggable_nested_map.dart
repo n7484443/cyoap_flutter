@@ -187,3 +187,6 @@ final lineListProvider = Provider.autoDispose<List<int>>((ref) {
       .map((e) => e.currentPos)
       .toList();
 });
+
+final lineFoldProvider =
+StateProvider.autoDispose.family<bool, int>((ref, i) => false);

@@ -259,6 +259,17 @@ class NodeDivider extends ConsumerWidget {
               padding: const EdgeInsets.all(1.0),
               child: Row(
                 children: [
+                  CircleButton(
+                    onPressed: () {
+                      ref.read(lineFoldProvider(y).notifier).update((state) => !state);
+                    },
+                    child: ref.watch(lineFoldProvider(y)) ? const Icon(
+                      Icons.unfold_more,
+                    ) :  const Icon(
+                      Icons.unfold_less,
+                    ),
+                  ),
+                  const Spacer(),
                   if (lineOption.name != null && isEditable)
                     Padding(
                       padding: const EdgeInsets.all(4.0),
@@ -460,13 +471,18 @@ class _NestedMapState extends ConsumerState<NestedMap> {
             ),
           ),
         ];
-      } else {
+      }else {
         sliverList = List.generate(lineList.length * 2, (index) {
           var y = lineList[index ~/ 2];
           var pos = Pos(data: [y]);
           if (index.isEven) {
             return SliverToBoxAdapter(
               child: NodeDivider(y),
+            );
+          }
+          if(ref.watch(lineFoldProvider(y))){
+            return const SliverToBoxAdapter(
+              child: SizedBox.shrink(),
             );
           }
           if (ref.watch(childrenChangeProvider(pos)).isEmpty) {

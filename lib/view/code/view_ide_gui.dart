@@ -71,7 +71,7 @@ class ViewIdeGui extends ConsumerWidget {
                             .read(nodeEditorTargetProvider)
                             .node
                             .recursiveStatus
-                            .executeCodeString = out.item1;
+                            .executeCodeString = out.$1;
                         ref
                             .read(currentIdeOpenProvider.notifier)
                             .update((state) => !state);

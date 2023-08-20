@@ -4,7 +4,6 @@ import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tuple/tuple.dart';
 
 final projectSettingNameTextEditingProvider =
     Provider.family.autoDispose<TextEditingController, int>((ref, index) {
@@ -12,7 +11,7 @@ final projectSettingNameTextEditingProvider =
       text: ref
           .read(valueTypeWrapperListProvider.notifier)
           .getEditTarget(index)!
-          .item1);
+          .$1);
   ref.onDispose(() => controller.dispose());
   return controller;
 });
@@ -22,7 +21,7 @@ final projectSettingValueTextEditingProvider =
   var data = ref
       .read(valueTypeWrapperListProvider.notifier)
       .getEditTarget(index)!
-      .item2
+      .$2
       .valueType;
   var text = data.type.isString ? '"${data.dataUnzip}"' : data.data;
   var controller = TextEditingController(text: text);
@@ -36,7 +35,7 @@ final projectSettingDisplayNameTextEditingProvider =
       text: ref
           .read(valueTypeWrapperListProvider.notifier)
           .getEditTarget(index)!
-          .item2
+          .$2
           .displayName);
   ref.onDispose(() => controller.dispose());
   return controller;
@@ -46,32 +45,32 @@ final projectSettingVisibleSwitchProvider = StateProvider.family
     .autoDispose<bool, int>((ref, index) => ref
     .read(valueTypeWrapperListProvider.notifier)
     .getEditTarget(index)!
-    .item2
+    .$2
     .visible);
 
 final valueTypeWrapperListProvider = StateNotifierProvider.autoDispose<
-        ValueTypeWrapperListNotifier, List<Tuple2<String, ValueTypeWrapper>>>(
+        ValueTypeWrapperListNotifier, List<(String, ValueTypeWrapper)>>(
     (ref) =>
         ValueTypeWrapperListNotifier(ref, List.from(getPlatform.globalSetting)));
 
 class ValueTypeWrapperListNotifier
-    extends StateNotifier<List<Tuple2<String, ValueTypeWrapper>>> {
+    extends StateNotifier<List<(String, ValueTypeWrapper)>> {
   Ref ref;
 
   ValueTypeWrapperListNotifier(this.ref, super.state);
 
   void addInitialValue(String name, ValueTypeWrapper type) {
     int t = 0;
-    var pos = state.indexWhere((element) => element.item1 == name);
+    var pos = state.indexWhere((element) => element.$1 == name);
     if (pos == -1) {
-      state = [...state, Tuple2(name, type)];
+      state = [...state, (name, type)];
     } else {
       while (true) {
-        pos = state.indexWhere((element) => element.item1 == (name + t.toString()));
+        pos = state.indexWhere((element) => element.$1 == (name + t.toString()));
         if (pos != -1) {
           t += 1;
         } else {
-          state = [...state, Tuple2((name + t.toString()), type)];
+          state = [...state, ((name + t.toString()), type)];
           break;
         }
       }
@@ -86,7 +85,7 @@ class ValueTypeWrapperListNotifier
     if (index != -1) {
       deleteInitialValue(index);
     }
-    state = [...state]..insert(index, Tuple2(name, value));
+    state = [...state]..insert(index, (name, value));
   }
 
   void save() {
@@ -95,7 +94,7 @@ class ValueTypeWrapperListNotifier
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
   }
 
-  Tuple2<String, ValueTypeWrapper>? getEditTarget(int index) {
+  (String, ValueTypeWrapper)? getEditTarget(int index) {
     if (index != -1) {
       return state[index];
     }
@@ -116,10 +115,10 @@ class ValueTypeWrapperListNotifier
       return true;
     }
     for(int i = 0; i < state.length; i++){
-      if(state[i].item1 != getPlatform.globalSetting[i].item1){
+      if(state[i].$1 != getPlatform.globalSetting[i].$1){
         return true;
       }
-      if(state[i].item2 != getPlatform.globalSetting[i].item2){
+      if(state[i].$2 != getPlatform.globalSetting[i].$2){
         return true;
       }
     }

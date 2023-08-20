@@ -6,7 +6,6 @@ import 'package:cyoap_core/grammar/value_type.dart';
 import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
-import 'package:tuple/tuple.dart';
 
 const int designSamplePosition = -100;
 
@@ -28,7 +27,7 @@ class AbstractPlatform extends PlayablePlatform {
     Map<String, dynamic> out = {
       'stringImageName': stringImageName,
       'globalSetting':
-          globalSetting.map((e) => [e.item1, e.item2.toJson()]).toList(),
+          globalSetting.map((e) => [e.$1, e.$2.toJson()]).toList(),
       'version': ConstList.version,
     };
     out.addAll(designSetting.toJson());
@@ -111,10 +110,10 @@ class AbstractPlatform extends PlayablePlatform {
     }
   }
 
-  void setGlobalSetting(List<Tuple2<String, ValueTypeWrapper>> units) {
+  void setGlobalSetting(List<(String, ValueTypeWrapper)> units) {
     clearGlobalSetting();
     for (var unit in units) {
-      addGlobalSetting(unit.item1, unit.item2);
+      addGlobalSetting(unit.$1, unit.$2);
     }
     generateRecursiveParser();
     updateStatusAll();

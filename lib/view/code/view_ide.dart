@@ -274,7 +274,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                           var output = ref
                               .read(ideCurrentInputProvider.notifier)
                               .formatting(text);
-                          if (output.item2) {
+                          if (output.$2) {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text("sort_error".i18n),
                             ));
@@ -285,7 +285,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                           ref
                               .read(controllerIdeProvider)
                               .document
-                              .insert(0, output.item1);
+                              .insert(0, output.$1);
                           ref.read(ideCurrentInputProvider.notifier).reformat =
                               false;
                         },
