@@ -9,6 +9,7 @@ import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_circle_button.dart';
+import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/view/view_selected_grid.dart';
@@ -171,6 +172,12 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
             controller: _nameController,
             decoration: InputDecoration(hintText: 'lineSetting_tooltip_2'.i18n),
           ),
+          ViewSwitchLabel(() {
+            ref.read(lineOptionProvider(widget.y).notifier).update((state) =>
+                state.copyWith(
+                    enableCancelFeature: !state.enableCancelFeature));
+          }, lineOption.enableCancelFeature,
+              label: 'lineSetting_tooltip_3'.i18n),
         ],
       ),
       actions: [
@@ -261,13 +268,17 @@ class NodeDivider extends ConsumerWidget {
                 children: [
                   CircleButton(
                     onPressed: () {
-                      ref.read(lineFoldProvider(y).notifier).update((state) => !state);
+                      ref
+                          .read(lineFoldProvider(y).notifier)
+                          .update((state) => !state);
                     },
-                    child: ref.watch(lineFoldProvider(y)) ? const Icon(
-                      Icons.unfold_more,
-                    ) :  const Icon(
-                      Icons.unfold_less,
-                    ),
+                    child: ref.watch(lineFoldProvider(y))
+                        ? const Icon(
+                            Icons.unfold_more,
+                          )
+                        : const Icon(
+                            Icons.unfold_less,
+                          ),
                   ),
                   const Spacer(),
                   if (lineOption.name != null && isEditable)
@@ -471,7 +482,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
             ),
           ),
         ];
-      }else {
+      } else {
         sliverList = List.generate(lineList.length * 2, (index) {
           var y = lineList[index ~/ 2];
           var pos = Pos(data: [y]);
@@ -480,7 +491,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
               child: NodeDivider(y),
             );
           }
-          if(ref.watch(lineFoldProvider(y))){
+          if (ref.watch(lineFoldProvider(y))) {
             return const SliverToBoxAdapter(
               child: SizedBox.shrink(),
             );
