@@ -1,6 +1,5 @@
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/i18n.dart';
-import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
@@ -40,126 +39,122 @@ class ViewSaveDialog extends ConsumerWidget {
   }
 }
 
+
+class CopyButton extends ConsumerWidget {
+  const CopyButton({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Visibility(
+      visible: ref.watch(copiedChoiceNodeProvider).choiceNode != null,
+      child: Draggable<Pos>(
+        data: const Pos(data: [copiedPositioned, copiedPositioned]),
+        feedback: Transform.scale(
+          scale: 0.9,
+          child: Opacity(
+            opacity: 0.6,
+            child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: 400,
+                ),
+                child: ViewChoiceNode(
+                    Pos(data: [copiedPositioned, copiedPositioned]))),
+          ),
+        ),
+        onDragStarted: () {
+          ref
+              .read(dragChoiceNodeProvider.notifier)
+              .dragStart(Pos(data: [copiedPositioned, copiedPositioned]));
+        },
+        onDragEnd: (DraggableDetails data) {
+          ref.read(dragChoiceNodeProvider.notifier).dragEnd();
+        },
+        onDragUpdate: (DragUpdateDetails details) => ref
+            .read(dragPositionProvider.notifier)
+            .state = details.localPosition.dy,
+        child: Tooltip(
+          message: 'copy_tooltip'.i18n,
+          child: const Icon(Icons.paste),
+        ),
+      ),
+    );
+  }
+}
+
+class RecoverButton extends ConsumerWidget {
+  const RecoverButton({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Visibility(
+      visible: ref.watch(removedChoiceNodeProvider).choiceNode != null,
+      child: Draggable<Pos>(
+        data: const Pos(data: [removedPositioned, removedPositioned]),
+        feedback: Transform.scale(
+          scale: 0.9,
+          child: Opacity(
+            opacity: 0.6,
+            child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: 400,
+                ),
+                child: const ViewChoiceNode(
+                    Pos(data: [removedPositioned, removedPositioned]))),
+          ),
+        ),
+        onDragStarted: () {
+          ref.read(dragChoiceNodeProvider.notifier).dragStart(
+              const Pos(data: [removedPositioned, removedPositioned]));
+        },
+        onDragEnd: (DraggableDetails data) {
+          ref.read(dragChoiceNodeProvider.notifier).dragEnd();
+        },
+        onDragUpdate: (DragUpdateDetails details) => ref
+            .read(dragPositionProvider.notifier)
+            .state = details.localPosition.dy,
+        child: Tooltip(
+          message: 'recently_tooltip'.i18n,
+          child: const Icon(Icons.restore_from_trash),
+        ),
+      ),
+    );
+  }
+}
+
 class ViewMake extends ConsumerWidget {
   const ViewMake({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var appbarWidget = AppBar(
-      leading: IconButton(
-        tooltip: 'back'.i18n,
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () {
-          if (ref.read(draggableNestedMapChangedProvider)) {
-            showDialog(
-              context: context,
-              builder: (_) => ViewBackDialog(() async {
-                final navigator = Navigator.of(context);
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) =>
-                        ViewSaveDialog(getPlatformFileSystem.openAsFile),
-                    barrierDismissible: false);
-                await savePlatform(ref, getPlatformFileSystem.openAsFile);
-                navigator.pop();
-                ref.read(draggableNestedMapChangedProvider.notifier).state =
-                    false;
-              }, (i) {
-                Navigator.of(context).pop();
-                if (i != 0) {
-                  Navigator.of(context).pushReplacementNamed("/");
-                }
-              }),
-            );
-          } else {
-            Navigator.of(context).pushReplacementNamed("/");
-          }
+    if (ConstList.isSmallDisplay(context)) {
+      return WillPopScope(
+        onWillPop: () async {
+          return false;
         },
-      ),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Visibility(
-            visible: ref.watch(copiedChoiceNode) != null,
-            child: Draggable<Pos>(
-              data: Pos(data: [copiedPositioned, copiedPositioned]),
-              feedback: Transform.scale(
-                scale: 0.9,
-                child: Opacity(
-                  opacity: 0.6,
-                  child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        maxWidth: 400,
-                      ),
-                      child: ViewChoiceNode(
-                          Pos(data: [copiedPositioned, copiedPositioned]))),
-                ),
-              ),
-              onDragStarted: () {
-                ref
-                    .read(dragChoiceNodeProvider.notifier)
-                    .dragStart(Pos(data: [copiedPositioned, copiedPositioned]));
-              },
-              onDragEnd: (DraggableDetails data) {
-                ref.read(dragChoiceNodeProvider.notifier).dragEnd();
-              },
-              onDragUpdate: (DragUpdateDetails details) => ref
-                  .read(dragPositionProvider.notifier)
-                  .state = details.localPosition.dy,
-              child: Tooltip(
-                message: 'copy_tooltip'.i18n,
-                child: const Icon(Icons.paste),
-              ),
+        child: Scaffold(
+          appBar: AppBar(
+            leading: const BackButton(),
+            title: const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                CopyButton(),
+                RecoverButton(),
+              ],
             ),
+            actions: [
+              if (ConstList.isMobile()) const ViewRefreshIcons(),
+              if (ConstList.isMobile()) const ViewSaveIcons()
+            ],
           ),
-          Visibility(
-            visible: ref.watch(removedChoiceNode) != null,
-            child: Draggable<Pos>(
-              data: Pos(data: [removedPositioned, removedPositioned]),
-              feedback: Transform.scale(
-                scale: 0.9,
-                child: Opacity(
-                  opacity: 0.6,
-                  child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        maxWidth: 400,
-                      ),
-                      child: ViewChoiceNode(
-                          Pos(data: [removedPositioned, removedPositioned]))),
-                ),
-              ),
-              onDragStarted: () {
-                ref.read(dragChoiceNodeProvider.notifier).dragStart(
-                    Pos(data: [removedPositioned, removedPositioned]));
-              },
-              onDragEnd: (DraggableDetails data) {
-                ref.read(dragChoiceNodeProvider.notifier).dragEnd();
-              },
-              onDragUpdate: (DragUpdateDetails details) => ref
-                  .read(dragPositionProvider.notifier)
-                  .state = details.localPosition.dy,
-              child: Tooltip(
-                message: 'recently_tooltip'.i18n,
-                child: const Icon(Icons.restore_from_trash),
-              ),
-            ),
-          ),
-        ],
-      ),
-      actions: [
-        if (ConstList.isMobile()) const ViewRefreshIcons(),
-        if (ConstList.isMobile()) const ViewSaveIcons()
-      ],
-    );
-
+          body: const NestedScroll(),
+        ),
+      );
+    }
     return WillPopScope(
       onWillPop: () async {
         return false;
       },
-      child: Scaffold(
-        appBar: appbarWidget,
-        body: const NestedScroll(),
-      ),
+      child: const Scaffold(body: NestedScroll()),
     );
   }
 }

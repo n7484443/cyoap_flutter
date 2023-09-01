@@ -2,7 +2,6 @@ import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
-import 'package:cyoap_flutter/view/view_make.dart';
 import 'package:cyoap_flutter/viewModel/vm_editor.dart';
 import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
 import 'package:easy_debounce/easy_debounce.dart';
@@ -54,103 +53,6 @@ class ViewChangeRotation extends ConsumerWidget {
             }
           },
           icon: const Icon(Icons.rotate_left),
-        ),
-      ],
-    );
-  }
-}
-
-class ViewEditDrawer extends ConsumerStatefulWidget {
-  const ViewEditDrawer({
-    super.key,
-  });
-
-  @override
-  ConsumerState createState() => _ViewEditDrawerState();
-}
-
-class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
-  final TextEditingController _controller = TextEditingController();
-  final ScrollController _scrollController = AdjustableScrollController();
-
-  @override
-  void initState() {
-    _controller.addListener(() {
-      EasyDebounce.debounce('search', const Duration(milliseconds: 500), () {
-        ref.read(searchProvider.notifier).state = _controller.text;
-      });
-    });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    EasyDebounce.cancel('search');
-    _controller.dispose();
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        if (!ConstList.isMobile())
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              const ViewSaveIcons(),
-              const ViewRefreshIcons(),
-            ],
-          ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            controller: _controller,
-            decoration: InputDecoration(
-              hintText: "search".i18n,
-            ),
-          ),
-        ),
-        Flexible(
-          child: ListView(
-            controller: _scrollController,
-            children: [
-              const VariableTiles(),
-              const NodeTiles(),
-            ],
-          ),
-        ),
-        Column(
-          children: [
-            ListTile(
-              onTap: () {
-                ref
-                    .read(changeTabProvider.notifier)
-                    .changePageString('viewDesignSetting', context);
-              },
-              leading: const Icon(Icons.layers),
-              title: Text('design_settings'.i18n),
-            ),
-            ListTile(
-              leading: const Icon(Icons.image),
-              title: Text('image_settings'.i18n),
-              onTap: () => ref
-                  .read(changeTabProvider.notifier)
-                  .changePageString("viewSource", context),
-            ),
-            ListTile(
-              onTap: () {
-                ref
-                    .read(changeTabProvider.notifier)
-                    .changePageString('viewProjectSetting', context);
-              },
-              leading: const Icon(Icons.settings),
-              title: Text('project_settings'.i18n),
-            ),
-            const ViewChangeRotation(),
-          ],
         ),
       ],
     );
@@ -378,6 +280,7 @@ class NodeTiles extends ConsumerWidget {
     }
     return ExpansionTile(
       title: Text('node'.i18n),
+      initiallyExpanded: true,
       children: widgetList,
     );
   }

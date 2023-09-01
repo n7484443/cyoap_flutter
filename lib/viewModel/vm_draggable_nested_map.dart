@@ -8,6 +8,7 @@ import 'package:cyoap_core/preset/line_preset.dart';
 import 'package:cyoap_core/variable_db.dart';
 import 'package:cyoap_flutter/viewModel/preset/vm_choice_line_preset.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/platform_system.dart';
@@ -17,8 +18,42 @@ final draggableNestedMapChangedProvider = StateProvider<bool>((ref) => false);
 final vmDraggableNestedMapProvider =
     Provider.autoDispose((ref) => VMDraggableNestedMap(ref));
 
-final removedChoiceNode = StateProvider<ChoiceNode?>((ref) => null);
-final copiedChoiceNode = StateProvider<ChoiceNode?>((ref) => null);
+final removedChoiceNodeProvider =
+    ChangeNotifierProvider<RemovedChoiceNodeNotifier>(
+        (ref) => RemovedChoiceNodeNotifier(ref, null));
+
+class RemovedChoiceNodeNotifier extends ChangeNotifier {
+  ChoiceNode? choiceNode;
+  Ref ref;
+
+  RemovedChoiceNodeNotifier(this.ref, this.choiceNode);
+
+  void update(ChoiceNode choiceNode) {
+    this.choiceNode = choiceNode;
+    notifyListeners();
+    ref.invalidate(choiceNodeProvider(
+        const Pos(data: [removedPositioned, removedPositioned])));
+  }
+}
+
+final copiedChoiceNodeProvider =
+    ChangeNotifierProvider<CopiedChoiceNodeNotifier>(
+        (ref) => CopiedChoiceNodeNotifier(ref, null));
+
+class CopiedChoiceNodeNotifier extends ChangeNotifier {
+  ChoiceNode? choiceNode;
+  Ref ref;
+
+  CopiedChoiceNodeNotifier(this.ref, this.choiceNode);
+
+  void update(ChoiceNode choiceNode) {
+    this.choiceNode = choiceNode;
+    notifyListeners();
+    ref.invalidate(choiceNodeProvider(
+        const Pos(data: [copiedPositioned, copiedPositioned])));
+  }
+}
+
 final dragPositionProvider = StateProvider<double?>((ref) => null);
 
 final dragChoiceNodeProvider =
@@ -44,19 +79,19 @@ class VMDraggableNestedMap {
 
   VMDraggableNestedMap(this.ref);
 
-  void refresh(){
+  void refresh() {
     refreshPage(ref);
   }
 
   void copyData(ChoiceNode choiceNode) {
-    ref.read(copiedChoiceNode.notifier).state = choiceNode.clone();
+    ref.read(copiedChoiceNodeProvider.notifier).update(choiceNode.clone());
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     refreshPage(ref);
   }
 
   void removeData(Pos pos) {
     var choiceNode = getPlatform.removeData(pos);
-    ref.read(removedChoiceNode.notifier).state = choiceNode.clone();
+    ref.read(removedChoiceNodeProvider.notifier).update(choiceNode.clone());
     VariableDataBase().updateCheckList();
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     refreshPage(ref);
@@ -189,4 +224,4 @@ final lineListProvider = Provider.autoDispose<List<int>>((ref) {
 });
 
 final lineFoldProvider =
-StateProvider.autoDispose.family<bool, int>((ref, i) => false);
+    StateProvider.autoDispose.family<bool, int>((ref, i) => false);

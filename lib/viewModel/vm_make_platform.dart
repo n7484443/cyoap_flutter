@@ -65,7 +65,7 @@ class ChangeTabNotifier extends StateNotifier<int> {
     return true;
   }
 
-  Future<void> changePage(int index, BuildContext context) async{
+  Future<void> changePage(int index, BuildContext context) async {
     var value = await removeFunction(state, context);
     if (value) {
       entryFunction(index, context);
@@ -73,11 +73,11 @@ class ChangeTabNotifier extends StateNotifier<int> {
     }
   }
 
-  Future<void> home(BuildContext context) async{
+  Future<void> home(BuildContext context) async {
     await changePage(0, context);
   }
 
-  Future<void> changePageString(String name, BuildContext context) async{
+  Future<void> changePageString(String name, BuildContext context) async {
     var index = tabList.indexOf(name).clamp(0, tabList.length);
     await changePage(index, context);
   }
@@ -91,3 +91,5 @@ final List<String> tabList = [
   "viewImageEditor",
   "viewDesignSetting",
 ];
+
+final sideTabProvider = StateProvider<int?>((ref) => null);
