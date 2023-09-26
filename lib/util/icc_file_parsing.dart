@@ -193,7 +193,9 @@ class IccProjectParser {
         name: generateRandomString(10),
         imagePosition: template == 4 ? 1 : template,
         colorNode: isRow ? globalRowBackgroundColor : globalObjectBackgroundColor,
-        colorSelectNode: isRow ? globalRowBackgroundColor : globalSelectFilterBgColor,
+        outlineOption: OutlineOption(
+          outlineSelectColor: isRow ? globalRowBackgroundColor : globalSelectFilterBgColor,
+        ),
       );
     }
     // var backgroundColor =
@@ -211,9 +213,11 @@ class IccProjectParser {
         colorNode: rowBackgroundColor == 0xFFFFFFFF
             ? globalRowBackgroundColor
             : rowBackgroundColor,
-        colorSelectNode: rowBackgroundColor == 0xFFFFFFFF
-            ? globalRowBackgroundColor
-            : rowBackgroundColor,
+        outlineOption: OutlineOption(
+          outlineSelectColor: rowBackgroundColor == 0xFFFFFFFF
+              ? globalRowBackgroundColor
+              : rowBackgroundColor,
+        ),
       );
     }
     return ChoiceNodeDesignPreset(
@@ -222,9 +226,11 @@ class IccProjectParser {
       colorNode: objectBackgroundColor == 0xFFFFFFFF
           ? globalObjectBackgroundColor
           : objectBackgroundColor,
-      colorSelectNode: objectSelectBackgroundColor == 0xFFFFFFFF
-          ? globalSelectFilterBgColor
-          : objectSelectBackgroundColor,
+      outlineOption: OutlineOption(
+        outlineSelectColor: objectSelectBackgroundColor == 0xFFFFFFFF
+            ? globalSelectFilterBgColor
+            : objectSelectBackgroundColor,
+      ),
     );
   }
 }

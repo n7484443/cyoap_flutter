@@ -49,7 +49,6 @@ dependencies:
   ffi: ^2.0.2
   device_info_plus: ^9.0.0
   isolated_worker: ^0.1.1
-  animated_flip_counter: ^0.2.5
   url_strategy: ^0.2.0
   path_provider: ^2.0.11
   path: ^1.8.2

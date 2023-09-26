@@ -368,10 +368,10 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
               heading: Center(
                 child: Text('node_outline_color'.i18n),
               ),
-              color: Color(preset.colorSelectNode),
+              color: Color(preset.outlineOption.outlineSelectColor),
               onColorChanged: (Color value) {
                 ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                    presetIndex, preset.copyWith(colorSelectNode: value.value));
+                    presetIndex, preset.copyWith.outlineOption(outlineSelectColor: value.value));
               },
               pickersEnabled: {
                 ColorPickerType.wheel: true,
@@ -388,21 +388,21 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
           ),
           SliverGrid(
             delegate: SliverChildListDelegate([
-              DropdownButtonFormField<Outline>(
+              DropdownButtonFormField<OutlineType>(
                 decoration: InputDecoration(labelText: 'outline_shape'.i18n),
-                items: Outline.values
-                    .map<DropdownMenuItem<Outline>>((type) =>
+                items: OutlineType.values
+                    .map<DropdownMenuItem<OutlineType>>((type) =>
                         DropdownMenuItem(value: type, child: Text(type.name)))
                     .toList(),
-                onChanged: (Outline? t) {
+                onChanged: (OutlineType? t) {
                   if (t != null) {
                     var index = ref.read(currentPresetIndexProvider);
                     ref
                         .read(choiceNodePresetListProvider.notifier)
-                        .updateIndex(index, preset.copyWith(outline: t));
+                        .updateIndex(index, preset.copyWith.outlineOption(outlineType: t));
                   }
                 },
-                value: preset.outline,
+                value: preset.outlineOption.outlineType,
               ),
               TextFormField(
                 textAlign: TextAlign.end,

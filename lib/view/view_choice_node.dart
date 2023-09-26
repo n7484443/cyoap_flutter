@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/playable_platform.dart';
@@ -74,9 +73,10 @@ class ViewChoiceNodeMain extends ConsumerWidget {
     var node = ref.watch(choiceNodeProvider(pos)).node!;
     var design = ref.watch(choiceNodeDesignSettingProvider(pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
+    var outline = preset.outlineOption;
     var defaultColor = Color(preset.colorNode);
     var borderColor =
-        node.select > 0 ? Color(preset.colorSelectNode) : defaultColor;
+        node.select > 0 ? Color(outline.outlineSelectColor) : defaultColor;
     var innerWidget = Ink(
       color: defaultColor,
       child: Padding(
@@ -93,14 +93,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
               : null,
           onTap: !isEditable
               ? () {
-                  ref.read(choiceNodeSelectProvider(pos).notifier).select(
-                        0,
-                        showDialogFunction: () => showDialog(
-                          context: context,
-                          builder: (builder) => RandomDialog(pos),
-                          barrierDismissible: false,
-                        ),
-                      );
+                  ref.read(choiceNodeSelectProvider(pos).notifier).select(0);
                 }
               : null,
           child: Stack(children: [
@@ -156,10 +149,10 @@ class ViewChoiceNodeMain extends ConsumerWidget {
       ),
     );
 
-    if (preset.outline == Outline.dotted || preset.outline == Outline.dashed) {
+    if (outline.outlineType == OutlineType.dotted || outline.outlineType == OutlineType.dashed) {
       var borderSide = BorderSide(
           color: borderColor,
-          width: preset.outlineWidth,
+          width: outline.outlineWidth,
           style: BorderStyle.none);
       var shape = RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(preset.round),
@@ -167,11 +160,11 @@ class ViewChoiceNodeMain extends ConsumerWidget {
       );
       return DottedBorder(
         borderType: BorderType.RRect,
-        strokeWidth: preset.outlineWidth,
-        dashPattern: preset.outline == Outline.dashed ? [6, 2] : [3, 1],
+        strokeWidth: outline.outlineWidth,
+        dashPattern: outline.outlineType == OutlineType.dashed ? [6, 2] : [3, 1],
         radius: Radius.circular(preset.round),
         color: borderColor,
-        padding: EdgeInsets.all(preset.outlinePadding),
+        padding: EdgeInsets.all(outline.outlinePadding),
         child: Card(
           shape: shape,
           clipBehavior: Clip.antiAlias,
@@ -185,26 +178,26 @@ class ViewChoiceNodeMain extends ConsumerWidget {
 
     var borderSide = BorderSide(
         color: borderColor,
-        width: preset.outlineWidth,
+        width: outline.outlineWidth,
         style: BorderStyle.solid);
     var shape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(preset.round),
       side: borderSide,
     );
 
-    if (preset.outline == Outline.solid) {
+    if (outline.outlineType == OutlineType.solid) {
       return DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(preset.round),
           border: Border.all(
             color: borderColor,
-            width: preset.outlineWidth,
+            width: outline.outlineWidth,
           ),
         ),
         child: Card(
           elevation: preset.elevation,
           color: defaultColor,
-          margin: EdgeInsets.all(preset.outlinePadding),
+          margin: EdgeInsets.all(outline.outlinePadding),
           child: innerWidget,
         ),
       );
@@ -257,36 +250,6 @@ class SizeDialog extends ConsumerWidget {
         ),
       ),
     );
-  }
-}
-
-class RandomDialog extends ConsumerWidget {
-  final Pos pos;
-
-  const RandomDialog(this.pos, {super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return AlertDialog(
-        scrollable: true,
-        title: Text('random_show'.i18n),
-        content: AnimatedFlipCounter(
-            value: ref.watch(randomStateNotifierProvider(pos)),
-            duration: const Duration(milliseconds: 500),
-            textStyle: Theme.of(context).textTheme.displayLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.secondary,
-                )),
-        actions: [
-          Visibility(
-            visible: !ref.watch(randomProcessExecutedProvider),
-            child: TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('confirm'.i18n),
-            ),
-          )
-        ]);
   }
 }
 

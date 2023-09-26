@@ -57,14 +57,14 @@ class CopyButton extends ConsumerWidget {
                 constraints: const BoxConstraints(
                   maxWidth: 400,
                 ),
-                child: ViewChoiceNode(
+                child: const ViewChoiceNode(
                     Pos(data: [copiedPositioned, copiedPositioned]))),
           ),
         ),
         onDragStarted: () {
           ref
               .read(dragChoiceNodeProvider.notifier)
-              .dragStart(Pos(data: [copiedPositioned, copiedPositioned]));
+              .dragStart(const Pos(data: [copiedPositioned, copiedPositioned]));
         },
         onDragEnd: (DraggableDetails data) {
           ref.read(dragChoiceNodeProvider.notifier).dragEnd();

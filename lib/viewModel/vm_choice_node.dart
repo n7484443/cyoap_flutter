@@ -124,11 +124,10 @@ class ChoiceNodeSelectNotifier extends StateNotifier<int> {
 
   ChoiceNodeSelectNotifier(this.ref, this.pos) : super(0);
 
-  void select(int n, {Future Function()? showDialogFunction}) {
+  void select(int n) {
     var node = ref.read(choiceNodeProvider(pos)).node!;
     node.selectNode(n);
     if (node.random != -1) {
-      showDialogFunction!();
       ref.read(randomStateNotifierProvider(pos).notifier).startRandom();
     }
     updateStatusAll(ref, startLine: node.pos.first);

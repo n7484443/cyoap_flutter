@@ -303,29 +303,32 @@ class _ViewSideClipboardState extends ConsumerState<ViewSideClipboard> {
     return ListView.builder(
       itemBuilder: (BuildContext context, int index) {
         var pos = list[index];
-        return Draggable<Pos>(
-          data: pos,
-          feedback: Transform.scale(
-            scale: 0.9,
-            child: Opacity(
-              opacity: 0.6,
-              child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: 400,
-                  ),
-                  child: ViewChoiceNode(pos, ignoreChild: true,)),
+        return Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Draggable<Pos>(
+            data: pos,
+            feedback: Transform.scale(
+              scale: 0.9,
+              child: Opacity(
+                opacity: 0.6,
+                child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      maxWidth: 400,
+                    ),
+                    child: ViewChoiceNode(pos, ignoreChild: true,)),
+              ),
             ),
+            onDragStarted: () {
+              ref.read(dragChoiceNodeProvider.notifier).dragStart(pos);
+            },
+            onDragEnd: (DraggableDetails data) {
+              ref.read(dragChoiceNodeProvider.notifier).dragEnd();
+            },
+            onDragUpdate: (DragUpdateDetails details) => ref
+                .read(dragPositionProvider.notifier)
+                .state = details.localPosition.dy,
+            child: ViewChoiceNode(pos, ignoreChild: true),
           ),
-          onDragStarted: () {
-            ref.read(dragChoiceNodeProvider.notifier).dragStart(pos);
-          },
-          onDragEnd: (DraggableDetails data) {
-            ref.read(dragChoiceNodeProvider.notifier).dragEnd();
-          },
-          onDragUpdate: (DragUpdateDetails details) => ref
-              .read(dragPositionProvider.notifier)
-              .state = details.localPosition.dy,
-          child: ViewChoiceNode(pos, ignoreChild: true),
         );
       },
       itemCount: list.length,
