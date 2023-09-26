@@ -1,5 +1,6 @@
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/i18n.dart';
+import 'package:cyoap_flutter/view/util/VerticalTabBar.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
@@ -83,7 +84,16 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
               maxWidth: 35,
               child: Column(
                 children: [
-                  const VerticalTabBar(),
+                  VerticalTabBar(
+                      tabList: [
+                        'vertical_tab_bar_0'.i18n,
+                        'vertical_tab_bar_1'.i18n,
+                        'vertical_tab_bar_2'.i18n,
+                      ],
+                      currentIndex: ref.watch(sideTabProvider),
+                      onChange: (index) {
+                        ref.read(sideTabProvider.notifier).state = index;
+                      }),
                   const Spacer(),
                   IconButton(
                     padding: EdgeInsets.zero,
@@ -131,44 +141,6 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class VerticalTabBar extends ConsumerWidget {
-  const VerticalTabBar({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    var selectedIndex = ref.watch(sideTabProvider);
-    var list = [
-      'vertical_tab_bar_0'.i18n,
-      'vertical_tab_bar_1'.i18n,
-      'vertical_tab_bar_2'.i18n,
-    ];
-    return RotatedBox(
-      quarterTurns: 3,
-      child: Row(
-        children: List.generate(
-            list.length,
-            (index) => Ink(
-                  color:
-                      index != selectedIndex ? Colors.transparent : Colors.red,
-                  child: InkWell(
-                    child: SizedBox(
-                      width: 80,
-                      child: Center(child: Text(list[index])),
-                    ),
-                    onTap: () {
-                      if (index == selectedIndex) {
-                        ref.read(sideTabProvider.notifier).state = null;
-                      } else {
-                        ref.read(sideTabProvider.notifier).state = index;
-                      }
-                    },
-                  ),
-                )),
       ),
     );
   }
@@ -315,7 +287,10 @@ class _ViewSideClipboardState extends ConsumerState<ViewSideClipboard> {
                     constraints: const BoxConstraints(
                       maxWidth: 400,
                     ),
-                    child: ViewChoiceNode(pos, ignoreChild: true,)),
+                    child: ViewChoiceNode(
+                      pos,
+                      ignoreChild: true,
+                    )),
               ),
             ),
             onDragStarted: () {
@@ -358,7 +333,7 @@ class BackButton extends ConsumerWidget {
               await savePlatform(ref, getPlatformFileSystem.openAsFile);
               navigator.pop();
               ref.read(draggableNestedMapChangedProvider.notifier).state =
-              false;
+                  false;
             }, (i) {
               Navigator.of(context).pop();
               if (i != 0) {

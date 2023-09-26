@@ -37,7 +37,7 @@ dependencies:
   file_picker : ^5.3.1
   http: ^1.1.0
   shared_preferences: ^2.0.15
-  google_fonts: ^5.1.0
+  google_fonts: ^6.1.0
   archive: ^3.3.1
   flutter_quill: ^7.1.18
   package_info_plus: ^4.0.0
