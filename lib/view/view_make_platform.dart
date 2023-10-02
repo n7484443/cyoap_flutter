@@ -1,6 +1,6 @@
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/i18n.dart';
-import 'package:cyoap_flutter/view/util/VerticalTabBar.dart';
+import 'package:cyoap_flutter/view/util/view_vertical_tabbar.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
@@ -179,7 +179,7 @@ class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    if (ref.watch(sideTabProvider) == 0) {
+    if (ref.watch(sideTabProvider) == 2) {
       return const ViewSideClipboard();
     }
     if (ref.watch(sideTabProvider) == 1) {
@@ -190,7 +190,7 @@ class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
         ],
       );
     }
-    if (ref.watch(sideTabProvider) == 2) {
+    if (ref.watch(sideTabProvider) == 0) {
       return ListView(
         controller: _scrollController,
         children: [

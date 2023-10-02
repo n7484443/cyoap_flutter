@@ -106,9 +106,9 @@ extension Localization on String {
           'save_option': 'Saving options',
           'extract': 'Save as Zip',
 
-          'vertical_tab_bar_0': 'Clipboard',
+          'vertical_tab_bar_0': 'Choice',
           'vertical_tab_bar_1': 'Variable',
-          'vertical_tab_bar_2': 'Choice',
+          'vertical_tab_bar_2': 'Clipboard',
 
           'remove_image': 'Delete images',
           'remove_image_undo': 'Cancel',
@@ -194,6 +194,8 @@ extension Localization on String {
           'margin_vertical': 'Vertical margin between choices',
           'margin_default': 'Default value',
           'background_image': 'Background Image',
+          'inner': 'Inner',
+          'outline': 'Outline',
           'outline_shape': 'Outline shape',
           'outline_padding': 'Outline padding',
           'outline_width': 'Outline width',
@@ -225,9 +227,9 @@ extension Localization on String {
           'save_option': '저장 관련 옵션',
           'extract': 'zip 파일로 추출',
 
-          'vertical_tab_bar_0': '클립보드',
+          'vertical_tab_bar_0': '선택지',
           'vertical_tab_bar_1': '변수',
-          'vertical_tab_bar_2': '선택지',
+          'vertical_tab_bar_2': '클립보드',
 
           'remove_image': '프로젝트에서 이미지 삭제',
           'remove_image_undo': '이미지 삭제 취소',
@@ -311,6 +313,8 @@ extension Localization on String {
           'margin_vertical': '선택지 간 세로 여백',
           'margin_default': '기본 값',
           'background_image': '배경 이미지',
+          'inner': '내부',
+          'outline': '외곽선',
           'outline_shape': '외곽선',
           'outline_padding': '외곽선 여백',
           'outline_width': '외곽선 두께',

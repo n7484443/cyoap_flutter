@@ -95,6 +95,7 @@ class _ViewPresetPositionState extends ConsumerState<ViewPresetPosition> {
               ),
             ),
             if (widget.sample != null) widget.sample!,
+            const Divider(height: 1),
             widget.describe,
           ],
         ),
@@ -126,6 +127,7 @@ class _ViewPresetPositionState extends ConsumerState<ViewPresetPosition> {
               ],
             ),
           ),
+          const VerticalDivider(width: 1),
           Expanded(
             flex: 3,
             child: widget.describe,
@@ -149,6 +151,7 @@ class _ViewPresetPositionState extends ConsumerState<ViewPresetPosition> {
             ],
           ),
         ),
+        const VerticalDivider(width: 1),
         Expanded(
           flex: 3,
           child: widget.describe,

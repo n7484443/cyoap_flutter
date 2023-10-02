@@ -11,12 +11,20 @@ import '../vm_draggable_nested_map.dart';
 
 final choiceNodePresetCurrentEditProvider =
     Provider.autoDispose<ChoiceNodeDesignPreset>((ref) {
+  ref.listenSelf((previous, next) {
+    ref.read(choiceNodePresetCurrentTabProvider.notifier).state = 0;
+  });
   var list = ref.watch(choiceNodePresetListProvider);
   var index = ref.watch(currentPresetIndexProvider);
   if (index >= list.length) {
     return const ChoiceNodeDesignPreset(name: 'default');
   }
   return list[index];
+});
+
+final choiceNodePresetCurrentTabProvider =
+    StateProvider.autoDispose<int>((ref) {
+  return 0;
 });
 
 final choiceNodePresetCurrentEditOutlinePaddingProvider =
