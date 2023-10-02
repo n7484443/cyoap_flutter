@@ -199,13 +199,15 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
     var preset = ref.watch(choiceNodePresetCurrentEditProvider);
 
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         VerticalTabBar(
           tabList: ['general'.i18n, 'outline'.i18n, 'inner'.i18n].toList(),
           isUnable: false,
           currentIndex: ref.watch(choiceNodePresetCurrentTabProvider),
           onChange: (index) {
-            ref.read(choiceNodePresetCurrentTabProvider.notifier).state = index!;
+            ref.read(choiceNodePresetCurrentTabProvider.notifier).state =
+                index!;
           },
         ),
         const SizedBox(
@@ -216,236 +218,264 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
             controller: _scrollController,
             thumbVisibility: true,
             child: CustomScrollView(
-              controller: _scrollController,
               shrinkWrap: true,
+              controller: _scrollController,
               slivers: [
-                SliverGrid(
-                  delegate: SliverChildListDelegate([
-                    TextFormField(
-                      textAlign: TextAlign.end,
-                      minLines: 1,
-                      maxLines: 1,
-                      keyboardType: TextInputType.number,
-                      controller:
-                          ref.watch(choiceNodePresetCurrentEditElevationProvider),
-                      decoration: InputDecoration(labelText: 'height'.i18n),
+                if (ref.watch(choiceNodePresetCurrentTabProvider) == 0)
+                  SliverGrid(
+                    delegate: SliverChildListDelegate([
+                      TextFormField(
+                        textAlign: TextAlign.end,
+                        minLines: 1,
+                        maxLines: 1,
+                        keyboardType: TextInputType.number,
+                        controller: ref.watch(
+                            choiceNodePresetCurrentEditElevationProvider),
+                        decoration: InputDecoration(labelText: 'height'.i18n),
+                      ),
+                      TextFormField(
+                        textAlign: TextAlign.end,
+                        minLines: 1,
+                        maxLines: 1,
+                        keyboardType: TextInputType.number,
+                        controller:
+                            ref.watch(choiceNodePresetCurrentEditRoundProvider),
+                        decoration: InputDecoration(labelText: 'round'.i18n),
+                      ),
+                      TextFormField(
+                        textAlign: TextAlign.end,
+                        minLines: 1,
+                        maxLines: 1,
+                        keyboardType: TextInputType.number,
+                        controller: ref
+                            .watch(choiceNodePresetCurrentEditPaddingProvider),
+                        decoration: InputDecoration(labelText: 'padding'.i18n),
+                      ),
+                      ViewSwitchLabel(
+                        () => ref
+                            .read(choiceNodePresetListProvider.notifier)
+                            .updateIndex(
+                                presetIndex,
+                                preset.copyWith(
+                                    maximizingImage: !preset.maximizingImage)),
+                        preset.maximizingImage,
+                        label: 'maximize_image'.i18n,
+                      ),
+                      ViewSwitchLabel(
+                        () => ref
+                            .read(choiceNodePresetListProvider.notifier)
+                            .updateIndex(presetIndex,
+                                preset.copyWith(hideTitle: !preset.hideTitle)),
+                        preset.hideTitle,
+                        label: 'hide_title'.i18n,
+                      ),
+                      ViewSwitchLabel(
+                        () => ref
+                            .read(choiceNodePresetListProvider.notifier)
+                            .updateIndex(
+                                presetIndex,
+                                preset.copyWith(
+                                    titlePosition: !preset.titlePosition)),
+                        preset.titlePosition,
+                        label: 'title_up'.i18n,
+                      ),
+                      ViewSwitchLabel(
+                        () => ref
+                            .read(choiceNodePresetListProvider.notifier)
+                            .updateIndex(
+                                presetIndex,
+                                preset.copyWith(
+                                    imagePosition:
+                                        preset.imagePosition == 0 ? 1 : 0)),
+                        preset.imagePosition != 0,
+                        label: 'horizontal_mode'.i18n,
+                      ),
+                      ViewSwitchLabel(
+                        () {
+                          if (preset.imagePosition == 1) {
+                            ref
+                                .read(choiceNodePresetListProvider.notifier)
+                                .updateIndex(presetIndex,
+                                    preset.copyWith(imagePosition: 2));
+                          } else if (preset.imagePosition == 2) {
+                            ref
+                                .read(choiceNodePresetListProvider.notifier)
+                                .updateIndex(presetIndex,
+                                    preset.copyWith(imagePosition: 1));
+                          }
+                        },
+                        preset.imagePosition == 2,
+                        disable: preset.imagePosition == 0,
+                        label: 'image_left'.i18n,
+                      ),
+                    ]),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 3,
+                      crossAxisSpacing: 10,
+                      mainAxisExtent: 80,
+                      mainAxisSpacing: 2,
                     ),
-                    TextFormField(
-                      textAlign: TextAlign.end,
-                      minLines: 1,
-                      maxLines: 1,
-                      keyboardType: TextInputType.number,
-                      controller: ref.watch(choiceNodePresetCurrentEditRoundProvider),
-                      decoration: InputDecoration(labelText: 'round'.i18n),
-                    ),
-                    TextFormField(
-                      textAlign: TextAlign.end,
-                      minLines: 1,
-                      maxLines: 1,
-                      keyboardType: TextInputType.number,
-                      controller:
-                          ref.watch(choiceNodePresetCurrentEditPaddingProvider),
-                      decoration: InputDecoration(labelText: 'padding'.i18n),
-                    ),
-                    ViewSwitchLabel(
-                      () => ref
-                          .read(choiceNodePresetListProvider.notifier)
-                          .updateIndex(
-                              presetIndex,
-                              preset.copyWith(
-                                  maximizingImage: !preset.maximizingImage)),
-                      preset.maximizingImage,
-                      label: 'maximize_image'.i18n,
-                    ),
-                    ViewSwitchLabel(
-                      () => ref
-                          .read(choiceNodePresetListProvider.notifier)
-                          .updateIndex(presetIndex,
-                              preset.copyWith(hideTitle: !preset.hideTitle)),
-                      preset.hideTitle,
-                      label: 'hide_title'.i18n,
-                    ),
-                    ViewSwitchLabel(
-                      () => ref
-                          .read(choiceNodePresetListProvider.notifier)
-                          .updateIndex(presetIndex,
-                              preset.copyWith(titlePosition: !preset.titlePosition)),
-                      preset.titlePosition,
-                      label: 'title_up'.i18n,
-                    ),
-                    ViewSwitchLabel(
-                      () => ref
-                          .read(choiceNodePresetListProvider.notifier)
-                          .updateIndex(
-                              presetIndex,
-                              preset.copyWith(
-                                  imagePosition: preset.imagePosition == 0 ? 1 : 0)),
-                      preset.imagePosition != 0,
-                      label: 'horizontal_mode'.i18n,
-                    ),
-                    ViewSwitchLabel(
-                      () {
-                        if (preset.imagePosition == 1) {
-                          ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                              presetIndex, preset.copyWith(imagePosition: 2));
-                        } else if (preset.imagePosition == 2) {
-                          ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                              presetIndex, preset.copyWith(imagePosition: 1));
-                        }
+                  ),
+                if (ref.watch(choiceNodePresetCurrentTabProvider) == 1)
+                  SliverToBoxAdapter(
+                    child: ColorPicker(
+                      heading: Center(
+                        child: Text('node_outline_color'.i18n),
+                      ),
+                      color: Color(preset.outlineOption.outlineSelectColor),
+                      onColorChanged: (Color value) {
+                        ref
+                            .read(choiceNodePresetListProvider.notifier)
+                            .updateIndex(
+                                presetIndex,
+                                preset.copyWith.outlineOption(
+                                    outlineSelectColor: value.value));
                       },
-                      preset.imagePosition == 2,
-                      disable: preset.imagePosition == 0,
-                      label: 'image_left'.i18n,
-                    ),
-                  ]),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 3,
-                    crossAxisSpacing: 10,
-                    mainAxisExtent: 80,
-                    mainAxisSpacing: 2,
-                  ),
-                ),
-                const SliverToBoxAdapter(
-                  child: Divider(height: 20),
-                ),
-                SliverToBoxAdapter(
-                  child: ColorPicker(
-                    heading: Center(
-                      child: Text('node_color'.i18n),
-                    ),
-                    color: Color(preset.colorNode),
-                    onColorChanged: (Color value) {
-                      ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                          presetIndex, preset.copyWith(colorNode: value.value));
-                    },
-                    pickersEnabled: {
-                      ColorPickerType.wheel: true,
-                      ColorPickerType.accent: false
-                    },
-                    pickerTypeLabels: {
-                      ColorPickerType.primary: "color_select".i18n,
-                      ColorPickerType.wheel: "color_direct_select".i18n
-                    },
-                    width: 22,
-                    height: 22,
-                    borderRadius: 22,
-                  ),
-                ),
-                SliverGrid(
-                  delegate: SliverChildListDelegate([
-                    DropdownButtonFormField<String>(
-                      decoration: InputDecoration(labelText: 'font_title'.i18n),
-                      items: ConstList.textFontList.keys
-                          .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
-                              value: name,
-                              child: Text(name, style: ConstList.getFont(name))))
-                          .toList(),
-                      onChanged: (String? t) {
-                        if (t != null) {
-                          var index = ref.read(currentPresetIndexProvider);
-                          ref
-                              .read(choiceNodePresetListProvider.notifier)
-                              .updateIndex(index, preset.copyWith(titleFont: t));
-                        }
+                      pickersEnabled: {
+                        ColorPickerType.wheel: true,
+                        ColorPickerType.accent: false
                       },
-                      value: preset.titleFont,
-                    ),
-                    DropdownButtonFormField<String>(
-                      decoration: InputDecoration(labelText: 'font_content'.i18n),
-                      items: ConstList.textFontList.keys
-                          .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
-                              value: name,
-                              child: Text(name, style: ConstList.getFont(name))))
-                          .toList(),
-                      onChanged: (String? t) {
-                        if (t != null) {
-                          var index = ref.read(currentPresetIndexProvider);
-                          ref
-                              .read(choiceNodePresetListProvider.notifier)
-                              .updateIndex(index, preset.copyWith(mainFont: t));
-                        }
+                      pickerTypeLabels: {
+                        ColorPickerType.primary: "color_select".i18n,
+                        ColorPickerType.wheel: "color_direct_select".i18n
                       },
-                      value: preset.mainFont,
+                      width: 22,
+                      height: 22,
+                      borderRadius: 22,
                     ),
-                  ]),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
-                    crossAxisSpacing: 10,
-                    mainAxisExtent: 60,
-                    mainAxisSpacing: 2,
                   ),
-                ),
-                const SliverToBoxAdapter(
-                  child: Divider(height: 20),
-                ),
-                SliverToBoxAdapter(
-                  child: ColorPicker(
-                    heading: Center(
-                      child: Text('node_outline_color'.i18n),
+                if (ref.watch(choiceNodePresetCurrentTabProvider) == 1)
+                  SliverGrid(
+                    delegate: SliverChildListDelegate([
+                      DropdownButtonFormField<OutlineType>(
+                        decoration:
+                            InputDecoration(labelText: 'outline_shape'.i18n),
+                        items: OutlineType.values
+                            .map<DropdownMenuItem<OutlineType>>((type) =>
+                                DropdownMenuItem(
+                                    value: type, child: Text(type.name)))
+                            .toList(),
+                        onChanged: (OutlineType? t) {
+                          if (t != null) {
+                            var index = ref.read(currentPresetIndexProvider);
+                            ref
+                                .read(choiceNodePresetListProvider.notifier)
+                                .updateIndex(
+                                    index,
+                                    preset.copyWith
+                                        .outlineOption(outlineType: t));
+                          }
+                        },
+                        value: preset.outlineOption.outlineType,
+                      ),
+                      TextFormField(
+                        textAlign: TextAlign.end,
+                        minLines: 1,
+                        maxLines: 1,
+                        keyboardType: TextInputType.number,
+                        controller: ref.watch(
+                            choiceNodePresetCurrentEditOutlinePaddingProvider),
+                        decoration:
+                            InputDecoration(labelText: 'outline_padding'.i18n),
+                      ),
+                      TextFormField(
+                        textAlign: TextAlign.end,
+                        minLines: 1,
+                        maxLines: 1,
+                        keyboardType: TextInputType.number,
+                        controller: ref.watch(
+                            choiceNodePresetCurrentEditOutlineWidthProvider),
+                        decoration:
+                            InputDecoration(labelText: 'outline_width'.i18n),
+                      ),
+                    ]),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 3,
+                      crossAxisSpacing: 10,
+                      mainAxisExtent: 60,
+                      mainAxisSpacing: 2,
                     ),
-                    color: Color(preset.outlineOption.outlineSelectColor),
-                    onColorChanged: (Color value) {
-                      ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                          presetIndex,
-                          preset.copyWith
-                              .outlineOption(outlineSelectColor: value.value));
-                    },
-                    pickersEnabled: {
-                      ColorPickerType.wheel: true,
-                      ColorPickerType.accent: false
-                    },
-                    pickerTypeLabels: {
-                      ColorPickerType.primary: "color_select".i18n,
-                      ColorPickerType.wheel: "color_direct_select".i18n
-                    },
-                    width: 22,
-                    height: 22,
-                    borderRadius: 22,
                   ),
-                ),
-                SliverGrid(
-                  delegate: SliverChildListDelegate([
-                    DropdownButtonFormField<OutlineType>(
-                      decoration: InputDecoration(labelText: 'outline_shape'.i18n),
-                      items: OutlineType.values
-                          .map<DropdownMenuItem<OutlineType>>((type) =>
-                              DropdownMenuItem(value: type, child: Text(type.name)))
-                          .toList(),
-                      onChanged: (OutlineType? t) {
-                        if (t != null) {
-                          var index = ref.read(currentPresetIndexProvider);
-                          ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                              index, preset.copyWith.outlineOption(outlineType: t));
-                        }
+
+                if (ref.watch(choiceNodePresetCurrentTabProvider) == 2)
+                  SliverToBoxAdapter(
+                    child: ColorPicker(
+                      heading: Center(
+                        child: Text('node_color'.i18n),
+                      ),
+                      color: Color(preset.colorNode),
+                      onColorChanged: (Color value) {
+                        ref
+                            .read(choiceNodePresetListProvider.notifier)
+                            .updateIndex(presetIndex,
+                            preset.copyWith(colorNode: value.value));
                       },
-                      value: preset.outlineOption.outlineType,
+                      pickersEnabled: {
+                        ColorPickerType.wheel: true,
+                        ColorPickerType.accent: false
+                      },
+                      pickerTypeLabels: {
+                        ColorPickerType.primary: "color_select".i18n,
+                        ColorPickerType.wheel: "color_direct_select".i18n
+                      },
+                      width: 22,
+                      height: 22,
+                      borderRadius: 22,
                     ),
-                    TextFormField(
-                      textAlign: TextAlign.end,
-                      minLines: 1,
-                      maxLines: 1,
-                      keyboardType: TextInputType.number,
-                      controller: ref
-                          .watch(choiceNodePresetCurrentEditOutlinePaddingProvider),
-                      decoration: InputDecoration(labelText: 'outline_padding'.i18n),
-                    ),
-                    TextFormField(
-                      textAlign: TextAlign.end,
-                      minLines: 1,
-                      maxLines: 1,
-                      keyboardType: TextInputType.number,
-                      controller:
-                          ref.watch(choiceNodePresetCurrentEditOutlineWidthProvider),
-                      decoration: InputDecoration(labelText: 'outline_width'.i18n),
-                    ),
-                  ]),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 3,
-                    crossAxisSpacing: 10,
-                    mainAxisExtent: 60,
-                    mainAxisSpacing: 2,
                   ),
-                ),
+                if (ref.watch(choiceNodePresetCurrentTabProvider) == 2)
+                  SliverGrid(
+                    delegate: SliverChildListDelegate([
+                      DropdownButtonFormField<String>(
+                        decoration:
+                        InputDecoration(labelText: 'font_title'.i18n),
+                        items: ConstList.textFontList.keys
+                            .map<DropdownMenuItem<String>>((name) =>
+                            DropdownMenuItem(
+                                value: name,
+                                child: Text(name,
+                                    style: ConstList.getFont(name))))
+                            .toList(),
+                        onChanged: (String? t) {
+                          if (t != null) {
+                            var index = ref.read(currentPresetIndexProvider);
+                            ref
+                                .read(choiceNodePresetListProvider.notifier)
+                                .updateIndex(
+                                index, preset.copyWith(titleFont: t));
+                          }
+                        },
+                        value: preset.titleFont,
+                      ),
+                      DropdownButtonFormField<String>(
+                        decoration:
+                        InputDecoration(labelText: 'font_content'.i18n),
+                        items: ConstList.textFontList.keys
+                            .map<DropdownMenuItem<String>>((name) =>
+                            DropdownMenuItem(
+                                value: name,
+                                child: Text(name,
+                                    style: ConstList.getFont(name))))
+                            .toList(),
+                        onChanged: (String? t) {
+                          if (t != null) {
+                            var index = ref.read(currentPresetIndexProvider);
+                            ref
+                                .read(choiceNodePresetListProvider.notifier)
+                                .updateIndex(
+                                index, preset.copyWith(mainFont: t));
+                          }
+                        },
+                        value: preset.mainFont,
+                      ),
+                    ]),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
+                      crossAxisSpacing: 10,
+                      mainAxisExtent: 60,
+                      mainAxisSpacing: 2,
+                    ),
+                  ),
               ],
             ),
           ),
