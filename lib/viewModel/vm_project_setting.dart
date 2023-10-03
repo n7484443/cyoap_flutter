@@ -43,15 +43,15 @@ final projectSettingDisplayNameTextEditingProvider =
 
 final projectSettingVisibleSwitchProvider = StateProvider.family
     .autoDispose<bool, int>((ref, index) => ref
-    .read(valueTypeWrapperListProvider.notifier)
-    .getEditTarget(index)!
-    .$2
-    .visible);
+        .read(valueTypeWrapperListProvider.notifier)
+        .getEditTarget(index)!
+        .$2
+        .visible);
 
 final valueTypeWrapperListProvider = StateNotifierProvider.autoDispose<
         ValueTypeWrapperListNotifier, List<(String, ValueTypeWrapper)>>(
-    (ref) =>
-        ValueTypeWrapperListNotifier(ref, List.from(getPlatform.globalSetting)));
+    (ref) => ValueTypeWrapperListNotifier(
+        ref, List.from(getPlatform.globalSetting)));
 
 class ValueTypeWrapperListNotifier
     extends StateNotifier<List<(String, ValueTypeWrapper)>> {
@@ -66,7 +66,8 @@ class ValueTypeWrapperListNotifier
       state = [...state, (name, type)];
     } else {
       while (true) {
-        pos = state.indexWhere((element) => element.$1 == (name + t.toString()));
+        pos =
+            state.indexWhere((element) => element.$1 == (name + t.toString()));
         if (pos != -1) {
           t += 1;
         } else {
@@ -102,7 +103,7 @@ class ValueTypeWrapperListNotifier
   }
 
   void reorder(int oldIndex, int newIndex) {
-    if(oldIndex < newIndex){
+    if (oldIndex < newIndex) {
       newIndex -= 1;
     }
     var element = state.removeAt(oldIndex);
@@ -114,11 +115,11 @@ class ValueTypeWrapperListNotifier
     if (state.length != getPlatform.globalSetting.length) {
       return true;
     }
-    for(int i = 0; i < state.length; i++){
-      if(state[i].$1 != getPlatform.globalSetting[i].$1){
+    for (int i = 0; i < state.length; i++) {
+      if (state[i].$1 != getPlatform.globalSetting[i].$1) {
         return true;
       }
-      if(state[i].$2 != getPlatform.globalSetting[i].$2){
+      if (state[i].$2 != getPlatform.globalSetting[i].$2) {
         return true;
       }
     }

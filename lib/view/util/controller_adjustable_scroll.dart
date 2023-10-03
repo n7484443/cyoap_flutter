@@ -71,8 +71,7 @@ class _HorizontalScrollState extends State<HorizontalScroll> {
 
 class HorizontalScrollSingleChild extends StatefulWidget {
   final Widget child;
-  const HorizontalScrollSingleChild(
-      {required this.child, super.key});
+  const HorizontalScrollSingleChild({required this.child, super.key});
 
   @override
   State<HorizontalScrollSingleChild> createState() =>

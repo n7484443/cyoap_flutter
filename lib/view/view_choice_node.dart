@@ -149,7 +149,8 @@ class ViewChoiceNodeMain extends ConsumerWidget {
       ),
     );
 
-    if (outline.outlineType == OutlineType.dotted || outline.outlineType == OutlineType.dashed) {
+    if (outline.outlineType == OutlineType.dotted ||
+        outline.outlineType == OutlineType.dashed) {
       var borderSide = BorderSide(
           color: borderColor,
           width: outline.outlineWidth,
@@ -161,7 +162,8 @@ class ViewChoiceNodeMain extends ConsumerWidget {
       return DottedBorder(
         borderType: BorderType.RRect,
         strokeWidth: outline.outlineWidth,
-        dashPattern: outline.outlineType == OutlineType.dashed ? [6, 2] : [3, 1],
+        dashPattern:
+            outline.outlineType == OutlineType.dashed ? [6, 2] : [3, 1],
         radius: Radius.circular(preset.round),
         color: borderColor,
         padding: EdgeInsets.all(outline.outlinePadding),

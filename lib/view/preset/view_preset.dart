@@ -95,10 +95,11 @@ class _ViewPresetPositionState extends ConsumerState<ViewPresetPosition> {
               ),
             ),
             if (widget.sample != null) const Divider(height: 1),
-            if (widget.sample != null) Padding(
-              padding: const EdgeInsets.all(2.0),
-              child: widget.sample!,
-            ),
+            if (widget.sample != null)
+              Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: widget.sample!,
+              ),
             const Divider(height: 1),
             widget.describe,
           ],

@@ -41,14 +41,19 @@ class _ViewIdeTabState extends ConsumerState<ViewIdeTab>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: kDebugMode ? TabBar(
-        controller: _tabController,
-        tabs: [Tab(text: "editor_simple".i18n), Tab(text: "editor_code".i18n)],
-      ) : null,
+      appBar: kDebugMode
+          ? TabBar(
+              controller: _tabController,
+              tabs: [
+                Tab(text: "editor_simple".i18n),
+                Tab(text: "editor_code".i18n)
+              ],
+            )
+          : null,
       body: TabBarView(
         controller: _tabController,
         children: [
-          if(kDebugMode)const ViewIdeSimple(),
+          if (kDebugMode) const ViewIdeSimple(),
           const ViewIde(),
         ],
       ),

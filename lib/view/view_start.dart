@@ -405,7 +405,7 @@ class ViewGlobalSettingDialog extends ConsumerWidget {
             label: "save_as_webp".i18n,
           ),
           ViewSwitchLabel(
-                () {
+            () {
               ref.read(forceWideProvider.notifier).rev();
             },
             ref.watch(forceWideProvider),

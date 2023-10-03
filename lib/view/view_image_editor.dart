@@ -122,7 +122,7 @@ class ViewImageEditorContents extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var data = ref.watch(imageCropRatioProvider);
-    if(data == null || data.item1 == null || data.item2 == null){
+    if (data == null || data.item1 == null || data.item2 == null) {
       data = null;
     }
     var image = ref.watch(imageProvider);

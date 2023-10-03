@@ -177,7 +177,6 @@ class EditorChangeNotifier extends StateNotifier<bool> {
     state = false;
     refreshLine(ref, pos.first);
   }
-
 }
 
 final lastImageProvider = StateProvider<Uint8List?>((ref) => null);

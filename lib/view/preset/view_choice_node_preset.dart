@@ -396,7 +396,6 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
                       mainAxisSpacing: 2,
                     ),
                   ),
-
                 if (ref.watch(choiceNodePresetCurrentTabProvider) == 2)
                   SliverToBoxAdapter(
                     child: ColorPicker(
@@ -408,7 +407,7 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
                         ref
                             .read(choiceNodePresetListProvider.notifier)
                             .updateIndex(presetIndex,
-                            preset.copyWith(colorNode: value.value));
+                                preset.copyWith(colorNode: value.value));
                       },
                       pickersEnabled: {
                         ColorPickerType.wheel: true,
@@ -428,13 +427,13 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
                     delegate: SliverChildListDelegate([
                       DropdownButtonFormField<String>(
                         decoration:
-                        InputDecoration(labelText: 'font_title'.i18n),
+                            InputDecoration(labelText: 'font_title'.i18n),
                         items: ConstList.textFontList.keys
                             .map<DropdownMenuItem<String>>((name) =>
-                            DropdownMenuItem(
-                                value: name,
-                                child: Text(name,
-                                    style: ConstList.getFont(name))))
+                                DropdownMenuItem(
+                                    value: name,
+                                    child: Text(name,
+                                        style: ConstList.getFont(name))))
                             .toList(),
                         onChanged: (String? t) {
                           if (t != null) {
@@ -442,20 +441,20 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
                             ref
                                 .read(choiceNodePresetListProvider.notifier)
                                 .updateIndex(
-                                index, preset.copyWith(titleFont: t));
+                                    index, preset.copyWith(titleFont: t));
                           }
                         },
                         value: preset.titleFont,
                       ),
                       DropdownButtonFormField<String>(
                         decoration:
-                        InputDecoration(labelText: 'font_content'.i18n),
+                            InputDecoration(labelText: 'font_content'.i18n),
                         items: ConstList.textFontList.keys
                             .map<DropdownMenuItem<String>>((name) =>
-                            DropdownMenuItem(
-                                value: name,
-                                child: Text(name,
-                                    style: ConstList.getFont(name))))
+                                DropdownMenuItem(
+                                    value: name,
+                                    child: Text(name,
+                                        style: ConstList.getFont(name))))
                             .toList(),
                         onChanged: (String? t) {
                           if (t != null) {
@@ -463,7 +462,7 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
                             ref
                                 .read(choiceNodePresetListProvider.notifier)
                                 .updateIndex(
-                                index, preset.copyWith(mainFont: t));
+                                    index, preset.copyWith(mainFont: t));
                           }
                         },
                         value: preset.mainFont,

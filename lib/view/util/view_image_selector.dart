@@ -60,7 +60,7 @@ class ViewImageDraggable extends ConsumerWidget {
             child: IconButton(
               icon: const Icon(Icons.delete),
               onPressed: () {
-                if(removeFunction != null){
+                if (removeFunction != null) {
                   removeFunction!(ref, index);
                 }
               },

@@ -1,8 +1,8 @@
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/i18n.dart';
-import 'package:cyoap_flutter/view/util/view_vertical_tabbar.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
+import 'package:cyoap_flutter/view/util/view_vertical_tabbar.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/view/view_design.dart';
 import 'package:cyoap_flutter/view/view_editor.dart';

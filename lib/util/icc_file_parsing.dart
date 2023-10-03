@@ -100,7 +100,8 @@ class IccProjectParser {
             title: objectTitle,
             contents: toContent(object["text"] ?? parsed['defaultChoiceText']),
             imageString: imageName);
-        choiceNode.choiceNodeOption = choiceNode.choiceNodeOption.copyWith(presetName: preset.name);
+        choiceNode.choiceNodeOption =
+            choiceNode.choiceNodeOption.copyWith(presetName: preset.name);
         for (var addon in object['addons']) {
           var addonTitle = addon["title"] ?? parsed['defaultAddonTitle'];
           var out = await checkImage(addon, addon["id"], addonTitle, ref);
@@ -113,7 +114,8 @@ class IccProjectParser {
               title: addonTitle,
               contents: toContent(addon["text"] ?? parsed['defaultAddonText']),
               imageString: imageName);
-          addonNode.choiceNodeOption = addonNode.choiceNodeOption.copyWith(presetName: preset.name);
+          addonNode.choiceNodeOption =
+              addonNode.choiceNodeOption.copyWith(presetName: preset.name);
           choiceNode.addChildren(addonNode);
         }
         lineSetting.addChildren(choiceNode);
@@ -188,13 +190,15 @@ class IccProjectParser {
       required globalObjectBackgroundColor,
       required globalRowBackgroundColor,
       required globalSelectFilterBgColor}) {
-    if(styles == null){
+    if (styles == null) {
       return ChoiceNodeDesignPreset(
         name: generateRandomString(10),
         imagePosition: template == 4 ? 1 : template,
-        colorNode: isRow ? globalRowBackgroundColor : globalObjectBackgroundColor,
+        colorNode:
+            isRow ? globalRowBackgroundColor : globalObjectBackgroundColor,
         outlineOption: OutlineOption(
-          outlineSelectColor: isRow ? globalRowBackgroundColor : globalSelectFilterBgColor,
+          outlineSelectColor:
+              isRow ? globalRowBackgroundColor : globalSelectFilterBgColor,
         ),
       );
     }
@@ -237,7 +241,8 @@ class IccProjectParser {
 
 String generateRandomString(int len) {
   var r = Random();
-  const chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  const chars =
+      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   return List.generate(len, (index) => chars[r.nextInt(chars.length)]).join();
 }
 
@@ -245,10 +250,10 @@ extension HexColor on Color {
   /// String is in the format "aabbcc" or "aabbccff" with an optional leading "#".
   static Color fromHex(String hexString) {
     final buffer = StringBuffer();
-    if (hexString.length == 7){
+    if (hexString.length == 7) {
       buffer.write('ff');
       buffer.write(hexString.replaceFirst('#', ''));
-    }else{
+    } else {
       buffer.write(hexString.substring(7, 9));
       buffer.write(hexString.substring(1, 7));
     }

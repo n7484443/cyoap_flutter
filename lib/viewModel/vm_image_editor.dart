@@ -28,7 +28,8 @@ final imageCropRatioProvider =
     StateProvider<Tuple2<double?, double?>?>((ref) => null);
 final imageCropIndexProvider = StateProvider<int>((ref) => 0);
 
-final textFieldWidthRatioProvider = StateProvider.autoDispose<TextEditingController>((ref) {
+final textFieldWidthRatioProvider =
+    StateProvider.autoDispose<TextEditingController>((ref) {
   var controller = TextEditingController();
   ref.onDispose(() {
     controller.dispose();
@@ -41,7 +42,8 @@ final textFieldWidthRatioProvider = StateProvider.autoDispose<TextEditingControl
   return controller;
 });
 
-final textFieldHeightRatioProvider = StateProvider.autoDispose<TextEditingController>((ref) {
+final textFieldHeightRatioProvider =
+    StateProvider.autoDispose<TextEditingController>((ref) {
   var controller = TextEditingController();
   ref.onDispose(() {
     controller.dispose();

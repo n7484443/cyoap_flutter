@@ -18,29 +18,31 @@ final saveAsWebpProvider = StateProvider<bool>((ref) {
   return true;
 });
 
-final forceWideProvider = StateNotifierProvider<ForceWideStateNotifier, bool>((ref) {
+final forceWideProvider =
+    StateNotifierProvider<ForceWideStateNotifier, bool>((ref) {
   ref.listenSelf((previous, next) {
     DevicePreference().setVariable('forceWide', next);
   });
   return ForceWideStateNotifier();
 });
 
-class ForceWideStateNotifier extends StateNotifier<bool>{
-  ForceWideStateNotifier() : super(true){
+class ForceWideStateNotifier extends StateNotifier<bool> {
+  ForceWideStateNotifier() : super(true) {
     init();
   }
 
-  void init() async{
-    state = await DevicePreference().getVariable('forceWide', isEmpty: !ConstList.isMobile());
+  void init() async {
+    state = await DevicePreference()
+        .getVariable('forceWide', isEmpty: !ConstList.isMobile());
   }
 
-  void rev(){
+  void rev() {
     state = !state;
   }
 }
 
 final maximumSizeProvider = Provider<int>((ref) {
-  if(ConstList.isMobile()) {
+  if (ConstList.isMobile()) {
     return ref.watch(forceWideProvider) ? 12 : 6;
   }
   return 12;
