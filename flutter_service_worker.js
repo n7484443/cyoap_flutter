@@ -9,7 +9,7 @@ const RESOURCES = {"assets/AssetManifest.bin": "da5cf5ba65160dc15285c7da3ba87e5d
 "assets/fonts/MaterialIcons-Regular.otf": "35c11cc978aa895ac477ff508cfdc27e",
 "assets/fonts/NeoDGM/NeoDGM.ttf": "fb933425ff4ed74ed3b810b399b7946f",
 "assets/images/sample.png": "c92e1697d57a0d1e7007fe33d76ea125",
-"assets/NOTICES": "56895063ba09f84671b25e6c2438b96c",
+"assets/NOTICES": "05b316eb86930daef334c6186b242d5a",
 "assets/packages/flex_color_picker/assets/opacity.png": "49c4f3bcb1b25364bb4c255edcaaf5b2",
 "assets/packages/flutter_image_compress_web/assets/pica.min.js": "6208ed6419908c4b04382adc8a3053a2",
 "assets/shaders/ink_sparkle.frag": "f8b80e740d33eb157090be4e995febdf",
@@ -29,10 +29,10 @@ const RESOURCES = {"assets/AssetManifest.bin": "da5cf5ba65160dc15285c7da3ba87e5d
 "index.html": "58f905882ef645859ad24d2c84419dde",
 "/": "58f905882ef645859ad24d2c84419dde",
 "jszip.js": "418ea325c68eb099ef2ccc8823771a63",
-"main.dart.js": "8d9f29d76c2f6cb7b1cadfb613021289",
+"main.dart.js": "9b29c34d04b4979782df1a6cbd4673e5",
 "manifest.json": "ebc04e4594e86d4e5763ccf0df7285b3",
 "save_web.js": "6d7f19b0443d2ca2a960f0532299e5d7",
-"version.json": "140a6c24af9daa7498a1e535a01a7c54",
+"version.json": "2491e26478e9393dbbdaa1f4e7e6d4dd",
 "worker.js": "55118d4a43a00cedd42f65ca3b0b0d2a"};
 // The application shell files that are downloaded before a service worker can
 // start.
