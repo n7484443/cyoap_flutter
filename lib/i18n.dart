@@ -86,6 +86,55 @@ extension Localization on String {
         }
       } +
       const {
+        //preset
+        "en": {
+          'preset': 'Preset',
+          'preset_setting': 'Preset settings',
+          'preset_new': 'New preset',
+          'black_line': 'Line between rows',
+          'background_color': 'Background color',
+          'color_select': 'Select color',
+          'color_direct_select': 'Direct selection',
+          'height': 'Shadow of the choice',
+          'round': 'Rounded corners',
+          'padding': 'Inner padding',
+          'maximize_image': 'Maximize images',
+          'hide_title': 'Hide title',
+          'title_up': 'Title up',
+          'horizontal_mode': 'Horizontal mode',
+          'image_left': 'Image left',
+          'node_color': 'Choices background color',
+          'node_outline_color': 'Border color when choice is selected',
+          'font_title': 'Title font',
+          'font_content': 'Content font',
+          'node_select_color_enable': 'Enable select color',
+          'node_select_color': 'Select color',
+        },
+        "ko": {
+          'preset': '프리셋',
+          'preset_setting': '프리셋 설정',
+          'preset_new': '새 프리셋',
+          'black_line': '검은 줄이 보임',
+          'background_color': '배경 색상',
+          'color_select': '색상 선택',
+          'color_direct_select': '직접 선택',
+          'height': '높이',
+          'round': '라운드',
+          'padding': '내부 여백',
+          'maximize_image': '이미지 최대화',
+          'hide_title': '제목 숨기기',
+          'title_up': '제목을 위로',
+          'horizontal_mode': '가로 모드',
+          'image_left': '이미지 왼쪽으로',
+          'node_color': '선택지 색상',
+          'node_outline_color': '외곽선 색상',
+          'font_title': '제목 폰트',
+          'font_content': '내용 폰트',
+          'node_select_color_enable': '선택시 색상 변경 활성화',
+          'node_select_color': '선택시 색상',
+        }
+      } +
+      const {
         "en": {
           //make page
           'lineSetting_tooltip_0': 'Number of selections available',
@@ -165,27 +214,6 @@ extension Localization on String {
           'gui': 'Change editing type',
           'editor_simple': 'Simple',
           'editor_code': 'Code',
-
-          //preset
-          'preset': 'Preset',
-          'preset_setting': 'Preset settings',
-          'preset_new': 'New preset',
-          'black_line': 'Line between rows',
-          'background_color': 'Background color',
-          'color_select': 'Select color',
-          'color_direct_select': 'Direct selection',
-          'height': 'Shadow of the choice',
-          'round': 'Rounded corners',
-          'padding': 'Inner padding',
-          'maximize_image': 'Maximize images',
-          'hide_title': 'Hide title',
-          'title_up': 'Title up',
-          'horizontal_mode': 'Horizontal mode',
-          'image_left': 'Image left',
-          'node_color': 'Choices background color',
-          'node_outline_color': 'Border color when choice is selected',
-          'font_title': 'Title font',
-          'font_content': 'Content font',
 
           //design
           'general': 'General',
@@ -284,27 +312,6 @@ extension Localization on String {
           'gui': '에디터 변경',
           'editor_simple': '간편',
           'editor_code': '코드',
-
-          //preset
-          'preset': '프리셋',
-          'preset_setting': '프리셋 설정',
-          'preset_new': '새 프리셋',
-          'black_line': '검은 줄이 보임',
-          'background_color': '배경 색상',
-          'color_select': '색상 선택',
-          'color_direct_select': '직접 선택',
-          'height': '높이',
-          'round': '라운드',
-          'padding': '내부 여백',
-          'maximize_image': '이미지 최대화',
-          'hide_title': '제목 숨기기',
-          'title_up': '제목을 위로',
-          'horizontal_mode': '가로 모드',
-          'image_left': '이미지 왼쪽으로',
-          'node_color': '선택지 색상',
-          'node_outline_color': '외곽선 색상',
-          'font_title': '제목 폰트',
-          'font_content': '내용 폰트',
 
           //design
           'general': '일반',

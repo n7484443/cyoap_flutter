@@ -74,9 +74,10 @@ class ViewChoiceNodeMain extends ConsumerWidget {
     var design = ref.watch(choiceNodeDesignSettingProvider(pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     var outline = preset.outlineOption;
-    var defaultColor = Color(preset.colorNode);
-    var borderColor =
-        node.select > 0 ? Color(outline.outlineSelectColor) : defaultColor;
+    var inner = preset.selectColorOption;
+    var isSelected = node.select > 0;
+    var defaultColor = isSelected && inner.enable ? Color(inner.selectColor) : Color(preset.colorNode);
+    var borderColor = isSelected ? Color(outline.outlineSelectColor) : defaultColor;
     var innerWidget = Ink(
       color: defaultColor,
       child: Padding(
