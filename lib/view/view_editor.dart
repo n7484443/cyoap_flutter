@@ -346,35 +346,45 @@ class _ViewTextContentsEditorState
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: QuillToolbar.basic(
-            controller: _quillController!,
-            locale: ref.watch(localeStateProvider),
-            showListCheck: false,
-            showInlineCode: false,
-            showLink: false,
-            showCodeBlock: false,
-            showHeaderStyle: false,
-            showAlignmentButtons: true,
-            showColorButton: false,
-            showBackgroundColorButton: false,
-            showFontFamily: false,
-            showSearchButton: false,
-            showIndent: false,
-            multiRowsDisplay: false,
-            customButtons: [
-              QuillCustomButton(
-                icon: Icons.color_lens,
-                onTap: () {
-                  colorIconDialog(false);
-                },
+          child: QuillProvider(
+            configurations: QuillConfigurations(
+              controller: _quillController!,
+              sharedConfigurations: QuillSharedConfigurations(
+                locale: ref.watch(localeStateProvider),
+              )
+            ),
+            child: QuillToolbar(
+              configurations: QuillToolbarConfigurations(
+                showListCheck: false,
+                showInlineCode: false,
+                showLink: false,
+                showCodeBlock: false,
+                showHeaderStyle: false,
+                showAlignmentButtons: true,
+                showColorButton: false,
+                showBackgroundColorButton: false,
+                showFontFamily: false,
+                showSearchButton: false,
+                showIndent: false,
+                showSuperscript: false,
+                showSubscript: false,
+                multiRowsDisplay: false,
+                customButtons: [
+                  QuillCustomButton(
+                    iconData: Icons.color_lens,
+                    onTap: () {
+                      colorIconDialog(false);
+                    },
+                  ),
+                  QuillCustomButton(
+                    iconData: Icons.format_color_fill,
+                    onTap: () {
+                      colorIconDialog(true);
+                    },
+                  ),
+                ],
               ),
-              QuillCustomButton(
-                icon: Icons.format_color_fill,
-                onTap: () {
-                  colorIconDialog(true);
-                },
-              ),
-            ],
+            ),
           ),
         ),
         Expanded(
@@ -382,19 +392,27 @@ class _ViewTextContentsEditorState
           child: Card(
             elevation: ConstList.elevation,
             color: Colors.blue.shade50,
-            child: QuillEditor(
-              locale: ref.watch(localeStateProvider),
-              padding: const EdgeInsets.all(3),
-              controller: _quillController!,
-              focusNode: _focusNode!,
-              expands: true,
-              scrollable: true,
-              autoFocus: true,
-              readOnly: false,
-              showCursor: true,
-              scrollController: _scrollController!,
-              customStyles: ConstList.getDefaultThemeData(context, 1,
-                  fontStyle: ConstList.getFontWithColor(preset.mainFont)),
+            child: QuillProvider(
+              configurations: QuillConfigurations(
+                  controller: _quillController!,
+                sharedConfigurations: QuillSharedConfigurations(
+                  locale: ref.watch(localeStateProvider),
+                )
+              ),
+              child: QuillEditor(
+                configurations: QuillEditorConfigurations(
+                  padding: const EdgeInsets.all(3),
+                  expands: true,
+                  scrollable: true,
+                  autoFocus: true,
+                  readOnly: false,
+                  showCursor: true,
+                  customStyles: ConstList.getDefaultThemeData(context, 1,
+                      fontStyle: ConstList.getFontWithColor(preset.mainFont)),
+                ),
+                focusNode: _focusNode!,
+                scrollController: _scrollController!,
+              ),
             ),
           ),
         ),

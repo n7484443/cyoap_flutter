@@ -5,7 +5,7 @@ import 'package:cyoap_flutter/view/code/view_ide_gui.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart' hide Text;
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../main.dart';
@@ -250,17 +250,25 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                           .read(ideCurrentInputProvider.notifier)
                           .lastFocusQuill = ref.watch(controllerIdeProvider);
                     },
-                    child: QuillEditor(
-                      locale: ref.watch(localeStateProvider),
-                      focusNode: _focusNode,
-                      scrollable: false,
-                      readOnly: false,
-                      autoFocus: false,
-                      scrollController: _scrollController!,
-                      controller: ref.watch(controllerIdeProvider),
-                      padding: EdgeInsets.zero,
-                      expands: false,
-                      placeholder: "code_hint_execute".i18n,
+                    child: QuillProvider(
+                      configurations: QuillConfigurations(
+                        controller: ref.watch(controllerIdeProvider),
+                        sharedConfigurations: QuillSharedConfigurations(
+                          locale: ref.watch(localeStateProvider),
+                        ),
+                      ),
+                      child: QuillEditor(
+                        configurations: QuillEditorConfigurations(
+                          scrollable: false,
+                          readOnly: false,
+                          autoFocus: false,
+                          padding: EdgeInsets.zero,
+                          expands: false,
+                          placeholder: "code_hint_execute".i18n,
+                        ),
+                        focusNode: _focusNode,
+                        scrollController: _scrollController!,
+                      ),
                     ),
                   ),
                 ),

@@ -76,8 +76,11 @@ class ViewChoiceNodeMain extends ConsumerWidget {
     var outline = preset.outlineOption;
     var inner = preset.selectColorOption;
     var isSelected = node.select > 0;
-    var defaultColor = isSelected && inner.enable ? Color(inner.selectColor) : Color(preset.colorNode);
-    var borderColor = isSelected ? Color(outline.outlineSelectColor) : defaultColor;
+    var defaultColor = isSelected && inner.enable
+        ? Color(inner.selectColor)
+        : Color(preset.colorNode);
+    var borderColor =
+        isSelected ? Color(outline.outlineSelectColor) : defaultColor;
     var innerWidget = Ink(
       color: defaultColor,
       child: Padding(
@@ -455,20 +458,26 @@ class _ViewContentsState extends ConsumerState<ViewContents> {
     }
     var design = ref.watch(choiceNodeDesignSettingProvider(widget.pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
-    return QuillEditor(
-      controller: ref.watch(contentsQuillProvider(widget.pos)),
-      focusNode: _focusNode!,
-      readOnly: true,
-      autoFocus: false,
-      expands: false,
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      showCursor: false,
-      scrollController: _scrollController!,
-      scrollable: false,
-      enableInteractiveSelection: false,
-      customStyles: ConstList.getDefaultThemeData(
-          context, ConstList.scale(context),
-          fontStyle: ConstList.getFontWithColor(preset.mainFont)),
+    return QuillProvider(
+      configurations: QuillConfigurations(
+        controller: ref.watch(contentsQuillProvider(widget.pos)),
+      ),
+      child: QuillEditor(
+        configurations: QuillEditorConfigurations(
+          readOnly: true,
+          autoFocus: false,
+          expands: false,
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          showCursor: false,
+          scrollable: false,
+          enableInteractiveSelection: false,
+          customStyles: ConstList.getDefaultThemeData(
+              context, ConstList.scale(context),
+              fontStyle: ConstList.getFontWithColor(preset.mainFont)),
+        ),
+        focusNode: _focusNode!,
+        scrollController: _scrollController!,
+      ),
     );
   }
 }
