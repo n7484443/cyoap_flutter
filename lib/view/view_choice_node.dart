@@ -30,9 +30,13 @@ class ViewChoiceNode extends ConsumerWidget {
   final Pos pos;
   final bool ignoreOpacity;
   final bool ignoreChild;
+  final bool ignoreOption;
 
   const ViewChoiceNode(this.pos,
-      {this.ignoreOpacity = false, this.ignoreChild = false, super.key});
+      {this.ignoreOpacity = false,
+      this.ignoreChild = false,
+      this.ignoreOption = false,
+      super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -54,14 +58,13 @@ class ViewChoiceNode extends ConsumerWidget {
       );
     }
     if (ignoreOpacity) {
-      return ViewChoiceNodeMain(
-        pos,
-        ignoreChild: ignoreChild,
-      );
+      return ViewChoiceNodeMain(pos,
+          ignoreChild: ignoreChild, ignoreOption: ignoreOption);
     }
     return Opacity(
       opacity: ref.watch(opacityProvider(pos)),
-      child: ViewChoiceNodeMain(pos, ignoreChild: ignoreChild),
+      child: ViewChoiceNodeMain(pos,
+          ignoreChild: ignoreChild, ignoreOption: ignoreOption),
     );
   }
 }
@@ -69,8 +72,10 @@ class ViewChoiceNode extends ConsumerWidget {
 class ViewChoiceNodeMain extends ConsumerWidget {
   final Pos pos;
   final bool ignoreChild;
+  final bool ignoreOption;
 
-  const ViewChoiceNodeMain(this.pos, {this.ignoreChild = false, super.key});
+  const ViewChoiceNodeMain(this.pos,
+      {this.ignoreChild = false, this.ignoreOption = false, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -82,7 +87,8 @@ class ViewChoiceNodeMain extends ConsumerWidget {
     ColorOption defaultColor = isSelected && preset.selectColorEnable
         ? preset.selectColorOption
         : preset.defaultColorOption;
-    ColorOption borderColor = isSelected ? outline.outlineColor : preset.defaultColorOption;
+    ColorOption borderColor =
+        isSelected ? outline.outlineColor : preset.defaultColorOption;
     var innerWidget = Ink(
       decoration: BoxDecoration(
         color: defaultColor.getColor(),
@@ -107,7 +113,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
           padding: EdgeInsets.all(preset.padding),
           child: Stack(children: [
             ViewChoiceNodeContent(pos, ignoreChild: ignoreChild),
-            if (isEditable)
+            if (isEditable && !ignoreOption)
               Align(
                 alignment: Alignment.topRight,
                 child: CircleAvatar(

@@ -64,6 +64,12 @@ class ImageDB {
   }
 
   Image noImage = Image.asset('images/sample.png');
+  DecorationImage checkers = const DecorationImage(
+    image: AssetImage(
+      'images/checkers.png',
+    ),
+    repeat: ImageRepeat.repeat,
+  );
 
   Future<void> removeImage(String name) async {
     _dirImageUint8Map.remove(name);

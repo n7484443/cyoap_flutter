@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../main.dart';
+import '../../model/image_db.dart';
 import '../../model/platform.dart';
 import '../../viewModel/preset/vm_choice_node_preset.dart';
 import '../../viewModel/preset/vm_preset.dart';
@@ -26,10 +27,16 @@ class ChoiceNodeSample extends ConsumerWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Expanded(
-          child: IgnorePointer(
-            child: ViewChoiceNode(
-              Pos(data: [designSamplePosition]),
+        Expanded(
+          child: Container(
+            decoration: BoxDecoration(
+              image: ImageDB().checkers,
+            ),
+            child: const IgnorePointer(
+              child: ViewChoiceNode(
+                Pos(data: [designSamplePosition]),
+                ignoreOption: true,
+              ),
             ),
           ),
         ),
@@ -41,7 +48,9 @@ class ChoiceNodeSample extends ConsumerWidget {
               var pos = const Pos(data: [designSamplePosition]);
               ref.invalidate(choiceNodeProvider(pos));
             },
-            icon: const Icon(Icons.border_style)),
+            icon: ref.watch(choiceNodePresetTestSelectProvider)
+                ? const Icon(Icons.check_box_outlined)
+                : const Icon(Icons.check_box_outline_blank)),
       ],
     );
   }
