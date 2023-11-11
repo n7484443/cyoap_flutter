@@ -40,7 +40,10 @@ class ViewChoiceNode extends ConsumerWidget {
       var presetName =
           ref.watch(choiceNodeDesignSettingProvider(pos)).presetName;
       return Card(
-        color: ref.watch(choiceNodePresetProvider(presetName)).defaultColorOption.getColor(),
+        color: ref
+            .watch(choiceNodePresetProvider(presetName))
+            .defaultColorOption
+            .getColor(),
         child: SizedBox(
           width: MediaQuery.of(context).size.width /
               defaultMaxSize *
@@ -79,7 +82,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
     ColorOption defaultColor = isSelected && preset.selectColorEnable
         ? preset.selectColorOption
         : preset.defaultColorOption;
-    ColorOption borderColor = isSelected ? outline.outlineColor : defaultColor;
+    ColorOption borderColor = isSelected ? outline.outlineColor : preset.defaultColorOption;
     var innerWidget = Ink(
       decoration: BoxDecoration(
         color: defaultColor.getColor(),
@@ -89,8 +92,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
       child: InkWell(
         onDoubleTap: isEditable
             ? () {
-                ref.read(nodeEditorTargetPosProvider.notifier).state =
-                    node.pos;
+                ref.read(nodeEditorTargetPosProvider.notifier).state = node.pos;
                 ref
                     .read(changeTabProvider.notifier)
                     .changePageString("viewEditor", context);
@@ -168,7 +170,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
         dashPattern:
             outline.outlineType == OutlineType.dashed ? [6, 2] : [3, 1],
         radius: Radius.circular(preset.round),
-        color: borderColor.getColor(),
+        color: borderColor.getColorIgnoreGradient(),
         padding: EdgeInsets.all(outline.outlinePadding),
         child: Card(
           shape: shape,
@@ -181,13 +183,12 @@ class ViewChoiceNodeMain extends ConsumerWidget {
       );
     }
 
-
     if (outline.outlineType == OutlineType.solid) {
       return DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(preset.round),
           border: Border.all(
-            color: borderColor.getColor(),
+            color: borderColor.getColorIgnoreGradient(),
             width: outline.outlineWidth,
           ),
         ),
@@ -196,6 +197,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
           margin: EdgeInsets.all(outline.outlinePadding),
           clipBehavior: Clip.antiAlias,
           shape: shape,
+          color: Colors.transparent,
           child: innerWidget,
         ),
       );
@@ -205,6 +207,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
       shape: shape,
       clipBehavior: Clip.antiAlias,
       elevation: preset.elevation,
+      color: Colors.transparent,
       child: innerWidget,
     );
   }

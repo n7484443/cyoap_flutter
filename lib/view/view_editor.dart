@@ -313,6 +313,7 @@ class _ViewTextContentsEditorState
                 onColorChanged: (color) {
                   newColor = color;
                 },
+                hasAlpha: false,
               ),
             ],
           ),

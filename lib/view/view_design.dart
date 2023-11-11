@@ -76,6 +76,7 @@ class ViewGeneralSettingTab extends ConsumerWidget {
             onColorChanged: (Color color) {
               ref.read(backgroundColorProvider.notifier).state = color;
             },
+            hasAlpha: false,
           )
         ],
       );
@@ -97,11 +98,12 @@ class ViewGeneralSettingTab extends ConsumerWidget {
         Expanded(
           flex: 2,
           child: ViewColorPicker(
-            text:'background_color'.i18n,
+            text: 'background_color'.i18n,
             color: ref.watch(backgroundColorProvider),
             onColorChanged: (Color color) {
               ref.read(backgroundColorProvider.notifier).state = color;
             },
+            hasAlpha: false,
           ),
         )
       ],

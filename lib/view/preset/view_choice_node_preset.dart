@@ -417,13 +417,14 @@ class _ViewNodeOutlineOptionEditorState
           SliverToBoxAdapter(
             child: ViewColorPicker(
               text: 'node_outline_color'.i18n,
-              color: preset.outlineOption.outlineColor.getColor(),
+              color: preset.outlineOption.outlineColor.getColor()!,
               onColorChanged: (Color value) {
                 ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                     presetIndex,
-                    preset.copyWith
-                        .outlineOption.outlineColor(color: value.value));
+                    preset.copyWith.outlineOption
+                        .outlineColor(color: value.value));
               },
+              hasAlpha: true,
             ),
           ),
           SliverGrid(
@@ -623,7 +624,8 @@ class _ViewColorOptionEditorState extends State<ViewColorOptionEditor> {
             widget.changeFunction(
                 widget.colorOption.copyWith(color: value.value));
           },
-          color: widget.colorOption.getColor(),
+          color: widget.colorOption.getColor()!,
+          hasAlpha: true,
         ),
       ],
     );
@@ -660,20 +662,23 @@ class ViewGradientOption extends StatelessWidget {
                 onTap: () {
                   currentIndexFunction(index);
                 },
-                selected:  index == currentIndex,
+                selected: index == currentIndex,
                 selectedTileColor: Colors.blueGrey.withOpacity(0.3),
               );
             }),
           ),
         ),
         Expanded(
-            child: ViewColorPicker(
-          text: 'node_select_grad_color'.i18n.fill([currentIndex]),
-          color: Color(colorOption.gradientData[currentIndex].color),
-          onColorChanged: (Color value) {
-            changeFunction(colorOption.changeGradientColor(currentIndex, value));
-          },
-        )),
+          child: ViewColorPicker(
+            text: 'node_select_grad_color'.i18n.fill([currentIndex]),
+            color: Color(colorOption.gradientData[currentIndex].color),
+            onColorChanged: (Color value) {
+              changeFunction(
+                  colorOption.changeGradientColor(currentIndex, value));
+            },
+            hasAlpha: true,
+          ),
+        ),
       ],
     );
   }
@@ -683,22 +688,27 @@ class ViewGradientPositionOption extends StatefulWidget {
   final ColorOption colorOption;
   final void Function(ColorOption after) changeFunction;
   final int currentIndex;
-  const ViewGradientPositionOption({required this.colorOption,
-    required this.changeFunction,
-    required this.currentIndex,
-    super.key});
+
+  const ViewGradientPositionOption(
+      {required this.colorOption,
+      required this.changeFunction,
+      required this.currentIndex,
+      super.key});
 
   @override
   State createState() => _ViewGradientPositionOptionState();
 }
 
-class _ViewGradientPositionOptionState extends State<ViewGradientPositionOption> {
+class _ViewGradientPositionOptionState
+    extends State<ViewGradientPositionOption> {
   double x = 0.5;
   double y = 0.5;
+
   @override
   void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     x = widget.colorOption.gradientData[widget.currentIndex].gradientPos.$1;
@@ -734,7 +744,8 @@ class _ViewGradientPositionOptionState extends State<ViewGradientPositionOption>
               x = x.clamp(0, 1);
               y = y.clamp(0, 1);
             });
-            widget.changeFunction(widget.colorOption.changeGradientPosition(widget.currentIndex, x, y));
+            widget.changeFunction(widget.colorOption
+                .changeGradientPosition(widget.currentIndex, x, y));
           },
         ),
       ],

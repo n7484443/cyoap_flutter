@@ -116,6 +116,7 @@ class ViewLineOptionEditor extends ConsumerWidget {
               ref.read(choiceLinePresetListProvider.notifier).updateIndex(
                   index, preset.copyWith(backgroundColor: color.value));
             },
+            hasAlpha: false,
           ),
         ),
         SliverToBoxAdapter(
