@@ -1,7 +1,7 @@
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/preset/view_preset.dart';
+import 'package:cyoap_flutter/view/util/view_color_picker.dart';
 import 'package:easy_debounce/easy_debounce.dart';
-import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -70,25 +70,12 @@ class ViewGeneralSettingTab extends ConsumerWidget {
             provider: variableFontProvider,
           ),
           const ViewPositionSetting(),
-          ColorPicker(
-            heading: Center(
-              child: Text('background_color'.i18n),
-            ),
+          ViewColorPicker(
+            text: 'background_color'.i18n,
             color: ref.watch(backgroundColorProvider),
             onColorChanged: (Color color) {
               ref.read(backgroundColorProvider.notifier).state = color;
             },
-            pickersEnabled: {
-              ColorPickerType.wheel: true,
-              ColorPickerType.accent: false
-            },
-            pickerTypeLabels: {
-              ColorPickerType.primary: "color_select".i18n,
-              ColorPickerType.wheel: "color_direct_select".i18n,
-            },
-            width: 22,
-            height: 22,
-            borderRadius: 22,
           )
         ],
       );
@@ -109,25 +96,12 @@ class ViewGeneralSettingTab extends ConsumerWidget {
         ),
         Expanded(
           flex: 2,
-          child: ColorPicker(
-            heading: Center(
-              child: Text('background_color'.i18n),
-            ),
+          child: ViewColorPicker(
+            text:'background_color'.i18n,
             color: ref.watch(backgroundColorProvider),
             onColorChanged: (Color color) {
               ref.read(backgroundColorProvider.notifier).state = color;
             },
-            pickersEnabled: {
-              ColorPickerType.wheel: true,
-              ColorPickerType.accent: false
-            },
-            pickerTypeLabels: {
-              ColorPickerType.primary: "color_select".i18n,
-              ColorPickerType.wheel: "color_direct_select".i18n,
-            },
-            width: 22,
-            height: 22,
-            borderRadius: 22,
           ),
         )
       ],

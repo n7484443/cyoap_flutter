@@ -5,13 +5,13 @@ import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/code/view_ide.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
+import 'package:cyoap_flutter/view/util/view_color_picker.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_image_selector.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:easy_debounce/easy_debounce.dart';
-import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart' hide Text;
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
@@ -307,12 +307,8 @@ class _ViewTextContentsEditorState
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ColorPicker(
-                pickersEnabled: {
-                  ColorPickerType.both: true,
-                  ColorPickerType.primary: false,
-                  ColorPickerType.accent: false
-                },
+              ViewColorPicker(
+                text: 'Select Color',
                 color: const Color(0x00000000),
                 onColorChanged: (color) {
                   newColor = color;
@@ -348,11 +344,10 @@ class _ViewTextContentsEditorState
           padding: const EdgeInsets.all(8.0),
           child: QuillProvider(
             configurations: QuillConfigurations(
-              controller: _quillController!,
-              sharedConfigurations: QuillSharedConfigurations(
-                locale: ref.watch(localeStateProvider),
-              )
-            ),
+                controller: _quillController!,
+                sharedConfigurations: QuillSharedConfigurations(
+                  locale: ref.watch(localeStateProvider),
+                )),
             child: QuillToolbar(
               configurations: QuillToolbarConfigurations(
                 showListCheck: false,
@@ -370,15 +365,15 @@ class _ViewTextContentsEditorState
                 showSubscript: false,
                 multiRowsDisplay: false,
                 customButtons: [
-                  QuillCustomButton(
-                    iconData: Icons.color_lens,
-                    onTap: () {
+                  QuillToolbarCustomButtonOptions(
+                    icon: const Icon(Icons.color_lens),
+                    onPressed: () {
                       colorIconDialog(false);
                     },
                   ),
-                  QuillCustomButton(
-                    iconData: Icons.format_color_fill,
-                    onTap: () {
+                  QuillToolbarCustomButtonOptions(
+                    icon: const Icon(Icons.format_color_fill),
+                    onPressed: () {
                       colorIconDialog(true);
                     },
                   ),
@@ -395,10 +390,9 @@ class _ViewTextContentsEditorState
             child: QuillProvider(
               configurations: QuillConfigurations(
                   controller: _quillController!,
-                sharedConfigurations: QuillSharedConfigurations(
-                  locale: ref.watch(localeStateProvider),
-                )
-              ),
+                  sharedConfigurations: QuillSharedConfigurations(
+                    locale: ref.watch(localeStateProvider),
+                  )),
               child: QuillEditor(
                 configurations: QuillEditorConfigurations(
                   padding: const EdgeInsets.all(3),

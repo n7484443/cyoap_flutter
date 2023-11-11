@@ -5,6 +5,7 @@ import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
+import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
@@ -14,7 +15,7 @@ import 'package:cyoap_flutter/viewModel/vm_editor.dart'
     show nodeEditorTargetPosProvider;
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart' hide Text;
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -39,7 +40,7 @@ class ViewChoiceNode extends ConsumerWidget {
       var presetName =
           ref.watch(choiceNodeDesignSettingProvider(pos)).presetName;
       return Card(
-        color: Color(ref.watch(choiceNodePresetProvider(presetName)).colorNode),
+        color: ref.watch(choiceNodePresetProvider(presetName)).defaultColorOption.getColor(),
         child: SizedBox(
           width: MediaQuery.of(context).size.width /
               defaultMaxSize *
@@ -74,15 +75,17 @@ class ViewChoiceNodeMain extends ConsumerWidget {
     var design = ref.watch(choiceNodeDesignSettingProvider(pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     var outline = preset.outlineOption;
-    var inner = preset.selectColorOption;
     var isSelected = node.select > 0;
-    var defaultColor = isSelected && inner.enable
-        ? Color(inner.selectColor)
-        : Color(preset.colorNode);
-    var borderColor =
-        isSelected ? Color(outline.outlineSelectColor) : defaultColor;
+    ColorOption defaultColor = isSelected && preset.selectColorEnable
+        ? preset.selectColorOption
+        : preset.defaultColorOption;
+    ColorOption borderColor = isSelected ? outline.outlineColor : defaultColor;
     var innerWidget = Ink(
-      color: defaultColor,
+      decoration: BoxDecoration(
+        color: defaultColor.getColor(),
+        gradient: defaultColor.getGradient(),
+        borderRadius: BorderRadius.circular(max(preset.round, 0)),
+      ),
       child: Padding(
         padding: EdgeInsets.all(preset.padding),
         child: InkWell(
@@ -153,57 +156,46 @@ class ViewChoiceNodeMain extends ConsumerWidget {
       ),
     );
 
+    var shape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(preset.round),
+      side: const BorderSide(width: 0, style: BorderStyle.none),
+    );
     if (outline.outlineType == OutlineType.dotted ||
         outline.outlineType == OutlineType.dashed) {
-      var borderSide = BorderSide(
-          color: borderColor,
-          width: outline.outlineWidth,
-          style: BorderStyle.none);
-      var shape = RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(preset.round),
-        side: borderSide,
-      );
       return DottedBorder(
         borderType: BorderType.RRect,
         strokeWidth: outline.outlineWidth,
         dashPattern:
             outline.outlineType == OutlineType.dashed ? [6, 2] : [3, 1],
         radius: Radius.circular(preset.round),
-        color: borderColor,
+        color: borderColor.getColor(),
         padding: EdgeInsets.all(outline.outlinePadding),
         child: Card(
           shape: shape,
-          clipBehavior: Clip.antiAlias,
+          clipBehavior: Clip.none,
           elevation: preset.elevation,
-          color: defaultColor,
+          color: Colors.transparent,
           margin: EdgeInsets.zero,
           child: innerWidget,
         ),
       );
     }
 
-    var borderSide = BorderSide(
-        color: borderColor,
-        width: outline.outlineWidth,
-        style: BorderStyle.solid);
-    var shape = RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(preset.round),
-      side: borderSide,
-    );
 
     if (outline.outlineType == OutlineType.solid) {
       return DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(preset.round),
           border: Border.all(
-            color: borderColor,
+            color: borderColor.getColor(),
             width: outline.outlineWidth,
           ),
         ),
         child: Card(
           elevation: preset.elevation,
-          color: defaultColor,
           margin: EdgeInsets.all(outline.outlinePadding),
+          clipBehavior: Clip.antiAlias,
+          shape: shape,
           child: innerWidget,
         ),
       );
@@ -213,7 +205,6 @@ class ViewChoiceNodeMain extends ConsumerWidget {
       shape: shape,
       clipBehavior: Clip.antiAlias,
       elevation: preset.elevation,
-      color: defaultColor,
       child: innerWidget,
     );
   }

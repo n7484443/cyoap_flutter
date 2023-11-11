@@ -104,11 +104,14 @@ extension Localization on String {
           'horizontal_mode': 'Horizontal mode',
           'image_left': 'Image left',
           'node_color': 'Choices background color',
+          'grad_type': 'Gradient Type',
           'node_outline_color': 'Border color when choice is selected',
           'font_title': 'Title font',
           'font_content': 'Content font',
           'node_select_color_enable': 'Enable select color',
           'node_select_color': 'Select color',
+          'node_select_grad_color': 'Select gradient %i th color',
+          'node_select_grad_pos': 'Select gradient %i th position',
         },
         "ko": {
           'preset': '프리셋',
@@ -127,11 +130,14 @@ extension Localization on String {
           'horizontal_mode': '가로 모드',
           'image_left': '이미지 왼쪽으로',
           'node_color': '선택지 색상',
+          'grad_type': '그라데이션 타입',
           'node_outline_color': '외곽선 색상',
           'font_title': '제목 폰트',
           'font_content': '내용 폰트',
           'node_select_color_enable': '선택시 색상 변경 활성화',
           'node_select_color': '선택시 색상',
+          'node_select_grad_color': '그라디언트 %i 번째 색상',
+          'node_select_grad_pos': '그라디언트 %i 번째 위치',
         }
       } +
       const {

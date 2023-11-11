@@ -1,6 +1,5 @@
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/preset/view_preset.dart';
-import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,6 +7,7 @@ import '../../main.dart';
 import '../../viewModel/preset/vm_choice_line_preset.dart';
 import '../../viewModel/preset/vm_preset.dart';
 import '../util/controller_adjustable_scroll.dart';
+import '../util/view_color_picker.dart';
 import '../util/view_switch_label.dart';
 
 class ChoiceLinePresetList extends ConsumerWidget {
@@ -109,26 +109,13 @@ class ViewLineOptionEditor extends ConsumerWidget {
           ),
         ),
         SliverToBoxAdapter(
-          child: ColorPicker(
-            heading: Center(
-              child: Text('background_color'.i18n),
-            ),
+          child: ViewColorPicker(
+            text: 'background_color'.i18n,
             color: Color(preset.backgroundColor ?? 0x000000),
             onColorChanged: (Color color) {
               ref.read(choiceLinePresetListProvider.notifier).updateIndex(
                   index, preset.copyWith(backgroundColor: color.value));
             },
-            pickersEnabled: {
-              ColorPickerType.wheel: true,
-              ColorPickerType.accent: false
-            },
-            pickerTypeLabels: {
-              ColorPickerType.primary: "color_select".i18n,
-              ColorPickerType.wheel: "color_direct_select".i18n,
-            },
-            width: 22,
-            height: 22,
-            borderRadius: 22,
           ),
         ),
         SliverToBoxAdapter(

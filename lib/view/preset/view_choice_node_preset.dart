@@ -1,10 +1,10 @@
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
+import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/preset/view_preset.dart';
 import 'package:cyoap_flutter/view/util/view_vertical_tabbar.dart';
 import 'package:easy_debounce/easy_debounce.dart';
-import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,6 +14,7 @@ import '../../viewModel/preset/vm_choice_node_preset.dart';
 import '../../viewModel/preset/vm_preset.dart';
 import '../../viewModel/vm_choice_node.dart';
 import '../util/controller_adjustable_scroll.dart';
+import '../util/view_color_picker.dart';
 import '../util/view_switch_label.dart';
 import '../view_choice_node.dart';
 
@@ -414,28 +415,15 @@ class _ViewNodeOutlineOptionEditorState
         controller: _scrollController,
         slivers: [
           SliverToBoxAdapter(
-            child: ColorPicker(
-              heading: Center(
-                child: Text('node_outline_color'.i18n),
-              ),
-              color: Color(preset.outlineOption.outlineSelectColor),
+            child: ViewColorPicker(
+              text: 'node_outline_color'.i18n,
+              color: preset.outlineOption.outlineColor.getColor(),
               onColorChanged: (Color value) {
                 ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                     presetIndex,
                     preset.copyWith
-                        .outlineOption(outlineSelectColor: value.value));
+                        .outlineOption.outlineColor(color: value.value));
               },
-              pickersEnabled: {
-                ColorPickerType.wheel: true,
-                ColorPickerType.accent: false
-              },
-              pickerTypeLabels: {
-                ColorPickerType.primary: "color_select".i18n,
-                ColorPickerType.wheel: "color_direct_select".i18n
-              },
-              width: 22,
-              height: 22,
-              borderRadius: 22,
             ),
           ),
           SliverGrid(
@@ -509,7 +497,6 @@ class _ViewNodeColorOptionEditorState
   Widget build(BuildContext context) {
     var preset = ref.watch(choiceNodePresetCurrentEditProvider);
     var presetIndex = ref.watch(currentPresetIndexProvider);
-    var opacity = preset.selectColorOption.enable ? 1.0 : 0.3;
     return Scrollbar(
       controller: _scrollController,
       thumbVisibility: true,
@@ -518,26 +505,12 @@ class _ViewNodeColorOptionEditorState
         controller: _scrollController,
         slivers: [
           SliverToBoxAdapter(
-            child: ColorPicker(
-              heading: Center(
-                child: Text('node_color'.i18n),
-              ),
-              color: Color(preset.colorNode),
-              onColorChanged: (Color value) {
+            child: ViewColorOptionEditor(
+              colorOption: preset.defaultColorOption,
+              changeFunction: (ColorOption after) {
                 ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                    presetIndex, preset.copyWith(colorNode: value.value));
+                    presetIndex, preset.copyWith(defaultColorOption: after));
               },
-              pickersEnabled: {
-                ColorPickerType.wheel: true,
-                ColorPickerType.accent: false
-              },
-              pickerTypeLabels: {
-                ColorPickerType.primary: "color_select".i18n,
-                ColorPickerType.wheel: "color_direct_select".i18n
-              },
-              width: 22,
-              height: 22,
-              borderRadius: 22,
             ),
           ),
           SliverToBoxAdapter(
@@ -545,13 +518,13 @@ class _ViewNodeColorOptionEditorState
               children: [
                 Text('node_select_color_enable'.i18n),
                 Checkbox(
-                  value: preset.selectColorOption.enable,
+                  value: preset.selectColorEnable,
                   onChanged: (bool? value) {
                     if (value != null) {
                       ref
                           .read(choiceNodePresetListProvider.notifier)
                           .updateIndex(presetIndex,
-                              preset.copyWith.selectColorOption(enable: value));
+                              preset.copyWith(selectColorEnable: value));
                     }
                   },
                 ),
@@ -559,64 +532,212 @@ class _ViewNodeColorOptionEditorState
             ),
           ),
           SliverOpacity(
-            opacity: opacity,
+            opacity: preset.selectColorEnable ? 1.0 : 0.3,
             sliver: SliverToBoxAdapter(
-              child: ColorPicker(
-                heading: Center(
-                  child: Text('node_select_color'.i18n),
-                ),
-                color: Color(preset.selectColorOption.selectColor),
-                onColorChanged: (Color value) {
+              child: ViewColorOptionEditor(
+                colorOption: preset.selectColorOption,
+                changeFunction: (ColorOption after) {
                   ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                      presetIndex, preset.copyWith.selectColorOption(selectColor: value.value));
+                      presetIndex, preset.copyWith(selectColorOption: after));
                 },
-                pickersEnabled: {
-                  ColorPickerType.wheel: true,
-                  ColorPickerType.accent: false
-                },
-                pickerTypeLabels: {
-                  ColorPickerType.primary: "color_select".i18n,
-                  ColorPickerType.wheel: "color_direct_select".i18n
-                },
-                width: 22,
-                height: 22,
-                borderRadius: 22,
-              ),
-            ),
-          ),
-          SliverOpacity(
-            opacity: opacity,
-            sliver: SliverGrid(
-              delegate: SliverChildListDelegate([
-                DropdownButtonFormField<SelectColorType>(
-                  decoration: InputDecoration(labelText: 'node_select_color'.i18n),
-                  items: SelectColorType.values.getRange(0, 1)
-                      .map<DropdownMenuItem<SelectColorType>>((type) =>
-                          DropdownMenuItem(value: type, child: Text(type.name)))
-                      .toList(),
-                  onChanged: (SelectColorType? t) {
-                    if (t != null) {
-                      ref
-                          .read(choiceNodePresetListProvider.notifier)
-                          .updateIndex(
-                              presetIndex,
-                              preset.copyWith
-                                  .selectColorOption(selectColorType: t));
-                    }
-                  },
-                  value: preset.selectColorOption.selectColorType,
-                ),
-              ]),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 3,
-                crossAxisSpacing: 10,
-                mainAxisExtent: 60,
-                mainAxisSpacing: 2,
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class ViewColorOptionEditor extends StatefulWidget {
+  final ColorOption colorOption;
+  final void Function(ColorOption after) changeFunction;
+
+  const ViewColorOptionEditor(
+      {required this.colorOption, required this.changeFunction, super.key});
+
+  @override
+  State createState() => _ViewColorOptionEditorState();
+}
+
+class _ViewColorOptionEditorState extends State<ViewColorOptionEditor> {
+  int currentEditIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    var dropdown = DropdownButtonFormField<ColorType>(
+      decoration: InputDecoration(labelText: 'node_color'.i18n),
+      items: ColorType.values
+          .getRange(0, 2)
+          .map<DropdownMenuItem<ColorType>>(
+              (type) => DropdownMenuItem(value: type, child: Text(type.name)))
+          .toList(),
+      onChanged: (ColorType? t) {
+        if (t != null) {
+          widget.changeFunction(widget.colorOption.copyWith(colorType: t));
+        }
+      },
+      value: widget.colorOption.colorType,
+    );
+    var dropdownGrad = DropdownButtonFormField<GradientType>(
+      decoration: InputDecoration(labelText: 'grad_type'.i18n),
+      items: GradientType.values
+          .map<DropdownMenuItem<GradientType>>(
+              (type) => DropdownMenuItem(value: type, child: Text(type.name)))
+          .toList(),
+      onChanged: (GradientType? t) {
+        if (t != null) {
+          widget.changeFunction(widget.colorOption.copyWith(gradientType: t));
+        }
+      },
+      value: widget.colorOption.gradientType,
+    );
+    if (widget.colorOption.hasGradient()) {
+      return Column(
+        children: [
+          dropdown,
+          dropdownGrad,
+          ViewGradientOption(
+            colorOption: widget.colorOption,
+            changeFunction: widget.changeFunction,
+            currentIndexFunction: (int after) {
+              setState(() {
+                currentEditIndex = after;
+              });
+            },
+            currentIndex: currentEditIndex,
+          ),
+          ViewGradientPositionOption(
+            colorOption: widget.colorOption,
+            changeFunction: widget.changeFunction,
+            currentIndex: currentEditIndex,
+          ),
+        ],
+      );
+    }
+    return Column(
+      children: [
+        dropdown,
+        ViewColorPicker(
+          onColorChanged: (Color value) {
+            widget.changeFunction(
+                widget.colorOption.copyWith(color: value.value));
+          },
+          color: widget.colorOption.getColor(),
+        ),
+      ],
+    );
+  }
+}
+
+class ViewGradientOption extends StatelessWidget {
+  final ColorOption colorOption;
+  final void Function(ColorOption after) changeFunction;
+  final void Function(int after) currentIndexFunction;
+  final int currentIndex;
+
+  const ViewGradientOption(
+      {required this.colorOption,
+      required this.changeFunction,
+      required this.currentIndexFunction,
+      required this.currentIndex,
+      super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 100,
+          height: 300,
+          child: ListView(
+            controller: AdjustableScrollController(),
+            shrinkWrap: true,
+            children: List.generate(colorOption.gradientData.length, (index) {
+              return ListTile(
+                title: Text(index.toString()),
+                onTap: () {
+                  currentIndexFunction(index);
+                },
+                selected:  index == currentIndex,
+                selectedTileColor: Colors.blueGrey.withOpacity(0.3),
+              );
+            }),
+          ),
+        ),
+        Expanded(
+            child: ViewColorPicker(
+          text: 'node_select_grad_color'.i18n.fill([currentIndex]),
+          color: Color(colorOption.gradientData[currentIndex].color),
+          onColorChanged: (Color value) {
+            changeFunction(colorOption.changeGradientColor(currentIndex, value));
+          },
+        )),
+      ],
+    );
+  }
+}
+
+class ViewGradientPositionOption extends StatefulWidget {
+  final ColorOption colorOption;
+  final void Function(ColorOption after) changeFunction;
+  final int currentIndex;
+  const ViewGradientPositionOption({required this.colorOption,
+    required this.changeFunction,
+    required this.currentIndex,
+    super.key});
+
+  @override
+  State createState() => _ViewGradientPositionOptionState();
+}
+
+class _ViewGradientPositionOptionState extends State<ViewGradientPositionOption> {
+  double x = 0.5;
+  double y = 0.5;
+  @override
+  void initState() {
+    super.initState();
+  }
+  @override
+  Widget build(BuildContext context) {
+    x = widget.colorOption.gradientData[widget.currentIndex].gradientPos.$1;
+    y = widget.colorOption.gradientData[widget.currentIndex].gradientPos.$2;
+    var size = 100.0;
+    var iconSize = 20.0;
+    return Row(
+      children: [
+        GestureDetector(
+          child: SizedBox.square(
+            dimension: size,
+            child: ColoredBox(
+              color: Colors.white,
+              child: Stack(
+                children: [
+                  Positioned(
+                    left: size * x - iconSize / 2,
+                    top: size * y - iconSize / 2,
+                    child: Icon(
+                      Icons.close,
+                      color: Colors.black,
+                      size: iconSize,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          onPanUpdate: (DragUpdateDetails? dragUpdateDetails) {
+            setState(() {
+              x = dragUpdateDetails!.localPosition.dx / size;
+              y = dragUpdateDetails.localPosition.dy / size;
+              x = x.clamp(0, 1);
+              y = y.clamp(0, 1);
+            });
+            widget.changeFunction(widget.colorOption.changeGradientPosition(widget.currentIndex, x, y));
+          },
+        ),
+      ],
     );
   }
 }

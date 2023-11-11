@@ -194,11 +194,13 @@ class IccProjectParser {
       return ChoiceNodeDesignPreset(
         name: generateRandomString(10),
         imagePosition: template == 4 ? 1 : template,
-        colorNode:
+        defaultColorOption:
             isRow ? globalRowBackgroundColor : globalObjectBackgroundColor,
         outlineOption: OutlineOption(
-          outlineSelectColor:
-              isRow ? globalRowBackgroundColor : globalSelectFilterBgColor,
+          outlineColor: ColorOption(
+            color: isRow ? globalRowBackgroundColor : globalSelectFilterBgColor,
+            colorType: ColorType.solid,
+          ),
         ),
       );
     }
@@ -214,26 +216,32 @@ class IccProjectParser {
       return ChoiceNodeDesignPreset(
         name: generateRandomString(10),
         imagePosition: template == 4 ? 1 : template,
-        colorNode: rowBackgroundColor == 0xFFFFFFFF
+        defaultColorOption: rowBackgroundColor == 0xFFFFFFFF
             ? globalRowBackgroundColor
             : rowBackgroundColor,
         outlineOption: OutlineOption(
-          outlineSelectColor: rowBackgroundColor == 0xFFFFFFFF
-              ? globalRowBackgroundColor
-              : rowBackgroundColor,
+          outlineColor: ColorOption(
+            color: rowBackgroundColor == 0xFFFFFFFF
+                ? globalRowBackgroundColor
+                : rowBackgroundColor,
+            colorType: ColorType.solid,
+          ),
         ),
       );
     }
     return ChoiceNodeDesignPreset(
       name: generateRandomString(10),
       imagePosition: template == 4 ? 1 : template,
-      colorNode: objectBackgroundColor == 0xFFFFFFFF
+      defaultColorOption: objectBackgroundColor == 0xFFFFFFFF
           ? globalObjectBackgroundColor
           : objectBackgroundColor,
       outlineOption: OutlineOption(
-        outlineSelectColor: objectSelectBackgroundColor == 0xFFFFFFFF
-            ? globalSelectFilterBgColor
-            : objectSelectBackgroundColor,
+        outlineColor: ColorOption(
+          color: objectSelectBackgroundColor == 0xFFFFFFFF
+              ? globalSelectFilterBgColor
+              : objectSelectBackgroundColor,
+          colorType: ColorType.solid,
+        ),
       ),
     );
   }

@@ -8,3 +8,5 @@ final currentPresetTab = StateProvider<int>((ref) {
 });
 
 final currentPresetIndexProvider = StateProvider.autoDispose<int>((ref) => 0);
+
+final currentGradientIndexProvider = StateProvider.autoDispose<int>((ref) => 0);
