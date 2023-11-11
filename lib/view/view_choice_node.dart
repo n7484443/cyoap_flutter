@@ -86,23 +86,23 @@ class ViewChoiceNodeMain extends ConsumerWidget {
         gradient: defaultColor.getGradient(),
         borderRadius: BorderRadius.circular(max(preset.round, 0)),
       ),
-      child: Padding(
-        padding: EdgeInsets.all(preset.padding),
-        child: InkWell(
-          onDoubleTap: isEditable
-              ? () {
-                  ref.read(nodeEditorTargetPosProvider.notifier).state =
-                      node.pos;
-                  ref
-                      .read(changeTabProvider.notifier)
-                      .changePageString("viewEditor", context);
-                }
-              : null,
-          onTap: !isEditable
-              ? () {
-                  ref.read(choiceNodeSelectProvider(pos).notifier).select(0);
-                }
-              : null,
+      child: InkWell(
+        onDoubleTap: isEditable
+            ? () {
+                ref.read(nodeEditorTargetPosProvider.notifier).state =
+                    node.pos;
+                ref
+                    .read(changeTabProvider.notifier)
+                    .changePageString("viewEditor", context);
+              }
+            : null,
+        onTap: !isEditable
+            ? () {
+                ref.read(choiceNodeSelectProvider(pos).notifier).select(0);
+              }
+            : null,
+        child: Padding(
+          padding: EdgeInsets.all(preset.padding),
           child: Stack(children: [
             ViewChoiceNodeContent(pos, ignoreChild: ignoreChild),
             if (isEditable)
