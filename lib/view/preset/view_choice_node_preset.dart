@@ -416,6 +416,7 @@ class _ViewNodeOutlineOptionEditorState
   Widget build(BuildContext context) {
     var preset = ref.watch(choiceNodePresetCurrentEditProvider);
     var presetIndex = ref.watch(currentPresetIndexProvider);
+    var opacity = preset.selectOutlineEnable ? 1.0 : 0.3;
     return Scrollbar(
       controller: _scrollController,
       thumbVisibility: true,
@@ -477,6 +478,91 @@ class _ViewNodeOutlineOptionEditorState
               crossAxisSpacing: 10,
               mainAxisExtent: 60,
               mainAxisSpacing: 2,
+            ),
+          ),
+          const SliverToBoxAdapter(child: Divider()),
+          SliverToBoxAdapter(
+            child: Row(
+              children: [
+                Text('node_select_color_enable'.i18n),
+                Checkbox(
+                  value: preset.selectOutlineEnable,
+                  onChanged: (bool? value) {
+                    if (value != null) {
+                      ref
+                          .read(choiceNodePresetListProvider.notifier)
+                          .updateIndex(presetIndex,
+                              preset.copyWith(selectOutlineEnable: value));
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+          SliverOpacity(
+            opacity: opacity,
+            sliver: SliverToBoxAdapter(
+              child: ViewColorPicker(
+                text: 'node_outline_color'.i18n,
+                color: preset.selectOutlineOption.outlineColor.getColor()!,
+                onColorChanged: (Color value) {
+                  ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+                      presetIndex,
+                      preset.copyWith.selectOutlineOption
+                          .outlineColor(color: value.value));
+                },
+                hasAlpha: true,
+              ),
+            ),
+          ),
+          SliverOpacity(
+            opacity: opacity,
+            sliver: SliverGrid(
+              delegate: SliverChildListDelegate([
+                DropdownButtonFormField<OutlineType>(
+                  decoration: InputDecoration(labelText: 'outline_shape'.i18n),
+                  items: OutlineType.values
+                      .map<DropdownMenuItem<OutlineType>>((type) =>
+                          DropdownMenuItem(value: type, child: Text(type.name)))
+                      .toList(),
+                  onChanged: (OutlineType? t) {
+                    if (t != null) {
+                      ref
+                          .read(choiceNodePresetListProvider.notifier)
+                          .updateIndex(
+                              presetIndex,
+                              preset.copyWith
+                                  .selectOutlineOption(outlineType: t));
+                    }
+                  },
+                  value: preset.selectOutlineOption.outlineType,
+                ),
+                TextFormField(
+                  textAlign: TextAlign.end,
+                  minLines: 1,
+                  maxLines: 1,
+                  keyboardType: TextInputType.number,
+                  controller: ref.watch(
+                      choiceNodePresetSelectedEditOutlinePaddingProvider),
+                  decoration:
+                      InputDecoration(labelText: 'outline_padding'.i18n),
+                ),
+                TextFormField(
+                  textAlign: TextAlign.end,
+                  minLines: 1,
+                  maxLines: 1,
+                  keyboardType: TextInputType.number,
+                  controller: ref
+                      .watch(choiceNodePresetSelectedEditOutlineWidthProvider),
+                  decoration: InputDecoration(labelText: 'outline_width'.i18n),
+                ),
+              ]),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 3,
+                crossAxisSpacing: 10,
+                mainAxisExtent: 60,
+                mainAxisSpacing: 2,
+              ),
             ),
           )
         ],

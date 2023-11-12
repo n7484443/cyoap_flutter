@@ -48,6 +48,30 @@ final choiceNodePresetCurrentEditOutlinePaddingProvider =
   return controller;
 });
 
+final choiceNodePresetSelectedEditOutlinePaddingProvider =
+Provider.autoDispose<TextEditingController>((ref) {
+  var controller = TextEditingController(
+      text: ref
+          .watch(choiceNodePresetCurrentEditProvider)
+          .selectOutlineOption
+          .outlinePadding
+          .toString());
+  controller.addListener(() {
+    EasyDebounce.debounce(
+        'Outline Padding Input Selected', const Duration(milliseconds: 500), () {
+      ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+          ref.watch(currentPresetIndexProvider),
+          ref.read(choiceNodePresetCurrentEditProvider).copyWith.selectOutlineOption(
+              outlinePadding: double.tryParse(controller.text) ?? 0.0));
+    });
+  });
+  ref.onDispose(() {
+    EasyDebounce.cancel('Outline Padding Input Selected');
+    controller.dispose();
+  });
+  return controller;
+});
+
 final choiceNodePresetCurrentEditOutlineWidthProvider =
     Provider.autoDispose<TextEditingController>((ref) {
   var controller = TextEditingController(
@@ -67,6 +91,30 @@ final choiceNodePresetCurrentEditOutlineWidthProvider =
   });
   ref.onDispose(() {
     EasyDebounce.cancel('Outline Width Input');
+    controller.dispose();
+  });
+  return controller;
+});
+
+final choiceNodePresetSelectedEditOutlineWidthProvider =
+Provider.autoDispose<TextEditingController>((ref) {
+  var controller = TextEditingController(
+      text: ref
+          .watch(choiceNodePresetCurrentEditProvider)
+          .selectOutlineOption
+          .outlineWidth
+          .toString());
+  controller.addListener(() {
+    EasyDebounce.debounce(
+        'Outline Width Input Selected', const Duration(milliseconds: 500), () {
+      ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+          ref.watch(currentPresetIndexProvider),
+          ref.read(choiceNodePresetCurrentEditProvider).copyWith.selectOutlineOption(
+              outlineWidth: double.tryParse(controller.text) ?? 0.0));
+    });
+  });
+  ref.onDispose(() {
+    EasyDebounce.cancel('Outline Width Input Selected');
     controller.dispose();
   });
   return controller;
