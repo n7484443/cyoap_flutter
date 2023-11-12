@@ -7688,7 +7688,7 @@ flutter_quill
 
 MIT License
 
-Copyright (c) 2020 Xin Yao
+Copyright (c) 2023 Xin Yao
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -30081,7 +30081,6 @@ SOFTWARE.
 --------------------------------------------------------------------------------
 json_annotation
 json_serializable
-pedantic
 
 Copyright 2017, the Dart project authors. All rights reserved.
 Redistribution and use in source and binary forms, with or without
