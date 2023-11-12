@@ -8,3 +8,5 @@ final currentPresetTab = StateProvider<int>((ref) {
 });
 
 final currentPresetIndexProvider = StateProvider.autoDispose<int>((ref) => 0);
+
+final closedChoiceNodePresetProvider = StateProvider.family.autoDispose<bool, int>((pos, ref) => false);

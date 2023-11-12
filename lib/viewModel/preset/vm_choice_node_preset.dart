@@ -29,7 +29,7 @@ final choiceNodePresetCurrentEditOutlinePaddingProvider =
   var controller = TextEditingController(
       text: ref
           .watch(choiceNodePresetCurrentEditProvider)
-          .outlineOption
+          .defaultOutlineOption
           .outlinePadding
           .toString());
   controller.addListener(() {
@@ -37,7 +37,7 @@ final choiceNodePresetCurrentEditOutlinePaddingProvider =
         'Outline Padding Input', const Duration(milliseconds: 500), () {
       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
           ref.watch(currentPresetIndexProvider),
-          ref.read(choiceNodePresetCurrentEditProvider).copyWith.outlineOption(
+          ref.read(choiceNodePresetCurrentEditProvider).copyWith.defaultOutlineOption(
               outlinePadding: double.tryParse(controller.text) ?? 0.0));
     });
   });
@@ -53,7 +53,7 @@ final choiceNodePresetCurrentEditOutlineWidthProvider =
   var controller = TextEditingController(
       text: ref
           .watch(choiceNodePresetCurrentEditProvider)
-          .outlineOption
+          .defaultOutlineOption
           .outlineWidth
           .toString());
   controller.addListener(() {
@@ -61,7 +61,7 @@ final choiceNodePresetCurrentEditOutlineWidthProvider =
         'Outline Width Input', const Duration(milliseconds: 500), () {
       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
           ref.watch(currentPresetIndexProvider),
-          ref.read(choiceNodePresetCurrentEditProvider).copyWith.outlineOption(
+          ref.read(choiceNodePresetCurrentEditProvider).copyWith.defaultOutlineOption(
               outlineWidth: double.tryParse(controller.text) ?? 0.0));
     });
   });

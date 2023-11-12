@@ -196,7 +196,7 @@ class IccProjectParser {
         imagePosition: template == 4 ? 1 : template,
         defaultColorOption:
             isRow ? globalRowBackgroundColor : globalObjectBackgroundColor,
-        outlineOption: OutlineOption(
+        defaultOutlineOption: OutlineOption(
           outlineColor: ColorOption(
             color: isRow ? globalRowBackgroundColor : globalSelectFilterBgColor,
             colorType: ColorType.solid,
@@ -219,7 +219,7 @@ class IccProjectParser {
         defaultColorOption: rowBackgroundColor == 0xFFFFFFFF
             ? globalRowBackgroundColor
             : rowBackgroundColor,
-        outlineOption: OutlineOption(
+        defaultOutlineOption: OutlineOption(
           outlineColor: ColorOption(
             color: rowBackgroundColor == 0xFFFFFFFF
                 ? globalRowBackgroundColor
@@ -235,7 +235,7 @@ class IccProjectParser {
       defaultColorOption: objectBackgroundColor == 0xFFFFFFFF
           ? globalObjectBackgroundColor
           : objectBackgroundColor,
-      outlineOption: OutlineOption(
+      defaultOutlineOption: OutlineOption(
         outlineColor: ColorOption(
           color: objectSelectBackgroundColor == 0xFFFFFFFF
               ? globalSelectFilterBgColor

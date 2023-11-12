@@ -426,11 +426,11 @@ class _ViewNodeOutlineOptionEditorState
           SliverToBoxAdapter(
             child: ViewColorPicker(
               text: 'node_outline_color'.i18n,
-              color: preset.outlineOption.outlineColor.getColor()!,
+              color: preset.defaultOutlineOption.outlineColor.getColor()!,
               onColorChanged: (Color value) {
                 ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                     presetIndex,
-                    preset.copyWith.outlineOption
+                    preset.copyWith.defaultOutlineOption
                         .outlineColor(color: value.value));
               },
               hasAlpha: true,
@@ -448,10 +448,10 @@ class _ViewNodeOutlineOptionEditorState
                   if (t != null) {
                     ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                         presetIndex,
-                        preset.copyWith.outlineOption(outlineType: t));
+                        preset.copyWith.defaultOutlineOption(outlineType: t));
                   }
                 },
-                value: preset.outlineOption.outlineType,
+                value: preset.defaultOutlineOption.outlineType,
               ),
               TextFormField(
                 textAlign: TextAlign.end,

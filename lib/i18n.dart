@@ -233,6 +233,7 @@ extension Localization on String {
           'outline_shape': 'Outline shape',
           'outline_padding': 'Outline padding',
           'outline_width': 'Outline width',
+          'selected' : 'Selected',
 
           'modify_size': 'Modify size',
           'random_show': 'Random',
@@ -331,6 +332,7 @@ extension Localization on String {
           'outline_shape': '외곽선',
           'outline_padding': '외곽선 여백',
           'outline_width': '외곽선 두께',
+          'selected' : '선택',
 
           'modify_size': '크기 수정',
           'random_show': '랜덤',

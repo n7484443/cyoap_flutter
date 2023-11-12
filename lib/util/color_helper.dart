@@ -28,24 +28,23 @@ extension ColorHelper on ColorOption {
               gradientData[0].gradientPos.$2 * 2.0 - 1.0),
           colors: [Color(gradientData[0].color), Color(gradientData[1].color)],
           stops: [
-            0.5,
+            0.0,
             1.0,
           ],
         );
       case GradientType.sweep:
+        var angle = atan2(gradientData[1].gradientPos.$2 - 0.5,
+            gradientData[1].gradientPos.$1 - 0.5);
+        var pos = gradientData[0].gradientPos;
         return SweepGradient(
-          center: Alignment(gradientData[0].gradientPos.$1 * 2.0 - 1.0,
-              gradientData[0].gradientPos.$2 * 2.0 - 1.0),
+          center: Alignment(pos.$1 * 2.0 - 1.0, pos.$2 * 2.0 - 1.0),
           colors: [
             Color(gradientData[0].color),
             Color(gradientData[1].color),
             Color(gradientData[0].color)
           ],
           stops: [0.0, 0.5, 1.0],
-          transform: GradientRotation(-atan2(
-                  gradientData[1].gradientPos.$1 - 0.5,
-                  gradientData[1].gradientPos.$2 - 0.5) -
-              pi / 2.0),
+          transform: GradientTranslateRotation(angle, Offset(pos.$1, pos.$2)),
         );
     }
   }
@@ -72,4 +71,31 @@ extension ColorHelper on ColorOption {
     newList[index] = newList[index].copyWith(gradientPos: (x, y));
     return copyWith(gradientData: newList);
   }
+}
+
+class GradientTranslateRotation extends GradientRotation {
+  const GradientTranslateRotation(super.radians, this.center);
+  final Offset center;
+
+  @override
+  Matrix4 transform(Rect bounds, {TextDirection? textDirection}) {
+    return Matrix4.identity()
+      ..translate(center.dx * bounds.width, center.dy * bounds.height)
+      ..rotateZ(radians)
+      ..translate(-center.dx * bounds.width, -center.dy * bounds.height);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+    return other is GradientRotation && other.radians == radians;
+  }
+
+  @override
+  int get hashCode => radians.hashCode * center.hashCode;
 }

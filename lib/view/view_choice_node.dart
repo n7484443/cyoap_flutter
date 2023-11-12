@@ -82,13 +82,12 @@ class ViewChoiceNodeMain extends ConsumerWidget {
     var node = ref.watch(choiceNodeProvider(pos)).node!;
     var design = ref.watch(choiceNodeDesignSettingProvider(pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
-    var outline = preset.outlineOption;
     var isSelected = node.select > 0;
-    ColorOption defaultColor = isSelected && preset.selectColorEnable
+    var defaultColor = isSelected && preset.selectColorEnable
         ? preset.selectColorOption
         : preset.defaultColorOption;
-    ColorOption borderColor =
-        isSelected ? outline.outlineColor : preset.defaultColorOption;
+    var outline =
+        isSelected && preset.selectOutlineEnable ? preset.selectOutlineOption : preset.defaultOutlineOption;
     var innerWidget = Ink(
       decoration: BoxDecoration(
         color: defaultColor.getColor(),
@@ -176,7 +175,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
         dashPattern:
             outline.outlineType == OutlineType.dashed ? [6, 2] : [3, 1],
         radius: Radius.circular(preset.round),
-        color: borderColor.getColorIgnoreGradient(),
+        color: outline.outlineColor.getColorIgnoreGradient(),
         padding: EdgeInsets.all(outline.outlinePadding),
         child: Card(
           shape: shape,
@@ -194,7 +193,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(preset.round),
           border: Border.all(
-            color: borderColor.getColorIgnoreGradient(),
+            color: outline.outlineColor.getColorIgnoreGradient(),
             width: outline.outlineWidth,
           ),
         ),
