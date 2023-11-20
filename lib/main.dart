@@ -25,6 +25,7 @@ import 'color_schemes.g.dart';
 import 'model/device_preference.dart';
 
 class ConstList {
+  static const Duration debounceDuration = Duration(milliseconds: 50);
   static const double appBarSize = 38.0;
   static const double elevation = 6.0;
   static const double padding = 8.0;
@@ -247,6 +248,7 @@ final ThemeData appThemeLight = ThemeData.from(
 ).copyWith(
   appBarTheme: const AppBarTheme(
     toolbarHeight: ConstList.appBarSize,
+    scrolledUnderElevation: 0.0,
   ),
   sliderTheme: const SliderThemeData(
     showValueIndicator: ShowValueIndicator.always,
@@ -275,6 +277,7 @@ final ThemeData appThemeDark = ThemeData.from(
 ).copyWith(
   appBarTheme: const AppBarTheme(
     toolbarHeight: ConstList.appBarSize,
+    scrolledUnderElevation: 0.0,
   ),
   sliderTheme: const SliderThemeData(
     showValueIndicator: ShowValueIndicator.always,

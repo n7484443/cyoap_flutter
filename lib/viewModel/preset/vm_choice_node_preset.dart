@@ -5,6 +5,7 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../main.dart';
 import '../../model/platform_system.dart';
 import '../vm_choice_node.dart';
 import '../vm_draggable_nested_map.dart';
@@ -34,7 +35,7 @@ final choiceNodePresetCurrentEditOutlinePaddingProvider =
           .toString());
   controller.addListener(() {
     EasyDebounce.debounce(
-        'Outline Padding Input', const Duration(milliseconds: 500), () {
+        'Outline Padding Input', ConstList.debounceDuration, () {
       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
           ref.watch(currentPresetIndexProvider),
           ref.read(choiceNodePresetCurrentEditProvider).copyWith.defaultOutlineOption(
@@ -58,7 +59,7 @@ Provider.autoDispose<TextEditingController>((ref) {
           .toString());
   controller.addListener(() {
     EasyDebounce.debounce(
-        'Outline Padding Input Selected', const Duration(milliseconds: 500), () {
+        'Outline Padding Input Selected', ConstList.debounceDuration, () {
       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
           ref.watch(currentPresetIndexProvider),
           ref.read(choiceNodePresetCurrentEditProvider).copyWith.selectOutlineOption(
@@ -82,7 +83,7 @@ final choiceNodePresetCurrentEditOutlineWidthProvider =
           .toString());
   controller.addListener(() {
     EasyDebounce.debounce(
-        'Outline Width Input', const Duration(milliseconds: 500), () {
+        'Outline Width Input', ConstList.debounceDuration, () {
       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
           ref.watch(currentPresetIndexProvider),
           ref.read(choiceNodePresetCurrentEditProvider).copyWith.defaultOutlineOption(
@@ -106,7 +107,7 @@ Provider.autoDispose<TextEditingController>((ref) {
           .toString());
   controller.addListener(() {
     EasyDebounce.debounce(
-        'Outline Width Input Selected', const Duration(milliseconds: 500), () {
+        'Outline Width Input Selected', ConstList.debounceDuration, () {
       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
           ref.watch(currentPresetIndexProvider),
           ref.read(choiceNodePresetCurrentEditProvider).copyWith.selectOutlineOption(
@@ -126,7 +127,7 @@ final choiceNodePresetCurrentEditElevationProvider =
       text:
           ref.watch(choiceNodePresetCurrentEditProvider).elevation.toString());
   controller.addListener(() {
-    EasyDebounce.debounce('Elevation Input', const Duration(milliseconds: 500),
+    EasyDebounce.debounce('Elevation Input', ConstList.debounceDuration,
         () {
       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
           ref.watch(currentPresetIndexProvider),
@@ -154,7 +155,7 @@ final choiceNodePresetCurrentEditRoundProvider =
   var controller = TextEditingController(
       text: ref.watch(choiceNodePresetCurrentEditProvider).round.toString());
   controller.addListener(() {
-    EasyDebounce.debounce('Round Input', const Duration(milliseconds: 500), () {
+    EasyDebounce.debounce('Round Input', ConstList.debounceDuration, () {
       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
           ref.watch(currentPresetIndexProvider),
           ref
@@ -174,7 +175,7 @@ final choiceNodePresetCurrentEditPaddingProvider =
   var controller = TextEditingController(
       text: ref.watch(choiceNodePresetCurrentEditProvider).padding.toString());
   controller.addListener(() {
-    EasyDebounce.debounce('Padding Input', const Duration(milliseconds: 500),
+    EasyDebounce.debounce('Padding Input', ConstList.debounceDuration,
         () {
       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
           ref.watch(currentPresetIndexProvider),

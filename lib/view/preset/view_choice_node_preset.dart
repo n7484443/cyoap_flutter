@@ -153,7 +153,7 @@ class _ViewTextFieldInputState extends ConsumerState<ViewTextFieldInput> {
     super.initState();
     _controller = TextEditingController();
     _controller?.addListener(() {
-      EasyDebounce.debounce(widget.text, const Duration(milliseconds: 500), () {
+      EasyDebounce.debounce(widget.text, ConstList.debounceDuration, () {
         widget.inputFunction(_controller?.text ?? '');
       });
     });

@@ -75,7 +75,7 @@ class _ViewPlayDrawerState extends ConsumerState<ViewPlayDrawer> {
   @override
   void initState() {
     _controller.addListener(() {
-      EasyDebounce.debounce('search', const Duration(milliseconds: 500), () {
+      EasyDebounce.debounce('search', ConstList.debounceDuration, () {
         ref.read(searchProvider.notifier).state = _controller.text;
       });
     });

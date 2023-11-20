@@ -233,7 +233,7 @@ extension Localization on String {
           'outline_shape': 'Outline shape',
           'outline_padding': 'Outline padding',
           'outline_width': 'Outline width',
-          'selected' : 'Selected',
+          'selected': 'Selected',
 
           'modify_size': 'Modify size',
           'random_show': 'Random',
@@ -332,7 +332,7 @@ extension Localization on String {
           'outline_shape': '외곽선',
           'outline_padding': '외곽선 여백',
           'outline_width': '외곽선 두께',
-          'selected' : '선택',
+          'selected': '선택',
 
           'modify_size': '크기 수정',
           'random_show': '랜덤',
@@ -341,7 +341,12 @@ extension Localization on String {
           'sample_node': '레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.',
           'sample_title': '디자인',
         },
-      };
+      } +
+      const {"en": {
+        'project_variable' : 'Project Variable',
+      }, "ko": {
+        'project_variable' : '프로젝트 변수',
+      }};
 
   String get i18n {
     return localize(this, _t);

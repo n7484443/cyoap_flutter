@@ -130,7 +130,7 @@ class _ViewPositionSettingState extends ConsumerState<ViewPositionSetting> {
     );
     _controller?.addListener(() {
       EasyDebounce.debounce(
-          'marginController', const Duration(milliseconds: 500), () {
+          'marginController', ConstList.debounceDuration, () {
         ref.read(marginVerticalProvider.notifier).state =
             double.tryParse(_controller?.text ?? '') ?? 12.0;
       });

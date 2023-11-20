@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../main.dart';
+
 final controllerClickableProvider =
     Provider.autoDispose<TextEditingController>((ref) {
   var node = ref.watch(nodeEditorTargetProvider).node;
@@ -17,7 +19,7 @@ final controllerClickableProvider =
         .read(ideCurrentInputProvider.notifier)
         .addCheckText(controller.text, controller.selection.end);
     EasyDebounce.debounce(
-        'conditionClickableString', const Duration(milliseconds: 500), () {
+        'conditionClickableString', ConstList.debounceDuration, () {
       ref
           .read(nodeEditorTargetProvider)
           .node
@@ -43,7 +45,7 @@ final controllerVisibleProvider =
         .read(ideCurrentInputProvider.notifier)
         .addCheckText(controller.text, controller.selection.end);
     EasyDebounce.debounce(
-        'conditionVisibleString', const Duration(milliseconds: 500), () {
+        'conditionVisibleString', ConstList.debounceDuration, () {
       node.recursiveStatus.conditionVisibleString = controller.text;
       ref.read(editorChangeProvider.notifier).needUpdate();
     });
@@ -71,7 +73,7 @@ final controllerIdeProvider = Provider.autoDispose<QuillController>((ref) {
       document: Document.fromJson(data),
       selection: const TextSelection.collapsed(offset: 0));
   controller.addListener(() {
-    EasyDebounce.debounce('code-ide', const Duration(milliseconds: 500), () {
+    EasyDebounce.debounce('code-ide', ConstList.debounceDuration, () {
       var plainText = controller.document.toPlainText();
       if (ref
               .read(nodeEditorTargetProvider)

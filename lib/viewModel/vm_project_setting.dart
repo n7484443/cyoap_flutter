@@ -2,51 +2,106 @@ import 'package:cyoap_core/grammar/value_type.dart';
 import 'package:cyoap_core/variable_db.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../main.dart';
+
 final projectSettingNameTextEditingProvider =
-    Provider.family.autoDispose<TextEditingController, int>((ref, index) {
-  var controller = TextEditingController(
-      text: ref
+    Provider.autoDispose<TextEditingController>((ref) {
+  var index = ref.watch(currentEditGlobalVariableProvider);
+  var name =
+      ref.read(valueTypeWrapperListProvider.notifier).getEditTargetName(index)!;
+  var value = ref
+      .read(valueTypeWrapperListProvider.notifier)
+      .getEditTargetValueTypeWrapper(index)!;
+  var controller = TextEditingController(text: name);
+  controller.addListener(() {
+    EasyDebounce.debounce(
+        'projectSettingNameTextEditingProvider', ConstList.debounceDuration,
+        () {
+      var newName = controller.text.trim();
+      if (newName.isEmpty) {
+        return;
+      }
+      ref
           .read(valueTypeWrapperListProvider.notifier)
-          .getEditTarget(index)!
-          .$1);
-  ref.onDispose(() => controller.dispose());
+          .editInitialValue(index, newName, value);
+    });
+  });
+  ref.onDispose(() {
+    controller.dispose();
+    EasyDebounce.cancel('projectSettingNameTextEditingProvider');
+  });
   return controller;
 });
 
 final projectSettingValueTextEditingProvider =
-    Provider.family.autoDispose<TextEditingController, int>((ref, index) {
-  var data = ref
+    Provider.autoDispose<TextEditingController>((ref) {
+  var index = ref.watch(currentEditGlobalVariableProvider);
+  var name =
+      ref.read(valueTypeWrapperListProvider.notifier).getEditTargetName(index)!;
+  var value = ref
       .read(valueTypeWrapperListProvider.notifier)
-      .getEditTarget(index)!
-      .$2
-      .valueType;
+      .getEditTargetValueTypeWrapper(index)!;
+  var data = value.valueType;
   var text = data.type.isString ? '"${data.dataUnzip}"' : data.data;
   var controller = TextEditingController(text: text);
-  ref.onDispose(() => controller.dispose());
+  controller.addListener(() {
+    EasyDebounce.debounce(
+        'projectSettingValueTextEditingProvider', ConstList.debounceDuration,
+        () {
+      var newValue = controller.text.trim();
+      if (newValue.isEmpty) {
+        return;
+      }
+      ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(
+          index,
+          name,
+          value.copyWith(valueType: getValueTypeFromStringInput(newValue)));
+    });
+  });
+  ref.onDispose(() {
+    controller.dispose();
+    EasyDebounce.cancel('projectSettingValueTextEditingProvider');
+  });
   return controller;
 });
 
 final projectSettingDisplayNameTextEditingProvider =
-    Provider.family.autoDispose<TextEditingController, int>((ref, index) {
-  var controller = TextEditingController(
-      text: ref
+    Provider.autoDispose<TextEditingController>((ref) {
+      var index = ref.watch(currentEditGlobalVariableProvider);
+      var name =
+      ref.read(valueTypeWrapperListProvider.notifier).getEditTargetName(index)!;
+      var value = ref
           .read(valueTypeWrapperListProvider.notifier)
-          .getEditTarget(index)!
-          .$2
-          .displayName);
-  ref.onDispose(() => controller.dispose());
-  return controller;
+          .getEditTargetValueTypeWrapper(index)!;
+      var controller = TextEditingController(text: value.displayName);
+      controller.addListener(() {
+        EasyDebounce.debounce(
+            'projectSettingDisplayNameTextEditingProvider', ConstList.debounceDuration,
+                () {
+              var newDisplayName = controller.text.trim();
+              if (newDisplayName.isEmpty) {
+                newDisplayName = name;
+              }
+              ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(
+                  index,
+                  name,
+                  value.copyWith(displayName: newDisplayName));
+            });
+      });
+      ref.onDispose(() {
+        controller.dispose();
+        EasyDebounce.cancel('projectSettingDisplayNameTextEditingProvider');
+      });
+      return controller;
 });
 
-final projectSettingVisibleSwitchProvider = StateProvider.family
-    .autoDispose<bool, int>((ref, index) => ref
-        .read(valueTypeWrapperListProvider.notifier)
-        .getEditTarget(index)!
-        .$2
-        .visible);
+final currentEditGlobalVariableProvider = StateProvider.autoDispose<int>((ref) {
+  return 0;
+});
 
 final valueTypeWrapperListProvider = StateNotifierProvider.autoDispose<
         ValueTypeWrapperListNotifier, List<(String, ValueTypeWrapper)>>(
@@ -95,9 +150,16 @@ class ValueTypeWrapperListNotifier
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
   }
 
-  (String, ValueTypeWrapper)? getEditTarget(int index) {
+  String? getEditTargetName(int index) {
     if (index != -1) {
-      return state[index];
+      return state[index].$1;
+    }
+    return null;
+  }
+
+  ValueTypeWrapper? getEditTargetValueTypeWrapper(int index) {
+    if (index != -1) {
+      return state[index].$2;
     }
     return null;
   }
