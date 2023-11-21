@@ -216,11 +216,8 @@ class _ViewGlobalVariableEditorState
                           ref.watch(valueTypeWrapperListProvider)[index].$1,
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
-                        subtitle: Text(ref
-                            .watch(valueTypeWrapperListProvider)[index]
-                            .$2
-                            .valueType
-                            .toString()),
+                        subtitle: Text(
+                            '${ref.watch(valueTypeWrapperListProvider)[index].$2.valueType}   ${ref.watch(valueTypeWrapperListProvider)[index].$2.displayName}'),
                         onTap: () {
                           ref
                               .read(currentEditGlobalVariableProvider.notifier)
