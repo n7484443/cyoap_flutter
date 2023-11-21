@@ -79,6 +79,9 @@ class _ViewGlobalVariableEditorState
         child: IconButton(
           icon: const Icon(Icons.arrow_upward),
           onPressed: () {
+            if (currentIndex == null) {
+              return;
+            }
             var indexFiltered = filteredList.indexOf(currentIndex);
             if (indexFiltered > 0) {
               var newIndex = filteredList[indexFiltered - 1];
@@ -95,6 +98,9 @@ class _ViewGlobalVariableEditorState
         child: IconButton(
           icon: const Icon(Icons.arrow_downward),
           onPressed: () {
+            if (currentIndex == null) {
+              return;
+            }
             var indexFiltered = filteredList.indexOf(currentIndex);
             if (indexFiltered < filteredList.length - 1) {
               var newIndex = filteredList[indexFiltered + 1];
@@ -112,6 +118,10 @@ class _ViewGlobalVariableEditorState
         child: IconButton(
           icon: const Icon(Icons.delete),
           onPressed: () {
+            if (currentIndex == null) {
+              return;
+            }
+            ref.read(currentEditGlobalVariableProvider.notifier).state = null;
             ref
                 .read(valueTypeWrapperListProvider.notifier)
                 .deleteInitialValue(currentIndex);
@@ -294,6 +304,9 @@ class _ViewGlobalVariableInnerEditorState
   @override
   Widget build(BuildContext context) {
     var currentIndex = ref.watch(currentEditGlobalVariableProvider);
+    if (currentIndex == null) {
+      return const SizedBox();
+    }
     var currentEditValue = ref
         .watch(valueTypeWrapperListProvider.notifier)
         .getEditTargetValueTypeWrapper(currentIndex)!;

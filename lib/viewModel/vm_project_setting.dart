@@ -10,7 +10,7 @@ import '../main.dart';
 
 final projectSettingNameTextEditingProvider =
     Provider.autoDispose<TextEditingController>((ref) {
-  var index = ref.watch(currentEditGlobalVariableProvider);
+  var index = ref.watch(currentEditGlobalVariableProvider)!;
   var name =
       ref.read(valueTypeWrapperListProvider.notifier).getEditTargetName(index)!;
   var value = ref
@@ -39,7 +39,7 @@ final projectSettingNameTextEditingProvider =
 
 final projectSettingValueTextEditingProvider =
     Provider.autoDispose<TextEditingController>((ref) {
-  var index = ref.watch(currentEditGlobalVariableProvider);
+  var index = ref.watch(currentEditGlobalVariableProvider)!;
   var name =
       ref.read(valueTypeWrapperListProvider.notifier).getEditTargetName(index)!;
   var value = ref
@@ -71,7 +71,7 @@ final projectSettingValueTextEditingProvider =
 
 final projectSettingDisplayNameTextEditingProvider =
     Provider.autoDispose<TextEditingController>((ref) {
-      var index = ref.watch(currentEditGlobalVariableProvider);
+      var index = ref.watch(currentEditGlobalVariableProvider)!;
       var name =
       ref.read(valueTypeWrapperListProvider.notifier).getEditTargetName(index)!;
       var value = ref
@@ -99,8 +99,8 @@ final projectSettingDisplayNameTextEditingProvider =
       return controller;
 });
 
-final currentEditGlobalVariableProvider = StateProvider.autoDispose<int>((ref) {
-  return 0;
+final currentEditGlobalVariableProvider = StateProvider.autoDispose<int?>((ref) {
+  return null;
 });
 
 final valueTypeWrapperListProvider = StateNotifierProvider.autoDispose<
@@ -134,7 +134,8 @@ class ValueTypeWrapperListNotifier
   }
 
   void deleteInitialValue(int index) {
-    state = [...state]..removeAt(index);
+    state.removeAt(index);
+    state = [...state];
   }
 
   void editInitialValue(int index, String name, ValueTypeWrapper value) {
