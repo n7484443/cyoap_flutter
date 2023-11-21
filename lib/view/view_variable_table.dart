@@ -145,11 +145,41 @@ class _ViewPlayDrawerState extends ConsumerState<ViewPlayDrawer> {
   }
 }
 
+class BottomDisplayedVariableWidget extends ConsumerWidget {
+  const BottomDisplayedVariableWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    var variableList = List<Widget>.empty(growable: true);
+    for (var (name, valueTypeWrapper)
+        in ref.watch(displayedVariablesProvider)) {
+      if (valueTypeWrapper.visible) {
+        name = valueTypeWrapper.displayName.isEmpty
+            ? name
+            : valueTypeWrapper.displayName;
+        variableList.add(
+          Chip(
+            label: Text("$name   ${valueTypeWrapper.valueType.data.toString()}",
+                style: ConstList.getFont(ref.watch(variableFontProvider))),
+          ),
+        );
+      }
+    }
+    return SizedBox(
+      height: 48,
+      child: HorizontalScroll(
+        itemBuilder: (BuildContext context, int index) {
+          return variableList[index];
+        },
+        itemCount: variableList.length,
+      ),
+    );
+  }
+}
+
 class VariableTiles extends ConsumerWidget {
-  final bool asBottom;
 
   const VariableTiles({
-    this.asBottom = false,
     super.key,
   });
 
@@ -177,14 +207,7 @@ class VariableTiles extends ConsumerWidget {
         }
       } else if (ref.watch(isDebugModeProvider) || values.visible) {
         var name = values.displayName.isEmpty ? key : values.displayName;
-        if (asBottom) {
-          variableList.add(
-            Chip(
-              label: Text("$name   ${values.valueType.data.toString()}",
-                  style: ConstList.getFont(ref.watch(variableFontProvider))),
-            ),
-          );
-        } else if (search.isEmpty ||
+        if (search.isEmpty ||
             (search.isNotEmpty && key.contains(search))) {
           variableList.add(ListTile(
             dense: true,
@@ -193,17 +216,6 @@ class VariableTiles extends ConsumerWidget {
           ));
         }
       }
-    }
-    if (asBottom) {
-      return SizedBox(
-        height: 48,
-        child: HorizontalScroll(
-          itemBuilder: (BuildContext context, int index) {
-            return variableList[index];
-          },
-          itemCount: variableList.length,
-        ),
-      );
     }
     return ExpansionTile(
       title: Text('variable'.i18n),

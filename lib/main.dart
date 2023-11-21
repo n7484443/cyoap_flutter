@@ -244,7 +244,6 @@ void main() {
 final ThemeData appThemeLight = ThemeData.from(
   colorScheme: lightColorScheme,
   textTheme: GoogleFonts.notoSansTextTheme(),
-  useMaterial3: true,
 ).copyWith(
   appBarTheme: const AppBarTheme(
     toolbarHeight: ConstList.appBarSize,
@@ -273,7 +272,6 @@ final ThemeData appThemeDark = ThemeData.from(
     bodyColor: darkColorScheme.onSurface,
     displayColor: darkColorScheme.onSurface,
   ),
-  useMaterial3: true,
 ).copyWith(
   appBarTheme: const AppBarTheme(
     toolbarHeight: ConstList.appBarSize,

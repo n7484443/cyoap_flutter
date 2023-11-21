@@ -83,7 +83,7 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
       endDrawer: const Drawer(
         child: ViewPlayDrawer(),
       ),
-      bottomNavigationBar: const VariableTiles(asBottom: true),
+      bottomNavigationBar: const BottomDisplayedVariableWidget(),
       body: const NestedScroll(),
     );
   }
