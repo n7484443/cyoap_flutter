@@ -60,7 +60,7 @@ jobs:
         with:
           command: build
           args: --release --manifest-path updater/Cargo.toml
-      - run: MV "updater/target/release/updater.exe" "build/windows/runner/Release"
+      - run: MV "./updater/target/release/updater.exe" "./build/windows/runner/Release"
       - run: |
           7z a build/windows/cyoap_windows_${{ github.ref_name }}.zip ./build/windows/runner/Release/*
 
