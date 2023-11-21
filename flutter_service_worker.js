@@ -31,7 +31,7 @@ const RESOURCES = {"assets/AssetManifest.bin": "7d225c433c2b9437a891863ced9bd603
 "index.html": "58f905882ef645859ad24d2c84419dde",
 "/": "58f905882ef645859ad24d2c84419dde",
 "jszip.js": "418ea325c68eb099ef2ccc8823771a63",
-"main.dart.js": "77b409831eed69ab33377e7c1a8dfddc",
+"main.dart.js": "a4e6070dfd539a147ddb07d4db800040",
 "manifest.json": "ebc04e4594e86d4e5763ccf0df7285b3",
 "save_web.js": "6d7f19b0443d2ca2a960f0532299e5d7",
 "version.json": "4c4f21602d8e19cd67f41018e87858e2",
