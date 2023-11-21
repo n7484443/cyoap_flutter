@@ -62,7 +62,7 @@ jobs:
           args: --release --manifest-path updater/Cargo.toml
       - run: MV "updater/target/release/updater.exe" "build/windows/x64/runner/Release"
       - run: |
-          7z a build/windows/cyoap_windows_${{ github.ref_name }}.zip ./build/windows/runner/Release/*
+          7z a build/windows/cyoap_windows_${{ github.ref_name }}.zip ./build/windows/x64/runner/Release/*
 
       - name: Release
         uses: softprops/action-gh-release@v0.1.15
