@@ -61,6 +61,8 @@ class _ViewGlobalVariableEditorState
   @override
   Widget build(BuildContext context) {
     var currentIndex = ref.watch(currentEditGlobalVariableProvider);
+    var filterType = ref.watch(globalVariableFilterProvider);
+    var filteredList = ref.watch(globalVariableFilteredListProvider);
     var iconList = [
       FittedBox(
         child: IconButton(
@@ -76,13 +78,33 @@ class _ViewGlobalVariableEditorState
       FittedBox(
         child: IconButton(
           icon: const Icon(Icons.arrow_upward),
-          onPressed: () {},
+          onPressed: () {
+            var indexFiltered = filteredList.indexOf(currentIndex);
+            if (indexFiltered > 0) {
+              var newIndex = filteredList[indexFiltered - 1];
+              ref
+                  .read(valueTypeWrapperListProvider.notifier)
+                  .swap(currentIndex, newIndex);
+              ref.read(currentEditGlobalVariableProvider.notifier).state =
+                  newIndex;
+            }
+          },
         ),
       ),
       FittedBox(
         child: IconButton(
           icon: const Icon(Icons.arrow_downward),
-          onPressed: () {},
+          onPressed: () {
+            var indexFiltered = filteredList.indexOf(currentIndex);
+            if (indexFiltered < filteredList.length - 1) {
+              var newIndex = filteredList[indexFiltered + 1];
+              ref
+                  .read(valueTypeWrapperListProvider.notifier)
+                  .swap(currentIndex, newIndex);
+              ref.read(currentEditGlobalVariableProvider.notifier).state =
+                  newIndex;
+            }
+          },
         ),
       ),
       const Spacer(),
@@ -114,37 +136,97 @@ class _ViewGlobalVariableEditorState
                   'project_variable'.i18n,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                toolbarHeight: 28,
+                toolbarHeight: 36,
                 centerTitle: true,
+                leading: MenuBar(
+                  style: const MenuStyle(
+                    surfaceTintColor:
+                        MaterialStatePropertyAll<Color?>(Colors.transparent),
+                  ),
+                  children: [
+                    SubmenuButton(
+                      menuChildren: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Text("filter".i18n),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.visibility),
+                                onPressed: () {
+                                  ref
+                                      .read(
+                                          globalVariableFilterProvider.notifier)
+                                      .state = FilterType.showVisible;
+                                },
+                                isSelected:
+                                    filterType == FilterType.showVisible,
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.visibility_off),
+                                onPressed: () {
+                                  ref
+                                      .read(
+                                          globalVariableFilterProvider.notifier)
+                                      .state = FilterType.hideVisible;
+                                },
+                                isSelected:
+                                    filterType == FilterType.hideVisible,
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.filter_list_off),
+                                onPressed: () {
+                                  ref
+                                      .read(
+                                          globalVariableFilterProvider.notifier)
+                                      .state = FilterType.showAll;
+                                },
+                                isSelected: filterType == FilterType.showAll,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                      child: const Icon(Icons.tune),
+                    )
+                  ],
+                ),
               ),
               SliverList(
                 delegate: SliverChildBuilderDelegate(
-                  (context, index) => Card(
-                    elevation: 0.0,
-                    child: ListTile(
-                      title: Text(
-                        ref.watch(valueTypeWrapperListProvider)[index].$1,
-                        style: Theme.of(context).textTheme.titleMedium,
+                  (context, index) {
+                    index = filteredList[index];
+                    return Card(
+                      elevation: 0.0,
+                      child: ListTile(
+                        title: Text(
+                          ref.watch(valueTypeWrapperListProvider)[index].$1,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        onTap: () {
+                          ref
+                              .read(currentEditGlobalVariableProvider.notifier)
+                              .state = index;
+                        },
+                        selected: currentIndex == index,
+                        selectedTileColor:
+                            Theme.of(context).colorScheme.inversePrimary,
+                        dense: true,
+                        trailing: ref
+                                    .watch(
+                                        valueTypeWrapperListProvider.notifier)
+                                    .getEditTargetValueTypeWrapper(index)
+                                    ?.visible ??
+                                false
+                            ? const Icon(Icons.visibility)
+                            : null,
                       ),
-                      onTap: () {
-                        ref
-                            .read(currentEditGlobalVariableProvider.notifier)
-                            .state = index;
-                      },
-                      selected: currentIndex == index,
-                      selectedTileColor:
-                          Theme.of(context).colorScheme.inversePrimary,
-                      dense: true,
-                      trailing: ref
-                                  .watch(valueTypeWrapperListProvider.notifier)
-                                  .getEditTargetValueTypeWrapper(index)
-                                  ?.visible ??
-                              false
-                          ? const Icon(Icons.visibility)
-                          : null,
-                    ),
-                  ),
-                  childCount: ref.watch(valueTypeWrapperListProvider).length,
+                    );
+                  },
+                  childCount: filteredList.length,
                 ),
               ),
             ],

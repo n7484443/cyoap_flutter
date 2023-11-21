@@ -173,6 +173,14 @@ class ValueTypeWrapperListNotifier
     state = [...state];
   }
 
+  void swap(int indexA, int indexB) {
+    var elementA = state[indexA];
+    var elementB = state[indexB];
+    state[indexA] = elementB;
+    state[indexB] = elementA;
+    state = [...state];
+  }
+
   bool isDifferentFromOrigin() {
     if (state.length != getPlatform.globalSetting.length) {
       return true;
@@ -188,3 +196,34 @@ class ValueTypeWrapperListNotifier
     return false;
   }
 }
+
+enum FilterType { showVisible, hideVisible, showAll}
+final globalVariableFilterProvider = StateProvider<FilterType>((ref) {
+  return FilterType.showAll;
+});
+
+final globalVariableFilteredListProvider = Provider.autoDispose<List<int>>((ref) {
+  var filterType = ref.watch(globalVariableFilterProvider);
+  var list = ref.watch(valueTypeWrapperListProvider);
+  List<int> output = [];
+  for(int i = 0; i < list.length; i++) {
+    switch(filterType){
+      case FilterType.showVisible:
+        if(list[i].$2.visible) {
+          output.add(i);
+        }
+        break;
+
+      case FilterType.hideVisible:
+        if(!list[i].$2.visible) {
+          output.add(i);
+        }
+        break;
+
+      case FilterType.showAll:
+        output.add(i);
+        break;
+    }
+  }
+  return output;
+});

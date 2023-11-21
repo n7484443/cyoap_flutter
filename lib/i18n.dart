@@ -344,8 +344,10 @@ extension Localization on String {
       } +
       const {"en": {
         'project_variable' : 'Project Variable',
+        'filter': 'Filter',
       }, "ko": {
         'project_variable' : '프로젝트 변수',
+        'filter': '필터',
       }};
 
   String get i18n {
