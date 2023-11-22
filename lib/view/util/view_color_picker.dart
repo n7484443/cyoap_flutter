@@ -115,11 +115,17 @@ class _ViewRGBInputState extends ConsumerState<ViewRGBTInput> {
     super.initState();
   }
 
+  void updateTextInner(TextEditingController controller, int value) {
+    var selection = controller.selection;
+    controller.text = value.toString();
+    controller.selection = selection;
+  }
+
   void updateText() {
-    _controllerR.text = widget.color.red.toString();
-    _controllerG.text = widget.color.green.toString();
-    _controllerB.text = widget.color.blue.toString();
-    _controllerA.text = widget.color.alpha.toString();
+    updateTextInner(_controllerR, widget.color.red);
+    updateTextInner(_controllerG, widget.color.green);
+    updateTextInner(_controllerB, widget.color.blue);
+    updateTextInner(_controllerA, widget.color.alpha);
   }
 
   void removeListener() {

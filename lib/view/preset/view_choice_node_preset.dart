@@ -4,7 +4,6 @@ import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/preset/view_preset.dart';
 import 'package:cyoap_flutter/view/util/view_vertical_tabbar.dart';
-import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -127,56 +126,6 @@ class ChoiceNodePresetList extends ConsumerWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class ViewTextFieldInput extends ConsumerStatefulWidget {
-  final String text;
-  final AutoDisposeProvider<double> provider;
-  final void Function(String) inputFunction;
-
-  const ViewTextFieldInput(
-    this.text,
-    this.provider,
-    this.inputFunction, {
-    super.key,
-  });
-
-  @override
-  ConsumerState createState() => _ViewTextFieldInputState();
-}
-
-class _ViewTextFieldInputState extends ConsumerState<ViewTextFieldInput> {
-  TextEditingController? _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController();
-    _controller?.addListener(() {
-      EasyDebounce.debounce(widget.text, ConstList.debounceDuration, () {
-        widget.inputFunction(_controller?.text ?? '');
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _controller?.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      textAlign: TextAlign.end,
-      maxLength: 3,
-      minLines: 1,
-      maxLines: 1,
-      keyboardType: TextInputType.number,
-      controller: _controller,
-      decoration: InputDecoration(labelText: widget.text),
     );
   }
 }

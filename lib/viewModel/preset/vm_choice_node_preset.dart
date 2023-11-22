@@ -29,7 +29,7 @@ final choiceNodePresetCurrentEditOutlinePaddingProvider =
     Provider.autoDispose<TextEditingController>((ref) {
   var controller = TextEditingController(
       text: ref
-          .watch(choiceNodePresetCurrentEditProvider)
+          .read(choiceNodePresetCurrentEditProvider)
           .defaultOutlineOption
           .outlinePadding
           .toString());
@@ -53,7 +53,7 @@ final choiceNodePresetSelectedEditOutlinePaddingProvider =
 Provider.autoDispose<TextEditingController>((ref) {
   var controller = TextEditingController(
       text: ref
-          .watch(choiceNodePresetCurrentEditProvider)
+          .read(choiceNodePresetCurrentEditProvider)
           .selectOutlineOption
           .outlinePadding
           .toString());
@@ -77,7 +77,7 @@ final choiceNodePresetCurrentEditOutlineWidthProvider =
     Provider.autoDispose<TextEditingController>((ref) {
   var controller = TextEditingController(
       text: ref
-          .watch(choiceNodePresetCurrentEditProvider)
+          .read(choiceNodePresetCurrentEditProvider)
           .defaultOutlineOption
           .outlineWidth
           .toString());
@@ -101,7 +101,7 @@ final choiceNodePresetSelectedEditOutlineWidthProvider =
 Provider.autoDispose<TextEditingController>((ref) {
   var controller = TextEditingController(
       text: ref
-          .watch(choiceNodePresetCurrentEditProvider)
+          .read(choiceNodePresetCurrentEditProvider)
           .selectOutlineOption
           .outlineWidth
           .toString());
@@ -125,7 +125,7 @@ final choiceNodePresetCurrentEditElevationProvider =
     Provider.autoDispose<TextEditingController>((ref) {
   var controller = TextEditingController(
       text:
-          ref.watch(choiceNodePresetCurrentEditProvider).elevation.toString());
+          ref.read(choiceNodePresetCurrentEditProvider).elevation.toString());
   controller.addListener(() {
     EasyDebounce.debounce('Elevation Input', ConstList.debounceDuration,
         () {
@@ -153,7 +153,7 @@ final choiceNodePresetProvider = Provider.family
 final choiceNodePresetCurrentEditRoundProvider =
     Provider.autoDispose<TextEditingController>((ref) {
   var controller = TextEditingController(
-      text: ref.watch(choiceNodePresetCurrentEditProvider).round.toString());
+      text: ref.read(choiceNodePresetCurrentEditProvider).round.toString());
   controller.addListener(() {
     EasyDebounce.debounce('Round Input', ConstList.debounceDuration, () {
       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
@@ -173,7 +173,7 @@ final choiceNodePresetCurrentEditRoundProvider =
 final choiceNodePresetCurrentEditPaddingProvider =
     Provider.autoDispose<TextEditingController>((ref) {
   var controller = TextEditingController(
-      text: ref.watch(choiceNodePresetCurrentEditProvider).padding.toString());
+      text: ref.read(choiceNodePresetCurrentEditProvider).padding.toString());
   controller.addListener(() {
     EasyDebounce.debounce('Padding Input', ConstList.debounceDuration,
         () {
