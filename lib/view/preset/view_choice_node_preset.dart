@@ -26,13 +26,15 @@ class ChoiceNodeSample extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              image: ImageDB().checkers,
-            ),
-            child: const IgnorePointer(
+        Container(
+          decoration: BoxDecoration(
+            image: ImageDB().checkers,
+          ),
+          child: const SizedBox(
+            width: 250,
+            child: IgnorePointer(
               child: ViewChoiceNode(
                 Pos(data: [designSamplePosition]),
                 ignoreOption: true,

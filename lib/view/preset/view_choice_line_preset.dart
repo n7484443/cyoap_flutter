@@ -1,15 +1,43 @@
 import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
+import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/preset/view_preset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../main.dart';
+import '../../model/image_db.dart';
 import '../../viewModel/preset/vm_choice_line_preset.dart';
 import '../../viewModel/preset/vm_preset.dart';
 import '../util/controller_adjustable_scroll.dart';
 import '../util/view_color_picker.dart';
 import '../util/view_switch_label.dart';
+
+class ChoiceLineSample extends ConsumerWidget {
+  const ChoiceLineSample({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    var colorOption = ref.watch(choiceLinePresetCurrentEditProvider).backgroundColorOption;
+    return Container(
+      decoration: BoxDecoration(
+        image: ImageDB().checkers,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(ConstList.padding),
+        child: Container(
+          decoration: BoxDecoration(
+            color: colorOption.getColor(),
+            gradient: colorOption.getGradient(),
+          ),
+          constraints: BoxConstraints.expand(
+            height: 300,
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class ChoiceLinePresetList extends ConsumerWidget {
   const ChoiceLinePresetList({

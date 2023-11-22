@@ -42,7 +42,7 @@ class ViewPresetTab extends ConsumerWidget {
     return ViewPresetPosition(
       first: first,
       second: const ChoiceLinePresetList(),
-      sample: null,
+      sample: const ChoiceLineSample(),
       describe: const ViewLineOptionEditor(),
     );
   }
