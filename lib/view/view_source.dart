@@ -76,6 +76,7 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
       );
     }
 
+    var designSetting = ref.watch(platformDesignSettingProvider);
     return WillPopScope(
       child: Scaffold(
         appBar: AppBar(
@@ -95,12 +96,11 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
                 .toList(),
             onChanged: (ImageAttribute? t) {
               if (t != null) {
-                ref
-                    .read(backgroundAttributeProvider.notifier)
-                    .update((state) => t);
+                ref.read(platformDesignSettingProvider.notifier).state =
+                    designSetting.copyWith(backgroundAttribute: t);
               }
             },
-            value: ref.watch(backgroundAttributeProvider),
+            value: ref.watch(platformDesignSettingProvider).backgroundAttribute,
           ),
           Expanded(
             child: ViewImageDraggable(
@@ -161,16 +161,20 @@ class _ViewSourceItemState extends ConsumerState<ViewSourceItem> {
   Widget build(BuildContext context) {
     var name = ref.watch(vmSourceProvider)[widget.index];
     var deleteList = ref.watch(deleteImageListProvider);
+    var designSetting = ref.watch(platformDesignSettingProvider);
     return InkWell(
       onDoubleTap: () {
         if (ref.read(backgroundCurrentStateProvider) == widget.index) {
           ref.read(backgroundCurrentStateProvider.notifier).state = -1;
-          ref.read(backgroundProvider.notifier).state = null;
+          ref.read(platformDesignSettingProvider.notifier).state =
+              designSetting.copyWith(backgroundImage: null);
         } else {
           ref.read(backgroundCurrentStateProvider.notifier).state =
               widget.index;
-          ref.read(backgroundProvider.notifier).state =
-              ref.read(imageListStateProvider)[widget.index];
+          ref.read(platformDesignSettingProvider.notifier).state =
+              designSetting.copyWith(
+                  backgroundImage:
+                      ref.read(imageListStateProvider)[widget.index]);
         }
         ref.read(editorChangeProvider.notifier).needUpdate();
       },

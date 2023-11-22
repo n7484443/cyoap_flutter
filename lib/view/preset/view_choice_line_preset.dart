@@ -1,3 +1,4 @@
+import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/preset/view_preset.dart';
 import 'package:flutter/material.dart';
@@ -86,6 +87,7 @@ class ViewLineOptionEditor extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var preset = ref.watch(choiceLinePresetCurrentEditProvider);
     var index = ref.watch(currentPresetIndexProvider);
+    var colorOption = preset.backgroundColorOption;
     return CustomScrollView(
       controller: AdjustableScrollController(),
       shrinkWrap: true,
@@ -109,26 +111,14 @@ class ViewLineOptionEditor extends ConsumerWidget {
           ),
         ),
         SliverToBoxAdapter(
-          child: ViewColorPicker(
-            text: 'background_color'.i18n,
-            color: Color(preset.backgroundColor ?? 0x000000),
-            onColorChanged: (Color color) {
+          child: ViewColorOptionEditor(
+            colorOption: colorOption,
+            changeFunction: (ColorOption after) {
               ref.read(choiceLinePresetListProvider.notifier).updateIndex(
-                  index, preset.copyWith(backgroundColor: color.value));
+                  index, preset.copyWith(backgroundColorOption: after));
             },
-            hasAlpha: false,
           ),
         ),
-        SliverToBoxAdapter(
-          child: IconButton(
-            onPressed: () {
-              ref
-                  .read(choiceLinePresetListProvider.notifier)
-                  .updateIndex(index, preset.copyWith(backgroundColor: null));
-            },
-            icon: const Icon(Icons.format_color_reset),
-          ),
-        )
       ],
     );
   }

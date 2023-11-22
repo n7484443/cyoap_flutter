@@ -123,7 +123,10 @@ class IccProjectParser {
       platform.lineSettings.add(lineSetting);
     }
     platform.designSetting = platform.designSetting.copyWith(
-      backgroundColor: backgroundColor,
+      backgroundColorOption: ColorOption(
+        color: backgroundColor,
+        colorType: ColorType.solid,
+      ),
       choiceNodePresetList: nodePresets,
     );
 

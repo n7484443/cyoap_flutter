@@ -1,5 +1,7 @@
+import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/preset/view_preset.dart';
+import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_color_picker.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
@@ -54,57 +56,68 @@ class ViewDesignSetting extends ConsumerWidget {
   }
 }
 
-class ViewGeneralSettingTab extends ConsumerWidget {
-  const ViewGeneralSettingTab({
-    super.key,
-  });
+class ViewGeneralSettingTab extends ConsumerStatefulWidget {
+  const ViewGeneralSettingTab({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState createState() => _ViewGeneralSettingTabState();
+}
+
+class _ViewGeneralSettingTabState extends ConsumerState<ViewGeneralSettingTab> {
+  AdjustableScrollController scrollController = AdjustableScrollController();
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var designSetting = ref.watch(platformDesignSettingProvider);
+    var fontEditor = ViewFontSelector(
+      label: 'font_score'.i18n,
+      value: designSetting.variableFont,
+      onChange: (String? value) {
+        ref.read(platformDesignSettingProvider.notifier).state =
+            designSetting.copyWith(variableFont: value!);
+      },
+    );
+    var colorEditor = ViewColorOptionEditor(
+      colorOption: designSetting.backgroundColorOption,
+      changeFunction: (ColorOption color) {
+        ref.read(platformDesignSettingProvider.notifier).state =
+            designSetting.copyWith(
+          backgroundColorOption: color,
+        );
+      },
+      hasAlpha: false,
+    );
     if (ConstList.isSmallDisplay(context)) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ViewFontSelector(
-            label: 'font_score'.i18n,
-            provider: variableFontProvider,
-          ),
-          const ViewPositionSetting(),
-          ViewColorPicker(
-            text: 'background_color'.i18n,
-            color: ref.watch(backgroundColorProvider),
-            onColorChanged: (Color color) {
-              ref.read(backgroundColorProvider.notifier).state = color;
-            },
-            hasAlpha: false,
-          )
-        ],
+      return ListView(
+        controller: scrollController,
+        children: [fontEditor, const ViewPositionSetting(), colorEditor],
       );
     }
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Column(
-            children: [
-              ViewFontSelector(
-                label: 'font_score'.i18n,
-                provider: variableFontProvider,
-              ),
-              const ViewPositionSetting(),
-            ],
+    return CustomScrollView(
+      controller: scrollController,
+      slivers: [
+        SliverGrid(
+          delegate: SliverChildListDelegate([
+            fontEditor,
+            const ViewPositionSetting(),
+          ]),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            mainAxisExtent: 60,
+            crossAxisSpacing: 40,
           ),
         ),
-        Expanded(
-          flex: 2,
-          child: ViewColorPicker(
-            text: 'background_color'.i18n,
-            color: ref.watch(backgroundColorProvider),
-            onColorChanged: (Color color) {
-              ref.read(backgroundColorProvider.notifier).state = color;
-            },
-            hasAlpha: false,
-          ),
+        const SliverPadding(
+          padding: EdgeInsets.only(top: 40),
+        ),
+        SliverToBoxAdapter(
+          child: colorEditor,
         )
       ],
     );
@@ -126,13 +139,15 @@ class _ViewPositionSettingState extends ConsumerState<ViewPositionSetting> {
   @override
   void initState() {
     _controller = TextEditingController(
-      text: ref.read(marginVerticalProvider).toString(),
+      text: ref.read(platformDesignSettingProvider).marginVertical.toString(),
     );
     _controller?.addListener(() {
-      EasyDebounce.debounce(
-          'marginController', ConstList.debounceDuration, () {
-        ref.read(marginVerticalProvider.notifier).state =
-            double.tryParse(_controller?.text ?? '') ?? 12.0;
+      EasyDebounce.debounce('marginController', ConstList.debounceDuration, () {
+        ref.read(platformDesignSettingProvider.notifier).state = ref
+            .read(platformDesignSettingProvider)
+            .copyWith(
+                marginVertical:
+                    double.tryParse(_controller?.text ?? '') ?? 12.0);
       });
     });
     super.initState();
@@ -176,11 +191,13 @@ class _ViewPositionSettingState extends ConsumerState<ViewPositionSetting> {
 
 class ViewFontSelector extends ConsumerWidget {
   final String label;
-  final AutoDisposeStateProvider<String> provider;
+  final Function(String?)? onChange;
+  final String value;
 
   const ViewFontSelector({
     required this.label,
-    required this.provider,
+    required this.onChange,
+    required this.value,
     super.key,
   });
 
@@ -192,12 +209,8 @@ class ViewFontSelector extends ConsumerWidget {
           .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
               value: name, child: Text(name, style: ConstList.getFont(name))))
           .toList(),
-      onChanged: (String? t) {
-        if (t != null) {
-          ref.read(provider.notifier).update((state) => t);
-        }
-      },
-      value: ref.watch(provider),
+      onChanged: onChange,
+      value: value,
     );
   }
 }

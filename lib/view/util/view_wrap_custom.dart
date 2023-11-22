@@ -2,8 +2,10 @@ import 'dart:math';
 
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
+import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
+import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/util/view_circle_button.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
@@ -111,13 +113,15 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
     }
     Widget addButton = Tooltip(
       message: 'create_tooltip'.i18n,
-      child: CircleButton(
-        onPressed: () {
-          ref.read(vmDraggableNestedMapProvider).addData(
-              parentPos.addLast(children.length),
-              ChoiceNode.empty()..width = 3);
-        },
-        child: const Icon(Icons.add),
+      child: Card(
+        child: CircleButton(
+          onPressed: () {
+            ref.read(vmDraggableNestedMapProvider).addData(
+                parentPos.addLast(children.length),
+                ChoiceNode.empty()..width = 3);
+          },
+          child: const Icon(Icons.add),
+        ),
       ),
     );
     bool check = false;
@@ -158,26 +162,23 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
       );
     }
     var preset = ref.watch(linePresetProvider(parentPos.first));
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          if (preset.backgroundColor == null) {
+    return DecoratedSliver(
+      decoration: preset.backgroundColorOption.colorType == ColorType.gradient ? BoxDecoration(
+        gradient: preset.backgroundColorOption.getGradient(),
+      ) : BoxDecoration(
+        color: Color(preset.backgroundColorOption.color),
+      ),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
             return Padding(
               padding: EdgeInsets.symmetric(
-                  vertical: ref.watch(marginVerticalProvider)),
+                  vertical: ref.watch(platformDesignSettingProvider).marginVertical),
               child: outputWidget[index],
             );
-          }
-          return ColoredBox(
-            color: Color(preset.backgroundColor!),
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: ref.watch(marginVerticalProvider)),
-              child: outputWidget[index],
-            ),
-          );
-        },
-        childCount: outputWidget.length,
+          },
+          childCount: outputWidget.length,
+        ),
       ),
     );
   }
@@ -262,26 +263,23 @@ class ViewWrapCustom extends ConsumerWidget {
       );
     }
     var preset = ref.watch(linePresetProvider(parentPos.first));
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          if (preset.backgroundColor == null) {
+    return DecoratedSliver(
+      decoration: preset.backgroundColorOption.colorType == ColorType.gradient ? BoxDecoration(
+        gradient: preset.backgroundColorOption.getGradient(),
+      ) : BoxDecoration(
+        color: Color(preset.backgroundColorOption.color),
+      ),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
             return Padding(
               padding: EdgeInsets.symmetric(
-                  vertical: ref.watch(marginVerticalProvider)),
+                  vertical: ref.watch(platformDesignSettingProvider).marginVertical),
               child: outputWidget[index],
             );
-          }
-          return ColoredBox(
-            color: Color(preset.backgroundColor!),
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: ref.watch(marginVerticalProvider)),
-              child: outputWidget[index],
-            ),
-          );
-        },
-        childCount: outputWidget.length,
+          },
+          childCount: outputWidget.length,
+        ),
       ),
     );
   }

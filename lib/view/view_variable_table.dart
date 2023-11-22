@@ -160,7 +160,7 @@ class BottomDisplayedVariableWidget extends ConsumerWidget {
         variableList.add(
           Chip(
             label: Text("$name   ${valueTypeWrapper.valueType.data.toString()}",
-                style: ConstList.getFont(ref.watch(variableFontProvider))),
+                style: ConstList.getFont(ref.watch(platformDesignSettingProvider).variableFont)),
           ),
         );
       }
