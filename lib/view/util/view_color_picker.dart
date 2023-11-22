@@ -440,6 +440,16 @@ class _ViewGradientPositionOptionState
             widget.changeFunction(widget.colorOption
                 .changeGradientPosition(widget.currentIndex, x, y));
           },
+          onTapDown: (TapDownDetails? tapDownDetails) {
+            setState(() {
+              x = tapDownDetails!.localPosition.dx / size;
+              y = tapDownDetails.localPosition.dy / size;
+              x = x.clamp(0, 1);
+              y = y.clamp(0, 1);
+            });
+            widget.changeFunction(widget.colorOption
+                .changeGradientPosition(widget.currentIndex, x, y));
+          }
         ),
       ],
     );
