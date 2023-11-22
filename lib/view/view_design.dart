@@ -1,5 +1,6 @@
 import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
+import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/preset/view_preset.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_color_picker.dart';
@@ -93,32 +94,56 @@ class _ViewGeneralSettingTabState extends ConsumerState<ViewGeneralSettingTab> {
       },
       hasAlpha: false,
     );
+    var backgroundPreview = Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SizedBox(
+        width: 100,
+        height: 100,
+        child: Container(
+          width: 100,
+          height: 100,
+          decoration: BoxDecoration(
+            image:
+            ref.watch(platformDesignSettingImageDecorationProvider),
+            color: designSetting.backgroundColorOption.getColor(),
+            gradient: designSetting.backgroundColorOption.getGradient(),
+          ),
+        ),
+      ),
+    );
     if (ConstList.isSmallDisplay(context)) {
       return ListView(
         controller: scrollController,
-        children: [fontEditor, const ViewPositionSetting(), colorEditor],
+        children: [fontEditor, const ViewPositionSetting(), backgroundPreview, colorEditor],
       );
     }
-    return CustomScrollView(
-      controller: scrollController,
-      slivers: [
-        SliverGrid(
-          delegate: SliverChildListDelegate([
-            fontEditor,
-            const ViewPositionSetting(),
-          ]),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            mainAxisExtent: 60,
-            crossAxisSpacing: 40,
+    return Row(
+      children: [
+        backgroundPreview,
+        const VerticalDivider(),
+        Expanded(
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: [
+              SliverGrid(
+                delegate: SliverChildListDelegate([
+                  fontEditor,
+                  const ViewPositionSetting(),
+
+                ]),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisExtent: 100,
+                  mainAxisSpacing: 60,
+                  crossAxisSpacing:60,
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: colorEditor
+              )
+            ],
           ),
         ),
-        const SliverPadding(
-          padding: EdgeInsets.only(top: 40),
-        ),
-        SliverToBoxAdapter(
-          child: colorEditor,
-        )
       ],
     );
   }

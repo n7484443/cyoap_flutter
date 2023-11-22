@@ -79,10 +79,12 @@ class GradientTranslateRotation extends GradientRotation {
 
   @override
   Matrix4 transform(Rect bounds, {TextDirection? textDirection}) {
+    var x = bounds.left + bounds.width * center.dx;
+    var y = bounds.top + bounds.height * center.dy;
     return Matrix4.identity()
-      ..translate(center.dx * bounds.width, center.dy * bounds.height)
+      ..translate(x, y)
       ..rotateZ(radians)
-      ..translate(-center.dx * bounds.width, -center.dy * bounds.height);
+      ..translate(-x, -y);
   }
 
   @override

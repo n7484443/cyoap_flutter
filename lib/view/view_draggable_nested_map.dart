@@ -377,38 +377,11 @@ class NestedScroll extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var designSetting = ref.watch(platformDesignSettingProvider);
-
-    BoxFit backgroundBoxFit = BoxFit.contain;
-    ImageRepeat backgroundRepeat = ImageRepeat.noRepeat;
-    switch (designSetting.backgroundAttribute) {
-      case ImageAttribute.fill:
-        backgroundBoxFit = BoxFit.cover;
-        break;
-      case ImageAttribute.fit:
-        backgroundBoxFit = BoxFit.contain;
-        break;
-      case ImageAttribute.pattern:
-        backgroundBoxFit = BoxFit.contain;
-        backgroundRepeat = ImageRepeat.repeat;
-        break;
-      case ImageAttribute.stretch:
-        backgroundBoxFit = BoxFit.fill;
-        break;
-    }
     return Container(
       decoration: BoxDecoration(
         color: designSetting.backgroundColorOption.getColor(),
         gradient: designSetting.backgroundColorOption.getGradient(),
-        image: designSetting.backgroundImage != null && ImageDB().getImage(designSetting.backgroundImage!) != null
-            ? DecorationImage(
-          image: Image
-              .memory(ImageDB().getImage(designSetting.backgroundImage!)!)
-              .image,
-          fit: backgroundBoxFit,
-          repeat: backgroundRepeat,
-          filterQuality: FilterQuality.high,
-        )
-            : null,
+        image: ref.watch(platformDesignSettingImageDecorationProvider),
       ),
       child: const NestedMap(),
     );
