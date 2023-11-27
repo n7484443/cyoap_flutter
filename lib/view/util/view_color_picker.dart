@@ -49,7 +49,7 @@ class ViewColorPicker extends ConsumerWidget {
         const SizedBox(
           height: 6,
         ),
-        ViewRGBTInput(
+        ViewRGBAInput(
           onColorChanged: onColorChanged,
           color: color,
           hasAlpha: hasAlpha,
@@ -59,12 +59,12 @@ class ViewColorPicker extends ConsumerWidget {
   }
 }
 
-class ViewRGBTInput extends ConsumerStatefulWidget {
+class ViewRGBAInput extends ConsumerStatefulWidget {
   final ValueChanged<Color> onColorChanged;
   final Color color;
   final bool hasAlpha;
 
-  const ViewRGBTInput(
+  const ViewRGBAInput(
       {required this.onColorChanged,
       required this.color,
       required this.hasAlpha,
@@ -74,44 +74,15 @@ class ViewRGBTInput extends ConsumerStatefulWidget {
   ConsumerState createState() => _ViewRGBInputState();
 }
 
-class _ViewRGBInputState extends ConsumerState<ViewRGBTInput> {
+class _ViewRGBInputState extends ConsumerState<ViewRGBAInput> {
   final TextEditingController _controllerR = TextEditingController();
   final TextEditingController _controllerG = TextEditingController();
   final TextEditingController _controllerB = TextEditingController();
   final TextEditingController _controllerA = TextEditingController();
 
-  void listenerR() {
-    var t = int.tryParse(_controllerR.text);
-    if (t != null) {
-      widget.onColorChanged(widget.color.withRed(t.clamp(0, 255)));
-    }
-  }
-
-  void listenerG() {
-    var t = int.tryParse(_controllerG.text);
-    if (t != null) {
-      widget.onColorChanged(widget.color.withGreen(t.clamp(0, 255)));
-    }
-  }
-
-  void listenerB() {
-    var t = int.tryParse(_controllerB.text);
-    if (t != null) {
-      widget.onColorChanged(widget.color.withBlue(t.clamp(0, 255)));
-    }
-  }
-
-  void listenerA() {
-    var t = int.tryParse(_controllerA.text);
-    if (t != null) {
-      widget.onColorChanged(widget.color.withAlpha(t.clamp(0, 255)));
-    }
-  }
-
   @override
   void initState() {
     updateText();
-    addListener();
     super.initState();
   }
 
@@ -126,20 +97,6 @@ class _ViewRGBInputState extends ConsumerState<ViewRGBTInput> {
     updateTextInner(_controllerG, widget.color.green);
     updateTextInner(_controllerB, widget.color.blue);
     updateTextInner(_controllerA, widget.color.alpha);
-  }
-
-  void removeListener() {
-    _controllerR.removeListener(listenerR);
-    _controllerG.removeListener(listenerG);
-    _controllerB.removeListener(listenerB);
-    _controllerA.removeListener(listenerA);
-  }
-
-  void addListener() {
-    _controllerR.addListener(listenerR);
-    _controllerG.addListener(listenerG);
-    _controllerB.addListener(listenerB);
-    _controllerA.addListener(listenerA);
   }
 
   @override
@@ -157,12 +114,10 @@ class _ViewRGBInputState extends ConsumerState<ViewRGBTInput> {
   }
 
   @override
-  void didUpdateWidget(covariant ViewRGBTInput oldWidget) {
+  void didUpdateWidget(covariant ViewRGBAInput oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.color != widget.color) {
-      removeListener();
       updateText();
-      addListener();
     }
   }
 
@@ -170,71 +125,125 @@ class _ViewRGBInputState extends ConsumerState<ViewRGBTInput> {
   Widget build(BuildContext context) {
     var width = 100.0;
     var height = 42.0;
-    return Wrap(
-      spacing: 10,
-      runSpacing: 34,
-      children: [
-        ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: width,
-            maxHeight: height,
-          ),
-          child: TextField(
-            controller: _controllerR,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            keyboardType: TextInputType.number,
-            maxLength: 3,
-            textAlign: TextAlign.end,
-            decoration: const InputDecoration(
-              prefixText: 'Red',
-            ),
-          ),
-        ),
-        ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: width,
-            maxHeight: height,
-          ),
-          child: TextField(
-            controller: _controllerG,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            keyboardType: TextInputType.number,
-            maxLength: 3,
-            textAlign: TextAlign.end,
-            decoration: const InputDecoration(prefixText: 'Green'),
-          ),
-        ),
-        ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: width,
-            maxHeight: height,
-          ),
-          child: TextField(
-            controller: _controllerB,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            keyboardType: TextInputType.number,
-            maxLength: 3,
-            textAlign: TextAlign.end,
-            decoration: const InputDecoration(prefixText: 'Blue'),
-          ),
-        ),
-        if (widget.hasAlpha)
+    var filter = [
+      FilteringTextInputFormatter.digitsOnly,
+      NumericalRangeFormatter(minRange: 0, maxRange: 255)
+    ];
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Wrap(
+        spacing: 10,
+        runSpacing: 34,
+        children: [
           ConstrainedBox(
             constraints: BoxConstraints(
               maxWidth: width,
               maxHeight: height,
             ),
             child: TextField(
-              controller: _controllerA,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              controller: _controllerR,
+              inputFormatters: filter,
               keyboardType: TextInputType.number,
               maxLength: 3,
               textAlign: TextAlign.end,
-              decoration: const InputDecoration(prefixText: 'Alpha'),
+              decoration: const InputDecoration(
+                prefixText: 'Red',
+              ),
+              onChanged: (String value) {
+                var t = int.tryParse(value);
+                if (t != null) {
+                  widget.onColorChanged(widget.color.withRed(t.clamp(0, 255)));
+                }
+              },
             ),
           ),
-      ],
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: width,
+              maxHeight: height,
+            ),
+            child: TextField(
+              controller: _controllerG,
+              inputFormatters: filter,
+              keyboardType: TextInputType.number,
+              maxLength: 3,
+              textAlign: TextAlign.end,
+              decoration: const InputDecoration(prefixText: 'Green'),
+              onChanged: (String value) {
+                var t = int.tryParse(value);
+                if (t != null) {
+                  widget.onColorChanged(widget.color.withGreen(t.clamp(0, 255)));
+                }
+              },
+            ),
+          ),
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: width,
+              maxHeight: height,
+            ),
+            child: TextField(
+              controller: _controllerB,
+              inputFormatters: filter,
+              keyboardType: TextInputType.number,
+              maxLength: 3,
+              textAlign: TextAlign.end,
+              decoration: const InputDecoration(prefixText: 'Blue'),
+              onChanged: (String value) {
+                var t = int.tryParse(value);
+                if (t != null) {
+                  widget.onColorChanged(widget.color.withBlue(t.clamp(0, 255)));
+                }
+              },
+            ),
+          ),
+          if (widget.hasAlpha)
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: width,
+                maxHeight: height,
+              ),
+              child: TextField(
+                controller: _controllerA,
+                inputFormatters: filter,
+                keyboardType: TextInputType.number,
+                maxLength: 3,
+                textAlign: TextAlign.end,
+                decoration: const InputDecoration(prefixText: 'Alpha'),
+                onChanged: (String value) {
+                  var t = int.tryParse(value);
+                  if (t != null) {
+                    widget.onColorChanged(widget.color.withAlpha(t.clamp(0, 255)));
+                  }
+                },
+              ),
+            ),
+        ],
+      ),
     );
+  }
+}
+
+class NumericalRangeFormatter extends TextInputFormatter {
+  final int minRange;
+  final int maxRange;
+
+  NumericalRangeFormatter({required this.minRange, required this.maxRange});
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) {
+      return newValue;
+    }
+    var next = int.parse(newValue.text).clamp(minRange, maxRange);
+    var output = TextEditingValue(
+        composing: newValue.composing,
+        selection: newValue.selection,
+        text: next.toString());
+    return output;
   }
 }
 
@@ -404,8 +413,7 @@ class _ViewGradientPositionOptionState
     super.initState();
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildPoint(BuildContext context) {
     x = widget.colorOption.gradientData[widget.currentIndex].gradientPos.$1;
     y = widget.colorOption.gradientData[widget.currentIndex].gradientPos.$2;
     var size = 100.0;
@@ -423,8 +431,8 @@ class _ViewGradientPositionOptionState
                       left: size * x - iconSize / 2,
                       top: size * y - iconSize / 2,
                       child: Icon(
-                        Icons.close,
-                        color: Colors.black,
+                        Icons.circle,
+                        color: Colors.red,
                         size: iconSize,
                       ),
                     )
@@ -453,6 +461,40 @@ class _ViewGradientPositionOptionState
                   .changeGradientPosition(widget.currentIndex, x, y));
             }),
       ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.colorOption.gradientType == GradientType.linear ||
+        (widget.colorOption.gradientType == GradientType.radial &&
+            widget.currentIndex == 0)) {
+      return _buildPoint(context);
+    }
+    x = widget.colorOption.gradientData[widget.currentIndex].gradientPos.$1;
+    var max = 4.0;
+    return Slider(
+      value: x.clamp(0, max),
+      min: 0,
+      max: max,
+      onChanged: (double value) {
+        setState(() {
+          x = value;
+        });
+        widget.changeFunction(widget.colorOption
+            .changeGradientPosition(widget.currentIndex, x, y));
+      },
+      onChangeEnd: (double value) {
+        setState(() {
+          x = value;
+        });
+        widget.changeFunction(widget.colorOption
+            .changeGradientPosition(widget.currentIndex, x, y));
+      },
+      label: x.toString(),
+      divisions: 80,
+      activeColor: Colors.red,
+      inactiveColor: Colors.grey,
     );
   }
 }

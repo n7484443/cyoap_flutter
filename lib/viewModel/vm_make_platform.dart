@@ -4,8 +4,6 @@ import 'package:cyoap_flutter/viewModel/vm_project_setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../view/util/view_back_dialog.dart';
-
 final changeTabProvider = StateNotifierProvider<ChangeTabNotifier, int>((ref) {
   return ChangeTabNotifier(ref);
 });
@@ -27,19 +25,7 @@ class ChangeTabNotifier extends StateNotifier<int> {
     switch (index) {
       case 1:
         if (ref.read(editorChangeProvider)) {
-          bool out = await showDialog(
-                context: context,
-                builder: (_) => ViewBackDialog(
-                  () async => ref.read(editorChangeProvider.notifier).save(),
-                  (i) => Navigator.of(context).pop(i != 0),
-                  cancelFunction: () =>
-                      ref.read(editorChangeProvider.notifier).update(),
-                ),
-              ) ??
-              false;
-          if (!out) {
-            return false;
-          }
+          ref.read(editorChangeProvider.notifier).save();
           refreshLine(ref, ref.read(nodeEditorTargetPosProvider)!.first);
         }
         break;
@@ -47,18 +33,7 @@ class ChangeTabNotifier extends StateNotifier<int> {
         if (ref
             .read(valueTypeWrapperListProvider.notifier)
             .isDifferentFromOrigin()) {
-          var out = await showDialog(
-            context: context,
-            builder: (_) => ViewBackDialog(
-              () async =>
-                  ref.read(valueTypeWrapperListProvider.notifier).save(),
-              (i) => Navigator.of(context).pop(i != 0),
-              cancelFunction: () {},
-            ),
-          );
-          if (!out) {
-            return false;
-          }
+          ref.read(valueTypeWrapperListProvider.notifier).save();
         }
         break;
     }

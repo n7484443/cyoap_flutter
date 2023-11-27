@@ -26,6 +26,7 @@ extension ColorHelper on ColorOption {
         return RadialGradient(
           center: Alignment(gradientData[0].gradientPos.$1 * 2.0 - 1.0,
               gradientData[0].gradientPos.$2 * 2.0 - 1.0),
+          radius: gradientData[1].gradientPos.$1,
           colors: [Color(gradientData[0].color), Color(gradientData[1].color)],
           stops: [
             0.0,
