@@ -86,8 +86,9 @@ class ViewChoiceNodeMain extends ConsumerWidget {
     var defaultColor = isSelected && preset.selectColorEnable
         ? preset.selectColorOption
         : preset.defaultColorOption;
-    var outline =
-        isSelected && preset.selectOutlineEnable ? preset.selectOutlineOption : preset.defaultOutlineOption;
+    var outline = isSelected && preset.selectOutlineEnable
+        ? preset.selectOutlineOption
+        : preset.defaultOutlineOption;
     var innerWidget = Ink(
       decoration: BoxDecoration(
         color: defaultColor.getColor(),

@@ -71,35 +71,33 @@ final projectSettingValueTextEditingProvider =
 
 final projectSettingDisplayNameTextEditingProvider =
     Provider.autoDispose<TextEditingController>((ref) {
-      var index = ref.watch(currentEditGlobalVariableProvider)!;
-      var name =
+  var index = ref.watch(currentEditGlobalVariableProvider)!;
+  var name =
       ref.read(valueTypeWrapperListProvider.notifier).getEditTargetName(index)!;
-      var value = ref
-          .read(valueTypeWrapperListProvider.notifier)
-          .getEditTargetValueTypeWrapper(index)!;
-      var controller = TextEditingController(text: value.displayName);
-      controller.addListener(() {
-        EasyDebounce.debounce(
-            'projectSettingDisplayNameTextEditingProvider', ConstList.debounceDuration,
-                () {
-              var newDisplayName = controller.text.trim();
-              if (newDisplayName.isEmpty) {
-                newDisplayName = name;
-              }
-              ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(
-                  index,
-                  name,
-                  value.copyWith(displayName: newDisplayName));
-            });
-      });
-      ref.onDispose(() {
-        controller.dispose();
-        EasyDebounce.cancel('projectSettingDisplayNameTextEditingProvider');
-      });
-      return controller;
+  var value = ref
+      .read(valueTypeWrapperListProvider.notifier)
+      .getEditTargetValueTypeWrapper(index)!;
+  var controller = TextEditingController(text: value.displayName);
+  controller.addListener(() {
+    EasyDebounce.debounce('projectSettingDisplayNameTextEditingProvider',
+        ConstList.debounceDuration, () {
+      var newDisplayName = controller.text.trim();
+      if (newDisplayName.isEmpty) {
+        newDisplayName = name;
+      }
+      ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(
+          index, name, value.copyWith(displayName: newDisplayName));
+    });
+  });
+  ref.onDispose(() {
+    controller.dispose();
+    EasyDebounce.cancel('projectSettingDisplayNameTextEditingProvider');
+  });
+  return controller;
 });
 
-final currentEditGlobalVariableProvider = StateProvider.autoDispose<int?>((ref) {
+final currentEditGlobalVariableProvider =
+    StateProvider.autoDispose<int?>((ref) {
   return null;
 });
 
@@ -198,25 +196,27 @@ class ValueTypeWrapperListNotifier
   }
 }
 
-enum FilterType { showVisible, hideVisible, showAll}
+enum FilterType { showVisible, hideVisible, showAll }
+
 final globalVariableFilterProvider = StateProvider<FilterType>((ref) {
   return FilterType.showAll;
 });
 
-final globalVariableFilteredListProvider = Provider.autoDispose<List<int>>((ref) {
+final globalVariableFilteredListProvider =
+    Provider.autoDispose<List<int>>((ref) {
   var filterType = ref.watch(globalVariableFilterProvider);
   var list = ref.watch(valueTypeWrapperListProvider);
   List<int> output = [];
-  for(int i = 0; i < list.length; i++) {
-    switch(filterType){
+  for (int i = 0; i < list.length; i++) {
+    switch (filterType) {
       case FilterType.showVisible:
-        if(list[i].$2.visible) {
+        if (list[i].$2.visible) {
           output.add(i);
         }
         break;
 
       case FilterType.hideVisible:
-        if(!list[i].$2.visible) {
+        if (!list[i].$2.visible) {
           output.add(i);
         }
         break;

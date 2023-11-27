@@ -244,8 +244,7 @@ class _ViewTextContentsEditorState
           selection: const TextSelection.collapsed(offset: 0));
     }
     _quillController?.addListener(() {
-      EasyDebounce.debounce('content-editor', ConstList.debounceDuration,
-          () {
+      EasyDebounce.debounce('content-editor', ConstList.debounceDuration, () {
         var pos = textFinder
             .allMatches(_quillController?.document.toPlainText() ?? '');
         if (pos.isNotEmpty) {

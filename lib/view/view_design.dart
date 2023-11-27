@@ -103,8 +103,7 @@ class _ViewGeneralSettingTabState extends ConsumerState<ViewGeneralSettingTab> {
           width: 100,
           height: 100,
           decoration: BoxDecoration(
-            image:
-            ref.watch(platformDesignSettingImageDecorationProvider),
+            image: ref.watch(platformDesignSettingImageDecorationProvider),
             color: designSetting.backgroundColorOption.getColor(),
             gradient: designSetting.backgroundColorOption.getGradient(),
           ),
@@ -114,7 +113,12 @@ class _ViewGeneralSettingTabState extends ConsumerState<ViewGeneralSettingTab> {
     if (ConstList.isSmallDisplay(context)) {
       return ListView(
         controller: scrollController,
-        children: [fontEditor, const ViewPositionSetting(), backgroundPreview, colorEditor],
+        children: [
+          fontEditor,
+          const ViewPositionSetting(),
+          backgroundPreview,
+          colorEditor
+        ],
       );
     }
     return Row(
@@ -129,18 +133,15 @@ class _ViewGeneralSettingTabState extends ConsumerState<ViewGeneralSettingTab> {
                 delegate: SliverChildListDelegate([
                   fontEditor,
                   const ViewPositionSetting(),
-
                 ]),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   mainAxisExtent: 100,
                   mainAxisSpacing: 60,
-                  crossAxisSpacing:60,
+                  crossAxisSpacing: 60,
                 ),
               ),
-              SliverToBoxAdapter(
-                child: colorEditor
-              )
+              SliverToBoxAdapter(child: colorEditor)
             ],
           ),
         ),

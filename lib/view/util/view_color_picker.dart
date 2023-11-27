@@ -244,7 +244,10 @@ class ViewColorOptionEditor extends StatefulWidget {
   final void Function(ColorOption after) changeFunction;
 
   const ViewColorOptionEditor(
-      {required this.colorOption, required this.changeFunction, this.hasAlpha = true, super.key});
+      {required this.colorOption,
+      required this.changeFunction,
+      this.hasAlpha = true,
+      super.key});
 
   @override
   State createState() => _ViewColorOptionEditorState();
@@ -322,7 +325,6 @@ class _ViewColorOptionEditorState extends State<ViewColorOptionEditor> {
   }
 }
 
-
 class ViewGradientOption extends StatelessWidget {
   final ColorOption colorOption;
   final void Function(ColorOption after) changeFunction;
@@ -332,11 +334,11 @@ class ViewGradientOption extends StatelessWidget {
 
   const ViewGradientOption(
       {required this.colorOption,
-        required this.changeFunction,
-        required this.currentIndexFunction,
-        required this.currentIndex,
-        this.hasAlpha = true,
-        super.key});
+      required this.changeFunction,
+      required this.currentIndexFunction,
+      required this.currentIndex,
+      this.hasAlpha = true,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -384,9 +386,9 @@ class ViewGradientPositionOption extends StatefulWidget {
 
   const ViewGradientPositionOption(
       {required this.colorOption,
-        required this.changeFunction,
-        required this.currentIndex,
-        super.key});
+      required this.changeFunction,
+      required this.currentIndex,
+      super.key});
 
   @override
   State createState() => _ViewGradientPositionOptionState();
@@ -411,46 +413,45 @@ class _ViewGradientPositionOptionState
     return Row(
       children: [
         GestureDetector(
-          child: SizedBox.square(
-            dimension: size,
-            child: ColoredBox(
-              color: Colors.white,
-              child: Stack(
-                children: [
-                  Positioned(
-                    left: size * x - iconSize / 2,
-                    top: size * y - iconSize / 2,
-                    child: Icon(
-                      Icons.close,
-                      color: Colors.black,
-                      size: iconSize,
-                    ),
-                  )
-                ],
+            child: SizedBox.square(
+              dimension: size,
+              child: ColoredBox(
+                color: Colors.white,
+                child: Stack(
+                  children: [
+                    Positioned(
+                      left: size * x - iconSize / 2,
+                      top: size * y - iconSize / 2,
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.black,
+                        size: iconSize,
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-          onPanUpdate: (DragUpdateDetails? dragUpdateDetails) {
-            setState(() {
-              x = dragUpdateDetails!.localPosition.dx / size;
-              y = dragUpdateDetails.localPosition.dy / size;
-              x = x.clamp(0, 1);
-              y = y.clamp(0, 1);
-            });
-            widget.changeFunction(widget.colorOption
-                .changeGradientPosition(widget.currentIndex, x, y));
-          },
-          onTapDown: (TapDownDetails? tapDownDetails) {
-            setState(() {
-              x = tapDownDetails!.localPosition.dx / size;
-              y = tapDownDetails.localPosition.dy / size;
-              x = x.clamp(0, 1);
-              y = y.clamp(0, 1);
-            });
-            widget.changeFunction(widget.colorOption
-                .changeGradientPosition(widget.currentIndex, x, y));
-          }
-        ),
+            onPanUpdate: (DragUpdateDetails? dragUpdateDetails) {
+              setState(() {
+                x = dragUpdateDetails!.localPosition.dx / size;
+                y = dragUpdateDetails.localPosition.dy / size;
+                x = x.clamp(0, 1);
+                y = y.clamp(0, 1);
+              });
+              widget.changeFunction(widget.colorOption
+                  .changeGradientPosition(widget.currentIndex, x, y));
+            },
+            onTapDown: (TapDownDetails? tapDownDetails) {
+              setState(() {
+                x = tapDownDetails!.localPosition.dx / size;
+                y = tapDownDetails.localPosition.dy / size;
+                x = x.clamp(0, 1);
+                y = y.clamp(0, 1);
+              });
+              widget.changeFunction(widget.colorOption
+                  .changeGradientPosition(widget.currentIndex, x, y));
+            }),
       ],
     );
   }

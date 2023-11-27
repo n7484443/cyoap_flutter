@@ -34,12 +34,15 @@ final choiceNodePresetCurrentEditOutlinePaddingProvider =
           .outlinePadding
           .toString());
   controller.addListener(() {
-    EasyDebounce.debounce(
-        'Outline Padding Input', ConstList.debounceDuration, () {
+    EasyDebounce.debounce('Outline Padding Input', ConstList.debounceDuration,
+        () {
       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
           ref.watch(currentPresetIndexProvider),
-          ref.read(choiceNodePresetCurrentEditProvider).copyWith.defaultOutlineOption(
-              outlinePadding: double.tryParse(controller.text) ?? 0.0));
+          ref
+              .read(choiceNodePresetCurrentEditProvider)
+              .copyWith
+              .defaultOutlineOption(
+                  outlinePadding: double.tryParse(controller.text) ?? 0.0));
     });
   });
   ref.onDispose(() {
@@ -50,7 +53,7 @@ final choiceNodePresetCurrentEditOutlinePaddingProvider =
 });
 
 final choiceNodePresetSelectedEditOutlinePaddingProvider =
-Provider.autoDispose<TextEditingController>((ref) {
+    Provider.autoDispose<TextEditingController>((ref) {
   var controller = TextEditingController(
       text: ref
           .read(choiceNodePresetCurrentEditProvider)
@@ -62,8 +65,11 @@ Provider.autoDispose<TextEditingController>((ref) {
         'Outline Padding Input Selected', ConstList.debounceDuration, () {
       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
           ref.watch(currentPresetIndexProvider),
-          ref.read(choiceNodePresetCurrentEditProvider).copyWith.selectOutlineOption(
-              outlinePadding: double.tryParse(controller.text) ?? 0.0));
+          ref
+              .read(choiceNodePresetCurrentEditProvider)
+              .copyWith
+              .selectOutlineOption(
+                  outlinePadding: double.tryParse(controller.text) ?? 0.0));
     });
   });
   ref.onDispose(() {
@@ -82,12 +88,15 @@ final choiceNodePresetCurrentEditOutlineWidthProvider =
           .outlineWidth
           .toString());
   controller.addListener(() {
-    EasyDebounce.debounce(
-        'Outline Width Input', ConstList.debounceDuration, () {
+    EasyDebounce.debounce('Outline Width Input', ConstList.debounceDuration,
+        () {
       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
           ref.watch(currentPresetIndexProvider),
-          ref.read(choiceNodePresetCurrentEditProvider).copyWith.defaultOutlineOption(
-              outlineWidth: double.tryParse(controller.text) ?? 0.0));
+          ref
+              .read(choiceNodePresetCurrentEditProvider)
+              .copyWith
+              .defaultOutlineOption(
+                  outlineWidth: double.tryParse(controller.text) ?? 0.0));
     });
   });
   ref.onDispose(() {
@@ -98,7 +107,7 @@ final choiceNodePresetCurrentEditOutlineWidthProvider =
 });
 
 final choiceNodePresetSelectedEditOutlineWidthProvider =
-Provider.autoDispose<TextEditingController>((ref) {
+    Provider.autoDispose<TextEditingController>((ref) {
   var controller = TextEditingController(
       text: ref
           .read(choiceNodePresetCurrentEditProvider)
@@ -110,8 +119,11 @@ Provider.autoDispose<TextEditingController>((ref) {
         'Outline Width Input Selected', ConstList.debounceDuration, () {
       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
           ref.watch(currentPresetIndexProvider),
-          ref.read(choiceNodePresetCurrentEditProvider).copyWith.selectOutlineOption(
-              outlineWidth: double.tryParse(controller.text) ?? 0.0));
+          ref
+              .read(choiceNodePresetCurrentEditProvider)
+              .copyWith
+              .selectOutlineOption(
+                  outlineWidth: double.tryParse(controller.text) ?? 0.0));
     });
   });
   ref.onDispose(() {
@@ -124,11 +136,9 @@ Provider.autoDispose<TextEditingController>((ref) {
 final choiceNodePresetCurrentEditElevationProvider =
     Provider.autoDispose<TextEditingController>((ref) {
   var controller = TextEditingController(
-      text:
-          ref.read(choiceNodePresetCurrentEditProvider).elevation.toString());
+      text: ref.read(choiceNodePresetCurrentEditProvider).elevation.toString());
   controller.addListener(() {
-    EasyDebounce.debounce('Elevation Input', ConstList.debounceDuration,
-        () {
+    EasyDebounce.debounce('Elevation Input', ConstList.debounceDuration, () {
       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
           ref.watch(currentPresetIndexProvider),
           ref
@@ -175,8 +185,7 @@ final choiceNodePresetCurrentEditPaddingProvider =
   var controller = TextEditingController(
       text: ref.read(choiceNodePresetCurrentEditProvider).padding.toString());
   controller.addListener(() {
-    EasyDebounce.debounce('Padding Input', ConstList.debounceDuration,
-        () {
+    EasyDebounce.debounce('Padding Input', ConstList.debounceDuration, () {
       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
           ref.watch(currentPresetIndexProvider),
           ref

@@ -163,17 +163,20 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
     }
     var preset = ref.watch(linePresetProvider(parentPos.first));
     return DecoratedSliver(
-      decoration: preset.backgroundColorOption.colorType == ColorType.gradient ? BoxDecoration(
-        gradient: preset.backgroundColorOption.getGradient(),
-      ) : BoxDecoration(
-        color: Color(preset.backgroundColorOption.color),
-      ),
+      decoration: preset.backgroundColorOption.colorType == ColorType.gradient
+          ? BoxDecoration(
+              gradient: preset.backgroundColorOption.getGradient(),
+            )
+          : BoxDecoration(
+              color: Color(preset.backgroundColorOption.color),
+            ),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
           (context, index) {
             return Padding(
               padding: EdgeInsets.symmetric(
-                  vertical: ref.watch(platformDesignSettingProvider).marginVertical),
+                  vertical:
+                      ref.watch(platformDesignSettingProvider).marginVertical),
               child: outputWidget[index],
             );
           },
@@ -264,17 +267,20 @@ class ViewWrapCustom extends ConsumerWidget {
     }
     var preset = ref.watch(linePresetProvider(parentPos.first));
     return DecoratedSliver(
-      decoration: preset.backgroundColorOption.colorType == ColorType.gradient ? BoxDecoration(
-        gradient: preset.backgroundColorOption.getGradient(),
-      ) : BoxDecoration(
-        color: Color(preset.backgroundColorOption.color),
-      ),
+      decoration: preset.backgroundColorOption.colorType == ColorType.gradient
+          ? BoxDecoration(
+              gradient: preset.backgroundColorOption.getGradient(),
+            )
+          : BoxDecoration(
+              color: Color(preset.backgroundColorOption.color),
+            ),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
           (context, index) {
             return Padding(
               padding: EdgeInsets.symmetric(
-                  vertical: ref.watch(platformDesignSettingProvider).marginVertical),
+                  vertical:
+                      ref.watch(platformDesignSettingProvider).marginVertical),
               child: outputWidget[index],
             );
           },

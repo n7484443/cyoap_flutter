@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
-import 'package:cyoap_core/design_setting.dart';
 import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
@@ -18,7 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
-import '../model/image_db.dart';
 import '../viewModel/preset/vm_choice_line_preset.dart';
 import '../viewModel/vm_choice_node.dart';
 import '../viewModel/vm_design_setting.dart';
@@ -56,22 +54,15 @@ class NodeDragTarget extends ConsumerWidget {
             ref.read(vmDraggableNestedMapProvider).changeData(drag, pos);
           } else if (drag.last == removedPositioned) {
             ref.read(vmDraggableNestedMapProvider).addData(
-                pos, ref
-                .read(removedChoiceNodeProvider)
-                .choiceNode!
-                .clone());
+                pos, ref.read(removedChoiceNodeProvider).choiceNode!.clone());
           } else if (drag.last == copiedPositioned) {
             ref.read(vmDraggableNestedMapProvider).addData(
-                pos, ref
-                .read(copiedChoiceNodeProvider)
-                .choiceNode!
-                .clone());
+                pos, ref.read(copiedChoiceNodeProvider).choiceNode!.clone());
           } else if (pos.equalExceptLast(drag) &&
               (pos.data.last - 1) >= drag.last) {
             ref
                 .read(vmDraggableNestedMapProvider)
-                .changeData(drag, Pos(data: List.from(pos.data)
-              ..last -= 1));
+                .changeData(drag, Pos(data: List.from(pos.data)..last -= 1));
           } else {
             ref.read(vmDraggableNestedMapProvider).changeData(drag, pos);
           }
@@ -84,7 +75,8 @@ class NodeDragTarget extends ConsumerWidget {
 class NodeDividerDialog extends ConsumerStatefulWidget {
   final int y;
 
-  const NodeDividerDialog(this.y, {
+  const NodeDividerDialog(
+    this.y, {
     super.key,
   });
 
@@ -100,14 +92,12 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
   void initState() {
     _textFieldController = TextEditingController(
         text: ref
-            .read(lineProvider(widget.y))
-            ?.recursiveStatus
-            .conditionVisibleString ??
+                .read(lineProvider(widget.y))
+                ?.recursiveStatus
+                .conditionVisibleString ??
             "");
     _nameController = TextEditingController(
-        text: ref
-            .read(lineOptionProvider(widget.y))
-            .name ??
+        text: ref.read(lineOptionProvider(widget.y)).name ??
             "ChoiceLine_${widget.y}");
     super.initState();
   }
@@ -123,7 +113,7 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
   Widget build(BuildContext context) {
     var lineOption = ref.watch(lineOptionProvider(widget.y));
     var maxSelectString =
-    lineOption.maxSelect == -1 ? "max" : lineOption.maxSelect.toString();
+        lineOption.maxSelect == -1 ? "max" : lineOption.maxSelect.toString();
     return AlertDialog(
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -136,11 +126,10 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
                 icon: const Icon(Icons.chevron_left),
                 onPressed: () {
                   ref.read(lineOptionProvider(widget.y).notifier).update(
-                          (state) =>
-                          state.copyWith(
-                              maxSelect: state.maxSelect >= 0
-                                  ? state.maxSelect - 1
-                                  : state.maxSelect));
+                      (state) => state.copyWith(
+                          maxSelect: state.maxSelect >= 0
+                              ? state.maxSelect - 1
+                              : state.maxSelect));
                 },
               ),
               Text(maxSelectString),
@@ -148,7 +137,7 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
                 icon: const Icon(Icons.chevron_right),
                 onPressed: () {
                   ref.read(lineOptionProvider(widget.y).notifier).update(
-                          (state) =>
+                      (state) =>
                           state.copyWith(maxSelect: state.maxSelect + 1));
                 },
               ),
@@ -156,11 +145,10 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
           ),
           DropdownButtonFormField<String>(
             decoration:
-            InputDecoration(labelText: 'preset_setting_tooltip'.i18n),
+                InputDecoration(labelText: 'preset_setting_tooltip'.i18n),
             items: ref
                 .watch(choiceLinePresetListProvider)
-                .map<DropdownMenuItem<String>>((preset) =>
-                DropdownMenuItem(
+                .map<DropdownMenuItem<String>>((preset) => DropdownMenuItem(
                     value: preset.name, child: Text(preset.name)))
                 .toList(),
             onChanged: (String? t) {
@@ -170,14 +158,12 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
                     .update((state) => state.copyWith(presetName: t));
               }
             },
-            value: ref
-                .watch(lineOptionProvider(widget.y))
-                .presetName,
+            value: ref.watch(lineOptionProvider(widget.y)).presetName,
           ),
           TextField(
             controller: _textFieldController,
             decoration:
-            InputDecoration(hintText: 'visible_condition_tooltip'.i18n),
+                InputDecoration(hintText: 'visible_condition_tooltip'.i18n),
           ),
           TextField(
             controller: _nameController,
@@ -276,11 +262,11 @@ class NodeDivider extends ConsumerWidget {
                     },
                     child: ref.watch(lineFoldProvider(y))
                         ? const Icon(
-                      Icons.unfold_more,
-                    )
+                            Icons.unfold_more,
+                          )
                         : const Icon(
-                      Icons.unfold_less,
-                    ),
+                            Icons.unfold_less,
+                          ),
                   ),
                   const Spacer(),
                   if (lineOption.name != null && isEditable)
@@ -320,9 +306,9 @@ class NodeDivider extends ConsumerWidget {
                   CircleButton(
                     onPressed: () {
                       showDialog<Tuple2<String, String>>(
-                          context: context,
-                          builder: (_) => NodeDividerDialog(y),
-                          barrierDismissible: false)
+                              context: context,
+                              builder: (_) => NodeDividerDialog(y),
+                              barrierDismissible: false)
                           .then((value) {
                         ref.invalidate(lineProvider(y));
                         getPlatform
@@ -330,7 +316,7 @@ class NodeDivider extends ConsumerWidget {
                             ?.recursiveStatus
                             .conditionVisibleString = value!.item1;
                         ref.read(lineOptionProvider(y).notifier).update(
-                                (state) => state.copyWith(name: value!.item2));
+                            (state) => state.copyWith(name: value!.item2));
                         ref
                             .read(draggableNestedMapChangedProvider.notifier)
                             .state = true;
@@ -402,10 +388,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
 
   void dragUpdate(double? pos) {
     if (pos == null) return;
-    var maxHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
+    var maxHeight = MediaQuery.of(context).size.height;
     double topY = 0;
     double bottomY = topY + maxHeight;
 
@@ -451,8 +434,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
               child: IconButton(
                 onPressed: () {
                   ref.read(vmDraggableNestedMapProvider).addData(
-                      const Pos(data: [0, 0]), ChoiceNode.empty()
-                    ..width = 3);
+                      const Pos(data: [0, 0]), ChoiceNode.empty()..width = 3);
                 },
                 icon: const Icon(Icons.add),
                 tooltip: 'create_tooltip'.i18n,
@@ -474,9 +456,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
               child: SizedBox.shrink(),
             );
           }
-          if (ref
-              .watch(childrenChangeProvider(pos))
-              .isEmpty) {
+          if (ref.watch(childrenChangeProvider(pos)).isEmpty) {
             return SliverToBoxAdapter(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -492,8 +472,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
                     child: IconButton(
                       onPressed: () {
                         ref.read(vmDraggableNestedMapProvider).addData(
-                            pos.addLast(0), ChoiceNode.empty()
-                          ..width = 3);
+                            pos.addLast(0), ChoiceNode.empty()..width = 3);
                       },
                       icon: const Icon(Icons.add),
                       tooltip: 'create_tooltip'.i18n,
@@ -528,9 +507,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
       for (int index = 0; index < lineList.length; index++) {
         var y = lineList[index];
         var pos = Pos(data: [y]);
-        if (ref
-            .watch(childrenChangeProvider(pos))
-            .isEmpty) {
+        if (ref.watch(childrenChangeProvider(pos)).isEmpty) {
           continue;
         }
         if (ref.watch(lineProvider(y)) != null &&
@@ -543,7 +520,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
         sliverList.add(
           ViewWrapCustom(
             pos,
-                (i) => ViewChoiceNode(pos.addLast(i)),
+            (i) => ViewChoiceNode(pos.addLast(i)),
             isInner: false,
             maxSize: ref.watch(maximumSizeProvider),
           ),
@@ -557,9 +534,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
                 height: 50,
                 child: TextButton(
                   onPressed: () {
-                    if (ref
-                        .watch(selectedChoiceNodeProvider)
-                        .isNotEmpty) {
+                    if (ref.watch(selectedChoiceNodeProvider).isNotEmpty) {
                       showDialog(
                         context: context,
                         builder: (context) => const ViewSelectedGrid(),

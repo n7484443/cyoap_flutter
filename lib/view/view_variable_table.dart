@@ -160,7 +160,8 @@ class BottomDisplayedVariableWidget extends ConsumerWidget {
         variableList.add(
           Chip(
             label: Text("$name   ${valueTypeWrapper.valueType.data.toString()}",
-                style: ConstList.getFont(ref.watch(platformDesignSettingProvider).variableFont)),
+                style: ConstList.getFont(
+                    ref.watch(platformDesignSettingProvider).variableFont)),
           ),
         );
       }
@@ -178,7 +179,6 @@ class BottomDisplayedVariableWidget extends ConsumerWidget {
 }
 
 class VariableTiles extends ConsumerWidget {
-
   const VariableTiles({
     super.key,
   });
@@ -207,8 +207,7 @@ class VariableTiles extends ConsumerWidget {
         }
       } else if (ref.watch(isDebugModeProvider) || values.visible) {
         var name = values.displayName.isEmpty ? key : values.displayName;
-        if (search.isEmpty ||
-            (search.isNotEmpty && key.contains(search))) {
+        if (search.isEmpty || (search.isNotEmpty && key.contains(search))) {
           variableList.add(ListTile(
             dense: true,
             title: Text(name),

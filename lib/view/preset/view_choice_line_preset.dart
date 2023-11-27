@@ -18,7 +18,8 @@ class ChoiceLineSample extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var colorOption = ref.watch(choiceLinePresetCurrentEditProvider).backgroundColorOption;
+    var colorOption =
+        ref.watch(choiceLinePresetCurrentEditProvider).backgroundColorOption;
     return Container(
       decoration: BoxDecoration(
         image: ImageDB().checkers,

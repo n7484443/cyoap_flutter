@@ -14,7 +14,8 @@ final vmVariableTableProvider = StateNotifierProvider<
   return VariableTilesStateNotifier(VariableDataBase().varMapGlobal);
 });
 
-final displayedVariablesProvider = Provider<List<(String, ValueTypeWrapper)>>((ref) {
+final displayedVariablesProvider =
+    Provider<List<(String, ValueTypeWrapper)>>((ref) {
   var output = <(String, ValueTypeWrapper)>[];
   for (var name in VariableDataBase().visibleOrder) {
     output.add((name, ref.watch(vmVariableTableProvider)[name]!));

@@ -44,8 +44,8 @@ final controllerVisibleProvider =
     ref
         .read(ideCurrentInputProvider.notifier)
         .addCheckText(controller.text, controller.selection.end);
-    EasyDebounce.debounce(
-        'conditionVisibleString', ConstList.debounceDuration, () {
+    EasyDebounce.debounce('conditionVisibleString', ConstList.debounceDuration,
+        () {
       node.recursiveStatus.conditionVisibleString = controller.text;
       ref.read(editorChangeProvider.notifier).needUpdate();
     });

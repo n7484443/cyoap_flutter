@@ -342,13 +342,16 @@ extension Localization on String {
           'sample_title': '디자인',
         },
       } +
-      const {"en": {
-        'project_variable' : 'Project Variable',
-        'filter': 'Filter',
-      }, "ko": {
-        'project_variable' : '프로젝트 변수',
-        'filter': '필터',
-      }};
+      const {
+        "en": {
+          'project_variable': 'Project Variable',
+          'filter': 'Filter',
+        },
+        "ko": {
+          'project_variable': '프로젝트 변수',
+          'filter': '필터',
+        }
+      };
 
   String get i18n {
     return localize(this, _t);
