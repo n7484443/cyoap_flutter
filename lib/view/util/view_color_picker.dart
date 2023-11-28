@@ -172,7 +172,8 @@ class _ViewRGBInputState extends ConsumerState<ViewRGBAInput> {
               onChanged: (String value) {
                 var t = int.tryParse(value);
                 if (t != null) {
-                  widget.onColorChanged(widget.color.withGreen(t.clamp(0, 255)));
+                  widget
+                      .onColorChanged(widget.color.withGreen(t.clamp(0, 255)));
                 }
               },
             ),
@@ -213,7 +214,8 @@ class _ViewRGBInputState extends ConsumerState<ViewRGBAInput> {
                 onChanged: (String value) {
                   var t = int.tryParse(value);
                   if (t != null) {
-                    widget.onColorChanged(widget.color.withAlpha(t.clamp(0, 255)));
+                    widget.onColorChanged(
+                        widget.color.withAlpha(t.clamp(0, 255)));
                   }
                 },
               ),
@@ -466,13 +468,46 @@ class _ViewGradientPositionOptionState
 
   @override
   Widget build(BuildContext context) {
-    if (widget.colorOption.gradientType == GradientType.linear ||
-        (widget.colorOption.gradientType == GradientType.radial &&
-            widget.currentIndex == 0)) {
+    if (widget.colorOption.gradientType == GradientType.linear) {
       return _buildPoint(context);
     }
+    if (widget.colorOption.gradientType == GradientType.radial &&
+        widget.currentIndex == 0) {
+      return _buildPoint(context);
+    }
+    if (widget.colorOption.gradientType == GradientType.sweep &&
+        widget.currentIndex == 0) {
+      return _buildPoint(context);
+    }
+    if(widget.colorOption.gradientType == GradientType.radial){
+      x = widget.colorOption.gradientData[widget.currentIndex].gradientPos.$1;
+      var max = 1.0;
+      return Slider(
+        value: x.clamp(0, max),
+        min: 0,
+        max: max,
+        onChanged: (double value) {
+          setState(() {
+            x = value;
+          });
+          widget.changeFunction(widget.colorOption
+              .changeGradientPosition(widget.currentIndex, x, y));
+        },
+        onChangeEnd: (double value) {
+          setState(() {
+            x = value;
+          });
+          widget.changeFunction(widget.colorOption
+              .changeGradientPosition(widget.currentIndex, x, y));
+        },
+        label: x.toString(),
+        divisions: 80,
+        activeColor: Colors.red,
+        inactiveColor: Colors.grey,
+      );
+    }
     x = widget.colorOption.gradientData[widget.currentIndex].gradientPos.$1;
-    var max = 4.0;
+    var max = 360.0;
     return Slider(
       value: x.clamp(0, max),
       min: 0,
@@ -491,8 +526,8 @@ class _ViewGradientPositionOptionState
         widget.changeFunction(widget.colorOption
             .changeGradientPosition(widget.currentIndex, x, y));
       },
-      label: x.toString(),
-      divisions: 80,
+      label: x.round().toString(),
+      divisions: 360,
       activeColor: Colors.red,
       inactiveColor: Colors.grey,
     );

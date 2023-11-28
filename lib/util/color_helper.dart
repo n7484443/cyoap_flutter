@@ -1,8 +1,10 @@
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dart:ui' as ui show Gradient;
 
 extension ColorHelper on ColorOption {
   bool hasGradient() {
@@ -23,19 +25,18 @@ extension ColorHelper on ColorOption {
           colors: [Color(gradientData[0].color), Color(gradientData[1].color)],
         );
       case GradientType.radial:
-        return RadialGradient(
+        return CssLikeRadialGradient(
           center: Alignment(gradientData[0].gradientPos.$1 * 2.0 - 1.0,
               gradientData[0].gradientPos.$2 * 2.0 - 1.0),
-          radius: gradientData[1].gradientPos.$1,
           colors: [Color(gradientData[0].color), Color(gradientData[1].color)],
           stops: [
             0.0,
-            1.0,
+            gradientData[1].gradientPos.$1,
           ],
+          radius: 1.0,
         );
       case GradientType.sweep:
-        var angle = atan2(gradientData[1].gradientPos.$2 - 0.5,
-            gradientData[1].gradientPos.$1 - 0.5);
+        var angle = gradientData[1].gradientPos.$1 / 180.0 * pi;
         var pos = gradientData[0].gradientPos;
         return SweepGradient(
           center: Alignment(pos.$1 * 2.0 - 1.0, pos.$2 * 2.0 - 1.0),
@@ -101,4 +102,37 @@ class GradientTranslateRotation extends GradientRotation {
 
   @override
   int get hashCode => radians.hashCode * center.hashCode;
+}
+
+class CssLikeRadialGradient extends RadialGradient{
+  const CssLikeRadialGradient({required super.colors, super.center, super.radius, super.stops});
+
+  List<double> _impliedStops() {
+    if (stops != null) {
+      return stops!;
+    }
+    assert(colors.length >= 2, 'colors list must have at least two colors');
+    final double separation = 1.0 / (colors.length - 1);
+    return List<double>.generate(
+      colors.length,
+          (int index) => index * separation,
+      growable: false,
+    );
+  }
+
+  Float64List? _resolveTransform(Rect bounds, TextDirection? textDirection) {
+    return transform?.transform(bounds, textDirection: textDirection)?.storage;
+  }
+
+  @override
+  Shader createShader(Rect rect, { TextDirection? textDirection }) {
+    return ui.Gradient.radial(
+      center.resolve(textDirection).withinRect(rect),
+      radius * rect.longestSide,
+      colors, _impliedStops(), tileMode,
+      _resolveTransform(rect, textDirection),
+      focal?.resolve(textDirection).withinRect(rect),
+      focalRadius * rect.longestSide,
+    );
+  }
 }
