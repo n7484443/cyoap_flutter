@@ -88,7 +88,11 @@ class _ViewEditorState extends ConsumerState<ViewEditor>
     ];
     var childrenText =
         const ["content", "code", "setting", "image"].map((e) => e.i18n);
-    return WillPopScope(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (onPopInvoked){
+        ref.read(changeTabProvider.notifier).home(context);
+      },
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -133,10 +137,6 @@ class _ViewEditorState extends ConsumerState<ViewEditor>
           children: children,
         ),
       ),
-      onWillPop: () async {
-        ref.read(changeTabProvider.notifier).home(context);
-        return false;
-      },
     );
   }
 }

@@ -127,10 +127,8 @@ class ViewMake extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (ConstList.isSmallDisplay(context)) {
-      return WillPopScope(
-        onWillPop: () async {
-          return false;
-        },
+      return PopScope(
+        canPop: false,
         child: Scaffold(
           appBar: AppBar(
             leading: const BackButton(),
@@ -150,11 +148,9 @@ class ViewMake extends ConsumerWidget {
         ),
       );
     }
-    return WillPopScope(
-      onWillPop: () async {
-        return false;
-      },
-      child: const Scaffold(body: NestedScroll()),
+    return const PopScope(
+      canPop: false,
+      child: Scaffold(body: NestedScroll()),
     );
   }
 }

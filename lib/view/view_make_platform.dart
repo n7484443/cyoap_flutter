@@ -44,10 +44,8 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
       () => const ViewDesignSetting(),
     ];
     if (ConstList.isSmallDisplay(context)) {
-      return WillPopScope(
-        onWillPop: () async {
-          return false;
-        },
+      return PopScope(
+        canPop: false,
         child: Scaffold(
           drawer: const Drawer(
             child: ViewEditDrawer(),
@@ -62,10 +60,8 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
         ),
       );
     }
-    return WillPopScope(
-      onWillPop: () async {
-        return false;
-      },
+    return PopScope(
+      canPop: false,
       child: Scaffold(
         appBar: AppBar(
           title: const Row(

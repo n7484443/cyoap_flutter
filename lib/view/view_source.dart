@@ -77,7 +77,8 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
     }
 
     var designSetting = ref.watch(platformDesignSettingProvider);
-    return WillPopScope(
+    return PopScope(
+      canPop: false,
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -115,9 +116,6 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
           ),
         ]),
       ),
-      onWillPop: () async {
-        return false;
-      },
     );
   }
 }

@@ -60,31 +60,34 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
       },
     );
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pushReplacementNamed("/"),
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.of(context).pushReplacementNamed("/"),
+          ),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(
+                  onPressed: () =>
+                      ref.read(playDataProvider.notifier).savePlayData(),
+                  icon: const Icon(Icons.save)),
+              IconButton(
+                  onPressed: () =>
+                      ref.read(playDataProvider.notifier).loadPlayData(),
+                  icon: const Icon(Icons.file_upload_outlined)),
+            ],
+          ),
         ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            IconButton(
-                onPressed: () =>
-                    ref.read(playDataProvider.notifier).savePlayData(),
-                icon: const Icon(Icons.save)),
-            IconButton(
-                onPressed: () =>
-                    ref.read(playDataProvider.notifier).loadPlayData(),
-                icon: const Icon(Icons.file_upload_outlined)),
-          ],
+        endDrawer: const Drawer(
+          child: ViewPlayDrawer(),
         ),
+        bottomNavigationBar: const BottomDisplayedVariableWidget(),
+        body: const NestedScroll(),
       ),
-      endDrawer: const Drawer(
-        child: ViewPlayDrawer(),
-      ),
-      bottomNavigationBar: const BottomDisplayedVariableWidget(),
-      body: const NestedScroll(),
     );
   }
 }
