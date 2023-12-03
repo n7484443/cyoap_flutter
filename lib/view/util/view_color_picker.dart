@@ -135,11 +135,9 @@ class _ViewRGBInputState extends ConsumerState<ViewRGBAInput> {
         spacing: 10,
         runSpacing: 34,
         children: [
-          ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: width,
-              maxHeight: height,
-            ),
+          SizedBox(
+            width: width,
+            height: height,
             child: TextField(
               controller: _controllerR,
               inputFormatters: filter,
@@ -157,11 +155,9 @@ class _ViewRGBInputState extends ConsumerState<ViewRGBAInput> {
               },
             ),
           ),
-          ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: width,
-              maxHeight: height,
-            ),
+          SizedBox(
+            width: width,
+            height: height,
             child: TextField(
               controller: _controllerG,
               inputFormatters: filter,
@@ -178,11 +174,9 @@ class _ViewRGBInputState extends ConsumerState<ViewRGBAInput> {
               },
             ),
           ),
-          ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: width,
-              maxHeight: height,
-            ),
+          SizedBox(
+            width: width,
+            height: height,
             child: TextField(
               controller: _controllerB,
               inputFormatters: filter,
@@ -199,11 +193,9 @@ class _ViewRGBInputState extends ConsumerState<ViewRGBAInput> {
             ),
           ),
           if (widget.hasAlpha)
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: width,
-                maxHeight: height,
-              ),
+            SizedBox(
+              width: width,
+              height: height,
               child: TextField(
                 controller: _controllerA,
                 inputFormatters: filter,

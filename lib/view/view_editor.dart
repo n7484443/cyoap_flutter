@@ -19,6 +19,7 @@ import '../main.dart';
 import '../viewModel/preset/vm_choice_node_preset.dart';
 import '../viewModel/vm_editor.dart';
 import '../viewModel/vm_make_platform.dart';
+import 'package:flutter_quill/src/utils/color.dart';
 
 class ViewEditor extends ConsumerStatefulWidget {
   const ViewEditor({
@@ -284,37 +285,51 @@ class _ViewTextContentsEditorState
     super.dispose();
   }
 
+  void changeColor(QuillController controller, Color color, bool background) {
+    var hex = color.value.toRadixString(16);
+    if (hex.startsWith('ff')) {
+      hex = hex.substring(2);
+    }
+    hex = '#$hex';
+    controller.formatSelection(
+        background ? BackgroundAttribute(hex) : ColorAttribute(hex));
+  }
+
+  Style get _selectionStyle => _quillController!.getSelectionStyle();
+
+  Color getColor() {
+    if(_selectionStyle.attributes['color'] == null){
+      return Colors.white;
+    }
+    return stringToColor(_selectionStyle.attributes['color']?.value) ;
+  }
+
+  Color getColorBackground() {
+    if(_selectionStyle.attributes['background'] == null){
+      return Colors.white;
+    }
+    return stringToColor(_selectionStyle.attributes['background']?.value);
+  }
+
   @override
   Widget build(BuildContext context) {
-    void changeColor(QuillController controller, Color color, bool background) {
-      var hex = color.value.toRadixString(16);
-      if (hex.startsWith('ff')) {
-        hex = hex.substring(2);
-      }
-      hex = '#$hex';
-      controller.formatSelection(
-          background ? BackgroundAttribute(hex) : ColorAttribute(hex));
-    }
-
-    void colorIconDialog(bool background) {
-      Color newColor = const Color(0x00000000);
+    void colorIconDialog(Color color, bool background) {
+      Color newColor = color;
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Select Color'),
           backgroundColor: Theme.of(context).canvasColor,
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ViewColorPicker(
-                text: 'Select Color',
-                color: const Color(0x00000000),
-                onColorChanged: (color) {
-                  newColor = color;
-                },
-                hasAlpha: false,
-              ),
-            ],
+          content: SizedBox(
+            width: ConstList.isSmallDisplay(context) ? 300 : 400,
+            height: ConstList.isSmallDisplay(context) ? 500 : 400,
+            child: ViewColorPicker(
+              text: 'Select Color',
+              color: newColor,
+              onColorChanged: (color) {
+                newColor = color;
+              },
+              hasAlpha: false,
+            ),
           ),
           actionsAlignment: MainAxisAlignment.spaceEvenly,
           actions: [
@@ -367,14 +382,16 @@ class _ViewTextContentsEditorState
                 customButtons: [
                   QuillToolbarCustomButtonOptions(
                     icon: const Icon(Icons.color_lens),
+                    controller: _quillController,
                     onPressed: () {
-                      colorIconDialog(false);
+                      colorIconDialog(getColor(), false);
                     },
                   ),
                   QuillToolbarCustomButtonOptions(
                     icon: const Icon(Icons.format_color_fill),
+                    controller: _quillController,
                     onPressed: () {
-                      colorIconDialog(true);
+                      colorIconDialog(getColorBackground(), true);
                     },
                   ),
                 ],
