@@ -90,7 +90,7 @@ class _ViewEditorState extends ConsumerState<ViewEditor>
         const ["content", "code", "setting", "image"].map((e) => e.i18n);
     return PopScope(
       canPop: false,
-      onPopInvoked: (onPopInvoked){
+      onPopInvoked: (onPopInvoked) {
         ref.read(changeTabProvider.notifier).home(context);
       },
       child: Scaffold(
@@ -298,14 +298,14 @@ class _ViewTextContentsEditorState
   Style get _selectionStyle => _quillController!.getSelectionStyle();
 
   Color getColor() {
-    if(_selectionStyle.attributes['color'] == null){
+    if (_selectionStyle.attributes['color'] == null) {
       return Colors.white;
     }
-    return stringToColor(_selectionStyle.attributes['color']?.value) ;
+    return stringToColor(_selectionStyle.attributes['color']?.value);
   }
 
   Color getColorBackground() {
-    if(_selectionStyle.attributes['background'] == null){
+    if (_selectionStyle.attributes['background'] == null) {
       return Colors.white;
     }
     return stringToColor(_selectionStyle.attributes['background']?.value);
@@ -357,45 +357,40 @@ class _ViewTextContentsEditorState
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: QuillProvider(
-            configurations: QuillConfigurations(
-                controller: _quillController!,
-                sharedConfigurations: QuillSharedConfigurations(
-                  locale: ref.watch(localeStateProvider),
-                )),
-            child: QuillToolbar(
-              configurations: QuillToolbarConfigurations(
-                showListCheck: false,
-                showInlineCode: false,
-                showLink: false,
-                showCodeBlock: false,
-                showHeaderStyle: false,
-                showAlignmentButtons: true,
-                showColorButton: false,
-                showBackgroundColorButton: false,
-                showFontFamily: false,
-                showSearchButton: false,
-                showIndent: false,
-                showSuperscript: false,
-                showSubscript: false,
-                multiRowsDisplay: false,
-                customButtons: [
-                  QuillToolbarCustomButtonOptions(
-                    icon: const Icon(Icons.color_lens),
-                    controller: _quillController,
-                    onPressed: () {
-                      colorIconDialog(getColor(), false);
-                    },
-                  ),
-                  QuillToolbarCustomButtonOptions(
-                    icon: const Icon(Icons.format_color_fill),
-                    controller: _quillController,
-                    onPressed: () {
-                      colorIconDialog(getColorBackground(), true);
-                    },
-                  ),
-                ],
+          child: QuillToolbar.simple(
+            configurations: QuillSimpleToolbarConfigurations(
+              sharedConfigurations: QuillSharedConfigurations(
+                locale: ref.watch(localeStateProvider),
               ),
+              showListCheck: false,
+              showInlineCode: false,
+              showLink: false,
+              showCodeBlock: false,
+              showHeaderStyle: false,
+              showAlignmentButtons: true,
+              showColorButton: false,
+              showBackgroundColorButton: false,
+              showFontFamily: false,
+              showSearchButton: false,
+              showIndent: false,
+              showSuperscript: false,
+              showSubscript: false,
+              multiRowsDisplay: false,
+              customButtons: [
+                QuillToolbarCustomButtonOptions(
+                  icon: const Icon(Icons.color_lens),
+                  onPressed: () {
+                    colorIconDialog(getColor(), false);
+                  },
+                ),
+                QuillToolbarCustomButtonOptions(
+                  icon: const Icon(Icons.format_color_fill),
+                  onPressed: () {
+                    colorIconDialog(getColorBackground(), true);
+                  },
+                ),
+              ],
+              controller: _quillController!,
             ),
           ),
         ),
@@ -404,26 +399,23 @@ class _ViewTextContentsEditorState
           child: Card(
             elevation: ConstList.elevation,
             color: Colors.blue.shade50,
-            child: QuillProvider(
-              configurations: QuillConfigurations(
-                  controller: _quillController!,
-                  sharedConfigurations: QuillSharedConfigurations(
-                    locale: ref.watch(localeStateProvider),
-                  )),
-              child: QuillEditor(
-                configurations: QuillEditorConfigurations(
-                  padding: const EdgeInsets.all(3),
-                  expands: true,
-                  scrollable: true,
-                  autoFocus: true,
-                  readOnly: false,
-                  showCursor: true,
-                  customStyles: ConstList.getDefaultThemeData(context, 1,
-                      fontStyle: ConstList.getFontWithColor(preset.mainFont)),
+            child: QuillEditor(
+              configurations: QuillEditorConfigurations(
+                padding: const EdgeInsets.all(3),
+                expands: true,
+                scrollable: true,
+                autoFocus: true,
+                readOnly: false,
+                showCursor: true,
+                customStyles: ConstList.getDefaultThemeData(context, 1,
+                    fontStyle: ConstList.getFontWithColor(preset.mainFont)),
+                controller: _quillController!,
+                sharedConfigurations: QuillSharedConfigurations(
+                  locale: ref.watch(localeStateProvider),
                 ),
-                focusNode: _focusNode!,
-                scrollController: _scrollController!,
               ),
+              focusNode: _focusNode!,
+              scrollController: _scrollController!,
             ),
           ),
         ),
@@ -500,113 +492,11 @@ class ViewNodeOptionEditor extends ConsumerWidget {
     var design = ref.watch(nodeEditorDesignProvider);
     var nodeMode = ref.watch(nodeModeProvider);
 
-    return CustomScrollView(
-      controller: ScrollController(),
-      slivers: [
-        SliverToBoxAdapter(
-          child:
-              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: DropdownButton<ChoiceNodeMode>(
-                value: nodeMode,
-                items: [
-                  DropdownMenuItem(
-                      value: ChoiceNodeMode.defaultMode,
-                      child: Text('default'.i18n)),
-                  DropdownMenuItem(
-                      value: ChoiceNodeMode.randomMode,
-                      child: Text('random'.i18n)),
-                  DropdownMenuItem(
-                      value: ChoiceNodeMode.multiSelect,
-                      child: Text('multiple'.i18n)),
-                  DropdownMenuItem(
-                      value: ChoiceNodeMode.unSelectableMode,
-                      child: Text('unselect'.i18n)),
-                  DropdownMenuItem(
-                      value: ChoiceNodeMode.onlyCode,
-                      child: Text('onlyCode'.i18n)),
-                ],
-                onChanged: (ChoiceNodeMode? value) {
-                  if (value != null) {
-                    ref
-                        .read(nodeModeProvider.notifier)
-                        .update((state) => value);
-                  }
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Visibility(
-                visible: nodeMode == ChoiceNodeMode.multiSelect ||
-                    nodeMode == ChoiceNodeMode.randomMode,
-                child: SizedBox(
-                  width: 120,
-                  child: Column(children: [
-                    Text('variable_name'.i18n,
-                        style: Theme.of(context).textTheme.labelLarge),
-                    Text(
-                        '${title.replaceAll(" ", "")}:${nodeMode == ChoiceNodeMode.multiSelect ? 'multi' : 'random'}',
-                        softWrap: true,
-                        style: Theme.of(context).textTheme.bodySmall),
-                    TextField(
-                      textAlign: TextAlign.end,
-                      maxLength: 3,
-                      minLines: 1,
-                      maxLines: 1,
-                      keyboardType: TextInputType.number,
-                      controller: ref.watch(maximumProvider),
-                      decoration: InputDecoration(
-                        label: Text(nodeMode == ChoiceNodeMode.multiSelect
-                            ? 'max_select'.i18n
-                            : 'max_random'.i18n),
-                      ),
-                    ),
-                  ]),
-                ),
-              ),
-            ),
-          ]),
-        ),
-        SliverGrid(
-          delegate: SliverChildListDelegate([
-            if (nodeMode != ChoiceNodeMode.unSelectableMode)
-              ViewSwitchLabel(
-                () => ref.read(nodeEditorDesignProvider.notifier).update(
-                    (state) => state.copyWith(
-                        hideAsResult: !design.hideAsResult,
-                        showAsResult: false)),
-                design.hideAsResult,
-                label: 'hide_result'.i18n,
-              ),
-            if (nodeMode != ChoiceNodeMode.unSelectableMode &&
-                nodeMode != ChoiceNodeMode.onlyCode)
-              ViewSwitchLabel(
-                () => ref.read(nodeEditorDesignProvider.notifier).update(
-                    (state) => state.copyWith(
-                        hideAsResult: !design.hideAsResult,
-                        showAsResult: false)),
-                design.hideAsResult,
-                label: 'hide_result'.i18n,
-              ),
-            if (nodeMode == ChoiceNodeMode.unSelectableMode)
-              ViewSwitchLabel(
-                () => ref.read(nodeEditorDesignProvider.notifier).update(
-                    (state) => state.copyWith(
-                        showAsResult: !design.showAsResult,
-                        hideAsResult: false)),
-                design.showAsResult,
-                label: 'show_result'.i18n,
-              ),
-            if (nodeMode == ChoiceNodeMode.multiSelect)
-              ViewSwitchLabel(
-                () => ref.read(nodeEditorDesignProvider.notifier).update(
-                    (state) =>
-                        state.copyWith(showAsSlider: !design.showAsSlider)),
-                design.showAsSlider,
-                label: 'slider_mode'.i18n,
-              ),
+    var left = Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
             DropdownButtonFormField<String>(
               decoration: InputDecoration(labelText: 'preset_setting'.i18n),
               items: ref
@@ -623,18 +513,132 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               },
               value: design.presetName,
             ),
-          ]),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 4,
-            crossAxisSpacing: 2,
-            mainAxisExtent: 80,
-            mainAxisSpacing: 2,
-          ),
+            DropdownButtonFormField<ChoiceNodeMode>(
+              decoration: InputDecoration(labelText: 'node_mode'.i18n),
+              items: [
+                DropdownMenuItem(
+                    value: ChoiceNodeMode.defaultMode,
+                    child: Text('default'.i18n)),
+                DropdownMenuItem(
+                    value: ChoiceNodeMode.randomMode,
+                    child: Text('random'.i18n)),
+                DropdownMenuItem(
+                    value: ChoiceNodeMode.multiSelect,
+                    child: Text('multiple'.i18n)),
+                DropdownMenuItem(
+                    value: ChoiceNodeMode.unSelectableMode,
+                    child: Text('unselect'.i18n)),
+                DropdownMenuItem(
+                    value: ChoiceNodeMode.onlyCode,
+                    child: Text('onlyCode'.i18n)),
+              ],
+              onChanged: (ChoiceNodeMode? value) {
+                if (value != null) {
+                  ref.read(nodeModeProvider.notifier).update((state) => value);
+                }
+              },
+              value: ref.watch(nodeModeProvider),
+            ),
+          ],
         ),
-        const SliverToBoxAdapter(
-          child: Divider(),
-        ),
-      ],
+      ),
     );
+    var right = Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: CustomScrollView(
+          controller: ScrollController(),
+          slivers: [
+            SliverList(
+              delegate: SliverChildListDelegate([
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Visibility(
+                    visible: nodeMode == ChoiceNodeMode.multiSelect ||
+                        nodeMode == ChoiceNodeMode.randomMode,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                            '${'variable_name'.i18n} \n${title.replaceAll(" ", "")}:${nodeMode == ChoiceNodeMode.multiSelect ? 'multi' : 'random'}',
+                            style: Theme.of(context).textTheme.labelLarge),
+                        const SizedBox(width: 40),
+                        SizedBox(
+                          width: 120,
+                          child: TextField(
+                            textAlign: TextAlign.end,
+                            maxLength: 3,
+                            minLines: 1,
+                            maxLines: 1,
+                            keyboardType: TextInputType.number,
+                            controller: ref.watch(maximumProvider),
+                            decoration: InputDecoration(
+                              label: Text(nodeMode == ChoiceNodeMode.multiSelect
+                                  ? 'max_select'.i18n
+                                  : 'max_random'.i18n),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                if (nodeMode != ChoiceNodeMode.unSelectableMode &&
+                    nodeMode != ChoiceNodeMode.onlyCode)
+                  ViewSwitchLabel(
+                    () => ref.read(nodeEditorDesignProvider.notifier).update(
+                        (state) => state.copyWith(
+                            hideAsResult: !design.hideAsResult,
+                            showAsResult: false)),
+                    design.hideAsResult,
+                    label: 'hide_result'.i18n,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ),
+                if (nodeMode == ChoiceNodeMode.unSelectableMode)
+                  ViewSwitchLabel(
+                    () => ref.read(nodeEditorDesignProvider.notifier).update(
+                        (state) => state.copyWith(
+                            showAsResult: !design.showAsResult,
+                            hideAsResult: false)),
+                    design.showAsResult,
+                    label: 'show_result'.i18n,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ),
+                if (nodeMode == ChoiceNodeMode.multiSelect)
+                  ViewSwitchLabel(
+                    () => ref.read(nodeEditorDesignProvider.notifier).update(
+                        (state) =>
+                            state.copyWith(showAsSlider: !design.showAsSlider)),
+                    design.showAsSlider,
+                    label: 'slider_mode'.i18n,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ),
+              ]),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (ConstList.isSmallDisplay(context)) {
+      return Column(
+        children: [
+          Expanded(
+            child: left,
+          ),
+          Expanded(
+            child: right,
+          ),
+        ],
+      );
+    }
+    return Row(children: [
+      Expanded(
+        child: left,
+      ),
+      Expanded(
+        child: right,
+      ),
+    ]);
   }
 }

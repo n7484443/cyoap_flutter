@@ -90,6 +90,7 @@ extension Localization on String {
         "en": {
           'preset': 'Preset',
           'preset_setting': 'Preset settings',
+          'node_mode': 'Node\'s mode',
           'preset_new': 'New preset',
           'black_line': 'Line between rows',
           'background_color': 'Background color',
@@ -116,6 +117,7 @@ extension Localization on String {
         "ko": {
           'preset': '프리셋',
           'preset_setting': '프리셋 설정',
+          'node_mode': '노드 모드 설정',
           'preset_new': '새 프리셋',
           'black_line': '검은 줄이 보임',
           'background_color': '배경 색상',
@@ -204,8 +206,8 @@ extension Localization on String {
           'sort_error':
               'The number of {\'s and }\'s in the code are not equal.',
           'auto_complete': 'Auto Complete',
-          'hide_result': 'Hide \n in viewer',
-          'show_result': 'Show \n in viewer',
+          'hide_result': 'Hide in viewer',
+          'show_result': 'Show in viewer',
           'slider_mode': 'Slider mode',
 
           'default': 'Default',
@@ -303,8 +305,8 @@ extension Localization on String {
           'sort': '정렬',
           'sort_error': '코드의 {의 개수와 }의 개수가 같지 않습니다.',
           'auto_complete': '자동 완성',
-          'hide_result': '결론창에서 \n숨기기',
-          'show_result': '결론창에서 \n보이기',
+          'hide_result': '결론창에서 숨기기',
+          'show_result': '결론창에서 보이기',
           'slider_mode': '슬라이더 모드',
 
           'default': '기본',

@@ -7,12 +7,14 @@ class ViewSwitchLabel extends StatelessWidget {
   final String label;
   final double labelSize;
   final bool reverse;
+  final MainAxisAlignment mainAxisAlignment;
 
   const ViewSwitchLabel(this.updateState, this.state,
       {this.label = '',
       this.disable = false,
       this.labelSize = 12.0,
       this.reverse = false,
+      this.mainAxisAlignment = MainAxisAlignment.spaceEvenly,
       super.key});
 
   @override
@@ -45,7 +47,7 @@ class ViewSwitchLabel extends StatelessWidget {
     return InkWell(
       onTap: () => updateState(),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: mainAxisAlignment,
         children: child,
       ),
     );
