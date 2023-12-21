@@ -314,39 +314,41 @@ class _ViewTextContentsEditorState
   @override
   Widget build(BuildContext context) {
     void colorIconDialog(Color color, bool background) {
-      Color newColor = color;
+      ref.read(textColorProvider.notifier).state = color;
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          backgroundColor: Theme.of(context).canvasColor,
-          content: SizedBox(
-            width: ConstList.isSmallDisplay(context) ? 300 : 400,
-            height: ConstList.isSmallDisplay(context) ? 500 : 400,
-            child: ViewColorPicker(
-              text: 'Select Color',
-              color: newColor,
-              onColorChanged: (color) {
-                newColor = color;
-              },
-              hasAlpha: false,
+        builder: (context) => Consumer(
+          builder: (BuildContext context, WidgetRef ref, Widget? _) => AlertDialog(
+            backgroundColor: Theme.of(context).canvasColor,
+            content: SizedBox(
+              width: ConstList.isSmallDisplay(context) ? 300 : 400,
+              height: ConstList.isSmallDisplay(context) ? 500 : 400,
+              child: ViewColorPicker(
+                text: 'Select Color',
+                color: ref.watch(textColorProvider),
+                onColorChanged: (color) {
+                  ref.read(textColorProvider.notifier).state = color;
+                },
+                hasAlpha: false,
+              ),
             ),
+            actionsAlignment: MainAxisAlignment.spaceEvenly,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.check),
+                onPressed: () {
+                  changeColor(_quillController!, ref.read(textColorProvider), background);
+                  Navigator.pop(context);
+                },
+              ),
+            ],
           ),
-          actionsAlignment: MainAxisAlignment.spaceEvenly,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.check),
-              onPressed: () {
-                changeColor(_quillController!, newColor, background);
-                Navigator.pop(context);
-              },
-            ),
-          ],
         ),
       );
     }

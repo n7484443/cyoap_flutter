@@ -183,3 +183,7 @@ final lastImageProvider = StateProvider<Uint8List?>((ref) => null);
 
 final editorImageDragDropColorProvider =
     StateProvider.autoDispose<Color>((ref) => Colors.black12);
+
+final textColorProvider = StateProvider<Color>((ref) {
+  return Colors.black;
+});
