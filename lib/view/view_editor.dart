@@ -318,7 +318,8 @@ class _ViewTextContentsEditorState
       showDialog(
         context: context,
         builder: (context) => Consumer(
-          builder: (BuildContext context, WidgetRef ref, Widget? _) => AlertDialog(
+          builder: (BuildContext context, WidgetRef ref, Widget? _) =>
+              AlertDialog(
             backgroundColor: Theme.of(context).canvasColor,
             content: SizedBox(
               width: ConstList.isSmallDisplay(context) ? 300 : 400,
@@ -343,7 +344,8 @@ class _ViewTextContentsEditorState
               IconButton(
                 icon: const Icon(Icons.check),
                 onPressed: () {
-                  changeColor(_quillController!, ref.read(textColorProvider), background);
+                  changeColor(_quillController!, ref.read(textColorProvider),
+                      background);
                   Navigator.pop(context);
                 },
               ),
@@ -359,40 +361,45 @@ class _ViewTextContentsEditorState
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: QuillToolbar.simple(
-            configurations: QuillSimpleToolbarConfigurations(
-              sharedConfigurations: QuillSharedConfigurations(
-                locale: ref.watch(localeStateProvider),
+          child: QuillProvider(
+            configurations: QuillConfigurations(
+                controller: _quillController!,
+                sharedConfigurations: QuillSharedConfigurations(
+                  locale: ref.watch(localeStateProvider),
+                )),
+            child: QuillToolbar(
+              configurations: QuillToolbarConfigurations(
+                showListCheck: false,
+                showInlineCode: false,
+                showLink: false,
+                showCodeBlock: false,
+                showHeaderStyle: false,
+                showAlignmentButtons: true,
+                showColorButton: false,
+                showBackgroundColorButton: false,
+                showFontFamily: false,
+                showSearchButton: false,
+                showIndent: false,
+                showSuperscript: false,
+                showSubscript: false,
+                multiRowsDisplay: false,
+                customButtons: [
+                  QuillToolbarCustomButtonOptions(
+                    icon: const Icon(Icons.color_lens),
+                    controller: _quillController,
+                    onPressed: () {
+                      colorIconDialog(getColor(), false);
+                    },
+                  ),
+                  QuillToolbarCustomButtonOptions(
+                    icon: const Icon(Icons.format_color_fill),
+                    controller: _quillController,
+                    onPressed: () {
+                      colorIconDialog(getColorBackground(), true);
+                    },
+                  ),
+                ],
               ),
-              showListCheck: false,
-              showInlineCode: false,
-              showLink: false,
-              showCodeBlock: false,
-              showHeaderStyle: false,
-              showAlignmentButtons: true,
-              showColorButton: false,
-              showBackgroundColorButton: false,
-              showFontFamily: false,
-              showSearchButton: false,
-              showIndent: false,
-              showSuperscript: false,
-              showSubscript: false,
-              multiRowsDisplay: false,
-              customButtons: [
-                QuillToolbarCustomButtonOptions(
-                  icon: const Icon(Icons.color_lens),
-                  onPressed: () {
-                    colorIconDialog(getColor(), false);
-                  },
-                ),
-                QuillToolbarCustomButtonOptions(
-                  icon: const Icon(Icons.format_color_fill),
-                  onPressed: () {
-                    colorIconDialog(getColorBackground(), true);
-                  },
-                ),
-              ],
-              controller: _quillController!,
             ),
           ),
         ),
@@ -401,23 +408,26 @@ class _ViewTextContentsEditorState
           child: Card(
             elevation: ConstList.elevation,
             color: Colors.blue.shade50,
-            child: QuillEditor(
-              configurations: QuillEditorConfigurations(
-                padding: const EdgeInsets.all(3),
-                expands: true,
-                scrollable: true,
-                autoFocus: true,
-                readOnly: false,
-                showCursor: true,
-                customStyles: ConstList.getDefaultThemeData(context, 1,
-                    fontStyle: ConstList.getFontWithColor(preset.mainFont)),
-                controller: _quillController!,
-                sharedConfigurations: QuillSharedConfigurations(
-                  locale: ref.watch(localeStateProvider),
+            child: QuillProvider(
+              configurations: QuillConfigurations(
+                  controller: _quillController!,
+                  sharedConfigurations: QuillSharedConfigurations(
+                    locale: ref.watch(localeStateProvider),
+                  )),
+              child: QuillEditor(
+                configurations: QuillEditorConfigurations(
+                  padding: const EdgeInsets.all(3),
+                  expands: true,
+                  scrollable: true,
+                  autoFocus: true,
+                  readOnly: false,
+                  showCursor: true,
+                  customStyles: ConstList.getDefaultThemeData(context, 1,
+                      fontStyle: ConstList.getFontWithColor(preset.mainFont)),
                 ),
+                focusNode: _focusNode!,
+                scrollController: _scrollController!,
               ),
-              focusNode: _focusNode!,
-              scrollController: _scrollController!,
             ),
           ),
         ),

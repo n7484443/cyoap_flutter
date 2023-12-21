@@ -458,22 +458,26 @@ class _ViewContentsState extends ConsumerState<ViewContents> {
     }
     var design = ref.watch(choiceNodeDesignSettingProvider(widget.pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
-    return QuillEditor(
-      configurations: QuillEditorConfigurations(
-        readOnly: true,
-        autoFocus: false,
-        expands: false,
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        showCursor: false,
-        scrollable: false,
-        enableInteractiveSelection: false,
-        customStyles: ConstList.getDefaultThemeData(
-            context, ConstList.scale(context),
-            fontStyle: ConstList.getFontWithColor(preset.mainFont)),
+    return QuillProvider(
+      configurations: QuillConfigurations(
         controller: ref.watch(contentsQuillProvider(widget.pos)),
       ),
-      focusNode: _focusNode!,
-      scrollController: _scrollController!,
+      child: QuillEditor(
+        configurations: QuillEditorConfigurations(
+          readOnly: true,
+          autoFocus: false,
+          expands: false,
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          showCursor: false,
+          scrollable: false,
+          enableInteractiveSelection: false,
+          customStyles: ConstList.getDefaultThemeData(
+              context, ConstList.scale(context),
+              fontStyle: ConstList.getFontWithColor(preset.mainFont)),
+        ),
+        focusNode: _focusNode!,
+        scrollController: _scrollController!,
+      ),
     );
   }
 }
