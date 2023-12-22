@@ -361,45 +361,40 @@ class _ViewTextContentsEditorState
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: QuillProvider(
-            configurations: QuillConfigurations(
-                controller: _quillController!,
-                sharedConfigurations: QuillSharedConfigurations(
-                  locale: ref.watch(localeStateProvider),
-                )),
-            child: QuillToolbar(
-              configurations: QuillToolbarConfigurations(
-                showListCheck: false,
-                showInlineCode: false,
-                showLink: false,
-                showCodeBlock: false,
-                showHeaderStyle: false,
-                showAlignmentButtons: true,
-                showColorButton: false,
-                showBackgroundColorButton: false,
-                showFontFamily: false,
-                showSearchButton: false,
-                showIndent: false,
-                showSuperscript: false,
-                showSubscript: false,
-                multiRowsDisplay: false,
-                customButtons: [
-                  QuillToolbarCustomButtonOptions(
-                    icon: const Icon(Icons.color_lens),
-                    controller: _quillController,
-                    onPressed: () {
-                      colorIconDialog(getColor(), false);
-                    },
-                  ),
-                  QuillToolbarCustomButtonOptions(
-                    icon: const Icon(Icons.format_color_fill),
-                    controller: _quillController,
-                    onPressed: () {
-                      colorIconDialog(getColorBackground(), true);
-                    },
-                  ),
-                ],
+          child: QuillToolbar.simple(
+            configurations: QuillSimpleToolbarConfigurations(
+              controller: _quillController!,
+              sharedConfigurations: QuillSharedConfigurations(
+                locale: ref.watch(localeStateProvider),
               ),
+              showListCheck: false,
+              showInlineCode: false,
+              showLink: false,
+              showCodeBlock: false,
+              showHeaderStyle: false,
+              showAlignmentButtons: true,
+              showColorButton: false,
+              showBackgroundColorButton: false,
+              showFontFamily: false,
+              showSearchButton: false,
+              showIndent: false,
+              showSuperscript: false,
+              showSubscript: false,
+              multiRowsDisplay: false,
+              customButtons: [
+                QuillToolbarCustomButtonOptions(
+                  icon: const Icon(Icons.color_lens),
+                  onPressed: () {
+                    colorIconDialog(getColor(), false);
+                  },
+                ),
+                QuillToolbarCustomButtonOptions(
+                  icon: const Icon(Icons.format_color_fill),
+                  onPressed: () {
+                    colorIconDialog(getColorBackground(), true);
+                  },
+                ),
+              ],
             ),
           ),
         ),
@@ -408,26 +403,23 @@ class _ViewTextContentsEditorState
           child: Card(
             elevation: ConstList.elevation,
             color: Colors.blue.shade50,
-            child: QuillProvider(
-              configurations: QuillConfigurations(
-                  controller: _quillController!,
-                  sharedConfigurations: QuillSharedConfigurations(
-                    locale: ref.watch(localeStateProvider),
-                  )),
-              child: QuillEditor(
-                configurations: QuillEditorConfigurations(
-                  padding: const EdgeInsets.all(3),
-                  expands: true,
-                  scrollable: true,
-                  autoFocus: true,
-                  readOnly: false,
-                  showCursor: true,
-                  customStyles: ConstList.getDefaultThemeData(context, 1,
-                      fontStyle: ConstList.getFontWithColor(preset.mainFont)),
+            child: QuillEditor(
+              configurations: QuillEditorConfigurations(
+                controller: _quillController!,
+                padding: const EdgeInsets.all(3),
+                expands: true,
+                scrollable: true,
+                autoFocus: true,
+                readOnly: false,
+                showCursor: true,
+                customStyles: ConstList.getDefaultThemeData(context, 1,
+                    fontStyle: ConstList.getFontWithColor(preset.mainFont)),
+                sharedConfigurations: QuillSharedConfigurations(
+                  locale: ref.watch(localeStateProvider),
                 ),
-                focusNode: _focusNode!,
-                scrollController: _scrollController!,
               ),
+              focusNode: _focusNode!,
+              scrollController: _scrollController!,
             ),
           ),
         ),

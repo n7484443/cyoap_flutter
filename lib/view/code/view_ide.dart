@@ -250,25 +250,21 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                           .read(ideCurrentInputProvider.notifier)
                           .lastFocusQuill = ref.watch(controllerIdeProvider);
                     },
-                    child: QuillProvider(
-                      configurations: QuillConfigurations(
+                    child: QuillEditor(
+                      configurations: QuillEditorConfigurations(
                         controller: ref.watch(controllerIdeProvider),
                         sharedConfigurations: QuillSharedConfigurations(
                           locale: ref.watch(localeStateProvider),
                         ),
+                        scrollable: false,
+                        readOnly: false,
+                        autoFocus: false,
+                        padding: EdgeInsets.zero,
+                        expands: false,
+                        placeholder: "code_hint_execute".i18n,
                       ),
-                      child: QuillEditor(
-                        configurations: QuillEditorConfigurations(
-                          scrollable: false,
-                          readOnly: false,
-                          autoFocus: false,
-                          padding: EdgeInsets.zero,
-                          expands: false,
-                          placeholder: "code_hint_execute".i18n,
-                        ),
-                        focusNode: _focusNode,
-                        scrollController: _scrollController!,
-                      ),
+                      focusNode: _focusNode,
+                      scrollController: _scrollController!,
                     ),
                   ),
                 ),

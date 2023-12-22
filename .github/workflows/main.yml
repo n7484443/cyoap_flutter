@@ -20,7 +20,7 @@ jobs:
         with:
           cache: 'gradle'
           distribution: 'zulu'
-          java-version: '11'
+          java-version: '17'
 
       - name: base64-to-file
         uses: timheuer/base64-to-file@v1.1
