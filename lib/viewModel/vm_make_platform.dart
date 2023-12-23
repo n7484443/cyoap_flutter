@@ -67,4 +67,19 @@ final List<String> tabList = [
   "viewDesignSetting",
 ];
 
+final List<String> tabBottomList = [
+  "viewMake",
+  "viewDesignSetting",
+  "viewSource",
+  "viewProjectSetting",
+];
+
 final sideTabProvider = StateProvider<int?>((ref) => null);
+final bottomTabProvider = StateProvider<int>((ref){
+  var index = ref.watch(changeTabProvider);
+  var name = tabList[index];
+  if(tabBottomList.contains(name)) {
+    return tabBottomList.indexOf(name);
+  }
+  return 0;
+});

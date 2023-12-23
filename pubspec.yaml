@@ -40,7 +40,7 @@ dependencies:
   google_fonts: ^6.1.0
   archive: ^3.3.1
   flutter_quill: ^9.1.0
-  package_info_plus: ^4.0.0
+  package_info_plus: ^5.0.1
   github: ^9.14.0
   flex_color_picker: ^3.0.2
   tuple: ^2.0.0
@@ -60,7 +60,7 @@ dependencies:
   easy_debounce: ^2.0.2+1
   desktop_drop: ^0.4.4
   shared_storage: ^0.8.0
-  i18n_extension: ^9.0.2
+  i18n_extension: ^10.0.1
   reorderable_grid_view: ^2.2.6
   dotted_border: ^2.1.0
   flutter_localizations:

@@ -43,12 +43,80 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
       () => const ViewImageEditor(),
       () => const ViewDesignSetting(),
     ];
-    if (ConstList.isSmallDisplay(context)) {
+    /*
+    * ListTile(
+                onTap: () {
+                  ref
+                      .read(changeTabProvider.notifier)
+                      .changePageString('viewDesignSetting', context);
+                },
+                leading: const Icon(Icons.layers),
+                title: Text('design_settings'.i18n),
+              ),
+              ListTile(
+                leading: const Icon(Icons.image),
+                title: Text('image_settings'.i18n),
+                onTap: () => ref
+                    .read(changeTabProvider.notifier)
+                    .changePageString("viewSource", context),
+              ),
+              ListTile(
+                onTap: () {
+                  ref
+                      .read(changeTabProvider.notifier)
+                      .changePageString('viewProjectSetting', context);
+                },
+                leading: const Icon(Icons.settings),
+                title: Text('project_settings'.i18n),
+              ),
+    * */
+    if (ConstList.isMobile()) {
       return PopScope(
         canPop: false,
         child: Scaffold(
-          drawer: const Drawer(
-            child: ViewEditDrawer(),
+          drawer: const ViewEditDrawerMobile(),
+          bottomNavigationBar: BottomNavigationBar(
+            selectedItemColor: Theme.of(context).colorScheme.tertiary,
+            unselectedItemColor: Theme.of(context).colorScheme.onSurface,
+            items: [
+              BottomNavigationBarItem(
+                  icon: const Icon(Icons.space_dashboard),
+                  label: 'main_dashboard'.i18n),
+              BottomNavigationBarItem(
+                  icon: const Icon(Icons.layers),
+                  label: 'design_settings'.i18n),
+              BottomNavigationBarItem(
+                  icon: const Icon(Icons.image), label: 'image_settings'.i18n),
+              BottomNavigationBarItem(
+                  icon: const Icon(Icons.settings),
+                  label: 'project_settings'.i18n),
+            ],
+            onTap: (index) {
+              switch (index) {
+                case 0:
+                  ref
+                      .read(changeTabProvider.notifier)
+                      .changePageString('viewMake', context);
+                  break;
+                case 1:
+                  ref
+                      .read(changeTabProvider.notifier)
+                      .changePageString('viewDesignSetting', context);
+                  break;
+                case 2:
+                  ref
+                      .read(changeTabProvider.notifier)
+                      .changePageString('viewSource', context);
+                  break;
+                case 3:
+                  ref
+                      .read(changeTabProvider.notifier)
+                      .changePageString('viewProjectSetting', context);
+                  break;
+              }
+              ref.read(bottomTabProvider.notifier).state = index;
+            },
+            currentIndex: ref.watch(bottomTabProvider),
           ),
           body: Stack(
             children: [
@@ -142,6 +210,59 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
   }
 }
 
+class ViewEditDrawerMobile extends ConsumerStatefulWidget {
+  const ViewEditDrawerMobile({super.key});
+
+  @override
+  ConsumerState createState() => _ViewEditDrawerMobileState();
+}
+
+class _ViewEditDrawerMobileState extends ConsumerState<ViewEditDrawerMobile>
+    with TickerProviderStateMixin {
+  TabController? _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _tabController?.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: Column(
+        children: [
+          TabBar(
+            tabs: [
+              Tab(
+                text: 'vertical_tab_bar_0'.i18n,
+              ),
+              Tab(
+                text: 'vertical_tab_bar_1'.i18n,
+              ),
+              Tab(
+                text: 'vertical_tab_bar_2'.i18n,
+              ),
+            ],
+            onTap: (index) {
+              ref.read(sideTabProvider.notifier).state = index;
+            },
+            controller: _tabController,
+          ),
+          const Expanded(child: ViewEditDrawer()),
+          const ViewChangeRotation(),
+        ],
+      ),
+    );
+  }
+}
+
 class ViewEditDrawer extends ConsumerStatefulWidget {
   const ViewEditDrawer({
     super.key,
@@ -182,6 +303,15 @@ class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
       return ListView(
         controller: _scrollController,
         children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _controller,
+              decoration: InputDecoration(
+                hintText: "search".i18n,
+              ),
+            ),
+          ),
           const VariableTiles(),
         ],
       );
@@ -190,64 +320,20 @@ class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
       return ListView(
         controller: _scrollController,
         children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _controller,
+              decoration: InputDecoration(
+                hintText: "search".i18n,
+              ),
+            ),
+          ),
           const NodeTiles(),
         ],
       );
     }
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Flexible(
-          child: ListView(
-            controller: _scrollController,
-            children: [
-              const VariableTiles(),
-              const NodeTiles(),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            controller: _controller,
-            decoration: InputDecoration(
-              hintText: "search".i18n,
-            ),
-          ),
-        ),
-        if (ConstList.isSmallDisplay(context))
-          Column(
-            children: [
-              ListTile(
-                onTap: () {
-                  ref
-                      .read(changeTabProvider.notifier)
-                      .changePageString('viewDesignSetting', context);
-                },
-                leading: const Icon(Icons.layers),
-                title: Text('design_settings'.i18n),
-              ),
-              ListTile(
-                leading: const Icon(Icons.image),
-                title: Text('image_settings'.i18n),
-                onTap: () => ref
-                    .read(changeTabProvider.notifier)
-                    .changePageString("viewSource", context),
-              ),
-              ListTile(
-                onTap: () {
-                  ref
-                      .read(changeTabProvider.notifier)
-                      .changePageString('viewProjectSetting', context);
-                },
-                leading: const Icon(Icons.settings),
-                title: Text('project_settings'.i18n),
-              ),
-              const ViewChangeRotation(),
-            ],
-          ),
-      ],
-    );
+    return const SizedBox.shrink();
   }
 }
 
