@@ -116,75 +116,74 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
         ),
         body: Row(
           children: [
-            NavigationRail(
-              destinations: [
-                NavigationRailDestination(
-                  icon: const Icon(Icons.space_dashboard),
-                  label: Text('vertical_tab_bar_0'.i18n),
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                ),
-                NavigationRailDestination(
-                  icon: const Icon(Icons.abc),
-                  label: Text('vertical_tab_bar_1'.i18n),
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                ),
-                NavigationRailDestination(
-                  icon: const Icon(Icons.history),
-                  label: Text('vertical_tab_bar_2'.i18n),
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                ),
-                NavigationRailDestination(
-                  icon: const Icon(Icons.layers),
-                  label: Text('design_settings'.i18n),
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                ),
-                NavigationRailDestination(
-                  icon: const Icon(Icons.image),
-                  label: Text('image_settings'.i18n),
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                ),
-                NavigationRailDestination(
-                  icon: const Icon(Icons.settings),
-                  label: Text('project_settings'.i18n),
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                ),
-              ],
-              labelType: NavigationRailLabelType.all,
-              selectedIndex: ref.watch(sideTabProvider),
-              onDestinationSelected: (int index) {
-                switch (index) {
-                  case 3:
-                    ref
-                        .read(changeTabProvider.notifier)
-                        .changePageString('viewDesignSetting', context);
-                    break;
-                  case 4:
-                    ref
-                        .read(changeTabProvider.notifier)
-                        .changePageString('viewSource', context);
-                    break;
-                  case 5:
-                    ref
-                        .read(changeTabProvider.notifier)
-                        .changePageString('viewProjectSetting', context);
-                    break;
-                  default:
-                    if (ref.watch(sideTabProvider) == index) {
-                      ref.read(sideTabProvider.notifier).state = null;
-                    } else {
-                      ref.read(sideTabProvider.notifier).state = index;
-                    }
-                }
-              },
-            ),
-            AnimatedSize(
-              duration: ConstList.animationDuration,
-              curve: Curves.fastOutSlowIn,
-              child: SizedBox(
-                width: ref.watch(sideTabProvider) != null ? 250 : 0,
-                child: const ViewEditDrawer(),
+            LimitedBox(
+              child: NavigationRail(
+                destinations: [
+                  NavigationRailDestination(
+                    icon: const Icon(Icons.space_dashboard),
+                    label: Text('vertical_tab_bar_0'.i18n),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                  NavigationRailDestination(
+                    icon: const Icon(Icons.abc),
+                    label: Text('vertical_tab_bar_1'.i18n),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                  NavigationRailDestination(
+                    icon: const Icon(Icons.history),
+                    label: Text('vertical_tab_bar_2'.i18n),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                  NavigationRailDestination(
+                    icon: const Icon(Icons.layers),
+                    label: Text('design_settings'.i18n),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                  NavigationRailDestination(
+                    icon: const Icon(Icons.image),
+                    label: Text('image_settings'.i18n),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                  NavigationRailDestination(
+                    icon: const Icon(Icons.settings),
+                    label: Text('project_settings'.i18n),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                ],
+                labelType: NavigationRailLabelType.all,
+                selectedIndex: ref.watch(sideTabProvider),
+                onDestinationSelected: (int index) {
+                  switch (index) {
+                    case 3:
+                      ref
+                          .read(changeTabProvider.notifier)
+                          .changePageString('viewDesignSetting', context);
+                      break;
+                    case 4:
+                      ref
+                          .read(changeTabProvider.notifier)
+                          .changePageString('viewSource', context);
+                      break;
+                    case 5:
+                      ref
+                          .read(changeTabProvider.notifier)
+                          .changePageString('viewProjectSetting', context);
+                      break;
+                    default:
+                      if(ref.watch(sideTabProvider) == index){
+                        ref.read(sideTabProvider.notifier).state = null;
+                      }else{
+                        ref.read(sideTabProvider.notifier).state = index;
+                      }
+                  }
+                },
               ),
             ),
+            if (ref.watch(sideTabProvider) != null)
+              const SizedBox(
+                width: 250,
+                child: ViewEditDrawer(),
+              ),
             Flexible(
               child: Stack(
                 children: [
@@ -357,14 +356,13 @@ class _ViewSideClipboardState extends ConsumerState<ViewSideClipboard> {
               child: Opacity(
                 opacity: 0.6,
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: 400,
-                  ),
-                  child: ViewChoiceNode(
-                    pos,
-                    ignoreChild: true,
-                  ),
-                ),
+                    constraints: const BoxConstraints(
+                      maxWidth: 400,
+                    ),
+                    child: ViewChoiceNode(
+                      pos,
+                      ignoreChild: true,
+                    )),
               ),
             ),
             onDragStarted: () {

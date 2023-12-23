@@ -6,7 +6,6 @@ import 'package:cyoap_core/choiceNode/selectable_status.dart';
 import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_core/preset/line_preset.dart';
 import 'package:cyoap_core/variable_db.dart';
-import 'package:cyoap_flutter/model/history_db.dart';
 import 'package:cyoap_flutter/viewModel/preset/vm_choice_line_preset.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:flutter/material.dart';
@@ -18,24 +17,6 @@ final draggableNestedMapChangedProvider = StateProvider<bool>((ref) => false);
 
 final vmDraggableNestedMapProvider =
     Provider.autoDispose((ref) => VMDraggableNestedMap(ref));
-
-final historyChoiceNodeProvider =
-    ChangeNotifierProvider<HistoryChoiceNodeNotifier>(
-        (ref) => HistoryChoiceNodeNotifier(ref));
-
-class HistoryChoiceNodeNotifier extends ChangeNotifier {
-  Ref ref;
-
-  HistoryChoiceNodeNotifier(this.ref);
-
-  void update() {
-    notifyListeners();
-    for (var i = 0; i < HistoryDB().historySize; i++) {
-      ref.invalidate(choiceNodeProvider(
-          Pos(data: [historyPositioned - i, historyPositioned - i])));
-    }
-  }
-}
 
 final removedChoiceNodeProvider =
     ChangeNotifierProvider<RemovedChoiceNodeNotifier>(
@@ -51,7 +32,7 @@ class RemovedChoiceNodeNotifier extends ChangeNotifier {
     this.choiceNode = choiceNode;
     notifyListeners();
     ref.invalidate(choiceNodeProvider(
-        const Pos(data: [historyPositioned, historyPositioned])));
+        const Pos(data: [removedPositioned, removedPositioned])));
   }
 }
 
@@ -103,7 +84,6 @@ class VMDraggableNestedMap {
   }
 
   void copyData(ChoiceNode choiceNode) {
-    HistoryDB().push(choiceNode);
     ref.read(copiedChoiceNodeProvider.notifier).update(choiceNode.clone());
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     refreshPage(ref);
@@ -111,7 +91,6 @@ class VMDraggableNestedMap {
 
   void removeData(Pos pos) {
     var choiceNode = getPlatform.removeData(pos);
-    HistoryDB().push(choiceNode);
     ref.read(removedChoiceNodeProvider.notifier).update(choiceNode.clone());
     VariableDataBase().updateCheckList();
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
