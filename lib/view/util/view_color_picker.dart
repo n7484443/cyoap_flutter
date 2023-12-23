@@ -471,7 +471,7 @@ class _ViewGradientPositionOptionState
         widget.currentIndex == 0) {
       return _buildPoint(context);
     }
-    if(widget.colorOption.gradientType == GradientType.radial){
+    if (widget.colorOption.gradientType == GradientType.radial) {
       x = widget.colorOption.gradientData[widget.currentIndex].gradientPos.$1;
       var max = 1.0;
       return Slider(

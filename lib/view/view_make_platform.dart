@@ -43,33 +43,6 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
       () => const ViewImageEditor(),
       () => const ViewDesignSetting(),
     ];
-    /*
-    * ListTile(
-                onTap: () {
-                  ref
-                      .read(changeTabProvider.notifier)
-                      .changePageString('viewDesignSetting', context);
-                },
-                leading: const Icon(Icons.layers),
-                title: Text('design_settings'.i18n),
-              ),
-              ListTile(
-                leading: const Icon(Icons.image),
-                title: Text('image_settings'.i18n),
-                onTap: () => ref
-                    .read(changeTabProvider.notifier)
-                    .changePageString("viewSource", context),
-              ),
-              ListTile(
-                onTap: () {
-                  ref
-                      .read(changeTabProvider.notifier)
-                      .changePageString('viewProjectSetting', context);
-                },
-                leading: const Icon(Icons.settings),
-                title: Text('project_settings'.i18n),
-              ),
-    * */
     if (ConstList.isMobile()) {
       return PopScope(
         canPop: false,

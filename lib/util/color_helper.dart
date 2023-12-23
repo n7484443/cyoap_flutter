@@ -104,8 +104,9 @@ class GradientTranslateRotation extends GradientRotation {
   int get hashCode => radians.hashCode * center.hashCode;
 }
 
-class CssLikeRadialGradient extends RadialGradient{
-  const CssLikeRadialGradient({required super.colors, super.center, super.radius, super.stops});
+class CssLikeRadialGradient extends RadialGradient {
+  const CssLikeRadialGradient(
+      {required super.colors, super.center, super.radius, super.stops});
 
   List<double> _impliedStops() {
     if (stops != null) {
@@ -115,7 +116,7 @@ class CssLikeRadialGradient extends RadialGradient{
     final double separation = 1.0 / (colors.length - 1);
     return List<double>.generate(
       colors.length,
-          (int index) => index * separation,
+      (int index) => index * separation,
       growable: false,
     );
   }
@@ -125,11 +126,13 @@ class CssLikeRadialGradient extends RadialGradient{
   }
 
   @override
-  Shader createShader(Rect rect, { TextDirection? textDirection }) {
+  Shader createShader(Rect rect, {TextDirection? textDirection}) {
     return ui.Gradient.radial(
       center.resolve(textDirection).withinRect(rect),
       radius * rect.longestSide,
-      colors, _impliedStops(), tileMode,
+      colors,
+      _impliedStops(),
+      tileMode,
       _resolveTransform(rect, textDirection),
       focal?.resolve(textDirection).withinRect(rect),
       focalRadius * rect.longestSide,

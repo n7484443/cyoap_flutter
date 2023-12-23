@@ -75,10 +75,10 @@ final List<String> tabBottomList = [
 ];
 
 final sideTabProvider = StateProvider<int?>((ref) => null);
-final bottomTabProvider = StateProvider<int>((ref){
+final bottomTabProvider = StateProvider<int>((ref) {
   var index = ref.watch(changeTabProvider);
   var name = tabList[index];
-  if(tabBottomList.contains(name)) {
+  if (tabBottomList.contains(name)) {
     return tabBottomList.indexOf(name);
   }
   return 0;

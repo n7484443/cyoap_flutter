@@ -189,7 +189,7 @@ final themeStateProvider = StateProvider<ThemeMode>((ref) {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ConstList.preInit();
-  if(ConstList.isDesktop()){
+  if (ConstList.isDesktop()) {
     await windowManager.ensureInitialized();
     var windowOptions = const WindowOptions(
       size: Size(1280, 720),
