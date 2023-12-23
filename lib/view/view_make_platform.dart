@@ -153,6 +153,7 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
                         'vertical_tab_bar_0'.i18n,
                         'vertical_tab_bar_1'.i18n,
                         'vertical_tab_bar_2'.i18n,
+                        'vertical_tab_bar_3'.i18n,
                       ],
                       currentIndex: ref.watch(sideTabProvider),
                       onChange: (index) {

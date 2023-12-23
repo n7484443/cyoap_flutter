@@ -6,11 +6,13 @@ class CircleButton extends StatelessWidget {
   final void Function() onPressed;
   final Widget child;
   final Tuple2<double, double> size;
+  final String? tooltip;
 
   const CircleButton(
       {required this.onPressed,
       required this.child,
       this.size = const Tuple2(40, 36),
+      this.tooltip,
       super.key});
 
   @override
@@ -23,6 +25,7 @@ class CircleButton extends StatelessWidget {
           fit: BoxFit.fill,
           child: child,
         ),
+        tooltip: tooltip,
       ),
     );
   }

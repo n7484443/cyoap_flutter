@@ -429,15 +429,14 @@ class _NestedMapState extends ConsumerState<NestedMap> {
             child: NodeDivider(0),
           ),
           SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(32.0),
-              child: IconButton(
+            child: Card(
+              child: CircleButton(
                 onPressed: () {
                   ref.read(vmDraggableNestedMapProvider).addData(
                       const Pos(data: [0, 0]), ChoiceNode.empty()..width = 3);
                 },
-                icon: const Icon(Icons.add),
                 tooltip: 'create_tooltip'.i18n,
+                child: const Icon(Icons.add),
               ),
             ),
           ),
@@ -467,15 +466,14 @@ class _NestedMapState extends ConsumerState<NestedMap> {
                       isHorizontal: true,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(32.0),
-                    child: IconButton(
+                  Card(
+                    child: CircleButton(
                       onPressed: () {
                         ref.read(vmDraggableNestedMapProvider).addData(
                             pos.addLast(0), ChoiceNode.empty()..width = 3);
                       },
-                      icon: const Icon(Icons.add),
                       tooltip: 'create_tooltip'.i18n,
+                      child: const Icon(Icons.add),
                     ),
                   ),
                 ],

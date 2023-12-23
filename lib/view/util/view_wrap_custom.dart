@@ -111,17 +111,15 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
       addBuildDraggable(subWidget, i + 1);
       stack += size;
     }
-    Widget addButton = Tooltip(
-      message: 'create_tooltip'.i18n,
-      child: Card(
-        child: CircleButton(
-          onPressed: () {
-            ref.read(vmDraggableNestedMapProvider).addData(
-                parentPos.addLast(children.length),
-                ChoiceNode.empty()..width = 3);
-          },
-          child: const Icon(Icons.add),
-        ),
+    Widget addButton = Card(
+      child: CircleButton(
+        onPressed: () {
+          ref.read(vmDraggableNestedMapProvider).addData(
+              parentPos.addLast(children.length),
+              ChoiceNode.empty()..width = 3);
+        },
+        tooltip: 'create_tooltip'.i18n,
+        child: const Icon(Icons.add),
       ),
     );
     bool check = false;
@@ -152,7 +150,15 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
       );
     }
     if (check) {
-      outputWidget.add(addButton);
+      outputWidget.add(
+        Stack(
+          children: [
+            Center(
+              child: addButton,
+            ),
+          ],
+        ),
+      );
     }
 
     if (isInner) {
