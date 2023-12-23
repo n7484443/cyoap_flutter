@@ -5,6 +5,7 @@ import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
+import 'package:cyoap_flutter/model/history_db.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
@@ -52,12 +53,10 @@ class NodeDragTarget extends ConsumerWidget {
         onAccept: (Pos drag) {
           if (drag.last == nonPositioned) {
             ref.read(vmDraggableNestedMapProvider).changeData(drag, pos);
-          } else if (drag.last == removedPositioned) {
-            ref.read(vmDraggableNestedMapProvider).addData(
-                pos, ref.read(removedChoiceNodeProvider).choiceNode!.clone());
-          } else if (drag.last == copiedPositioned) {
-            ref.read(vmDraggableNestedMapProvider).addData(
-                pos, ref.read(copiedChoiceNodeProvider).choiceNode!.clone());
+          } else if (drag.last == historyPositioned) {
+            ref
+                .read(vmDraggableNestedMapProvider)
+                .addData(pos, HistoryDB().first!);
           } else if (pos.equalExceptLast(drag) &&
               (pos.data.last - 1) >= drag.last) {
             ref

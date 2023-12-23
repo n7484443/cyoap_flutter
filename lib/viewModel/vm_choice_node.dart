@@ -14,12 +14,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../model/history_db.dart';
 import '../model/platform.dart';
 import '../model/platform_system.dart';
 
 const double nodeBaseHeight = 200;
-const int removedPositioned = -2;
-const int copiedPositioned = -3;
+const int historyPositioned = -2;
 
 void refreshChild(Ref ref, Choice node) {
   ref.invalidate(choiceNodeProvider(node.pos));
@@ -41,10 +41,8 @@ class ChoiceNodeNotifier extends ChangeNotifier {
   Pos pos;
 
   ChoiceNodeNotifier(this.ref, this.pos) {
-    if (pos.last == copiedPositioned) {
-      node = ref.read(copiedChoiceNodeProvider).choiceNode;
-    } else if (pos.last == removedPositioned) {
-      node = ref.read(removedChoiceNodeProvider).choiceNode;
+    if (pos.last == historyPositioned) {
+      node = HistoryDB().first;
     } else if (pos.last == designSamplePosition) {
       node = ChoiceNode(
         width: 1,

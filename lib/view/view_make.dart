@@ -48,7 +48,7 @@ class CopyButton extends ConsumerWidget {
     return Visibility(
       visible: ref.watch(copiedChoiceNodeProvider).choiceNode != null,
       child: Draggable<Pos>(
-        data: const Pos(data: [copiedPositioned, copiedPositioned]),
+        data: const Pos(data: [historyPositioned, historyPositioned]),
         feedback: Transform.scale(
           scale: 0.9,
           child: Opacity(
@@ -58,13 +58,13 @@ class CopyButton extends ConsumerWidget {
                   maxWidth: 400,
                 ),
                 child: const ViewChoiceNode(
-                    Pos(data: [copiedPositioned, copiedPositioned]))),
+                    Pos(data: [historyPositioned, historyPositioned]))),
           ),
         ),
         onDragStarted: () {
           ref
               .read(dragChoiceNodeProvider.notifier)
-              .dragStart(const Pos(data: [copiedPositioned, copiedPositioned]));
+              .dragStart(const Pos(data: [historyPositioned, historyPositioned]));
         },
         onDragEnd: (DraggableDetails data) {
           ref.read(dragChoiceNodeProvider.notifier).dragEnd();
@@ -89,7 +89,7 @@ class RecoverButton extends ConsumerWidget {
     return Visibility(
       visible: ref.watch(removedChoiceNodeProvider).choiceNode != null,
       child: Draggable<Pos>(
-        data: const Pos(data: [removedPositioned, removedPositioned]),
+        data: const Pos(data: [historyPositioned, historyPositioned]),
         feedback: Transform.scale(
           scale: 0.9,
           child: Opacity(
@@ -99,12 +99,12 @@ class RecoverButton extends ConsumerWidget {
                   maxWidth: 400,
                 ),
                 child: const ViewChoiceNode(
-                    Pos(data: [removedPositioned, removedPositioned]))),
+                    Pos(data: [historyPositioned, historyPositioned]))),
           ),
         ),
         onDragStarted: () {
           ref.read(dragChoiceNodeProvider.notifier).dragStart(
-              const Pos(data: [removedPositioned, removedPositioned]));
+              const Pos(data: [historyPositioned, historyPositioned]));
         },
         onDragEnd: (DraggableDetails data) {
           ref.read(dragChoiceNodeProvider.notifier).dragEnd();
