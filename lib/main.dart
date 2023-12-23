@@ -23,6 +23,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'color_schemes.g.dart';
 import 'model/device_preference.dart';
+import 'package:window_manager/window_manager.dart';
 
 class ConstList {
   static const Duration debounceDuration = Duration(milliseconds: 50);
@@ -58,7 +59,7 @@ class ConstList {
 
   static bool isSmallDisplay(BuildContext context) {
     if (isMobile()) return true;
-    if (getScreenWidth(context) < 1000) return true;
+    if (getScreenWidth(context) < 900) return true;
     return false;
   }
 
@@ -185,60 +186,85 @@ final themeStateProvider = StateProvider<ThemeMode>((ref) {
   return ConstList.currentThemeMode;
 });
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  ConstList.preInit().then((value) async {
-    runZonedGuarded(() async {
-      await SentryFlutter.init(
-        (options) {
-          options.dsn = kDebugMode ? '' : sentryDsn;
-          options.attachStacktrace = true;
-        },
-        appRunner: () => runApp(
-          ProviderScope(
-            child: I18n(
-              initialLocale: ConstList.currentLocale,
-              child: Consumer(
-                builder: (context, ref, child) {
-                  return MaterialApp(
-                    locale: ref.watch(localeStateProvider),
-                    localizationsDelegates: [
-                      GlobalMaterialLocalizations.delegate,
-                      GlobalCupertinoLocalizations.delegate,
-                      GlobalWidgetsLocalizations.delegate,
-                    ],
-                    supportedLocales: [
-                      const Locale('en'),
-                      const Locale('ko'),
-                    ],
-                    title: 'CYOAP',
-                    initialRoute: '/',
-                    routes: {
-                      '/': (context) => const ViewStart(),
-                      '/viewPlay': (context) => const ViewPlay(),
-                      '/viewMake': (context) => const ViewMakePlatform(),
-                      '/viewLicense': (context) => const ViewFontSource(),
-                    },
-                    theme: appThemeLight,
-                    darkTheme: appThemeDark,
-                    themeMode: ref.watch(themeStateProvider),
-                    debugShowCheckedModeBanner: false,
-                  );
-                },
-              ),
-            ),
-          ),
-        ),
-      );
-    }, (error, stack) async {
+  await ConstList.preInit();
+  if(ConstList.isDesktop()){
+    await windowManager.ensureInitialized();
+    var windowOptions = const WindowOptions(
+      size: Size(1280, 720),
+      center: true,
+      minimumSize: Size(960, 640),
+    );
+    windowManager.waitUntilReadyToShow(windowOptions, () async {
+      await windowManager.show();
+      await windowManager.focus();
+    });
+  }
+  FlutterError.onError = (details) async {
+    await Sentry.captureException(details.exception, stackTrace: details.stack);
+    if (ConstList.isDesktop()) {
+      var f = File(
+          '${Directory.current.path}/error-${DateTime.now().toString()}.log');
+      await f.writeAsString(
+          "${details.exception} \r\n ${details.stack.toString()}");
+    }
+  };
+  PlatformDispatcher.instance.onError = (error, stack) {
+    asyncFunction() async {
       await Sentry.captureException(error, stackTrace: stack);
       if (ConstList.isDesktop()) {
         var f = File(
             '${Directory.current.path}/error-${DateTime.now().toString()}.log');
         await f.writeAsString("$error \r\n $stack");
       }
-    });
-  }).then((value) => ConstList.init());
+    }
+
+    asyncFunction();
+    return true;
+  };
+  await SentryFlutter.init(
+    (options) {
+      options.dsn = kDebugMode ? '' : sentryDsn;
+      options.attachStacktrace = true;
+    },
+    appRunner: () => runApp(
+      ProviderScope(
+        child: I18n(
+          initialLocale: ConstList.currentLocale,
+          child: Consumer(
+            builder: (context, ref, child) {
+              return MaterialApp(
+                locale: ref.watch(localeStateProvider),
+                localizationsDelegates: [
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                ],
+                supportedLocales: [
+                  const Locale('en'),
+                  const Locale('ko'),
+                ],
+                title: 'CYOAP',
+                initialRoute: '/',
+                routes: {
+                  '/': (context) => const ViewStart(),
+                  '/viewPlay': (context) => const ViewPlay(),
+                  '/viewMake': (context) => const ViewMakePlatform(),
+                  '/viewLicense': (context) => const ViewFontSource(),
+                },
+                theme: appThemeLight,
+                darkTheme: appThemeDark,
+                themeMode: ref.watch(themeStateProvider),
+                debugShowCheckedModeBanner: false,
+              );
+            },
+          ),
+        ),
+      ),
+    ),
+  );
+  ConstList.init();
 }
 
 final ThemeData appThemeLight = ThemeData.from(
