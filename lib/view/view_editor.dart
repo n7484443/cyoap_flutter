@@ -12,6 +12,7 @@ import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill/src/utils/color.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
@@ -19,7 +20,6 @@ import '../main.dart';
 import '../viewModel/preset/vm_choice_node_preset.dart';
 import '../viewModel/vm_editor.dart';
 import '../viewModel/vm_make_platform.dart';
-import 'package:flutter_quill/src/utils/color.dart';
 
 class ViewEditor extends ConsumerStatefulWidget {
   const ViewEditor({

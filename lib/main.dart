@@ -20,10 +20,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'color_schemes.g.dart';
 import 'model/device_preference.dart';
-import 'package:window_manager/window_manager.dart';
 
 class ConstList {
   static const Duration debounceDuration = Duration(milliseconds: 50);
