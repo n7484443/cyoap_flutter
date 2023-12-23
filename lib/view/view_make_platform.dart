@@ -2,7 +2,6 @@ import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
-import 'package:cyoap_flutter/view/util/view_vertical_tabbar.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/view/view_design.dart';
 import 'package:cyoap_flutter/view/view_editor.dart';
@@ -118,49 +117,66 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
         body: Row(
           children: [
             LimitedBox(
-              maxWidth: 35,
-              child: Column(
-                children: [
-                  VerticalTabBar(
-                      tabList: [
-                        'vertical_tab_bar_0'.i18n,
-                        'vertical_tab_bar_1'.i18n,
-                        'vertical_tab_bar_2'.i18n,
-                        'vertical_tab_bar_3'.i18n,
-                      ],
-                      currentIndex: ref.watch(sideTabProvider),
-                      onChange: (index) {
-                        ref.read(sideTabProvider.notifier).state = index;
-                      }),
-                  const Spacer(),
-                  IconButton(
-                    padding: EdgeInsets.zero,
-                    onPressed: () {
+              child: NavigationRail(
+                destinations: [
+                  NavigationRailDestination(
+                    icon: const Icon(Icons.space_dashboard),
+                    label: Text('vertical_tab_bar_0'.i18n),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                  NavigationRailDestination(
+                    icon: const Icon(Icons.abc),
+                    label: Text('vertical_tab_bar_1'.i18n),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                  NavigationRailDestination(
+                    icon: const Icon(Icons.history),
+                    label: Text('vertical_tab_bar_2'.i18n),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                  NavigationRailDestination(
+                    icon: const Icon(Icons.layers),
+                    label: Text('design_settings'.i18n),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                  NavigationRailDestination(
+                    icon: const Icon(Icons.image),
+                    label: Text('image_settings'.i18n),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                  NavigationRailDestination(
+                    icon: const Icon(Icons.settings),
+                    label: Text('project_settings'.i18n),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                ],
+                labelType: NavigationRailLabelType.all,
+                selectedIndex: ref.watch(sideTabProvider),
+                onDestinationSelected: (int index) {
+                  switch (index) {
+                    case 3:
                       ref
                           .read(changeTabProvider.notifier)
                           .changePageString('viewDesignSetting', context);
-                    },
-                    icon: const Icon(Icons.layers),
-                  ),
-                  IconButton(
-                    padding: EdgeInsets.zero,
-                    onPressed: () {
+                      break;
+                    case 4:
                       ref
                           .read(changeTabProvider.notifier)
                           .changePageString('viewSource', context);
-                    },
-                    icon: const Icon(Icons.image),
-                  ),
-                  IconButton(
-                    padding: EdgeInsets.zero,
-                    onPressed: () {
+                      break;
+                    case 5:
                       ref
                           .read(changeTabProvider.notifier)
                           .changePageString('viewProjectSetting', context);
-                    },
-                    icon: const Icon(Icons.settings),
-                  ),
-                ],
+                      break;
+                    default:
+                      if(ref.watch(sideTabProvider) == index){
+                        ref.read(sideTabProvider.notifier).state = null;
+                      }else{
+                        ref.read(sideTabProvider.notifier).state = index;
+                      }
+                  }
+                },
               ),
             ),
             if (ref.watch(sideTabProvider) != null)

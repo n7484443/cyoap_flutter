@@ -3,7 +3,6 @@ import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/preset/view_preset.dart';
-import 'package:cyoap_flutter/view/util/view_vertical_tabbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -169,14 +168,29 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        VerticalTabBar(
-          tabList: ['general'.i18n, 'outline'.i18n, 'inner'.i18n].toList(),
-          isUnable: false,
-          currentIndex: ref.watch(choiceNodePresetCurrentTabProvider),
-          onChange: (index) {
-            ref.read(choiceNodePresetCurrentTabProvider.notifier).state =
-                index!;
+        NavigationRail(
+          destinations: [
+            NavigationRailDestination(
+              icon: const Icon(Icons.settings),
+              label: Text('general'.i18n),
+              padding: const EdgeInsets.symmetric(vertical: 8),
+            ),
+            NavigationRailDestination(
+              icon: const Icon(Icons.check_box_outline_blank),
+              label: Text('outline'.i18n),
+              padding: const EdgeInsets.symmetric(vertical: 8),
+            ),
+            NavigationRailDestination(
+              icon: const Icon(Icons.square_rounded),
+              label: Text('inner'.i18n),
+              padding: const EdgeInsets.symmetric(vertical: 8),
+            ),
+          ],
+          selectedIndex: ref.watch(choiceNodePresetCurrentTabProvider),
+          onDestinationSelected: (int index) {
+            ref.read(choiceNodePresetCurrentTabProvider.notifier).state = index;
           },
+          labelType: NavigationRailLabelType.all,
         ),
         const SizedBox(
           width: 8,
