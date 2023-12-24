@@ -27,6 +27,7 @@ import 'model/device_preference.dart';
 
 class ConstList {
   static const Duration debounceDuration = Duration(milliseconds: 50);
+  static const Duration durationAnimation = Duration(milliseconds: 200);
   static const double appBarSize = 38.0;
   static const double elevation = 6.0;
   static const double padding = 8.0;

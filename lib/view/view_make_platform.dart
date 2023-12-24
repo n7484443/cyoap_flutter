@@ -170,20 +170,22 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
                           .changePageString('viewProjectSetting', context);
                       break;
                     default:
-                      if(ref.watch(sideTabProvider) == index){
+                      if (ref.watch(sideTabProvider) == index) {
                         ref.read(sideTabProvider.notifier).state = null;
-                      }else{
+                      } else {
                         ref.read(sideTabProvider.notifier).state = index;
                       }
                   }
                 },
               ),
             ),
-            if (ref.watch(sideTabProvider) != null)
-              const SizedBox(
-                width: 250,
-                child: ViewEditDrawer(),
+            AnimatedSize(
+              duration: ConstList.durationAnimation,
+              child: SizedBox(
+                width: ref.watch(sideTabProvider) == null ? 0 : 250,
+                child: const ViewEditDrawer(),
               ),
+            ),
             Flexible(
               child: Stack(
                 children: [

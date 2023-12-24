@@ -25,6 +25,8 @@
 * Windows 창 최소 크기 설정
 ### 4.4.7
 * vertical tabbar의 가독성 문제로 navigation rail 로 변경
+### 4.4.8
+* 좌측 패널 애니메이션 추가
 
 # 4.3.0
 * 선택 시 색상 변경 추가
