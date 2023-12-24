@@ -28,6 +28,7 @@ class AbstractPlatform extends PlayablePlatform {
       'stringImageName': stringImageName,
       'globalSetting': globalSetting.map((e) => [e.$1, e.$2.toJson()]).toList(),
       'version': ConstList.version,
+      'fileVersion': super.fileVersion,
     };
     out.addAll(designSetting.toJson());
     return out;
