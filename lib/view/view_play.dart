@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../util/custom_snackbar.dart';
 import '../viewModel/vm_play.dart';
 import '../viewModel/vm_snackbar.dart';
 
@@ -72,12 +73,22 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               IconButton(
-                  onPressed: () =>
-                      ref.read(playDataProvider.notifier).savePlayData(),
+                  onPressed: () async {
+                    var status = await ref
+                        .read(playDataProvider.notifier)
+                        .savePlayData();
+                    showSnackbar(context, status);
+                  },
                   icon: const Icon(Icons.save)),
               IconButton(
-                  onPressed: () =>
-                      ref.read(playDataProvider.notifier).loadPlayData(),
+                  onPressed: () async {
+                    var status = await ref
+                        .read(playDataProvider.notifier)
+                        .loadPlayData();
+                    if (status != null) {
+                      showSnackbar(context, status);
+                    }
+                  },
                   icon: const Icon(Icons.file_upload_outlined)),
             ],
           ),

@@ -340,7 +340,7 @@ class NodeDivider extends ConsumerWidget {
           Visibility(
             visible: lineOption.maxSelect != -1,
             child: Text(
-              'lineSetting_tooltip_1'.fill([lineOption.maxSelect]),
+              'lineSetting_tooltip_1'.i18n.fill([lineOption.maxSelect]),
               style: ConstList.getFont("notoSans").copyWith(
                 fontSize: 18.0,
                 color: getColorButton(),

@@ -355,11 +355,38 @@ extension Localization on String {
           'project_variable': '프로젝트 변수',
           'filter': '필터',
         }
+      } +
+      const {
+        //error message
+        "en": {
+          'no_file_selected': 'No file selected.\n Please select a file.',
+          'failed_load_project_version':
+              'Failed to open project.\nCheck the version.\nfile version : %i\nCYOAP version : %i',
+          'failed_load_project_non_exist':
+              'Failed to open project.\nFile or directory does not exist.',
+          'cyoap_error': 'Error due to cyoap. Please report this error.',
+          'save_web': 'Start downloading file. Wait a moment.',
+          'save_non_web': 'Saved file/directory to %s.',
+          'save_successfully': 'Saved successfully.',
+        },
+        "ko": {
+          'no_file_selected': '선택된 파일이 없습니다.\n파일을 선택해주세요.',
+          'failed_load_project_version':
+              '프로젝트를 여는데 실패하였습니다.\n 버전을 확인해주세요.\n파일 버전 : %i\nCYOAP 버전 : %i',
+          'failed_load_project_non_exist':
+              '프로젝트를 여는데 실패하였습니다.\n 파일 혹은 디렉토리가 없습니다.',
+          'cyoap_error': 'CYOAP 에러. 이 에러를 보고해주세요.',
+          'save_web': '다운로드를 시작하였습니다. 조금만 기다리세요.',
+          'save_non_web': '%s 로 파일/폴더를 저장하였습니다.',
+          'save_successfully': '저장하였습니다.',
+        }
       };
 
   String get i18n {
     return localize(this, _t);
   }
 
+  //%i : int
+  //%s : String
   String fill(List<Object> params) => localizeFill(this, params);
 }

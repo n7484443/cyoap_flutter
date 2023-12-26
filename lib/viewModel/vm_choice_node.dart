@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:cyoap_core/choiceNode/choice.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
-import 'package:cyoap_core/choiceNode/selectable_status.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/viewModel/preset/vm_choice_node_preset.dart';
@@ -109,11 +108,6 @@ final contentsQuillProvider =
 final nodeModeProvider = Provider.family.autoDispose<ChoiceNodeMode, Pos>(
     (ref, pos) => ref.watch(choiceNodeProvider(pos)).node!.choiceNodeMode);
 
-final choiceNodePlayStatusProvider =
-    Provider.family.autoDispose<SelectableStatus, Pos>((ref, pos) {
-  return ref.watch(choiceNodeProvider(pos)).node!.selectableStatus;
-});
-
 final choiceNodeSelectProvider = StateNotifierProvider.family
     .autoDispose<ChoiceNodeSelectNotifier, int, Pos>(
         (ref, pos) => ChoiceNodeSelectNotifier(ref, pos));
@@ -150,12 +144,9 @@ final opacityProvider = Provider.family.autoDispose<double, Pos>((ref, pos) {
   if (node == null) return 0;
   if (isEditable) return 1;
   if (node.choiceNodeMode == ChoiceNodeMode.onlyCode) return 0;
-  if (node.isExecutable()) return 1;
-  var status = ref.watch(choiceNodePlayStatusProvider(pos));
-  if (status.isHide()) return 0;
-  if (status.isClosed()) return 0.4;
-  if (!node.checkParentClickable(first: true)) return 0.4;
-  return 1;
+  if (node.isHide()) return 0;
+  if (node.isOpen()) return 1;
+  return 0.4;
 });
 
 class RandomProvider extends StateNotifier<int> {

@@ -1,6 +1,5 @@
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
-import 'package:cyoap_core/choiceNode/selectable_status.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
@@ -79,12 +78,12 @@ void main() {
             parentPos1, (i) => ViewChoiceNode(parentPos1.addLast(i))),
       ),
     ));
-    getPlatform.getChoiceNode(pos1_0)?.choiceNodeOption =
-        ChoiceNodeOption(isOccupySpace: true);
-    getPlatform.getChoiceNode(pos1_0)?.selectableStatus = SelectableStatus.hide;
-    getPlatform.getChoiceNode(pos1_1)?.choiceNodeOption =
-        ChoiceNodeOption(isOccupySpace: true);
-    getPlatform.getChoiceNode(pos1_1)?.selectableStatus = SelectableStatus.hide;
+    var node1 = getPlatform.getChoiceNode(pos1_0)!;
+    var node2 = getPlatform.getChoiceNode(pos1_1)!;
+    node1.choiceNodeOption = ChoiceNodeOption(isOccupySpace: true);
+    node1.selectableStatus = node1.selectableStatus.copyWith(isHide: true);
+    node2.choiceNodeOption = ChoiceNodeOption(isOccupySpace: true);
+    node2.selectableStatus = node2.selectableStatus.copyWith(isHide: true);
     expect(find.byType(Expanded), findsNWidgets(3));
   });
   testWidgets('OccupySpaceFalse', (WidgetTester tester) async {
@@ -95,12 +94,12 @@ void main() {
             parentPos1, (i) => ViewChoiceNode(parentPos1.addLast(i))),
       ),
     ));
-    getPlatform.getChoiceNode(pos1_0)?.choiceNodeOption =
-        ChoiceNodeOption(isOccupySpace: false);
-    getPlatform.getChoiceNode(pos1_0)?.selectableStatus = SelectableStatus.hide;
-    getPlatform.getChoiceNode(pos1_1)?.choiceNodeOption =
-        ChoiceNodeOption(isOccupySpace: false);
-    getPlatform.getChoiceNode(pos1_1)?.selectableStatus = SelectableStatus.hide;
+    var node1 = getPlatform.getChoiceNode(pos1_0)!;
+    var node2 = getPlatform.getChoiceNode(pos1_1)!;
+    node1.choiceNodeOption = ChoiceNodeOption(isOccupySpace: false);
+    node1.selectableStatus = node1.selectableStatus.copyWith(isHide: true);
+    node2.choiceNodeOption = ChoiceNodeOption(isOccupySpace: false);
+    node2.selectableStatus = node2.selectableStatus.copyWith(isHide: true);
     expect(find.byType(Expanded), findsNothing);
   });
 }

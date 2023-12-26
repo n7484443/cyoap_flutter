@@ -1,5 +1,6 @@
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/i18n.dart';
+import 'package:cyoap_flutter/util/custom_snackbar.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
 import 'package:cyoap_flutter/view/view_make_platform.dart';
@@ -210,21 +211,21 @@ class ViewSaveIcons extends ConsumerWidget {
     return PopupMenuButton(
       icon: const Icon(Icons.save),
       tooltip: 'save_option'.i18n,
-      onSelected: (int selected) {
+      onSelected: (int selected) async{
         showDialog(
             context: context,
             builder: (BuildContext context) => ViewSaveDialog(selected != 0),
             barrierDismissible: false);
         switch (selected) {
           case 0:
-            savePlatform(ref, false)
-                .then((value) => Navigator.of(context).pop());
+            await savePlatform(ref, false);
             break;
           case 1:
-            savePlatform(ref, true)
-                .then((value) => Navigator.of(context).pop());
+            await savePlatform(ref, true);
             break;
         }
+        showSnackbar(context, 'save_successfully'.i18n);
+        Navigator.of(context).pop();
       },
       itemBuilder: (BuildContext context) {
         return [

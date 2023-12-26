@@ -386,36 +386,47 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
     }
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(
-          width: 20,
-          child: IconButton(
-            padding: EdgeInsets.zero,
-            icon: const Icon(Icons.chevron_left),
-            onPressed: () {
-              if (!isEditable) {
-                ref.read(choiceNodeSelectProvider(pos).notifier).select(-1);
-              }
-            },
+        InkWell(
+          child: Container(
+            width: 64,
+            height: 36,
+            decoration: BoxDecoration(
+              color: Colors.black12,
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: const Icon(Icons.chevron_left, size: 16, color: Colors.black,),
           ),
+          onTap: (){
+            if (!isEditable) {
+              ref.read(choiceNodeSelectProvider(pos).notifier).select(-1);
+            }
+          },
         ),
         Text(
           ref.watch(choiceNodeSelectProvider(pos)).toString(),
-          style: Theme.of(context).textTheme.headlineSmall,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: Colors.black,
+          ),
           textAlign: TextAlign.center,
         ),
-        SizedBox(
-          width: 20,
-          child: IconButton(
-            padding: EdgeInsets.zero,
-            icon: const Icon(Icons.chevron_right),
-            onPressed: () {
-              if (!isEditable) {
-                ref.read(choiceNodeSelectProvider(pos).notifier).select(1);
-              }
-            },
+        InkWell(
+          child: Container(
+            width: 64,
+            height: 36,
+            decoration: BoxDecoration(
+              color: Colors.black12,
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: const Icon(Icons.chevron_right, size: 16, color: Colors.black,),
           ),
-        ),
+          onTap: (){
+            if (!isEditable) {
+              ref.read(choiceNodeSelectProvider(pos).notifier).select(1);
+            }
+          },
+        )
       ],
     );
   }

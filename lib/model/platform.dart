@@ -4,7 +4,6 @@ import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/grammar/value_type.dart';
 import 'package:cyoap_core/playable_platform.dart';
-import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 
 const int designSamplePosition = -100;
@@ -27,8 +26,7 @@ class AbstractPlatform extends PlayablePlatform {
     Map<String, dynamic> out = {
       'stringImageName': stringImageName,
       'globalSetting': globalSetting.map((e) => [e.$1, e.$2.toJson()]).toList(),
-      'version': ConstList.version,
-      'fileVersion': super.fileVersion,
+      'currentFileVersion': super.currentFileVersion,
     };
     out.addAll(designSetting.toJson());
     return out;
@@ -122,8 +120,8 @@ class AbstractPlatform extends PlayablePlatform {
   void updateNodePresetNameAll(String before, String after) {
     for (var line in lineSettings) {
       for (var choice in line.children) {
-        (choice as ChoiceNode).doAllChild((node) {
-          if (node.choiceNodeOption.presetName == before) {
+        (choice as ChoiceNode).recursiveFunction((node) {
+          if ((node as ChoiceNode).choiceNodeOption.presetName == before) {
             node.choiceNodeOption =
                 node.choiceNodeOption.copyWith(presetName: after);
           }

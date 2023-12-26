@@ -213,7 +213,7 @@ class ViewWrapCustom extends ConsumerWidget {
     List<Widget> subWidget = List<Widget>.empty(growable: true);
     for (int i = 0; i < children.length; i++) {
       var child = children[i] as ChoiceNode;
-      if (child.isHide) {
+      if (child.isHide()) {
         continue;
       }
       int size = child.width == 0 ? maxSize : min(child.width, maxSize);

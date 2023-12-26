@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
+import 'package:cyoap_flutter/util/custom_snackbar.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +12,7 @@ import 'package:i18n_extension/i18n_widget.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../model/device_preference.dart';
+import '../model/platform_file_system.dart';
 import '../model/platform_system.dart';
 import '../viewModel/vm_global_setting.dart';
 import '../viewModel/vm_snackbar.dart';
@@ -219,23 +222,32 @@ class SelectMode extends ConsumerWidget {
       children: [
         Expanded(
           child: InkWell(
-            onTap: () {
-              ref
-                  .read(pathListProvider.notifier)
-                  .openProject(
-                    () => showDialog(
-                      barrierDismissible: false,
-                      context: context,
-                      builder: (context) => const ViewLoadingDialog(),
-                    ),
-                  )
-                  .then((value) {
-                if (value) {
+            onTap: () async {
+              showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (context) => const ViewLoadingDialog(),
+              );
+              LoadProjectState loadState = await ref.read(pathListProvider.notifier).openProject();
+              Navigator.pop(context);
+              switch(loadState.state) {
+                case ProjectState.success:
                   getPlatformFileSystem.isEditable = false;
                   Navigator.of(context).pushReplacementNamed('/viewPlay');
                   ref.read(snackBarErrorProvider.notifier).update();
-                }
-              });
+                  break;
+                case ProjectState.nonExist:
+                  showSnackbar(context, 'failed_load_project_non_exist'.i18n, autoHide: false);
+                  break;
+                case ProjectState.fail:
+                  print(loadState.version!);
+                  showSnackbar(context, 'failed_load_project_version'.i18n.fill([
+                    loadState.version!, fileVersion]), autoHide: false);
+                  break;
+                default:
+                  showSnackbar(context, 'failed_load_project_cyoap_error'.i18n, autoHide: false);
+                  break;
+              }
             },
             child: Center(
               child: Text(
@@ -248,22 +260,31 @@ class SelectMode extends ConsumerWidget {
         ),
         Expanded(
           child: InkWell(
-            onTap: () {
-              ref
-                  .read(pathListProvider.notifier)
-                  .openProject(
-                    () => showDialog(
-                      barrierDismissible: false,
-                      context: context,
-                      builder: (context) => const ViewLoadingDialog(),
-                    ),
-                  )
-                  .then((value) {
-                if (value) {
+            onTap: () async {
+              showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (context) => const ViewLoadingDialog(),
+              );
+              LoadProjectState loadState = await ref.read(pathListProvider.notifier).openProject();
+              Navigator.pop(context);
+              switch(loadState.state) {
+                case ProjectState.success:
                   getPlatformFileSystem.isEditable = true;
                   Navigator.of(context).pushReplacementNamed('/viewMake');
-                }
-              });
+                  break;
+                case ProjectState.nonExist:
+                  showSnackbar(context, 'failed_load_project_non_exist'.i18n, autoHide: false);
+                  break;
+                case ProjectState.fail:
+                  print(loadState.version!);
+                  showSnackbar(context, 'failed_load_project_version'.i18n.fill([
+                    loadState.version!, fileVersion]), autoHide: false);
+                  break;
+                default:
+                  showSnackbar(context, 'failed_load_project_cyoap_error'.i18n, autoHide: false);
+                  break;
+              }
             },
             child: Center(
               child: Text(

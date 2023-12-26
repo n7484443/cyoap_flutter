@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../main.dart';
 import '../model/device_preference.dart';
+import '../model/platform_file_system.dart';
 import '../model/platform_system.dart';
 import '../util/check_update.dart';
 
@@ -70,43 +71,40 @@ class PathListNotifier extends StateNotifier<List<String>> {
     return 0;
   }
 
-  Future<bool> openProject(void Function() dialog) async {
+  Future<LoadProjectState> openProject() async {
     getPlatformFileSystem.clear();
     var index = ref.read(pathListSelectedProvider);
     if (ConstList.isWeb()) {
-      PlatformSystem().openPlatformZipForWeb(ref.watch(pathListFileProvider));
-      return true;
+      return await PlatformSystem()
+          .openPlatformZipForWeb(ref.watch(pathListFileProvider));
     }
     if (index == -1 || index >= state.length) {
-      return false;
+      return LoadProjectState(ProjectState.cyoapError);
     }
     var path = state[index];
+
     if (path.endsWith('.zip')) {
       var file = File(path);
       if (!await file.exists()) {
         state.removeAt(index);
         state = [...state];
-        updateFromState();
-        return false;
+        await updateFromState();
+        return LoadProjectState(ProjectState.nonExist);
       }
-      await PlatformSystem().openPlatformZip(file);
-      return true;
-    }
-    if (path.endsWith('.json')) {
-      dialog();
+      return await PlatformSystem().openPlatformZip(file);
+    } else if (path.endsWith('.json')) {
       var file = File(path);
       if (!await file.exists()) {
-        return false;
+        return LoadProjectState(ProjectState.nonExist);
       }
-      await PlatformSystem().openPlatformJson(file, ref);
-      return true;
+      return await PlatformSystem().openPlatformJson(file, ref);
+    } else {
+      var dir = Directory(path);
+      if (!await dir.exists()) {
+        return LoadProjectState(ProjectState.nonExist);
+      }
+      return await PlatformSystem().openPlatformFolder(path);
     }
-    var dir = Directory(path);
-    if (!await dir.exists()) {
-      return false;
-    }
-    await PlatformSystem().openPlatformFolder(path);
-    return true;
   }
 
   Future<void> removeFrequentPath(

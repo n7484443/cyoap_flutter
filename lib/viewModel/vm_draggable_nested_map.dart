@@ -2,7 +2,6 @@ import 'package:cyoap_core/choiceNode/choice.dart';
 import 'package:cyoap_core/choiceNode/choice_line.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
-import 'package:cyoap_core/choiceNode/selectable_status.dart';
 import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_core/preset/line_preset.dart';
 import 'package:cyoap_core/variable_db.dart';
@@ -164,8 +163,7 @@ final lineProvider = Provider.autoDispose
     .family<ChoiceLine?, int>((ref, pos) => getPlatform.getLineSetting(pos));
 
 final lineVisibleProvider = Provider.autoDispose.family<bool?, Pos>(
-    (ref, pos) =>
-        ref.watch(lineProvider(pos.first))?.selectableStatus.isOpen());
+    (ref, pos) => ref.watch(lineProvider(pos.first))?.isOpen());
 
 final _childrenProvider =
     Provider.autoDispose.family<List<Choice>?, Pos>((ref, pos) {
@@ -218,7 +216,7 @@ final lineListProvider = Provider.autoDispose<List<int>>((ref) {
     return getPlatform.lineSettings.map((e) => e.currentPos).toList();
   }
   return getPlatform.lineSettings
-      .where((e) => e.selectableStatus.isOpen())
+      .where((e) => e.isOpen())
       .map((e) => e.currentPos)
       .toList();
 });
