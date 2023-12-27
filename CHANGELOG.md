@@ -27,6 +27,8 @@
 * vertical tabbar의 가독성 문제로 navigation rail 로 변경
 * 오류 전송 중 fatal error가 오히려 발생하는 문제 수정
 * 좌측 패널 애니메이션 추가
+### 4.4.8
+* icc 변환 중 rows가 비어있을 때 error 해결
 
 # 4.3.0
 * 선택 시 색상 변경 추가
