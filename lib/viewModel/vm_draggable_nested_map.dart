@@ -111,7 +111,7 @@ class VMDraggableNestedMap {
       var targetNode = getPlatform.getChoiceNode(target);
       if (targetNode == null) {
         var generableParser =
-            getPlatform.getGenerableParserAndPosition(target.removeLast());
+            getPlatform.getChoice(target.removeLast());
         if (generableParser == null) {
           getPlatform.removeData(input);
           getPlatform.addData(target, inputNode);

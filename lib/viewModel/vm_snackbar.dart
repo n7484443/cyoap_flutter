@@ -10,10 +10,7 @@ class SnackBarErrorNotifier extends StateNotifier<List<String>> {
   SnackBarErrorNotifier() : super([]);
 
   void update() {
-    if (Analyser().errorList.isNotEmpty) {
-      state = [...state, ...Analyser().errorList];
-      Analyser().clearError();
-    }
+    state = [...Analyser().errorList];
   }
 
   void clear() {
