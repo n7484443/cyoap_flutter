@@ -25,14 +25,14 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children:
-                ref.watch(snackBarErrorProvider).map((e) => Text(e)).toList(),
+                ref.read(snackBarErrorProvider).map((e) => Text(e)).toList(),
           ),
         ),
         action: SnackBarAction(
           label: 'copy_clipboard'.i18n,
           onPressed: () {
             Clipboard.setData(ClipboardData(
-                text: ref.watch(snackBarErrorProvider).fold(
+                text: ref.read(snackBarErrorProvider).fold(
                       "",
                       (previousValue, element) => "$previousValue \n $element",
                     )));
