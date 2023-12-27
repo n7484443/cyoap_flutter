@@ -22,8 +22,11 @@ class IccProjectParser {
       String input, Ref ref) async {
     Map<String, dynamic> parsed = jsonDecode(input);
     Map<String, Uint8List> imageList = {};
-    var rows = parsed['rows'] as List;
     var platform = AbstractPlatform();
+    if(parsed['rows'] == null){
+      return Tuple2(platform, imageList);
+    }
+    var rows = parsed['rows'] as List;
     List<ChoiceNodeDesignPreset> nodePresets = [];
     var styles = parsed['styling'];
 
