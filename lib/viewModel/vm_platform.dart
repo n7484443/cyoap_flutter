@@ -30,7 +30,7 @@ class SaveStopWatch extends StateNotifier<String> {
 Future<void> savePlatform(WidgetRef ref, bool asZip) async {
   ref.read(stopWatchProvider.notifier).start();
 
-  getPlatform.compress();
+  getPlatform.checkDataCorrect();
   getPlatform.generateRecursiveParser();
 
   await getPlatformFileSystem.save(asZip);

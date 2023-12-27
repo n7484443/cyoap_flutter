@@ -520,7 +520,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
     Widget? child;
     if (pos.isValid) {
       if (isEditable) {
-        child = ViewWrapCustomReorderable(
+        child = ViewWrapCustomReorder(
           pos,
           maxSize: min(ref.watch(maximumSizeProvider), node.getMaxSize(true)),
         );

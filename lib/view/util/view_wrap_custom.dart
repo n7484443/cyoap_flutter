@@ -17,12 +17,14 @@ import '../../viewModel/vm_design_setting.dart';
 import '../view_choice_node.dart';
 import '../view_draggable_nested_map.dart';
 
-class ViewWrapCustomReorderable extends ConsumerWidget {
+const double defaultHeight = 60.0;
+
+class ViewWrapCustomReorder extends ConsumerWidget {
   final Pos parentPos;
   final int maxSize;
   final bool isInner;
 
-  ViewWrapCustomReorderable(this.parentPos,
+  ViewWrapCustomReorder(this.parentPos,
       {this.maxSize = defaultMaxSize, this.isInner = true, super.key}) {
     if (ConstList.isMobile()) {
       mul = const Tuple2(7, 4);
@@ -56,8 +58,8 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<Widget> outputWidget = List<Widget>.empty(growable: true);
-    var children = ref.watch(childrenChangeProvider(parentPos));
-    if (children.isEmpty) {
+    var children = ref.watch(getChildrenProvider(pos: parentPos));
+    if (children.isEmpty && isInner) {
       return SizedBox(
           height: nodeBaseHeight / 6,
           child: NodeDragTarget(parentPos.addLast(0)));
@@ -139,16 +141,17 @@ class ViewWrapCustomReorderable extends ConsumerWidget {
     } else {
       check = true;
     }
-    if (subWidget.isNotEmpty) {
-      outputWidget.add(
-        IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: subWidget,
-          ),
-        ),
-      );
+    if(subWidget.isEmpty){
+      addBuildDraggable(outputWidget, 0, horizontal: true);
     }
+    outputWidget.add(
+      IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: subWidget,
+        ),
+      ),
+    );
     if (check) {
       outputWidget.add(
         Stack(
@@ -205,9 +208,11 @@ class ViewWrapCustom extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<Widget> outputWidget = List<Widget>.empty(growable: true);
-    var children = ref.watch(childrenChangeProvider(parentPos));
-    if (children.isEmpty) {
-      return const SizedBox.shrink();
+    var children = ref.watch(getChildrenProvider(pos: parentPos));
+    if (children.isEmpty && isInner) {
+      return SizedBox(
+          height: nodeBaseHeight / 6,
+          child: NodeDragTarget(parentPos.addLast(0)));
     }
     int stack = 0;
     List<Widget> subWidget = List<Widget>.empty(growable: true);
@@ -264,6 +269,8 @@ class ViewWrapCustom extends ConsumerWidget {
           ),
         );
       }
+    } else {
+      outputWidget.add(const SizedBox.square(dimension: defaultHeight));
     }
     if (isInner) {
       return Column(

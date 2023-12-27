@@ -179,9 +179,11 @@ extension Localization on String {
           'variable_show_hidden': 'Hidden variables',
 
           'unsaved': 'There is something unsaved. Do you want to save it?',
-          'warning': '!Warning!',
-          'warning_message':
+          'warning': 'Warning',
+          'warning_message_project_delete':
               'This is a complete deletion of the selected project and cannot be recovered. Are you sure you want to delete it?',
+          'warning_message_line_delete':
+              'This is a complete deletion of the selected line and cannot be recovered. Are you sure you want to delete it?',
 
           'add_image': 'Upload image',
           'add_image_description': 'Drop image here or',
@@ -281,9 +283,11 @@ extension Localization on String {
           'variable_show_hidden': '숨겨진 변수',
 
           'unsaved': '저장되지 않은 내용이 있습니다. 저장하시겠습니까?',
-          'warning': '!경고!',
-          'warning_message':
+          'warning': '경고',
+          'warning_message_project_delete':
               '이것은 선택된 프로젝트를 완전히 삭제하는 것이며, 복구할 수 없습니다. 삭제하시겠습니까?',
+          'warning_message_line_delete':
+              '이것은 선택된 라인을 완전히 삭제하는 것이며, 복구할 수 없습니다. 삭제하시겠습니까?',
 
           'add_image': '이미지 추가',
           'add_image_description': '이미지를 추가하려면 드래그하세요. 혹은, ',

@@ -45,14 +45,24 @@ class ViewBackDialog extends StatelessWidget {
 class ViewWarningDialog extends StatelessWidget {
   final void Function()? cancelFunction;
   final void Function()? acceptFunction;
+  final String content;
   const ViewWarningDialog(
-      {this.acceptFunction, this.cancelFunction, super.key});
+      {this.acceptFunction, this.cancelFunction, required this.content, super.key});
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Center(child: Text('warning'.i18n)),
-      content: Text('warning_message'.i18n),
+      title: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.warning),
+            Text('warning'.i18n),
+            const Icon(Icons.warning),
+          ],
+        ),
+      ),
+      content: Text(content),
       actionsAlignment: MainAxisAlignment.spaceAround,
       actions: [
         ElevatedButton(

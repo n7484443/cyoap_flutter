@@ -72,6 +72,11 @@ class AbstractPlatform extends PlayablePlatform {
     }
     checkDataCorrect();
   }
+  
+  void removeChoiceLine(int y) {
+    lineSettings.removeAt(y);
+    checkDataCorrect();
+  }
 
   @override
   Choice? getNode(Pos pos) {
@@ -91,11 +96,6 @@ class AbstractPlatform extends PlayablePlatform {
     node.parent!.removeChildren(node);
     checkDataCorrect();
     return node;
-  }
-
-  void compress() {
-    lineSettings.removeWhere((item) => item.children.isEmpty);
-    checkDataCorrect();
   }
 
   void checkDataCorrect() {

@@ -23,7 +23,6 @@ const int copiedPositioned = -3;
 void refreshChild(Ref ref, Choice node) {
   ref.invalidate(choiceNodeProvider(node.pos));
   ref.invalidate(opacityProvider(node.pos));
-  ref.read(childrenChangeProvider(node.pos).notifier).update();
   for (var child in node.children) {
     refreshChild(ref, child);
   }

@@ -8,6 +8,7 @@ import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
+import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/util/view_circle_button.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
@@ -54,15 +55,22 @@ class NodeDragTarget extends ConsumerWidget {
             ref.read(vmDraggableNestedMapProvider).changeData(drag, pos);
           } else if (drag.last == removedPositioned) {
             ref.read(vmDraggableNestedMapProvider).addData(
-                pos, ref.read(removedChoiceNodeProvider).choiceNode!.clone());
+                pos, ref
+                .read(removedChoiceNodeProvider)
+                .choiceNode!
+                .clone());
           } else if (drag.last == copiedPositioned) {
             ref.read(vmDraggableNestedMapProvider).addData(
-                pos, ref.read(copiedChoiceNodeProvider).choiceNode!.clone());
+                pos, ref
+                .read(copiedChoiceNodeProvider)
+                .choiceNode!
+                .clone());
           } else if (pos.equalExceptLast(drag) &&
               (pos.data.last - 1) >= drag.last) {
             ref
                 .read(vmDraggableNestedMapProvider)
-                .changeData(drag, Pos(data: List.from(pos.data)..last -= 1));
+                .changeData(drag, Pos(data: List.from(pos.data)
+              ..last -= 1));
           } else {
             ref.read(vmDraggableNestedMapProvider).changeData(drag, pos);
           }
@@ -304,26 +312,45 @@ class NodeDivider extends ConsumerWidget {
                     dimension: 5,
                   ),
                   CircleButton(
-                    onPressed: () {
-                      showDialog<Tuple2<String, String>>(
-                              context: context,
-                              builder: (_) => NodeDividerDialog(y),
-                              barrierDismissible: false)
-                          .then((value) {
-                        ref.invalidate(lineProvider(y));
-                        getPlatform
-                            .getLineSetting(y)
-                            ?.recursiveStatus
-                            .conditionVisibleString = value!.item1;
-                        ref.read(lineOptionProvider(y).notifier).update(
-                            (state) => state.copyWith(name: value!.item2));
-                        ref
-                            .read(draggableNestedMapChangedProvider.notifier)
-                            .state = true;
-                      });
+                    onPressed: () async {
+                      var value = await showDialog<Tuple2<String, String>>(
+                          context: context,
+                          builder: (_) => NodeDividerDialog(y),
+                          barrierDismissible: false);
+                      getPlatform
+                          .getLineSetting(y)
+                          ?.recursiveStatus
+                          .conditionVisibleString = value!.item1;
+                      ref.read(lineOptionProvider(y).notifier).update(
+                          (state) => state.copyWith(name: value!.item2));
+                      ref
+                          .read(draggableNestedMapChangedProvider.notifier)
+                          .state = true;
+                      ref.invalidate(lineProvider(y));
                     },
                     child: const Icon(
                       Icons.settings,
+                    ),
+                  ),
+                  CircleButton(
+                    onPressed: () async {
+                      await showDialog<bool?>(
+                          context: context,
+                          builder: (_) => ViewWarningDialog(
+                            acceptFunction: () {
+                              getPlatform.removeChoiceLine(y);
+                              ref
+                                  .read(draggableNestedMapChangedProvider.notifier)
+                                  .state = true;
+                              ref.read(refreshPageProvider);
+                            },
+                            cancelFunction: (){},
+                            content: 'warning_message_line_delete'.i18n,
+                          ),
+                          barrierDismissible: false);
+                    },
+                    child: const Icon(
+                      Icons.delete,
                     ),
                   ),
                 ],
@@ -455,32 +482,7 @@ class _NestedMapState extends ConsumerState<NestedMap> {
               child: SizedBox.shrink(),
             );
           }
-          if (ref.watch(childrenChangeProvider(pos)).isEmpty) {
-            return SliverToBoxAdapter(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    child: NodeDragTarget(
-                      pos.addLast(0),
-                      isHorizontal: true,
-                    ),
-                  ),
-                  Card(
-                    child: CircleButton(
-                      onPressed: () {
-                        ref.read(vmDraggableNestedMapProvider).addData(
-                            pos.addLast(0), ChoiceNode.empty()..width = 3);
-                      },
-                      tooltip: 'create_tooltip'.i18n,
-                      child: const Icon(Icons.add),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
-          return ViewWrapCustomReorderable(
+          return ViewWrapCustomReorder(
             pos,
             isInner: false,
             maxSize: ref.watch(maximumSizeProvider),
@@ -505,9 +507,6 @@ class _NestedMapState extends ConsumerState<NestedMap> {
       for (int index = 0; index < lineList.length; index++) {
         var y = lineList[index];
         var pos = Pos(data: [y]);
-        if (ref.watch(childrenChangeProvider(pos)).isEmpty) {
-          continue;
-        }
         if (ref.watch(lineProvider(y)) != null &&
             !ref.watch(lineVisibleProvider(pos))!) {
           continue;

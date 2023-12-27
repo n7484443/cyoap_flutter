@@ -53,7 +53,6 @@ dependencies:
   url_strategy: ^0.2.0
   path_provider: ^2.0.11
   path: ^1.8.2
-  flutter_riverpod: ^2.3.2
   freezed_annotation: any
   json_annotation: any
   js: ^0.6.7
@@ -68,18 +67,23 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+  flutter_riverpod: ^2.4.9
+  riverpod_annotation: ^2.3.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   freezed: ^2.3.2
   build_runner: ^2.3.3
   json_serializable: ^6.6.0
+  riverpod_generator: ^2.3.9
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.1
+  custom_lint: ^0.5.7
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

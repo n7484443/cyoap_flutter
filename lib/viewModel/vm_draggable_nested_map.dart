@@ -9,8 +9,11 @@ import 'package:cyoap_flutter/viewModel/preset/vm_choice_line_preset.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../model/platform_system.dart';
+
+part 'vm_draggable_nested_map.g.dart';
 
 final draggableNestedMapChangedProvider = StateProvider<bool>((ref) => false);
 
@@ -153,11 +156,14 @@ void refreshLine(Ref ref, int y) {
   ref.invalidate(lineProvider(y));
   ref.invalidate(lineListProvider);
   ref.invalidate(lineVisibleProvider(pos));
-  ref.read(childrenChangeProvider(pos).notifier).update();
   for (var child in ref.read(lineProvider(y))!.children) {
     refreshChild(ref, child);
   }
 }
+
+final refreshPageProvider = Provider.autoDispose<void>((ref) {
+  refreshPage(ref);
+});
 
 final lineProvider = Provider.autoDispose
     .family<ChoiceLine?, int>((ref, pos) => getPlatform.getLineSetting(pos));
@@ -165,28 +171,12 @@ final lineProvider = Provider.autoDispose
 final lineVisibleProvider = Provider.autoDispose.family<bool?, Pos>(
     (ref, pos) => ref.watch(lineProvider(pos.first))?.isOpen());
 
-final _childrenProvider =
-    Provider.autoDispose.family<List<Choice>?, Pos>((ref, pos) {
+@riverpod
+List<Choice> getChildren(GetChildrenRef ref, {required Pos pos}){
   if (pos.length == 1) {
-    return ref.watch(lineProvider(pos.first))?.children;
+    return ref.watch(lineProvider(pos.first))?.children ?? [];
   } else {
-    return ref.watch(choiceNodeProvider(pos)).node?.children;
-  }
-});
-
-final childrenChangeProvider = StateNotifierProvider.autoDispose
-    .family<ChildrenNotifier, List<Choice>, Pos>(
-        (ref, pos) => ChildrenNotifier(ref, pos));
-
-class ChildrenNotifier extends StateNotifier<List<Choice>> {
-  Ref ref;
-  Pos pos;
-
-  ChildrenNotifier(this.ref, this.pos)
-      : super([...(ref.read(_childrenProvider(pos)) ?? [])]);
-
-  void update() {
-    state = [...(ref.read(_childrenProvider(pos)) ?? [])];
+    return ref.watch(choiceNodeProvider(pos)).node?.children ?? [];
   }
 }
 
