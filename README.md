@@ -7,8 +7,6 @@
 
 [cyoap web](https://n7484443.github.io/cyoap_flutter/)
 
-[web 배포용 뷰어](https://github.com/n7484443/cyoap_vue/releases/tag/v0.1.0)
-
 [문법](https://github.com/n7484443/cyoap_core/blob/main/README.md)
 
 ## 목차
@@ -32,4 +30,4 @@
 * 제가 유료로 해야 하는 디지털 인증을 안해서 그렇습니다.
 * 추가정보->실행 하시면 됩니다.
 ## 배포 방법
-dist 폴더를 생성하고, 거기에 프로젝트 압축을 풀거나 폴더 형식이면 그대로 옮기면 됩니다.
+[web 배포용 뷰어](https://github.com/n7484443/cyoap_vue/releases/)을 서버에 올린 뒤, dist 폴더에 프로젝트 내용을 옮기면 됩니다.
