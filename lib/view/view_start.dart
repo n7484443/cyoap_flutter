@@ -199,7 +199,7 @@ class _ViewProjectListState extends ConsumerState<ViewProjectList> {
                           index,
                           () async => await showDialog<bool?>(
                             context: context,
-                            builder: (_) => const ViewWarningDialog(),
+                            builder: (_) => ViewWarningDialog(content: 'warning_message_project_delete'.i18n,),
                           ),
                         );
                   },
