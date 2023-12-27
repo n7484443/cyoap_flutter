@@ -206,7 +206,7 @@ void main() async {
     await Sentry.captureException(details.exception, stackTrace: details.stack);
     if (ConstList.isDesktop()) {
       var f = File(
-          '${Directory.current.path}/error-${DateTime.now().toString()}.log');
+          '${Directory.current.path}\\error-${DateTime.now().toString()}.log');
       await f.writeAsString(
           "${details.exception} \r\n ${details.stack.toString()}");
     }
@@ -216,7 +216,7 @@ void main() async {
       await Sentry.captureException(error, stackTrace: stack);
       if (ConstList.isDesktop()) {
         var f = File(
-            '${Directory.current.path}/error-${DateTime.now().toString()}.log');
+            '${Directory.current.path}\\error-${DateTime.now().toString()}.log');
         await f.writeAsString("$error \r\n $stack");
       }
     }
