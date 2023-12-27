@@ -30,8 +30,9 @@ class ConstList {
   static const Duration durationAnimation = Duration(milliseconds: 200);
   static const double appBarSize = 38.0;
   static const double elevation = 6.0;
-  static const double padding = 8.0;
-  static const double paddingSmall = 4.0;
+  static const double padding = 10.0;
+  static const double paddingHuge = 20.0;
+  static const double paddingSmall = 5.0;
 
   static bool isWeb() {
     return kIsWeb;

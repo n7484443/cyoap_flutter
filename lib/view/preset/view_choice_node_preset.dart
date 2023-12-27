@@ -96,28 +96,33 @@ class ChoiceNodePresetList extends ConsumerWidget {
                               .deleteIndex(index);
                         },
                       ),
+                leading: preset.name == "default"
+                    ? null
+                    : IconButton(
+                        icon: Icon(Icons.drive_file_rename_outline,
+                            size: (IconTheme.of(context).size ?? 18) * 0.8),
+                        onPressed: () async {
+                          var text = await showDialog(
+                              context: context,
+                              builder: (context) {
+                                return PresetRenameDialog(preset.name);
+                              },
+                              barrierDismissible: false);
+                          if (text != null && text.trim().isNotEmpty) {
+                            ref
+                                .read(choiceNodePresetListProvider.notifier)
+                                .rename(index, text.trim());
+                            var pos = const Pos(data: [designSamplePosition]);
+                            ref.invalidate(choiceNodeProvider(pos));
+                          }
+                        },
+                      ),
                 onTap: () {
                   ref
                       .read(currentPresetIndexProvider.notifier)
                       .update((state) => index);
                   var pos = const Pos(data: [designSamplePosition]);
                   ref.invalidate(choiceNodeProvider(pos));
-                },
-                onLongPress: () async {
-                  if (preset.name == "default") return;
-                  var text = await showDialog(
-                      context: context,
-                      builder: (context) {
-                        return PresetRenameDialog(preset.name);
-                      },
-                      barrierDismissible: false);
-                  if (text != null && text.trim().isNotEmpty) {
-                    ref
-                        .read(choiceNodePresetListProvider.notifier)
-                        .rename(index, text.trim());
-                    var pos = const Pos(data: [designSamplePosition]);
-                    ref.invalidate(choiceNodeProvider(pos));
-                  }
                 },
                 selected: index == ref.watch(currentPresetIndexProvider),
               );
@@ -196,7 +201,10 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
           width: 8,
         ),
         Expanded(
-          child: currentChild,
+          child: Padding(
+            padding: const EdgeInsets.all(ConstList.padding),
+            child: currentChild,
+          ),
         ),
       ],
     );
@@ -260,6 +268,17 @@ class _ViewNodeGeneralOptionEditorState
                     ref.watch(choiceNodePresetCurrentEditPaddingProvider),
                 decoration: InputDecoration(labelText: 'padding'.i18n),
               ),
+            ]),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 10,
+              mainAxisExtent: 80,
+              mainAxisSpacing: 2,
+            ),
+          ),
+          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
+          SliverGrid(
+            delegate: SliverChildListDelegate([
               ViewSwitchLabel(
                 () => ref
                     .read(choiceNodePresetListProvider.notifier)
@@ -310,7 +329,17 @@ class _ViewNodeGeneralOptionEditorState
                 disable: preset.imagePosition == 0,
                 label: 'image_left'.i18n,
               ),
-              SizedBox(),
+            ]),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 10,
+              mainAxisExtent: 80,
+              mainAxisSpacing: 2,
+            ),
+          ),
+          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
+          SliverGrid(
+            delegate: SliverChildListDelegate([
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(labelText: 'font_title'.i18n),
                 items: ConstList.textFontList.keys
@@ -346,13 +375,13 @@ class _ViewNodeGeneralOptionEditorState
                 value: preset.mainFont,
               )
             ]),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 3,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
               crossAxisSpacing: 10,
               mainAxisExtent: 80,
               mainAxisSpacing: 2,
             ),
-          )
+          ),
         ],
       ),
     );
@@ -402,6 +431,7 @@ class _ViewNodeOutlineOptionEditorState
               hasAlpha: true,
             ),
           ),
+          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           SliverGrid(
             delegate: SliverChildListDelegate([
               DropdownButtonFormField<OutlineType>(
@@ -438,14 +468,16 @@ class _ViewNodeOutlineOptionEditorState
                 decoration: InputDecoration(labelText: 'outline_width'.i18n),
               ),
             ]),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 3,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
               crossAxisSpacing: 10,
               mainAxisExtent: 60,
               mainAxisSpacing: 2,
             ),
           ),
+          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           const SliverToBoxAdapter(child: Divider()),
+          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           SliverToBoxAdapter(
             child: Row(
               children: [
@@ -480,6 +512,7 @@ class _ViewNodeOutlineOptionEditorState
               ),
             ),
           ),
+          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           SliverOpacity(
             opacity: opacity,
             sliver: SliverGrid(
@@ -522,8 +555,8 @@ class _ViewNodeOutlineOptionEditorState
                   decoration: InputDecoration(labelText: 'outline_width'.i18n),
                 ),
               ]),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 3,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
                 crossAxisSpacing: 10,
                 mainAxisExtent: 60,
                 mainAxisSpacing: 2,
@@ -574,6 +607,7 @@ class _ViewNodeColorOptionEditorState
               },
             ),
           ),
+          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           SliverToBoxAdapter(
             child: Row(
               children: [
@@ -592,6 +626,7 @@ class _ViewNodeColorOptionEditorState
               ],
             ),
           ),
+          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           SliverOpacity(
             opacity: preset.selectColorEnable ? 1.0 : 0.3,
             sliver: SliverToBoxAdapter(

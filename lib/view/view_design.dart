@@ -38,7 +38,7 @@ class ViewDesignSetting extends ConsumerWidget {
           ),
         ),
         body: Padding(
-          padding: const EdgeInsets.all(ConstList.padding),
+          padding: const EdgeInsets.only(top: ConstList.paddingHuge, bottom: ConstList.padding, left: ConstList.padding, right: ConstList.padding),
           child: Column(
             children: [
               Expanded(

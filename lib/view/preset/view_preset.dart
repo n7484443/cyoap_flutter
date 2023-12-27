@@ -112,23 +112,25 @@ class _ViewPresetPositionState extends ConsumerState<ViewPresetPosition> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
-            flex: 2,
+            flex: 7,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Expanded(
                   child: Row(
                     children: [
-                      Expanded(
+                      SizedBox(
+                        width: 90,
                         child: widget.first,
                       ),
+                      const VerticalDivider(width: 2),
                       Expanded(
                         child: widget.second,
                       )
                     ],
                   ),
                 ),
-                const Divider(height: 1),
+                const Divider(height: 2),
                 Padding(
                   padding: const EdgeInsets.all(2.0),
                   child: widget.sample!,
@@ -136,9 +138,9 @@ class _ViewPresetPositionState extends ConsumerState<ViewPresetPosition> {
               ],
             ),
           ),
-          const VerticalDivider(width: 1),
+          const VerticalDivider(width: 2),
           Expanded(
-            flex: 3,
+            flex: 12,
             child: widget.describe,
           ),
         ],
@@ -160,7 +162,7 @@ class _ViewPresetPositionState extends ConsumerState<ViewPresetPosition> {
             ],
           ),
         ),
-        const VerticalDivider(width: 1),
+        const VerticalDivider(width: 2),
         Expanded(
           flex: 3,
           child: widget.describe,
