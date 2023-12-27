@@ -7,7 +7,7 @@ const RESOURCES = {"assets/AssetManifest.bin": "5f7db09af6875d1b5a7921b045495873
 "assets/AssetManifest.bin.json": "55f1faacabb98402c13a6728896ad50d",
 "assets/AssetManifest.json": "0bd258f452c5f44ab34dc53b945ef114",
 "assets/FontManifest.json": "df625e53b2aec5cd1d311615484480d0",
-"assets/fonts/MaterialIcons-Regular.otf": "5bab0f4b6cbf124061a1626ea666131d",
+"assets/fonts/MaterialIcons-Regular.otf": "7006d85de396524babfe42e105b5e4f1",
 "assets/fonts/NeoDGM/NeoDGM.ttf": "fb933425ff4ed74ed3b810b399b7946f",
 "assets/images/checkers.png": "832cfa26861372530aef1964499c94ff",
 "assets/images/sample.png": "c92e1697d57a0d1e7007fe33d76ea125",
@@ -35,10 +35,10 @@ const RESOURCES = {"assets/AssetManifest.bin": "5f7db09af6875d1b5a7921b045495873
 "index.html": "58f905882ef645859ad24d2c84419dde",
 "/": "58f905882ef645859ad24d2c84419dde",
 "jszip.js": "418ea325c68eb099ef2ccc8823771a63",
-"main.dart.js": "c81e1cfde3ee9271931158c1f1f44832",
+"main.dart.js": "473a2c0dfdaefffdd36866af7bfa730a",
 "manifest.json": "ebc04e4594e86d4e5763ccf0df7285b3",
 "save_web.js": "6d7f19b0443d2ca2a960f0532299e5d7",
-"version.json": "24589c9aa332e4a4498d0c223bd9afaa",
+"version.json": "24c1f65bb54c49c546f0169c70bb90fd",
 "worker.js": "55118d4a43a00cedd42f65ca3b0b0d2a"};
 // The application shell files that are downloaded before a service worker can
 // start.
