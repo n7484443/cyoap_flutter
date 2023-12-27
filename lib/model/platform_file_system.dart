@@ -178,7 +178,7 @@ class PlatformFileSystem {
               //Not yet supported x
             }
           } else {
-            String dataConverted = utf8.decode(data);
+            String dataConverted = utf8.decode(data, allowMalformed: true);
             if (fileName.startsWith('nodes')) {
               if (fileName.contains('lineSetting_')) {
                 lineSettingList
