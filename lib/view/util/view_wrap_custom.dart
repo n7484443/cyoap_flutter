@@ -269,7 +269,7 @@ class ViewWrapCustom extends ConsumerWidget {
           ),
         );
       }
-    } else {
+    } else if(!isInner){
       outputWidget.add(const SizedBox.square(dimension: defaultHeight));
     }
     if (isInner) {
