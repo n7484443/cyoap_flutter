@@ -202,28 +202,6 @@ void main() async {
       await windowManager.focus();
     });
   }
-  FlutterError.onError = (details) async {
-    await Sentry.captureException(details.exception, stackTrace: details.stack);
-    if (ConstList.isDesktop()) {
-      var f = File(
-          '${Directory.current.path}/error-${DateTime.now().toString()}.log');
-      await f.writeAsString(
-          "${details.exception} \r\n ${details.stack.toString()}");
-    }
-  };
-  PlatformDispatcher.instance.onError = (error, stack) {
-    asyncFunction() async {
-      await Sentry.captureException(error, stackTrace: stack);
-      if (ConstList.isDesktop()) {
-        var f = File(
-            '${Directory.current.path}/error-${DateTime.now().toString()}.log');
-        await f.writeAsString("$error \r\n $stack");
-      }
-    }
-
-    asyncFunction();
-    return true;
-  };
   await SentryFlutter.init(
     (options) {
       options.dsn = kDebugMode ? '' : sentryDsn;

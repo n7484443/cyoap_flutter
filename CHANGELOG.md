@@ -30,7 +30,7 @@
 * Windows 창 최소 크기 설정
 ### 4.4.7
 * vertical tabbar의 가독성 문제로 navigation rail 로 변경
-### 4.4.8
+* 오류 전송 중 fatal error가 오히려 발생하는 문제 수정
 * 좌측 패널 애니메이션 추가
 
 # 4.3.0
