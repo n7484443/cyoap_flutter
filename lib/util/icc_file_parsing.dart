@@ -23,7 +23,7 @@ class IccProjectParser {
     Map<String, dynamic> parsed = jsonDecode(input);
     Map<String, Uint8List> imageList = {};
     var platform = AbstractPlatform();
-    if(parsed['rows'] == null){
+    if (parsed['rows'] == null) {
       return Tuple2(platform, imageList);
     }
     var rows = parsed['rows'] as List;
@@ -193,15 +193,17 @@ class IccProjectParser {
   ChoiceNodeDesignPreset parseStyle(Map<String, dynamic>? styles,
       {required int template,
       required bool isRow,
-      required globalObjectBackgroundColor,
-      required globalRowBackgroundColor,
-      required globalSelectFilterBgColor}) {
+      required int globalObjectBackgroundColor,
+      required int globalRowBackgroundColor,
+      required int globalSelectFilterBgColor}) {
     if (styles == null) {
       return ChoiceNodeDesignPreset(
         name: generateRandomString(10),
         imagePosition: template == 4 ? 1 : template,
-        defaultColorOption:
-            isRow ? globalRowBackgroundColor : globalObjectBackgroundColor,
+        defaultColorOption: ColorOption(
+          color: isRow ? globalRowBackgroundColor : globalObjectBackgroundColor,
+          colorType: ColorType.solid,
+        ),
         defaultOutlineOption: OutlineOption(
           outlineColor: ColorOption(
             color: isRow ? globalRowBackgroundColor : globalSelectFilterBgColor,
@@ -222,9 +224,12 @@ class IccProjectParser {
       return ChoiceNodeDesignPreset(
         name: generateRandomString(10),
         imagePosition: template == 4 ? 1 : template,
-        defaultColorOption: rowBackgroundColor == 0xFFFFFFFF
-            ? globalRowBackgroundColor
-            : rowBackgroundColor,
+        defaultColorOption: ColorOption(
+          color: rowBackgroundColor == 0xFFFFFFFF
+              ? globalRowBackgroundColor
+              : rowBackgroundColor,
+          colorType: ColorType.solid,
+        ),
         defaultOutlineOption: OutlineOption(
           outlineColor: ColorOption(
             color: rowBackgroundColor == 0xFFFFFFFF
@@ -238,9 +243,12 @@ class IccProjectParser {
     return ChoiceNodeDesignPreset(
       name: generateRandomString(10),
       imagePosition: template == 4 ? 1 : template,
-      defaultColorOption: objectBackgroundColor == 0xFFFFFFFF
-          ? globalObjectBackgroundColor
-          : objectBackgroundColor,
+      defaultColorOption: ColorOption(
+        color: objectBackgroundColor == 0xFFFFFFFF
+            ? globalObjectBackgroundColor
+            : objectBackgroundColor,
+        colorType: ColorType.solid,
+      ),
       defaultOutlineOption: OutlineOption(
         outlineColor: ColorOption(
           color: objectSelectBackgroundColor == 0xFFFFFFFF

@@ -31,7 +31,7 @@ class ChoiceLineSample extends ConsumerWidget {
             color: colorOption.getColor(),
             gradient: colorOption.getGradient(),
           ),
-          constraints: BoxConstraints.expand(
+          constraints: const BoxConstraints.expand(
             height: 300,
           ),
         ),
@@ -80,24 +80,27 @@ class ChoiceLinePresetList extends ConsumerWidget {
                               .deleteIndex(index);
                         },
                       ),
+                leading: preset.name == "default" ? null : IconButton(
+                  icon: Icon(Icons.drive_file_rename_outline,
+                      size: (IconTheme.of(context).size ?? 18) * 0.8),
+                  onPressed: () async{
+                    var text = await showDialog(
+                        context: context,
+                        builder: (context) {
+                          return PresetRenameDialog(preset.name);
+                        },
+                        barrierDismissible: false);
+                    if (text != null && text.trim().isNotEmpty) {
+                      ref
+                          .read(choiceLinePresetListProvider.notifier)
+                          .rename(index, text.trim());
+                    }
+                  },
+                ),
                 onTap: () {
                   ref
                       .read(currentPresetIndexProvider.notifier)
                       .update((state) => index);
-                },
-                onLongPress: () async {
-                  if (preset.name == "default") return;
-                  var text = await showDialog(
-                      context: context,
-                      builder: (context) {
-                        return PresetRenameDialog(preset.name);
-                      },
-                      barrierDismissible: false);
-                  if (text != null && text.trim().isNotEmpty) {
-                    ref
-                        .read(choiceLinePresetListProvider.notifier)
-                        .rename(index, text.trim());
-                  }
                 },
                 selected: index == ref.watch(currentPresetIndexProvider),
               );
@@ -117,38 +120,42 @@ class ViewLineOptionEditor extends ConsumerWidget {
     var preset = ref.watch(choiceLinePresetCurrentEditProvider);
     var index = ref.watch(currentPresetIndexProvider);
     var colorOption = preset.backgroundColorOption;
-    return CustomScrollView(
-      controller: AdjustableScrollController(),
-      shrinkWrap: true,
-      slivers: [
-        SliverGrid(
-          delegate: SliverChildListDelegate([
-            ViewSwitchLabel(
-              () => ref.read(choiceLinePresetListProvider.notifier).updateIndex(
-                  index,
-                  preset.copyWith(
-                      alwaysVisibleLine: !preset.alwaysVisibleLine)),
-              preset.alwaysVisibleLine,
-              label: 'black_line'.i18n,
+    return Padding(
+      padding: const EdgeInsets.all(ConstList.padding),
+      child: CustomScrollView(
+        controller: AdjustableScrollController(),
+        shrinkWrap: true,
+        slivers: [
+          SliverGrid(
+            delegate: SliverChildListDelegate([
+              ViewSwitchLabel(
+                () => ref.read(choiceLinePresetListProvider.notifier).updateIndex(
+                    index,
+                    preset.copyWith(
+                        alwaysVisibleLine: !preset.alwaysVisibleLine)),
+                preset.alwaysVisibleLine,
+                label: 'black_line'.i18n,
+              ),
+            ]),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 3,
+              crossAxisSpacing: 2,
+              mainAxisExtent: 80,
+              mainAxisSpacing: 2,
             ),
-          ]),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 3,
-            crossAxisSpacing: 2,
-            mainAxisExtent: 80,
-            mainAxisSpacing: 2,
           ),
-        ),
-        SliverToBoxAdapter(
-          child: ViewColorOptionEditor(
-            colorOption: colorOption,
-            changeFunction: (ColorOption after) {
-              ref.read(choiceLinePresetListProvider.notifier).updateIndex(
-                  index, preset.copyWith(backgroundColorOption: after));
-            },
+          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
+          SliverToBoxAdapter(
+            child: ViewColorOptionEditor(
+              colorOption: colorOption,
+              changeFunction: (ColorOption after) {
+                ref.read(choiceLinePresetListProvider.notifier).updateIndex(
+                    index, preset.copyWith(backgroundColorOption: after));
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
