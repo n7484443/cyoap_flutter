@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:cyoap_core/choiceNode/choice_line.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
@@ -9,86 +10,109 @@ import 'package:cyoap_flutter/viewModel/vm_source.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../util/platform_specified_util/webp_converter.dart';
+
+part 'vm_editor.g.dart';
 
 final nodeEditorTargetPosProvider = StateProvider<Pos?>((ref) {
   return null;
 });
 
-final nodeEditorTargetProvider =
-    ChangeNotifierProvider<NodeEditorTargetNotifier>((ref) {
-  var pos = ref.watch(nodeEditorTargetPosProvider);
-  if (pos == null) {
-    return NodeEditorTargetNotifier(ChoiceNode.empty(), ref);
+@riverpod
+class NodeEditorTarget extends _$NodeEditorTarget {
+  @override
+  ChoiceNode build() {
+    var pos = ref.watch(nodeEditorTargetPosProvider);
+    if (pos == null) {
+      return ChoiceNode.empty();
+    }
+    return getPlatform.getChoiceNode(pos)!.clone();
   }
-  return NodeEditorTargetNotifier(getPlatform.getChoiceNode(pos)!.clone(), ref);
-});
-
-class NodeEditorTargetNotifier extends ChangeNotifier {
-  ChoiceNode node;
-  Ref ref;
-
-  NodeEditorTargetNotifier(this.node, this.ref);
 
   void update() {
     var pos = ref.watch(nodeEditorTargetPosProvider);
     if (pos == null) {
-      node = ChoiceNode.empty();
+      state = ChoiceNode.empty();
     } else {
-      node = getPlatform.getChoiceNode(pos)?.clone() ?? ChoiceNode.empty();
+      state = getPlatform.getChoiceNode(pos)?.clone() ?? ChoiceNode.empty();
     }
-    notifyListeners();
+  }
+
+  void setState(ChoiceNode Function(ChoiceNode) func) {
+    state = func(state);
+  }
+}
+
+final lineEditorTargetPosProvider = StateProvider<Pos?>((ref) {
+  return null;
+});
+
+@riverpod
+class LineEditorTargetNotifier extends _$LineEditorTargetNotifier {
+  @override
+  ChoiceLine? build() {
+    var pos = ref.watch(lineEditorTargetPosProvider)!;
+    var choice = getPlatform.getChoice(pos);
+    ref.onDispose(() {
+      ref.read(lineEditorTargetPosProvider.notifier).state = null;
+    });
+    return choice as ChoiceLine;
   }
 }
 
 final nodeEditorDesignProvider =
     StateProvider.autoDispose<ChoiceNodeOption>((ref) {
   ref.listenSelf((previous, ChoiceNodeOption next) {
-    ref.read(nodeEditorTargetProvider).node.choiceNodeOption = next;
+    ref.read(nodeEditorTargetProvider.notifier).setState((node) {
+      node.choiceNodeOption = next;
+      return node;
+    });
     ref.read(editorChangeProvider.notifier).needUpdate();
   });
-  return ref.watch(nodeEditorTargetProvider).node.choiceNodeOption;
+  return ref.watch(nodeEditorTargetProvider).choiceNodeOption;
 });
 
 final nodeModeProvider = StateProvider.autoDispose<ChoiceNodeMode>((ref) {
   ref.listenSelf((previous, ChoiceNodeMode next) {
-    ref.read(nodeEditorTargetProvider).node.choiceNodeMode = next;
+    ref.read(nodeEditorTargetProvider.notifier).setState((node) {
+      node.choiceNodeMode = next;
+      return node;
+    });
     if (next == ChoiceNodeMode.onlyCode) {
-      ref
-          .read(nodeEditorTargetProvider.notifier)
-          .node
-          .conditionalCodeHandler
-          .conditionClickableCode = [];
-      ref
-          .read(nodeEditorTargetProvider.notifier)
-          .node
-          .conditionalCodeHandler
-          .conditionVisibleCode = [];
-      ref
-          .read(nodeEditorTargetProvider.notifier)
-          .node
-          .conditionalCodeHandler
-          .conditionClickableString = null;
-      ref
-          .read(nodeEditorTargetProvider.notifier)
-          .node
-          .conditionalCodeHandler
-          .conditionVisibleString = null;
+      ref.read(nodeEditorTargetProvider.notifier).setState((node) {
+        node.conditionalCodeHandler.conditionClickableCode = [];
+        return node;
+      });
+      ref.read(nodeEditorTargetProvider.notifier).setState((node) {
+        node.conditionalCodeHandler.conditionVisibleCode = [];
+        return node;
+      });
+      ref.read(nodeEditorTargetProvider.notifier).setState((node) {
+        node.conditionalCodeHandler.conditionClickableString = null;
+        return node;
+      });
+      ref.read(nodeEditorTargetProvider.notifier).setState((node) {
+        node.conditionalCodeHandler.conditionVisibleString = null;
+        return node;
+      });
     }
     ref.read(editorChangeProvider.notifier).needUpdate();
   });
-  return ref.watch(nodeEditorTargetProvider).node.choiceNodeMode;
+  return ref.watch(nodeEditorTargetProvider).choiceNodeMode;
 });
 final nodeTitleProvider = StateProvider.autoDispose<String>(
-    (ref) => ref.watch(nodeEditorTargetProvider).node.title);
+    (ref) => ref.watch(nodeEditorTargetProvider).title);
 
 final maximumProvider = Provider.autoDispose<TextEditingController>((ref) {
-  var node = ref.watch(nodeEditorTargetProvider).node;
+  var node = ref.watch(nodeEditorTargetProvider);
   var controller = TextEditingController(text: node.maximumStatus.toString());
   controller.addListener(() {
-    ref.read(nodeEditorTargetProvider).node.maximumStatus =
-        int.tryParse(controller.text) ?? 0;
+    ref.read(nodeEditorTargetProvider.notifier).setState((node){
+      node.maximumStatus = int.tryParse(controller.text) ?? 0;
+      return node;
+    });
     ref.read(editorChangeProvider.notifier).needUpdate();
   });
   ref.onDispose(() => controller.dispose());
@@ -138,12 +162,16 @@ class ImageListStateNotifier extends StateNotifier<List<String>> {
 
 final imageStateProvider = StateProvider.autoDispose<int>((ref) {
   ref.listenSelf((previous, int index) {
-    ref.read(nodeEditorTargetProvider).node.imageString =
-        ImageDB().getImageName(index);
+    ref.read(nodeEditorTargetProvider.notifier).setState(
+        (node){
+          node.imageString = ImageDB().getImageName(index);
+          return node;
+        }
+    );
     ref.read(editorChangeProvider.notifier).needUpdate();
   });
   return ImageDB()
-      .getImageIndex(ref.read(nodeEditorTargetProvider).node.imageString);
+      .getImageIndex(ref.read(nodeEditorTargetProvider).imageString);
 });
 
 final editorChangeProvider = StateNotifierProvider<EditorChangeNotifier, bool>(
@@ -165,7 +193,7 @@ class EditorChangeNotifier extends StateNotifier<bool> {
   void save() {
     var pos = ref.read(nodeEditorTargetPosProvider)!;
     var origin = getPlatform.getChoiceNode(pos)!;
-    var changed = ref.read(nodeEditorTargetProvider).node;
+    var changed = ref.read(nodeEditorTargetProvider);
     origin.title = changed.title;
     origin.contentsString = changed.contentsOriginalString;
     origin.maximumStatus = changed.maximumStatus;

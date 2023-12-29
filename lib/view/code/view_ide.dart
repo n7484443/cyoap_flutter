@@ -110,7 +110,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
         ),
         SliverList(
           delegate: SliverChildListDelegate([
-            if (ref.watch(nodeEditorTargetProvider).node.isSelectableMode &&
+            if (ref.watch(nodeEditorTargetProvider).isSelectableMode &&
                 widget.isChoiceNode)
               rowColumn(
                 leftOrTop: SizedBox(
@@ -141,7 +141,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                   ),
                 ),
               ),
-            if (ref.watch(nodeEditorTargetProvider).node.isSelectableMode &&
+            if (ref.watch(nodeEditorTargetProvider).isSelectableMode &&
                 widget.isChoiceNode)
               const Divider(),
             if (ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode)

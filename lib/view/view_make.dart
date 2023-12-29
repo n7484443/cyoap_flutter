@@ -12,9 +12,6 @@ import '../main.dart';
 import '../model/platform_system.dart';
 import '../viewModel/vm_choice_node.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
-import '../viewModel/vm_editor.dart';
-import '../viewModel/vm_make_platform.dart';
-import '../viewModel/vm_project_setting.dart';
 
 class ViewSaveDialog extends ConsumerWidget {
   final bool asZip;
@@ -73,9 +70,10 @@ class CopyButton extends ConsumerWidget {
         onDragUpdate: (DragUpdateDetails details) => ref
             .read(dragPositionProvider.notifier)
             .state = details.localPosition.dy,
-        child: Tooltip(
-          message: 'copy_tooltip'.i18n,
-          child: const Icon(Icons.paste),
+        child: IconButton(
+          icon: const Icon(Icons.paste),
+          tooltip: 'copy_tooltip'.i18n,
+          onPressed: () {},
         ),
       ),
     );
@@ -113,9 +111,10 @@ class RecoverButton extends ConsumerWidget {
         onDragUpdate: (DragUpdateDetails details) => ref
             .read(dragPositionProvider.notifier)
             .state = details.localPosition.dy,
-        child: Tooltip(
-          message: 'recently_tooltip'.i18n,
-          child: const Icon(Icons.restore_from_trash),
+        child: IconButton(
+          icon: const Icon(Icons.restore_from_trash),
+          tooltip: 'recently_tooltip'.i18n,
+          onPressed: () {},
         ),
       ),
     );
@@ -127,22 +126,22 @@ class ViewMake extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (ConstList.isSmallDisplay(context)) {
+    if (ConstList.isMobile()) {
       return PopScope(
         canPop: false,
         child: Scaffold(
           appBar: AppBar(
-            leading: const BackButton(),
             title: const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                ViewSaveIcons(),
+                ViewRefreshIcons(),
                 CopyButton(),
                 RecoverButton(),
               ],
             ),
             actions: [
-              if (ConstList.isMobile()) const ViewRefreshIcons(),
-              if (ConstList.isMobile()) const ViewSaveIcons()
+              const BackButton(),
             ],
           ),
           body: const NestedScroll(),
@@ -179,23 +178,6 @@ class ViewSaveIcons extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var current = tabList[ref.watch(changeTabProvider)];
-    if (current == "viewEditor") {
-      return IconButton(
-        icon: const Icon(Icons.save),
-        onPressed: () {
-          ref.read(editorChangeProvider.notifier).save();
-        },
-      );
-    }
-    if (current == "viewProjectSetting") {
-      return IconButton(
-        icon: const Icon(Icons.save),
-        onPressed: () {
-          ref.read(valueTypeWrapperListProvider.notifier).save();
-        },
-      );
-    }
     if (getPlatformFileSystem.openAsFile) {
       return IconButton(
         icon: const Icon(Icons.save),
@@ -211,7 +193,7 @@ class ViewSaveIcons extends ConsumerWidget {
     return PopupMenuButton(
       icon: const Icon(Icons.save),
       tooltip: 'save_option'.i18n,
-      onSelected: (int selected) async{
+      onSelected: (int selected) async {
         showDialog(
             context: context,
             builder: (BuildContext context) => ViewSaveDialog(selected != 0),

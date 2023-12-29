@@ -68,10 +68,12 @@ class ViewIdeGui extends ConsumerWidget {
                             .read(ideCurrentInputProvider.notifier)
                             .formatting(code);
                         ref
-                            .read(nodeEditorTargetProvider)
-                            .node
-                            .conditionalCodeHandler
-                            .executeCodeString = out.$1;
+                            .read(nodeEditorTargetProvider.notifier)
+                            .setState((node) {
+                          node.conditionalCodeHandler.executeCodeString =
+                              out.$1;
+                          return node;
+                        });
                         ref
                             .read(currentIdeOpenProvider.notifier)
                             .update((state) => !state);

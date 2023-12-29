@@ -57,7 +57,9 @@ class _ViewEditorState extends ConsumerState<ViewEditor>
       const ViewNodeOptionEditor(),
       ViewImageDraggable(
         addImageFunction: (ref, name) {
-          ref.read(nodeEditorTargetProvider).node.imageString = name;
+          ref
+              .read(nodeEditorTargetProvider.notifier)
+              .setState((node) => node..imageString = name);
         },
         widgetBuilder: (ref, index) {
           return Container(
@@ -121,16 +123,6 @@ class _ViewEditorState extends ConsumerState<ViewEditor>
               ),
             ),
           ),
-          actions: ConstList.isMobile()
-              ? [
-                  IconButton(
-                    icon: const Icon(Icons.save),
-                    onPressed: () {
-                      ref.read(editorChangeProvider.notifier).save();
-                    },
-                  ),
-                ]
-              : null,
         ),
         body: TabBarView(
           controller: _tabController,
@@ -180,7 +172,7 @@ class _ViewTitleTextFieldInputState
 
   @override
   void initState() {
-    var node = ref.read(nodeEditorTargetProvider).node;
+    var node = ref.read(nodeEditorTargetProvider);
     _controller = TextEditingController(text: node.title);
     _controller!.addListener(() {
       node.title = _controller!.text;
@@ -236,7 +228,7 @@ class _ViewTextContentsEditorState
   @override
   void initState() {
     _focusNode = FocusNode();
-    var node = ref.read(nodeEditorTargetProvider).node;
+    var node = ref.read(nodeEditorTargetProvider);
     if (node.contentsOriginalString.isEmpty) {
       _quillController = QuillController.basic();
     } else {
@@ -267,8 +259,10 @@ class _ViewTextContentsEditorState
             }
           }
         }
-        ref.read(nodeEditorTargetProvider).node.contentsString =
-            jsonEncode(_quillController?.document.toDelta().toJson());
+
+        ref.read(nodeEditorTargetProvider.notifier).setState((node) => node
+          ..contentsString =
+              jsonEncode(_quillController?.document.toDelta().toJson()));
         ref.read(editorChangeProvider.notifier).needUpdate();
       });
     });

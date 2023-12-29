@@ -10,10 +10,10 @@ import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/util/view_circle_button.dart';
-import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/view/view_selected_grid.dart';
+import 'package:cyoap_flutter/viewModel/vm_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tuple/tuple.dart';
@@ -181,6 +181,7 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
       actions: [
         TextButton(
           onPressed: () {
+            ref.read(lineEditorTargetPosProvider.notifier).state = Pos(data: [widget.y]);
             Navigator.pop(context);
             ref.read(changeTabProvider.notifier).changePageString("viewEditorLine", context);
           },

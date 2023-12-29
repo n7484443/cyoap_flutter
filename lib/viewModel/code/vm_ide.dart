@@ -11,7 +11,7 @@ import '../../main.dart';
 
 final controllerClickableProvider =
     Provider.autoDispose<TextEditingController>((ref) {
-  var node = ref.watch(nodeEditorTargetProvider).node;
+  var node = ref.watch(nodeEditorTargetProvider);
   var controller = TextEditingController(
       text: node.conditionalCodeHandler.conditionClickableString);
   controller.addListener(() {
@@ -20,11 +20,11 @@ final controllerClickableProvider =
         .addCheckText(controller.text, controller.selection.end);
     EasyDebounce.debounce(
         'conditionClickableString', ConstList.debounceDuration, () {
-      ref
-          .read(nodeEditorTargetProvider)
-          .node
-          .conditionalCodeHandler
-          .conditionClickableString = controller.text;
+      ref.read(nodeEditorTargetProvider.notifier).setState((node) {
+        node.conditionalCodeHandler.conditionClickableString = controller.text;
+        return node;
+      });
+
       ref.read(editorChangeProvider.notifier).needUpdate();
     });
   });
@@ -37,9 +37,9 @@ final controllerClickableProvider =
 
 final controllerVisibleProvider =
     Provider.autoDispose<TextEditingController>((ref) {
-  var node = ref.watch(nodeEditorTargetProvider).node;
-  var controller =
-      TextEditingController(text: node.conditionalCodeHandler.conditionVisibleString);
+  var node = ref.watch(nodeEditorTargetProvider);
+  var controller = TextEditingController(
+      text: node.conditionalCodeHandler.conditionVisibleString);
   controller.addListener(() {
     ref
         .read(ideCurrentInputProvider.notifier)
@@ -65,7 +65,7 @@ final regexFunction = RegExp(
     r"\(");
 
 final controllerIdeProvider = Provider.autoDispose<QuillController>((ref) {
-  var node = ref.watch(nodeEditorTargetProvider).node;
+  var node = ref.watch(nodeEditorTargetProvider);
   var data = [
     {"insert": "${node.conditionalCodeHandler.executeCodeString ?? ''}\n"}
   ];
@@ -77,7 +77,6 @@ final controllerIdeProvider = Provider.autoDispose<QuillController>((ref) {
       var plainText = controller.document.toPlainText();
       if (ref
               .read(nodeEditorTargetProvider)
-              .node
               .conditionalCodeHandler
               .executeCodeString !=
           plainText) {
@@ -108,11 +107,10 @@ final controllerIdeProvider = Provider.autoDispose<QuillController>((ref) {
           controller.formatText(m.start, m.end - m.start, styleGrey);
         }
 
-        ref
-            .read(nodeEditorTargetProvider)
-            .node
-            .conditionalCodeHandler
-            .executeCodeString = plainText;
+        ref.read(nodeEditorTargetProvider.notifier).setState((node) {
+          node.conditionalCodeHandler.executeCodeString = plainText;
+          return node;
+        });
         ref.read(editorChangeProvider.notifier).needUpdate();
       }
     });
