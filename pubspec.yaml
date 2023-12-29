@@ -60,7 +60,6 @@ dependencies:
   desktop_drop: ^0.4.4
   shared_storage: ^0.8.0
   i18n_extension: ^10.0.1
-  reorderable_grid_view: ^2.2.6
   dotted_border: ^2.1.0
   window_manager: ^0.3.7
   flutter_localizations:

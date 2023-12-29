@@ -58,22 +58,22 @@ final nodeModeProvider = StateProvider.autoDispose<ChoiceNodeMode>((ref) {
       ref
           .read(nodeEditorTargetProvider.notifier)
           .node
-          .recursiveStatus
+          .conditionalCodeHandler
           .conditionClickableCode = [];
       ref
           .read(nodeEditorTargetProvider.notifier)
           .node
-          .recursiveStatus
+          .conditionalCodeHandler
           .conditionVisibleCode = [];
       ref
           .read(nodeEditorTargetProvider.notifier)
           .node
-          .recursiveStatus
+          .conditionalCodeHandler
           .conditionClickableString = null;
       ref
           .read(nodeEditorTargetProvider.notifier)
           .node
-          .recursiveStatus
+          .conditionalCodeHandler
           .conditionVisibleString = null;
     }
     ref.read(editorChangeProvider.notifier).needUpdate();
@@ -171,7 +171,7 @@ class EditorChangeNotifier extends StateNotifier<bool> {
     origin.maximumStatus = changed.maximumStatus;
     origin.choiceNodeMode = changed.choiceNodeMode;
     origin.imageString = changed.imageString;
-    origin.recursiveStatus = changed.recursiveStatus;
+    origin.conditionalCodeHandler = changed.conditionalCodeHandler;
     origin.choiceNodeOption = ref.read(nodeEditorDesignProvider);
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     state = false;
