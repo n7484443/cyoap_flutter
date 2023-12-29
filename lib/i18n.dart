@@ -148,8 +148,7 @@ extension Localization on String {
           'lineSetting_tooltip_0': 'Number of selections available',
           'lineSetting_tooltip_1': 'Allowed Choices %s',
           'lineSetting_tooltip_2': "ChoiceLine's name",
-          'lineSetting_tooltip_3':
-              "Automatic canceling of selection\nIt has possibility of bug if execute code's variable and execution condition's variable are same",
+          'lineSetting_tooltip_3': "Code of ChoiceLine",
           'lineSetting': 'Row settings',
           'preset_setting_tooltip': 'Preset settings',
           'visible_condition_tooltip': 'Visible condition (visible when true)',
@@ -202,7 +201,7 @@ extension Localization on String {
           'crop': 'Crop',
           'code_hint_execute_condition': 'Execution Conditions',
           'code_hint_visible_condition':
-              'Visible Conditions (Visible when true)',
+              'Visible Conditions\n(Visible when true)',
           'code_hint_execute': 'Executable code on selection',
           'space_hide': 'Takes up space when hidden',
           'sort': 'Sort',
@@ -252,8 +251,7 @@ extension Localization on String {
           'lineSetting_tooltip_0': '선택 가능 개수',
           'lineSetting_tooltip_1': '최대 %s 개만큼 선택 가능',
           'lineSetting_tooltip_2': "선택지 줄 명칭",
-          'lineSetting_tooltip_3':
-              "선택지 자동 취소\n조건과 실행 시 코드의 변수가 같을 경우 오류가 발생할 수 있습니다",
+          'lineSetting_tooltip_3': "라인 코드",
           'lineSetting': '라인 설정',
           'preset_setting_tooltip': '프리셋 설정',
           'visible_condition_tooltip': '보이는 조건(true 일 때 보임, 비어있을 시 true)',
@@ -305,7 +303,7 @@ extension Localization on String {
           'source_hint': '출처를 모르거나 없을 경우 비워두세요.',
           'crop': '자르기',
           'code_hint_execute_condition': '실행 조건',
-          'code_hint_visible_condition': '보이는 조건(true 일 때 보임, 비어있을 시 true)',
+          'code_hint_visible_condition': '보이는 조건\n(true 일 때 보임, 비어있을 시 true)',
           'code_hint_execute': '선택 시 시행 코드',
           'space_hide': '숨김 시 공간 차지',
           'sort': '정렬',

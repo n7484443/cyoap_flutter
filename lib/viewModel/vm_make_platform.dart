@@ -65,6 +65,7 @@ final List<String> tabList = [
   "viewSource",
   "viewImageEditor",
   "viewDesignSetting",
+  "viewEditorLine",
 ];
 
 final List<String> tabBottomList = [

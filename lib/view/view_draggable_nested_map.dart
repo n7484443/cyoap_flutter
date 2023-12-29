@@ -23,6 +23,7 @@ import '../viewModel/vm_choice_node.dart';
 import '../viewModel/vm_design_setting.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
 import '../viewModel/vm_global_setting.dart';
+import '../viewModel/vm_make_platform.dart';
 import '../viewModel/vm_selected_grid.dart';
 
 class NodeDragTarget extends ConsumerWidget {
@@ -55,22 +56,15 @@ class NodeDragTarget extends ConsumerWidget {
             ref.read(vmDraggableNestedMapProvider).changeData(drag, pos);
           } else if (drag.last == removedPositioned) {
             ref.read(vmDraggableNestedMapProvider).addData(
-                pos, ref
-                .read(removedChoiceNodeProvider)
-                .choiceNode!
-                .clone());
+                pos, ref.read(removedChoiceNodeProvider).choiceNode!.clone());
           } else if (drag.last == copiedPositioned) {
             ref.read(vmDraggableNestedMapProvider).addData(
-                pos, ref
-                .read(copiedChoiceNodeProvider)
-                .choiceNode!
-                .clone());
+                pos, ref.read(copiedChoiceNodeProvider).choiceNode!.clone());
           } else if (pos.equalExceptLast(drag) &&
               (pos.data.last - 1) >= drag.last) {
             ref
                 .read(vmDraggableNestedMapProvider)
-                .changeData(drag, Pos(data: List.from(pos.data)
-              ..last -= 1));
+                .changeData(drag, Pos(data: List.from(pos.data)..last -= 1));
           } else {
             ref.read(vmDraggableNestedMapProvider).changeData(drag, pos);
           }
@@ -151,6 +145,7 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
               ),
             ],
           ),
+          const SizedBox(height: ConstList.padding),
           DropdownButtonFormField<String>(
             decoration:
                 InputDecoration(labelText: 'preset_setting_tooltip'.i18n),
@@ -168,30 +163,36 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
             },
             value: ref.watch(lineOptionProvider(widget.y)).presetName,
           ),
+          const SizedBox(height: ConstList.padding),
           TextField(
             controller: _textFieldController,
             decoration:
                 InputDecoration(hintText: 'visible_condition_tooltip'.i18n),
           ),
+          const SizedBox(height: ConstList.padding),
           TextField(
             controller: _nameController,
             decoration: InputDecoration(hintText: 'lineSetting_tooltip_2'.i18n),
           ),
-          ViewSwitchLabel(() {
-            ref.read(lineOptionProvider(widget.y).notifier).update((state) =>
-                state.copyWith(
-                    enableCancelFeature: !state.enableCancelFeature));
-          }, lineOption.enableCancelFeature,
-              label: 'lineSetting_tooltip_3'.i18n),
+          const SizedBox(height: ConstList.paddingHuge),
         ],
       ),
+      actionsAlignment: MainAxisAlignment.spaceBetween,
       actions: [
         TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(
-                  Tuple2(_textFieldController!.text, _nameController!.text));
-            },
-            child: Text("confirm".i18n))
+          onPressed: () {
+            Navigator.pop(context);
+            ref.read(changeTabProvider.notifier).changePageString("viewEditorLine", context);
+          },
+          child: Text("lineSetting_tooltip_3".i18n),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context)
+                .pop(Tuple2(_textFieldController!.text, _nameController!.text));
+          },
+          child: Text("confirm".i18n),
+        ),
       ],
     );
   }
@@ -337,16 +338,17 @@ class NodeDivider extends ConsumerWidget {
                       await showDialog<bool?>(
                           context: context,
                           builder: (_) => ViewWarningDialog(
-                            acceptFunction: () {
-                              getPlatform.removeChoiceLine(y);
-                              ref
-                                  .read(draggableNestedMapChangedProvider.notifier)
-                                  .state = true;
-                              ref.read(refreshPageProvider);
-                            },
-                            cancelFunction: (){},
-                            content: 'warning_message_line_delete'.i18n,
-                          ),
+                                acceptFunction: () {
+                                  getPlatform.removeChoiceLine(y);
+                                  ref
+                                      .read(draggableNestedMapChangedProvider
+                                          .notifier)
+                                      .state = true;
+                                  ref.read(refreshPageProvider);
+                                },
+                                cancelFunction: () {},
+                                content: 'warning_message_line_delete'.i18n,
+                              ),
                           barrierDismissible: false);
                     },
                     child: const Icon(

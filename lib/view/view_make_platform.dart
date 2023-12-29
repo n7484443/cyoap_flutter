@@ -21,6 +21,7 @@ import '../viewModel/vm_choice_node.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
 import '../viewModel/vm_platform.dart';
 import '../viewModel/vm_variable_table.dart';
+import 'code/view_ide_line.dart';
 
 class ViewMakePlatform extends ConsumerStatefulWidget {
   const ViewMakePlatform({
@@ -41,6 +42,7 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
       () => const ViewSource(),
       () => const ViewImageEditor(),
       () => const ViewDesignSetting(),
+      () => const ViewIdeLine(),
     ];
     if (ConstList.isMobile()) {
       return PopScope(

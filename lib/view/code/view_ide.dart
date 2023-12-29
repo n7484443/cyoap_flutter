@@ -13,126 +13,11 @@ import '../../viewModel/code/vm_ide.dart';
 import '../../viewModel/code/vm_ide_gui.dart';
 import '../../viewModel/vm_editor.dart';
 
-class ViewIdeTab extends ConsumerStatefulWidget {
-  const ViewIdeTab({
-    super.key,
-  });
-
-  @override
-  ConsumerState createState() => _ViewIdeTabState();
-}
-
-class _ViewIdeTabState extends ConsumerState<ViewIdeTab>
-    with TickerProviderStateMixin {
-  TabController? _tabController;
-
-  @override
-  void initState() {
-    _tabController = TabController(length: 2, vsync: this);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _tabController?.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: kDebugMode
-          ? TabBar(
-              controller: _tabController,
-              tabs: [
-                Tab(text: "editor_simple".i18n),
-                Tab(text: "editor_code".i18n)
-              ],
-            )
-          : null,
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          if (kDebugMode) const ViewIdeSimple(),
-          const ViewIde(),
-        ],
-      ),
-    );
-  }
-}
-
-class ViewIdeSimple extends ConsumerStatefulWidget {
-  const ViewIdeSimple({
-    super.key,
-  });
-
-  @override
-  ConsumerState createState() => _ViewIdeSimpleState();
-}
-
-class _ViewIdeSimpleState extends ConsumerState<ViewIdeSimple> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: ListView(
-            children: [
-              Center(
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<int>(
-                    value: 0,
-                    onChanged: (index) {},
-                    items: [
-                      const DropdownMenuItem(value: 0, child: Text('and')),
-                      const DropdownMenuItem(value: 1, child: Text('or')),
-                    ],
-                  ),
-                ),
-              ),
-              const TextField(),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.add))
-            ],
-          ),
-        ),
-        const VerticalDivider(),
-        Expanded(
-          child: ListView(
-            children: [
-              Center(
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<int>(
-                    value: 0,
-                    onChanged: (index) {},
-                    items: [
-                      const DropdownMenuItem(value: 0, child: Text('and')),
-                      const DropdownMenuItem(value: 1, child: Text('or')),
-                    ],
-                  ),
-                ),
-              ),
-              const TextField(),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.add))
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class ViewIde extends ConsumerStatefulWidget {
+  final bool isChoiceNode;
+
   const ViewIde({
+    this.isChoiceNode = true,
     super.key,
   });
 
@@ -159,11 +44,28 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
     super.dispose();
   }
 
+  Widget rowColumn({required Widget leftOrTop, required Widget rightOrBottom}) {
+    return ConstList.isMobile()
+        ? Column(
+            children: [
+              leftOrTop,
+              rightOrBottom,
+            ],
+          )
+        : Row(
+            children: [
+              leftOrTop,
+              Expanded(child: rightOrBottom),
+            ],
+          );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!ref.watch(currentIdeOpenProvider)) {
       return const ViewIdeGui();
     }
+    var size = 240.0;
     return CustomScrollView(
       controller: _scrollController,
       slivers: [
@@ -208,122 +110,195 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
         ),
         SliverList(
           delegate: SliverChildListDelegate([
-            if (ref.watch(nodeEditorTargetProvider).node.isSelectableMode)
-              Focus(
-                onFocusChange: (bool hasFocus) {
-                  ref.read(ideCurrentInputProvider.notifier).lastFocusText =
-                      ref.watch(controllerClickableProvider);
-                  ref.read(ideCurrentInputProvider.notifier).lastFocusQuill =
-                      null;
-                },
-                child: TextField(
-                  controller: ref.watch(controllerClickableProvider),
-                  textAlign: TextAlign.left,
-                  decoration: InputDecoration(
-                      hintText: 'code_hint_execute_condition'.i18n),
+            if (ref.watch(nodeEditorTargetProvider).node.isSelectableMode &&
+                widget.isChoiceNode)
+              rowColumn(
+                leftOrTop: SizedBox(
+                  width: size,
+                  child: Text('code_hint_execute_condition'.i18n),
                 ),
-              ),
-            if (ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode)
-              Focus(
-                onFocusChange: (bool hasFocus) {
-                  ref.read(ideCurrentInputProvider.notifier).lastFocusText =
-                      ref.watch(controllerVisibleProvider);
-                  ref.read(ideCurrentInputProvider.notifier).lastFocusQuill =
-                      null;
-                },
-                child: TextField(
-                  controller: ref.watch(controllerVisibleProvider),
-                  textAlign: TextAlign.left,
-                  decoration: InputDecoration(
-                      hintText: 'code_hint_visible_condition'.i18n),
-                ),
-              ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Focus(
-                    onFocusChange: (bool hasFocus) {
-                      ref.read(ideCurrentInputProvider.notifier).lastFocusText =
-                          null;
-                      ref
-                          .read(ideCurrentInputProvider.notifier)
-                          .lastFocusQuill = ref.watch(controllerIdeProvider);
-                    },
-                    child: QuillEditor(
-                      configurations: QuillEditorConfigurations(
-                        controller: ref.watch(controllerIdeProvider),
-                        sharedConfigurations: QuillSharedConfigurations(
-                          locale: ref.watch(localeStateProvider),
+                rightOrBottom: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(ConstList.padding),
+                    child: Focus(
+                      onFocusChange: (bool hasFocus) {
+                        ref
+                                .read(ideCurrentInputProvider.notifier)
+                                .lastFocusText =
+                            ref.watch(controllerClickableProvider);
+                        ref
+                            .read(ideCurrentInputProvider.notifier)
+                            .lastFocusQuill = null;
+                      },
+                      child: TextField(
+                        controller: ref.watch(controllerClickableProvider),
+                        textAlign: TextAlign.left,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
                         ),
-                        scrollable: false,
-                        readOnly: false,
-                        autoFocus: false,
-                        padding: EdgeInsets.zero,
-                        expands: false,
-                        placeholder: "code_hint_execute".i18n,
                       ),
-                      focusNode: _focusNode,
-                      scrollController: _scrollController!,
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: Column(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.reorder),
-                        tooltip: "sort".i18n,
-                        onPressed: () {
-                          var text = ref
-                              .read(controllerIdeProvider)
-                              .document
-                              .toPlainText();
-                          var output = ref
-                              .read(ideCurrentInputProvider.notifier)
-                              .formatting(text);
-                          if (output.$2) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text("sort_error".i18n),
-                            ));
-                          }
-                          ref.read(ideCurrentInputProvider.notifier).reformat =
-                              true;
-                          ref.read(controllerIdeProvider).clear();
-                          ref
-                              .read(controllerIdeProvider)
-                              .document
-                              .insert(0, output.$1);
-                          ref.read(ideCurrentInputProvider.notifier).reformat =
-                              false;
-                        },
-                      ),
-                      if (kDebugMode)
-                        IconButton(
-                          icon: const Icon(Icons.dns_rounded),
-                          tooltip: "gui".i18n,
-                          onPressed: () {
-                            var ast = Analyser().toAst(ref
-                                .read(controllerIdeProvider)
-                                .document
-                                .toPlainText());
-                            ref
-                                .read(codeBlockProvider.notifier)
-                                .updateFromAst(ast);
-                            ref
-                                .read(currentIdeOpenProvider.notifier)
-                                .update((state) => !state);
-                          },
+              ),
+            if (ref.watch(nodeEditorTargetProvider).node.isSelectableMode &&
+                widget.isChoiceNode)
+              const Divider(),
+            if (ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode)
+              rowColumn(
+                leftOrTop: SizedBox(
+                  width: size,
+                  child: Text('code_hint_visible_condition'.i18n),
+                ),
+                rightOrBottom: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(ConstList.padding),
+                    child: Focus(
+                      onFocusChange: (bool hasFocus) {
+                        ref
+                                .read(ideCurrentInputProvider.notifier)
+                                .lastFocusText =
+                            ref.watch(controllerVisibleProvider);
+                        ref
+                            .read(ideCurrentInputProvider.notifier)
+                            .lastFocusQuill = null;
+                      },
+                      child: TextField(
+                        controller: ref.watch(controllerVisibleProvider),
+                        textAlign: TextAlign.left,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
                         ),
-                    ],
+                      ),
+                    ),
                   ),
                 ),
-              ],
+              ),
+            const Divider(),
+            rowColumn(
+              leftOrTop: SizedBox(
+                width: size,
+                child: Text("code_hint_execute".i18n),
+              ),
+              rightOrBottom: const Card(
+                child: Padding(
+                  padding: EdgeInsets.all(ConstList.padding),
+                  child: ViewQuillCodeIde(),
+                ),
+              ),
             ),
+            const Divider(),
+            if (!widget.isChoiceNode)
+              rowColumn(
+                leftOrTop: SizedBox(
+                  width: size,
+                  child: Text("code_hint_execute".i18n),
+                ),
+                rightOrBottom: const Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(ConstList.padding),
+                    child: ViewQuillCodeIde(),
+                  ),
+                ),
+              ),
           ]),
         ),
       ],
+    );
+  }
+}
+
+class ViewQuillCodeIde extends ConsumerStatefulWidget {
+  const ViewQuillCodeIde({super.key});
+
+  @override
+  ConsumerState createState() => _ViewQuillCodeIdeState();
+}
+
+class _ViewQuillCodeIdeState extends ConsumerState<ViewQuillCodeIde> {
+  final FocusNode _focusNode = FocusNode();
+  final AdjustableScrollController _scrollController =
+      AdjustableScrollController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _focusNode.dispose();
+    _scrollController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: Focus(
+              onFocusChange: (bool hasFocus) {
+                ref.read(ideCurrentInputProvider.notifier).lastFocusText = null;
+                ref.read(ideCurrentInputProvider.notifier).lastFocusQuill =
+                    ref.watch(controllerIdeProvider);
+              },
+              child: QuillEditor(
+                configurations: QuillEditorConfigurations(
+                  controller: ref.watch(controllerIdeProvider),
+                  sharedConfigurations: QuillSharedConfigurations(
+                    locale: ref.watch(localeStateProvider),
+                  ),
+                  scrollable: false,
+                  readOnly: false,
+                  autoFocus: false,
+                  padding: EdgeInsets.zero,
+                  expands: true,
+                ),
+                focusNode: _focusNode,
+                scrollController: _scrollController,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: Column(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.reorder),
+                  tooltip: "sort".i18n,
+                  onPressed: () {
+                    var text =
+                        ref.read(controllerIdeProvider).document.toPlainText();
+                    var output = ref
+                        .read(ideCurrentInputProvider.notifier)
+                        .formatting(text);
+                    if (output.$2) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("sort_error".i18n),
+                      ));
+                    }
+                    ref.read(ideCurrentInputProvider.notifier).reformat = true;
+                    ref.read(controllerIdeProvider).clear();
+                    ref.read(controllerIdeProvider).document.insert(0, output.$1);
+                    ref.read(ideCurrentInputProvider.notifier).reformat = false;
+                  },
+                ),
+                if (kDebugMode)
+                  IconButton(
+                    icon: const Icon(Icons.dns_rounded),
+                    tooltip: "gui".i18n,
+                    onPressed: () {
+                      var ast = Analyser().toAst(
+                          ref.read(controllerIdeProvider).document.toPlainText());
+                      ref.read(codeBlockProvider.notifier).updateFromAst(ast);
+                      ref
+                          .read(currentIdeOpenProvider.notifier)
+                          .update((state) => !state);
+                    },
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
