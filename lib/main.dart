@@ -270,6 +270,9 @@ final ThemeData appThemeLight = ThemeData.from(
       borderRadius: BorderRadius.all(Radius.circular(8.0)),
     ),
   ),
+  inputDecorationTheme: const InputDecorationTheme(
+    border: InputBorder.none,
+  ),
 );
 
 final ThemeData appThemeDark = ThemeData.from(
@@ -297,5 +300,8 @@ final ThemeData appThemeDark = ThemeData.from(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(8.0)),
     ),
+  ),
+  inputDecorationTheme: const InputDecorationTheme(
+    border: InputBorder.none,
   ),
 );

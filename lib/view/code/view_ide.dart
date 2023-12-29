@@ -133,9 +133,6 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                       child: TextField(
                         controller: ref.watch(controllerClickableProvider),
                         textAlign: TextAlign.left,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                        ),
                       ),
                     ),
                   ),
@@ -166,9 +163,6 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                       child: TextField(
                         controller: ref.watch(controllerVisibleProvider),
                         textAlign: TextAlign.left,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                        ),
                       ),
                     ),
                   ),

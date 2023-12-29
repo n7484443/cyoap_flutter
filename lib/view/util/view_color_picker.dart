@@ -132,7 +132,7 @@ class _ViewRGBInputState extends ConsumerState<ViewRGBAInput> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Wrap(
-        spacing: 10,
+        spacing: 20,
         runSpacing: 34,
         children: [
           SizedBox(

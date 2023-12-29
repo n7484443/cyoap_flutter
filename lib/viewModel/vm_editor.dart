@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../main.dart';
 import '../util/platform_specified_util/webp_converter.dart';
 
 part 'vm_editor.g.dart';
@@ -210,4 +211,8 @@ final editorImageDragDropColorProvider =
 
 final textColorProvider = StateProvider<Color>((ref) {
   return Colors.black;
+});
+
+final shownImageNumProvider = StateProvider<int>((ref) {
+  return ConstList.isMobile() ? 3 : 4;
 });

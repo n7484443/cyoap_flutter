@@ -14,7 +14,7 @@ import '../../viewModel/preset/vm_preset.dart';
 import '../../viewModel/vm_choice_node.dart';
 import '../util/controller_adjustable_scroll.dart';
 import '../util/view_color_picker.dart';
-import '../util/view_switch_label.dart';
+import '../util/view_options.dart';
 import '../view_choice_node.dart';
 
 class ChoiceNodeSample extends ConsumerWidget {
@@ -242,31 +242,19 @@ class _ViewNodeGeneralOptionEditorState
         slivers: [
           SliverGrid(
             delegate: SliverChildListDelegate([
-              TextFormField(
-                textAlign: TextAlign.end,
-                minLines: 1,
-                maxLines: 1,
-                keyboardType: TextInputType.number,
+              CustomTextField(
                 controller:
                     ref.watch(choiceNodePresetCurrentEditElevationProvider),
-                decoration: InputDecoration(labelText: 'height'.i18n),
+                label: 'height'.i18n,
               ),
-              TextFormField(
-                textAlign: TextAlign.end,
-                minLines: 1,
-                maxLines: 1,
-                keyboardType: TextInputType.number,
+              CustomTextField(
                 controller: ref.watch(choiceNodePresetCurrentEditRoundProvider),
-                decoration: InputDecoration(labelText: 'round'.i18n),
+                label: 'round'.i18n,
               ),
-              TextFormField(
-                textAlign: TextAlign.end,
-                minLines: 1,
-                maxLines: 1,
-                keyboardType: TextInputType.number,
+              CustomTextField(
                 controller:
                     ref.watch(choiceNodePresetCurrentEditPaddingProvider),
-                decoration: InputDecoration(labelText: 'padding'.i18n),
+                label: 'padding'.i18n,
               ),
             ]),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -276,47 +264,50 @@ class _ViewNodeGeneralOptionEditorState
               mainAxisSpacing: 2,
             ),
           ),
-          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
+          const SliverPadding(
+              padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           SliverGrid(
             delegate: SliverChildListDelegate([
-              ViewSwitchLabel(
-                () => ref
-                    .read(choiceNodePresetListProvider.notifier)
-                    .updateIndex(
-                        presetIndex,
-                        preset.copyWith(
-                            maximizingImage: !preset.maximizingImage)),
-                preset.maximizingImage,
+              CustomSwitch(
+                updateState: () {
+                  ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+                      presetIndex,
+                      preset.copyWith(
+                          maximizingImage: !preset.maximizingImage));
+                },
                 label: 'maximize_image'.i18n,
+                state: preset.maximizingImage,
               ),
-              ViewSwitchLabel(
-                () => ref
-                    .read(choiceNodePresetListProvider.notifier)
-                    .updateIndex(presetIndex,
-                        preset.copyWith(hideTitle: !preset.hideTitle)),
-                preset.hideTitle,
+              CustomSwitch(
+                updateState: () {
+                  ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+                      presetIndex,
+                      preset.copyWith(hideTitle: !preset.hideTitle));
+                },
                 label: 'hide_title'.i18n,
+                state: preset.hideTitle,
               ),
-              ViewSwitchLabel(
-                () => ref
-                    .read(choiceNodePresetListProvider.notifier)
-                    .updateIndex(presetIndex,
-                        preset.copyWith(titlePosition: !preset.titlePosition)),
-                preset.titlePosition,
+              CustomSwitch(
+                updateState: () {
+                  ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+                      presetIndex,
+                      preset.copyWith(titlePosition: !preset.titlePosition));
+                },
                 label: 'title_up'.i18n,
+                state: preset.titlePosition,
               ),
-              ViewSwitchLabel(
-                () => ref
-                    .read(choiceNodePresetListProvider.notifier)
-                    .updateIndex(
-                        presetIndex,
-                        preset.copyWith(
-                            imagePosition: preset.imagePosition == 0 ? 1 : 0)),
-                preset.imagePosition != 0,
+              CustomSwitch(
+                updateState: () {
+                  ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+                      presetIndex,
+                      preset.copyWith(
+                          imagePosition: preset.imagePosition == 0 ? 1 : 0));
+                },
                 label: 'horizontal_mode'.i18n,
+                state: preset.imagePosition != 0,
               ),
-              ViewSwitchLabel(
-                () {
+              CustomSwitch(
+                updateState: () {
                   if (preset.imagePosition == 1) {
                     ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                         presetIndex, preset.copyWith(imagePosition: 2));
@@ -325,9 +316,9 @@ class _ViewNodeGeneralOptionEditorState
                         presetIndex, preset.copyWith(imagePosition: 1));
                   }
                 },
-                preset.imagePosition == 2,
-                disable: preset.imagePosition == 0,
                 label: 'image_left'.i18n,
+                disable: preset.imagePosition == 0,
+                state: preset.imagePosition == 2,
               ),
             ]),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -337,16 +328,12 @@ class _ViewNodeGeneralOptionEditorState
               mainAxisSpacing: 2,
             ),
           ),
-          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
+          const SliverPadding(
+              padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           SliverGrid(
             delegate: SliverChildListDelegate([
-              DropdownButtonFormField<String>(
-                decoration: InputDecoration(labelText: 'font_title'.i18n),
-                items: ConstList.textFontList.keys
-                    .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
-                        value: name,
-                        child: Text(name, style: ConstList.getFont(name))))
-                    .toList(),
+              CustomDropdownButton<String>(
+                label: 'font_title'.i18n,
                 onChanged: (String? t) {
                   if (t != null) {
                     var index = ref.read(currentPresetIndexProvider);
@@ -356,14 +343,14 @@ class _ViewNodeGeneralOptionEditorState
                   }
                 },
                 value: preset.titleFont,
-              ),
-              DropdownButtonFormField<String>(
-                decoration: InputDecoration(labelText: 'font_content'.i18n),
                 items: ConstList.textFontList.keys
                     .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
                         value: name,
                         child: Text(name, style: ConstList.getFont(name))))
                     .toList(),
+              ),
+              CustomDropdownButton<String>(
+                label: 'font_content'.i18n,
                 onChanged: (String? t) {
                   if (t != null) {
                     var index = ref.read(currentPresetIndexProvider);
@@ -373,7 +360,12 @@ class _ViewNodeGeneralOptionEditorState
                   }
                 },
                 value: preset.mainFont,
-              )
+                items: ConstList.textFontList.keys
+                    .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
+                        value: name,
+                        child: Text(name, style: ConstList.getFont(name))))
+                    .toList(),
+              ),
             ]),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
@@ -419,27 +411,29 @@ class _ViewNodeOutlineOptionEditorState
         controller: _scrollController,
         slivers: [
           SliverToBoxAdapter(
-            child: ViewColorPicker(
-              text: 'node_outline_color'.i18n,
-              color: preset.defaultOutlineOption.outlineColor.getColor()!,
-              onColorChanged: (Color value) {
-                ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                    presetIndex,
-                    preset.copyWith.defaultOutlineOption
-                        .outlineColor(color: value.value));
-              },
-              hasAlpha: true,
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(ConstList.padding),
+                child: ViewColorPicker(
+                  text: 'node_outline_color'.i18n,
+                  color: preset.defaultOutlineOption.outlineColor.getColor()!,
+                  onColorChanged: (Color value) {
+                    ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+                        presetIndex,
+                        preset.copyWith.defaultOutlineOption
+                            .outlineColor(color: value.value));
+                  },
+                  hasAlpha: true,
+                ),
+              ),
             ),
           ),
-          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
+          const SliverPadding(
+              padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           SliverGrid(
             delegate: SliverChildListDelegate([
-              DropdownButtonFormField<OutlineType>(
-                decoration: InputDecoration(labelText: 'outline_shape'.i18n),
-                items: OutlineType.values
-                    .map<DropdownMenuItem<OutlineType>>((type) =>
-                        DropdownMenuItem(value: type, child: Text(type.name)))
-                    .toList(),
+              CustomDropdownButton<OutlineType>(
+                label: 'outline_shape'.i18n,
                 onChanged: (OutlineType? t) {
                   if (t != null) {
                     ref.read(choiceNodePresetListProvider.notifier).updateIndex(
@@ -448,77 +442,91 @@ class _ViewNodeOutlineOptionEditorState
                   }
                 },
                 value: preset.defaultOutlineOption.outlineType,
+                items: OutlineType.values
+                    .map<DropdownMenuItem<OutlineType>>((type) =>
+                        DropdownMenuItem(value: type, child: Text(type.name)))
+                    .toList(),
               ),
-              TextFormField(
-                textAlign: TextAlign.end,
-                minLines: 1,
-                maxLines: 1,
+              CustomTextField(
+                label: 'outline_padding'.i18n,
                 keyboardType: TextInputType.number,
                 controller: ref
                     .watch(choiceNodePresetCurrentEditOutlinePaddingProvider),
-                decoration: InputDecoration(labelText: 'outline_padding'.i18n),
               ),
-              TextFormField(
-                textAlign: TextAlign.end,
-                minLines: 1,
-                maxLines: 1,
+              CustomTextField(
+                label: 'outline_width'.i18n,
                 keyboardType: TextInputType.number,
                 controller:
                     ref.watch(choiceNodePresetCurrentEditOutlineWidthProvider),
-                decoration: InputDecoration(labelText: 'outline_width'.i18n),
               ),
             ]),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 10,
-              mainAxisExtent: 60,
+              mainAxisExtent: 80,
               mainAxisSpacing: 2,
             ),
           ),
-          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
+          const SliverPadding(
+              padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           const SliverToBoxAdapter(child: Divider()),
-          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
+          const SliverPadding(
+              padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           SliverToBoxAdapter(
-            child: Row(
-              children: [
-                Text('node_select_color_enable'.i18n),
-                Checkbox(
-                  value: preset.selectOutlineEnable,
-                  onChanged: (bool? value) {
-                    if (value != null) {
-                      ref
-                          .read(choiceNodePresetListProvider.notifier)
-                          .updateIndex(presetIndex,
-                              preset.copyWith(selectOutlineEnable: value));
-                    }
-                  },
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(ConstList.padding),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Text('node_select_color_enable'.i18n),
+                        Checkbox(
+                          value: preset.selectOutlineEnable,
+                          onChanged: (bool? value) {
+                            if (value != null) {
+                              ref
+                                  .read(choiceNodePresetListProvider.notifier)
+                                  .updateIndex(
+                                      presetIndex,
+                                      preset.copyWith(
+                                          selectOutlineEnable: value));
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                    Opacity(
+                      opacity: opacity,
+                      child: ViewColorPicker(
+                        text: 'node_outline_color'.i18n,
+                        color:
+                            preset.selectOutlineOption.outlineColor.getColor()!,
+                        onColorChanged: (Color value) {
+                          ref
+                              .read(choiceNodePresetListProvider.notifier)
+                              .updateIndex(
+                                  presetIndex,
+                                  preset.copyWith.selectOutlineOption
+                                      .outlineColor(color: value.value));
+                        },
+                        hasAlpha: true,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          SliverOpacity(
-            opacity: opacity,
-            sliver: SliverToBoxAdapter(
-              child: ViewColorPicker(
-                text: 'node_outline_color'.i18n,
-                color: preset.selectOutlineOption.outlineColor.getColor()!,
-                onColorChanged: (Color value) {
-                  ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                      presetIndex,
-                      preset.copyWith.selectOutlineOption
-                          .outlineColor(color: value.value));
-                },
-                hasAlpha: true,
               ),
             ),
           ),
-          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
+          const SliverPadding(
+              padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           SliverOpacity(
             opacity: opacity,
             sliver: SliverGrid(
               delegate: SliverChildListDelegate([
-                DropdownButtonFormField<OutlineType>(
-                  decoration: InputDecoration(labelText: 'outline_shape'.i18n),
+                CustomDropdownButton<OutlineType>(
+                  label: 'outline_shape'.i18n,
+                  value: preset.selectOutlineOption.outlineType,
                   items: OutlineType.values
                       .map<DropdownMenuItem<OutlineType>>((type) =>
                           DropdownMenuItem(value: type, child: Text(type.name)))
@@ -533,32 +541,20 @@ class _ViewNodeOutlineOptionEditorState
                                   .selectOutlineOption(outlineType: t));
                     }
                   },
-                  value: preset.selectOutlineOption.outlineType,
                 ),
-                TextFormField(
-                  textAlign: TextAlign.end,
-                  minLines: 1,
-                  maxLines: 1,
-                  keyboardType: TextInputType.number,
-                  controller: ref.watch(
-                      choiceNodePresetSelectedEditOutlinePaddingProvider),
-                  decoration:
-                      InputDecoration(labelText: 'outline_padding'.i18n),
-                ),
-                TextFormField(
-                  textAlign: TextAlign.end,
-                  minLines: 1,
-                  maxLines: 1,
-                  keyboardType: TextInputType.number,
-                  controller: ref
-                      .watch(choiceNodePresetSelectedEditOutlineWidthProvider),
-                  decoration: InputDecoration(labelText: 'outline_width'.i18n),
-                ),
+                CustomTextField(
+                    controller: ref.watch(
+                        choiceNodePresetSelectedEditOutlinePaddingProvider),
+                    label: 'outline_padding'.i18n),
+                CustomTextField(
+                    controller: ref.watch(
+                        choiceNodePresetSelectedEditOutlineWidthProvider),
+                    label: 'outline_width'.i18n),
               ]),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 10,
-                mainAxisExtent: 60,
+                mainAxisExtent: 80,
                 mainAxisSpacing: 2,
               ),
             ),
@@ -599,43 +595,55 @@ class _ViewNodeColorOptionEditorState
         controller: _scrollController,
         slivers: [
           SliverToBoxAdapter(
-            child: ViewColorOptionEditor(
-              colorOption: preset.defaultColorOption,
-              changeFunction: (ColorOption after) {
-                ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                    presetIndex, preset.copyWith(defaultColorOption: after));
-              },
-            ),
-          ),
-          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
-          SliverToBoxAdapter(
-            child: Row(
-              children: [
-                Text('node_select_color_enable'.i18n),
-                Checkbox(
-                  value: preset.selectColorEnable,
-                  onChanged: (bool? value) {
-                    if (value != null) {
-                      ref
-                          .read(choiceNodePresetListProvider.notifier)
-                          .updateIndex(presetIndex,
-                              preset.copyWith(selectColorEnable: value));
-                    }
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(ConstList.padding),
+                child: ViewColorOptionEditor(
+                  colorOption: preset.defaultColorOption,
+                  changeFunction: (ColorOption after) {
+                    ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+                        presetIndex, preset.copyWith(defaultColorOption: after));
                   },
                 ),
-              ],
+              ),
             ),
           ),
-          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
-          SliverOpacity(
-            opacity: preset.selectColorEnable ? 1.0 : 0.3,
-            sliver: SliverToBoxAdapter(
-              child: ViewColorOptionEditor(
-                colorOption: preset.selectColorOption,
-                changeFunction: (ColorOption after) {
-                  ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                      presetIndex, preset.copyWith(selectColorOption: after));
-                },
+          const SliverPadding(
+              padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
+          SliverToBoxAdapter(
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(ConstList.padding),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Text('node_select_color_enable'.i18n),
+                        Checkbox(
+                          value: preset.selectColorEnable,
+                          onChanged: (bool? value) {
+                            if (value != null) {
+                              ref
+                                  .read(choiceNodePresetListProvider.notifier)
+                                  .updateIndex(presetIndex,
+                                      preset.copyWith(selectColorEnable: value));
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                    Opacity(
+                      opacity: preset.selectColorEnable ? 1.0 : 0.3,
+                      child: ViewColorOptionEditor(
+                        colorOption: preset.selectColorOption,
+                        changeFunction: (ColorOption after) {
+                          ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+                              presetIndex, preset.copyWith(selectColorOption: after));
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

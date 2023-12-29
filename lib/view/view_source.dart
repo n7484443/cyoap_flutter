@@ -1,8 +1,10 @@
 import 'package:cyoap_core/design_setting.dart';
 import 'package:cyoap_flutter/i18n.dart';
+import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_image_selector.dart';
+import 'package:cyoap_flutter/view/util/view_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -89,32 +91,45 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
           ),
           title: icon,
         ),
-        body: Column(children: [
-          DropdownButtonFormField<ImageAttribute>(
-            decoration: InputDecoration(labelText: 'background_image'.i18n),
-            items: ImageAttribute.values
-                .map((e) => DropdownMenuItem(value: e, child: Text(e.name)))
-                .toList(),
-            onChanged: (ImageAttribute? t) {
-              if (t != null) {
-                ref.read(platformDesignSettingProvider.notifier).state =
-                    designSetting.copyWith(backgroundAttribute: t);
-              }
-            },
-            value: ref.watch(platformDesignSettingProvider).backgroundAttribute,
-          ),
-          Expanded(
-            child: ViewImageDraggable(
-              addImageFunction: (ref, name) {},
-              widgetBuilder: (ref, index) => ViewSourceItem(index: index),
-              widgetLength: (ref) => ref.watch(vmSourceProvider).length,
-              imageName: (ref, index) => ref.read(vmSourceProvider)[index],
-              isRemovable: ref.watch(deleteModeProvider),
-              removeFunction: (ref, index) =>
-                  ref.read(vmSourceProvider.notifier).checkRemove(index),
+        body: Padding(
+          padding: const EdgeInsets.all(ConstList.paddingHuge),
+          child: Column(children: [
+            Row(
+              children: [
+                Expanded(
+                  child: CustomDropdownButton<ImageAttribute>(
+                    label: 'background_image_batch_option'.i18n,
+                    value: ref
+                        .watch(platformDesignSettingProvider)
+                        .backgroundAttribute,
+                    items: ImageAttribute.values
+                        .map((e) =>
+                            DropdownMenuItem(value: e, child: Text(e.name)))
+                        .toList(),
+                    onChanged: (ImageAttribute? t) {
+                      if (t != null) {
+                        ref.read(platformDesignSettingProvider.notifier).state =
+                            designSetting.copyWith(backgroundAttribute: t);
+                      }
+                    },
+                  ),
+                ),
+                const Spacer(),
+              ],
             ),
-          ),
-        ]),
+            Expanded(
+              child: ViewImageDraggable(
+                addImageFunction: (ref, name) {},
+                widgetBuilder: (ref, index) => ViewSourceItem(index: index),
+                widgetLength: (ref) => ref.watch(vmSourceProvider).length,
+                imageName: (ref, index) => ref.read(vmSourceProvider)[index],
+                isRemovable: ref.watch(deleteModeProvider),
+                removeFunction: (ref, index) =>
+                    ref.read(vmSourceProvider.notifier).checkRemove(index),
+              ),
+            ),
+          ]),
+        ),
       ),
     );
   }
@@ -177,41 +192,48 @@ class _ViewSourceItemState extends ConsumerState<ViewSourceItem> {
         ref.read(editorChangeProvider.notifier).needUpdate();
       },
       child: Card(
-        elevation: 0,
         shape: RoundedRectangleBorder(
           side: BorderSide(
             color: ref.watch(backgroundCurrentStateProvider) == widget.index
                 ? Colors.red
                 : Theme.of(context).colorScheme.outline,
-            width: 4,
+            width: 2,
           ),
           borderRadius: const BorderRadius.all(Radius.circular(4)),
         ),
         color: deleteList.contains(name)
             ? Theme.of(context).colorScheme.secondaryContainer
             : null,
-        child: Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: ViewImageLoading(name),
-              ),
-              Text(name),
-              const Divider(),
-              SizedBox(
+        child: Column(
+          children: [
+            Expanded(
+              child: ViewImageLoading(name),
+            ),
+            Text(
+              name,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
+            const Divider(height: 2),
+            Padding(
+              padding: const EdgeInsets.all(ConstList.paddingSmall),
+              child: SizedBox(
                 height: 24,
                 child: TextField(
                   textAlign: TextAlign.start,
                   decoration: InputDecoration(
+                    contentPadding:
+                        const EdgeInsets.fromLTRB(2.0, 1.0, 2.0, 11.0),
                     hintText: 'source_hint'.i18n,
                     alignLabelWithHint: true,
+                    border: InputBorder.none,
                   ),
+                  maxLines: 1,
                   controller: _textEditingController,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -104,6 +104,15 @@ class ViewImageDraggable extends ConsumerWidget {
               },
               child: Text('add_image'.i18n),
             ),
+            const Spacer(),
+            Slider(
+              value: ref.watch(shownImageNumProvider).toDouble(),
+              min: 3,
+              max: 8,
+              onChanged: (double value) {
+                ref.read(shownImageNumProvider.notifier).state = value.toInt();
+              },
+            ),
           ],
         ),
         Expanded(
@@ -231,7 +240,7 @@ class _ViewImageSelectorState extends ConsumerState<ViewImageSelector> {
             childCount: widget.widgetLength(ref),
           ),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 4,
+            crossAxisCount: ref.watch(shownImageNumProvider),
             crossAxisSpacing: 3.0,
             mainAxisSpacing: 3.0,
           ),

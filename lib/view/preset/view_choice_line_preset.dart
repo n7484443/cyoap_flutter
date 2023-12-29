@@ -2,6 +2,7 @@ import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/preset/view_preset.dart';
+import 'package:cyoap_flutter/view/util/view_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,7 +12,6 @@ import '../../viewModel/preset/vm_choice_line_preset.dart';
 import '../../viewModel/preset/vm_preset.dart';
 import '../util/controller_adjustable_scroll.dart';
 import '../util/view_color_picker.dart';
-import '../util/view_switch_label.dart';
 
 class ChoiceLineSample extends ConsumerWidget {
   const ChoiceLineSample({super.key});
@@ -19,7 +19,9 @@ class ChoiceLineSample extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var colorOption =
-        ref.watch(choiceLinePresetCurrentEditProvider).backgroundColorOption;
+        ref
+            .watch(choiceLinePresetCurrentEditProvider)
+            .backgroundColorOption;
     return Container(
       decoration: BoxDecoration(
         image: ImageDB().checkers,
@@ -72,25 +74,31 @@ class ChoiceLinePresetList extends ConsumerWidget {
                 trailing: preset.name == "default"
                     ? null
                     : IconButton(
-                        icon: Icon(Icons.delete,
-                            size: (IconTheme.of(context).size ?? 18) * 0.8),
-                        onPressed: () {
-                          ref
-                              .read(choiceLinePresetListProvider.notifier)
-                              .deleteIndex(index);
-                        },
-                      ),
+                  icon: Icon(Icons.delete,
+                      size: (IconTheme
+                          .of(context)
+                          .size ?? 18) * 0.8),
+                  onPressed: () {
+                    ref
+                        .read(choiceLinePresetListProvider.notifier)
+                        .deleteIndex(index);
+                  },
+                ),
                 leading: preset.name == "default" ? null : IconButton(
                   icon: Icon(Icons.drive_file_rename_outline,
-                      size: (IconTheme.of(context).size ?? 18) * 0.8),
-                  onPressed: () async{
+                      size: (IconTheme
+                          .of(context)
+                          .size ?? 18) * 0.8),
+                  onPressed: () async {
                     var text = await showDialog(
                         context: context,
                         builder: (context) {
                           return PresetRenameDialog(preset.name);
                         },
                         barrierDismissible: false);
-                    if (text != null && text.trim().isNotEmpty) {
+                    if (text != null && text
+                        .trim()
+                        .isNotEmpty) {
                       ref
                           .read(choiceLinePresetListProvider.notifier)
                           .rename(index, text.trim());
@@ -128,14 +136,13 @@ class ViewLineOptionEditor extends ConsumerWidget {
         slivers: [
           SliverGrid(
             delegate: SliverChildListDelegate([
-              ViewSwitchLabel(
-                () => ref.read(choiceLinePresetListProvider.notifier).updateIndex(
-                    index,
-                    preset.copyWith(
-                        alwaysVisibleLine: !preset.alwaysVisibleLine)),
-                preset.alwaysVisibleLine,
-                label: 'black_line'.i18n,
-              ),
+              CustomSwitch(updateState: () =>
+                  ref.read(choiceLinePresetListProvider.notifier).updateIndex(
+                      index,
+                      preset.copyWith(
+                          alwaysVisibleLine: !preset.alwaysVisibleLine)),
+                  label: 'black_line'.i18n,
+                  state: preset.alwaysVisibleLine)
             ]),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: ConstList.isSmallDisplay(context) ? 2 : 3,
@@ -144,14 +151,20 @@ class ViewLineOptionEditor extends ConsumerWidget {
               mainAxisSpacing: 2,
             ),
           ),
-          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
+          const SliverPadding(
+              padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           SliverToBoxAdapter(
-            child: ViewColorOptionEditor(
-              colorOption: colorOption,
-              changeFunction: (ColorOption after) {
-                ref.read(choiceLinePresetListProvider.notifier).updateIndex(
-                    index, preset.copyWith(backgroundColorOption: after));
-              },
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(ConstList.padding),
+                child: ViewColorOptionEditor(
+                  colorOption: colorOption,
+                  changeFunction: (ColorOption after) {
+                    ref.read(choiceLinePresetListProvider.notifier).updateIndex(
+                        index, preset.copyWith(backgroundColorOption: after));
+                  },
+                ),
+              ),
             ),
           ),
         ],

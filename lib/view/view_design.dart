@@ -4,6 +4,7 @@ import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/preset/view_preset.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_color_picker.dart';
+import 'package:cyoap_flutter/view/util/view_options.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,15 +39,22 @@ class ViewDesignSetting extends ConsumerWidget {
           ),
         ),
         body: Padding(
-          padding: const EdgeInsets.only(top: ConstList.paddingHuge, bottom: ConstList.padding, left: ConstList.padding, right: ConstList.padding),
+          padding: const EdgeInsets.only(
+              top: ConstList.paddingHuge,
+              bottom: ConstList.padding,
+              left: ConstList.padding,
+              right: ConstList.padding),
           child: Column(
             children: [
               Expanded(
-                child: TabBarView(
-                  children: [
-                    const ViewGeneralSettingTab(),
-                    ViewPresetTab(),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.all(ConstList.paddingHuge),
+                  child: TabBarView(
+                    children: [
+                      const ViewGeneralSettingTab(),
+                      ViewPresetTab(),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -76,23 +84,32 @@ class _ViewGeneralSettingTabState extends ConsumerState<ViewGeneralSettingTab> {
   @override
   Widget build(BuildContext context) {
     var designSetting = ref.watch(platformDesignSettingProvider);
-    var fontEditor = ViewFontSelector(
+    var fontEditor = CustomDropdownButton(
       label: 'font_score'.i18n,
       value: designSetting.variableFont,
-      onChange: (String? value) {
+      items: ConstList.textFontList.keys
+          .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
+          value: name, child: Text(name, style: ConstList.getFont(name))))
+          .toList(),
+      onChanged: (String? value) {
         ref.read(platformDesignSettingProvider.notifier).state =
             designSetting.copyWith(variableFont: value!);
       },
     );
-    var colorEditor = ViewColorOptionEditor(
-      colorOption: designSetting.backgroundColorOption,
-      changeFunction: (ColorOption color) {
-        ref.read(platformDesignSettingProvider.notifier).state =
-            designSetting.copyWith(
-          backgroundColorOption: color,
-        );
-      },
-      hasAlpha: false,
+    var colorEditor = Card(
+      child: Padding(
+        padding: const EdgeInsets.all(ConstList.padding),
+        child: ViewColorOptionEditor(
+          colorOption: designSetting.backgroundColorOption,
+          changeFunction: (ColorOption color) {
+            ref.read(platformDesignSettingProvider.notifier).state =
+                designSetting.copyWith(
+              backgroundColorOption: color,
+            );
+          },
+          hasAlpha: false,
+        ),
+      ),
     );
     var backgroundPreview = Padding(
       padding: const EdgeInsets.all(8.0),
@@ -136,7 +153,7 @@ class _ViewGeneralSettingTabState extends ConsumerState<ViewGeneralSettingTab> {
                 ]),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  mainAxisExtent: 100,
+                  mainAxisExtent: 80,
                   mainAxisSpacing: 60,
                   crossAxisSpacing: 60,
                 ),
@@ -188,55 +205,14 @@ class _ViewPositionSettingState extends ConsumerState<ViewPositionSetting> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          child: Text('margin_vertical'.i18n,
-              style: Theme.of(context).textTheme.labelLarge),
-        ),
-        SizedBox(
-          width: 100,
-          child: TextField(
-            textAlign: TextAlign.end,
-            maxLength: 4,
-            minLines: 1,
-            maxLines: 1,
-            keyboardType: const TextInputType.numberWithOptions(
-                decimal: true, signed: false),
-            controller: _controller,
-            decoration: InputDecoration(
-              label: Text('${"margin_default".i18n} 12.0'),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class ViewFontSelector extends ConsumerWidget {
-  final String label;
-  final Function(String?)? onChange;
-  final String value;
-
-  const ViewFontSelector({
-    required this.label,
-    required this.onChange,
-    required this.value,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return DropdownButtonFormField<String>(
-      decoration: InputDecoration(labelText: label),
-      items: ConstList.textFontList.keys
-          .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
-              value: name, child: Text(name, style: ConstList.getFont(name))))
-          .toList(),
-      onChanged: onChange,
-      value: value,
+    return CustomTextField(
+      controller: _controller!,
+      label: 'margin_vertical'.i18n.fill([12.0]),
+      keyboardType: const TextInputType.numberWithOptions(
+        decimal: true,
+        signed: false,
+      ),
+      maxLength: 5,
     );
   }
 }
