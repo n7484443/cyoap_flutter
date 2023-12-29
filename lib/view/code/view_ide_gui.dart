@@ -70,7 +70,7 @@ class ViewIdeGui extends ConsumerWidget {
                         ref
                             .read(nodeEditorTargetProvider)
                             .node
-                            .recursiveStatus
+                            .conditionalCodeHandler
                             .executeCodeString = out.$1;
                         ref
                             .read(currentIdeOpenProvider.notifier)

@@ -101,7 +101,7 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
     _textFieldController = TextEditingController(
         text: ref
                 .read(lineProvider(widget.y))
-                ?.recursiveStatus
+                ?.conditionalCodeHandler
                 .conditionVisibleString ??
             "");
     _nameController = TextEditingController(
@@ -319,7 +319,7 @@ class NodeDivider extends ConsumerWidget {
                           barrierDismissible: false);
                       getPlatform
                           .getLineSetting(y)
-                          ?.recursiveStatus
+                          ?.conditionalCodeHandler
                           .conditionVisibleString = value!.item1;
                       ref.read(lineOptionProvider(y).notifier).update(
                           (state) => state.copyWith(name: value!.item2));

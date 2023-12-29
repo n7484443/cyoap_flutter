@@ -13,7 +13,7 @@ final controllerClickableProvider =
     Provider.autoDispose<TextEditingController>((ref) {
   var node = ref.watch(nodeEditorTargetProvider).node;
   var controller = TextEditingController(
-      text: node.recursiveStatus.conditionClickableString);
+      text: node.conditionalCodeHandler.conditionClickableString);
   controller.addListener(() {
     ref
         .read(ideCurrentInputProvider.notifier)
@@ -23,7 +23,7 @@ final controllerClickableProvider =
       ref
           .read(nodeEditorTargetProvider)
           .node
-          .recursiveStatus
+          .conditionalCodeHandler
           .conditionClickableString = controller.text;
       ref.read(editorChangeProvider.notifier).needUpdate();
     });
@@ -39,14 +39,14 @@ final controllerVisibleProvider =
     Provider.autoDispose<TextEditingController>((ref) {
   var node = ref.watch(nodeEditorTargetProvider).node;
   var controller =
-      TextEditingController(text: node.recursiveStatus.conditionVisibleString);
+      TextEditingController(text: node.conditionalCodeHandler.conditionVisibleString);
   controller.addListener(() {
     ref
         .read(ideCurrentInputProvider.notifier)
         .addCheckText(controller.text, controller.selection.end);
     EasyDebounce.debounce('conditionVisibleString', ConstList.debounceDuration,
         () {
-      node.recursiveStatus.conditionVisibleString = controller.text;
+      node.conditionalCodeHandler.conditionVisibleString = controller.text;
       ref.read(editorChangeProvider.notifier).needUpdate();
     });
   });
@@ -67,7 +67,7 @@ final regexFunction = RegExp(
 final controllerIdeProvider = Provider.autoDispose<QuillController>((ref) {
   var node = ref.watch(nodeEditorTargetProvider).node;
   var data = [
-    {"insert": "${node.recursiveStatus.executeCodeString ?? ''}\n"}
+    {"insert": "${node.conditionalCodeHandler.executeCodeString ?? ''}\n"}
   ];
   var controller = QuillController(
       document: Document.fromJson(data),
@@ -78,7 +78,7 @@ final controllerIdeProvider = Provider.autoDispose<QuillController>((ref) {
       if (ref
               .read(nodeEditorTargetProvider)
               .node
-              .recursiveStatus
+              .conditionalCodeHandler
               .executeCodeString !=
           plainText) {
         var styleNull = Attribute.color;
@@ -111,7 +111,7 @@ final controllerIdeProvider = Provider.autoDispose<QuillController>((ref) {
         ref
             .read(nodeEditorTargetProvider)
             .node
-            .recursiveStatus
+            .conditionalCodeHandler
             .executeCodeString = plainText;
         ref.read(editorChangeProvider.notifier).needUpdate();
       }
