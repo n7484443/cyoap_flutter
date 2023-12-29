@@ -113,13 +113,12 @@ class VMDraggableNestedMap {
       var inputNode = getPlatform.getChoiceNode(input)!;
       var targetNode = getPlatform.getChoiceNode(target);
       if (targetNode == null) {
-        var generableParser =
-            getPlatform.getChoice(target.removeLast());
-        if (generableParser == null) {
+        var choice = getPlatform.getChoice(target.removeLast());
+        if (choice == null) {
           getPlatform.removeData(input);
           getPlatform.addData(target, inputNode);
         } else {
-          getPlatform.insertDataWithParent(inputNode, generableParser);
+          getPlatform.insertDataWithParent(inputNode, choice);
         }
       } else {
         getPlatform.insertData(inputNode, targetNode);
@@ -172,7 +171,7 @@ final lineVisibleProvider = Provider.autoDispose.family<bool?, Pos>(
     (ref, pos) => ref.watch(lineProvider(pos.first))?.isOpen());
 
 @riverpod
-List<Choice> getChildren(GetChildrenRef ref, {required Pos pos}){
+List<Choice> getChildren(GetChildrenRef ref, {required Pos pos}) {
   if (pos.length == 1) {
     return ref.watch(lineProvider(pos.first))?.children ?? [];
   } else {
