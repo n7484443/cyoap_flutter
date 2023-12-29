@@ -290,8 +290,22 @@ class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    if (ref.watch(sideTabProvider) == 2) {
-      return const ViewSideClipboard();
+    if (ref.watch(sideTabProvider) == 0) {
+      return ListView(
+        controller: _scrollController,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _controller,
+              decoration: InputDecoration(
+                hintText: "search".i18n,
+              ),
+            ),
+          ),
+          const NodeTiles(),
+        ],
+      );
     }
     if (ref.watch(sideTabProvider) == 1) {
       return ListView(
@@ -310,22 +324,8 @@ class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
         ],
       );
     }
-    if (ref.watch(sideTabProvider) == 0) {
-      return ListView(
-        controller: _scrollController,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: _controller,
-              decoration: InputDecoration(
-                hintText: "search".i18n,
-              ),
-            ),
-          ),
-          const NodeTiles(),
-        ],
-      );
+    if (ref.watch(sideTabProvider) == 2) {
+      return const ViewSideClipboard();
     }
     return const SizedBox.shrink();
   }
@@ -338,7 +338,7 @@ class ViewSideClipboard extends ConsumerStatefulWidget {
   ConsumerState createState() => _ViewSideClipboardState();
 }
 
-class _ViewSideClipboardState extends ConsumerState<ViewSideClipboard> {
+class _ViewSideClipboardState extends ConsumerState<ViewSideClipboard>{
   @override
   Widget build(BuildContext context) {
     var list = [];
@@ -370,14 +370,17 @@ class _ViewSideClipboardState extends ConsumerState<ViewSideClipboard> {
               ),
             ),
             onDragStarted: () {
+              if(ConstList.isMobile()){
+                Scaffold.of(context).closeDrawer();
+                ref.read(sideTabProvider.notifier).state = 0;
+              }
               ref.read(dragChoiceNodeProvider.notifier).dragStart(pos);
             },
-            onDragEnd: (DraggableDetails data) {
-              ref.read(dragChoiceNodeProvider.notifier).dragEnd();
+            onDragUpdate: (DragUpdateDetails details){
+              ref
+                  .read(dragPositionProvider.notifier)
+                  .state = details.localPosition.dy;
             },
-            onDragUpdate: (DragUpdateDetails details) => ref
-                .read(dragPositionProvider.notifier)
-                .state = details.localPosition.dy,
             child: ViewChoiceNode(pos, ignoreChild: true),
           ),
         );

@@ -68,6 +68,7 @@ class NodeDragTarget extends ConsumerWidget {
           } else {
             ref.read(vmDraggableNestedMapProvider).changeData(drag, pos);
           }
+          ref.read(dragChoiceNodeProvider.notifier).dragEnd();
         },
       ),
     );
@@ -120,10 +121,10 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
+          if(ConstList.isMobile())Text('lineSetting_tooltip_0'.i18n),
+          if(ConstList.isMobile())Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('lineSetting_tooltip_0'.i18n),
-              const Spacer(),
               IconButton(
                 icon: const Icon(Icons.chevron_left),
                 onPressed: () {
@@ -140,6 +141,31 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
                 onPressed: () {
                   ref.read(lineOptionProvider(widget.y).notifier).update(
                       (state) =>
+                          state.copyWith(maxSelect: state.maxSelect + 1));
+                },
+              ),
+            ],
+          ),
+          if(!ConstList.isMobile())Row(
+            children: [
+              Text('lineSetting_tooltip_0'.i18n),
+              const Spacer(),
+              IconButton(
+                icon: const Icon(Icons.chevron_left),
+                onPressed: () {
+                  ref.read(lineOptionProvider(widget.y).notifier).update(
+                          (state) => state.copyWith(
+                          maxSelect: state.maxSelect >= 0
+                              ? state.maxSelect - 1
+                              : state.maxSelect));
+                },
+              ),
+              Text(maxSelectString),
+              IconButton(
+                icon: const Icon(Icons.chevron_right),
+                onPressed: () {
+                  ref.read(lineOptionProvider(widget.y).notifier).update(
+                          (state) =>
                           state.copyWith(maxSelect: state.maxSelect + 1));
                 },
               ),

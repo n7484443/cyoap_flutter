@@ -1,7 +1,5 @@
-import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/custom_snackbar.dart';
-import 'package:cyoap_flutter/view/view_choice_node.dart';
 import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
 import 'package:cyoap_flutter/view/view_make_platform.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
@@ -10,8 +8,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../main.dart';
 import '../model/platform_system.dart';
-import '../viewModel/vm_choice_node.dart';
-import '../viewModel/vm_draggable_nested_map.dart';
 
 class ViewSaveDialog extends ConsumerWidget {
   final bool asZip;
@@ -38,89 +34,6 @@ class ViewSaveDialog extends ConsumerWidget {
   }
 }
 
-class CopyButton extends ConsumerWidget {
-  const CopyButton({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Visibility(
-      visible: ref.watch(copiedChoiceNodeProvider).choiceNode != null,
-      child: Draggable<Pos>(
-        data: const Pos(data: [copiedPositioned, copiedPositioned]),
-        feedback: Transform.scale(
-          scale: 0.9,
-          child: Opacity(
-            opacity: 0.6,
-            child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 400,
-                ),
-                child: const ViewChoiceNode(
-                    Pos(data: [copiedPositioned, copiedPositioned]))),
-          ),
-        ),
-        onDragStarted: () {
-          ref
-              .read(dragChoiceNodeProvider.notifier)
-              .dragStart(const Pos(data: [copiedPositioned, copiedPositioned]));
-        },
-        onDragEnd: (DraggableDetails data) {
-          ref.read(dragChoiceNodeProvider.notifier).dragEnd();
-        },
-        onDragUpdate: (DragUpdateDetails details) => ref
-            .read(dragPositionProvider.notifier)
-            .state = details.localPosition.dy,
-        child: IconButton(
-          icon: const Icon(Icons.paste),
-          tooltip: 'copy_tooltip'.i18n,
-          onPressed: () {},
-        ),
-      ),
-    );
-  }
-}
-
-class RecoverButton extends ConsumerWidget {
-  const RecoverButton({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Visibility(
-      visible: ref.watch(removedChoiceNodeProvider).choiceNode != null,
-      child: Draggable<Pos>(
-        data: const Pos(data: [removedPositioned, removedPositioned]),
-        feedback: Transform.scale(
-          scale: 0.9,
-          child: Opacity(
-            opacity: 0.6,
-            child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 400,
-                ),
-                child: const ViewChoiceNode(
-                    Pos(data: [removedPositioned, removedPositioned]))),
-          ),
-        ),
-        onDragStarted: () {
-          ref.read(dragChoiceNodeProvider.notifier).dragStart(
-              const Pos(data: [removedPositioned, removedPositioned]));
-        },
-        onDragEnd: (DraggableDetails data) {
-          ref.read(dragChoiceNodeProvider.notifier).dragEnd();
-        },
-        onDragUpdate: (DragUpdateDetails details) => ref
-            .read(dragPositionProvider.notifier)
-            .state = details.localPosition.dy,
-        child: IconButton(
-          icon: const Icon(Icons.restore_from_trash),
-          tooltip: 'recently_tooltip'.i18n,
-          onPressed: () {},
-        ),
-      ),
-    );
-  }
-}
-
 class ViewMake extends ConsumerWidget {
   const ViewMake({super.key});
 
@@ -136,8 +49,6 @@ class ViewMake extends ConsumerWidget {
               children: [
                 ViewSaveIcons(),
                 ViewRefreshIcons(),
-                CopyButton(),
-                RecoverButton(),
               ],
             ),
             actions: [

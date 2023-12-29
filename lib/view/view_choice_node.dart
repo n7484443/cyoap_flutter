@@ -294,9 +294,6 @@ class NodeDraggable extends ConsumerWidget {
                 child: widget,
               )
             : widget,
-        onDragEnd: (DraggableDetails data) {
-          ref.read(dragChoiceNodeProvider.notifier).dragEnd();
-        },
         onDraggableCanceled: (Velocity velocity, Offset offset) {
           ref.read(dragChoiceNodeProvider.notifier).dragEnd();
         },
@@ -322,9 +319,6 @@ class NodeDraggable extends ConsumerWidget {
           opacity: ref.watch(dragChoiceNodeProvider) == pos ? 0.2 : 1.0,
           child: widget,
         ),
-        onDragEnd: (DraggableDetails data) {
-          ref.read(dragChoiceNodeProvider.notifier).dragEnd();
-        },
         onDraggableCanceled: (Velocity velocity, Offset offset) {
           ref.read(dragChoiceNodeProvider.notifier).dragEnd();
         },
