@@ -88,12 +88,13 @@ class PlatformFileSystem {
         if (f is File) {
           var value = await f.readAsString();
           if (f.path.contains('lineSetting_')) {
-            lineSettingList.add(ChoiceLine.fromJson(jsonDecode(value)));
+            var index =
+                int.tryParse(basename(f.path).split('_')[1].split('.')[0]) ?? 0;
+            lineSettingList.add(ChoiceLine.fromJson(jsonDecode(value), index));
           }
         }
       }
     }
-
     platform!.addDataAll(lineSettingList);
     platform!.init();
   }
@@ -108,7 +109,8 @@ class PlatformFileSystem {
       var data = choiceNodes[name]!;
       var decoded = jsonDecode(data);
       if (name.contains('lineSetting_')) {
-        lineSettingList.add(ChoiceLine.fromJson(decoded));
+        var index = int.tryParse(name.split('_')[1].split('.')[0]) ?? 0;
+        lineSettingList.add(ChoiceLine.fromJson(decoded, index));
       }
     }
     Map map = jsonDecode(imageSource);
@@ -143,8 +145,10 @@ class PlatformFileSystem {
           String dataConverted = utf8.decode(data, allowMalformed: true);
           if (fileName.startsWith('nodes')) {
             if (fileName.contains('lineSetting_')) {
+              var index =
+                  int.tryParse(fileName.split('_')[1].split('.')[0]) ?? 0;
               lineSettingList
-                  .add(ChoiceLine.fromJson(jsonDecode(dataConverted)));
+                  .add(ChoiceLine.fromJson(jsonDecode(dataConverted), index));
             }
           } else if (fileName.endsWith('platform.json')) {
             platformJson = dataConverted;
