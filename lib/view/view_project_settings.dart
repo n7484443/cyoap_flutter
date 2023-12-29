@@ -309,12 +309,8 @@ class _ViewGlobalVariableInnerEditorState
     if (currentIndex == null) {
       return const SizedBox();
     }
-    var currentEditValue = ref
-        .watch(valueTypeWrapperListProvider.notifier)
-        .getEditTargetValueTypeWrapper(currentIndex)!;
-    var currentEditName = ref
-        .watch(valueTypeWrapperListProvider.notifier)
-        .getEditTargetName(currentIndex)!;
+    var currentEditValueList = ref.watch(valueTypeWrapperListProvider);
+    var (currentEditName, currentEditValue) = currentEditValueList[currentIndex];
     return Scrollbar(
       thumbVisibility: true,
       controller: controller,

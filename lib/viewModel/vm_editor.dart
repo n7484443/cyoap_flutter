@@ -105,11 +105,12 @@ final nodeModeProvider = StateProvider.autoDispose<ChoiceNodeMode>((ref) {
 final nodeTitleProvider = StateProvider.autoDispose<String>(
     (ref) => ref.watch(nodeEditorTargetProvider).title);
 
-final maximumProvider = Provider.autoDispose<TextEditingController>((ref) {
+@riverpod
+TextEditingController maximum(MaximumRef ref) {
   var node = ref.watch(nodeEditorTargetProvider);
   var controller = TextEditingController(text: node.maximumStatus.toString());
   controller.addListener(() {
-    ref.read(nodeEditorTargetProvider.notifier).setState((node){
+    ref.read(nodeEditorTargetProvider.notifier).setState((node) {
       node.maximumStatus = int.tryParse(controller.text) ?? 0;
       return node;
     });
@@ -117,16 +118,14 @@ final maximumProvider = Provider.autoDispose<TextEditingController>((ref) {
   });
   ref.onDispose(() => controller.dispose());
   return controller;
-});
+}
 
-final imageListStateProvider =
-    StateNotifierProvider.autoDispose<ImageListStateNotifier, List<String>>(
-        (ref) => ImageListStateNotifier(ref));
-
-class ImageListStateNotifier extends StateNotifier<List<String>> {
-  Ref ref;
-
-  ImageListStateNotifier(this.ref) : super(ImageDB().imageList);
+@riverpod
+class ImageListState extends _$ImageListState {
+  @override
+  List<String> build() {
+    return ImageDB().imageList;
+  }
 
   Future<String> addImage() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -140,7 +139,7 @@ class ImageListStateNotifier extends StateNotifier<List<String>> {
       ref
           .read(lastImageProvider.notifier)
           .update((state) => result.files.single.bytes);
-      ref.read(editorChangeProvider.notifier).state = true;
+      ref.read(editorChangeProvider.notifier).needUpdate();
     }
     return name;
   }
@@ -153,7 +152,7 @@ class ImageListStateNotifier extends StateNotifier<List<String>> {
     ref.read(imageStateProvider.notifier).state =
         ImageDB().getImageIndex(out.item1);
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-    ref.read(editorChangeProvider.notifier).state = true;
+    ref.read(editorChangeProvider.notifier).needUpdate();
     ref.read(lastImageProvider.notifier).update((state) => null);
     ref.invalidate(vmSourceProvider);
     state = [...ImageDB().imageList];
@@ -162,25 +161,22 @@ class ImageListStateNotifier extends StateNotifier<List<String>> {
 
 final imageStateProvider = StateProvider.autoDispose<int>((ref) {
   ref.listenSelf((previous, int index) {
-    ref.read(nodeEditorTargetProvider.notifier).setState(
-        (node){
-          node.imageString = ImageDB().getImageName(index);
-          return node;
-        }
-    );
+    ref.read(nodeEditorTargetProvider.notifier).setState((node) {
+      node.imageString = ImageDB().getImageName(index);
+      return node;
+    });
     ref.read(editorChangeProvider.notifier).needUpdate();
   });
   return ImageDB()
       .getImageIndex(ref.read(nodeEditorTargetProvider).imageString);
 });
 
-final editorChangeProvider = StateNotifierProvider<EditorChangeNotifier, bool>(
-    (ref) => EditorChangeNotifier(ref));
-
-class EditorChangeNotifier extends StateNotifier<bool> {
-  Ref ref;
-
-  EditorChangeNotifier(this.ref) : super(false);
+@riverpod
+class EditorChange extends _$EditorChange {
+  @override
+  bool build() {
+    return false;
+  }
 
   void needUpdate() {
     state = true;

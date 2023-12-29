@@ -5,11 +5,15 @@ import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../main.dart';
 
-final projectSettingNameTextEditingProvider =
-    Provider.autoDispose<TextEditingController>((ref) {
+part 'vm_project_setting.g.dart';
+
+@riverpod
+TextEditingController projectSettingNameTextEditing(
+    ProjectSettingNameTextEditingRef ref) {
   var index = ref.watch(currentEditGlobalVariableProvider)!;
   var name =
       ref.read(valueTypeWrapperListProvider.notifier).getEditTargetName(index)!;
@@ -35,13 +39,14 @@ final projectSettingNameTextEditingProvider =
     EasyDebounce.cancel('projectSettingNameTextEditingProvider');
   });
   return controller;
-});
+}
 
-final projectSettingValueTextEditingProvider =
-    Provider.autoDispose<TextEditingController>((ref) {
+@riverpod
+TextEditingController projectSettingValueTextEditing(
+    ProjectSettingValueTextEditingRef ref) {
   var index = ref.watch(currentEditGlobalVariableProvider)!;
   var name =
-      ref.read(valueTypeWrapperListProvider.notifier).getEditTargetName(index)!;
+  ref.read(valueTypeWrapperListProvider.notifier).getEditTargetName(index)!;
   var value = ref
       .read(valueTypeWrapperListProvider.notifier)
       .getEditTargetValueTypeWrapper(index)!;
@@ -51,29 +56,30 @@ final projectSettingValueTextEditingProvider =
   controller.addListener(() {
     EasyDebounce.debounce(
         'projectSettingValueTextEditingProvider', ConstList.debounceDuration,
-        () {
-      var newValue = controller.text.trim();
-      if (newValue.isEmpty) {
-        return;
-      }
-      ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(
-          index,
-          name,
-          value.copyWith(valueType: getValueTypeFromStringInput(newValue)));
-    });
+            () {
+          var newValue = controller.text.trim();
+          if (newValue.isEmpty) {
+            return;
+          }
+          ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(
+              index,
+              name,
+              value.copyWith(valueType: getValueTypeFromStringInput(newValue)));
+        });
   });
   ref.onDispose(() {
     controller.dispose();
     EasyDebounce.cancel('projectSettingValueTextEditingProvider');
   });
   return controller;
-});
+}
 
-final projectSettingDisplayNameTextEditingProvider =
-    Provider.autoDispose<TextEditingController>((ref) {
+@riverpod
+TextEditingController projectSettingDisplayNameTextEditing(
+    ProjectSettingDisplayNameTextEditingRef ref) {
   var index = ref.watch(currentEditGlobalVariableProvider)!;
   var name =
-      ref.read(valueTypeWrapperListProvider.notifier).getEditTargetName(index)!;
+  ref.read(valueTypeWrapperListProvider.notifier).getEditTargetName(index)!;
   var value = ref
       .read(valueTypeWrapperListProvider.notifier)
       .getEditTargetValueTypeWrapper(index)!;
@@ -81,36 +87,32 @@ final projectSettingDisplayNameTextEditingProvider =
   controller.addListener(() {
     EasyDebounce.debounce('projectSettingDisplayNameTextEditingProvider',
         ConstList.debounceDuration, () {
-      var newDisplayName = controller.text.trim();
-      if (newDisplayName.isEmpty) {
-        newDisplayName = name;
-      }
-      ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(
-          index, name, value.copyWith(displayName: newDisplayName));
-    });
+          var newDisplayName = controller.text.trim();
+          if (newDisplayName.isEmpty) {
+            newDisplayName = name;
+          }
+          ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(
+              index, name, value.copyWith(displayName: newDisplayName));
+        });
   });
   ref.onDispose(() {
     controller.dispose();
     EasyDebounce.cancel('projectSettingDisplayNameTextEditingProvider');
   });
   return controller;
-});
+}
 
 final currentEditGlobalVariableProvider =
     StateProvider.autoDispose<int?>((ref) {
   return null;
 });
 
-final valueTypeWrapperListProvider = StateNotifierProvider.autoDispose<
-        ValueTypeWrapperListNotifier, List<(String, ValueTypeWrapper)>>(
-    (ref) => ValueTypeWrapperListNotifier(
-        ref, List.from(getPlatform.globalSetting)));
-
-class ValueTypeWrapperListNotifier
-    extends StateNotifier<List<(String, ValueTypeWrapper)>> {
-  Ref ref;
-
-  ValueTypeWrapperListNotifier(this.ref, super.state);
+@riverpod
+class ValueTypeWrapperList extends _$ValueTypeWrapperList {
+  @override
+  List<(String, ValueTypeWrapper)> build() {
+    return List.from(getPlatform.globalSetting);
+  }
 
   void addInitialValue(String name, ValueTypeWrapper type) {
     int t = 0;
@@ -202,8 +204,8 @@ final globalVariableFilterProvider = StateProvider<FilterType>((ref) {
   return FilterType.showAll;
 });
 
-final globalVariableFilteredListProvider =
-    Provider.autoDispose<List<int>>((ref) {
+@riverpod
+List<int> globalVariableFilteredList(GlobalVariableFilteredListRef ref) {
   var filterType = ref.watch(globalVariableFilterProvider);
   var list = ref.watch(valueTypeWrapperListProvider);
   List<int> output = [];
@@ -227,4 +229,4 @@ final globalVariableFilteredListProvider =
     }
   }
   return output;
-});
+}
