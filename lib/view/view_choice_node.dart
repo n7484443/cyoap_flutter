@@ -79,7 +79,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var node = ref.watch(choiceNodeProvider(pos)).node!;
+    var node = ref.watch(choiceNodeStatusProvider(pos)).node!;
     var design = ref.watch(choiceNodeDesignSettingProvider(pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     var isSelected = node.select > 0;
@@ -131,7 +131,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
                           break;
                         case 1:
                           ref.read(vmDraggableNestedMapProvider).copyData(
-                              ref.watch(choiceNodeProvider(pos)).node!);
+                              ref.watch(choiceNodeStatusProvider(pos)).node!);
                           break;
                         case 2:
                           ref
@@ -266,7 +266,7 @@ class NodeDraggable extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var node = ref.watch(choiceNodeProvider(pos)).node;
+    var node = ref.watch(choiceNodeStatusProvider(pos)).node;
     if (node == null) {
       return const SizedBox.shrink();
     }
@@ -286,16 +286,16 @@ class NodeDraggable extends ConsumerWidget {
               child: widget),
         ),
         onDragStarted: () {
-          ref.read(dragChoiceNodeProvider.notifier).dragStart(pos);
+          ref.read(dragchoiceNodeStatusProvider.notifier).dragStart(pos);
         },
-        child: ref.watch(dragChoiceNodeProvider) == pos
+        child: ref.watch(dragchoiceNodeStatusProvider) == pos
             ? Opacity(
                 opacity: 0.2,
                 child: widget,
               )
             : widget,
         onDraggableCanceled: (Velocity velocity, Offset offset) {
-          ref.read(dragChoiceNodeProvider.notifier).dragEnd();
+          ref.read(dragchoiceNodeStatusProvider.notifier).dragEnd();
         },
       );
     } else {
@@ -313,14 +313,14 @@ class NodeDraggable extends ConsumerWidget {
               child: widget),
         ),
         onDragStarted: () {
-          ref.read(dragChoiceNodeProvider.notifier).dragStart(pos);
+          ref.read(dragchoiceNodeStatusProvider.notifier).dragStart(pos);
         },
         child: Opacity(
-          opacity: ref.watch(dragChoiceNodeProvider) == pos ? 0.2 : 1.0,
+          opacity: ref.watch(dragchoiceNodeStatusProvider) == pos ? 0.2 : 1.0,
           child: widget,
         ),
         onDraggableCanceled: (Velocity velocity, Offset offset) {
-          ref.read(dragChoiceNodeProvider.notifier).dragEnd();
+          ref.read(dragchoiceNodeStatusProvider.notifier).dragEnd();
         },
       );
     }
@@ -441,11 +441,13 @@ class ViewContents extends ConsumerStatefulWidget {
 class _ViewContentsState extends ConsumerState<ViewContents> {
   FocusNode? _focusNode;
   ScrollController? _scrollController;
+  QuillController? _controller;
 
   @override
   void initState() {
     _focusNode = FocusNode();
     _scrollController = AdjustableScrollController();
+    _controller = QuillController.basic();
     super.initState();
   }
 
@@ -453,19 +455,22 @@ class _ViewContentsState extends ConsumerState<ViewContents> {
   void dispose() {
     _focusNode?.dispose();
     _scrollController?.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (ref.watch(contentsQuillProvider(widget.pos)).document.isEmpty()) {
+    var delta = ref.watch(contentsQuillProvider(widget.pos));
+    if(delta == null){
       return const SizedBox.shrink();
     }
+    _controller!.setContents(delta);
     var design = ref.watch(choiceNodeDesignSettingProvider(widget.pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     return QuillEditor(
       configurations: QuillEditorConfigurations(
-        controller: ref.watch(contentsQuillProvider(widget.pos)),
+        controller: _controller!,
         readOnly: true,
         autoFocus: false,
         expands: false,
@@ -491,7 +496,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var node = ref.watch(choiceNodeProvider(pos)).node ?? ChoiceNode.empty();
+    var node = ref.watch(choiceNodeStatusProvider(pos)).node ?? ChoiceNode.empty();
     var design = ref.watch(choiceNodeDesignSettingProvider(pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     Widget image;

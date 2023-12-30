@@ -6,7 +6,6 @@ import 'package:cyoap_flutter/util/platform_specified_util/webp_converter.dart';
 import 'package:ffi/ffi.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image/image.dart';
-import 'package:tuple/tuple.dart';
 
 import '../../main.dart';
 import '../../model/device_preference.dart';
@@ -78,10 +77,9 @@ class WebpConverterImpWindows implements WebpConverterImp {
   final double quality = 90;
 
   @override
-  Future<Tuple2<String, Uint8List>> convert(
-      Uint8List input, String name) async {
+  Future<(String, Uint8List)> convert(Uint8List input, String name) async {
     if (!saveAsWebp) {
-      return Tuple2(name, input);
+      return (name, input);
     }
     try {
       Image decodedImage;
@@ -95,9 +93,9 @@ class WebpConverterImpWindows implements WebpConverterImp {
         decodedImage = decodeImage(input)!;
         isLossless = false;
       } else {
-        return Tuple2(name, input);
+        return (name, input);
       }
-      return using<Tuple2<String, Uint8List>>((Arena arena) {
+      return using<(String, Uint8List)>((Arena arena) {
         Pointer<Pointer<Uint8>> outputBuff = arena.allocate<Pointer<Uint8>>(0);
         Pointer<Uint8> inputBuff;
         Uint8List output;
@@ -144,12 +142,14 @@ class WebpConverterImpWindows implements WebpConverterImp {
         }
         if (outputSize == 0) throw 'encoding error!';
         output = outputBuff.value.asTypedList(outputSize);
-        return Tuple2(
-            name.replaceAll(RegExp('[.](png|jpg|jpeg|bmp)'), '.webp'), output);
+        return (
+          name.replaceAll(RegExp('[.](png|jpg|jpeg|bmp)'), '.webp'),
+          output
+        );
       });
     } catch (e) {
       print(e);
-      return Tuple2(name, input);
+      return (name, input);
     }
   }
 
@@ -162,11 +162,11 @@ class WebpConverterImpWindows implements WebpConverterImp {
 
 class WebpConverterImpAndroid implements WebpConverterImp {
   final int quality = 80;
+
   @override
-  Future<Tuple2<String, Uint8List>> convert(
-      Uint8List input, String name) async {
+  Future<(String, Uint8List)> convert(Uint8List input, String name) async {
     if (!saveAsWebp) {
-      return Tuple2(name, input);
+      return (name, input);
     }
     Image decodedImage;
     if (name.endsWith(".png")) {
@@ -176,7 +176,7 @@ class WebpConverterImpAndroid implements WebpConverterImp {
         name.endsWith(".bmp")) {
       decodedImage = decodeImage(input)!;
     } else {
-      return Tuple2(name, input);
+      return (name, input);
     }
     var output = await FlutterImageCompress.compressWithList(
       input,
@@ -185,8 +185,7 @@ class WebpConverterImpAndroid implements WebpConverterImp {
       minWidth: decodedImage.width,
       minHeight: decodedImage.height,
     );
-    return Tuple2(
-        name.replaceAll(RegExp('[.](png|jpg|jpeg|bmp)'), '.webp'), output);
+    return (name.replaceAll(RegExp('[.](png|jpg|jpeg|bmp)'), '.webp'), output);
   }
 
   @override

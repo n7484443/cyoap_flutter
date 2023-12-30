@@ -5,7 +5,6 @@ import 'package:cyoap_flutter/viewModel/vm_image_editor.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tuple/tuple.dart';
 
 import '../viewModel/vm_draggable_nested_map.dart';
 import '../viewModel/vm_make_platform.dart';
@@ -86,25 +85,25 @@ class ViewImageEditor extends ConsumerWidget {
               break;
             case 1:
               ref.read(imageCropRatioProvider.notifier).state =
-                  const Tuple2(4, 3);
+                  const (4, 3);
               break;
             case 2:
               ref.read(imageCropRatioProvider.notifier).state =
-                  const Tuple2(3, 2);
+                  const (3, 2);
               break;
             case 3:
               ref.read(imageCropRatioProvider.notifier).state =
-                  const Tuple2(16, 9);
+                  const (16, 9);
               break;
             case 4:
               ref.read(imageCropRatioProvider.notifier).state =
-                  const Tuple2(1, 1);
+                  const (1, 1);
               break;
             case 5:
               var data = ref.read(imageCropRatioProvider);
               if (data != null) {
                 ref.read(imageCropRatioProvider.notifier).state =
-                    Tuple2(data.item2, data.item1);
+                    (data.$2, data.$1);
               }
               break;
           }
@@ -122,7 +121,7 @@ class ViewImageEditorContents extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var data = ref.watch(imageCropRatioProvider);
-    if (data == null || data.item1 == null || data.item2 == null) {
+    if (data == null || data.$1 == null || data.$2 == null) {
       data = null;
     }
     var image = ref.watch(imageProvider);
@@ -133,7 +132,7 @@ class ViewImageEditorContents extends ConsumerWidget {
       children: [
         Flexible(
           child: ExtendedImage.memory(
-            image.item2,
+            image.$2,
             fit: BoxFit.contain,
             mode: ExtendedImageMode.editor,
             extendedImageEditorKey: ref.watch(globalEditorKeyProvider),
@@ -143,7 +142,7 @@ class ViewImageEditorContents extends ConsumerWidget {
                   hitTestSize: 20.0,
                   cropRectPadding: const EdgeInsets.all(10.0),
                   cropAspectRatio:
-                      data == null ? null : data.item1! / data.item2!,
+                      data == null ? null : data.$1! / data.$2!,
                   initCropRectType: InitCropRectType.imageRect,
                   editActionDetailsIsChanged: (EditActionDetails? details) {});
             },
@@ -155,13 +154,13 @@ class ViewImageEditorContents extends ConsumerWidget {
             ref.read(lastImageProvider.notifier).update((state) => null);
             ref
                 .read(imageListStateProvider.notifier)
-                .addImageToList(image.item1,
+                .addImageToList(image.$1,
                     data: await ref.read(cropImageProvider.future))
                 .then((value) {
               var pos = ref.read(nodeEditorTargetPosProvider);
               if (pos != null) {
-                ref.read(choiceNodeProvider(pos)).node?.imageString =
-                    image.item1;
+                ref.read(choiceNodeStatusProvider(pos)).node?.imageString =
+                    image.$1;
               }
               ref.read(vmDraggableNestedMapProvider).refresh();
               ref.read(changeTabProvider.notifier).home(context);

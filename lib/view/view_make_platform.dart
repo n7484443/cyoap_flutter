@@ -10,6 +10,7 @@ import 'package:cyoap_flutter/view/view_make.dart';
 import 'package:cyoap_flutter/view/view_project_settings.dart';
 import 'package:cyoap_flutter/view/view_source.dart';
 import 'package:cyoap_flutter/view/view_variable_table.dart';
+import 'package:cyoap_flutter/viewModel/vm_editor.dart';
 import 'package:cyoap_flutter/viewModel/vm_make_platform.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
@@ -342,10 +343,10 @@ class _ViewSideClipboardState extends ConsumerState<ViewSideClipboard>{
   @override
   Widget build(BuildContext context) {
     var list = [];
-    if (ref.watch(copiedChoiceNodeProvider).choiceNode != null) {
+    if (ref.watch(copiedChoiceNodeStatusProvider).choiceNode != null) {
       list.add(const Pos(data: [copiedPositioned, copiedPositioned]));
     }
-    if (ref.watch(removedChoiceNodeProvider).choiceNode != null) {
+    if (ref.watch(removedChoiceNodeStatusProvider).choiceNode != null) {
       list.add(const Pos(data: [removedPositioned, removedPositioned]));
     }
     return ListView.builder(
@@ -374,7 +375,7 @@ class _ViewSideClipboardState extends ConsumerState<ViewSideClipboard>{
                 Scaffold.of(context).closeDrawer();
                 ref.read(sideTabProvider.notifier).state = 0;
               }
-              ref.read(dragChoiceNodeProvider.notifier).dragStart(pos);
+              ref.read(dragchoiceNodeStatusProvider.notifier).dragStart(pos);
             },
             onDragUpdate: (DragUpdateDetails details){
               ref
@@ -416,11 +417,15 @@ class BackButton extends ConsumerWidget {
             }, (i) {
               Navigator.of(context).pop();
               if (i != 0) {
+                ref.read(nodeEditorTargetPosProvider.notifier).state = null;
+                ref.read(lineEditorTargetPosProvider.notifier).state = null;
                 Navigator.of(context).pushReplacementNamed("/");
               }
             }),
           );
         } else {
+          ref.read(nodeEditorTargetPosProvider.notifier).state = null;
+          ref.read(lineEditorTargetPosProvider.notifier).state = null;
           Navigator.of(context).pushReplacementNamed("/");
         }
       },

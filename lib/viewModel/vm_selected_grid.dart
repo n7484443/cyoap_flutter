@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final selectedChoiceNodeProvider =
+final selectedchoiceNodeStatusProvider =
     Provider.autoDispose<List<(Pos, int)>>((ref) {
   return getPlatform.selectedPos;
 });

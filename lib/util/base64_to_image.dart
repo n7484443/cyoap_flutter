@@ -2,12 +2,11 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cyoap_flutter/util/platform_specified_util/webp_converter.dart';
-import 'package:tuple/tuple.dart';
 
 class Base64ToImage {
 //   data:image/jpeg;base64,  base64blah blah blah
   static final RegExp pattern = RegExp(';|/');
-  static Future<Tuple2<String, Uint8List>?> convertToImage(String input) async {
+  static Future<(String, Uint8List)?> convertToImage(String input) async {
     var split = input.split(",");
     if (split.length != 2) {
       return null;

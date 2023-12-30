@@ -20,7 +20,7 @@ final maximumProvider = AutoDisposeProvider<TextEditingController>.internal(
 );
 
 typedef MaximumRef = AutoDisposeProviderRef<TextEditingController>;
-String _$nodeEditorTargetHash() => r'c3e8a660dc7812071d0ce1a8d44e9376270ccf20';
+String _$nodeEditorTargetHash() => r'ca009294dc8b90f6fcd9b53ff82283dd91e98317';
 
 /// See also [NodeEditorTarget].
 @ProviderFor(NodeEditorTarget)
@@ -36,24 +36,23 @@ final nodeEditorTargetProvider =
 );
 
 typedef _$NodeEditorTarget = AutoDisposeNotifier<ChoiceNode>;
-String _$lineEditorTargetNotifierHash() =>
-    r'3cfb3eb3c8de9606e1f523dea4f647502673318a';
+String _$lineEditorTargetHash() => r'e2b0466414588b42dda37dec80dff6c5b94953e4';
 
-/// See also [LineEditorTargetNotifier].
-@ProviderFor(LineEditorTargetNotifier)
-final lineEditorTargetNotifierProvider =
-    AutoDisposeNotifierProvider<LineEditorTargetNotifier, ChoiceLine?>.internal(
-  LineEditorTargetNotifier.new,
-  name: r'lineEditorTargetNotifierProvider',
+/// See also [LineEditorTarget].
+@ProviderFor(LineEditorTarget)
+final lineEditorTargetProvider =
+    AutoDisposeNotifierProvider<LineEditorTarget, ChoiceLine>.internal(
+  LineEditorTarget.new,
+  name: r'lineEditorTargetProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$lineEditorTargetNotifierHash,
+      : _$lineEditorTargetHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$LineEditorTargetNotifier = AutoDisposeNotifier<ChoiceLine?>;
-String _$imageListStateHash() => r'666162cc481eebc260dd94b42f702b77a3d6e315';
+typedef _$LineEditorTarget = AutoDisposeNotifier<ChoiceLine>;
+String _$imageListStateHash() => r'085da30f9929cbd22fd54c54acccd19aca6914f3';
 
 /// See also [ImageListState].
 @ProviderFor(ImageListState)

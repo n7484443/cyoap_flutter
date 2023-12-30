@@ -9,9 +9,10 @@ import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/viewModel/preset/vm_choice_node_preset.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_snackbar.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_quill/quill_delta.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../model/platform.dart';
 import '../model/platform_system.dart';
@@ -21,14 +22,14 @@ const int removedPositioned = -2;
 const int copiedPositioned = -3;
 
 void refreshChild(Ref ref, Choice node) {
-  ref.invalidate(choiceNodeProvider(node.pos));
+  ref.invalidate(choiceNodeStatusProvider(node.pos));
   ref.invalidate(opacityProvider(node.pos));
   for (var child in node.children) {
     refreshChild(ref, child);
   }
 }
 
-final choiceNodeProvider = ChangeNotifierProvider.family
+final choiceNodeStatusProvider = ChangeNotifierProvider.family
     .autoDispose<ChoiceNodeNotifier, Pos>((ref, pos) {
   return ChoiceNodeNotifier(ref, pos);
 });
@@ -40,9 +41,9 @@ class ChoiceNodeNotifier extends ChangeNotifier {
 
   ChoiceNodeNotifier(this.ref, this.pos) {
     if (pos.last == copiedPositioned) {
-      node = ref.read(copiedChoiceNodeProvider).choiceNode;
+      node = ref.read(copiedChoiceNodeStatusProvider).choiceNode;
     } else if (pos.last == removedPositioned) {
-      node = ref.read(removedChoiceNodeProvider).choiceNode;
+      node = ref.read(removedChoiceNodeStatusProvider).choiceNode;
     } else if (pos.last == designSamplePosition) {
       node = ChoiceNode(
         width: 1,
@@ -67,13 +68,13 @@ class ChoiceNodeNotifier extends ChangeNotifier {
 
 final choiceNodeDesignSettingProvider =
     Provider.family.autoDispose<ChoiceNodeOption, Pos>((ref, pos) {
-  var node = ref.watch(choiceNodeProvider(pos));
-  return node.node!.choiceNodeOption;
+  var node = ref.watch(choiceNodeStatusProvider(pos)).node;
+  return node!.choiceNodeOption;
 });
 
 final imageStringProvider =
     Provider.family.autoDispose<String, Pos>((ref, pos) {
-  var node = ref.watch(choiceNodeProvider(pos)).node!;
+  var node = ref.watch(choiceNodeStatusProvider(pos)).node!;
   if (!ImageDB().contains(node.imageString) && node.imageString.isNotEmpty) {
     if (node.imageString != "noImage") {
       node.imageString = "";
@@ -83,29 +84,20 @@ final imageStringProvider =
 });
 
 final titleStringProvider = Provider.family.autoDispose<String, Pos>(
-    (ref, pos) => ref.watch(choiceNodeProvider(pos)).node!.title);
+    (ref, pos) => ref.watch(choiceNodeStatusProvider(pos)).node!.title);
 
 final contentsQuillProvider =
-    Provider.family.autoDispose<QuillController, Pos>((ref, pos) {
-  QuillController controller;
-  if (ref.watch(choiceNodeProvider(pos)).node!.contentsString.isEmpty) {
-    controller = QuillController.basic();
-  } else {
-    var json =
-        jsonDecode(ref.watch(choiceNodeProvider(pos)).node!.contentsString);
-    var document = Document.fromJson(json);
-    controller = QuillController(
-        document: document,
-        selection: const TextSelection.collapsed(offset: 0));
+    Provider.family.autoDispose<Delta?, Pos>((ref, pos) {
+  var node = ref.watch(choiceNodeStatusProvider(pos)).node!;
+  if (node.contentsString.isEmpty) {
+    return null;
   }
-  ref.onDispose(() {
-    controller.dispose();
-  });
-  return controller;
+  var json = jsonDecode(node.contentsString);
+  return Delta.fromJson(json);
 });
 
 final nodeModeProvider = Provider.family.autoDispose<ChoiceNodeMode, Pos>(
-    (ref, pos) => ref.watch(choiceNodeProvider(pos)).node!.choiceNodeMode);
+    (ref, pos) => ref.watch(choiceNodeStatusProvider(pos)).node!.choiceNodeMode);
 
 final choiceNodeSelectProvider = StateNotifierProvider.family
     .autoDispose<ChoiceNodeSelectNotifier, int, Pos>(
@@ -118,7 +110,7 @@ class ChoiceNodeSelectNotifier extends StateNotifier<int> {
   ChoiceNodeSelectNotifier(this.ref, this.pos) : super(0);
 
   void select(int n) {
-    var node = ref.read(choiceNodeProvider(pos)).node!;
+    var node = ref.read(choiceNodeStatusProvider(pos)).node!;
     node.selectNode(n);
     if (node.random != -1) {
       ref.read(randomStateNotifierProvider(pos).notifier).startRandom();
@@ -128,7 +120,7 @@ class ChoiceNodeSelectNotifier extends StateNotifier<int> {
   }
 
   int maxSelect() {
-    var node = ref.read(choiceNodeProvider(pos)).node!;
+    var node = ref.read(choiceNodeStatusProvider(pos)).node!;
     return node.maximumStatus;
   }
 }
@@ -139,7 +131,7 @@ final randomStateNotifierProvider =
         (ref, pos) => RandomProvider(ref, pos));
 
 final opacityProvider = Provider.family.autoDispose<double, Pos>((ref, pos) {
-  var node = ref.watch(choiceNodeProvider(pos)).node;
+  var node = ref.watch(choiceNodeStatusProvider(pos)).node;
   if (node == null) return 0;
   if (isEditable) return 1;
   if (node.choiceNodeMode == ChoiceNodeMode.onlyCode) return 0;
@@ -156,7 +148,7 @@ class RandomProvider extends StateNotifier<int> {
 
   void startRandom() {
     ref.read(randomProcessExecutedProvider.notifier).state = true;
-    var node = ref.read(choiceNodeProvider(pos)).node!;
+    var node = ref.read(choiceNodeStatusProvider(pos)).node!;
     state = node.maximumStatus * 10;
     var timer =
         Timer.periodic(const Duration(milliseconds: 500), (Timer timer) {
@@ -181,12 +173,12 @@ class ChoiceNodeSizeNotifier extends StateNotifier<int> {
   ChoiceNode node;
 
   ChoiceNodeSizeNotifier(this.pos, this.ref)
-      : node = ref.read(choiceNodeProvider(pos)).node ?? ChoiceNode.empty(),
-        super(ref.read(choiceNodeProvider(pos)).node?.width ?? 12);
+      : node = ref.read(choiceNodeStatusProvider(pos)).node ?? ChoiceNode.empty(),
+        super(ref.read(choiceNodeStatusProvider(pos)).node?.width ?? 12);
 
   void sizeChange(int width) {
     if (width == -1) {
-      if (state > ref.read(choiceNodeProvider(pos)).node!.getMaxSize(false)) {
+      if (state > ref.read(choiceNodeStatusProvider(pos)).node!.getMaxSize(false)) {
         state = node.getMaxSize(false);
       }
     } else {

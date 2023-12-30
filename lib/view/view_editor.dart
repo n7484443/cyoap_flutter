@@ -14,7 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/src/utils/color.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tuple/tuple.dart';
 
 import '../main.dart';
 import '../viewModel/preset/vm_choice_node_preset.dart';
@@ -463,14 +462,14 @@ class _ImageSourceDialogState extends ConsumerState<ImageSourceDialog> {
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.pop(context, Tuple2(true, _sourceController?.text ?? ''));
+            Navigator.pop(context, (true, _sourceController?.text ?? ''));
           },
           child: Text('crop'.i18n),
         ),
         TextButton(
           onPressed: () {
             Navigator.pop(
-                context, Tuple2(false, _sourceController?.text ?? ''));
+                context, (false, _sourceController?.text ?? ''));
           },
           child: Text('save'.i18n),
         ),

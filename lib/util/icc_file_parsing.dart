@@ -7,7 +7,6 @@ import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tuple/tuple.dart';
 
 import '../model/platform.dart';
 import '../viewModel/vm_start.dart';
@@ -18,13 +17,13 @@ class IccProjectParser {
 
   IccProjectParser(this.path);
 
-  Future<Tuple2<AbstractPlatform, Map<String, Uint8List>>> getPlatform(
+  Future<(AbstractPlatform, Map<String, Uint8List>)> getPlatform(
       String input, Ref ref) async {
     Map<String, dynamic> parsed = jsonDecode(input);
     Map<String, Uint8List> imageList = {};
     var platform = AbstractPlatform();
     if (parsed['rows'] == null) {
-      return Tuple2(platform, imageList);
+      return (platform, imageList);
     }
     var rows = parsed['rows'] as List;
     List<ChoiceNodeDesignPreset> nodePresets = [];
@@ -43,9 +42,9 @@ class IccProjectParser {
       var row = rows[i];
       var rowTitle = row["title"] ?? parsed['defaultRowTitle'];
       var out = await checkImage(row, row["id"], rowTitle, ref);
-      var imageName = out?.item1 ?? '';
-      if (out != null && out.item2 != null) {
-        imageList[imageName] = out.item2!;
+      var imageName = out?.$1 ?? '';
+      if (out != null && out.$2 != null) {
+        imageList[imageName] = out.$2!;
       }
       var preset = checkContained(
         nodePresets,
@@ -76,9 +75,9 @@ class IccProjectParser {
       for (var object in row["objects"]) {
         var objectTitle = object["title"] ?? parsed['defaultChoiceTitle'];
         var out = await checkImage(object, object["id"], objectTitle, ref);
-        var imageName = out?.item1 ?? '';
-        if (out != null && out.item2 != null) {
-          imageList[imageName] = out.item2!;
+        var imageName = out?.$1 ?? '';
+        if (out != null && out.$2 != null) {
+          imageList[imageName] = out.$2!;
         }
         var preset = checkContained(
           nodePresets,
@@ -108,9 +107,9 @@ class IccProjectParser {
         for (var addon in object['addons']) {
           var addonTitle = addon["title"] ?? parsed['defaultAddonTitle'];
           var out = await checkImage(addon, addon["id"], addonTitle, ref);
-          var imageName = out?.item1 ?? '';
-          if (out != null && out.item2 != null) {
-            imageList[imageName] = out.item2!;
+          var imageName = out?.$1 ?? '';
+          if (out != null && out.$2 != null) {
+            imageList[imageName] = out.$2!;
           }
           var addonNode = ChoiceNode(
               width: 0,
@@ -133,7 +132,7 @@ class IccProjectParser {
       choiceNodePresetList: nodePresets,
     );
 
-    return Tuple2(platform, imageList);
+    return (platform, imageList);
   }
 
   int parseAsInt(dynamic input) {
@@ -143,7 +142,7 @@ class IccProjectParser {
     return int.tryParse(input) ?? 0;
   }
 
-  Future<Tuple2<String, Uint8List?>?> checkImage(
+  Future<(String, Uint8List?)?> checkImage(
       dynamic input, String? first, String second, Ref ref) async {
     var image = input['image'] as String?;
     if (image == null || image.isEmpty) {
@@ -158,10 +157,10 @@ class IccProjectParser {
       if (sub.isEmpty) {
         sub = Random().nextInt(999999).toString();
       }
-      name = "$sub.${out.item1}";
+      name = "$sub.${out.$1}";
     }
     ref.read(loadProjectStateProvider.notifier).state = "이미지 파일 로딩중 : $name";
-    return Tuple2(name, out?.item2);
+    return (name, out?.$2);
   }
 
   Future<ChoiceNode?> parseToChoiceNode(Map<String, dynamic> input) async {

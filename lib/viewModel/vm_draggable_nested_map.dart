@@ -20,7 +20,7 @@ final draggableNestedMapChangedProvider = StateProvider<bool>((ref) => false);
 final vmDraggableNestedMapProvider =
     Provider.autoDispose((ref) => VMDraggableNestedMap(ref));
 
-final removedChoiceNodeProvider =
+final removedChoiceNodeStatusProvider =
     ChangeNotifierProvider<RemovedChoiceNodeNotifier>(
         (ref) => RemovedChoiceNodeNotifier(ref, null));
 
@@ -33,12 +33,12 @@ class RemovedChoiceNodeNotifier extends ChangeNotifier {
   void update(ChoiceNode choiceNode) {
     this.choiceNode = choiceNode;
     notifyListeners();
-    ref.invalidate(choiceNodeProvider(
+    ref.invalidate(choiceNodeStatusProvider(
         const Pos(data: [removedPositioned, removedPositioned])));
   }
 }
 
-final copiedChoiceNodeProvider =
+final copiedChoiceNodeStatusProvider =
     ChangeNotifierProvider<CopiedChoiceNodeNotifier>(
         (ref) => CopiedChoiceNodeNotifier(ref, null));
 
@@ -51,14 +51,14 @@ class CopiedChoiceNodeNotifier extends ChangeNotifier {
   void update(ChoiceNode choiceNode) {
     this.choiceNode = choiceNode;
     notifyListeners();
-    ref.invalidate(choiceNodeProvider(
+    ref.invalidate(choiceNodeStatusProvider(
         const Pos(data: [copiedPositioned, copiedPositioned])));
   }
 }
 
 final dragPositionProvider = StateProvider<double?>((ref) => null);
 
-final dragChoiceNodeProvider =
+final dragchoiceNodeStatusProvider =
     StateNotifierProvider<DragChoiceNodeNotifier, Pos?>(
         (ref) => DragChoiceNodeNotifier(ref));
 
@@ -86,14 +86,14 @@ class VMDraggableNestedMap {
   }
 
   void copyData(ChoiceNode choiceNode) {
-    ref.read(copiedChoiceNodeProvider.notifier).update(choiceNode.clone());
+    ref.read(copiedChoiceNodeStatusProvider.notifier).update(choiceNode.clone());
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     refreshPage(ref);
   }
 
   void removeData(Pos pos) {
     var choiceNode = getPlatform.removeData(pos);
-    ref.read(removedChoiceNodeProvider.notifier).update(choiceNode.clone());
+    ref.read(removedChoiceNodeStatusProvider.notifier).update(choiceNode.clone());
     VariableDataBase().updateCheckList();
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     refreshPage(ref);
@@ -175,7 +175,7 @@ List<Choice> getChildren(GetChildrenRef ref, {required Pos pos}) {
   if (pos.length == 1) {
     return ref.watch(lineProvider(pos.first))?.children ?? [];
   } else {
-    return ref.watch(choiceNodeProvider(pos)).node?.children ?? [];
+    return ref.watch(choiceNodeStatusProvider(pos)).node?.children ?? [];
   }
 }
 

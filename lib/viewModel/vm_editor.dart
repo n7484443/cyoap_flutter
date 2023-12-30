@@ -17,6 +17,17 @@ import '../util/platform_specified_util/webp_converter.dart';
 
 part 'vm_editor.g.dart';
 
+final editEndProvider = StateProvider<bool>((ref){
+  ref.listenSelf((previous, next) {
+    if(next){
+      ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+      var pos = (ref.read(nodeEditorTargetPosProvider) ?? ref.read(lineEditorTargetPosProvider))!;
+      refreshLine(ref, pos.first);
+    }
+  });
+  return false;
+});
+
 final nodeEditorTargetPosProvider = StateProvider<Pos?>((ref) {
   return null;
 });
@@ -25,20 +36,8 @@ final nodeEditorTargetPosProvider = StateProvider<Pos?>((ref) {
 class NodeEditorTarget extends _$NodeEditorTarget {
   @override
   ChoiceNode build() {
-    var pos = ref.watch(nodeEditorTargetPosProvider);
-    if (pos == null) {
-      return ChoiceNode.empty();
-    }
-    return getPlatform.getChoiceNode(pos)!.clone();
-  }
-
-  void update() {
-    var pos = ref.watch(nodeEditorTargetPosProvider);
-    if (pos == null) {
-      state = ChoiceNode.empty();
-    } else {
-      state = getPlatform.getChoiceNode(pos)?.clone() ?? ChoiceNode.empty();
-    }
+    var pos = ref.watch(nodeEditorTargetPosProvider)!;
+    return getPlatform.getChoiceNode(pos)!;
   }
 
   void setState(ChoiceNode Function(ChoiceNode) func) {
@@ -51,15 +50,15 @@ final lineEditorTargetPosProvider = StateProvider<Pos?>((ref) {
 });
 
 @riverpod
-class LineEditorTargetNotifier extends _$LineEditorTargetNotifier {
+class LineEditorTarget extends _$LineEditorTarget {
   @override
-  ChoiceLine? build() {
+  ChoiceLine build() {
     var pos = ref.watch(lineEditorTargetPosProvider)!;
-    var choice = getPlatform.getChoice(pos);
-    ref.onDispose(() {
-      ref.read(lineEditorTargetPosProvider.notifier).state = null;
-    });
-    return choice as ChoiceLine;
+    return getPlatform.getChoice(pos) as ChoiceLine;
+  }
+
+  void setState(ChoiceLine Function(ChoiceLine) func) {
+    state = func(state);
   }
 }
 
@@ -149,9 +148,9 @@ class ImageListState extends _$ImageListState {
     var before = data ?? ref.read(lastImageProvider)!;
     var out = await WebpConverter.instance!.convert(before, name);
 
-    ImageDB().uploadImages(out.item1, out.item2);
+    ImageDB().uploadImages(out.$1, out.$2);
     ref.read(imageStateProvider.notifier).state =
-        ImageDB().getImageIndex(out.item1);
+        ImageDB().getImageIndex(out.$1);
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     ref.read(editorChangeProvider.notifier).needUpdate();
     ref.read(lastImageProvider.notifier).update((state) => null);

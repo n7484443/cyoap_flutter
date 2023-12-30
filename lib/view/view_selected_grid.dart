@@ -14,7 +14,7 @@ class ViewSelectedGrid extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var globalKey = GlobalKey();
-    var posList = ref.watch(selectedChoiceNodeProvider);
+    var posList = ref.watch(selectedchoiceNodeStatusProvider);
     var numRow = ConstList.isSmallDisplay(context) ? 4 : 6;
     var listLength = (posList.length / numRow).ceil();
     return AlertDialog(

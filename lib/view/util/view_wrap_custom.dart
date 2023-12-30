@@ -11,7 +11,6 @@ import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tuple/tuple.dart';
 
 import '../../viewModel/vm_design_setting.dart';
 import '../view_choice_node.dart';
@@ -27,13 +26,13 @@ class ViewWrapCustomReorder extends ConsumerWidget {
   ViewWrapCustomReorder(this.parentPos,
       {this.maxSize = defaultMaxSize, this.isInner = true, super.key}) {
     if (ConstList.isMobile()) {
-      mul = const Tuple2(7, 4);
+      mul = const (7, 4);
     } else {
-      mul = const Tuple2(5, 2);
+      mul = const (5, 2);
     }
   }
 
-  late final Tuple2<int, int> mul;
+  late final (int, int) mul;
 
   void addBuildDraggable(List<Widget> widget, int pos,
       {bool horizontal = false}) {
@@ -43,16 +42,16 @@ class ViewWrapCustomReorder extends ConsumerWidget {
           child: NodeDragTarget(parentPos.addLast(pos))));
     } else {
       widget.add(Expanded(
-          flex: mul.item2, child: NodeDragTarget(parentPos.addLast(pos))));
+          flex: mul.$2, child: NodeDragTarget(parentPos.addLast(pos))));
     }
   }
 
   int calculateFlex(int size) {
-    return size * mul.item1 + (size - 1) * mul.item2;
+    return size * mul.$1 + (size - 1) * mul.$2;
   }
 
   int calculateFlexReverse(int size) {
-    return size * mul.item2 + size * mul.item1;
+    return size * mul.$2 + size * mul.$1;
   }
 
   @override

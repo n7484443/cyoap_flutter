@@ -1,3 +1,6 @@
+import 'package:cyoap_core/choiceNode/choice.dart';
+import 'package:cyoap_core/choiceNode/choice_line.dart';
+import 'package:cyoap_core/choiceNode/conditional_code_handler.dart';
 import 'package:cyoap_core/grammar/function_list.dart';
 import 'package:cyoap_core/variable_db.dart';
 import 'package:cyoap_flutter/viewModel/vm_editor.dart';
@@ -6,8 +9,11 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../main.dart';
+
+part 'vm_ide.g.dart';
 
 final controllerClickableProvider =
     Provider.autoDispose<TextEditingController>((ref) {
@@ -35,9 +41,14 @@ final controllerClickableProvider =
   return controller;
 });
 
-final controllerVisibleProvider =
-    Provider.autoDispose<TextEditingController>((ref) {
-  var node = ref.watch(nodeEditorTargetProvider);
+@riverpod
+TextEditingController controllerVisible(ControllerVisibleRef ref) {
+  Choice node;
+  if (ref.watch(nodeEditorTargetPosProvider) != null) {
+    node = ref.watch(nodeEditorTargetProvider);
+  } else {
+    node = ref.watch(lineEditorTargetProvider);
+  }
   var controller = TextEditingController(
       text: node.conditionalCodeHandler.conditionVisibleString);
   controller.addListener(() {
@@ -47,7 +58,6 @@ final controllerVisibleProvider =
     EasyDebounce.debounce('conditionVisibleString', ConstList.debounceDuration,
         () {
       node.conditionalCodeHandler.conditionVisibleString = controller.text;
-      ref.read(editorChangeProvider.notifier).needUpdate();
     });
   });
   ref.onDispose(() {
@@ -55,7 +65,7 @@ final controllerVisibleProvider =
     EasyDebounce.cancel('conditionVisibleString');
   });
   return controller;
-});
+}
 
 final regexSpace = RegExp(r"(\b|}|\))(if|for|else|in|break|continue)(\b|{|\()");
 final regexBrace = RegExp(r"[{}()]");
@@ -65,9 +75,20 @@ final regexFunction = RegExp(
     r"\(");
 
 final controllerIdeProvider = Provider.autoDispose<QuillController>((ref) {
-  var node = ref.watch(nodeEditorTargetProvider);
+  Choice node;
+  ConditionalCodeHandler handler;
+  String? str;
+  if (ref.watch(nodeEditorTargetPosProvider) != null) {
+    node = ref.watch(nodeEditorTargetProvider);
+    handler = node.conditionalCodeHandler;
+  } else {
+    node = ref.watch(lineEditorTargetProvider);
+    handler = (node as ChoiceLine).conditionalCodeHandlerFinalize;
+  }
+  str = handler.executeCodeString;
+
   var data = [
-    {"insert": "${node.conditionalCodeHandler.executeCodeString ?? ''}\n"}
+    {"insert": "${str ?? ''}\n"}
   ];
   var controller = QuillController(
       document: Document.fromJson(data),
@@ -75,11 +96,7 @@ final controllerIdeProvider = Provider.autoDispose<QuillController>((ref) {
   controller.addListener(() {
     EasyDebounce.debounce('code-ide', ConstList.debounceDuration, () {
       var plainText = controller.document.toPlainText();
-      if (ref
-              .read(nodeEditorTargetProvider)
-              .conditionalCodeHandler
-              .executeCodeString !=
-          plainText) {
+      if (handler.executeCodeString != plainText) {
         var styleNull = Attribute.color;
         var styleDeepOrange = ColorAttribute('#${Colors.deepOrangeAccent.hex}');
         var styleDeepPurple = ColorAttribute('#${Colors.deepPurple.hex}');
@@ -107,10 +124,17 @@ final controllerIdeProvider = Provider.autoDispose<QuillController>((ref) {
           controller.formatText(m.start, m.end - m.start, styleGrey);
         }
 
-        ref.read(nodeEditorTargetProvider.notifier).setState((node) {
-          node.conditionalCodeHandler.executeCodeString = plainText;
-          return node;
-        });
+        if (ref.watch(nodeEditorTargetPosProvider) != null) {
+          ref.read(nodeEditorTargetProvider.notifier).setState((node) {
+            node.conditionalCodeHandler.executeCodeString = plainText;
+            return node;
+          });
+        } else {
+          ref.read(lineEditorTargetProvider.notifier).setState((line) {
+            line.conditionalCodeHandlerFinalize.executeCodeString = plainText;
+            return line;
+          });
+        }
         ref.read(editorChangeProvider.notifier).needUpdate();
       }
     });

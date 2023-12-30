@@ -16,7 +16,10 @@ class ChangeTabNotifier extends StateNotifier<int> {
   void entryFunction(int index, BuildContext context) {
     switch (index) {
       case 0:
-        ref.read(nodeEditorTargetPosProvider.notifier).state = null;
+        ref.read(editEndProvider.notifier).state = false;
+        break;
+      case 6:
+        ref.read(editEndProvider.notifier).state = false;
         break;
     }
   }
@@ -28,6 +31,7 @@ class ChangeTabNotifier extends StateNotifier<int> {
           ref.read(editorChangeProvider.notifier).save();
           refreshLine(ref, ref.read(nodeEditorTargetPosProvider)!.first);
         }
+        ref.read(editEndProvider.notifier).state = true;
         break;
       case 2:
         if (ref
@@ -35,6 +39,9 @@ class ChangeTabNotifier extends StateNotifier<int> {
             .isDifferentFromOrigin()) {
           ref.read(valueTypeWrapperListProvider.notifier).save();
         }
+        break;
+      case 6:
+        ref.read(editEndProvider.notifier).state = true;
         break;
     }
     return true;

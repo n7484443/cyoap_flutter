@@ -6,7 +6,7 @@ part of 'vm_draggable_nested_map.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getChildrenHash() => r'1faa2db928861d2aedb519294f7d4e49e48a3c5f';
+String _$getChildrenHash() => r'd44260e93af8c1447ccbc65e34f10d6e6525ecf4';
 
 /// Copied from Dart SDK
 class _SystemHash {

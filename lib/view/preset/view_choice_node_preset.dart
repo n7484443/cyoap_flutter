@@ -46,7 +46,7 @@ class ChoiceNodeSample extends ConsumerWidget {
                   .read(choiceNodePresetTestSelectProvider.notifier)
                   .update((state) => !state);
               var pos = const Pos(data: [designSamplePosition]);
-              ref.invalidate(choiceNodeProvider(pos));
+              ref.invalidate(choiceNodeStatusProvider(pos));
             },
             icon: ref.watch(choiceNodePresetTestSelectProvider)
                 ? const Icon(Icons.check_box_outlined)
@@ -113,7 +113,7 @@ class ChoiceNodePresetList extends ConsumerWidget {
                                 .read(choiceNodePresetListProvider.notifier)
                                 .rename(index, text.trim());
                             var pos = const Pos(data: [designSamplePosition]);
-                            ref.invalidate(choiceNodeProvider(pos));
+                            ref.invalidate(choiceNodeStatusProvider(pos));
                           }
                         },
                       ),
@@ -122,7 +122,7 @@ class ChoiceNodePresetList extends ConsumerWidget {
                       .read(currentPresetIndexProvider.notifier)
                       .update((state) => index);
                   var pos = const Pos(data: [designSamplePosition]);
-                  ref.invalidate(choiceNodeProvider(pos));
+                  ref.invalidate(choiceNodeStatusProvider(pos));
                 },
                 selected: index == ref.watch(currentPresetIndexProvider),
               );

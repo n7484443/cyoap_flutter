@@ -4,7 +4,6 @@ import 'package:cyoap_flutter/i18n.dart';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tuple/tuple.dart';
 
 import '../../main.dart';
 import '../../model/image_db.dart';
@@ -163,7 +162,7 @@ class ViewImageDraggable extends ConsumerWidget {
       if (change) {
         ref
             .read(imageProvider.notifier)
-            .update((state) => Tuple2(name, ImageDB().getImage(name)!));
+            .update((state) => (name, ImageDB().getImage(name)!));
         ref
             .read(changeTabProvider.notifier)
             .changePageString('viewImageEditor', context);
@@ -176,16 +175,16 @@ class ViewImageDraggable extends ConsumerWidget {
                 .contains(name.replaceAll(ImageDB.regCheckImage, ".webp"))) {
           name = defaultName + Random().nextInt(999999).toString();
         }
-        showDialog<Tuple2<bool, String>>(
+        showDialog<(bool, String)>(
           builder: (_) => ImageSourceDialog(name),
           context: context,
           barrierDismissible: false,
         ).then((value) {
-          getPlatformFileSystem.addSource(name, value?.item2 ?? '');
-          if (value?.item1 ?? false) {
+          getPlatformFileSystem.addSource(name, value?.$2 ?? '');
+          if (value?.$1 ?? false) {
             ref
                 .read(imageProvider.notifier)
-                .update((state) => Tuple2(name, ref.watch(lastImageProvider)!));
+                .update((state) => (name, ref.watch(lastImageProvider)!));
             ref
                 .read(changeTabProvider.notifier)
                 .changePageString('viewImageEditor', context);

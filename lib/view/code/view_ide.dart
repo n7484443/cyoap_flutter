@@ -110,8 +110,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
         ),
         SliverList(
           delegate: SliverChildListDelegate([
-            if (ref.watch(nodeEditorTargetProvider).isSelectableMode &&
-                widget.isChoiceNode)
+            if (widget.isChoiceNode && ref.watch(nodeEditorTargetProvider).isSelectableMode)
               rowColumn(
                 leftOrTop: SizedBox(
                   width: size,
@@ -138,10 +137,9 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                   ),
                 ),
               ),
-            if (ref.watch(nodeEditorTargetProvider).isSelectableMode &&
-                widget.isChoiceNode)
+            if (widget.isChoiceNode && ref.watch(nodeEditorTargetProvider).isSelectableMode)
               const Divider(),
-            if (ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode)
+            if (!widget.isChoiceNode || ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode)
               rowColumn(
                 leftOrTop: SizedBox(
                   width: size,
@@ -181,20 +179,6 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                 ),
               ),
             ),
-            const Divider(),
-            if (!widget.isChoiceNode)
-              rowColumn(
-                leftOrTop: SizedBox(
-                  width: size,
-                  child: Text("code_hint_execute".i18n),
-                ),
-                rightOrBottom: const Card(
-                  child: Padding(
-                    padding: EdgeInsets.all(ConstList.padding),
-                    child: ViewQuillCodeIde(),
-                  ),
-                ),
-              ),
           ]),
         ),
       ],
