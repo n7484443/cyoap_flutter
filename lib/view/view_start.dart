@@ -23,7 +23,6 @@ class ViewStart extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(saveAsWebpFutureProvider);
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -412,17 +411,17 @@ class ViewGlobalSettingDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var asyncValue = ref.watch(saveAsWebpProvider).value ?? true;
     return AlertDialog(
       scrollable: true,
       title: Text('settings'.i18n),
       content: Column(
         children: [
           ViewSwitchLabel(
-            () {
-              ref.read(saveAsWebpProvider.notifier).state =
-                  !ref.read(saveAsWebpProvider);
+                () {
+              ref.read(saveAsWebpProvider.notifier).setVariable(!asyncValue);
             },
-            ref.watch(saveAsWebpProvider),
+            asyncValue,
             label: "save_as_webp".i18n,
           ),
           ViewSwitchLabel(

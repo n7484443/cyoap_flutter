@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:cyoap_core/choiceNode/choice.dart';
 import 'package:cyoap_core/choiceNode/choice_line.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
@@ -5,10 +7,27 @@ import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/grammar/value_type.dart';
 import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
+import 'package:flutter/material.dart';
 
 const int designSamplePosition = -100;
 
 class AbstractPlatform extends PlayablePlatform {
+  ListQueue<Color> lastColorList = ListQueue.from(List.filled(10, Colors.black));
+
+  void addLastColor(Color color) {
+    if(lastColorList.contains(color)){
+      lastColorList.remove(color);
+    }else{
+      lastColorList.removeLast();
+    }
+    lastColorList.addFirst(color);
+  }
+
+  Map<int, Color> getLastColor(Color color) {
+    var lastColorMap = getPlatform.lastColorList.toList().asMap();
+    return lastColorMap.map((key, value) => MapEntry(key == 0 ? 50 : key * 100, value));
+  }
+
   void init() {
     checkDataCorrect();
     if (getPlatformFileSystem.isEditable) {
@@ -20,13 +39,20 @@ class AbstractPlatform extends PlayablePlatform {
   AbstractPlatform();
 
   AbstractPlatform.none();
-  AbstractPlatform.fromJson(super.json) : super.fromJson();
+  AbstractPlatform.fromJson(Map<String, dynamic> json): super.fromJson(json){
+    if(json['lastColorList'] != null){
+      lastColorList = ListQueue.from((json['lastColorList'] as List).map((e) => Color(e)).toList());
+    }else{
+      lastColorList = ListQueue.from(List.filled(10, Colors.black));
+    }
+  }
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> out = {
       'stringImageName': stringImageName,
       'globalSetting': globalSetting.map((e) => [e.$1, e.$2.toJson()]).toList(),
       'currentFileVersion': super.currentFileVersion,
+      'lastColorList': lastColorList.map((e) => e.value).toList(),
     };
     out.addAll(designSetting.toJson());
     return out;

@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/i18n.dart';
+import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/code/view_ide.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_color_picker.dart';
@@ -286,6 +287,7 @@ class _ViewTextContentsEditorState
     hex = '#$hex';
     controller.formatSelection(
         background ? BackgroundAttribute(hex) : ColorAttribute(hex));
+    getPlatform.addLastColor(color);
   }
 
   Style get _selectionStyle => _quillController!.getSelectionStyle();
@@ -315,15 +317,16 @@ class _ViewTextContentsEditorState
               AlertDialog(
             backgroundColor: Theme.of(context).canvasColor,
             content: SizedBox(
-              width: ConstList.isSmallDisplay(context) ? 300 : 400,
-              height: ConstList.isSmallDisplay(context) ? 500 : 400,
-              child: ViewColorPicker(
-                text: 'Select Color',
-                color: ref.watch(textColorProvider),
-                onColorChanged: (color) {
-                  ref.read(textColorProvider.notifier).state = color;
-                },
-                hasAlpha: false,
+              width: ConstList.isSmallDisplay(context) ? 400 : 370,
+              child: SingleChildScrollView(
+                child: ViewColorPicker(
+                  text: 'Select Color',
+                  color: ref.watch(textColorProvider),
+                  onColorChanged: (color) {
+                    ref.read(textColorProvider.notifier).state = color;
+                  },
+                  hasAlpha: false,
+                ),
               ),
             ),
             actionsAlignment: MainAxisAlignment.spaceEvenly,
@@ -468,8 +471,7 @@ class _ImageSourceDialogState extends ConsumerState<ImageSourceDialog> {
         ),
         TextButton(
           onPressed: () {
-            Navigator.pop(
-                context, (false, _sourceController?.text ?? ''));
+            Navigator.pop(context, (false, _sourceController?.text ?? ''));
           },
           child: Text('save'.i18n),
         ),

@@ -1,5 +1,6 @@
 import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
+import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
@@ -24,30 +25,34 @@ class ViewColorPicker extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        ColorPicker(
-          heading: text == null
-              ? null
-              : Center(
-                  child: Text(text!),
-                ),
-          color: color,
-          onColorChanged: onColorChanged,
-          pickersEnabled: {
-            ColorPickerType.wheel: true,
-            ColorPickerType.accent: false
-          },
-          pickerTypeLabels: {
-            ColorPickerType.primary: "color_select".i18n,
-            ColorPickerType.wheel: "color_direct_select".i18n
-          },
-          width: 22,
-          height: 22,
-          borderRadius: 22,
-          enableOpacity: hasAlpha,
-        ),
-        const SizedBox(
-          height: 6,
+        SizedBox(
+          height: hasAlpha ? 420 : 360,
+          child: ColorPicker(
+            heading: text == null
+                ? null
+                : Center(
+                    child: Text(text!),
+                  ),
+            color: color,
+            onColorChanged: onColorChanged,
+            pickersEnabled: {
+              ColorPickerType.wheel: true,
+              ColorPickerType.accent: false,
+              ColorPickerType.custom: true,
+            },
+            pickerTypeLabels: {
+              ColorPickerType.primary: "color_select".i18n,
+              ColorPickerType.wheel: "color_direct_select".i18n,
+            },
+            recentColors: getPlatform.lastColorList.toList(),
+            showRecentColors: true,
+            width: 18,
+            height: 18,
+            borderRadius: 22,
+            enableOpacity: hasAlpha,
+          ),
         ),
         ViewRGBAInput(
           onColorChanged: onColorChanged,
@@ -123,93 +128,117 @@ class _ViewRGBInputState extends ConsumerState<ViewRGBAInput> {
 
   @override
   Widget build(BuildContext context) {
-    var width = 100.0;
-    var height = 42.0;
     var filter = [
       FilteringTextInputFormatter.digitsOnly,
       NumericalRangeFormatter(minRange: 0, maxRange: 255)
     ];
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Wrap(
-        spacing: 20,
-        runSpacing: 34,
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 320),
+      child: Row(
         children: [
-          SizedBox(
-            width: width,
-            height: height,
-            child: TextField(
-              controller: _controllerR,
-              inputFormatters: filter,
-              keyboardType: TextInputType.number,
-              maxLength: 3,
-              textAlign: TextAlign.end,
-              decoration: const InputDecoration(
-                prefixText: 'Red',
-              ),
-              onChanged: (String value) {
-                var t = int.tryParse(value);
-                if (t != null) {
-                  widget.onColorChanged(widget.color.withRed(t.clamp(0, 255)));
-                }
-              },
+          Expanded(
+            child: Column(
+              children: [
+                const Text('Red'),
+                TextField(
+                  controller: _controllerR,
+                  inputFormatters: filter,
+                  keyboardType: TextInputType.number,
+                  maxLength: 3,
+                  decoration: const InputDecoration(
+                    isDense: true,
+                    isCollapsed: true,
+                    counterText: '',
+                  ),
+                  textAlign: TextAlign.center,
+                  onChanged: (String value) {
+                    var t = int.tryParse(value);
+                    if (t != null) {
+                      widget.onColorChanged(
+                          widget.color.withRed(t.clamp(0, 255)));
+                    }
+                  },
+                ),
+              ],
             ),
           ),
-          SizedBox(
-            width: width,
-            height: height,
-            child: TextField(
-              controller: _controllerG,
-              inputFormatters: filter,
-              keyboardType: TextInputType.number,
-              maxLength: 3,
-              textAlign: TextAlign.end,
-              decoration: const InputDecoration(prefixText: 'Green'),
-              onChanged: (String value) {
-                var t = int.tryParse(value);
-                if (t != null) {
-                  widget
-                      .onColorChanged(widget.color.withGreen(t.clamp(0, 255)));
-                }
-              },
+          Expanded(
+            child: Column(
+              children: [
+                const Text('Green'),
+                TextField(
+                  controller: _controllerG,
+                  inputFormatters: filter,
+                  keyboardType: TextInputType.number,
+                  maxLength: 3,
+                  decoration: const InputDecoration(
+                    isDense: true,
+                    isCollapsed: true,
+                    counterText: '',
+                  ),
+                  textAlign: TextAlign.center,
+                  onChanged: (String value) {
+                    var t = int.tryParse(value);
+                    if (t != null) {
+                      widget.onColorChanged(
+                          widget.color.withGreen(t.clamp(0, 255)));
+                    }
+                  },
+                )
+              ],
             ),
           ),
-          SizedBox(
-            width: width,
-            height: height,
-            child: TextField(
-              controller: _controllerB,
-              inputFormatters: filter,
-              keyboardType: TextInputType.number,
-              maxLength: 3,
-              textAlign: TextAlign.end,
-              decoration: const InputDecoration(prefixText: 'Blue'),
-              onChanged: (String value) {
-                var t = int.tryParse(value);
-                if (t != null) {
-                  widget.onColorChanged(widget.color.withBlue(t.clamp(0, 255)));
-                }
-              },
+          Expanded(
+            child: Column(
+              children: [
+                const Text('Blue'),
+                TextField(
+                  controller: _controllerB,
+                  inputFormatters: filter,
+                  keyboardType: TextInputType.number,
+                  maxLength: 3,
+                  decoration: const InputDecoration(
+                    isDense: true,
+                    isCollapsed: true,
+                    counterText: '',
+                  ),
+                  textAlign: TextAlign.center,
+                  onChanged: (String value) {
+                    var t = int.tryParse(value);
+                    if (t != null) {
+                      widget.onColorChanged(
+                          widget.color.withBlue(t.clamp(0, 255)));
+                    }
+                  },
+                ),
+              ],
             ),
           ),
           if (widget.hasAlpha)
-            SizedBox(
-              width: width,
-              height: height,
-              child: TextField(
-                controller: _controllerA,
-                inputFormatters: filter,
-                keyboardType: TextInputType.number,
-                maxLength: 3,
-                textAlign: TextAlign.end,
-                decoration: const InputDecoration(prefixText: 'Alpha'),
-                onChanged: (String value) {
-                  var t = int.tryParse(value);
-                  if (t != null) {
-                    widget.onColorChanged(
-                        widget.color.withAlpha(t.clamp(0, 255)));
-                  }
-                },
+            Expanded(
+              child: Column(
+                children: [
+                  const Text('Alpha'),
+                  TextField(
+                    controller: _controllerA,
+                    inputFormatters: filter,
+                    keyboardType: TextInputType.number,
+                    maxLength: 3,
+                    decoration: const InputDecoration(
+                      isDense: true,
+                      isCollapsed: true,
+                      counterText: '',
+                    ),
+                    textAlign: TextAlign.center,
+                    onChanged: (String value) {
+                      var t = int.tryParse(value);
+                      if (t != null) {
+                        widget.onColorChanged(
+                            widget.color.withAlpha(t.clamp(0, 255)));
+                      }
+                    },
+                  )
+                ],
               ),
             ),
         ],
