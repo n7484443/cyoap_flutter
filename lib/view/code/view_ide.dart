@@ -110,7 +110,8 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
         ),
         SliverList(
           delegate: SliverChildListDelegate([
-            if (widget.isChoiceNode && ref.watch(nodeEditorTargetProvider).isSelectableMode)
+            if (widget.isChoiceNode &&
+                ref.watch(nodeEditorTargetProvider).isSelectableMode)
               rowColumn(
                 leftOrTop: SizedBox(
                   width: size,
@@ -137,9 +138,11 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                   ),
                 ),
               ),
-            if (widget.isChoiceNode && ref.watch(nodeEditorTargetProvider).isSelectableMode)
+            if (widget.isChoiceNode &&
+                ref.watch(nodeEditorTargetProvider).isSelectableMode)
               const Divider(),
-            if (!widget.isChoiceNode || ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode)
+            if (!widget.isChoiceNode ||
+                ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode)
               rowColumn(
                 leftOrTop: SizedBox(
                   width: size,
@@ -255,7 +258,10 @@ class _ViewQuillCodeIdeState extends ConsumerState<ViewQuillCodeIde> {
                     }
                     ref.read(ideCurrentInputProvider.notifier).reformat = true;
                     ref.read(controllerIdeProvider).clear();
-                    ref.read(controllerIdeProvider).document.insert(0, output.$1);
+                    ref
+                        .read(controllerIdeProvider)
+                        .document
+                        .insert(0, output.$1);
                     ref.read(ideCurrentInputProvider.notifier).reformat = false;
                   },
                 ),
@@ -264,8 +270,10 @@ class _ViewQuillCodeIdeState extends ConsumerState<ViewQuillCodeIde> {
                     icon: const Icon(Icons.dns_rounded),
                     tooltip: "gui".i18n,
                     onPressed: () {
-                      var ast = Analyser().toAst(
-                          ref.read(controllerIdeProvider).document.toPlainText());
+                      var ast = Analyser().toAst(ref
+                          .read(controllerIdeProvider)
+                          .document
+                          .toPlainText());
                       ref.read(codeBlockProvider.notifier).updateFromAst(ast);
                       ref
                           .read(currentIdeOpenProvider.notifier)

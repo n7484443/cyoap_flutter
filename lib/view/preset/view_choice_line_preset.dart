@@ -19,9 +19,7 @@ class ChoiceLineSample extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var colorOption =
-        ref
-            .watch(choiceLinePresetCurrentEditProvider)
-            .backgroundColorOption;
+        ref.watch(choiceLinePresetCurrentEditProvider).backgroundColorOption;
     return Container(
       decoration: BoxDecoration(
         image: ImageDB().checkers,
@@ -74,37 +72,33 @@ class ChoiceLinePresetList extends ConsumerWidget {
                 trailing: preset.name == "default"
                     ? null
                     : IconButton(
-                  icon: Icon(Icons.delete,
-                      size: (IconTheme
-                          .of(context)
-                          .size ?? 18) * 0.8),
-                  onPressed: () {
-                    ref
-                        .read(choiceLinePresetListProvider.notifier)
-                        .deleteIndex(index);
-                  },
-                ),
-                leading: preset.name == "default" ? null : IconButton(
-                  icon: Icon(Icons.drive_file_rename_outline,
-                      size: (IconTheme
-                          .of(context)
-                          .size ?? 18) * 0.8),
-                  onPressed: () async {
-                    var text = await showDialog(
-                        context: context,
-                        builder: (context) {
-                          return PresetRenameDialog(preset.name);
+                        icon: Icon(Icons.delete,
+                            size: (IconTheme.of(context).size ?? 18) * 0.8),
+                        onPressed: () {
+                          ref
+                              .read(choiceLinePresetListProvider.notifier)
+                              .deleteIndex(index);
                         },
-                        barrierDismissible: false);
-                    if (text != null && text
-                        .trim()
-                        .isNotEmpty) {
-                      ref
-                          .read(choiceLinePresetListProvider.notifier)
-                          .rename(index, text.trim());
-                    }
-                  },
-                ),
+                      ),
+                leading: preset.name == "default"
+                    ? null
+                    : IconButton(
+                        icon: Icon(Icons.drive_file_rename_outline,
+                            size: (IconTheme.of(context).size ?? 18) * 0.8),
+                        onPressed: () async {
+                          var text = await showDialog(
+                              context: context,
+                              builder: (context) {
+                                return PresetRenameDialog(preset.name);
+                              },
+                              barrierDismissible: false);
+                          if (text != null && text.trim().isNotEmpty) {
+                            ref
+                                .read(choiceLinePresetListProvider.notifier)
+                                .rename(index, text.trim());
+                          }
+                        },
+                      ),
                 onTap: () {
                   ref
                       .read(currentPresetIndexProvider.notifier)
@@ -136,11 +130,13 @@ class ViewLineOptionEditor extends ConsumerWidget {
         slivers: [
           SliverGrid(
             delegate: SliverChildListDelegate([
-              CustomSwitch(updateState: () =>
-                  ref.read(choiceLinePresetListProvider.notifier).updateIndex(
-                      index,
-                      preset.copyWith(
-                          alwaysVisibleLine: !preset.alwaysVisibleLine)),
+              CustomSwitch(
+                  updateState: () => ref
+                      .read(choiceLinePresetListProvider.notifier)
+                      .updateIndex(
+                          index,
+                          preset.copyWith(
+                              alwaysVisibleLine: !preset.alwaysVisibleLine)),
                   label: 'black_line'.i18n,
                   state: preset.alwaysVisibleLine)
             ]),

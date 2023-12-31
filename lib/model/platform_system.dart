@@ -41,7 +41,8 @@ class PlatformSystem {
 
   Future<LoadProjectState> openPlatformJson(File file, Ref ref) async {
     platformFileSystem.path = file.parent.path;
-    return await platformFileSystem.createFromJson(file.readAsStringSync(), ref);
+    return await platformFileSystem.createFromJson(
+        file.readAsStringSync(), ref);
   }
 
   Future<LoadProjectState> openPlatformFolder(String path) async {

@@ -90,7 +90,8 @@ class CheckListNotifier extends StateNotifier<List<CheckList>> {
       List<CheckList> subWidgetList = List.empty(growable: true);
       for (var child in line.children) {
         (child as ChoiceNode).recursiveFunction((node) {
-          subWidgetList.add(CheckList(name: (node as ChoiceNode).title, pos: node.pos));
+          subWidgetList
+              .add(CheckList(name: (node as ChoiceNode).title, pos: node.pos));
         });
       }
       nodeList.add(CheckList(

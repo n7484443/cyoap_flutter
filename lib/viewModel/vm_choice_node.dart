@@ -97,7 +97,8 @@ final contentsQuillProvider =
 });
 
 final nodeModeProvider = Provider.family.autoDispose<ChoiceNodeMode, Pos>(
-    (ref, pos) => ref.watch(choiceNodeStatusProvider(pos)).node!.choiceNodeMode);
+    (ref, pos) =>
+        ref.watch(choiceNodeStatusProvider(pos)).node!.choiceNodeMode);
 
 final choiceNodeSelectProvider = StateNotifierProvider.family
     .autoDispose<ChoiceNodeSelectNotifier, int, Pos>(
@@ -173,12 +174,14 @@ class ChoiceNodeSizeNotifier extends StateNotifier<int> {
   ChoiceNode node;
 
   ChoiceNodeSizeNotifier(this.pos, this.ref)
-      : node = ref.read(choiceNodeStatusProvider(pos)).node ?? ChoiceNode.empty(),
+      : node =
+            ref.read(choiceNodeStatusProvider(pos)).node ?? ChoiceNode.empty(),
         super(ref.read(choiceNodeStatusProvider(pos)).node?.width ?? 12);
 
   void sizeChange(int width) {
     if (width == -1) {
-      if (state > ref.read(choiceNodeStatusProvider(pos)).node!.getMaxSize(false)) {
+      if (state >
+          ref.read(choiceNodeStatusProvider(pos)).node!.getMaxSize(false)) {
         state = node.getMaxSize(false);
       }
     } else {

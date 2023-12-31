@@ -17,11 +17,12 @@ import '../util/platform_specified_util/webp_converter.dart';
 
 part 'vm_editor.g.dart';
 
-final editEndProvider = StateProvider<bool>((ref){
+final editEndProvider = StateProvider<bool>((ref) {
   ref.listenSelf((previous, next) {
-    if(next){
+    if (next) {
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-      var pos = (ref.read(nodeEditorTargetPosProvider) ?? ref.read(lineEditorTargetPosProvider))!;
+      var pos = (ref.read(nodeEditorTargetPosProvider) ??
+          ref.read(lineEditorTargetPosProvider))!;
       refreshLine(ref, pos.first);
     }
   });

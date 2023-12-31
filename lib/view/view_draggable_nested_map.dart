@@ -54,11 +54,11 @@ class NodeDragTarget extends ConsumerWidget {
           if (drag.last == nonPositioned) {
             ref.read(vmDraggableNestedMapProvider).changeData(drag, pos);
           } else if (drag.last == removedPositioned) {
-            ref.read(vmDraggableNestedMapProvider).addData(
-                pos, ref.read(removedChoiceNodeStatusProvider).choiceNode!.clone());
+            ref.read(vmDraggableNestedMapProvider).addData(pos,
+                ref.read(removedChoiceNodeStatusProvider).choiceNode!.clone());
           } else if (drag.last == copiedPositioned) {
-            ref.read(vmDraggableNestedMapProvider).addData(
-                pos, ref.read(copiedChoiceNodeStatusProvider).choiceNode!.clone());
+            ref.read(vmDraggableNestedMapProvider).addData(pos,
+                ref.read(copiedChoiceNodeStatusProvider).choiceNode!.clone());
           } else if (pos.equalExceptLast(drag) &&
               (pos.data.last - 1) >= drag.last) {
             ref
@@ -112,56 +112,58 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if(ConstList.isMobile())Text('lineSetting_tooltip_0'.i18n),
-          if(ConstList.isMobile())Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.chevron_left),
-                onPressed: () {
-                  ref.read(lineOptionProvider(widget.y).notifier).update(
-                      (state) => state.copyWith(
-                          maxSelect: state.maxSelect >= 0
-                              ? state.maxSelect - 1
-                              : state.maxSelect));
-                },
-              ),
-              Text(maxSelectString),
-              IconButton(
-                icon: const Icon(Icons.chevron_right),
-                onPressed: () {
-                  ref.read(lineOptionProvider(widget.y).notifier).update(
-                      (state) =>
-                          state.copyWith(maxSelect: state.maxSelect + 1));
-                },
-              ),
-            ],
-          ),
-          if(!ConstList.isMobile())Row(
-            children: [
-              Text('lineSetting_tooltip_0'.i18n),
-              const Spacer(),
-              IconButton(
-                icon: const Icon(Icons.chevron_left),
-                onPressed: () {
-                  ref.read(lineOptionProvider(widget.y).notifier).update(
-                          (state) => state.copyWith(
-                          maxSelect: state.maxSelect >= 0
-                              ? state.maxSelect - 1
-                              : state.maxSelect));
-                },
-              ),
-              Text(maxSelectString),
-              IconButton(
-                icon: const Icon(Icons.chevron_right),
-                onPressed: () {
-                  ref.read(lineOptionProvider(widget.y).notifier).update(
-                          (state) =>
-                          state.copyWith(maxSelect: state.maxSelect + 1));
-                },
-              ),
-            ],
-          ),
+          if (ConstList.isMobile()) Text('lineSetting_tooltip_0'.i18n),
+          if (ConstList.isMobile())
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.chevron_left),
+                  onPressed: () {
+                    ref.read(lineOptionProvider(widget.y).notifier).update(
+                        (state) => state.copyWith(
+                            maxSelect: state.maxSelect >= 0
+                                ? state.maxSelect - 1
+                                : state.maxSelect));
+                  },
+                ),
+                Text(maxSelectString),
+                IconButton(
+                  icon: const Icon(Icons.chevron_right),
+                  onPressed: () {
+                    ref.read(lineOptionProvider(widget.y).notifier).update(
+                        (state) =>
+                            state.copyWith(maxSelect: state.maxSelect + 1));
+                  },
+                ),
+              ],
+            ),
+          if (!ConstList.isMobile())
+            Row(
+              children: [
+                Text('lineSetting_tooltip_0'.i18n),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.chevron_left),
+                  onPressed: () {
+                    ref.read(lineOptionProvider(widget.y).notifier).update(
+                        (state) => state.copyWith(
+                            maxSelect: state.maxSelect >= 0
+                                ? state.maxSelect - 1
+                                : state.maxSelect));
+                  },
+                ),
+                Text(maxSelectString),
+                IconButton(
+                  icon: const Icon(Icons.chevron_right),
+                  onPressed: () {
+                    ref.read(lineOptionProvider(widget.y).notifier).update(
+                        (state) =>
+                            state.copyWith(maxSelect: state.maxSelect + 1));
+                  },
+                ),
+              ],
+            ),
           const SizedBox(height: ConstList.padding),
           DropdownButtonFormField<String>(
             decoration:
@@ -192,16 +194,18 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
       actions: [
         TextButton(
           onPressed: () {
-            ref.read(lineEditorTargetPosProvider.notifier).state = Pos(data: [widget.y]);
+            ref.read(lineEditorTargetPosProvider.notifier).state =
+                Pos(data: [widget.y]);
             Navigator.pop(context);
-            ref.read(changeTabProvider.notifier).changePageString("viewEditorLine", context);
+            ref
+                .read(changeTabProvider.notifier)
+                .changePageString("viewEditorLine", context);
           },
           child: Text("lineSetting_tooltip_3".i18n),
         ),
         TextButton(
           onPressed: () {
-            Navigator.of(context)
-                .pop(_nameController!.text);
+            Navigator.of(context).pop(_nameController!.text);
           },
           child: Text("confirm".i18n),
         ),
@@ -330,8 +334,9 @@ class NodeDivider extends ConsumerWidget {
                           context: context,
                           builder: (_) => NodeDividerDialog(y),
                           barrierDismissible: false);
-                      ref.read(lineOptionProvider(y).notifier).update(
-                          (state) => state.copyWith(name: value));
+                      ref
+                          .read(lineOptionProvider(y).notifier)
+                          .update((state) => state.copyWith(name: value));
                       ref
                           .read(draggableNestedMapChangedProvider.notifier)
                           .state = true;
@@ -541,7 +546,9 @@ class _NestedMapState extends ConsumerState<NestedMap> {
                 height: 50,
                 child: TextButton(
                   onPressed: () {
-                    if (ref.watch(selectedchoiceNodeStatusProvider).isNotEmpty) {
+                    if (ref
+                        .watch(selectedchoiceNodeStatusProvider)
+                        .isNotEmpty) {
                       showDialog(
                         context: context,
                         builder: (context) => const ViewSelectedGrid(),

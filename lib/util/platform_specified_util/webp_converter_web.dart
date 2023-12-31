@@ -5,8 +5,7 @@ import 'package:image/image.dart';
 
 class WebpConverterImp extends WebpConverter {
   @override
-  Future<(String, Uint8List)> convert(
-      Uint8List input, String name) async {
+  Future<(String, Uint8List)> convert(Uint8List input, String name) async {
     if (name.endsWith(".bmp")) {
       var image = BmpDecoder().decode(input);
       var output = Uint8List.fromList(PngEncoder().encode(image!));

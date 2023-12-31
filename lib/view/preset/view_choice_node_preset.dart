@@ -602,7 +602,8 @@ class _ViewNodeColorOptionEditorState
                   colorOption: preset.defaultColorOption,
                   changeFunction: (ColorOption after) {
                     ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                        presetIndex, preset.copyWith(defaultColorOption: after));
+                        presetIndex,
+                        preset.copyWith(defaultColorOption: after));
                   },
                 ),
               ),
@@ -625,8 +626,10 @@ class _ViewNodeColorOptionEditorState
                             if (value != null) {
                               ref
                                   .read(choiceNodePresetListProvider.notifier)
-                                  .updateIndex(presetIndex,
-                                      preset.copyWith(selectColorEnable: value));
+                                  .updateIndex(
+                                      presetIndex,
+                                      preset.copyWith(
+                                          selectColorEnable: value));
                             }
                           },
                         ),
@@ -637,8 +640,10 @@ class _ViewNodeColorOptionEditorState
                       child: ViewColorOptionEditor(
                         colorOption: preset.selectColorOption,
                         changeFunction: (ColorOption after) {
-                          ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                              presetIndex, preset.copyWith(selectColorOption: after));
+                          ref
+                              .read(choiceNodePresetListProvider.notifier)
+                              .updateIndex(presetIndex,
+                                  preset.copyWith(selectColorOption: after));
                         },
                       ),
                     ),

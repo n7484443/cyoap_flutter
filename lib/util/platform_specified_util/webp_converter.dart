@@ -6,8 +6,7 @@ import 'webp_converter_vm.dart'
 abstract class WebpConverter {
   static WebpConverter? instance = WebpConverterImp();
 
-  Future<(String, Uint8List)> convert(
-          Uint8List input, String name) async =>
+  Future<(String, Uint8List)> convert(Uint8List input, String name) async =>
       throw "doesn't work in this platform";
 
   void init() async {}

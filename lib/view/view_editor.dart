@@ -12,6 +12,7 @@ import 'package:cyoap_flutter/view/util/view_image_selector.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/src/utils/color.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -569,7 +570,11 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                             maxLength: 3,
                             minLines: 1,
                             maxLines: 1,
-                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            keyboardType: const TextInputType.numberWithOptions(
+                                signed: false, decimal: false),
                             controller: ref.watch(maximumProvider),
                             decoration: InputDecoration(
                               label: Text(nodeMode == ChoiceNodeMode.multiSelect

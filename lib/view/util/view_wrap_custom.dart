@@ -140,7 +140,7 @@ class ViewWrapCustomReorder extends ConsumerWidget {
     } else {
       check = true;
     }
-    if(subWidget.isEmpty){
+    if (subWidget.isEmpty) {
       addBuildDraggable(outputWidget, 0, horizontal: true);
     }
     outputWidget.add(
@@ -268,7 +268,7 @@ class ViewWrapCustom extends ConsumerWidget {
           ),
         );
       }
-    } else if(!isInner){
+    } else if (!isInner) {
       outputWidget.add(const SizedBox.square(dimension: defaultHeight));
     }
     if (isInner) {

@@ -47,7 +47,10 @@ class ViewWarningDialog extends StatelessWidget {
   final void Function()? acceptFunction;
   final String content;
   const ViewWarningDialog(
-      {this.acceptFunction, this.cancelFunction, required this.content, super.key});
+      {this.acceptFunction,
+      this.cancelFunction,
+      required this.content,
+      super.key});
 
   @override
   Widget build(BuildContext context) {

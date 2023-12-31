@@ -339,7 +339,7 @@ class ViewSideClipboard extends ConsumerStatefulWidget {
   ConsumerState createState() => _ViewSideClipboardState();
 }
 
-class _ViewSideClipboardState extends ConsumerState<ViewSideClipboard>{
+class _ViewSideClipboardState extends ConsumerState<ViewSideClipboard> {
   @override
   Widget build(BuildContext context) {
     var list = [];
@@ -371,16 +371,15 @@ class _ViewSideClipboardState extends ConsumerState<ViewSideClipboard>{
               ),
             ),
             onDragStarted: () {
-              if(ConstList.isMobile()){
+              if (ConstList.isMobile()) {
                 Scaffold.of(context).closeDrawer();
                 ref.read(sideTabProvider.notifier).state = 0;
               }
               ref.read(dragchoiceNodeStatusProvider.notifier).dragStart(pos);
             },
-            onDragUpdate: (DragUpdateDetails details){
-              ref
-                  .read(dragPositionProvider.notifier)
-                  .state = details.localPosition.dy;
+            onDragUpdate: (DragUpdateDetails details) {
+              ref.read(dragPositionProvider.notifier).state =
+                  details.localPosition.dy;
             },
             child: ViewChoiceNode(pos, ignoreChild: true),
           ),

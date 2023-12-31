@@ -84,20 +84,16 @@ class ViewImageEditor extends ConsumerWidget {
               ref.read(imageCropRatioProvider.notifier).state = null;
               break;
             case 1:
-              ref.read(imageCropRatioProvider.notifier).state =
-                  const (4, 3);
+              ref.read(imageCropRatioProvider.notifier).state = const (4, 3);
               break;
             case 2:
-              ref.read(imageCropRatioProvider.notifier).state =
-                  const (3, 2);
+              ref.read(imageCropRatioProvider.notifier).state = const (3, 2);
               break;
             case 3:
-              ref.read(imageCropRatioProvider.notifier).state =
-                  const (16, 9);
+              ref.read(imageCropRatioProvider.notifier).state = const (16, 9);
               break;
             case 4:
-              ref.read(imageCropRatioProvider.notifier).state =
-                  const (1, 1);
+              ref.read(imageCropRatioProvider.notifier).state = const (1, 1);
               break;
             case 5:
               var data = ref.read(imageCropRatioProvider);
@@ -141,8 +137,7 @@ class ViewImageEditorContents extends ConsumerWidget {
                   maxScale: 4.0,
                   hitTestSize: 20.0,
                   cropRectPadding: const EdgeInsets.all(10.0),
-                  cropAspectRatio:
-                      data == null ? null : data.$1! / data.$2!,
+                  cropAspectRatio: data == null ? null : data.$1! / data.$2!,
                   initCropRectType: InitCropRectType.imageRect,
                   editActionDetailsIsChanged: (EditActionDetails? details) {});
             },

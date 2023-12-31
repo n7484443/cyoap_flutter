@@ -390,9 +390,13 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
               color: Colors.black12,
               borderRadius: BorderRadius.circular(5),
             ),
-            child: const Icon(Icons.chevron_left, size: 16, color: Colors.black,),
+            child: const Icon(
+              Icons.chevron_left,
+              size: 16,
+              color: Colors.black,
+            ),
           ),
-          onTap: (){
+          onTap: () {
             if (!isEditable) {
               ref.read(choiceNodeSelectProvider(pos).notifier).select(-1);
             }
@@ -402,7 +406,7 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
           ref.watch(choiceNodeSelectProvider(pos)).toString(),
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: Colors.black,
-          ),
+              ),
           textAlign: TextAlign.center,
         ),
         InkWell(
@@ -413,9 +417,13 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
               color: Colors.black12,
               borderRadius: BorderRadius.circular(5),
             ),
-            child: const Icon(Icons.chevron_right, size: 16, color: Colors.black,),
+            child: const Icon(
+              Icons.chevron_right,
+              size: 16,
+              color: Colors.black,
+            ),
           ),
-          onTap: (){
+          onTap: () {
             if (!isEditable) {
               ref.read(choiceNodeSelectProvider(pos).notifier).select(1);
             }
@@ -462,7 +470,7 @@ class _ViewContentsState extends ConsumerState<ViewContents> {
   @override
   Widget build(BuildContext context) {
     var delta = ref.watch(contentsQuillProvider(widget.pos));
-    if(delta == null){
+    if (delta == null) {
       return const SizedBox.shrink();
     }
     _controller!.setContents(delta);
@@ -496,7 +504,8 @@ class ViewChoiceNodeContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var node = ref.watch(choiceNodeStatusProvider(pos)).node ?? ChoiceNode.empty();
+    var node =
+        ref.watch(choiceNodeStatusProvider(pos)).node ?? ChoiceNode.empty();
     var design = ref.watch(choiceNodeDesignSettingProvider(pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     Widget image;

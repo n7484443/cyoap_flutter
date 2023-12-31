@@ -46,7 +46,7 @@ TextEditingController projectSettingValueTextEditing(
     ProjectSettingValueTextEditingRef ref) {
   var index = ref.watch(currentEditGlobalVariableProvider)!;
   var name =
-  ref.read(valueTypeWrapperListProvider.notifier).getEditTargetName(index)!;
+      ref.read(valueTypeWrapperListProvider.notifier).getEditTargetName(index)!;
   var value = ref
       .read(valueTypeWrapperListProvider.notifier)
       .getEditTargetValueTypeWrapper(index)!;
@@ -56,16 +56,16 @@ TextEditingController projectSettingValueTextEditing(
   controller.addListener(() {
     EasyDebounce.debounce(
         'projectSettingValueTextEditingProvider', ConstList.debounceDuration,
-            () {
-          var newValue = controller.text.trim();
-          if (newValue.isEmpty) {
-            return;
-          }
-          ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(
-              index,
-              name,
-              value.copyWith(valueType: getValueTypeFromStringInput(newValue)));
-        });
+        () {
+      var newValue = controller.text.trim();
+      if (newValue.isEmpty) {
+        return;
+      }
+      ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(
+          index,
+          name,
+          value.copyWith(valueType: getValueTypeFromStringInput(newValue)));
+    });
   });
   ref.onDispose(() {
     controller.dispose();
@@ -79,7 +79,7 @@ TextEditingController projectSettingDisplayNameTextEditing(
     ProjectSettingDisplayNameTextEditingRef ref) {
   var index = ref.watch(currentEditGlobalVariableProvider)!;
   var name =
-  ref.read(valueTypeWrapperListProvider.notifier).getEditTargetName(index)!;
+      ref.read(valueTypeWrapperListProvider.notifier).getEditTargetName(index)!;
   var value = ref
       .read(valueTypeWrapperListProvider.notifier)
       .getEditTargetValueTypeWrapper(index)!;
@@ -87,13 +87,13 @@ TextEditingController projectSettingDisplayNameTextEditing(
   controller.addListener(() {
     EasyDebounce.debounce('projectSettingDisplayNameTextEditingProvider',
         ConstList.debounceDuration, () {
-          var newDisplayName = controller.text.trim();
-          if (newDisplayName.isEmpty) {
-            newDisplayName = name;
-          }
-          ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(
-              index, name, value.copyWith(displayName: newDisplayName));
-        });
+      var newDisplayName = controller.text.trim();
+      if (newDisplayName.isEmpty) {
+        newDisplayName = name;
+      }
+      ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(
+          index, name, value.copyWith(displayName: newDisplayName));
+    });
   });
   ref.onDispose(() {
     controller.dispose();

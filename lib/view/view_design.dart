@@ -89,7 +89,7 @@ class _ViewGeneralSettingTabState extends ConsumerState<ViewGeneralSettingTab> {
       value: designSetting.variableFont,
       items: ConstList.textFontList.keys
           .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
-          value: name, child: Text(name, style: ConstList.getFont(name))))
+              value: name, child: Text(name, style: ConstList.getFont(name))))
           .toList(),
       onChanged: (String? value) {
         ref.read(platformDesignSettingProvider.notifier).state =

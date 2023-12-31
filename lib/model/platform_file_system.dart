@@ -108,8 +108,8 @@ class PlatformFileSystem {
               var index =
                   int.tryParse(basename(f.path).split('_')[1].split('.')[0]) ??
                       0;
-              lineSettingList.add(
-                  ChoiceLine.fromJson(jsonDecode(value), index));
+              lineSettingList
+                  .add(ChoiceLine.fromJson(jsonDecode(value), index));
             }
           }
         }

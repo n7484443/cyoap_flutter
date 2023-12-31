@@ -12,12 +12,13 @@ import 'package:flutter/material.dart';
 const int designSamplePosition = -100;
 
 class AbstractPlatform extends PlayablePlatform {
-  ListQueue<Color> lastColorList = ListQueue.from(List.filled(10, Colors.black));
+  ListQueue<Color> lastColorList =
+      ListQueue.from(List.filled(10, Colors.black));
 
   void addLastColor(Color color) {
-    if(lastColorList.contains(color)){
+    if (lastColorList.contains(color)) {
       lastColorList.remove(color);
-    }else{
+    } else {
       lastColorList.removeLast();
     }
     lastColorList.addFirst(color);
@@ -25,7 +26,8 @@ class AbstractPlatform extends PlayablePlatform {
 
   Map<int, Color> getLastColor(Color color) {
     var lastColorMap = getPlatform.lastColorList.toList().asMap();
-    return lastColorMap.map((key, value) => MapEntry(key == 0 ? 50 : key * 100, value));
+    return lastColorMap
+        .map((key, value) => MapEntry(key == 0 ? 50 : key * 100, value));
   }
 
   void init() {
@@ -39,10 +41,11 @@ class AbstractPlatform extends PlayablePlatform {
   AbstractPlatform();
 
   AbstractPlatform.none();
-  AbstractPlatform.fromJson(Map<String, dynamic> json): super.fromJson(json){
-    if(json['lastColorList'] != null){
-      lastColorList = ListQueue.from((json['lastColorList'] as List).map((e) => Color(e)).toList());
-    }else{
+  AbstractPlatform.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
+    if (json['lastColorList'] != null) {
+      lastColorList = ListQueue.from(
+          (json['lastColorList'] as List).map((e) => Color(e)).toList());
+    } else {
       lastColorList = ListQueue.from(List.filled(10, Colors.black));
     }
   }
@@ -98,7 +101,7 @@ class AbstractPlatform extends PlayablePlatform {
     }
     checkDataCorrect();
   }
-  
+
   void removeChoiceLine(int y) {
     lineSettings.removeAt(y);
     checkDataCorrect();

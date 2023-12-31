@@ -230,7 +230,8 @@ extension Localization on String {
           'general': 'General',
           'background': 'Background',
           'font_score': 'Score font',
-          'margin_vertical': 'Vertical margin between choices\nDefault value %.1f',
+          'margin_vertical':
+              'Vertical margin between choices\nDefault value %.1f',
           'background_image_batch_option': 'Background image batch option',
           'inner': 'Inner',
           'outline': 'Outline',

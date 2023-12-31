@@ -201,7 +201,9 @@ class _ViewProjectListState extends ConsumerState<ViewProjectList> {
                           index,
                           () async => await showDialog<bool?>(
                             context: context,
-                            builder: (_) => ViewWarningDialog(content: 'warning_message_project_delete'.i18n,),
+                            builder: (_) => ViewWarningDialog(
+                              content: 'warning_message_project_delete'.i18n,
+                            ),
                           ),
                         );
                   },
@@ -227,24 +229,31 @@ class SelectMode extends ConsumerWidget {
                 context: context,
                 builder: (context) => const ViewLoadingDialog(),
               );
-              LoadProjectState loadState = await ref.read(pathListProvider.notifier).openProject();
+              LoadProjectState loadState =
+                  await ref.read(pathListProvider.notifier).openProject();
               Navigator.pop(context);
-              switch(loadState.state) {
+              switch (loadState.state) {
                 case ProjectState.success:
                   getPlatformFileSystem.isEditable = false;
                   Navigator.of(context).pushReplacementNamed('/viewPlay');
                   ref.read(snackBarErrorProvider.notifier).update();
                   break;
                 case ProjectState.nonExist:
-                  showSnackbar(context, 'failed_load_project_non_exist'.i18n, autoHide: false);
+                  showSnackbar(context, 'failed_load_project_non_exist'.i18n,
+                      autoHide: false);
                   break;
                 case ProjectState.fail:
                   print(loadState.version!);
-                  showSnackbar(context, 'failed_load_project_version'.i18n.fill([
-                    loadState.version!, fileVersion]), autoHide: false);
+                  showSnackbar(
+                      context,
+                      'failed_load_project_version'
+                          .i18n
+                          .fill([loadState.version!, fileVersion]),
+                      autoHide: false);
                   break;
                 default:
-                  showSnackbar(context, 'failed_load_project_cyoap_error'.i18n, autoHide: false);
+                  showSnackbar(context, 'failed_load_project_cyoap_error'.i18n,
+                      autoHide: false);
                   break;
               }
             },
@@ -265,23 +274,30 @@ class SelectMode extends ConsumerWidget {
                 context: context,
                 builder: (context) => const ViewLoadingDialog(),
               );
-              LoadProjectState loadState = await ref.read(pathListProvider.notifier).openProject();
+              LoadProjectState loadState =
+                  await ref.read(pathListProvider.notifier).openProject();
               Navigator.pop(context);
-              switch(loadState.state) {
+              switch (loadState.state) {
                 case ProjectState.success:
                   getPlatformFileSystem.isEditable = true;
                   Navigator.of(context).pushReplacementNamed('/viewMake');
                   break;
                 case ProjectState.nonExist:
-                  showSnackbar(context, 'failed_load_project_non_exist'.i18n, autoHide: false);
+                  showSnackbar(context, 'failed_load_project_non_exist'.i18n,
+                      autoHide: false);
                   break;
                 case ProjectState.fail:
                   print(loadState.version!);
-                  showSnackbar(context, 'failed_load_project_version'.i18n.fill([
-                    loadState.version!, fileVersion]), autoHide: false);
+                  showSnackbar(
+                      context,
+                      'failed_load_project_version'
+                          .i18n
+                          .fill([loadState.version!, fileVersion]),
+                      autoHide: false);
                   break;
                 default:
-                  showSnackbar(context, 'failed_load_project_cyoap_error'.i18n, autoHide: false);
+                  showSnackbar(context, 'failed_load_project_cyoap_error'.i18n,
+                      autoHide: false);
                   break;
               }
             },
@@ -418,7 +434,7 @@ class ViewGlobalSettingDialog extends ConsumerWidget {
       content: Column(
         children: [
           ViewSwitchLabel(
-                () {
+            () {
               ref.read(saveAsWebpProvider.notifier).setVariable(!asyncValue);
             },
             asyncValue,

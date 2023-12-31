@@ -86,14 +86,18 @@ class VMDraggableNestedMap {
   }
 
   void copyData(ChoiceNode choiceNode) {
-    ref.read(copiedChoiceNodeStatusProvider.notifier).update(choiceNode.clone());
+    ref
+        .read(copiedChoiceNodeStatusProvider.notifier)
+        .update(choiceNode.clone());
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     refreshPage(ref);
   }
 
   void removeData(Pos pos) {
     var choiceNode = getPlatform.removeData(pos);
-    ref.read(removedChoiceNodeStatusProvider.notifier).update(choiceNode.clone());
+    ref
+        .read(removedChoiceNodeStatusProvider.notifier)
+        .update(choiceNode.clone());
     VariableDataBase().updateCheckList();
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     refreshPage(ref);
