@@ -35,7 +35,7 @@ class AbstractPlatform extends PlayablePlatform {
     if (getPlatformFileSystem.isEditable) {
       generateRecursiveParser();
     }
-    updateStatusAll();
+    updateStatus();
   }
 
   AbstractPlatform();
@@ -72,7 +72,7 @@ class AbstractPlatform extends PlayablePlatform {
     while (choicePage.choiceLines.length <= pos.first) {
       choicePage.choiceLines.add(ChoiceLine(choicePage.choiceLines.length));
     }
-    var parent = getNode(pos.removeLast())!;
+    var parent = getChoice(pos.removeLast())!;
     parent.addChildren(node, pos: pos.last);
     checkDataCorrect();
   }
@@ -108,7 +108,7 @@ class AbstractPlatform extends PlayablePlatform {
   }
 
   @override
-  Choice? getNode(Pos pos) {
+  Choice? getChoice(Pos pos) {
     if (pos.last == nonPositioned) {
       return createTempNode();
     }
@@ -133,7 +133,7 @@ class AbstractPlatform extends PlayablePlatform {
       addGlobalSetting(unit.$1, unit.$2);
     }
     generateRecursiveParser();
-    updateStatusAll();
+    updateStatus();
   }
 
   void updateNodePresetNameAll(String before, String after) {

@@ -55,7 +55,7 @@ class ChoiceNodeNotifier extends ChangeNotifier {
           presetName: ref.read(choiceNodePresetCurrentEditProvider).name);
       node!.select = ref.read(choiceNodePresetTestSelectProvider) ? 1 : 0;
     } else {
-      var node = getPlatform.getNode(pos);
+      var node = getPlatform.getChoice(pos);
       if (node is ChoiceNode) {
         this.node = node;
       } else {
@@ -115,7 +115,7 @@ class ChoiceNodeSelectNotifier extends StateNotifier<int> {
     if (node.random != -1) {
       ref.read(randomStateNotifierProvider(pos).notifier).startRandom();
     }
-    updateStatusAll(ref, startLine: node.pos.first);
+    updateStatus(ref, startLine: node.pos.first);
     state = node.select;
   }
 
@@ -194,14 +194,14 @@ class ChoiceNodeSizeNotifier extends StateNotifier<int> {
   }
 }
 
-void updateStatusAll(Ref ref, {int startLine = 0}) {
-  getPlatform.updateStatusAll();
+void updateStatus(Ref ref, {int startLine = 0}) {
+  getPlatform.updateStatus();
   ref.read(snackBarErrorProvider.notifier).update();
   refreshPage(ref, startLine: startLine);
 }
 
 void updateImageAll(Ref ref) {
-  getPlatform.updateStatusAll();
+  getPlatform.updateStatus();
   for (var lineSetting in getPlatform.choicePage.choiceLines) {
     for (var node in lineSetting.children) {
       ref.invalidate(imageStringProvider(node.pos));

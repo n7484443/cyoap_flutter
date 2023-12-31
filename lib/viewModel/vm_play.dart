@@ -41,7 +41,7 @@ class PlayDataNotifier extends StateNotifier<void> {
     var bytes = selected.files[0].bytes;
     var string = String.fromCharCodes(bytes!);
     getPlatform.setSelectedPosInternal(string);
-    updateStatusAll(ref);
+    updateStatus(ref);
     return null;
   }
 }

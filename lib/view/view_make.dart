@@ -76,7 +76,7 @@ class ViewRefreshIcons extends ConsumerWidget {
       tooltip: 'update_variable_tooltip'.i18n,
       onPressed: () {
         getPlatform.generateRecursiveParser();
-        getPlatform.updateStatusAll();
+        getPlatform.updateStatus();
       },
     );
   }
