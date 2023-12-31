@@ -122,7 +122,7 @@ class IccProjectParser {
         }
         lineSetting.addChildren(choiceNode);
       }
-      platform.lineSettings.add(lineSetting);
+      platform.choicePage.choiceLines.add(lineSetting);
     }
     platform.designSetting = platform.designSetting.copyWith(
       backgroundColorOption: ColorOption(

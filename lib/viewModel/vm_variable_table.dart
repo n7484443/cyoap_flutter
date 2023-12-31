@@ -86,7 +86,7 @@ class CheckListNotifier extends StateNotifier<List<CheckList>> {
 
   List<CheckList> get showList {
     var nodeList = List<CheckList>.empty(growable: true);
-    for (var line in getPlatform.lineSettings) {
+    for (var line in getPlatform.choicePage.choiceLines) {
       List<CheckList> subWidgetList = List.empty(growable: true);
       for (var child in line.children) {
         (child as ChoiceNode).recursiveFunction((node) {

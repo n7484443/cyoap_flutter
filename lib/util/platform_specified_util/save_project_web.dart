@@ -7,12 +7,10 @@ import 'package:js/js.dart';
 
 class SaveProjectImp extends SaveProject {
   @override
-  Future<void> saveZip(String name, Map<String, dynamic> dataInput) async {
-    var map = await getMap(dataInput);
-
+  Future<void> saveZip(String name, Map<String, Uint8List> dataInput) async {
     await JsIsolatedWorker().importScripts(['save_web.js', 'jszip.js']);
     Uint8List output = await JsIsolatedWorker()
-        .run(functionName: '_compressToZip', arguments: jsonEncode(map));
+        .run(functionName: '_compressToZip', arguments: jsonEncode(dataInput));
     downloadCapture("", name, output);
   }
 

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'platform_specified_vm.dart'
@@ -29,37 +28,13 @@ abstract class Distribute {
 }
 
 abstract class SaveProject {
-  Future<Map<String, dynamic>> getMap(Map<String, dynamic> dataInput) async {
-    Map<String, dynamic> map = {
-      'platform.json': utf8.encode(dataInput['platform']),
-      'imageSource.json': utf8.encode(jsonEncode(dataInput['imageSource']))
-    };
-
-    var image = dataInput['imageMap'] as Map<String, String>;
-    for (var name in image.keys) {
-      var data = Uint8List.fromList(image[name]!.codeUnits);
-      map['images/$name'] = data;
-    }
-
-    var fileList = List.empty(growable: true);
-
-    var lineSetting = dataInput['lineSetting'] as Map<String, String>;
-    for (var nodeName in lineSetting.keys) {
-      map['nodes/$nodeName'] = utf8.encode(lineSetting[nodeName]!) as Uint8List;
-      fileList.add(nodeName);
-    }
-    map['nodes/list.json'] = utf8.encode(jsonEncode(fileList));
-
-    return map;
-  }
-
   Future<void> downloadCapture(String path, String name, Uint8List data) async {
     throw UnimplementedError();
   }
 
-  Future<void> saveZip(String name, Map<String, dynamic> dataInput) async {
+  Future<void> saveZip(String name, Map<String, Uint8List> dataInput) async {
     throw UnimplementedError();
   }
 
-  Future<void> saveRaw(String path, Map<String, dynamic> dataInput) async {}
+  Future<void> saveRaw(String path, Map<String, Uint8List> dataInput) async {}
 }

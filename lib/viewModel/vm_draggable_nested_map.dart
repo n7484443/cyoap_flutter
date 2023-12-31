@@ -133,15 +133,15 @@ class VMDraggableNestedMap {
   }
 
   void moveLine(int before, int after) {
-    if (after >= getPlatform.lineSettings.length) {
+    if (after >= getPlatform.choicePage.choiceLines.length) {
       return;
     }
     if (after < 0) {
       return;
     }
-    var temp = getPlatform.lineSettings[before];
-    getPlatform.lineSettings[before] = getPlatform.lineSettings[after];
-    getPlatform.lineSettings[after] = temp;
+    var temp = getPlatform.choicePage.choiceLines[before];
+    getPlatform.choicePage.choiceLines[before] = getPlatform.choicePage.choiceLines[after];
+    getPlatform.choicePage.choiceLines[after] = temp;
     getPlatform.checkDataCorrect();
     refreshPage(ref);
   }
@@ -149,7 +149,7 @@ class VMDraggableNestedMap {
 
 void refreshPage(Ref ref, {int startLine = 0}) {
   ref.invalidate(lineLengthProvider);
-  for (var pos = startLine; pos < getPlatform.lineSettings.length; pos++) {
+  for (var pos = startLine; pos < getPlatform.choicePage.choiceLines.length; pos++) {
     refreshLine(ref, pos);
   }
 }
@@ -202,13 +202,13 @@ final linePresetProvider =
 });
 
 final lineLengthProvider =
-    Provider.autoDispose<int>((ref) => getPlatform.lineSettings.length);
+    Provider.autoDispose<int>((ref) => getPlatform.choicePage.choiceLines.length);
 
 final lineListProvider = Provider.autoDispose<List<int>>((ref) {
   if (isEditable) {
-    return getPlatform.lineSettings.map((e) => e.currentPos).toList();
+    return getPlatform.choicePage.choiceLines.map((e) => e.currentPos).toList();
   }
-  return getPlatform.lineSettings
+  return getPlatform.choicePage.choiceLines
       .where((e) => e.isOpen())
       .map((e) => e.currentPos)
       .toList();

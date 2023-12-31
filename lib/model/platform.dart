@@ -61,16 +61,16 @@ class AbstractPlatform extends PlayablePlatform {
     return out;
   }
 
-  void addLineSettingData(ChoiceLine lineSetting) {
-    while (lineSettings.length <= lineSetting.currentPos) {
-      lineSettings.add(ChoiceLine(lineSettings.length));
+  void addLineSettingData(ChoiceLine choiceLine) {
+    while (choicePage.choiceLines.length <= choiceLine.currentPos) {
+      choicePage.choiceLines.add(ChoiceLine(choicePage.choiceLines.length));
     }
-    lineSettings[lineSetting.currentPos] = lineSetting;
+    choicePage.choiceLines[choiceLine.currentPos] = choiceLine;
   }
 
   void addData(Pos pos, ChoiceNode node) {
-    while (lineSettings.length <= pos.first) {
-      lineSettings.add(ChoiceLine(lineSettings.length));
+    while (choicePage.choiceLines.length <= pos.first) {
+      choicePage.choiceLines.add(ChoiceLine(choicePage.choiceLines.length));
     }
     var parent = getNode(pos.removeLast())!;
     parent.addChildren(node, pos: pos.last);
@@ -103,7 +103,7 @@ class AbstractPlatform extends PlayablePlatform {
   }
 
   void removeChoiceLine(int y) {
-    lineSettings.removeAt(y);
+    choicePage.choiceLines.removeAt(y);
     checkDataCorrect();
   }
 
@@ -112,7 +112,7 @@ class AbstractPlatform extends PlayablePlatform {
     if (pos.last == nonPositioned) {
       return createTempNode();
     }
-    if (pos.length == 1) return lineSettings[pos.first];
+    if (pos.length == 1) return choicePage.choiceLines[pos.first];
     return getChoiceNode(pos);
   }
 
@@ -137,7 +137,7 @@ class AbstractPlatform extends PlayablePlatform {
   }
 
   void updateNodePresetNameAll(String before, String after) {
-    for (var line in lineSettings) {
+    for (var line in choicePage.choiceLines) {
       for (var choice in line.children) {
         (choice as ChoiceNode).recursiveFunction((node) {
           if ((node as ChoiceNode).choiceNodeOption.presetName == before) {
@@ -150,7 +150,7 @@ class AbstractPlatform extends PlayablePlatform {
   }
 
   void updateLinePresetNameAll(String before, String after) {
-    for (var line in lineSettings) {
+    for (var line in choicePage.choiceLines) {
       if (line.choiceLineOption.presetName == before) {
         line.choiceLineOption =
             line.choiceLineOption.copyWith(presetName: after);

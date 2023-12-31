@@ -8,12 +8,10 @@ import 'package:path/path.dart';
 import 'package:shared_storage/shared_storage.dart';
 
 class SaveProjectImp extends SaveProject {
-  Future<Uint8List> mapToArchive(Map<String, dynamic> dataInput) async {
-    var map = await getMap(dataInput);
-
+  Future<Uint8List> mapToArchive(Map<String, Uint8List> dataInput) async {
     var archive = Archive();
-    for (var name in map.keys) {
-      var data = map[name]!;
+    for (var name in dataInput.keys) {
+      var data = dataInput[name]!;
       archive.addFile(ArchiveFile(name, data.length, data));
     }
 
@@ -21,7 +19,7 @@ class SaveProjectImp extends SaveProject {
   }
 
   @override
-  Future<void> saveZip(String name, Map<String, dynamic> dataInput) async {
+  Future<void> saveZip(String name, Map<String, Uint8List> dataInput) async {
     var uint8data = await compute(mapToArchive, dataInput);
 
     if (ConstList.isMobile()) {
@@ -43,8 +41,7 @@ class SaveProjectImp extends SaveProject {
   }
 
   @override
-  Future<void> saveRaw(String path, Map<String, dynamic> dataInput) async {
-    var map = await getMap(dataInput);
+  Future<void> saveRaw(String path, Map<String, Uint8List> dataInput) async {
 
     var existMap = List<String>.empty(growable: true);
     Directory dirNode = Directory('$path/nodes');
@@ -67,15 +64,15 @@ class SaveProjectImp extends SaveProject {
         .toList();
     existMap.addAll(nameList);
 
-    var needRemove = existMap.toSet().difference(map.keys.toSet());
+    var needRemove = existMap.toSet().difference(dataInput.keys.toSet());
 
     for (var name in needRemove) {
       File f = File('$path/$name');
       await f.delete(recursive: true);
     }
 
-    for (var name in map.keys) {
-      var data = map[name]!;
+    for (var name in dataInput.keys) {
+      var data = dataInput[name]!;
       File f = File('$path/$name');
       await f.writeAsBytes(data);
     }

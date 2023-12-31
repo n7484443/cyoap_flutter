@@ -246,20 +246,29 @@ class PlatformFileSystem {
     platform = AbstractPlatform.none();
   }
 
-  Future<Map<String, dynamic>> get saveDataMap async {
-    Map<String, String> lineSetting = {};
-    for (int i = 0; i < getPlatform.lineSettings.length; i++) {
-      var line = getPlatform.lineSettings[i];
-      lineSetting['lineSetting_${line.currentPos}.json'] =
-          jsonEncode(line.toJson());
-    }
-
-    var input = {
-      'imageMap': await ImageDB().imageMap,
-      'imageSource': getPlatformFileSystem.imageSource,
-      'platform': jsonEncode(getPlatform.toJson()),
-      'lineSetting': lineSetting,
+  Future<Map<String, Uint8List>> get saveDataMap async {
+    Map<String, Uint8List> input = {
+      'imageSource.json': utf8.encode(jsonEncode(getPlatformFileSystem.imageSource)),
+      'platform.json': utf8.encode(jsonEncode(getPlatform)),
     };
+    var imageMap = await ImageDB().imageMap;
+    for (var key in imageMap.keys) {
+      var value = imageMap[key]!;
+      input['images/$key'] = Uint8List.fromList(value.codeUnits);
+    }
+    for (int i = 0; i < getPlatform.choicePage.choiceLines.length; i++) {
+      var line = getPlatform.choicePage.choiceLines[i];
+      input['nodes/lineSetting_${line.currentPos}.json'] =
+          utf8.encode(jsonEncode(line));
+    }
+    var page = getPlatform.choicePage;
+    input['nodes/choicePage_0.json'] = utf8.encode(jsonEncode(page));
+
+    input['nodes/list.json'] = utf8.encode(jsonEncode(getPlatform
+        .choicePage.choiceLines
+        .map((e) => "lineSetting_${e.currentPos}.json")
+        .toList()));
+
     return input;
   }
 

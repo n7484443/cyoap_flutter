@@ -12,7 +12,6 @@ import 'package:cyoap_flutter/viewModel/vm_snackbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../model/platform.dart';
 import '../model/platform_system.dart';
@@ -203,7 +202,7 @@ void updateStatusAll(Ref ref, {int startLine = 0}) {
 
 void updateImageAll(Ref ref) {
   getPlatform.updateStatusAll();
-  for (var lineSetting in getPlatform.lineSettings) {
+  for (var lineSetting in getPlatform.choicePage.choiceLines) {
     for (var node in lineSetting.children) {
       ref.invalidate(imageStringProvider(node.pos));
     }

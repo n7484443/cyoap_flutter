@@ -220,7 +220,7 @@ class NodeDivider extends ConsumerWidget {
   const NodeDivider(this.y, {super.key});
 
   Color getColorLine(bool alwaysVisible) {
-    if (y < getPlatform.lineSettings.length && !alwaysVisible) {
+    if (y < getPlatform.choicePage.choiceLines.length && !alwaysVisible) {
       return Colors.blueAccent;
     }
     return Colors.white54;
@@ -233,7 +233,7 @@ class NodeDivider extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var lineOption = ref.watch(lineOptionProvider(y));
-    if (y >= getPlatform.lineSettings.length) {
+    if (y >= getPlatform.choicePage.choiceLines.length) {
       return const Divider(
         thickness: 4,
       );
