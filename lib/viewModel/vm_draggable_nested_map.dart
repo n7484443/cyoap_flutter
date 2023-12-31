@@ -169,7 +169,7 @@ final refreshPageProvider = Provider.autoDispose<void>((ref) {
 });
 
 final lineProvider = Provider.autoDispose
-    .family<ChoiceLine?, int>((ref, pos) => getPlatform.getLineSetting(pos));
+    .family<ChoiceLine?, int>((ref, pos) => getPlatform.getChoiceLine(pos));
 
 final lineVisibleProvider = Provider.autoDispose.family<bool?, Pos>(
     (ref, pos) => ref.watch(lineProvider(pos.first))?.isOpen());
@@ -186,7 +186,7 @@ List<Choice> getChildren(GetChildrenRef ref, {required Pos pos}) {
 final lineOptionProvider =
     StateProvider.autoDispose.family<ChoiceLineOption, int>((ref, pos) {
   ref.listenSelf((previous, ChoiceLineOption next) {
-    getPlatform.getLineSetting(pos)?.choiceLineOption = next;
+    getPlatform.getChoiceLine(pos)?.choiceLineOption = next;
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
   });
   return ref.watch(lineProvider(pos))?.choiceLineOption ??
