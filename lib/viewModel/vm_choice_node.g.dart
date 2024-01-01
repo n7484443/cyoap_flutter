@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'vm_draggable_nested_map.dart';
+part of 'vm_choice_node.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getChildrenHash() => r'd44260e93af8c1447ccbc65e34f10d6e6525ecf4';
+String _$contentsQuillHash() => r'b6ea3ae4b5c24cea15d6cfd1b8d85915f94bba0a';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,27 +29,27 @@ class _SystemHash {
   }
 }
 
-/// See also [getChildren].
-@ProviderFor(getChildren)
-const getChildrenProvider = GetChildrenFamily();
+/// See also [contentsQuill].
+@ProviderFor(contentsQuill)
+const contentsQuillProvider = ContentsQuillFamily();
 
-/// See also [getChildren].
-class GetChildrenFamily extends Family<List<Choice>> {
-  /// See also [getChildren].
-  const GetChildrenFamily();
+/// See also [contentsQuill].
+class ContentsQuillFamily extends Family<String?> {
+  /// See also [contentsQuill].
+  const ContentsQuillFamily();
 
-  /// See also [getChildren].
-  GetChildrenProvider call({
+  /// See also [contentsQuill].
+  ContentsQuillProvider call({
     required Pos pos,
   }) {
-    return GetChildrenProvider(
+    return ContentsQuillProvider(
       pos: pos,
     );
   }
 
   @override
-  GetChildrenProvider getProviderOverride(
-    covariant GetChildrenProvider provider,
+  ContentsQuillProvider getProviderOverride(
+    covariant ContentsQuillProvider provider,
   ) {
     return call(
       pos: provider.pos,
@@ -68,32 +68,32 @@ class GetChildrenFamily extends Family<List<Choice>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'getChildrenProvider';
+  String? get name => r'contentsQuillProvider';
 }
 
-/// See also [getChildren].
-class GetChildrenProvider extends AutoDisposeProvider<List<Choice>> {
-  /// See also [getChildren].
-  GetChildrenProvider({
+/// See also [contentsQuill].
+class ContentsQuillProvider extends AutoDisposeProvider<String?> {
+  /// See also [contentsQuill].
+  ContentsQuillProvider({
     required Pos pos,
   }) : this._internal(
-          (ref) => getChildren(
-            ref as GetChildrenRef,
+          (ref) => contentsQuill(
+            ref as ContentsQuillRef,
             pos: pos,
           ),
-          from: getChildrenProvider,
-          name: r'getChildrenProvider',
+          from: contentsQuillProvider,
+          name: r'contentsQuillProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$getChildrenHash,
-          dependencies: GetChildrenFamily._dependencies,
+                  : _$contentsQuillHash,
+          dependencies: ContentsQuillFamily._dependencies,
           allTransitiveDependencies:
-              GetChildrenFamily._allTransitiveDependencies,
+              ContentsQuillFamily._allTransitiveDependencies,
           pos: pos,
         );
 
-  GetChildrenProvider._internal(
+  ContentsQuillProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -107,12 +107,12 @@ class GetChildrenProvider extends AutoDisposeProvider<List<Choice>> {
 
   @override
   Override overrideWith(
-    List<Choice> Function(GetChildrenRef provider) create,
+    String? Function(ContentsQuillRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: GetChildrenProvider._internal(
-        (ref) => create(ref as GetChildrenRef),
+      override: ContentsQuillProvider._internal(
+        (ref) => create(ref as ContentsQuillRef),
         from: from,
         name: null,
         dependencies: null,
@@ -124,13 +124,13 @@ class GetChildrenProvider extends AutoDisposeProvider<List<Choice>> {
   }
 
   @override
-  AutoDisposeProviderElement<List<Choice>> createElement() {
-    return _GetChildrenProviderElement(this);
+  AutoDisposeProviderElement<String?> createElement() {
+    return _ContentsQuillProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is GetChildrenProvider && other.pos == pos;
+    return other is ContentsQuillProvider && other.pos == pos;
   }
 
   @override
@@ -142,17 +142,17 @@ class GetChildrenProvider extends AutoDisposeProvider<List<Choice>> {
   }
 }
 
-mixin GetChildrenRef on AutoDisposeProviderRef<List<Choice>> {
+mixin ContentsQuillRef on AutoDisposeProviderRef<String?> {
   /// The parameter `pos` of this provider.
   Pos get pos;
 }
 
-class _GetChildrenProviderElement
-    extends AutoDisposeProviderElement<List<Choice>> with GetChildrenRef {
-  _GetChildrenProviderElement(super.provider);
+class _ContentsQuillProviderElement extends AutoDisposeProviderElement<String?>
+    with ContentsQuillRef {
+  _ContentsQuillProviderElement(super.provider);
 
   @override
-  Pos get pos => (origin as GetChildrenProvider).pos;
+  Pos get pos => (origin as ContentsQuillProvider).pos;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

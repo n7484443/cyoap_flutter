@@ -66,7 +66,7 @@ class IccProjectParser {
       choiceRow.choiceNodeOption =
           choiceRow.choiceNodeOption.copyWith(presetName: preset.name);
       choiceRow.choiceNodeMode = ChoiceNodeMode.unSelectableMode;
-      var lineSetting = ChoiceLine(i)..addChildren(choiceRow);
+      var lineSetting = ChoiceLine()..addChildren(choiceRow);
       var rowWidth = int.tryParse((row['objectWidth'] as String? ?? '')
               .replaceAll("md-", "")
               .replaceAll("col-", "")) ??

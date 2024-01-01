@@ -1,4 +1,3 @@
-import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_editor.dart';
 import 'package:cyoap_flutter/viewModel/vm_project_setting.dart';
 import 'package:flutter/material.dart';
@@ -27,10 +26,6 @@ class ChangeTabNotifier extends StateNotifier<int> {
   Future<bool> removeFunction(int index, BuildContext context) async {
     switch (index) {
       case 1:
-        if (ref.read(editorChangeProvider)) {
-          ref.read(editorChangeProvider.notifier).save();
-          refreshLine(ref, ref.read(nodeEditorTargetPosProvider)!.first);
-        }
         ref.read(editEndProvider.notifier).state = true;
         break;
       case 2:

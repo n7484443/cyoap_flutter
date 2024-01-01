@@ -1,6 +1,6 @@
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/custom_snackbar.dart';
-import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
+import 'package:cyoap_flutter/view/view_choice_page.dart';
 import 'package:cyoap_flutter/view/view_make_platform.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:flutter/material.dart' hide BackButton;
@@ -55,13 +55,13 @@ class ViewMake extends ConsumerWidget {
               const BackButton(),
             ],
           ),
-          body: const NestedScroll(),
+          body: const ViewChoicePage(),
         ),
       );
     }
     return const PopScope(
       canPop: false,
-      child: Scaffold(body: NestedScroll()),
+      child: Scaffold(body: ViewChoicePage()),
     );
   }
 }

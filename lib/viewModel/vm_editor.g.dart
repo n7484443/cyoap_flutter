@@ -6,7 +6,7 @@ part of 'vm_editor.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$maximumHash() => r'c692dba74d64c513d4a4e5f5daea1f49f1dcb123';
+String _$maximumHash() => r'2454c467577441aa2851069758cde1ec13a0e2ce';
 
 /// See also [maximum].
 @ProviderFor(maximum)
@@ -52,7 +52,7 @@ final lineEditorTargetProvider =
 );
 
 typedef _$LineEditorTarget = AutoDisposeNotifier<ChoiceLine>;
-String _$imageListStateHash() => r'085da30f9929cbd22fd54c54acccd19aca6914f3';
+String _$imageListStateHash() => r'3fba2a0b4e1cd361b5241312f1671cee9ee3c599';
 
 /// See also [ImageListState].
 @ProviderFor(ImageListState)
@@ -68,20 +68,5 @@ final imageListStateProvider =
 );
 
 typedef _$ImageListState = AutoDisposeNotifier<List<String>>;
-String _$editorChangeHash() => r'fcee36b44455d75e9a6b8eadb06fabb436a55324';
-
-/// See also [EditorChange].
-@ProviderFor(EditorChange)
-final editorChangeProvider =
-    AutoDisposeNotifierProvider<EditorChange, bool>.internal(
-  EditorChange.new,
-  name: r'editorChangeProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$editorChangeHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$EditorChange = AutoDisposeNotifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

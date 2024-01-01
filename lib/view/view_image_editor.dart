@@ -1,12 +1,11 @@
 import 'package:cyoap_flutter/i18n.dart';
-import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_editor.dart';
 import 'package:cyoap_flutter/viewModel/vm_image_editor.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../viewModel/vm_draggable_nested_map.dart';
+import '../viewModel/vm_choice.dart';
 import '../viewModel/vm_make_platform.dart';
 
 class ViewImageEditor extends ConsumerWidget {
@@ -154,10 +153,10 @@ class ViewImageEditorContents extends ConsumerWidget {
                 .then((value) {
               var pos = ref.read(nodeEditorTargetPosProvider);
               if (pos != null) {
-                ref.read(choiceNodeStatusProvider(pos)).node?.imageString =
+                ref.read(choiceStatusProvider(pos)).asChoiceNode()?.imageString =
                     image.$1;
               }
-              ref.read(vmDraggableNestedMapProvider).refresh();
+              ref.read(currentChoicePageProvider.notifier).refresh();
               ref.read(changeTabProvider.notifier).home(context);
             });
           },

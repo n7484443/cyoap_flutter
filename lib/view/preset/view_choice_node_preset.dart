@@ -11,7 +11,7 @@ import '../../model/image_db.dart';
 import '../../model/platform.dart';
 import '../../viewModel/preset/vm_choice_node_preset.dart';
 import '../../viewModel/preset/vm_preset.dart';
-import '../../viewModel/vm_choice_node.dart';
+import '../../viewModel/vm_choice.dart';
 import '../util/controller_adjustable_scroll.dart';
 import '../util/view_color_picker.dart';
 import '../util/view_options.dart';
@@ -46,7 +46,7 @@ class ChoiceNodeSample extends ConsumerWidget {
                   .read(choiceNodePresetTestSelectProvider.notifier)
                   .update((state) => !state);
               var pos = const Pos(data: [designSamplePosition]);
-              ref.invalidate(choiceNodeStatusProvider(pos));
+              ref.read(choiceStatusProvider(pos)).refreshSelf();
             },
             icon: ref.watch(choiceNodePresetTestSelectProvider)
                 ? const Icon(Icons.check_box_outlined)
@@ -113,7 +113,8 @@ class ChoiceNodePresetList extends ConsumerWidget {
                                 .read(choiceNodePresetListProvider.notifier)
                                 .rename(index, text.trim());
                             var pos = const Pos(data: [designSamplePosition]);
-                            ref.invalidate(choiceNodeStatusProvider(pos));
+
+                            ref.read(choiceStatusProvider(pos)).refreshSelf();
                           }
                         },
                       ),
@@ -122,7 +123,7 @@ class ChoiceNodePresetList extends ConsumerWidget {
                       .read(currentPresetIndexProvider.notifier)
                       .update((state) => index);
                   var pos = const Pos(data: [designSamplePosition]);
-                  ref.invalidate(choiceNodeStatusProvider(pos));
+                  ref.read(choiceStatusProvider(pos)).refreshSelf();
                 },
                 selected: index == ref.watch(currentPresetIndexProvider),
               );

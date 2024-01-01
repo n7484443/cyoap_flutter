@@ -30,8 +30,6 @@ final controllerClickableProvider =
         node.conditionalCodeHandler.conditionClickableString = controller.text;
         return node;
       });
-
-      ref.read(editorChangeProvider.notifier).needUpdate();
     });
   });
   ref.onDispose(() {
@@ -135,7 +133,6 @@ final controllerIdeProvider = Provider.autoDispose<QuillController>((ref) {
             return line;
           });
         }
-        ref.read(editorChangeProvider.notifier).needUpdate();
       }
     });
   });

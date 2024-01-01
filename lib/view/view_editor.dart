@@ -80,7 +80,6 @@ class _ViewEditorState extends ConsumerState<ViewEditor>
                 } else {
                   ref.read(imageStateProvider.notifier).state = index;
                 }
-                ref.read(editorChangeProvider.notifier).needUpdate();
               },
             ),
           );
@@ -178,7 +177,6 @@ class _ViewTitleTextFieldInputState
     _controller!.addListener(() {
       node.title = _controller!.text;
       ref.read(nodeTitleProvider.notifier).state = node.title;
-      ref.read(editorChangeProvider.notifier).needUpdate();
     });
     super.initState();
   }
@@ -264,7 +262,6 @@ class _ViewTextContentsEditorState
         ref.read(nodeEditorTargetProvider.notifier).setState((node) => node
           ..contentsString =
               jsonEncode(_quillController?.document.toDelta().toJson()));
-        ref.read(editorChangeProvider.notifier).needUpdate();
       });
     });
     _scrollController = AdjustableScrollController();

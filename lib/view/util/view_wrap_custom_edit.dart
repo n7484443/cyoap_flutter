@@ -7,11 +7,11 @@ import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/util/view_circle_button.dart';
-import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
-import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../viewModel/vm_choice.dart';
+import '../../viewModel/vm_choice_line.dart';
 import '../../viewModel/vm_design_setting.dart';
 import '../view_choice_node.dart';
 import '../view_draggable_nested_map.dart';
@@ -57,7 +57,7 @@ class ViewWrapCustomReorder extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<Widget> outputWidget = List<Widget>.empty(growable: true);
-    var children = ref.watch(getChildrenProvider(pos: parentPos));
+    var children = ref.watch(choiceStatusProvider(parentPos)).getChildrenList();
     if (children.isEmpty && isInner) {
       return SizedBox(
           height: nodeBaseHeight / 6,
@@ -115,9 +115,9 @@ class ViewWrapCustomReorder extends ConsumerWidget {
     Widget addButton = Card(
       child: CircleButton(
         onPressed: () {
-          ref.read(vmDraggableNestedMapProvider).addData(
-              parentPos.addLast(children.length),
-              ChoiceNode.empty()..width = 3);
+          ref
+              .read(choiceStatusProvider(parentPos).notifier)
+              .addChoice(ChoiceNode.empty()..width = 3, index: children.length);
         },
         tooltip: 'create_tooltip'.i18n,
         child: const Icon(Icons.add),
@@ -169,7 +169,7 @@ class ViewWrapCustomReorder extends ConsumerWidget {
         children: outputWidget,
       );
     }
-    var preset = ref.watch(linePresetProvider(parentPos.first));
+    var preset = ref.watch(lineDesignPresetProvider(pos: parentPos));
     return DecoratedSliver(
       decoration: preset.backgroundColorOption.colorType == ColorType.gradient
           ? BoxDecoration(
@@ -207,7 +207,7 @@ class ViewWrapCustom extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<Widget> outputWidget = List<Widget>.empty(growable: true);
-    var children = ref.watch(getChildrenProvider(pos: parentPos));
+    var children = ref.watch(choiceStatusProvider(parentPos)).getChildrenList();
     if (children.isEmpty && isInner) {
       return SizedBox(
           height: nodeBaseHeight / 6,
@@ -277,7 +277,7 @@ class ViewWrapCustom extends ConsumerWidget {
         children: outputWidget,
       );
     }
-    var preset = ref.watch(linePresetProvider(parentPos.first));
+    var preset = ref.watch(lineDesignPresetProvider(pos: parentPos));
     return DecoratedSliver(
       decoration: preset.backgroundColorOption.colorType == ColorType.gradient
           ? BoxDecoration(

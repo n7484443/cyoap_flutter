@@ -1,6 +1,7 @@
 import 'package:cyoap_core/preset/line_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/viewModel/preset/vm_preset.dart';
+import 'package:cyoap_flutter/viewModel/vm_choice.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../model/platform_system.dart';
@@ -43,7 +44,7 @@ class ChoiceLinePresetListNotifier
     var before = state[index].name;
     updateIndex(index, state[index].copyWith(name: after));
     getPlatform.updateLinePresetNameAll(before, after);
-    ref.invalidate(lineOptionProvider);
+    ref.read(currentChoicePageProvider.notifier).refresh();
   }
 
   void updateName(String name, ChoiceLineDesignPreset preset) {

@@ -1,5 +1,5 @@
 import 'package:cyoap_flutter/i18n.dart';
-import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
+import 'package:cyoap_flutter/view/view_choice_page.dart';
 import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -97,7 +97,7 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
           child: ViewPlayDrawer(),
         ),
         bottomNavigationBar: const BottomDisplayedVariableWidget(),
-        body: const NestedScroll(),
+        body: const ViewChoicePage(),
       ),
     );
   }

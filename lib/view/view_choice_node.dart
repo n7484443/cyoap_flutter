@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:cyoap_core/choiceNode/choice_node.dart';
@@ -8,7 +9,7 @@ import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
-import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
+import 'package:cyoap_flutter/view/util/view_wrap_custom_edit.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_editor.dart'
@@ -16,12 +17,14 @@ import 'package:cyoap_flutter/viewModel/vm_editor.dart'
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill/quill_delta.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../main.dart';
 import '../model/platform_system.dart';
 import '../viewModel/preset/vm_choice_node_preset.dart';
+import '../viewModel/vm_choice.dart';
 import '../viewModel/vm_global_setting.dart';
 import '../viewModel/vm_make_platform.dart';
 import '../viewModel/vm_variable_table.dart';
@@ -79,7 +82,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var node = ref.watch(choiceNodeStatusProvider(pos)).node!;
+    var node = ref.watch(choiceStatusProvider(pos)).asChoiceNode()!;
     var design = ref.watch(choiceNodeDesignSettingProvider(pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     var isSelected = node.select > 0;
@@ -130,13 +133,10 @@ class ViewChoiceNodeMain extends ConsumerWidget {
                           );
                           break;
                         case 1:
-                          ref.read(vmDraggableNestedMapProvider).copyData(
-                              ref.watch(choiceNodeStatusProvider(pos)).node!);
+                          ref.read(choiceStatusProvider(pos)).copyData();
                           break;
                         case 2:
-                          ref
-                              .read(vmDraggableNestedMapProvider)
-                              .removeData(pos);
+                          ref.read(choiceStatusProvider(pos)).removeData();
                           break;
                       }
                     },
@@ -266,7 +266,7 @@ class NodeDraggable extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var node = ref.watch(choiceNodeStatusProvider(pos)).node;
+    var node = ref.watch(choiceStatusProvider(pos)).asChoiceNode();
     if (node == null) {
       return const SizedBox.shrink();
     }
@@ -286,16 +286,16 @@ class NodeDraggable extends ConsumerWidget {
               child: widget),
         ),
         onDragStarted: () {
-          ref.read(dragchoiceNodeStatusProvider.notifier).dragStart(pos);
+          ref.read(dragChoiceNodeStatusProvider.notifier).dragStart(pos);
         },
-        child: ref.watch(dragchoiceNodeStatusProvider) == pos
+        child: ref.watch(dragChoiceNodeStatusProvider) == pos
             ? Opacity(
                 opacity: 0.2,
                 child: widget,
               )
             : widget,
         onDraggableCanceled: (Velocity velocity, Offset offset) {
-          ref.read(dragchoiceNodeStatusProvider.notifier).dragEnd();
+          ref.read(dragChoiceNodeStatusProvider.notifier).dragEnd();
         },
       );
     } else {
@@ -313,14 +313,14 @@ class NodeDraggable extends ConsumerWidget {
               child: widget),
         ),
         onDragStarted: () {
-          ref.read(dragchoiceNodeStatusProvider.notifier).dragStart(pos);
+          ref.read(dragChoiceNodeStatusProvider.notifier).dragStart(pos);
         },
         child: Opacity(
-          opacity: ref.watch(dragchoiceNodeStatusProvider) == pos ? 0.2 : 1.0,
+          opacity: ref.watch(dragChoiceNodeStatusProvider) == pos ? 0.2 : 1.0,
           child: widget,
         ),
         onDraggableCanceled: (Velocity velocity, Offset offset) {
-          ref.read(dragchoiceNodeStatusProvider.notifier).dragEnd();
+          ref.read(dragChoiceNodeStatusProvider.notifier).dragEnd();
         },
       );
     }
@@ -469,11 +469,11 @@ class _ViewContentsState extends ConsumerState<ViewContents> {
 
   @override
   Widget build(BuildContext context) {
-    var delta = ref.watch(contentsQuillProvider(widget.pos));
-    if (delta == null) {
+    var json = ref.watch(contentsQuillProvider(pos: widget.pos));
+    if (json == null) {
       return const SizedBox.shrink();
     }
-    _controller!.setContents(delta);
+    _controller!.setContents(Delta.fromJson(jsonDecode(json)));
     var design = ref.watch(choiceNodeDesignSettingProvider(widget.pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     return QuillEditor(
@@ -505,7 +505,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var node =
-        ref.watch(choiceNodeStatusProvider(pos)).node ?? ChoiceNode.empty();
+        ref.watch(choiceStatusProvider(pos)).asChoiceNode() ?? ChoiceNode.empty();
     var design = ref.watch(choiceNodeDesignSettingProvider(pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     Widget image;

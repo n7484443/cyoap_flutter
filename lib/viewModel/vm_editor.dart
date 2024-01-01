@@ -5,6 +5,7 @@ import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
+import 'package:cyoap_flutter/viewModel/vm_choice.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_source.dart';
 import 'package:file_picker/file_picker.dart';
@@ -23,7 +24,7 @@ final editEndProvider = StateProvider<bool>((ref) {
       ref.read(draggableNestedMapChangedProvider.notifier).state = true;
       var pos = (ref.read(nodeEditorTargetPosProvider) ??
           ref.read(lineEditorTargetPosProvider))!;
-      refreshLine(ref, pos.first);
+      ref.read(choiceStatusProvider(pos)).refreshParent();
     }
   });
   return false;
@@ -70,7 +71,6 @@ final nodeEditorDesignProvider =
       node.choiceNodeOption = next;
       return node;
     });
-    ref.read(editorChangeProvider.notifier).needUpdate();
   });
   return ref.watch(nodeEditorTargetProvider).choiceNodeOption;
 });
@@ -99,7 +99,6 @@ final nodeModeProvider = StateProvider.autoDispose<ChoiceNodeMode>((ref) {
         return node;
       });
     }
-    ref.read(editorChangeProvider.notifier).needUpdate();
   });
   return ref.watch(nodeEditorTargetProvider).choiceNodeMode;
 });
@@ -115,7 +114,6 @@ TextEditingController maximum(MaximumRef ref) {
       node.maximumStatus = int.tryParse(controller.text) ?? 0;
       return node;
     });
-    ref.read(editorChangeProvider.notifier).needUpdate();
   });
   ref.onDispose(() => controller.dispose());
   return controller;
@@ -140,7 +138,6 @@ class ImageListState extends _$ImageListState {
       ref
           .read(lastImageProvider.notifier)
           .update((state) => result.files.single.bytes);
-      ref.read(editorChangeProvider.notifier).needUpdate();
     }
     return name;
   }
@@ -153,7 +150,6 @@ class ImageListState extends _$ImageListState {
     ref.read(imageStateProvider.notifier).state =
         ImageDB().getImageIndex(out.$1);
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-    ref.read(editorChangeProvider.notifier).needUpdate();
     ref.read(lastImageProvider.notifier).update((state) => null);
     ref.invalidate(vmSourceProvider);
     state = [...ImageDB().imageList];
@@ -166,43 +162,10 @@ final imageStateProvider = StateProvider.autoDispose<int>((ref) {
       node.imageString = ImageDB().getImageName(index);
       return node;
     });
-    ref.read(editorChangeProvider.notifier).needUpdate();
   });
   return ImageDB()
       .getImageIndex(ref.read(nodeEditorTargetProvider).imageString);
 });
-
-@riverpod
-class EditorChange extends _$EditorChange {
-  @override
-  bool build() {
-    return false;
-  }
-
-  void needUpdate() {
-    state = true;
-  }
-
-  void update() {
-    state = false;
-  }
-
-  void save() {
-    var pos = ref.read(nodeEditorTargetPosProvider)!;
-    var origin = getPlatform.getChoiceNode(pos)!;
-    var changed = ref.read(nodeEditorTargetProvider);
-    origin.title = changed.title;
-    origin.contentsString = changed.contentsOriginalString;
-    origin.maximumStatus = changed.maximumStatus;
-    origin.choiceNodeMode = changed.choiceNodeMode;
-    origin.imageString = changed.imageString;
-    origin.conditionalCodeHandler = changed.conditionalCodeHandler;
-    origin.choiceNodeOption = ref.read(nodeEditorDesignProvider);
-    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
-    state = false;
-    refreshLine(ref, pos.first);
-  }
-}
 
 final lastImageProvider = StateProvider<Uint8List?>((ref) => null);
 

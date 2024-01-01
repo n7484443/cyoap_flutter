@@ -18,7 +18,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../main.dart';
 import '../model/platform_system.dart';
-import '../viewModel/vm_choice_node.dart';
+import '../viewModel/vm_choice.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
 import '../viewModel/vm_platform.dart';
 import '../viewModel/vm_variable_table.dart';
@@ -375,7 +375,7 @@ class _ViewSideClipboardState extends ConsumerState<ViewSideClipboard> {
                 Scaffold.of(context).closeDrawer();
                 ref.read(sideTabProvider.notifier).state = 0;
               }
-              ref.read(dragchoiceNodeStatusProvider.notifier).dragStart(pos);
+              ref.read(dragChoiceNodeStatusProvider.notifier).dragStart(pos);
             },
             onDragUpdate: (DragUpdateDetails details) {
               ref.read(dragPositionProvider.notifier).state =

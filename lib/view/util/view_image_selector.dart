@@ -126,7 +126,6 @@ class ViewImageDraggable extends ConsumerWidget {
                 ref
                     .read(lastImageProvider.notifier)
                     .update((state) => fileData);
-                ref.read(editorChangeProvider.notifier).needUpdate();
                 openImageEditor(ref, context, fileName);
                 break;
               }

@@ -63,16 +63,27 @@ class AbstractPlatform extends PlayablePlatform {
 
   void addLineSettingData(ChoiceLine choiceLine) {
     while (choicePage.choiceLines.length <= choiceLine.currentPos) {
-      choicePage.choiceLines.add(ChoiceLine(choicePage.choiceLines.length));
+      choicePage.addChildren(ChoiceLine());
     }
+    choiceLine.parent = choicePage;
     choicePage.choiceLines[choiceLine.currentPos] = choiceLine;
   }
 
   void addData(Pos pos, ChoiceNode node) {
     while (choicePage.choiceLines.length <= pos.first) {
-      choicePage.choiceLines.add(ChoiceLine(choicePage.choiceLines.length));
+      choicePage.addChildren(ChoiceLine());
     }
-    var parent = getChoice(pos.removeLast())!;
+    Choice parent = choicePage;
+    for(int i = 1; i < pos.data.length - 1; i++){
+      while (parent.children.length <= pos.data[i]) {
+        if(i == 1){
+          parent.addChildren(ChoiceLine());
+        }else{
+          parent.addChildren(ChoiceNode.empty());
+        }
+      }
+      parent = parent.children[pos.data[i]];
+    }
     parent.addChildren(node, pos: pos.last);
     checkDataCorrect();
   }
@@ -112,8 +123,7 @@ class AbstractPlatform extends PlayablePlatform {
     if (pos.last == nonPositioned) {
       return createTempNode();
     }
-    if (pos.length == 1) return choicePage.choiceLines[pos.first];
-    return getChoiceNode(pos);
+    return super.getChoice(pos);
   }
 
   ChoiceNode createTempNode() {

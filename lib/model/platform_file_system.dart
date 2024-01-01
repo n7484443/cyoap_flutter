@@ -105,11 +105,7 @@ class PlatformFileSystem {
           if (f is File) {
             var value = await f.readAsString();
             if (f.path.contains('lineSetting_')) {
-              var index =
-                  int.tryParse(basename(f.path).split('_')[1].split('.')[0]) ??
-                      0;
-              lineSettingList
-                  .add(ChoiceLine.fromJson(jsonDecode(value), index));
+              lineSettingList.add(ChoiceLine.fromJson(jsonDecode(value)));
             }
           }
         }
@@ -138,8 +134,7 @@ class PlatformFileSystem {
         var data = choiceNodes[name]!;
         var decoded = jsonDecode(data);
         if (name.contains('lineSetting_')) {
-          var index = int.tryParse(name.split('_')[1].split('.')[0]) ?? 0;
-          lineSettingList.add(ChoiceLine.fromJson(decoded, index));
+          lineSettingList.add(ChoiceLine.fromJson(decoded));
         }
       }
 
@@ -186,10 +181,8 @@ class PlatformFileSystem {
             String dataConverted = utf8.decode(data, allowMalformed: true);
             if (fileName.startsWith('nodes')) {
               if (fileName.contains('lineSetting_')) {
-                var index =
-                    int.tryParse(fileName.split('_')[1].split('.')[0]) ?? 0;
                 lineSettingList
-                    .add(ChoiceLine.fromJson(jsonDecode(dataConverted), index));
+                    .add(ChoiceLine.fromJson(jsonDecode(dataConverted)));
               }
             } else if (fileName.endsWith('platform.json')) {
               platformJson = dataConverted;
@@ -248,7 +241,8 @@ class PlatformFileSystem {
 
   Future<Map<String, Uint8List>> get saveDataMap async {
     Map<String, Uint8List> input = {
-      'imageSource.json': utf8.encode(jsonEncode(getPlatformFileSystem.imageSource)),
+      'imageSource.json':
+          utf8.encode(jsonEncode(getPlatformFileSystem.imageSource)),
       'platform.json': utf8.encode(jsonEncode(getPlatform)),
     };
     var imageMap = await ImageDB().imageMap;
