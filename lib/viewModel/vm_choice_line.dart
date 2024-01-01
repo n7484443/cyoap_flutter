@@ -23,7 +23,10 @@ ChoiceLineDesignPreset lineDesignPreset(LineDesignPresetRef ref,
 class LineOption extends _$LineOption {
   @override
   ChoiceLineOption build({required Pos pos}) {
-    return ref.watch(choiceStatusProvider(pos)).asChoiceLine()?.choiceLineOption ??
+    return ref
+            .watch(choiceStatusProvider(pos))
+            .asChoiceLine()
+            ?.choiceLineOption ??
         const ChoiceLineOption();
   }
 

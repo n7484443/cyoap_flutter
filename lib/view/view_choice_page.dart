@@ -54,7 +54,8 @@ class _ViewChoicePageState extends ConsumerState<ViewChoicePage> {
         dragPositionProvider, (previous, next) => dragUpdate(next));
     var pos = ref.watch(currentChoicePageProvider);
     var designSetting = ref.watch(platformDesignSettingProvider);
-    var childrenLength = ref.watch(choiceStatusProvider(pos)).getChildrenList().length;
+    var childrenLength =
+        ref.watch(choiceStatusProvider(pos)).getChildrenList().length;
 
     var sliverList = List.generate(
       (childrenLength + 1) * 2,

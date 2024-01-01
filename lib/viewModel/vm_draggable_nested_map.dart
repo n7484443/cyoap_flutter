@@ -4,8 +4,6 @@ import 'package:cyoap_flutter/viewModel/vm_choice.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../model/platform_system.dart';
-
 final draggableNestedMapChangedProvider = StateProvider<bool>((ref) => false);
 
 final removedChoiceNodeStatusProvider =
@@ -43,7 +41,7 @@ class CopiedChoiceNodeNotifier extends ChangeNotifier {
     notifyListeners();
     ref
         .read(choiceStatusProvider(
-        const Pos(data: [copiedPositioned, copiedPositioned])))
+            const Pos(data: [copiedPositioned, copiedPositioned])))
         .refreshSelf();
   }
 }
@@ -67,19 +65,3 @@ class DragChoiceNodeNotifier extends StateNotifier<Pos?> {
     state = null;
   }
 }
-
-final lineLengthProvider = Provider.autoDispose<int>(
-    (ref) => getPlatform.choicePage.choiceLines.length);
-
-final lineListProvider = Provider.autoDispose<List<int>>((ref) {
-  if (isEditable) {
-    return getPlatform.choicePage.choiceLines.map((e) => e.currentPos).toList();
-  }
-  return getPlatform.choicePage.choiceLines
-      .where((e) => e.isOpen())
-      .map((e) => e.currentPos)
-      .toList();
-});
-
-final lineFoldProvider =
-    StateProvider.autoDispose.family<bool, int>((ref, i) => false);

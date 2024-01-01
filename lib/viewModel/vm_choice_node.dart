@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:cyoap_core/choiceNode/choice.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
@@ -12,21 +10,15 @@ import '../model/platform_system.dart';
 
 part 'vm_choice_node.g.dart';
 
-void refreshChild(Ref ref, Choice node) {
-  ref.invalidate(opacityProvider(node.pos));
-  for (var child in node.children) {
-    refreshChild(ref, child);
-  }
-}
-
-final choiceNodeDesignSettingProvider =
-    Provider.family.autoDispose<ChoiceNodeOption, Pos>((ref, pos) {
+@riverpod
+ChoiceNodeOption choiceNodeDesignSetting(ChoiceNodeDesignSettingRef ref,
+    {required Pos pos}) {
   var node = ref.watch(choiceStatusProvider(pos)).asChoiceNode();
   return node!.choiceNodeOption;
-});
+}
 
-final imageStringProvider =
-    Provider.family.autoDispose<String, Pos>((ref, pos) {
+@riverpod
+String imageString(ImageStringRef ref, {required Pos pos}) {
   var node = ref.watch(choiceStatusProvider(pos)).asChoiceNode()!;
   if (!ImageDB().contains(node.imageString) && node.imageString.isNotEmpty) {
     if (node.imageString != "noImage") {
@@ -34,7 +26,7 @@ final imageStringProvider =
     }
   }
   return node.imageString;
-});
+}
 
 final titleStringProvider = Provider.family.autoDispose<String, Pos>(
     (ref, pos) => ref.watch(choiceStatusProvider(pos)).asChoiceNode()!.title);
@@ -161,7 +153,7 @@ void updateImageAll(Ref ref) {
   getPlatform.updateStatus();
   for (var lineSetting in getPlatform.choicePage.choiceLines) {
     for (var node in lineSetting.children) {
-      ref.invalidate(imageStringProvider(node.pos));
+      ref.invalidate(imageStringProvider(pos: node.pos));
     }
   }
 }

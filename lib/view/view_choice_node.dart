@@ -45,7 +45,7 @@ class ViewChoiceNode extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     if (pos.last == nonPositioned) {
       var presetName =
-          ref.watch(choiceNodeDesignSettingProvider(pos)).presetName;
+          ref.watch(choiceNodeDesignSettingProvider(pos: pos)).presetName;
       return Card(
         color: ref
             .watch(choiceNodePresetProvider(presetName))
@@ -83,7 +83,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var node = ref.watch(choiceStatusProvider(pos)).asChoiceNode()!;
-    var design = ref.watch(choiceNodeDesignSettingProvider(pos));
+    var design = ref.watch(choiceNodeDesignSettingProvider(pos: pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     var isSelected = node.select > 0;
     var defaultColor = isSelected && preset.selectColorEnable
@@ -334,7 +334,7 @@ class ViewTitleWithEdit extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var design = ref.watch(choiceNodeDesignSettingProvider(pos));
+    var design = ref.watch(choiceNodeDesignSettingProvider(pos: pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     if (!preset.hideTitle) {
       return Center(
@@ -358,7 +358,7 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var design = ref.watch(choiceNodeDesignSettingProvider(pos));
+    var design = ref.watch(choiceNodeDesignSettingProvider(pos: pos));
     if (design.showAsSlider) {
       return Slider(
         value: ref.watch(choiceNodeSelectProvider(pos)).toDouble(),
@@ -474,7 +474,7 @@ class _ViewContentsState extends ConsumerState<ViewContents> {
       return const SizedBox.shrink();
     }
     _controller!.setContents(Delta.fromJson(jsonDecode(json)));
-    var design = ref.watch(choiceNodeDesignSettingProvider(widget.pos));
+    var design = ref.watch(choiceNodeDesignSettingProvider(pos: widget.pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     return QuillEditor(
       configurations: QuillEditorConfigurations(
@@ -504,12 +504,12 @@ class ViewChoiceNodeContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var node =
-        ref.watch(choiceStatusProvider(pos)).asChoiceNode() ?? ChoiceNode.empty();
-    var design = ref.watch(choiceNodeDesignSettingProvider(pos));
+    var node = ref.watch(choiceStatusProvider(pos)).asChoiceNode() ??
+        ChoiceNode.empty();
+    var design = ref.watch(choiceNodeDesignSettingProvider(pos: pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     Widget image;
-    if (ref.watch(imageStringProvider(pos)).isNotEmpty) {
+    if (ref.watch(imageStringProvider(pos: pos)).isNotEmpty) {
       image = ConstrainedBox(
         constraints: BoxConstraints(
           maxHeight: preset.maximizingImage
@@ -518,7 +518,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
         ),
         child: ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(5)),
-          child: ViewImageLoading(ref.watch(imageStringProvider(pos))),
+          child: ViewImageLoading(ref.watch(imageStringProvider(pos: pos))),
         ),
       );
     } else {
@@ -596,7 +596,8 @@ class ViewChoiceNodeContent extends ConsumerWidget {
     ]);
 
     if (!isEditable &&
-        getPlatformFileSystem.hasSource(ref.watch(imageStringProvider(pos))) &&
+        getPlatformFileSystem
+            .hasSource(ref.watch(imageStringProvider(pos: pos))) &&
         ref.watch(isVisibleSourceProvider)) {
       subWidget.add(
         TextButton(
@@ -607,7 +608,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
           ),
           onPressed: () {
             var url = getPlatformFileSystem
-                .getSource(ref.watch(imageStringProvider(pos)));
+                .getSource(ref.watch(imageStringProvider(pos: pos)));
             if (url != null && url.isNotEmpty) {
               launchUrlString(url);
             }

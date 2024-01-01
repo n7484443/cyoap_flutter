@@ -74,11 +74,11 @@ class AbstractPlatform extends PlayablePlatform {
       choicePage.addChildren(ChoiceLine());
     }
     Choice parent = choicePage;
-    for(int i = 1; i < pos.data.length - 1; i++){
+    for (int i = 1; i < pos.data.length - 1; i++) {
       while (parent.children.length <= pos.data[i]) {
-        if(i == 1){
+        if (i == 1) {
           parent.addChildren(ChoiceLine());
-        }else{
+        } else {
           parent.addChildren(ChoiceNode.empty());
         }
       }

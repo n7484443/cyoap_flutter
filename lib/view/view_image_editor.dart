@@ -153,8 +153,10 @@ class ViewImageEditorContents extends ConsumerWidget {
                 .then((value) {
               var pos = ref.read(nodeEditorTargetPosProvider);
               if (pos != null) {
-                ref.read(choiceStatusProvider(pos)).asChoiceNode()?.imageString =
-                    image.$1;
+                ref
+                    .read(choiceStatusProvider(pos))
+                    .asChoiceNode()
+                    ?.imageString = image.$1;
               }
               ref.read(currentChoicePageProvider.notifier).refresh();
               ref.read(changeTabProvider.notifier).home(context);

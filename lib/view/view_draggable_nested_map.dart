@@ -35,10 +35,12 @@ class NodeDragTarget extends ConsumerWidget {
             ref.read(choiceStatusProvider(drag).notifier).swapChoice(pos);
           } else if (drag.last == removedPositioned) {
             ref.read(choiceStatusProvider(pos.removeLast()).notifier).addChoice(
-                ref.read(removedChoiceNodeStatusProvider).choiceNode!.clone(), index: pos.last);
+                ref.read(removedChoiceNodeStatusProvider).choiceNode!.clone(),
+                index: pos.last);
           } else if (drag.last == copiedPositioned) {
             ref.read(choiceStatusProvider(pos.removeLast()).notifier).addChoice(
-                ref.read(copiedChoiceNodeStatusProvider).choiceNode!.clone(), index: pos.last);
+                ref.read(copiedChoiceNodeStatusProvider).choiceNode!.clone(),
+                index: pos.last);
           } else if (pos.equalExceptLast(drag) &&
               (pos.data.last - 1) >= drag.last) {
             ref

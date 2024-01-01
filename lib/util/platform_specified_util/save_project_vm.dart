@@ -42,7 +42,6 @@ class SaveProjectImp extends SaveProject {
 
   @override
   Future<void> saveRaw(String path, Map<String, Uint8List> dataInput) async {
-
     var existMap = List<String>.empty(growable: true);
     Directory dirNode = Directory('$path/nodes');
     if (!await dirNode.exists()) {

@@ -191,13 +191,15 @@ class _ViewSourceItemState extends ConsumerState<ViewSourceItem> {
         }
       },
       child: Card(
-        shape: ref.watch(backgroundCurrentStateProvider) == widget.index ? const RoundedRectangleBorder(
-          side: BorderSide(
-            color: Colors.red,
-            width: 2,
-          ),
-          borderRadius: BorderRadius.all(Radius.circular(4)),
-        ) : null,
+        shape: ref.watch(backgroundCurrentStateProvider) == widget.index
+            ? const RoundedRectangleBorder(
+                side: BorderSide(
+                  color: Colors.red,
+                  width: 2,
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(4)),
+              )
+            : null,
         color: deleteList.contains(name)
             ? Theme.of(context).colorScheme.secondaryContainer
             : null,

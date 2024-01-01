@@ -19,8 +19,8 @@ part 'vm_choice.g.dart';
 const double nodeBaseHeight = 200;
 const int removedPositioned = -2;
 const int copiedPositioned = -3;
-final choiceStatusProvider = ChangeNotifierProvider.family
-    .autoDispose<ChoiceStatus, Pos>((ref, pos) {
+final choiceStatusProvider =
+    ChangeNotifierProvider.family.autoDispose<ChoiceStatus, Pos>((ref, pos) {
   return ChoiceStatus(ref, pos);
 });
 
@@ -33,7 +33,7 @@ class ChoiceStatus extends ChangeNotifier {
     build();
   }
 
-  void build(){
+  void build() {
     if (pos.last == copiedPositioned) {
       node = ref.read(copiedChoiceNodeStatusProvider).choiceNode!;
     } else if (pos.last == removedPositioned) {
@@ -50,25 +50,25 @@ class ChoiceStatus extends ChangeNotifier {
           presetName: ref.read(choiceNodePresetCurrentEditProvider).name);
       choiceNode.select = ref.read(choiceNodePresetTestSelectProvider) ? 1 : 0;
       node = choiceNode;
-    } else{
+    } else {
       node = getPlatform.getChoice(pos)!;
     }
   }
 
-  void refreshParent(){
+  void refreshParent() {
     ref.read(choiceStatusProvider(pos.removeLast())).refreshSelf();
   }
 
-  void refreshSelf(){
+  void refreshSelf() {
     build();
     notifyListeners();
 
-    for(var i = 0; i < node.children.length; i++){
+    for (var i = 0; i < node.children.length; i++) {
       ref.read(choiceStatusProvider(pos.addLast(i))).refreshSelf();
     }
   }
 
-  void refreshAll(){
+  void refreshAll() {
     ref.read(choiceStatusProvider(Pos(data: [pos.first]))).refreshSelf();
   }
 
@@ -94,7 +94,7 @@ class ChoiceStatus extends ChangeNotifier {
     ref.read(choiceStatusProvider(lca)).refreshSelf();
   }
 
-  void removeData(){
+  void removeData() {
     var parent = ref.read(choiceStatusProvider(pos.removeLast())).node;
     parent.removeChildren(node);
     refreshParent();
@@ -115,15 +115,15 @@ class ChoiceStatus extends ChangeNotifier {
     return node.children;
   }
 
-  ChoiceNode? asChoiceNode(){
+  ChoiceNode? asChoiceNode() {
     return node as ChoiceNode?;
   }
 
-  ChoiceLine? asChoiceLine(){
+  ChoiceLine? asChoiceLine() {
     return node as ChoiceLine?;
   }
 
-  ChoicePage? asChoicePage(){
+  ChoicePage? asChoicePage() {
     return node as ChoicePage?;
   }
 }
@@ -135,7 +135,7 @@ class CurrentChoicePage extends _$CurrentChoicePage {
     return const Pos(data: [0]);
   }
 
-  void refresh(){
+  void refresh() {
     ref.read(choiceStatusProvider(state)).refreshAll();
   }
 }
