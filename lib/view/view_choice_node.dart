@@ -9,7 +9,7 @@ import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
-import 'package:cyoap_flutter/view/util/view_wrap_custom_edit.dart';
+import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_editor.dart'
