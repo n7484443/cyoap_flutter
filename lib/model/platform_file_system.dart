@@ -96,7 +96,7 @@ class PlatformFileSystem {
       }
 
       var existNodes = await dirNodes.exists();
-      List<ChoiceLine> lineSettingList = List.empty(growable: true);
+      List<(ChoiceLine, int)> lineSettingList = List.empty(growable: true);
       if (!existNodes) {
         dirNodes.create();
       } else {
@@ -105,7 +105,10 @@ class PlatformFileSystem {
           if (f is File) {
             var value = await f.readAsString();
             if (f.path.contains('lineSetting_')) {
-              lineSettingList.add(ChoiceLine.fromJson(jsonDecode(value)));
+              var starts = f.path.lastIndexOf('lineSetting_');
+              var y = int.parse(
+                  f.path.substring(starts).split('_')[1].split('.json')[0]);
+              lineSettingList.add((ChoiceLine.fromJson(jsonDecode(value)), y));
             }
           }
         }
@@ -129,12 +132,14 @@ class PlatformFileSystem {
     openAsFile = true;
     try {
       version = jsonDecode(platformData)['currentFileVersion'] ?? 0;
-      List<ChoiceLine> lineSettingList = List.empty(growable: true);
+      List<(ChoiceLine, int)> lineSettingList = List.empty(growable: true);
       for (var name in choiceNodes.keys) {
         var data = choiceNodes[name]!;
         var decoded = jsonDecode(data);
         if (name.contains('lineSetting_')) {
-          lineSettingList.add(ChoiceLine.fromJson(decoded));
+          var y = int.parse(
+              name.replaceAll('lineSetting_', '').replaceAll('.json', ''));
+          lineSettingList.add((ChoiceLine.fromJson(decoded), y));
         }
       }
 
@@ -164,7 +169,7 @@ class PlatformFileSystem {
     try {
       String? platformJson;
 
-      List<ChoiceLine> lineSettingList = List.empty(growable: true);
+      List<(ChoiceLine, int)> lineSettingList = List.empty(growable: true);
       for (var file in archive) {
         Uint8List data = file.content as Uint8List;
 
@@ -181,8 +186,11 @@ class PlatformFileSystem {
             String dataConverted = utf8.decode(data, allowMalformed: true);
             if (fileName.startsWith('nodes')) {
               if (fileName.contains('lineSetting_')) {
+                var y = int.parse(fileName
+                    .replaceAll('lineSetting_', '')
+                    .replaceAll('.json', ''));
                 lineSettingList
-                    .add(ChoiceLine.fromJson(jsonDecode(dataConverted)));
+                    .add((ChoiceLine.fromJson(jsonDecode(dataConverted)), y));
               }
             } else if (fileName.endsWith('platform.json')) {
               platformJson = dataConverted;

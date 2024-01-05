@@ -61,12 +61,12 @@ class AbstractPlatform extends PlayablePlatform {
     return out;
   }
 
-  void addLineSettingData(ChoiceLine choiceLine) {
-    while (choicePage.choiceLines.length <= choiceLine.currentPos) {
+  void addLineSettingData(ChoiceLine choiceLine, int y) {
+    while (choicePage.choiceLines.length <= y) {
       choicePage.addChildren(ChoiceLine());
     }
     choiceLine.parent = choicePage;
-    choicePage.choiceLines[choiceLine.currentPos] = choiceLine;
+    choicePage.choiceLines[y] = choiceLine;
   }
 
   void addData(Pos pos, ChoiceNode node) {
@@ -106,9 +106,9 @@ class AbstractPlatform extends PlayablePlatform {
     checkDataCorrect();
   }
 
-  void addDataAll(List<ChoiceLine> lineList) {
-    for (var lineSetting in lineList) {
-      addLineSettingData(lineSetting);
+  void addDataAll(List<(ChoiceLine, int)> lineList) {
+    for (var (lineSetting, y) in lineList) {
+      addLineSettingData(lineSetting, y);
     }
     checkDataCorrect();
   }
