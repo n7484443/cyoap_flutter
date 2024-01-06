@@ -32,7 +32,6 @@ dependencies:
   cyoap_core:
     git:
       url: https://github.com/n7484443/cyoap_core.git
-      ref: dev-grid-system
   image: ^4.0.12
   extended_image: ^8.1.0
   file_picker : ^6.1.1
