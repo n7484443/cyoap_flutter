@@ -27,6 +27,9 @@ final choiceNodePresetCurrentTabProvider =
 
 final choiceNodePresetCurrentEditOutlinePaddingProvider =
     Provider.autoDispose<TextEditingController>((ref) {
+  ref.listen(currentPresetIndexProvider, (previous, next) {
+    ref.invalidateSelf();
+  });
   var controller = TextEditingController(
       text: ref
           .read(choiceNodePresetCurrentEditProvider)
@@ -54,6 +57,9 @@ final choiceNodePresetCurrentEditOutlinePaddingProvider =
 
 final choiceNodePresetSelectedEditOutlinePaddingProvider =
     Provider.autoDispose<TextEditingController>((ref) {
+  ref.listen(currentPresetIndexProvider, (previous, next) {
+    ref.invalidateSelf();
+  });
   var controller = TextEditingController(
       text: ref
           .read(choiceNodePresetCurrentEditProvider)
@@ -81,6 +87,9 @@ final choiceNodePresetSelectedEditOutlinePaddingProvider =
 
 final choiceNodePresetCurrentEditOutlineWidthProvider =
     Provider.autoDispose<TextEditingController>((ref) {
+  ref.listen(currentPresetIndexProvider, (previous, next) {
+    ref.invalidateSelf();
+  });
   var controller = TextEditingController(
       text: ref
           .read(choiceNodePresetCurrentEditProvider)
@@ -108,6 +117,9 @@ final choiceNodePresetCurrentEditOutlineWidthProvider =
 
 final choiceNodePresetSelectedEditOutlineWidthProvider =
     Provider.autoDispose<TextEditingController>((ref) {
+  ref.listen(currentPresetIndexProvider, (previous, next) {
+    ref.invalidateSelf();
+  });
   var controller = TextEditingController(
       text: ref
           .read(choiceNodePresetCurrentEditProvider)
@@ -135,6 +147,9 @@ final choiceNodePresetSelectedEditOutlineWidthProvider =
 
 final choiceNodePresetCurrentEditElevationProvider =
     Provider.autoDispose<TextEditingController>((ref) {
+  ref.listen(currentPresetIndexProvider, (previous, next) {
+    ref.invalidateSelf();
+  });
   var controller = TextEditingController(
       text: ref.read(choiceNodePresetCurrentEditProvider).elevation.toString());
   controller.addListener(() {
@@ -162,6 +177,9 @@ final choiceNodePresetProvider = Provider.family
 
 final choiceNodePresetCurrentEditRoundProvider =
     Provider.autoDispose<TextEditingController>((ref) {
+  ref.listen(currentPresetIndexProvider, (previous, next) {
+    ref.invalidateSelf();
+  });
   var controller = TextEditingController(
       text: ref.read(choiceNodePresetCurrentEditProvider).round.toString());
   controller.addListener(() {
@@ -182,6 +200,9 @@ final choiceNodePresetCurrentEditRoundProvider =
 
 final choiceNodePresetCurrentEditPaddingProvider =
     Provider.autoDispose<TextEditingController>((ref) {
+  ref.listen(currentPresetIndexProvider, (previous, next) {
+    ref.invalidateSelf();
+  });
   var controller = TextEditingController(
       text: ref.read(choiceNodePresetCurrentEditProvider).padding.toString());
   controller.addListener(() {
