@@ -3,7 +3,6 @@ import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice.dart';
-import 'package:cyoap_flutter/viewModel/vm_snackbar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../model/platform_system.dart';
@@ -43,32 +42,6 @@ String? contentsQuill(ContentsQuillRef ref, {required Pos pos}) {
 final nodeModeProvider = Provider.family.autoDispose<ChoiceNodeMode, Pos>(
     (ref, pos) =>
         ref.watch(choiceStatusProvider(pos)).asChoiceNode()!.choiceNodeMode);
-
-final choiceNodeSelectProvider = StateNotifierProvider.family
-    .autoDispose<ChoiceNodeSelectNotifier, int, Pos>(
-        (ref, pos) => ChoiceNodeSelectNotifier(ref, pos));
-
-class ChoiceNodeSelectNotifier extends StateNotifier<int> {
-  Ref ref;
-  Pos pos;
-
-  ChoiceNodeSelectNotifier(this.ref, this.pos) : super(0);
-
-  void select(int n) {
-    var node = ref.read(choiceStatusProvider(pos)).asChoiceNode()!;
-    node.selectNode(n);
-    if (node.random != -1) {
-      ref.read(randomStateNotifierProvider(pos).notifier).startRandom();
-    }
-    updateStatus(ref, startLine: node.pos.first);
-    state = node.select;
-  }
-
-  int maxSelect() {
-    var node = ref.read(choiceStatusProvider(pos)).asChoiceNode()!;
-    return node.maximumStatus;
-  }
-}
 
 final randomProcessExecutedProvider = StateProvider<bool>((ref) => false);
 final randomStateNotifierProvider =
@@ -140,13 +113,6 @@ class ChoiceNodeSizeNotifier extends StateNotifier<int> {
     }
     ref.read(choiceStatusProvider(pos).notifier).refreshParent();
   }
-}
-
-void updateStatus(Ref ref, {int startLine = 0}) {
-  getPlatform.updateStatus();
-  ref.read(snackBarErrorProvider.notifier).update();
-
-  ref.read(currentChoicePageProvider.notifier).refresh();
 }
 
 void updateImageAll(Ref ref) {

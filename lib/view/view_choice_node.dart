@@ -109,7 +109,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
             : null,
         onTap: !isEditable
             ? () {
-                ref.read(choiceNodeSelectProvider(pos).notifier).select(0);
+                ref.read(choiceStatusProvider(pos).notifier).select(0);
               }
             : null,
         child: Padding(
@@ -359,21 +359,22 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var design = ref.watch(choiceNodeDesignSettingProvider(pos: pos));
+    int select = ref.watch(choiceStatusProvider(pos)).asChoiceNode()!.select;
     if (design.showAsSlider) {
       return Slider(
-        value: ref.watch(choiceNodeSelectProvider(pos)).toDouble(),
+        value: select.toDouble(),
         min: 0,
         max: ref
-            .watch(choiceNodeSelectProvider(pos).notifier)
+            .watch(choiceStatusProvider(pos).notifier)
             .maxSelect()
             .toDouble(),
-        label: ref.watch(choiceNodeSelectProvider(pos)).toString(),
+        label: select.toString(),
         onChanged: (value) {
           var valueInt = value.toInt();
           if (!isEditable &&
-              valueInt != ref.read(choiceNodeSelectProvider(pos))) {
-            int t = valueInt - ref.read(choiceNodeSelectProvider(pos));
-            ref.read(choiceNodeSelectProvider(pos).notifier).select(t);
+              valueInt != select) {
+            int t = valueInt - select;
+            ref.read(choiceStatusProvider(pos).notifier).select(t);
           }
         },
       );
@@ -398,12 +399,12 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
           ),
           onTap: () {
             if (!isEditable) {
-              ref.read(choiceNodeSelectProvider(pos).notifier).select(-1);
+              ref.read(choiceStatusProvider(pos).notifier).select(-1);
             }
           },
         ),
         Text(
-          ref.watch(choiceNodeSelectProvider(pos)).toString(),
+          select.toString(),
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: Colors.black,
               ),
@@ -425,7 +426,7 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
           ),
           onTap: () {
             if (!isEditable) {
-              ref.read(choiceNodeSelectProvider(pos).notifier).select(1);
+              ref.read(choiceStatusProvider(pos).notifier).select(1);
             }
           },
         )

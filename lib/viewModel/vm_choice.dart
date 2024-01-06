@@ -6,7 +6,9 @@ import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/i18n.dart';
 import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/viewModel/preset/vm_choice_node_preset.dart';
+import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
+import 'package:cyoap_flutter/viewModel/vm_snackbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -69,7 +71,11 @@ class ChoiceStatus extends ChangeNotifier {
   }
 
   void refreshAll() {
-    ref.read(choiceStatusProvider(Pos(data: [pos.first]))).refreshSelf();
+    if(pos.length == 1){
+      refreshSelf();
+    }else{
+      ref.read(choiceStatusProvider(Pos(data: [pos.first]))).refreshSelf();
+    }
   }
 
   void swapChoice(Pos target) {
@@ -125,6 +131,21 @@ class ChoiceStatus extends ChangeNotifier {
 
   ChoicePage? asChoicePage() {
     return node as ChoicePage?;
+  }
+
+  void select(int n) {
+    var node = asChoiceNode()!;
+    node.selectNode(n);
+    if (node.random != -1) {
+      ref.read(randomStateNotifierProvider(pos).notifier).startRandom();
+    }
+    getPlatform.updateStatus();
+    ref.read(snackBarErrorProvider.notifier).update();
+    refreshAll();
+  }
+
+  int maxSelect() {
+    return asChoiceNode()!.maximumStatus;
   }
 }
 
