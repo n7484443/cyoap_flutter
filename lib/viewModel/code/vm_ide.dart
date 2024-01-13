@@ -13,58 +13,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../main.dart';
 
-part 'vm_ide.g.dart';
-
-final controllerClickableProvider =
-    Provider.autoDispose<TextEditingController>((ref) {
-  var node = ref.watch(nodeEditorTargetProvider);
-  var controller = TextEditingController(
-      text: node.conditionalCodeHandler.conditionClickableString);
-  controller.addListener(() {
-    ref
-        .read(ideCurrentInputProvider.notifier)
-        .addCheckText(controller.text, controller.selection.end);
-    EasyDebounce.debounce(
-        'conditionClickableString', ConstList.debounceDuration, () {
-      ref.read(nodeEditorTargetProvider.notifier).setState((node) {
-        node.conditionalCodeHandler.conditionClickableString = controller.text;
-        return node;
-      });
-    });
-  });
-  ref.onDispose(() {
-    controller.dispose();
-    EasyDebounce.cancel('conditionClickableString');
-  });
-  return controller;
-});
-
-@riverpod
-TextEditingController controllerVisible(ControllerVisibleRef ref) {
-  Choice node;
-  if (ref.watch(nodeEditorTargetPosProvider) != null) {
-    node = ref.watch(nodeEditorTargetProvider);
-  } else {
-    node = ref.watch(lineEditorTargetProvider);
-  }
-  var controller = TextEditingController(
-      text: node.conditionalCodeHandler.conditionVisibleString);
-  controller.addListener(() {
-    ref
-        .read(ideCurrentInputProvider.notifier)
-        .addCheckText(controller.text, controller.selection.end);
-    EasyDebounce.debounce('conditionVisibleString', ConstList.debounceDuration,
-        () {
-      node.conditionalCodeHandler.conditionVisibleString = controller.text;
-    });
-  });
-  ref.onDispose(() {
-    controller.dispose();
-    EasyDebounce.cancel('conditionVisibleString');
-  });
-  return controller;
-}
-
 final regexSpace = RegExp(r"(\b|}|\))(if|for|else|in|break|continue)(\b|{|\()");
 final regexBrace = RegExp(r"[{}()]");
 final regexComment = RegExp(r"//.*");

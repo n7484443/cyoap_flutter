@@ -348,7 +348,7 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
         TextButton(
           onPressed: () {
             ref.read(lineEditorTargetPosProvider.notifier).state = widget.pos;
-            Navigator.pop(context);
+            Navigator.of(context).pop(_nameController!.text);
             ref
                 .read(changeTabProvider.notifier)
                 .changePageString("viewEditorLine", context);

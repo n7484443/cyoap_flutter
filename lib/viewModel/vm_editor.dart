@@ -38,7 +38,10 @@ final nodeEditorTargetPosProvider = StateProvider<Pos?>((ref) {
 class NodeEditorTarget extends _$NodeEditorTarget {
   @override
   ChoiceNode build() {
-    var pos = ref.watch(nodeEditorTargetPosProvider)!;
+    var pos = ref.watch(nodeEditorTargetPosProvider);
+    if(pos == null) {
+      return ChoiceNode.empty();
+    }
     return getPlatform.getChoiceNode(pos)!;
   }
 
@@ -55,7 +58,10 @@ final lineEditorTargetPosProvider = StateProvider<Pos?>((ref) {
 class LineEditorTarget extends _$LineEditorTarget {
   @override
   ChoiceLine build() {
-    var pos = ref.watch(lineEditorTargetPosProvider)!;
+    var pos = ref.watch(lineEditorTargetPosProvider);
+    if(pos == null) {
+      return ChoiceLine();
+    }
     return getPlatform.getChoice(pos) as ChoiceLine;
   }
 

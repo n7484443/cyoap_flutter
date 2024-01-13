@@ -1,4 +1,5 @@
 import 'package:cyoap_flutter/i18n.dart';
+import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/view/view_choice_page.dart';
 import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:flutter/material.dart';
@@ -60,15 +61,63 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
         }
       },
     );
+    if (ConstList.isSmallDisplay(context)) {
+      return PopScope(
+        canPop: false,
+        child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => Navigator.of(context).pushReplacementNamed("/"),
+            ),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                IconButton(
+                    onPressed: () async {
+                      var status = await ref
+                          .read(playDataProvider.notifier)
+                          .savePlayData();
+                      showSnackbar(context, status);
+                    },
+                    icon: const Icon(Icons.save)),
+                IconButton(
+                    onPressed: () async {
+                      var status = await ref
+                          .read(playDataProvider.notifier)
+                          .loadPlayData();
+                      if (status != null) {
+                        showSnackbar(context, status);
+                      }
+                    },
+                    icon: const Icon(Icons.file_upload_outlined)),
+              ],
+            ),
+          ),
+          endDrawer: const Drawer(
+            child: ViewPlayDrawer(),
+          ),
+          bottomNavigationBar: const BottomDisplayedVariableWidget(),
+          body: const ViewChoicePage(),
+        ),
+      );
+    }
 
     return PopScope(
       canPop: false,
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.of(context).pushReplacementNamed("/"),
+            icon: const Icon(Icons.list),
+            onPressed: () =>
+                ref.read(isOpenSideProvider.notifier).update((state) => !state),
           ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: () => Navigator.of(context).pushReplacementNamed("/"),
+            ),
+          ],
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -93,11 +142,19 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
             ],
           ),
         ),
-        endDrawer: const Drawer(
-          child: ViewPlayDrawer(),
-        ),
         bottomNavigationBar: const BottomDisplayedVariableWidget(),
-        body: const ViewChoicePage(),
+        body: Row(
+          children: [
+            AnimatedSize(
+              duration: ConstList.durationAnimation,
+              child: SizedBox(
+                width: ref.watch(isOpenSideProvider) ? 250 : 0,
+                child: const ViewPlayDrawer(),
+              ),
+            ),
+            const Expanded(child: ViewChoicePage()),
+          ],
+        ),
       ),
     );
   }

@@ -1,8 +1,10 @@
+import 'package:cyoap_core/choiceNode/choice.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/grammar/analyser.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/code/view_ide_gui.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -15,9 +17,11 @@ import '../../viewModel/vm_editor.dart';
 
 class ViewIde extends ConsumerStatefulWidget {
   final bool isChoiceNode;
+  final Choice choice;
 
   const ViewIde({
     this.isChoiceNode = true,
+    required this.choice,
     super.key,
   });
 
@@ -28,12 +32,38 @@ class ViewIde extends ConsumerStatefulWidget {
 class _ViewCodeIdeState extends ConsumerState<ViewIde> {
   final FocusNode _focusNode = FocusNode();
   ScrollController? _scrollController;
+  TextEditingController? _controllerClickable;
+  TextEditingController? _controllerVisible;
 
   String currentTargetVariable = '';
 
   @override
   void initState() {
     _scrollController = AdjustableScrollController();
+    _controllerClickable = TextEditingController(
+      text: widget.choice.conditionalCodeHandler.conditionClickableString,
+    );
+    _controllerClickable!.addListener(() {
+      ref.read(ideCurrentInputProvider.notifier).addCheckText(
+          _controllerClickable!.text, _controllerClickable!.selection.end);
+      EasyDebounce.debounce(
+          'conditionClickableString', ConstList.debounceDuration, () {
+        widget.choice.conditionalCodeHandler.conditionClickableString =
+            _controllerClickable!.text;
+      });
+    });
+    _controllerVisible = TextEditingController(
+      text: widget.choice.conditionalCodeHandler.conditionVisibleString,
+    );
+    _controllerVisible!.addListener(() {
+      ref.read(ideCurrentInputProvider.notifier).addCheckText(
+          _controllerVisible!.text, _controllerVisible!.selection.end);
+      EasyDebounce.debounce(
+          'conditionVisibleString', ConstList.debounceDuration, () {
+        widget.choice.conditionalCodeHandler.conditionVisibleString =
+            _controllerVisible!.text;
+      });
+    });
     super.initState();
   }
 
@@ -41,6 +71,10 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
   void dispose() {
     _focusNode.dispose();
     _scrollController?.dispose();
+    _controllerClickable?.dispose();
+    _controllerVisible?.dispose();
+    EasyDebounce.cancel('conditionClickableString');
+    EasyDebounce.cancel('conditionVisibleString');
     super.dispose();
   }
 
@@ -123,15 +157,14 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                     child: Focus(
                       onFocusChange: (bool hasFocus) {
                         ref
-                                .read(ideCurrentInputProvider.notifier)
-                                .lastFocusText =
-                            ref.watch(controllerClickableProvider);
+                            .read(ideCurrentInputProvider.notifier)
+                            .lastFocusText = _controllerClickable;
                         ref
                             .read(ideCurrentInputProvider.notifier)
                             .lastFocusQuill = null;
                       },
                       child: TextField(
-                        controller: ref.watch(controllerClickableProvider),
+                        controller: _controllerClickable,
                         textAlign: TextAlign.left,
                       ),
                     ),
@@ -154,15 +187,14 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                     child: Focus(
                       onFocusChange: (bool hasFocus) {
                         ref
-                                .read(ideCurrentInputProvider.notifier)
-                                .lastFocusText =
-                            ref.watch(controllerVisibleProvider);
+                            .read(ideCurrentInputProvider.notifier)
+                            .lastFocusText = _controllerVisible;
                         ref
                             .read(ideCurrentInputProvider.notifier)
                             .lastFocusQuill = null;
                       },
                       child: TextField(
-                        controller: ref.watch(controllerVisibleProvider),
+                        controller: _controllerVisible,
                         textAlign: TextAlign.left,
                       ),
                     ),

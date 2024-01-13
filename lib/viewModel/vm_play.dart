@@ -4,7 +4,6 @@ import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
 import 'package:cyoap_flutter/viewModel/vm_choice.dart';
-import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -46,3 +45,5 @@ class PlayDataNotifier extends StateNotifier<void> {
     return null;
   }
 }
+
+final isOpenSideProvider = StateProvider<bool>((ref) => false);

@@ -20,7 +20,7 @@ final maximumProvider = AutoDisposeProvider<TextEditingController>.internal(
 );
 
 typedef MaximumRef = AutoDisposeProviderRef<TextEditingController>;
-String _$nodeEditorTargetHash() => r'ca009294dc8b90f6fcd9b53ff82283dd91e98317';
+String _$nodeEditorTargetHash() => r'a700b765ea3b8b853396649e34ee5a0a896fdcad';
 
 /// See also [NodeEditorTarget].
 @ProviderFor(NodeEditorTarget)
@@ -36,7 +36,7 @@ final nodeEditorTargetProvider =
 );
 
 typedef _$NodeEditorTarget = AutoDisposeNotifier<ChoiceNode>;
-String _$lineEditorTargetHash() => r'e2b0466414588b42dda37dec80dff6c5b94953e4';
+String _$lineEditorTargetHash() => r'bfe0a464ba3c63acfaa89207150ec7395d0e3e4e';
 
 /// See also [LineEditorTarget].
 @ProviderFor(LineEditorTarget)

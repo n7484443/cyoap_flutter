@@ -2,6 +2,7 @@ import 'package:cyoap_flutter/view/code/view_ide.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../viewModel/vm_editor.dart';
 import '../../viewModel/vm_make_platform.dart';
 
 class ViewIdeLine extends ConsumerWidget {
@@ -9,6 +10,7 @@ class ViewIdeLine extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    print(1);
     return PopScope(
       child: Scaffold(
         appBar: AppBar(
@@ -19,8 +21,9 @@ class ViewIdeLine extends ConsumerWidget {
             },
           ),
         ),
-        body: const ViewIde(
+        body: ViewIde(
           isChoiceNode: false,
+          choice: ref.watch(lineEditorTargetProvider),
         ),
       ),
     );
