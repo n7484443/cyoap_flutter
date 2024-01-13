@@ -71,9 +71,9 @@ class ChoiceStatus extends ChangeNotifier {
   }
 
   void refreshAll() {
-    if(pos.length == 1){
+    if (pos.length == 1) {
       refreshSelf();
-    }else{
+    } else {
       ref.read(choiceStatusProvider(Pos(data: [pos.first]))).refreshSelf();
     }
   }

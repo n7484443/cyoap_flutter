@@ -39,7 +39,7 @@ class NodeEditorTarget extends _$NodeEditorTarget {
   @override
   ChoiceNode build() {
     var pos = ref.watch(nodeEditorTargetPosProvider);
-    if(pos == null) {
+    if (pos == null) {
       return ChoiceNode.empty();
     }
     return getPlatform.getChoiceNode(pos)!;
@@ -59,7 +59,7 @@ class LineEditorTarget extends _$LineEditorTarget {
   @override
   ChoiceLine build() {
     var pos = ref.watch(lineEditorTargetPosProvider);
-    if(pos == null) {
+    if (pos == null) {
       return ChoiceLine();
     }
     return getPlatform.getChoice(pos) as ChoiceLine;

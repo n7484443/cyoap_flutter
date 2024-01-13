@@ -371,8 +371,7 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
         label: select.toString(),
         onChanged: (value) {
           var valueInt = value.toInt();
-          if (!isEditable &&
-              valueInt != select) {
+          if (!isEditable && valueInt != select) {
             int t = valueInt - select;
             ref.read(choiceStatusProvider(pos).notifier).select(t);
           }
