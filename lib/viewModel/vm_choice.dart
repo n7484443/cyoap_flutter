@@ -97,7 +97,11 @@ class ChoiceStatus extends ChangeNotifier {
         getPlatform.insertData(inputNode, targetNode);
       }
     }
-    ref.read(choiceStatusProvider(lca)).refreshSelf();
+    if(lca == pos){
+      refreshSelf();
+    }else{
+      ref.read(choiceStatusProvider(lca)).refreshSelf();
+    }
   }
 
   void removeData() {
