@@ -69,7 +69,7 @@ class AbstractPlatform extends PlayablePlatform {
     choicePage.choiceLines[y] = choiceLine;
   }
 
-  void addData(Pos pos, ChoiceNode node) {
+  void addData(Pos pos, Choice node) {
     while (choicePage.choiceLines.length <= pos.first) {
       choicePage.addChildren(ChoiceLine());
     }
@@ -88,21 +88,21 @@ class AbstractPlatform extends PlayablePlatform {
     checkDataCorrect();
   }
 
-  void insertData(ChoiceNode nodeA, ChoiceNode nodeB) {
-    var parentA = nodeA.parent!;
-    var parentB = nodeB.parent!;
-    var posB = nodeB.currentPos;
+  void insertData(Choice a, Choice b) {
+    var parentA = a.parent!;
+    var parentB = b.parent!;
+    var posB = b.currentPos;
 
-    parentA.removeChildren(nodeA);
-    parentB.addChildren(nodeA, pos: posB);
+    parentA.removeChildren(a);
+    parentB.addChildren(a, pos: posB);
     checkDataCorrect();
   }
 
-  void insertDataWithParent(ChoiceNode nodeA, Choice parentB) {
-    var parentA = nodeA.parent!;
+  void insertDataWithParent(Choice a, Choice parentB) {
+    var parentA = a.parent!;
 
-    parentA.removeChildren(nodeA);
-    parentB.addChildren(nodeA);
+    parentA.removeChildren(a);
+    parentB.addChildren(a);
     checkDataCorrect();
   }
 

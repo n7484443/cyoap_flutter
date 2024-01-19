@@ -83,18 +83,17 @@ class ChoiceStatus extends ChangeNotifier {
     if (pos.last == nonPositioned) {
       getPlatform.addData(target, getPlatform.createTempNode());
     } else {
-      var inputNode = getPlatform.getChoiceNode(pos)!;
       var targetNode = getPlatform.getChoiceNode(target);
       if (targetNode == null) {
         var choice = getPlatform.getChoice(target.removeLast());
         if (choice == null) {
           getPlatform.removeData(pos);
-          getPlatform.addData(target, inputNode);
+          getPlatform.addData(target, node);
         } else {
-          getPlatform.insertDataWithParent(inputNode, choice);
+          getPlatform.insertDataWithParent(node, choice);
         }
       } else {
-        getPlatform.insertData(inputNode, targetNode);
+        getPlatform.insertData(node, targetNode);
       }
     }
     if(lca == pos){

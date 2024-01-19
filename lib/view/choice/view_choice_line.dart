@@ -132,8 +132,20 @@ class ViewChoiceLineHeader extends ConsumerWidget {
                   const Spacer(),
                   CircleButton(
                     onPressed: () {
-                      var upPos = pos.removeLast().addLast(pos.last - 1);
-                      ref.read(choiceStatusProvider(pos)).swapChoice(upPos);
+                    },
+                    child: const Icon(
+                      Icons.view_module,
+                    ),
+                  ),
+                  const SizedBox.square(
+                    dimension: 5,
+                  ),
+                  CircleButton(
+                    onPressed: () {
+                      if(pos.last - 1 >= 0){
+                        var upPos = pos.removeLast().addLast(pos.last - 1);
+                        ref.read(choiceStatusProvider(pos)).swapChoice(upPos);
+                      }
                     },
                     child: const Icon(
                       Icons.arrow_upward,
