@@ -99,7 +99,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
         borderRadius: BorderRadius.circular(max(preset.round, 0)),
       ),
       child: InkWell(
-        onDoubleTap: isEditable
+        onDoubleTap: ref.watch(isEditableProvider(pos: pos))
             ? () {
                 ref.read(nodeEditorTargetPosProvider.notifier).state = node.pos;
                 ref
@@ -107,7 +107,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
                     .changePageString("viewEditor", context);
               }
             : null,
-        onTap: !isEditable
+        onTap: !ref.watch(isEditableProvider(pos: pos))
             ? () {
                 ref.read(choiceStatusProvider(pos).notifier).select(0);
               }
@@ -116,7 +116,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
           padding: EdgeInsets.all(preset.padding),
           child: Stack(children: [
             ViewChoiceNodeContent(pos, ignoreChild: ignoreChild),
-            if (isEditable && !ignoreOption)
+            if (ref.watch(isEditableProvider(pos: pos)) && !ignoreOption)
               Align(
                 alignment: Alignment.topRight,
                 child: CircleAvatar(
@@ -371,7 +371,7 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
         label: select.toString(),
         onChanged: (value) {
           var valueInt = value.toInt();
-          if (!isEditable && valueInt != select) {
+          if (!ref.watch(isEditableProvider(pos: pos)) && valueInt != select) {
             int t = valueInt - select;
             ref.read(choiceStatusProvider(pos).notifier).select(t);
           }
@@ -397,7 +397,7 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
             ),
           ),
           onTap: () {
-            if (!isEditable) {
+            if (!ref.watch(isEditableProvider(pos: pos))) {
               ref.read(choiceStatusProvider(pos).notifier).select(-1);
             }
           },
@@ -424,7 +424,7 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
             ),
           ),
           onTap: () {
-            if (!isEditable) {
+            if (!ref.watch(isEditableProvider(pos: pos))) {
               ref.read(choiceStatusProvider(pos).notifier).select(1);
             }
           },
@@ -527,7 +527,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
 
     Widget? child;
     if (pos.isValid) {
-      if (isEditable) {
+      if (ref.watch(isEditableProvider(pos: pos))) {
         child = ViewWrapCustomReorder(
           pos,
           maxSize: min(ref.watch(maximumSizeProvider), node.getMaxSize(true)),
@@ -595,7 +595,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
       child,
     ]);
 
-    if (!isEditable &&
+    if (!ref.watch(isEditableProvider(pos: pos)) &&
         getPlatformFileSystem
             .hasSource(ref.watch(imageStringProvider(pos: pos))) &&
         ref.watch(isVisibleSourceProvider)) {

@@ -49,7 +49,7 @@ class ViewChoiceLine extends ConsumerWidget {
         ),
       );
     }
-    if (getPlatformFileSystem.isEditable) {
+    if (getPlatformFileSystem.isEditable && ref.watch(isEditableProvider(pos: pos))) {
       return ViewWrapCustomReorder(
         pos,
         isInner: false,
@@ -84,10 +84,10 @@ class ViewChoiceLineHeader extends ConsumerWidget {
     }
     var lineOption = ref.watch(lineOptionProvider(pos: pos));
     var preset = ref.watch(lineDesignPresetProvider(pos: pos));
-    if (!preset.alwaysVisibleLine && !isEditable) {
+    if (!preset.alwaysVisibleLine && !isPlatformEditable) {
       return const SizedBox.shrink();
     }
-    if (isEditable) {
+    if (isPlatformEditable) {
       return Stack(
         alignment: Alignment.center,
         children: [
@@ -118,7 +118,7 @@ class ViewChoiceLineHeader extends ConsumerWidget {
                           ),
                   ),
                   const Spacer(),
-                  if (lineOption.name != null && isEditable)
+                  if (lineOption.name != null && isPlatformEditable)
                     Padding(
                       padding: const EdgeInsets.all(4.0),
                       child: Text(
@@ -132,17 +132,24 @@ class ViewChoiceLineHeader extends ConsumerWidget {
                   const Spacer(),
                   CircleButton(
                     onPressed: () {
+                      ref
+                          .read(isEditableStateProvider(pos).notifier)
+                          .state = !ref.watch(isEditableStateProvider(pos));
                     },
-                    child: const Icon(
-                      Icons.view_module,
-                    ),
+                    child: ref.watch(isEditableStateProvider(pos))
+                        ? const Icon(
+                            Icons.visibility,
+                          )
+                        : const Icon(
+                            Icons.edit,
+                          ),
                   ),
                   const SizedBox.square(
                     dimension: 5,
                   ),
                   CircleButton(
                     onPressed: () {
-                      if(pos.last - 1 >= 0){
+                      if (pos.last - 1 >= 0) {
                         var upPos = pos.removeLast().addLast(pos.last - 1);
                         ref.read(choiceStatusProvider(pos)).swapChoice(upPos);
                       }

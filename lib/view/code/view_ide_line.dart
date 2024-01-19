@@ -10,7 +10,6 @@ class ViewIdeLine extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print(1);
     return PopScope(
       child: Scaffold(
         appBar: AppBar(

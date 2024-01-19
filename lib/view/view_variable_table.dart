@@ -192,7 +192,7 @@ class VariableTiles extends ConsumerWidget {
     for (var key in ref.watch(vmVariableTableProvider).keys) {
       var values = ref.watch(vmVariableTableProvider)[key]!;
 
-      if (isEditable) {
+      if (isPlatformEditable) {
         if (isVisibleHideVariable ||
             (!isVisibleHideVariable && values.visible)) {
           if (search.isEmpty || (search.isNotEmpty && key.contains(search))) {
@@ -220,7 +220,7 @@ class VariableTiles extends ConsumerWidget {
       title: Text('variable'.i18n),
       initiallyExpanded: true,
       children: [
-        if (isEditable)
+        if (isPlatformEditable)
           ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 200, maxHeight: 25),
             child: ViewSwitchLabel(

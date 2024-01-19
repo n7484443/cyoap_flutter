@@ -66,6 +66,12 @@ class ViewStart extends ConsumerWidget {
                   ),
                   const Spacer(),
                   IconButton(
+                      icon: const Icon(Icons.info),
+                      onPressed: () {
+                        launchUrlString(
+                            'https://github.com/n7484443/cyoap_flutter/wiki');
+                      }),
+                  IconButton(
                     icon: ref.watch(themeStateProvider) == ThemeMode.light
                         ? const Icon(Icons.dark_mode)
                         : const Icon(Icons.light_mode),

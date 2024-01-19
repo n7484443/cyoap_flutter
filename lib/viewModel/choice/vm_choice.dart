@@ -5,6 +5,7 @@ import 'package:cyoap_core/choiceNode/choice_page.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/i18n.dart';
 import 'package:cyoap_core/playable_platform.dart';
+import 'package:cyoap_flutter/viewModel/choice/vm_choice_line.dart';
 import 'package:cyoap_flutter/viewModel/preset/vm_choice_node_preset.dart';
 import 'package:cyoap_flutter/viewModel/choice/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
@@ -162,4 +163,15 @@ class CurrentChoicePage extends _$CurrentChoicePage {
   void refresh() {
     ref.read(choiceStatusProvider(state)).refreshAll();
   }
+}
+
+@riverpod
+bool isEditable(IsEditableRef ref, {required Pos pos}) {
+  if(pos.length == 1){
+    return isPlatformEditable;
+  }
+  if(pos.length == 2){
+    return isPlatformEditable && ref.watch(isEditableStateProvider(pos));
+  }
+  return isPlatformEditable && ref.watch(isEditableStateProvider(Pos(data: [pos.data[0], pos.data[1]])));
 }

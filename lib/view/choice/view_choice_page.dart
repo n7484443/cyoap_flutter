@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../main.dart';
-import '../../model/platform_system.dart';
 import '../../viewModel/choice/vm_choice.dart';
 import '../../viewModel/vm_design_setting.dart';
 import '../../viewModel/vm_draggable_nested_map.dart';
@@ -77,7 +76,7 @@ class _ViewChoicePageState extends ConsumerState<ViewChoicePage> {
         );
       },
     );
-    if (!isEditable) {
+    if (!ref.watch(isEditableProvider(pos: pos))) {
       sliverList.add(SliverToBoxAdapter(
         child: TextButton(
           onPressed: () {

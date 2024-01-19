@@ -53,7 +53,7 @@ final randomStateNotifierProvider =
 final opacityProvider = Provider.family.autoDispose<double, Pos>((ref, pos) {
   var node = ref.watch(choiceStatusProvider(pos)).asChoiceNode();
   if (node == null) return 0;
-  if (isEditable) return 1;
+  if (ref.watch(isEditableProvider(pos: pos))) return 1;
   if (node.choiceNodeMode == ChoiceNodeMode.onlyCode) return 0;
   if (node.isHide()) return 0;
   if (node.isOpen()) return 1;
