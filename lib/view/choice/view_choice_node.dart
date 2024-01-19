@@ -10,7 +10,7 @@ import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
-import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
+import 'package:cyoap_flutter/viewModel/choice/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_editor.dart'
     show nodeEditorTargetPosProvider;
@@ -21,13 +21,13 @@ import 'package:flutter_quill/quill_delta.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import '../main.dart';
-import '../model/platform_system.dart';
-import '../viewModel/preset/vm_choice_node_preset.dart';
-import '../viewModel/vm_choice.dart';
-import '../viewModel/vm_global_setting.dart';
-import '../viewModel/vm_make_platform.dart';
-import '../viewModel/vm_variable_table.dart';
+import '../../main.dart';
+import '../../model/platform_system.dart';
+import '../../viewModel/preset/vm_choice_node_preset.dart';
+import '../../viewModel/choice/vm_choice.dart';
+import '../../viewModel/vm_global_setting.dart';
+import '../../viewModel/vm_make_platform.dart';
+import '../../viewModel/vm_variable_table.dart';
 
 class ViewChoiceNode extends ConsumerWidget {
   final Pos pos;

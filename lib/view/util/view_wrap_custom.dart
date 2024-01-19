@@ -10,10 +10,10 @@ import 'package:cyoap_flutter/view/util/view_circle_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../viewModel/vm_choice.dart';
-import '../../viewModel/vm_choice_line.dart';
+import '../../viewModel/choice/vm_choice.dart';
+import '../../viewModel/choice/vm_choice_line.dart';
 import '../../viewModel/vm_design_setting.dart';
-import '../view_choice_node.dart';
+import '../choice/view_choice_node.dart';
 import '../view_draggable_nested_map.dart';
 
 const double defaultHeight = 60.0;

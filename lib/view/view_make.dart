@@ -1,6 +1,6 @@
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/custom_snackbar.dart';
-import 'package:cyoap_flutter/view/view_choice_page.dart';
+import 'package:cyoap_flutter/view/choice/view_choice_page.dart';
 import 'package:cyoap_flutter/view/view_make_platform.dart';
 import 'package:cyoap_flutter/viewModel/vm_platform.dart';
 import 'package:flutter/material.dart' hide BackButton;

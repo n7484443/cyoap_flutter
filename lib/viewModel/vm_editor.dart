@@ -5,7 +5,7 @@ import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
-import 'package:cyoap_flutter/viewModel/vm_choice.dart';
+import 'package:cyoap_flutter/viewModel/choice/vm_choice.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_source.dart';
 import 'package:file_picker/file_picker.dart';

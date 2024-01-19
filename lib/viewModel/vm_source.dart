@@ -1,5 +1,5 @@
 import 'package:cyoap_flutter/model/image_db.dart';
-import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
+import 'package:cyoap_flutter/viewModel/choice/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

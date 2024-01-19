@@ -3,17 +3,17 @@ import 'dart:math';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
-import 'package:cyoap_flutter/view/view_choice_line.dart';
+import 'package:cyoap_flutter/view/choice/view_choice_line.dart';
 import 'package:cyoap_flutter/view/view_selected_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../main.dart';
-import '../model/platform_system.dart';
-import '../viewModel/vm_choice.dart';
-import '../viewModel/vm_design_setting.dart';
-import '../viewModel/vm_draggable_nested_map.dart';
-import '../viewModel/vm_selected_grid.dart';
+import '../../main.dart';
+import '../../model/platform_system.dart';
+import '../../viewModel/choice/vm_choice.dart';
+import '../../viewModel/vm_design_setting.dart';
+import '../../viewModel/vm_draggable_nested_map.dart';
+import '../../viewModel/vm_selected_grid.dart';
 
 class ViewChoicePage extends ConsumerStatefulWidget {
   const ViewChoicePage({super.key});

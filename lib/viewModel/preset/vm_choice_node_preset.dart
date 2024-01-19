@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../main.dart';
 import '../../model/platform_system.dart';
-import '../vm_choice_node.dart';
+import '../choice/vm_choice_node.dart';
 import '../vm_draggable_nested_map.dart';
 
 final choiceNodePresetCurrentEditProvider =

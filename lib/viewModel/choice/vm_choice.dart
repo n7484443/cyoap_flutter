@@ -6,15 +6,15 @@ import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/i18n.dart';
 import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/viewModel/preset/vm_choice_node_preset.dart';
-import 'package:cyoap_flutter/viewModel/vm_choice_node.dart';
+import 'package:cyoap_flutter/viewModel/choice/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_snackbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../model/platform.dart';
-import '../model/platform_system.dart';
+import '../../model/platform.dart';
+import '../../model/platform_system.dart';
 
 part 'vm_choice.g.dart';
 
