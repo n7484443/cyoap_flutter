@@ -25,7 +25,7 @@ class CheckUpdate {
     }
     if (kDebugMode) {
       print(
-          '마지막 업데이트 버전 : ${lastRelease.tagName} | 현제 버전 : v${ConstList.version}');
+          '마지막 업데이트 버전 : ${lastRelease.tagName} | 현재 버전 : v${ConstList.version}');
     }
     if (lastRelease.tagName == null) return null;
     if (ConstList.version == '') return null;

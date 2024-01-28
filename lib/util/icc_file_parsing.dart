@@ -21,7 +21,7 @@ class IccProjectParser {
       String input, Ref ref) async {
     Map<String, dynamic> parsed = jsonDecode(input);
     Map<String, Uint8List> imageList = {};
-    var platform = AbstractPlatform();
+    var platform = AbstractPlatform.none();
     if (parsed['rows'] == null) {
       return (platform, imageList);
     }

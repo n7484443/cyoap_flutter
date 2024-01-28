@@ -159,7 +159,8 @@ extension Localization on String {
           'project_settings': 'Variables',
           'compress_process': 'Compressing...',
           'save_process': 'Saving...',
-          'create_tooltip': 'Create a choice',
+          'create_tooltip_node': 'Create a choice node',
+          'create_tooltip_line': 'Create a choice line',
           'update_variable_tooltip': 'Update the variable list',
           'save_option': 'Saving options',
           'extract': 'Save as Zip',
@@ -261,7 +262,8 @@ extension Localization on String {
           'project_settings': '프로젝트 설정',
           'compress_process': '압축중...',
           'save_process': '저장중...',
-          'create_tooltip': '선택지 생성',
+          'create_tooltip_node': '선택지 노드 생성',
+          'create_tooltip_line': '선택지 라인 생성',
           'update_variable_tooltip': '변수 목록 갱신',
           'save_option': '저장 관련 옵션',
           'extract': 'zip 파일로 추출',
@@ -361,6 +363,7 @@ extension Localization on String {
         //error message
         "en": {
           'no_file_selected': 'No file selected.\n Please select a file.',
+          'failed_load_project_cyoap_error': 'Failed to open project.\nYou may not have selected a project.\nPlease make sure you have added and selected the folder or file.',
           'failed_load_project_version':
               'Failed to open project.\nCheck the version.\nfile version : %i\nCYOAP version : %i',
           'failed_load_project_non_exist':
@@ -372,6 +375,7 @@ extension Localization on String {
         },
         "ko": {
           'no_file_selected': '선택된 파일이 없습니다.\n파일을 선택해주세요.',
+          'failed_load_project_cyoap_error': '프로젝트를 여는데 실패하였습니다.\n프로젝트를 선택하지 않았을 수 있습니다.\n폴더 혹은 파일을 추가하여 선택하였는지 확인해주세요.',
           'failed_load_project_version':
               '프로젝트를 여는데 실패하였습니다.\n 버전을 확인해주세요.\n파일 버전 : %i\nCYOAP 버전 : %i',
           'failed_load_project_non_exist':

@@ -119,7 +119,7 @@ class ViewWrapCustomReorder extends ConsumerWidget {
               .read(choiceStatusProvider(parentPos).notifier)
               .addChoice(ChoiceNode.empty()..width = 3, index: children.length);
         },
-        tooltip: 'create_tooltip'.i18n,
+        tooltip: 'create_tooltip_node'.i18n,
         child: const Icon(Icons.add),
       ),
     );

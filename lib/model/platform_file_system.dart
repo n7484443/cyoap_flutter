@@ -48,6 +48,17 @@ class PlatformFileSystem {
 
     openAsFile = false;
     try {
+      var dirDirectory = Directory(path);
+      if(!await dirDirectory.exists()) {
+        projectState = ProjectState.nonExist;
+        throw Exception('folder is empty');
+      }
+      if (dirDirectory.listSync().isEmpty) {
+        platform = AbstractPlatform.none();
+        platform?.init();
+        return LoadProjectState(ProjectState.success,
+            version: version, description: description);
+      }
       var dirImages = Directory('$path/images');
       var dirNodes = Directory('$path/nodes');
       var platformJson = File('$path/platform.json');

@@ -1,3 +1,4 @@
+import 'package:cyoap_core/choiceNode/choice_line.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
@@ -35,10 +36,26 @@ class ViewChoiceLine extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (isOutOfLength) {
+      Widget addButton = Card(
+        child: CircleButton(
+          onPressed: () {
+            ref
+                .read(choiceStatusProvider(pos.removeLast()).notifier)
+                .addChoice(ChoiceLine(), index: pos.last);
+          },
+          tooltip: 'create_tooltip_line'.i18n,
+          child: const Icon(Icons.add_box),
+        ),
+      );
       return SliverToBoxAdapter(
-        child: NodeDragTarget(
-          pos.addLast(0),
-          isHorizontal: true,
+        child: Column(
+          children: [
+            NodeDragTarget(
+              pos.addLast(0),
+              isHorizontal: true,
+            ),
+            addButton,
+          ],
         ),
       );
     }
@@ -49,7 +66,8 @@ class ViewChoiceLine extends ConsumerWidget {
         ),
       );
     }
-    if (getPlatformFileSystem.isEditable && ref.watch(isEditableProvider(pos: pos))) {
+    if (getPlatformFileSystem.isEditable &&
+        ref.watch(isEditableProvider(pos: pos))) {
       return ViewWrapCustomReorder(
         pos,
         isInner: false,
@@ -132,9 +150,8 @@ class ViewChoiceLineHeader extends ConsumerWidget {
                   const Spacer(),
                   CircleButton(
                     onPressed: () {
-                      ref
-                          .read(isEditableStateProvider(pos).notifier)
-                          .state = !ref.watch(isEditableStateProvider(pos));
+                      ref.read(isEditableStateProvider(pos).notifier).state =
+                          !ref.watch(isEditableStateProvider(pos));
                     },
                     child: ref.watch(isEditableStateProvider(pos))
                         ? const Icon(
