@@ -14,10 +14,12 @@ import 'package:cyoap_flutter/viewModel/vm_editor.dart';
 import 'package:cyoap_flutter/viewModel/vm_make_platform.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../main.dart';
 import '../model/platform_system.dart';
+import '../util/custom_snackbar.dart';
 import '../viewModel/choice/vm_choice.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
 import '../viewModel/vm_platform.dart';
@@ -103,102 +105,113 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
         ),
       );
     }
-    return PopScope(
-      canPop: false,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Row(
-            children: [
-              ViewSaveIcons(),
-              SizedBox(width: 10),
-              ViewRefreshIcons(),
-              Expanded(child: SizedBox.shrink()),
-              BackButton(),
-            ],
-          ),
-        ),
-        body: Row(
-          children: [
-            LimitedBox(
-              child: NavigationRail(
-                destinations: [
-                  NavigationRailDestination(
-                    icon: const Icon(Icons.space_dashboard),
-                    label: Text('vertical_tab_bar_0'.i18n),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                  ),
-                  NavigationRailDestination(
-                    icon: const Icon(Icons.abc),
-                    label: Text('vertical_tab_bar_1'.i18n),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                  ),
-                  NavigationRailDestination(
-                    icon: const Icon(Icons.history),
-                    label: Text('vertical_tab_bar_2'.i18n),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                  ),
-                  NavigationRailDestination(
-                    icon: const Icon(Icons.layers),
-                    label: Text('design_settings'.i18n),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                  ),
-                  NavigationRailDestination(
-                    icon: const Icon(Icons.image),
-                    label: Text('image_settings'.i18n),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                  ),
-                  NavigationRailDestination(
-                    icon: const Icon(Icons.settings),
-                    label: Text('project_settings'.i18n),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                  ),
-                ],
-                labelType: NavigationRailLabelType.all,
-                selectedIndex: ref.watch(sideTabProvider),
-                onDestinationSelected: (int index) {
-                  switch (index) {
-                    case 3:
-                      ref
-                          .read(changeTabProvider.notifier)
-                          .changePageString('viewDesignSetting', context);
-                      break;
-                    case 4:
-                      ref
-                          .read(changeTabProvider.notifier)
-                          .changePageString('viewSource', context);
-                      break;
-                    case 5:
-                      ref
-                          .read(changeTabProvider.notifier)
-                          .changePageString('viewProjectSetting', context);
-                      break;
-                    default:
-                      if (ref.watch(sideTabProvider) == index) {
-                        ref.read(sideTabProvider.notifier).state = null;
-                      } else {
-                        ref.read(sideTabProvider.notifier).state = index;
-                      }
-                  }
-                },
-              ),
-            ),
-            AnimatedSize(
-              duration: ConstList.durationAnimation,
-              child: SizedBox(
-                width: ref.watch(sideTabProvider) == null ? 0 : 250,
-                child: const ViewEditDrawer(),
-              ),
-            ),
-            Flexible(
-              child: Stack(
+    return CallbackShortcuts(
+      bindings: {
+        const SingleActivator(LogicalKeyboardKey.keyS, control: true): () async{
+          await savePlatform(ref, getPlatformFileSystem.openAsFile);
+          showSnackbar(context, "save_successfully".i18n);
+        }
+      },
+      child: Focus(
+        autofocus: true,
+        child: PopScope(
+          canPop: false,
+          child: Scaffold(
+            appBar: AppBar(
+              title: const Row(
                 children: [
-                  defaultMap,
-                  if (ref.watch(changeTabProvider) != 0)
-                    childrenFunction[ref.watch(changeTabProvider) - 1]()
+                  ViewSaveIcons(),
+                  SizedBox(width: 10),
+                  ViewRefreshIcons(),
+                  Expanded(child: SizedBox.shrink()),
+                  BackButton(),
                 ],
               ),
             ),
-          ],
+            body: Row(
+              children: [
+                LimitedBox(
+                  child: NavigationRail(
+                    destinations: [
+                      NavigationRailDestination(
+                        icon: const Icon(Icons.space_dashboard),
+                        label: Text('vertical_tab_bar_0'.i18n),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                      ),
+                      NavigationRailDestination(
+                        icon: const Icon(Icons.abc),
+                        label: Text('vertical_tab_bar_1'.i18n),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                      ),
+                      NavigationRailDestination(
+                        icon: const Icon(Icons.history),
+                        label: Text('vertical_tab_bar_2'.i18n),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                      ),
+                      NavigationRailDestination(
+                        icon: const Icon(Icons.layers),
+                        label: Text('design_settings'.i18n),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                      ),
+                      NavigationRailDestination(
+                        icon: const Icon(Icons.image),
+                        label: Text('image_settings'.i18n),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                      ),
+                      NavigationRailDestination(
+                        icon: const Icon(Icons.settings),
+                        label: Text('project_settings'.i18n),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                      ),
+                    ],
+                    labelType: NavigationRailLabelType.all,
+                    selectedIndex: ref.watch(sideTabProvider),
+                    onDestinationSelected: (int index) {
+                      switch (index) {
+                        case 3:
+                          ref
+                              .read(changeTabProvider.notifier)
+                              .changePageString('viewDesignSetting', context);
+                          break;
+                        case 4:
+                          ref
+                              .read(changeTabProvider.notifier)
+                              .changePageString('viewSource', context);
+                          break;
+                        case 5:
+                          ref
+                              .read(changeTabProvider.notifier)
+                              .changePageString('viewProjectSetting', context);
+                          break;
+                        default:
+                          if (ref.watch(sideTabProvider) == index) {
+                            ref.read(sideTabProvider.notifier).state = null;
+                          } else {
+                            ref.read(sideTabProvider.notifier).state = index;
+                          }
+                      }
+                    },
+                  ),
+                ),
+                AnimatedSize(
+                  duration: ConstList.durationAnimation,
+                  child: SizedBox(
+                    width: ref.watch(sideTabProvider) == null ? 0 : 250,
+                    child: const ViewEditDrawer(),
+                  ),
+                ),
+                Flexible(
+                  child: Stack(
+                    children: [
+                      defaultMap,
+                      if (ref.watch(changeTabProvider) != 0)
+                        childrenFunction[ref.watch(changeTabProvider) - 1]()
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

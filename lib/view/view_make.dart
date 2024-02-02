@@ -92,12 +92,14 @@ class ViewSaveIcons extends ConsumerWidget {
     if (getPlatformFileSystem.openAsFile) {
       return IconButton(
         icon: const Icon(Icons.save),
-        onPressed: () {
+        onPressed: () async{
           showDialog(
               context: context,
               builder: (BuildContext context) => const ViewSaveDialog(true),
               barrierDismissible: false);
-          savePlatform(ref, true).then((value) => Navigator.of(context).pop());
+          await savePlatform(ref, true);
+          Navigator.of(context).pop();
+          showSnackbar(context, "save_successfully".i18n);
         },
       );
     }

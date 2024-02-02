@@ -305,7 +305,7 @@ class _ViewQuillCodeIdeState extends ConsumerState<ViewQuillCodeIde> {
                       var ast = Analyser().toAst(ref
                           .read(controllerIdeProvider)
                           .document
-                          .toPlainText());
+                          .toPlainText(), isCondition: false);
                       ref.read(codeBlockProvider.notifier).updateFromAst(ast);
                       ref
                           .read(currentIdeOpenProvider.notifier)

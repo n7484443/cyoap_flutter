@@ -1,5 +1,5 @@
 import 'package:cyoap_core/choiceNode/pos.dart';
-import 'package:cyoap_core/grammar/recursive_parser.dart';
+import 'package:cyoap_core/grammar/ast.dart';
 import 'package:cyoap_core/grammar/value_type.dart';
 import 'package:cyoap_flutter/util/icc_file_parsing.dart';
 
@@ -39,18 +39,17 @@ enum CodeBlockType {
     }
   }
 
-  static CodeBlockBuild fromAst(RecursiveUnit unit) {
-    if (unit is RecursiveData) {
+  static CodeBlockBuild fromAst(AST unit) {
+    if (unit.child.isEmpty) {
       return CodeBlock(code: unit.body.data);
     }
-    unit = unit as RecursiveFunction;
     var body = unit.body;
-    if (body.type.isString && body.data == "doLines") {
+    if (body.isString && body.data == "doLines") {
       return CodeBlockSet(
         codeBlocks: unit.child.map((e) => fromAst(e)).toList(),
       );
     }
-    if (body.type.isString && body.data == "if") {
+    if (body.isString && body.data == "if") {
       var block = CodeBlockIf(
         code: fromAst(unit.child[0]),
         childT: fromAst(unit.child[1]),
@@ -58,7 +57,7 @@ enum CodeBlockType {
       );
       return block;
     }
-    if (body.type.isString && body.data == "for") {
+    if (body.isString && body.data == "for") {
       var variable = fromAst(unit.child[0].child[0]);
       var range = fromAst(unit.child[0].child[1]);
       return CodeBlockFor(
@@ -69,18 +68,18 @@ enum CodeBlockType {
         ],
       );
     }
-    if (body.type.isString && body.data == "to") {
+    if (body.isString && body.data == "to") {
       var block = CodeBlock(
         code:
             '${fromAst(unit.child[0]).toString()}..${fromAst(unit.child[1]).toString()}',
       );
       return block;
     }
-    if (body.type.isString &&
+    if (body.isString &&
         (body.data == "loadVariable" || body.data == "in")) {
       return fromAst(unit.child[0]);
     }
-    if (body.type.isString &&
+    if (body.isString &&
         (body.data == "setGlobal" ||
             body.data == "setLocal" ||
             body.data == "setVariable")) {
@@ -96,7 +95,7 @@ enum CodeBlockType {
       );
       return block;
     }
-    if (body.type.isString) {
+    if (body.isString) {
       //function
       var arg = unit.child.map((e) {
         var ast = fromAst(e);

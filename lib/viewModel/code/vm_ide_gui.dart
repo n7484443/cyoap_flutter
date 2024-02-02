@@ -1,6 +1,6 @@
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/grammar/analyser.dart';
-import 'package:cyoap_core/grammar/recursive_parser.dart';
+import 'package:cyoap_core/grammar/ast.dart';
 import 'package:cyoap_flutter/viewModel/code/vm_ide.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,7 +18,7 @@ class CodeBlockChangeNotifier extends ChangeNotifier {
 
   CodeBlockChangeNotifier(this.ref) : state = CodeBlockSet(codeBlocks: []) {
     var ast = Analyser()
-        .toAst(ref.read(controllerIdeProvider).document.toPlainText());
+        .toAst(ref.read(controllerIdeProvider).document.toPlainText(), isCondition: false);
     updateFromAst(ast);
   }
 
@@ -59,7 +59,7 @@ class CodeBlockChangeNotifier extends ChangeNotifier {
     return state.search(pos);
   }
 
-  void updateFromAst(RecursiveUnit? unit) {
+  void updateFromAst(AST? unit) {
     if (unit == null) {
       return;
     }
