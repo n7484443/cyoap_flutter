@@ -23,7 +23,7 @@ jobs:
           java-version: '17'
 
       - name: base64-to-file
-        uses: timheuer/base64-to-file@v1.1
+        uses: timheuer/base64-to-file@v1.2.4
         with:
           fileName: 'key.properties'
           fileDir: './android/'
