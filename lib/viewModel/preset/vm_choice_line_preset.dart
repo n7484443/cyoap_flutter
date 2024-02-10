@@ -1,7 +1,7 @@
 import 'package:cyoap_core/preset/line_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
-import 'package:cyoap_flutter/viewModel/preset/vm_preset.dart';
 import 'package:cyoap_flutter/viewModel/choice/vm_choice.dart';
+import 'package:cyoap_flutter/viewModel/preset/vm_preset.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../model/platform_system.dart';

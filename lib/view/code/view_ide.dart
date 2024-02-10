@@ -264,6 +264,7 @@ class _ViewQuillCodeIdeState extends ConsumerState<ViewQuillCodeIde> {
                   autoFocus: false,
                   padding: EdgeInsets.zero,
                   expands: true,
+                  enableSelectionToolbar: false,
                 ),
                 focusNode: _focusNode,
                 scrollController: _scrollController,
@@ -302,10 +303,12 @@ class _ViewQuillCodeIdeState extends ConsumerState<ViewQuillCodeIde> {
                     icon: const Icon(Icons.dns_rounded),
                     tooltip: "gui".i18n,
                     onPressed: () {
-                      var ast = Analyser().toAst(ref
-                          .read(controllerIdeProvider)
-                          .document
-                          .toPlainText(), isCondition: false);
+                      var ast = Analyser().toAst(
+                          ref
+                              .read(controllerIdeProvider)
+                              .document
+                              .toPlainText(),
+                          isCondition: false);
                       ref.read(codeBlockProvider.notifier).updateFromAst(ast);
                       ref
                           .read(currentIdeOpenProvider.notifier)

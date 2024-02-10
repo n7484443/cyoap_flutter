@@ -1,8 +1,8 @@
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/i18n.dart';
+import 'package:cyoap_flutter/view/choice/view_choice_node.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
-import 'package:cyoap_flutter/view/choice/view_choice_node.dart';
 import 'package:cyoap_flutter/view/view_design.dart';
 import 'package:cyoap_flutter/view/view_editor.dart';
 import 'package:cyoap_flutter/view/view_image_editor.dart';
@@ -107,7 +107,8 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
     }
     return CallbackShortcuts(
       bindings: {
-        const SingleActivator(LogicalKeyboardKey.keyS, control: true): () async{
+        const SingleActivator(LogicalKeyboardKey.keyS, control: true):
+            () async {
           await savePlatform(ref, getPlatformFileSystem.openAsFile);
           showSnackbar(context, "save_successfully".i18n);
         }

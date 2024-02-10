@@ -49,7 +49,7 @@ class PlatformFileSystem {
     openAsFile = false;
     try {
       var dirDirectory = Directory(path);
-      if(!await dirDirectory.exists()) {
+      if (!await dirDirectory.exists()) {
         projectState = ProjectState.nonExist;
         throw Exception('folder is empty');
       }

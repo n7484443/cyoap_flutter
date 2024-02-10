@@ -1,6 +1,5 @@
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/grammar/ast.dart';
-import 'package:cyoap_core/grammar/value_type.dart';
 import 'package:cyoap_flutter/util/icc_file_parsing.dart';
 
 class CodePosSet {
@@ -75,8 +74,7 @@ enum CodeBlockType {
       );
       return block;
     }
-    if (body.isString &&
-        (body.data == "loadVariable" || body.data == "in")) {
+    if (body.isString && (body.data == "loadVariable" || body.data == "in")) {
       return fromAst(unit.child[0]);
     }
     if (body.isString &&

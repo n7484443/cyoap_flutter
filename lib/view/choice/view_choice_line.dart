@@ -1,10 +1,10 @@
 import 'package:cyoap_core/choiceNode/choice_line.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/i18n.dart';
+import 'package:cyoap_flutter/view/choice/view_choice_node.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/util/view_circle_button.dart';
 import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
-import 'package:cyoap_flutter/view/choice/view_choice_node.dart';
 import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_global_setting.dart';
 import 'package:flutter/material.dart';
@@ -12,9 +12,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../main.dart';
 import '../../model/platform_system.dart';
-import '../../viewModel/preset/vm_choice_line_preset.dart';
 import '../../viewModel/choice/vm_choice.dart';
 import '../../viewModel/choice/vm_choice_line.dart';
+import '../../viewModel/preset/vm_choice_line_preset.dart';
 import '../../viewModel/vm_editor.dart';
 import '../../viewModel/vm_make_platform.dart';
 

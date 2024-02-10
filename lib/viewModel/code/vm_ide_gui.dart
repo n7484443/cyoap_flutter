@@ -17,8 +17,9 @@ class CodeBlockChangeNotifier extends ChangeNotifier {
   Ref ref;
 
   CodeBlockChangeNotifier(this.ref) : state = CodeBlockSet(codeBlocks: []) {
-    var ast = Analyser()
-        .toAst(ref.read(controllerIdeProvider).document.toPlainText(), isCondition: false);
+    var ast = Analyser().toAst(
+        ref.read(controllerIdeProvider).document.toPlainText(),
+        isCondition: false);
     updateFromAst(ast);
   }
 

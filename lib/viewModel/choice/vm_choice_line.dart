@@ -1,8 +1,8 @@
 import 'package:cyoap_core/choiceNode/choice_line.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/preset/line_preset.dart';
-import 'package:cyoap_flutter/viewModel/preset/vm_choice_line_preset.dart';
 import 'package:cyoap_flutter/viewModel/choice/vm_choice.dart';
+import 'package:cyoap_flutter/viewModel/preset/vm_choice_line_preset.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -54,6 +54,7 @@ class LineFold extends _$LineFold {
   }
 }
 
-final isEditableStateProvider = StateProvider.autoDispose.family<bool, Pos>((ref, pos) {
+final isEditableStateProvider =
+    StateProvider.autoDispose.family<bool, Pos>((ref, pos) {
   return true;
 });

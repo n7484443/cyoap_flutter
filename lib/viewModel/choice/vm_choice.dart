@@ -6,8 +6,8 @@ import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/i18n.dart';
 import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/viewModel/choice/vm_choice_line.dart';
-import 'package:cyoap_flutter/viewModel/preset/vm_choice_node_preset.dart';
 import 'package:cyoap_flutter/viewModel/choice/vm_choice_node.dart';
+import 'package:cyoap_flutter/viewModel/preset/vm_choice_node_preset.dart';
 import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_snackbar.dart';
 import 'package:flutter/cupertino.dart';
@@ -97,9 +97,9 @@ class ChoiceStatus extends ChangeNotifier {
         getPlatform.insertData(node, targetNode);
       }
     }
-    if(lca == pos){
+    if (lca == pos) {
       refreshSelf();
-    }else{
+    } else {
       ref.read(choiceStatusProvider(lca)).refreshSelf();
     }
   }
@@ -167,11 +167,12 @@ class CurrentChoicePage extends _$CurrentChoicePage {
 
 @riverpod
 bool isEditable(IsEditableRef ref, {required Pos pos}) {
-  if(pos.length == 1){
+  if (pos.length == 1) {
     return isPlatformEditable;
   }
-  if(pos.length == 2){
+  if (pos.length == 2) {
     return isPlatformEditable && ref.watch(isEditableStateProvider(pos));
   }
-  return isPlatformEditable && ref.watch(isEditableStateProvider(Pos(data: [pos.data[0], pos.data[1]])));
+  return isPlatformEditable &&
+      ref.watch(isEditableStateProvider(Pos(data: [pos.data[0], pos.data[1]])));
 }

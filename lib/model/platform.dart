@@ -38,7 +38,7 @@ class AbstractPlatform extends PlayablePlatform {
     updateStatus();
   }
 
-  AbstractPlatform.none(): super();
+  AbstractPlatform.none() : super();
   AbstractPlatform.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
     if (json['lastColorList'] != null) {
       lastColorList = ListQueue.from(

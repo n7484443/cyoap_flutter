@@ -1,7 +1,9 @@
 import 'package:cyoap_core/choiceNode/choice.dart';
 import 'package:cyoap_core/choiceNode/choice_line.dart';
 import 'package:cyoap_core/choiceNode/conditional_code_handler.dart';
-import 'package:cyoap_core/grammar/function_list.dart';
+import 'package:cyoap_core/grammar/analyser.dart';
+import 'package:cyoap_core/grammar/analyser_const.dart';
+import 'package:cyoap_core/grammar/ast.dart';
 import 'package:cyoap_core/variable_db.dart';
 import 'package:cyoap_flutter/viewModel/vm_editor.dart';
 import 'package:easy_debounce/easy_debounce.dart';
@@ -11,13 +13,6 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../main.dart';
-
-final regexSpace = RegExp(r"(\b|}|\))(if|for|else|in|break|continue)(\b|{|\()");
-final regexBrace = RegExp(r"[{}()]");
-final regexComment = RegExp(r"//.*");
-final regexFunction = RegExp(
-    "(${FunctionListEnum.values.where((e) => e.displayWithColor).map((e) => e.functionName ?? e.name).join('|')})"
-    r"\(");
 
 final controllerIdeProvider = Provider.autoDispose<QuillController>((ref) {
   Choice node;
@@ -40,46 +35,50 @@ final controllerIdeProvider = Provider.autoDispose<QuillController>((ref) {
       selection: const TextSelection.collapsed(offset: 0));
   controller.addListener(() {
     EasyDebounce.debounce('code-ide', ConstList.debounceDuration, () {
+      const styleNull = Attribute.color;
+      final styleDeepOrange = ColorAttribute('#${Colors.deepOrangeAccent.hex}');
+      final styleDeepPurple = ColorAttribute('#${Colors.deepPurpleAccent.hex}');
+      final styleBlue = ColorAttribute('#${Colors.blueAccent.hex}');
       var plainText = controller.document.toPlainText();
-      if (handler.executeCodeString != plainText) {
-        var styleNull = Attribute.color;
-        var styleDeepOrange = ColorAttribute('#${Colors.deepOrangeAccent.hex}');
-        var styleDeepPurple = ColorAttribute('#${Colors.deepPurple.hex}');
-        var styleGrey = ColorAttribute('#${Colors.grey.hex}');
+      var compile = Analyser().toAst(plainText, isCondition: false);
 
-        controller.formatText(0, plainText.length, styleNull);
-
-        var match = regexFunction.allMatches(plainText);
-        for (var m in match) {
-          controller.formatText(m.start, m.end - m.start, styleDeepPurple);
+      var needUpdate = [];
+      void recursive(AST ast) {
+        switch (ast.data!.value.type) {
+          case AnalyserConst.keywordIf:
+          case AnalyserConst.keywordElse:
+          case AnalyserConst.keywordFor:
+          case AnalyserConst.keywordBreak:
+          case AnalyserConst.keywordContinue:
+            needUpdate.add((ast.data!.start, ast.data!.stop, styleDeepOrange));
+            break;
+          case AnalyserConst.keywordDot:
+          case AnalyserConst.keywordIn:
+          case AnalyserConst.function:
+            needUpdate.add((ast.data!.start, ast.data!.stop, styleDeepPurple));
+            break;
+          case AnalyserConst.bools:
+          case AnalyserConst.loadAddress:
+            needUpdate.add((ast.data!.start, ast.data!.stop, styleBlue));
+            break;
+          default:
+            break;
         }
-
-        match = regexSpace.allMatches(plainText);
-        for (var m in match) {
-          controller.formatText(m.start, m.end - m.start, styleDeepOrange);
+        for (var child in ast.child) {
+          recursive(child);
         }
+      }
 
-        match = regexBrace.allMatches(plainText);
-        for (var m in match) {
-          controller.formatText(m.start, m.end - m.start, styleNull);
-        }
-
-        match = regexComment.allMatches(plainText);
-        for (var m in match) {
-          controller.formatText(m.start, m.end - m.start, styleGrey);
-        }
-
-        if (ref.watch(nodeEditorTargetPosProvider) != null) {
-          ref.read(nodeEditorTargetProvider.notifier).setState((node) {
-            node.conditionalCodeHandler.executeCodeString = plainText;
-            return node;
-          });
-        } else {
-          ref.read(lineEditorTargetProvider.notifier).setState((line) {
-            line.conditionalCodeHandlerFinalize.executeCodeString = plainText;
-            return line;
-          });
-        }
+      if (compile == null) {
+        return;
+      }
+      recursive(compile);
+      controller.formatText(0, plainText.length, styleNull,
+          shouldNotifyListeners: false);
+      for (var i = 0; i < needUpdate.length; i++) {
+        var (start, end, style) = needUpdate[i];
+        controller.formatText(start, end - start, style,
+            shouldNotifyListeners: i == needUpdate.length - 1);
       }
     });
   });

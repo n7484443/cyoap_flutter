@@ -363,7 +363,8 @@ extension Localization on String {
         //error message
         "en": {
           'no_file_selected': 'No file selected.\n Please select a file.',
-          'failed_load_project_cyoap_error': 'Failed to open project.\nYou may not have selected a project.\nPlease make sure you have added and selected the folder or file.',
+          'failed_load_project_cyoap_error':
+              'Failed to open project.\nYou may not have selected a project.\nPlease make sure you have added and selected the folder or file.',
           'failed_load_project_version':
               'Failed to open project.\nCheck the version.\nfile version : %i\nCYOAP version : %i',
           'failed_load_project_non_exist':
@@ -375,7 +376,8 @@ extension Localization on String {
         },
         "ko": {
           'no_file_selected': '선택된 파일이 없습니다.\n파일을 선택해주세요.',
-          'failed_load_project_cyoap_error': '프로젝트를 여는데 실패하였습니다.\n프로젝트를 선택하지 않았을 수 있습니다.\n폴더 혹은 파일을 추가하여 선택하였는지 확인해주세요.',
+          'failed_load_project_cyoap_error':
+              '프로젝트를 여는데 실패하였습니다.\n프로젝트를 선택하지 않았을 수 있습니다.\n폴더 혹은 파일을 추가하여 선택하였는지 확인해주세요.',
           'failed_load_project_version':
               '프로젝트를 여는데 실패하였습니다.\n 버전을 확인해주세요.\n파일 버전 : %i\nCYOAP 버전 : %i',
           'failed_load_project_non_exist':
