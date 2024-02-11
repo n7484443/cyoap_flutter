@@ -205,7 +205,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
             rowColumn(
               leftOrTop: SizedBox(
                 width: size,
-                child: Text("code_hint_execute".i18n),
+                child: Text(widget.isChoiceNode ? "code_hint_execute".i18n : "code_hint_fin".i18n),
               ),
               rightOrBottom: const Card(
                 child: Padding(

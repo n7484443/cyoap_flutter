@@ -202,6 +202,7 @@ extension Localization on String {
           'source_hint': 'If you dont know a source, leave it blank.',
           'crop': 'Crop',
           'code_hint_execute_condition': 'Execution Conditions',
+          'code_hint_fin': 'Executable code when the line ends',
           'code_hint_visible_condition':
               'Visible Conditions\n(Visible when true)',
           'code_hint_execute': 'Executable code on selection',
@@ -307,6 +308,7 @@ extension Localization on String {
           'code_hint_execute_condition': '실행 조건',
           'code_hint_visible_condition': '보이는 조건\n(true 일 때 보임, 비어있을 시 true)',
           'code_hint_execute': '선택 시 시행 코드',
+          'code_hint_fin': '라인 종료 시 시행 코드',
           'space_hide': '숨김 시 공간 차지',
           'sort': '정렬',
           'sort_error': '코드의 {의 개수와 }의 개수가 같지 않습니다.',

@@ -78,9 +78,10 @@ final controllerIdeProvider = Provider.autoDispose<QuillController>((ref) {
       for (var i = 0; i < needUpdate.length; i++) {
         var (start, end, style) = needUpdate[i];
         controller.formatText(start, end - start, style,
-            shouldNotifyListeners: i == needUpdate.length - 1);
+            shouldNotifyListeners: false);
       }
     });
+    node.conditionalCodeHandler.executeCodeString = controller.document.toPlainText();
   });
   ref.onDispose(() {
     controller.dispose();
@@ -129,6 +130,7 @@ class IdeCurrentInputNotifier extends StateNotifier<String> {
     plainText = plainText.replaceRange(index, index + len, data);
     carrot = carrot - len + data.length;
     addCheckText(plainText, carrot);
+    plainText.trim();
   }
 
   void addCheckText(String plainText, int index) {
