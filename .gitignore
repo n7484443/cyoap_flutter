@@ -4,7 +4,6 @@
 .dart_tool/
 .packages
 .idea/
-test/save_load_folder/
 
 build/
 updater/target/

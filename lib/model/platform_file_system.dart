@@ -198,7 +198,7 @@ class PlatformFileSystem {
             if (fileName.startsWith('nodes')) {
               if (fileName.contains('lineSetting_')) {
                 var y = int.parse(fileName
-                    .replaceAll('lineSetting_', '')
+                    .replaceAll('nodes/lineSetting_', '')
                     .replaceAll('.json', ''));
                 lineSettingList
                     .add((ChoiceLine.fromJson(jsonDecode(dataConverted)), y));

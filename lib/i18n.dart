@@ -381,7 +381,7 @@ extension Localization on String {
           'failed_load_project_cyoap_error':
               '프로젝트를 여는데 실패하였습니다.\n프로젝트를 선택하지 않았을 수 있습니다.\n폴더 혹은 파일을 추가하여 선택하였는지 확인해주세요.',
           'failed_load_project_version':
-              '프로젝트를 여는데 실패하였습니다.\n 버전을 확인해주세요.\n파일 버전 : %i\nCYOAP 버전 : %i',
+              '프로젝트를 여는데 실패하였습니다.\n버전을 확인해주세요.\n파일 버전 : %i\nCYOAP 버전 : %i',
           'failed_load_project_non_exist':
               '프로젝트를 여는데 실패하였습니다.\n 파일 혹은 디렉토리가 없습니다.',
           'cyoap_error': 'CYOAP 에러. 이 에러를 보고해주세요.',

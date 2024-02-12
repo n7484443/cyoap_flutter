@@ -1,3 +1,4 @@
+import 'package:cyoap_core/grammar/analyser.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/custom_snackbar.dart';
 import 'package:cyoap_flutter/view/choice/view_choice_page.dart';
@@ -99,7 +100,8 @@ class ViewSaveIcons extends ConsumerWidget {
               barrierDismissible: false);
           await savePlatform(ref, true);
           Navigator.of(context).pop();
-          showSnackbar(context, "save_successfully".i18n);
+          showSnackbar(context, "save_successfully".i18n,
+              ref: ref, hasErrorLog: Analyser().errorList.isNotEmpty);
         },
       );
     }
@@ -119,7 +121,8 @@ class ViewSaveIcons extends ConsumerWidget {
             await savePlatform(ref, true);
             break;
         }
-        showSnackbar(context, 'save_successfully'.i18n);
+        showSnackbar(context, 'save_successfully'.i18n,
+            ref: ref, hasErrorLog: Analyser().errorList.isNotEmpty);
         Navigator.of(context).pop();
       },
       itemBuilder: (BuildContext context) {

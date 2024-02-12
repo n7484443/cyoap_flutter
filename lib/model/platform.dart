@@ -68,9 +68,6 @@ class AbstractPlatform extends PlayablePlatform {
   }
 
   void addData(Pos pos, Choice node) {
-    while (choicePage.choiceLines.length <= pos.first) {
-      choicePage.addChildren(ChoiceLine());
-    }
     Choice parent = choicePage;
     for (int i = 1; i < pos.data.length - 1; i++) {
       while (parent.children.length <= pos.data[i]) {
