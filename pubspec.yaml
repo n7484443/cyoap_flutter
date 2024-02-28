@@ -57,7 +57,7 @@ dependencies:
   sentry_flutter: ^7.12.0
   easy_debounce: ^2.0.2+1
   desktop_drop: ^0.4.4
-  shared_storage: ^0.8.0
+  shared_storage: ^0.8.1
   i18n_extension: ^10.0.1
   dotted_border: ^2.1.0
   window_manager: ^0.3.7
