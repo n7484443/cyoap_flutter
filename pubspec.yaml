@@ -35,7 +35,7 @@ dependencies:
   image: ^4.0.12
   extended_image: ^8.1.0
   file_picker : ^6.1.1
-  http: ^1.1.0
+  http: ^1.2.0
   shared_preferences: ^2.0.15
   google_fonts: ^6.1.0
   archive: ^3.3.1
@@ -58,7 +58,7 @@ dependencies:
   easy_debounce: ^2.0.2+1
   desktop_drop: ^0.4.4
   shared_storage: ^0.8.1
-  i18n_extension: ^10.0.1
+  i18n_extension: ^11.0.11
   dotted_border: ^2.1.0
   window_manager: ^0.3.7
   flutter_localizations:

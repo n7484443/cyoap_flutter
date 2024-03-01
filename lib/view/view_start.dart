@@ -8,7 +8,7 @@ import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:i18n_extension/i18n_widget.dart';
+import 'package:i18n_extension/i18n_extension.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../model/device_preference.dart';
