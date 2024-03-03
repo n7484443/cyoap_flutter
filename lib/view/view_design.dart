@@ -48,7 +48,9 @@ class ViewDesignSetting extends ConsumerWidget {
             children: [
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(ConstList.paddingHuge),
+                  padding: ConstList.isSmallDisplay(context)
+                      ? const EdgeInsets.all(ConstList.paddingSmall)
+                      : const EdgeInsets.all(ConstList.paddingHuge),
                   child: TabBarView(
                     children: [
                       const ViewGeneralSettingTab(),
