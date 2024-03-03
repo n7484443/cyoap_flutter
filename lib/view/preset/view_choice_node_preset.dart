@@ -22,6 +22,42 @@ class ChoiceNodeSample extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (ConstList.isSmallDisplay(context)) {
+      return SizedBox(
+        height: 300,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                image: ImageDB().checkers,
+              ),
+              child: const SizedBox(
+                width: 250,
+                child: IgnorePointer(
+                  child: ViewChoiceNode(
+                    Pos(data: [designSamplePosition]),
+                    ignoreOption: true,
+                  ),
+                ),
+              ),
+            ),
+            IconButton(
+                onPressed: () {
+                  ref
+                      .read(choiceNodePresetTestSelectProvider.notifier)
+                      .update((state) => !state);
+                  var pos = const Pos(data: [designSamplePosition]);
+                  ref.read(choiceStatusProvider(pos)).refreshSelf();
+                },
+                icon: ref.watch(choiceNodePresetTestSelectProvider)
+                    ? const Icon(Icons.check_box_outlined)
+                    : const Icon(Icons.check_box_outline_blank)),
+          ],
+        ),
+      );
+    }
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -170,6 +206,38 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
       default:
         currentChild = const ViewNodeColorOptionEditor();
     }
+    if (ConstList.isSmallDisplay(context)) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          NavigationBar(
+            destinations: [
+              NavigationDestination(
+                icon: const Icon(Icons.settings),
+                label: 'general'.i18n,
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.check_box_outline_blank),
+                label: 'outline'.i18n,
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.square_rounded),
+                label: 'inner'.i18n,
+              ),
+            ],
+            selectedIndex: ref.watch(choiceNodePresetCurrentTabProvider),
+            onDestinationSelected: (int index) {
+              ref.read(choiceNodePresetCurrentTabProvider.notifier).state = index;
+            },
+            surfaceTintColor: Colors.transparent,
+          ),
+          const SizedBox(
+            width: 8,
+          ),
+          currentChild,
+        ],
+      );
+    }
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -258,8 +326,8 @@ class _ViewNodeGeneralOptionEditorState
                 label: 'padding'.i18n,
               ),
             ]),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
               crossAxisSpacing: 10,
               mainAxisExtent: 80,
               mainAxisSpacing: 2,
@@ -322,8 +390,8 @@ class _ViewNodeGeneralOptionEditorState
                 state: preset.imagePosition == 2,
               ),
             ]),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
               crossAxisSpacing: 10,
               mainAxisExtent: 80,
               mainAxisSpacing: 2,
@@ -368,8 +436,8 @@ class _ViewNodeGeneralOptionEditorState
                     .toList(),
               ),
             ]),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
               crossAxisSpacing: 10,
               mainAxisExtent: 80,
               mainAxisSpacing: 2,
@@ -461,8 +529,8 @@ class _ViewNodeOutlineOptionEditorState
                     ref.watch(choiceNodePresetCurrentEditOutlineWidthProvider),
               ),
             ]),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
               crossAxisSpacing: 10,
               mainAxisExtent: 80,
               mainAxisSpacing: 2,
@@ -552,8 +620,8 @@ class _ViewNodeOutlineOptionEditorState
                         choiceNodePresetSelectedEditOutlineWidthProvider),
                     label: 'outline_width'.i18n),
               ]),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
                 crossAxisSpacing: 10,
                 mainAxisExtent: 80,
                 mainAxisSpacing: 2,

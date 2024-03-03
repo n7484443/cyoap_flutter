@@ -35,9 +35,7 @@ class ChoiceStatus extends ChangeNotifier {
   }
 
   void build() {
-    if (pos.first < 0) {
-      node = ref.read(choiceNodeClipboardStatusProvider).getIndexPos(pos);
-    } else if (pos.last == designSamplePosition) {
+    if (pos.last == designSamplePosition) {
       var choiceNode = ChoiceNode(
         width: 1,
         title: "sample_title".i18n,
@@ -49,6 +47,8 @@ class ChoiceStatus extends ChangeNotifier {
           presetName: ref.read(choiceNodePresetCurrentEditProvider).name);
       choiceNode.select = ref.read(choiceNodePresetTestSelectProvider) ? 1 : 0;
       node = choiceNode;
+    } else if (pos.first < 0) {
+      node = ref.read(choiceNodeClipboardStatusProvider).getIndexPos(pos);
     } else {
       node = getPlatform.getChoice(pos)!;
     }
