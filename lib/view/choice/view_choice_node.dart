@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
-import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
@@ -43,23 +42,6 @@ class ViewChoiceNode extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (pos.last == nonPositioned) {
-      var presetName =
-          ref.watch(choiceNodeDesignSettingProvider(pos: pos)).presetName;
-      return Card(
-        color: ref
-            .watch(choiceNodePresetProvider(presetName))
-            .defaultColorOption
-            .getColor(),
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width /
-              defaultMaxSize *
-              3 *
-              ConstList.scale(context),
-          height: nodeBaseHeight * ConstList.scale(context),
-        ),
-      );
-    }
     if (ignoreOpacity) {
       return ViewChoiceNodeMain(pos,
           ignoreChild: ignoreChild, ignoreOption: ignoreOption);
@@ -115,7 +97,8 @@ class ViewChoiceNodeMain extends ConsumerWidget {
         child: Padding(
           padding: EdgeInsets.all(preset.padding),
           child: Stack(children: [
-            ViewChoiceNodeContent(pos, ignoreChild: ignoreChild),
+            ViewChoiceNodeContent(pos,
+                ignoreOption: ignoreOption, ignoreChild: ignoreChild),
             if (ref.watch(isEditableProvider(pos: pos)) && !ignoreOption)
               Align(
                 alignment: Alignment.topRight,
@@ -499,8 +482,10 @@ class _ViewContentsState extends ConsumerState<ViewContents> {
 class ViewChoiceNodeContent extends ConsumerWidget {
   final Pos pos;
   final bool ignoreChild;
+  final bool ignoreOption;
 
-  const ViewChoiceNodeContent(this.pos, {this.ignoreChild = false, super.key});
+  const ViewChoiceNodeContent(this.pos,
+      {this.ignoreChild = false, required this.ignoreOption, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -526,19 +511,21 @@ class ViewChoiceNodeContent extends ConsumerWidget {
     }
 
     Widget? child;
-    if (pos.isValid) {
-      if (ref.watch(isEditableProvider(pos: pos))) {
-        child = ViewWrapCustomReorder(
-          pos,
-          maxSize: min(ref.watch(maximumSizeProvider), node.getMaxSize(true)),
-        );
-      } else if (!ignoreChild) {
-        child = ViewWrapCustom(
-          pos,
-          (i) => ViewChoiceNode(pos.addLast(i)),
-          maxSize: min(ref.watch(maximumSizeProvider), node.getMaxSize(true)),
-        );
-      }
+    if (ref.watch(isEditableProvider(pos: pos)) && !ignoreOption) {
+      child = ViewWrapCustomReorder(
+        pos,
+        maxSize: min(ref.watch(maximumSizeProvider), node.getMaxSize(true)),
+      );
+    } else if (!ignoreChild) {
+      child = ViewWrapCustom(
+        pos,
+        (i) => ViewChoiceNode(
+          pos.addLast(i),
+          ignoreOption: ignoreOption,
+          ignoreChild: ignoreChild,
+        ),
+        maxSize: min(ref.watch(maximumSizeProvider), node.getMaxSize(true)),
+      );
     }
     child ??= const SizedBox.shrink();
 

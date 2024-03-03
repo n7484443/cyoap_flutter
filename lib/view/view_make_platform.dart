@@ -1,8 +1,7 @@
-import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/i18n.dart';
-import 'package:cyoap_flutter/view/choice/view_choice_node.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
+import 'package:cyoap_flutter/view/view_clipboard.dart';
 import 'package:cyoap_flutter/view/view_design.dart';
 import 'package:cyoap_flutter/view/view_editor.dart';
 import 'package:cyoap_flutter/view/view_image_editor.dart';
@@ -20,7 +19,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../main.dart';
 import '../model/platform_system.dart';
 import '../util/custom_snackbar.dart';
-import '../viewModel/choice/vm_choice.dart';
 import '../viewModel/vm_draggable_nested_map.dart';
 import '../viewModel/vm_platform.dart';
 import '../viewModel/vm_variable_table.dart';
@@ -340,69 +338,12 @@ class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
       );
     }
     if (ref.watch(sideTabProvider) == 2) {
-      return const ViewSideClipboard();
+      return const ViewClipboard();
     }
     return const SizedBox.shrink();
   }
 }
 
-class ViewSideClipboard extends ConsumerStatefulWidget {
-  const ViewSideClipboard({super.key});
-
-  @override
-  ConsumerState createState() => _ViewSideClipboardState();
-}
-
-class _ViewSideClipboardState extends ConsumerState<ViewSideClipboard> {
-  @override
-  Widget build(BuildContext context) {
-    var list = [];
-    if (ref.watch(copiedChoiceNodeStatusProvider).choiceNode != null) {
-      list.add(const Pos(data: [copiedPositioned, copiedPositioned]));
-    }
-    if (ref.watch(removedChoiceNodeStatusProvider).choiceNode != null) {
-      list.add(const Pos(data: [removedPositioned, removedPositioned]));
-    }
-    return ListView.builder(
-      itemBuilder: (BuildContext context, int index) {
-        var pos = list[index];
-        return Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: Draggable<Pos>(
-            data: pos,
-            feedback: Transform.scale(
-              scale: 0.9,
-              child: Opacity(
-                opacity: 0.6,
-                child: ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      maxWidth: 400,
-                    ),
-                    child: ViewChoiceNode(
-                      pos,
-                      ignoreChild: true,
-                    )),
-              ),
-            ),
-            onDragStarted: () {
-              if (ConstList.isMobile()) {
-                Scaffold.of(context).closeDrawer();
-                ref.read(sideTabProvider.notifier).state = 0;
-              }
-              ref.read(dragChoiceNodeStatusProvider.notifier).dragStart(pos);
-            },
-            onDragUpdate: (DragUpdateDetails details) {
-              ref.read(dragPositionProvider.notifier).state =
-                  details.localPosition.dy;
-            },
-            child: ViewChoiceNode(pos, ignoreChild: true),
-          ),
-        );
-      },
-      itemCount: list.length,
-    );
-  }
-}
 
 class BackButton extends ConsumerWidget {
   const BackButton({super.key});

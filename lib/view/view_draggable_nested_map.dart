@@ -1,5 +1,4 @@
 import 'package:cyoap_core/choiceNode/pos.dart';
-import 'package:cyoap_core/playable_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -32,15 +31,9 @@ class NodeDragTarget extends ConsumerWidget {
           return drag != null && !drag.contain(pos);
         },
         onAccept: (Pos drag) {
-          if (drag.last == nonPositioned) {
-            ref.read(choiceStatusProvider(drag).notifier).swapChoice(pos);
-          } else if (drag.last == removedPositioned) {
+          if (drag.first < 0) {
             ref.read(choiceStatusProvider(pos.removeLast()).notifier).addChoice(
-                ref.read(removedChoiceNodeStatusProvider).choiceNode!.clone(),
-                index: pos.last);
-          } else if (drag.last == copiedPositioned) {
-            ref.read(choiceStatusProvider(pos.removeLast()).notifier).addChoice(
-                ref.read(copiedChoiceNodeStatusProvider).choiceNode!.clone(),
+                ref.read(choiceNodeClipboardStatusProvider).choiceNodeQueue[-drag.first - 1].clone(),
                 index: pos.last);
           } else if (pos.equalExceptLast(drag) &&
               (pos.data.last - 1) >= drag.last) {

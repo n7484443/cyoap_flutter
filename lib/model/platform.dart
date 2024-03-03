@@ -9,9 +9,13 @@ import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:flutter/material.dart';
 
+import 'clipboard.dart';
+
 const int designSamplePosition = -100;
 
 class AbstractPlatform extends PlayablePlatform {
+  Clipboard clipboard = Clipboard();
+
   ListQueue<Color> lastColorList =
       ListQueue.from(List.filled(10, Colors.black));
 

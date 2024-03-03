@@ -6,10 +6,10 @@ import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/model/platform.dart';
 import 'package:cyoap_flutter/model/platform_file_system.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/material.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart'
-    deferred as platform_specified;
+deferred as platform_specified;
 
 AbstractPlatform createPlatform() {
   AbstractPlatform platform = AbstractPlatform.none();
@@ -32,11 +32,11 @@ bool checkSamePlatform(AbstractPlatform a, AbstractPlatform b) {
 }
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await platform_specified.loadLibrary();
+  platform_specified.PlatformSpecified().preInit();
+  platform_specified.PlatformSpecified().init();
   test('save load zip', () async {
-    WidgetsFlutterBinding.ensureInitialized();
-    await platform_specified.loadLibrary();
-    platform_specified.PlatformSpecified().preInit();
-    platform_specified.PlatformSpecified().init();
     var pathZip = "test\\save_load_folder\\extract.zip";
     var pathFolder = "test\\save_load_folder";
     File fileZip = File(pathZip);
@@ -55,10 +55,6 @@ void main() async {
   });
 
   test('save load folder', () async {
-    WidgetsFlutterBinding.ensureInitialized();
-    await platform_specified.loadLibrary();
-    platform_specified.PlatformSpecified().preInit();
-    platform_specified.PlatformSpecified().init();
     var pathFolder = "test\\save_load_folder\\folder";
     Directory dir = Directory(pathFolder);
     if(await dir.exists()){

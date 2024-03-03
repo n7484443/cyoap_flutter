@@ -20,8 +20,6 @@ import '../../model/platform_system.dart';
 part 'vm_choice.g.dart';
 
 const double nodeBaseHeight = 200;
-const int removedPositioned = -2;
-const int copiedPositioned = -3;
 final choiceStatusProvider =
     ChangeNotifierProvider.family.autoDispose<ChoiceStatus, Pos>((ref, pos) {
   return ChoiceStatus(ref, pos);
@@ -37,10 +35,8 @@ class ChoiceStatus extends ChangeNotifier {
   }
 
   void build() {
-    if (pos.last == copiedPositioned) {
-      node = ref.read(copiedChoiceNodeStatusProvider).choiceNode!;
-    } else if (pos.last == removedPositioned) {
-      node = ref.read(removedChoiceNodeStatusProvider).choiceNode!;
+    if (pos.first < 0) {
+      node = ref.read(choiceNodeClipboardStatusProvider).getIndexPos(pos);
     } else if (pos.last == designSamplePosition) {
       var choiceNode = ChoiceNode(
         width: 1,
@@ -105,6 +101,7 @@ class ChoiceStatus extends ChangeNotifier {
   }
 
   void removeData() {
+    ref.read(choiceNodeClipboardStatusProvider).add(node as ChoiceNode);
     var parent = ref.read(choiceStatusProvider(pos.removeLast())).node;
     parent.removeChildren(node);
     refreshParent();
@@ -116,9 +113,7 @@ class ChoiceStatus extends ChangeNotifier {
   }
 
   void copyData() {
-    ref
-        .read(copiedChoiceNodeStatusProvider.notifier)
-        .update(node.clone() as ChoiceNode);
+    ref.read(choiceNodeClipboardStatusProvider).add(node as ChoiceNode);
   }
 
   List<Choice> getChildrenList() {
