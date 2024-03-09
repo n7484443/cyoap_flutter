@@ -92,9 +92,7 @@ class _ViewRGBInputState extends ConsumerState<ViewRGBAInput> {
   }
 
   void updateTextInner(TextEditingController controller, int value) {
-    var selection = controller.selection;
     controller.text = value.toString();
-    controller.selection = selection;
   }
 
   void updateText() {
@@ -154,8 +152,8 @@ class _ViewRGBInputState extends ConsumerState<ViewRGBAInput> {
                   onChanged: (String value) {
                     var t = int.tryParse(value);
                     if (t != null) {
-                      widget.onColorChanged(
-                          widget.color.withRed(t.clamp(0, 255)));
+                      // widget.onColorChanged(
+                      //     widget.color.withRed(t.clamp(0, 255)));
                     }
                   },
                 ),
@@ -264,7 +262,12 @@ class NumericalRangeFormatter extends TextInputFormatter {
     var next = int.parse(newValue.text).clamp(minRange, maxRange);
     var output = TextEditingValue(
         composing: newValue.composing,
-        selection: newValue.selection,
+        selection: newValue.selection.copyWith(
+          baseOffset:
+              newValue.selection.baseOffset.clamp(0, 3),
+          extentOffset:
+              newValue.selection.extentOffset.clamp(0, 3),
+        ),
         text: next.toString());
     return output;
   }
