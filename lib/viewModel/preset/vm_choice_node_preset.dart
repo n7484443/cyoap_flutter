@@ -224,7 +224,7 @@ final choiceNodePresetCurrentEditPaddingProvider =
 final choiceNodePresetListProvider = StateNotifierProvider.autoDispose<
     ChoiceNodePresetListNotifier, List<ChoiceNodeDesignPreset>>((ref) {
   ref.listenSelf((previous, next) {
-    if (previous == null || previous != next) return;
+    if (previous == null || previous == next) return;
     getPlatform.designSetting =
         getPlatform.designSetting.copyWith(choiceNodePresetList: next);
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;

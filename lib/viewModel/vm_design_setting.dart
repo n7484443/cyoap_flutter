@@ -9,7 +9,7 @@ import '../model/image_db.dart';
 final platformDesignSettingProvider =
     StateProvider.autoDispose<PlatformDesignSetting>((ref) {
   ref.listenSelf((PlatformDesignSetting? previous, PlatformDesignSetting next) {
-    if (previous == null || previous != next) return;
+    if (previous == null || previous == next) return;
     ref.read(draggableNestedMapChangedProvider.notifier).state = true;
     getPlatform.designSetting = next;
   });
