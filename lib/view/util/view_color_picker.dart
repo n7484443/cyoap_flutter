@@ -152,8 +152,8 @@ class _ViewRGBInputState extends ConsumerState<ViewRGBAInput> {
                   onChanged: (String value) {
                     var t = int.tryParse(value);
                     if (t != null) {
-                      // widget.onColorChanged(
-                      //     widget.color.withRed(t.clamp(0, 255)));
+                      widget.onColorChanged(
+                          widget.color.withRed(t.clamp(0, 255)));
                     }
                   },
                 ),
