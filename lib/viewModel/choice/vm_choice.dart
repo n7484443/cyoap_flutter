@@ -101,7 +101,9 @@ class ChoiceStatus extends ChangeNotifier {
   }
 
   void removeData() {
-    ref.read(choiceNodeClipboardStatusProvider).add(node as ChoiceNode);
+    if(node is ChoiceNode){
+      ref.read(choiceNodeClipboardStatusProvider).add(node as ChoiceNode);
+    }
     var parent = ref.read(choiceStatusProvider(pos.removeLast())).node;
     parent.removeChildren(node);
     refreshParent();

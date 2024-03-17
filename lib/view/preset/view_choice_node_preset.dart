@@ -227,7 +227,8 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
             ],
             selectedIndex: ref.watch(choiceNodePresetCurrentTabProvider),
             onDestinationSelected: (int index) {
-              ref.read(choiceNodePresetCurrentTabProvider.notifier).state = index;
+              ref.read(choiceNodePresetCurrentTabProvider.notifier).state =
+                  index;
             },
             surfaceTintColor: Colors.transparent,
           ),
@@ -317,15 +318,37 @@ class _ViewNodeGeneralOptionEditorState
                 label: 'height'.i18n,
               ),
               CustomTextField(
-                controller: ref.watch(choiceNodePresetCurrentEditRoundProvider),
-                label: 'round'.i18n,
-              ),
-              CustomTextField(
                 controller:
                     ref.watch(choiceNodePresetCurrentEditPaddingProvider),
                 label: 'padding'.i18n,
               ),
             ]),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
+              crossAxisSpacing: 10,
+              mainAxisExtent: 80,
+              mainAxisSpacing: 2,
+            ),
+          ),
+          const SliverPadding(
+              padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
+          SliverGrid(
+            delegate: SliverChildListDelegate(
+                (ConstList.isMobile() ? [0, 1, 2, 3] : [0, 1, 3, 2])
+                    .map(
+                      (index) => CustomTextField(
+                        controller: ref.watch(
+                            choiceNodePresetCurrentEditRoundProvider(index)),
+                        icon: Padding(
+                          padding: const EdgeInsets.all(ConstList.paddingSmall),
+                          child: RotatedBox(
+                            quarterTurns: (index - 1) % 4,
+                            child: const Icon(Icons.rounded_corner),
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList()),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
               crossAxisSpacing: 10,

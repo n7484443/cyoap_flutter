@@ -5,7 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../main.dart';
 
 class CustomTextField extends ConsumerWidget {
-  final String label;
+  final String? label;
+  final Widget? icon;
   final TextEditingController controller;
   final TextInputType keyboardType;
   final int? maxLength;
@@ -13,7 +14,8 @@ class CustomTextField extends ConsumerWidget {
   const CustomTextField(
       {super.key,
       required this.controller,
-      required this.label,
+      this.label,
+      this.icon,
       this.keyboardType = TextInputType.number,
       this.maxLength});
 
@@ -24,7 +26,8 @@ class CustomTextField extends ConsumerWidget {
         padding: const EdgeInsets.all(ConstList.padding),
         child: Row(
           children: [
-            Text(label),
+            if(icon != null)icon!,
+            if(label != null)Text(label!),
             Expanded(
               child: TextField(
                 textAlign: TextAlign.end,
@@ -71,6 +74,7 @@ class CustomDropdownButton<T> extends ConsumerWidget {
                 items: items,
                 onChanged: onChanged,
                 value: value,
+                isExpanded: true,
               ),
             ),
           ],

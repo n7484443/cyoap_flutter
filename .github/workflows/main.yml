@@ -53,13 +53,8 @@ jobs:
 
       - run: flutter build windows --release
 
-      - uses: actions-rs/toolchain@v1.0.6
-        with:
-          toolchain: stable
-      - uses: actions-rs/cargo@v1.0.1
-        with:
-          command: build
-          args: --release --manifest-path updater/Cargo.toml
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo build --release --manifest-path updater/Cargo.toml
       - run: MV "updater/target/release/updater.exe" "build/windows/x64/runner/Release"
       - run: |
           7z a build/windows/cyoap_windows_${{ github.ref_name }}.zip ./build/windows/x64/runner/Release/*

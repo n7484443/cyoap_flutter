@@ -176,23 +176,26 @@ final choiceNodePresetProvider = Provider.family
             orElse: () => const ChoiceNodeDesignPreset(name: 'default')));
 
 final choiceNodePresetCurrentEditRoundProvider =
-    Provider.autoDispose<TextEditingController>((ref) {
+    Provider.autoDispose.family<TextEditingController, int>((ref, index) {
   ref.listen(currentPresetIndexProvider, (previous, next) {
     ref.invalidateSelf();
   });
   var controller = TextEditingController(
-      text: ref.read(choiceNodePresetCurrentEditProvider).round.toString());
+      text: ref.read(choiceNodePresetCurrentEditProvider).roundEdge[index].toString());
   controller.addListener(() {
-    EasyDebounce.debounce('Round Input', ConstList.debounceDuration, () {
+    EasyDebounce.debounce('Round Input $index', ConstList.debounceDuration, () {
+      var round = double.tryParse(controller.text) ?? 0.0;
+      var currentRound = [...ref.read(choiceNodePresetCurrentEditProvider).roundEdge];
+      currentRound[index] = round;
       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
           ref.watch(currentPresetIndexProvider),
           ref
               .read(choiceNodePresetCurrentEditProvider)
-              .copyWith(round: double.tryParse(controller.text) ?? 0.0));
+              .copyWith(roundEdge: currentRound));
     });
   });
   ref.onDispose(() {
-    EasyDebounce.cancel('Round Input');
+    EasyDebounce.cancel('Round Input $index');
     controller.dispose();
   });
   return controller;
@@ -204,14 +207,15 @@ final choiceNodePresetCurrentEditPaddingProvider =
     ref.invalidateSelf();
   });
   var controller = TextEditingController(
-      text: ref.read(choiceNodePresetCurrentEditProvider).padding.toString());
+      text: ref.read(choiceNodePresetCurrentEditProvider).paddingAround[0].toString());
   controller.addListener(() {
     EasyDebounce.debounce('Padding Input', ConstList.debounceDuration, () {
+      var padding = double.tryParse(controller.text) ?? 0.0;
       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
           ref.watch(currentPresetIndexProvider),
           ref
               .read(choiceNodePresetCurrentEditProvider)
-              .copyWith(padding: double.tryParse(controller.text) ?? 0.0));
+              .copyWith(paddingAround: [padding, padding, padding, padding]));
     });
   });
   ref.onDispose(() {

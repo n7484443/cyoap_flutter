@@ -74,11 +74,18 @@ class ViewChoiceNodeMain extends ConsumerWidget {
     var outline = isSelected && preset.selectOutlineEnable
         ? preset.selectOutlineOption
         : preset.defaultOutlineOption;
+
+    var borderRadius = BorderRadius.only(
+      topLeft: Radius.circular(preset.roundEdge[0]),
+      topRight: Radius.circular(preset.roundEdge[1]),
+      bottomRight: Radius.circular(preset.roundEdge[2]),
+      bottomLeft: Radius.circular(preset.roundEdge[3]),
+    );
     var innerWidget = Ink(
       decoration: BoxDecoration(
         color: defaultColor.getColor(),
         gradient: defaultColor.getGradient(),
-        borderRadius: BorderRadius.circular(max(preset.round, 0)),
+        borderRadius: borderRadius,
       ),
       child: InkWell(
         onDoubleTap: ref.watch(isEditableProvider(pos: pos))
@@ -95,7 +102,11 @@ class ViewChoiceNodeMain extends ConsumerWidget {
               }
             : null,
         child: Padding(
-          padding: EdgeInsets.all(preset.padding),
+          padding: EdgeInsets.only(
+              top: preset.paddingAround[0],
+              right: preset.paddingAround[1],
+              bottom: preset.paddingAround[2],
+              left: preset.paddingAround[3]),
           child: Stack(children: [
             ViewChoiceNodeContent(pos,
                 ignoreOption: ignoreOption, ignoreChild: ignoreChild),
@@ -148,7 +159,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
     );
 
     var shape = RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(preset.round),
+      borderRadius: borderRadius,
       side: const BorderSide(width: 0, style: BorderStyle.none),
     );
     if (outline.outlineType == OutlineType.dotted ||
@@ -156,9 +167,18 @@ class ViewChoiceNodeMain extends ConsumerWidget {
       return DottedBorder(
         borderType: BorderType.RRect,
         strokeWidth: outline.outlineWidth,
+        customPath: (size) {
+          Rect rect = Rect.fromLTWH(0, 0, size.width, size.height);
+          Path path = Path()
+            ..addRRect(RRect.fromRectAndCorners(rect,
+                topLeft: Radius.circular(preset.roundEdge[0]),
+                topRight: Radius.circular(preset.roundEdge[1]),
+                bottomRight: Radius.circular(preset.roundEdge[2]),
+                bottomLeft: Radius.circular(preset.roundEdge[3])));
+          return path;
+        },
         dashPattern:
             outline.outlineType == OutlineType.dashed ? [6, 2] : [3, 1],
-        radius: Radius.circular(preset.round),
         color: outline.outlineColor.getColorIgnoreGradient(),
         padding: EdgeInsets.all(outline.outlinePadding),
         child: Card(
@@ -175,7 +195,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
     if (outline.outlineType == OutlineType.solid) {
       return DecoratedBox(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(preset.round),
+          borderRadius: borderRadius,
           border: Border.all(
             color: outline.outlineColor.getColorIgnoreGradient(),
             width: outline.outlineWidth,
