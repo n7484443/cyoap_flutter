@@ -7,11 +7,11 @@ const RESOURCES = {"assets/AssetManifest.bin": "5f7db09af6875d1b5a7921b045495873
 "assets/AssetManifest.bin.json": "55f1faacabb98402c13a6728896ad50d",
 "assets/AssetManifest.json": "0bd258f452c5f44ab34dc53b945ef114",
 "assets/FontManifest.json": "df625e53b2aec5cd1d311615484480d0",
-"assets/fonts/MaterialIcons-Regular.otf": "dcad9a054792e8e56861c3a6dfe34d78",
+"assets/fonts/MaterialIcons-Regular.otf": "139a3bcec92442263018790bd0da4f52",
 "assets/fonts/NeoDGM/NeoDGM.ttf": "fb933425ff4ed74ed3b810b399b7946f",
 "assets/images/checkers.png": "832cfa26861372530aef1964499c94ff",
 "assets/images/sample.png": "c92e1697d57a0d1e7007fe33d76ea125",
-"assets/NOTICES": "17b1dd2255e7be4e500775526c008826",
+"assets/NOTICES": "28a419d7dd3c717051285050164607fa",
 "assets/packages/flex_color_picker/assets/opacity.png": "49c4f3bcb1b25364bb4c255edcaaf5b2",
 "assets/packages/flutter_image_compress_web/assets/pica.min.js": "6208ed6419908c4b04382adc8a3053a2",
 "assets/packages/window_manager/images/ic_chrome_close.png": "75f4b8ab3608a05461a31fc18d6b47c2",
@@ -38,10 +38,10 @@ const RESOURCES = {"assets/AssetManifest.bin": "5f7db09af6875d1b5a7921b045495873
 "index.html": "58f905882ef645859ad24d2c84419dde",
 "/": "58f905882ef645859ad24d2c84419dde",
 "jszip.js": "418ea325c68eb099ef2ccc8823771a63",
-"main.dart.js": "02181050b853cde8acc0bd6c8f0adf96",
+"main.dart.js": "864d94a4fba623ad4e18b9cea85ab9ac",
 "manifest.json": "ebc04e4594e86d4e5763ccf0df7285b3",
 "save_web.js": "6d7f19b0443d2ca2a960f0532299e5d7",
-"version.json": "bb42ee5d7ad93259cdc0d44d1df4ace6",
+"version.json": "7971aeeb98478dc2e47061d3ae761b15",
 "worker.js": "55118d4a43a00cedd42f65ca3b0b0d2a"};
 // The application shell files that are downloaded before a service worker can
 // start.

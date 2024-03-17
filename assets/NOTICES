@@ -8443,6 +8443,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 flutter_image_compress
 flutter_image_compress_common
 flutter_image_compress_macos
+flutter_image_compress_ohos
 flutter_image_compress_platform_interface
 flutter_image_compress_web
 
@@ -36062,6 +36063,7 @@ May you find forgiveness for yourself and forgive others
 May you share freely, never taking more than you give.
 --------------------------------------------------------------------------------
 super_clipboard
+super_drag_and_drop
 super_native_extensions
 
 Copyright (c) 2022 Superlist, Matej Knopp and the contributors
