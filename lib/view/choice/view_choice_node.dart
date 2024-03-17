@@ -46,6 +46,61 @@ class ViewChoiceNode extends ConsumerWidget {
       return ViewChoiceNodeMain(pos,
           ignoreChild: ignoreChild, ignoreOption: ignoreOption);
     }
+
+    if (ref.watch(isEditableProvider(pos: pos)) && !ignoreOption) {
+      return Opacity(
+        opacity: ref.watch(opacityProvider(pos)),
+        child: Stack(
+          children: [
+            ViewChoiceNodeMain(pos,
+                ignoreChild: ignoreChild, ignoreOption: ignoreOption),
+            if (ref.watch(isEditableProvider(pos: pos)) && !ignoreOption)
+              Align(
+                alignment: Alignment.topRight,
+                child: CircleAvatar(
+                  radius: 16,
+                  child: PopupMenuButton<int>(
+                    padding: EdgeInsets.zero,
+                    icon: const Icon(Icons.more_vert),
+                    onSelected: (result) {
+                      switch (result) {
+                        case 0:
+                          showDialog(
+                            context: context,
+                            builder: (builder) => SizeDialog(pos),
+                          );
+                          break;
+                        case 1:
+                          ref.read(choiceStatusProvider(pos)).copyData();
+                          break;
+                        case 2:
+                          ref.read(choiceStatusProvider(pos)).removeData();
+                          break;
+                      }
+                    },
+                    itemBuilder: (context) {
+                      return [
+                        PopupMenuItem(
+                          value: 0,
+                          child: Text('modify_size'.i18n),
+                        ),
+                        PopupMenuItem(
+                          value: 1,
+                          child: Text('copy'.i18n),
+                        ),
+                        PopupMenuItem(
+                          value: 2,
+                          child: Text('delete'.i18n),
+                        ),
+                      ];
+                    },
+                  ),
+                ),
+              ),
+          ],
+        ),
+      );
+    }
     return Opacity(
       opacity: ref.watch(opacityProvider(pos)),
       child: ViewChoiceNodeMain(pos,
@@ -107,53 +162,8 @@ class ViewChoiceNodeMain extends ConsumerWidget {
               right: preset.paddingAround[1],
               bottom: preset.paddingAround[2],
               left: preset.paddingAround[3]),
-          child: Stack(children: [
-            ViewChoiceNodeContent(pos,
-                ignoreOption: ignoreOption, ignoreChild: ignoreChild),
-            if (ref.watch(isEditableProvider(pos: pos)) && !ignoreOption)
-              Align(
-                alignment: Alignment.topRight,
-                child: CircleAvatar(
-                  radius: 16,
-                  child: PopupMenuButton<int>(
-                    padding: EdgeInsets.zero,
-                    icon: const Icon(Icons.more_vert),
-                    onSelected: (result) {
-                      switch (result) {
-                        case 0:
-                          showDialog(
-                            context: context,
-                            builder: (builder) => SizeDialog(pos),
-                          );
-                          break;
-                        case 1:
-                          ref.read(choiceStatusProvider(pos)).copyData();
-                          break;
-                        case 2:
-                          ref.read(choiceStatusProvider(pos)).removeData();
-                          break;
-                      }
-                    },
-                    itemBuilder: (context) {
-                      return [
-                        PopupMenuItem(
-                          value: 0,
-                          child: Text('modify_size'.i18n),
-                        ),
-                        PopupMenuItem(
-                          value: 1,
-                          child: Text('copy'.i18n),
-                        ),
-                        PopupMenuItem(
-                          value: 2,
-                          child: Text('delete'.i18n),
-                        ),
-                      ];
-                    },
-                  ),
-                ),
-              ),
-          ]),
+          child: ViewChoiceNodeContent(pos,
+              ignoreOption: ignoreOption, ignoreChild: ignoreChild),
         ),
       ),
     );
@@ -183,7 +193,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
         padding: EdgeInsets.all(outline.outlinePadding),
         child: Card(
           shape: shape,
-          clipBehavior: Clip.none,
+          clipBehavior: Clip.antiAlias,
           elevation: preset.elevation,
           color: Colors.transparent,
           margin: EdgeInsets.zero,
@@ -191,7 +201,6 @@ class ViewChoiceNodeMain extends ConsumerWidget {
         ),
       );
     }
-
     if (outline.outlineType == OutlineType.solid) {
       return DecoratedBox(
         decoration: BoxDecoration(
