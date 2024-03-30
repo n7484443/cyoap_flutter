@@ -45,7 +45,7 @@ final controllerIdeProvider = Provider.autoDispose<QuillController>((ref) {
       var needUpdate = [];
       void recursive(AST ast) {
         switch (ast.data!.value.type) {
-          case AnalyserConst.keywordIf:
+          case AnalyserConst.keywordIfCondition:
           case AnalyserConst.keywordElse:
           case AnalyserConst.keywordFor:
           case AnalyserConst.keywordBreak:

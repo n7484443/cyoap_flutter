@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 5.1.1+222
+version: 5.2.0+223
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -34,7 +34,7 @@ dependencies:
       url: https://github.com/n7484443/cyoap_core.git
   image: ^4.0.12
   extended_image: ^8.1.0
-  file_picker : ^6.1.1
+  file_picker : ^8.0.0
   http: ^1.2.0
   shared_preferences: ^2.0.15
   google_fonts: ^6.2.1
@@ -81,7 +81,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.1
-  custom_lint: ^0.5.7
+  custom_lint: ^0.6.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
