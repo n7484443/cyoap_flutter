@@ -344,7 +344,6 @@ class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
   }
 }
 
-
 class BackButton extends ConsumerWidget {
   const BackButton({super.key});
 

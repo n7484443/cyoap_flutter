@@ -33,7 +33,10 @@ class NodeDragTarget extends ConsumerWidget {
         onAccept: (Pos drag) {
           if (drag.first < 0) {
             ref.read(choiceStatusProvider(pos.removeLast()).notifier).addChoice(
-                ref.read(choiceNodeClipboardStatusProvider).choiceNodeQueue[-drag.first - 1].clone(),
+                ref
+                    .read(choiceNodeClipboardStatusProvider)
+                    .choiceNodeQueue[-drag.first - 1]
+                    .clone(),
                 index: pos.last);
           } else if (pos.equalExceptLast(drag) &&
               (pos.data.last - 1) >= drag.last) {

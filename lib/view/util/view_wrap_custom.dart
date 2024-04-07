@@ -209,8 +209,7 @@ class ViewWrapCustom extends ConsumerWidget {
     List<Widget> outputWidget = List<Widget>.empty(growable: true);
     var children = ref.watch(choiceStatusProvider(parentPos)).getChildrenList();
     if (children.isEmpty && isInner) {
-      return const SizedBox(
-          height: nodeBaseHeight / 6);
+      return const SizedBox(height: nodeBaseHeight / 6);
     }
     int stack = 0;
     List<Widget> subWidget = List<Widget>.empty(growable: true);

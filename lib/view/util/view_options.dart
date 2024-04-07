@@ -26,8 +26,8 @@ class CustomTextField extends ConsumerWidget {
         padding: const EdgeInsets.all(ConstList.padding),
         child: Row(
           children: [
-            if(icon != null)icon!,
-            if(label != null)Text(label!),
+            if (icon != null) icon!,
+            if (label != null) Text(label!),
             Expanded(
               child: TextField(
                 textAlign: TextAlign.end,

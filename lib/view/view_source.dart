@@ -114,7 +114,7 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
                     },
                   ),
                 ),
-                if(!ConstList.isMobile())const Spacer(),
+                if (!ConstList.isMobile()) const Spacer(),
               ],
             ),
             Expanded(

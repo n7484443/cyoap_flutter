@@ -263,10 +263,8 @@ class NumericalRangeFormatter extends TextInputFormatter {
     var output = TextEditingValue(
         composing: newValue.composing,
         selection: newValue.selection.copyWith(
-          baseOffset:
-              newValue.selection.baseOffset.clamp(0, 3),
-          extentOffset:
-              newValue.selection.extentOffset.clamp(0, 3),
+          baseOffset: newValue.selection.baseOffset.clamp(0, 3),
+          extentOffset: newValue.selection.extentOffset.clamp(0, 3),
         ),
         text: next.toString());
     return output;
