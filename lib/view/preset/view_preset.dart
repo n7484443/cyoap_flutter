@@ -117,6 +117,7 @@ class _ViewPresetPositionState extends ConsumerState<ViewPresetPosition> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Expanded(
+                  flex: 5,
                   child: Row(
                     children: [
                       SizedBox(
@@ -131,9 +132,12 @@ class _ViewPresetPositionState extends ConsumerState<ViewPresetPosition> {
                   ),
                 ),
                 const Divider(height: 2),
-                Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: widget.sample!,
+                Expanded(
+                  flex: 7,
+                  child: Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: widget.sample!,
+                  ),
                 )
               ],
             ),

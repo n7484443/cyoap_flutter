@@ -15,7 +15,7 @@ final vmVariableTableProvider = StateNotifierProvider<
 });
 
 final displayedVariablesProvider =
-    Provider<List<(String, ValueTypeWrapper)>>((ref) {
+    Provider.autoDispose<List<(String, ValueTypeWrapper)>>((ref) {
   var output = <(String, ValueTypeWrapper)>[];
   for (var name in VariableDataBase().visibleOrder) {
     output.add((name, ref.watch(vmVariableTableProvider)[name]!));
