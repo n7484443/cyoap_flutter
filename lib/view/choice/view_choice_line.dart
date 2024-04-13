@@ -4,8 +4,7 @@ import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/choice/view_choice_node.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/util/view_circle_button.dart';
-import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
-import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
+import 'package:cyoap_flutter/view/choice/view_wrap_custom.dart';
 import 'package:cyoap_flutter/viewModel/vm_global_setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -48,15 +47,7 @@ class ViewChoiceLine extends ConsumerWidget {
         ),
       );
       return SliverToBoxAdapter(
-        child: Column(
-          children: [
-            NodeDragTarget(
-              pos.addLast(0),
-              isHorizontal: true,
-            ),
-            addButton,
-          ],
-        ),
+        child: addButton,
       );
     }
     if (ref.watch(lineFoldProvider(pos: pos))) {

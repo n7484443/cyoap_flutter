@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/choice/view_choice_line.dart';
@@ -8,10 +6,8 @@ import 'package:cyoap_flutter/view/view_selected_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../main.dart';
 import '../../viewModel/choice/vm_choice.dart';
 import '../../viewModel/vm_design_setting.dart';
-import '../../viewModel/vm_draggable_nested_map.dart';
 import '../../viewModel/vm_selected_grid.dart';
 
 class ViewChoicePage extends ConsumerStatefulWidget {
@@ -31,26 +27,24 @@ class _ViewChoicePageState extends ConsumerState<ViewChoicePage> {
     _scrollController.dispose();
   }
 
-  void dragUpdate(double? pos) {
-    if (pos == null) return;
-    var maxHeight = MediaQuery.of(context).size.height;
-    double topY = 0;
-    double bottomY = topY + maxHeight;
-
-    var detectedRange = maxHeight * 0.06;
-    var moveDistance = ConstList.isSmallDisplay(context) ? 0.8 : 1;
-    if (pos < topY + detectedRange) {
-      _scrollController.jumpTo(max(_scrollController.offset - moveDistance, 0));
-    }
-    if (pos > bottomY - detectedRange) {
-      _scrollController.jumpTo(_scrollController.offset + moveDistance);
-    }
-  }
+  // void dragUpdate(double? pos) {
+  //   if (pos == null) return;
+  //   var maxHeight = MediaQuery.of(context).size.height;
+  //   double topY = 0;
+  //   double bottomY = topY + maxHeight;
+  //
+  //   var detectedRange = maxHeight * 0.06;
+  //   var moveDistance = ConstList.isSmallDisplay(context) ? 0.8 : 1;
+  //   if (pos < topY + detectedRange) {
+  //     _scrollController.jumpTo(max(_scrollController.offset - moveDistance, 0));
+  //   }
+  //   if (pos > bottomY - detectedRange) {
+  //     _scrollController.jumpTo(_scrollController.offset + moveDistance);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<double?>(
-        dragPositionProvider, (previous, next) => dragUpdate(next));
     var pos = ref.watch(currentChoicePageProvider);
     var designSetting = ref.watch(platformDesignSettingProvider);
     var childrenLength =

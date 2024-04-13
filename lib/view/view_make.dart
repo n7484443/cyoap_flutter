@@ -108,6 +108,7 @@ class ViewSaveIcons extends ConsumerWidget {
     return PopupMenuButton(
       icon: const Icon(Icons.save),
       tooltip: 'save_option'.i18n,
+      popUpAnimationStyle: AnimationStyle(duration: ConstList.durationAnimation),
       onSelected: (int selected) async {
         showDialog(
             context: context,

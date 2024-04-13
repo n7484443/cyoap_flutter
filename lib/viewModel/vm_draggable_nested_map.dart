@@ -58,12 +58,6 @@ class ChoiceNodeClipboardNotifier extends ChangeNotifier {
 
 final draggableNestedMapChangedProvider = StateProvider<bool>((ref) => false);
 
-final dragPositionProvider = StateProvider<double?>((ref) => null);
-
-final dragChoiceNodeStatusProvider =
-    StateNotifierProvider<DragChoiceNodeNotifier, Pos?>(
-        (ref) => DragChoiceNodeNotifier(ref));
-
 class DragChoiceNodeNotifier extends StateNotifier<Pos?> {
   Ref ref;
 

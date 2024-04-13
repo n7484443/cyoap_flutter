@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
@@ -8,9 +9,8 @@ import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
-import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
+import 'package:cyoap_flutter/view/choice/view_wrap_custom.dart';
 import 'package:cyoap_flutter/viewModel/choice/vm_choice_node.dart';
-import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_editor.dart'
     show nodeEditorTargetPosProvider;
 import 'package:dotted_border/dotted_border.dart';
@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../main.dart';
@@ -62,6 +63,7 @@ class ViewChoiceNode extends ConsumerWidget {
                   child: PopupMenuButton<int>(
                     padding: EdgeInsets.zero,
                     icon: const Icon(Icons.more_vert),
+                    popUpAnimationStyle: AnimationStyle(duration: ConstList.durationAnimation),
                     onSelected: (result) {
                       switch (result) {
                         case 0:
@@ -273,8 +275,9 @@ class SizeDialog extends ConsumerWidget {
 
 class NodeDraggable extends ConsumerWidget {
   final Pos pos;
+  final bool ignoreOption;
 
-  const NodeDraggable(this.pos, {super.key});
+  const NodeDraggable(this.pos, {this.ignoreOption = false, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -282,60 +285,15 @@ class NodeDraggable extends ConsumerWidget {
     if (node == null) {
       return const SizedBox.shrink();
     }
-    var widget = ViewChoiceNode(pos);
-    if (ConstList.isMobile()) {
-      return LongPressDraggable<Pos>(
-        onDragUpdate: (details) => ref
-            .read(dragPositionProvider.notifier)
-            .state = details.localPosition.dy,
-        data: pos,
-        feedback: Opacity(
-          opacity: 0.5,
-          child: SizedBox(
-              width: MediaQuery.of(context).size.width /
-                  (defaultMaxSize + 3) *
-                  (node.width == 0 ? defaultMaxSize : node.width),
-              child: widget),
-        ),
-        onDragStarted: () {
-          ref.read(dragChoiceNodeStatusProvider.notifier).dragStart(pos);
-        },
-        child: ref.watch(dragChoiceNodeStatusProvider) == pos
-            ? Opacity(
-                opacity: 0.2,
-                child: widget,
-              )
-            : widget,
-        onDraggableCanceled: (Velocity velocity, Offset offset) {
-          ref.read(dragChoiceNodeStatusProvider.notifier).dragEnd();
-        },
-      );
-    } else {
-      return Draggable<Pos>(
-        onDragUpdate: (details) => ref
-            .read(dragPositionProvider.notifier)
-            .state = details.localPosition.dy,
-        data: pos,
-        feedback: Opacity(
-          opacity: 0.5,
-          child: SizedBox(
-              width: MediaQuery.of(context).size.width /
-                  (defaultMaxSize + 3) *
-                  (node.width == 0 ? defaultMaxSize : node.width),
-              child: widget),
-        ),
-        onDragStarted: () {
-          ref.read(dragChoiceNodeStatusProvider.notifier).dragStart(pos);
-        },
-        child: Opacity(
-          opacity: ref.watch(dragChoiceNodeStatusProvider) == pos ? 0.2 : 1.0,
-          child: widget,
-        ),
-        onDraggableCanceled: (Velocity velocity, Offset offset) {
-          ref.read(dragChoiceNodeStatusProvider.notifier).dragEnd();
-        },
-      );
-    }
+    var widget = ViewChoiceNode(pos, ignoreOption: ignoreOption);
+    return DragItemWidget(
+      dragItemProvider: (DragItemRequest request) =>
+          DragItem(localData: Int32List.fromList(pos.data)),
+      allowedOperations: () => [DropOperation.copy],
+      child: DraggableWidget(
+        child: widget,
+      ),
+    );
   }
 }
 
@@ -396,7 +354,7 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
       children: [
         InkWell(
           child: Container(
-            width: 64,
+            width: 36,
             height: 36,
             decoration: BoxDecoration(
               color: Colors.black12,
@@ -414,16 +372,18 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
             }
           },
         ),
-        Text(
-          select.toString(),
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: Colors.black,
-              ),
-          textAlign: TextAlign.center,
+        Expanded(
+          child: Text(
+            select.toString(),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Colors.black,
+                ),
+            textAlign: TextAlign.center,
+          ),
         ),
         InkWell(
           child: Container(
-            width: 64,
+            width: 36,
             height: 36,
             decoration: BoxDecoration(
               color: Colors.black12,

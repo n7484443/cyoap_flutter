@@ -2,7 +2,6 @@ import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/choice/view_choice_node.dart';
-import 'package:cyoap_flutter/view/view_draggable_nested_map.dart';
 import 'package:cyoap_flutter/view/view_make_platform.dart';
 import 'package:cyoap_flutter/viewModel/choice/vm_choice.dart';
 import 'package:flutter/material.dart';
@@ -44,8 +43,8 @@ void main() async {
     expect(vCopy0, findsOneWidget);
     expect(vCopy1, findsOneWidget);
 
-    var dragPos = find.byWidgetPredicate((widget) => widget is NodeDragTarget && widget.pos == posCopy0);
-    await tester.drag(vCopy0, tester.getCenter(dragPos));
+    // var dragPos = find.byWidgetPredicate((widget) => widget is NodeDragTarget && widget.pos == posCopy0);
+    // await tester.drag(vCopy0, tester.getCenter(dragPos));
 
     expect(find.byElementType(ViewChoiceNode), findsExactly(5));
   });

@@ -1,7 +1,7 @@
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
-import 'package:cyoap_flutter/view/util/view_wrap_custom.dart';
+import 'package:cyoap_flutter/view/choice/view_wrap_custom.dart';
 import 'package:cyoap_flutter/view/choice/view_choice_node.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
