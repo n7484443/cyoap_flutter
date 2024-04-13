@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/choice/view_choice_line.dart';
@@ -5,7 +7,9 @@ import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/view_selected_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 
+import '../../main.dart';
 import '../../viewModel/choice/vm_choice.dart';
 import '../../viewModel/vm_design_setting.dart';
 import '../../viewModel/vm_selected_grid.dart';
@@ -22,26 +26,34 @@ class _ViewChoicePageState extends ConsumerState<ViewChoicePage> {
       AdjustableScrollController();
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   void dispose() {
     super.dispose();
     _scrollController.dispose();
   }
 
-  // void dragUpdate(double? pos) {
-  //   if (pos == null) return;
-  //   var maxHeight = MediaQuery.of(context).size.height;
-  //   double topY = 0;
-  //   double bottomY = topY + maxHeight;
-  //
-  //   var detectedRange = maxHeight * 0.06;
-  //   var moveDistance = ConstList.isSmallDisplay(context) ? 0.8 : 1;
-  //   if (pos < topY + detectedRange) {
-  //     _scrollController.jumpTo(max(_scrollController.offset - moveDistance, 0));
-  //   }
-  //   if (pos > bottomY - detectedRange) {
-  //     _scrollController.jumpTo(_scrollController.offset + moveDistance);
-  //   }
-  // }
+  void dragUpdate(double? pos) {
+    if (pos == null) return;
+    var maxHeight = MediaQuery.of(context).size.height;
+    double topY = 0;
+    double bottomY = maxHeight;
+
+    var detectedRange = 100;
+    var moveDistance = ConstList.isSmallDisplay(context) ? 1 : 1.5;
+    var move = 0.0;
+    if (pos < topY + detectedRange) {
+      move = pos - (topY + detectedRange);
+    }else if (pos > bottomY - detectedRange) {
+      move = -pos + (bottomY + detectedRange);
+    }
+    move /= detectedRange;
+    move *= moveDistance;
+    _scrollController.jumpTo(max(_scrollController.offset + move, 0));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,17 +107,23 @@ class _ViewChoicePageState extends ConsumerState<ViewChoicePage> {
         padding: EdgeInsets.all(50),
       ));
     }
-    return Container(
-      decoration: BoxDecoration(
-        color: designSetting.backgroundColorOption.getColor(),
-        gradient: designSetting.backgroundColorOption.getGradient(),
-        image: ref.watch(platformDesignSettingImageDecorationProvider),
-      ),
-      child: Scrollbar(
-        controller: _scrollController,
-        child: CustomScrollView(
+    return DropMonitor(
+      formats: Formats.standardFormats,
+      onDropOver: (details) {
+        dragUpdate(details.position.local.dy);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: designSetting.backgroundColorOption.getColor(),
+          gradient: designSetting.backgroundColorOption.getGradient(),
+          image: ref.watch(platformDesignSettingImageDecorationProvider),
+        ),
+        child: Scrollbar(
           controller: _scrollController,
-          slivers: sliverList,
+          child: CustomScrollView(
+            controller: _scrollController,
+            slivers: sliverList,
+          ),
         ),
       ),
     );

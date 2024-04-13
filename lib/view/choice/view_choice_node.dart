@@ -29,6 +29,31 @@ import '../../viewModel/vm_global_setting.dart';
 import '../../viewModel/vm_make_platform.dart';
 import '../../viewModel/vm_variable_table.dart';
 
+class NodeDraggable extends ConsumerWidget {
+  final Pos pos;
+  final bool ignoreOption;
+
+  const NodeDraggable(this.pos, {this.ignoreOption = false, super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    var node = ref.watch(choiceStatusProvider(pos)).asChoiceNode();
+    if (node == null) {
+      return const SizedBox.shrink();
+    }
+    var widget = ViewChoiceNode(pos, ignoreOption: ignoreOption);
+    return DragItemWidget(
+      dragItemProvider: (DragItemRequest request) =>
+          DragItem(localData: Int32List.fromList(pos.data)),
+      allowedOperations: () => [DropOperation.copy],
+      child: DraggableWidget(
+        child: widget,
+      ),
+    );
+  }
+}
+
+
 class ViewChoiceNode extends ConsumerWidget {
   final Pos pos;
   final bool ignoreOpacity;
@@ -268,30 +293,6 @@ class SizeDialog extends ConsumerWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class NodeDraggable extends ConsumerWidget {
-  final Pos pos;
-  final bool ignoreOption;
-
-  const NodeDraggable(this.pos, {this.ignoreOption = false, super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    var node = ref.watch(choiceStatusProvider(pos)).asChoiceNode();
-    if (node == null) {
-      return const SizedBox.shrink();
-    }
-    var widget = ViewChoiceNode(pos, ignoreOption: ignoreOption);
-    return DragItemWidget(
-      dragItemProvider: (DragItemRequest request) =>
-          DragItem(localData: Int32List.fromList(pos.data)),
-      allowedOperations: () => [DropOperation.copy],
-      child: DraggableWidget(
-        child: widget,
       ),
     );
   }
