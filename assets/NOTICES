@@ -8369,7 +8369,7 @@ flex_seed_scheme
 
 BSD 3-Clause License
 
-FlexSeedScheme Copyright (c) 2022
+FlexSeedScheme Copyright (c) 2022-2024
 Mike Rydstrom (Twitter @RydMike GitHub rydmike)
 All rights reserved.
 
@@ -36318,7 +36318,7 @@ win32_registry
 
 BSD 3-Clause License
 
-Copyright (c) 2023, Dart | Windows
+Copyright (c) 2023, Halil Durmus
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
