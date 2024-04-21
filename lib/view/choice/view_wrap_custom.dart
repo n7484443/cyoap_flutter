@@ -167,14 +167,12 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
         var item = event.session.items.first;
         var data = Pos(data: (item.localData as List).cast<int>());
         if (isEntered && index >= 0) {
-          index = index ~/ 2;
-          var (_, pos) = widget.sizeData[index];
-          if (index.isEven) {
-            add(data, pos, ref);
+          if (index == widget.sizeData.length) {
+            var (_, pos) = widget.sizeData.last;
+            add(data, pos.removeLast().addLast(pos.last + 1), ref);
           } else {
-            var nextPos = List<int>.from(pos.data, growable: true);
-            nextPos.last += 1;
-            add(data, Pos(data: nextPos), ref);
+            var (_, pos) = widget.sizeData[index];
+            add(data, pos, ref);
           }
         }
       },
@@ -266,10 +264,11 @@ class ViewWrapCustomReorder extends ConsumerWidget {
         sizeData.add((maxSize - stack, parentPos.addLast(children.length)));
       }
       outputWidget.add(DropRegionRow(
-          widgets: subWidget,
-          maxSize: maxSize,
-          sizeData: sizeData,
-          isEmpty: children.isEmpty));
+        widgets: subWidget,
+        maxSize: maxSize,
+        sizeData: sizeData,
+        isEmpty: children.isEmpty,
+      ));
     }
     Widget addButton = Card(
       child: CircleButton(
