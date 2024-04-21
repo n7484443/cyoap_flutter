@@ -605,6 +605,15 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                     label: 'show_result'.i18n,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   ),
+                if (nodeMode == ChoiceNodeMode.unSelectableMode)
+                  ViewSwitchLabel(
+                    () => ref.read(nodeEditorDesignProvider.notifier).update(
+                        (state) => state.copyWith(
+                            executeWhenVisible: design.executeWhenVisible)),
+                    design.executeWhenVisible,
+                    label: 'execute_when_visible'.i18n,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ),
                 if (nodeMode == ChoiceNodeMode.multiSelect)
                   ViewSwitchLabel(
                     () => ref.read(nodeEditorDesignProvider.notifier).update(

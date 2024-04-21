@@ -213,6 +213,7 @@ extension Localization on String {
           'auto_complete': 'Auto Complete',
           'hide_result': 'Hide in viewer',
           'show_result': 'Show in viewer',
+          'execute_when_visible': 'Execute code when visible',
           'slider_mode': 'Slider mode',
 
           'default': 'Default',
@@ -315,6 +316,7 @@ extension Localization on String {
           'auto_complete': '자동 완성',
           'hide_result': '결론창에서 숨기기',
           'show_result': '결론창에서 보이기',
+          'execute_when_visible': '보여질 때 코드 실행',
           'slider_mode': '슬라이더 모드',
 
           'default': '기본',

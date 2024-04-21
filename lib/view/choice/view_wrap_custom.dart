@@ -55,6 +55,7 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
     } else {
       ref.read(choiceStatusProvider(drag).notifier).swapChoice(target);
     }
+    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
   }
 
   @override
