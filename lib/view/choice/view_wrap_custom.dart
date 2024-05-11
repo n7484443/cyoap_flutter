@@ -338,7 +338,7 @@ class ViewWrapCustom extends ConsumerWidget {
     List<Widget> outputWidget = List<Widget>.empty(growable: true);
     var children = ref.watch(choiceStatusProvider(parentPos)).getChildrenList();
     if (children.isEmpty && isInner) {
-      return const SizedBox(height: nodeBaseHeight / 6);
+      return const SizedBox.shrink();
     }
     int stack = 0;
     List<Widget> subWidget = List<Widget>.empty(growable: true);
@@ -386,14 +386,7 @@ class ViewWrapCustom extends ConsumerWidget {
       if (subWidget.length == 1) {
         outputWidget.add(subWidget.first);
       } else {
-        outputWidget.add(
-          IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: subWidget,
-            ),
-          ),
-        );
+
       }
     } else if (!isInner) {
       outputWidget.add(const SizedBox.square(dimension: defaultHeight));

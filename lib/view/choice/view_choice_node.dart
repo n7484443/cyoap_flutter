@@ -428,7 +428,12 @@ class _ViewContentsState extends ConsumerState<ViewContents> {
   void initState() {
     _focusNode = FocusNode();
     _scrollController = AdjustableScrollController();
-    _controller = QuillController.basic();
+    _controller = QuillController(
+      configurations: const QuillControllerConfigurations(),
+      document: Document(),
+      selection: const TextSelection.collapsed(offset: 0),
+      readOnly: true,
+    );
     super.initState();
   }
 
@@ -452,7 +457,6 @@ class _ViewContentsState extends ConsumerState<ViewContents> {
     return QuillEditor(
       configurations: QuillEditorConfigurations(
         controller: _controller!,
-        readOnly: true,
         autoFocus: false,
         expands: false,
         padding: const EdgeInsets.symmetric(vertical: 4),

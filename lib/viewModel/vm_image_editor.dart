@@ -20,7 +20,7 @@ final cropImageProvider = FutureProvider.autoDispose<Uint8List>((ref) async {
       y: cropRect.top.toInt(),
       width: cropRect.width.toInt(),
       height: cropRect.height.toInt());
-  return PngEncoder().encode(output);
+  return encodePng(output, singleFrame: image.numFrames == 1);
 });
 
 final imageCropRatioProvider =

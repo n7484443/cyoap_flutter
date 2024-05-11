@@ -7,6 +7,7 @@ extension Localization on String {
         "en": {
           'language': 'Language Setting',
           'variable': 'Variable',
+          'variable_type': 'Variable type',
           'variable_name': 'Row name',
           'version': 'Version',
           'confirm': 'Ok',
@@ -24,6 +25,7 @@ extension Localization on String {
         "ko": {
           'language': '언어 설정',
           'variable': '변수',
+          'variable_type': '변수 타입',
           'version': '버전',
           'variable_name': '변수명',
           'confirm': '확인',
@@ -174,6 +176,7 @@ extension Localization on String {
 
           'change_data': 'Change data',
           'variable_init': 'Initial value',
+          'variable_init_array': 'Initial value of arrays(seperated by comma)',
           'variable_notation': 'Variable Name',
           'variable_show': 'Show when playing',
           'variable_add': 'Add variable',
@@ -279,6 +282,7 @@ extension Localization on String {
 
           'change_data': '데이터 변경',
           'variable_init': '변수 초기값',
+          'variable_init_array': '변수 배열 초기값(쉼표로 구분)',
           'variable_notation': '변수 표기명',
           'variable_show': '플레이시 표시',
           'variable_add': '초기값 추가',

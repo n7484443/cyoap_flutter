@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 
 import '../../main.dart';
+import '../../model/platform_system.dart';
 import '../../viewModel/choice/vm_choice.dart';
 import '../../viewModel/vm_design_setting.dart';
 import '../../viewModel/vm_selected_grid.dart';
@@ -47,7 +48,7 @@ class _ViewChoicePageState extends ConsumerState<ViewChoicePage> {
     var move = 0.0;
     if (pos < topY + detectedRange) {
       move = pos - (topY + detectedRange);
-    }else if (pos > bottomY - detectedRange) {
+    } else if (pos > bottomY - detectedRange) {
       move = -pos + (bottomY + detectedRange);
     }
     move /= detectedRange;
@@ -62,8 +63,11 @@ class _ViewChoicePageState extends ConsumerState<ViewChoicePage> {
     var childrenLength =
         ref.watch(choiceStatusProvider(pos)).getChildrenList().length;
 
+    var length = getPlatformFileSystem.isEditable
+        ? (childrenLength + 1) * 2
+        : childrenLength * 2;
     var sliverList = List.generate(
-      (childrenLength + 1) * 2,
+      length,
       (index) {
         var realIndex = index ~/ 2;
         var currentPos = pos.addLast(realIndex);

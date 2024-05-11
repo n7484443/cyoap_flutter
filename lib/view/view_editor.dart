@@ -404,7 +404,6 @@ class _ViewTextContentsEditorState
                 expands: true,
                 scrollable: true,
                 autoFocus: true,
-                readOnly: false,
                 showCursor: true,
                 customStyles: ConstList.getDefaultThemeData(context, 1,
                     fontStyle: ConstList.getFontWithColor(preset.mainFont)),

@@ -262,7 +262,6 @@ class _ViewQuillCodeIdeState extends ConsumerState<ViewQuillCodeIde> {
                     locale: ref.watch(localeStateProvider),
                   ),
                   scrollable: false,
-                  readOnly: false,
                   autoFocus: false,
                   padding: EdgeInsets.zero,
                   expands: true,

@@ -146,21 +146,16 @@ class ViewImageEditorContents extends ConsumerWidget {
           child: const Icon(Icons.crop),
           onPressed: () async {
             ref.read(lastImageProvider.notifier).update((state) => null);
-            ref
-                .read(imageListStateProvider.notifier)
-                .addImageToList(image.$1,
-                    data: await ref.read(cropImageProvider.future))
-                .then((value) {
-              var pos = ref.read(nodeEditorTargetPosProvider);
-              if (pos != null) {
-                ref
-                    .read(choiceStatusProvider(pos))
-                    .asChoiceNode()
-                    ?.imageString = image.$1;
-              }
-              ref.read(currentChoicePageProvider.notifier).refresh();
-              ref.read(changeTabProvider.notifier).home(context);
-            });
+            await ref.read(imageListStateProvider.notifier).addImageToList(
+                image.$1,
+                data: await ref.read(cropImageProvider.future));
+            var pos = ref.read(nodeEditorTargetPosProvider);
+            if (pos != null) {
+              ref.read(choiceStatusProvider(pos)).asChoiceNode()?.imageString =
+                  image.$1;
+            }
+            ref.read(currentChoicePageProvider.notifier).refresh();
+            ref.read(changeTabProvider.notifier).home(context);
           },
         ),
       ],

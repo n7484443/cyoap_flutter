@@ -68,9 +68,9 @@ class _ViewGlobalVariableEditorState
         child: IconButton(
           icon: const Icon(Icons.add),
           onPressed: () {
-            ref
-                .read(valueTypeWrapperListProvider.notifier)
-                .addInitialValue('point', ValueTypeWrapper(ValueType.int(0)));
+            ref.read(valueTypeWrapperListProvider.notifier).addInitialValue(
+                'point',
+                ValueTypeWrapper(valueType: getValueTypeFromDynamicInput(0)));
           },
         ),
       ),
@@ -217,7 +217,7 @@ class _ViewGlobalVariableEditorState
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         subtitle: Text(
-                            '${ref.watch(valueTypeWrapperListProvider)[index].$2.valueType}   ${ref.watch(valueTypeWrapperListProvider)[index].$2.displayName}'),
+                            '${ref.watch(valueTypeWrapperListProvider)[index].$2.valueType}\n${ref.watch(valueTypeWrapperListProvider)[index].$2.displayName}    ${ref.watch(valueTypeWrapperListProvider)[index].$2.valueType.type}'),
                         onTap: () {
                           ref
                               .read(currentEditGlobalVariableProvider.notifier)
