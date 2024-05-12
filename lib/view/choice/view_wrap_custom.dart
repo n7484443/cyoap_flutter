@@ -383,11 +383,14 @@ class ViewWrapCustom extends ConsumerWidget {
           .add(Expanded(flex: maxSize - stack, child: const SizedBox.shrink()));
     }
     if (subWidget.isNotEmpty) {
-      if (subWidget.length == 1) {
-        outputWidget.add(subWidget.first);
-      } else {
-
-      }
+      outputWidget.add(
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: subWidget,
+          ),
+        ),
+      );
     } else if (!isInner) {
       outputWidget.add(const SizedBox.square(dimension: defaultHeight));
     }
