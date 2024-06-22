@@ -3,12 +3,16 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../main.dart';
 import '../model/device_preference.dart';
+import '../model/device_preference_util.dart';
 import '../model/platform_file_system.dart';
 import '../model/platform_system.dart';
 import '../util/check_update.dart';
+
+part 'vm_start.g.dart';
 
 final needUpdateStateProvider = StateProvider<String?>((ref) {
   return null;
@@ -20,37 +24,49 @@ final versionProvider = FutureProvider<String>((ref) async {
   return ConstList.version;
 });
 
-final pathListProvider = StateNotifierProvider<PathListNotifier, List<String>>(
-    (ref) => PathListNotifier(ref));
-
 final pathListSelectedProvider = StateProvider<int>((ref) => -1);
 final pathListFileProvider = StateProvider<PlatformFile?>((ref) => null);
 
-final isLoadingStateProvider =
-    StateProvider<bool>((ref) => ConstList.isWeb() ? false : true);
 final loadProjectStateProvider = StateProvider<String>((ref) => '');
 
-class PathListNotifier extends StateNotifier<List<String>> {
-  Ref ref;
-
-  PathListNotifier(this.ref) : super([]);
-
-  Future<void> updateFromState() async {
-    DevicePreference().setFrequentPathFromData(state);
+@riverpod
+class DevicePreferenceState extends _$DevicePreferenceState {
+  @override
+  Map<String, dynamic> build() {
+    return DevicePreference().data;
   }
 
-  Future<void> updateFromData() async {
-    state = await DevicePreference().frequentPathFromData;
+  void update(String name, dynamic value) {
+    DevicePreference().data[name] = value;
+    state = Map.from(DevicePreference().data);
+    DevicePreference().save();
+  }
+}
+
+@riverpod
+class FrequentlyUsedPath extends _$FrequentlyUsedPath {
+  @override
+  List<String> build() {
+    return ref.watch(devicePreferenceStateProvider)['cyoap_frequent_path'];
+  }
+
+  void addPath(String newString){
+    state = [...state, newString];
+    ref.read(devicePreferenceStateProvider.notifier).update('cyoap_frequent_path', state);
+  }
+  void deletePath(int index){
+    state.removeAt(index);
+    state = [...state];
+    ref.read(devicePreferenceStateProvider.notifier).update('cyoap_frequent_path', state);
   }
 
   Future<bool> addDirectory() async {
     String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
-    if (selectedDirectory != null) {
-      state = [...state, selectedDirectory];
-      updateFromState();
-      return true;
+    if (selectedDirectory == null) {
+      return false;
     }
-    return false;
+    addPath(selectedDirectory);
+    return true;
   }
 
   Future<int> addFile() async {
@@ -62,14 +78,14 @@ class PathListNotifier extends StateNotifier<List<String>> {
 
     var data = result.files.single;
     if (ConstList.isWeb()) {
+      addPath(data.name);
       ref.read(pathListFileProvider.notifier).state = data;
-      state = [data.name];
     } else {
-      state = [...state, data.path!];
-      updateFromState();
+      addPath(data.path!);
     }
     return 0;
   }
+
 
   Future<LoadProjectState> openProject() async {
     getPlatformFileSystem.clear();
@@ -86,9 +102,7 @@ class PathListNotifier extends StateNotifier<List<String>> {
     if (path.endsWith('.zip')) {
       var file = File(path);
       if (!await file.exists()) {
-        state.removeAt(index);
-        state = [...state];
-        await updateFromState();
+        deletePath(index);
         return LoadProjectState(ProjectState.nonExist);
       }
       return await PlatformSystem().openPlatformZip(file);
@@ -113,11 +127,9 @@ class PathListNotifier extends StateNotifier<List<String>> {
       if (!(await dialog() ?? false)) {
         return;
       }
-      DevicePreference().removeFolder(state[index]);
+      DevicePreferenceUtil().removeFolder(state[index]);
     }
-    state.removeAt(index);
-    state = [...state];
-    updateFromState();
+    deletePath(index);
   }
 
   set select(int index) {

@@ -8,7 +8,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image/image.dart';
 
 import '../../main.dart';
-import '../../model/device_preference.dart';
+import '../../model/device_preference_util.dart';
 
 class WebpConverterImp extends WebpConverter {
   factory WebpConverterImp() {
@@ -32,7 +32,7 @@ class WebpConverterImpWindows implements WebpConverterImp {
 
   @override
   void init() async {
-    saveAsWebp = await DevicePreference().getVariable('saveAsWebp');
+    saveAsWebp = await DevicePreferenceUtil().getBoolVariable('saveAsWebp');
 
     var startPath = Platform.script.resolve("libwebp.dll").toFilePath();
     // 'windows/libwebp.dll'
@@ -190,7 +190,7 @@ class WebpConverterImpAndroid implements WebpConverterImp {
 
   @override
   void init() async {
-    saveAsWebp = await DevicePreference().getVariable('saveAsWebp');
+    saveAsWebp = await DevicePreferenceUtil().getBoolVariable('saveAsWebp');
   }
 
   @override

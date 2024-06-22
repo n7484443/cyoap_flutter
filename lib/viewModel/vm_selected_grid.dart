@@ -2,12 +2,13 @@ import 'dart:ui';
 
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/main.dart';
-import 'package:cyoap_flutter/model/device_preference.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../model/device_preference.dart';
 
 final selectedchoiceNodeStatusProvider =
     Provider.autoDispose<List<(Pos, int)>>((ref) {

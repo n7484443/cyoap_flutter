@@ -116,7 +116,9 @@ class ViewStart extends ConsumerWidget {
                 TextButton(
                   child: Text('add_file'.i18n),
                   onPressed: () async {
-                    if (await ref.read(pathListProvider.notifier).addFile() ==
+                    if (await ref
+                            .read(frequentlyUsedPathProvider.notifier)
+                            .addFile() ==
                         0) {
                       ref.read(pathListSelectedProvider.notifier).state = 0;
                     }
@@ -133,12 +135,11 @@ class ViewStart extends ConsumerWidget {
                           builder: (context) => const ViewAddProjectDialog(),
                           barrierDismissible: false,
                         );
-                      } else {
-                        if (await ref
-                            .read(pathListProvider.notifier)
-                            .addDirectory()) {
-                          ref.read(pathListSelectedProvider.notifier).state = 0;
-                        }
+                      } else if (await ref
+                          .read(frequentlyUsedPathProvider.notifier)
+                          .addDirectory()) {
+                        ref.read(pathListSelectedProvider.notifier).state =
+                            ref.read(frequentlyUsedPathProvider).length - 1;
                       }
                     },
                   ),
@@ -167,22 +168,9 @@ class ViewProjectList extends ConsumerStatefulWidget {
 
 class _ViewProjectListState extends ConsumerState<ViewProjectList> {
   @override
-  void initState() {
-    super.initState();
-    if (!ConstList.isWeb()) {
-      ref.read(pathListProvider.notifier).updateFromData().then(
-          (value) => ref.read(isLoadingStateProvider.notifier).state = false);
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    if (ref.watch(isLoadingStateProvider)) {
-      return const SizedBox.square(
-          dimension: 50, child: CircularProgressIndicator());
-    }
     return ListView.builder(
-      itemCount: ref.watch(pathListProvider).length,
+      itemCount: ref.watch(frequentlyUsedPathProvider).length,
       itemBuilder: (context, index) {
         return ListTile(
           title: OutlinedButton(
@@ -195,7 +183,7 @@ class _ViewProjectListState extends ConsumerState<ViewProjectList> {
                 : null,
             child: Padding(
               padding: const EdgeInsets.all(4.0),
-              child: Text(ref.watch(pathListProvider)[index]),
+              child: Text(ref.watch(frequentlyUsedPathProvider)[index]),
             ),
           ),
           trailing: ConstList.isWeb()
@@ -203,7 +191,9 @@ class _ViewProjectListState extends ConsumerState<ViewProjectList> {
               : IconButton(
                   icon: const Icon(Icons.delete),
                   onPressed: () {
-                    ref.read(pathListProvider.notifier).removeFrequentPath(
+                    ref
+                        .read(frequentlyUsedPathProvider.notifier)
+                        .removeFrequentPath(
                           index,
                           () async => await showDialog<bool?>(
                             context: context,
@@ -235,8 +225,9 @@ class SelectMode extends ConsumerWidget {
                 context: context,
                 builder: (context) => const ViewLoadingDialog(),
               );
-              LoadProjectState loadState =
-                  await ref.read(pathListProvider.notifier).openProject();
+              LoadProjectState loadState = await ref
+                  .read(frequentlyUsedPathProvider.notifier)
+                  .openProject();
               Navigator.pop(context);
               switch (loadState.state) {
                 case ProjectState.success:
@@ -280,8 +271,9 @@ class SelectMode extends ConsumerWidget {
                 context: context,
                 builder: (context) => const ViewLoadingDialog(),
               );
-              LoadProjectState loadState =
-                  await ref.read(pathListProvider.notifier).openProject();
+              LoadProjectState loadState = await ref
+                  .read(frequentlyUsedPathProvider.notifier)
+                  .openProject();
               Navigator.pop(context);
               switch (loadState.state) {
                 case ProjectState.success:
@@ -366,7 +358,7 @@ class _ViewAddProjectDialogState extends ConsumerState<ViewAddProjectDialog> {
               var path = await DevicePreference.getProjectFolder(
                   _textEditingController?.text);
               await Directory(path).create(recursive: true);
-              await ref.read(pathListProvider.notifier).updateFromData();
+              ref.read(frequentlyUsedPathProvider.notifier).addPath(path);
             }
           },
           child: Text('create'.i18n),
@@ -406,18 +398,16 @@ class ViewLanguageDialog extends ConsumerWidget {
       scrollable: true,
       title: Text('language'.i18n),
       content: Column(
-        children: ConstList.localeMap.keys
+        children: DevicePreference.localeMap.keys
             .map(
-              (e) => ListTile(
-                title: Text(e),
+              (name) => ListTile(
+                title: Text(DevicePreference.localeMap[name]!),
                 onTap: () {
-                  I18n.of(context).locale = ConstList.localeMap[e];
-                  ref.read(localeStateProvider.notifier).state =
-                      ConstList.localeMap[e];
-                  DevicePreference.setLocaleName(e);
+                  ref.read(localeStateProvider.notifier).state = Locale(name);
+                  I18n.of(context).locale = Locale(name);
                   Navigator.of(context).pop();
                 },
-                selected: ConstList.localeMap[e] == I18n.locale,
+                selected: name == I18n.locale.toString().toLowerCase(),
               ),
             )
             .toList(),
@@ -433,25 +423,37 @@ class ViewGlobalSettingDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var asyncValue = ref.watch(saveAsWebpProvider).value ?? true;
+    var asyncValue = ref.watch(saveAsWebpProvider);
     return AlertDialog(
       scrollable: true,
       title: Text('settings'.i18n),
       content: Column(
         children: [
-          ViewSwitchLabel(
-            () {
-              ref.read(saveAsWebpProvider.notifier).setVariable(!asyncValue);
-            },
-            asyncValue,
-            label: "save_as_webp".i18n,
+          Padding(
+            padding: const EdgeInsets.all(ConstList.padding),
+            child: ViewSwitchLabel(
+              () {
+                ref.read(saveAsWebpProvider.notifier).rev();
+              },
+              asyncValue,
+              label: "save_as_webp".i18n,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            ),
           ),
-          ViewSwitchLabel(
-            () {
-              ref.read(forceWideProvider.notifier).rev();
-            },
-            ref.watch(forceWideProvider),
-            label: "force_wide".i18n,
+          Padding(
+            padding: const EdgeInsets.all(ConstList.padding),
+            child: ViewSwitchLabel(
+              () {
+                ref.read(forceWideProvider.notifier).rev();
+              },
+              ref.watch(forceWideProvider),
+              label: "force_wide".i18n,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.all(ConstList.padding),
+            child: MaximumClipboardSettingInput(),
           ),
           TextButton(
               onPressed: () {
@@ -461,6 +463,60 @@ class ViewGlobalSettingDialog extends ConsumerWidget {
               child: Text("font_licenses".i18n)),
         ],
       ),
+    );
+  }
+}
+
+class MaximumClipboardSettingInput extends ConsumerStatefulWidget {
+  const MaximumClipboardSettingInput({super.key});
+
+  @override
+  ConsumerState createState() => _MaximumClipboardSettingInputState();
+}
+
+class _MaximumClipboardSettingInputState
+    extends ConsumerState<MaximumClipboardSettingInput> {
+  TextEditingController? _controller;
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(
+      text: ref.read(clipboardMaximumCapacityProvider).toString()
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller?.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text('clipboard_maximum'.i18n),
+        Expanded(
+          child: TextField(
+            controller: _controller,
+            keyboardType: TextInputType.number,
+            maxLength: 3,
+            decoration: const InputDecoration(
+              isDense: true,
+              isCollapsed: true,
+              counterText: '',
+            ),
+            textAlign: TextAlign.center,
+            onChanged: (String value) {
+              var t = int.tryParse(value);
+              if (t != null) {
+                ref.read(clipboardMaximumCapacityProvider.notifier).setVariable(t);
+              }
+            },
+          ),
+        ),
+      ],
     );
   }
 }

@@ -5,7 +5,6 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:cyoap_core/choiceNode/choice_line.dart';
-import 'package:cyoap_flutter/model/device_preference.dart';
 import 'package:cyoap_flutter/model/image_db.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,6 +13,7 @@ import 'package:path/path.dart';
 import '../main.dart';
 import '../util/icc_file_parsing.dart';
 import '../util/platform_specified_util/platform_specified.dart';
+import 'device_preference.dart';
 import 'platform.dart';
 
 enum ProjectState { nonExist, success, fail, cyoapError }

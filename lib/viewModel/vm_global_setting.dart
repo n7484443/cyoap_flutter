@@ -1,8 +1,7 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cyoap_flutter/viewModel/vm_start.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../main.dart';
-import '../model/device_preference.dart';
 import '../util/platform_specified_util/webp_converter.dart';
 
 part 'vm_global_setting.g.dart';
@@ -10,45 +9,47 @@ part 'vm_global_setting.g.dart';
 @riverpod
 class SaveAsWebp extends _$SaveAsWebp {
   @override
-  FutureOr<bool> build() async {
-    var out = await DevicePreference().getVariable('saveAsWebp');
-    WebpConverter.instance?.saveAsWebp = out;
-    return out;
-  }
-
-  Future<void> setVariable(bool value) async {
-    state = AsyncData(value);
-    WebpConverter.instance?.saveAsWebp = value;
-    await DevicePreference().setVariable('saveAsWebp', value);
-  }
-}
-
-final forceWideProvider =
-    StateNotifierProvider<ForceWideStateNotifier, bool>((ref) {
-  ref.listenSelf((previous, next) {
-    DevicePreference().setVariable('forceWide', next);
-  });
-  return ForceWideStateNotifier();
-});
-
-class ForceWideStateNotifier extends StateNotifier<bool> {
-  ForceWideStateNotifier() : super(true) {
-    init();
-  }
-
-  void init() async {
-    state = await DevicePreference()
-        .getVariable('forceWide', isEmpty: !ConstList.isMobile());
+  bool build() {
+    var data = ref.watch(devicePreferenceStateProvider)['saveAsWebp'];
+    WebpConverter.instance?.saveAsWebp = data;
+    return data;
   }
 
   void rev() {
-    state = !state;
+    WebpConverter.instance?.saveAsWebp = !state;
+    ref.read(devicePreferenceStateProvider.notifier).update('saveAsWebp', !state);
   }
 }
 
-final maximumSizeProvider = Provider<int>((ref) {
+@riverpod
+class ForceWide extends _$ForceWide {
+  @override
+  bool build() {
+    var data = ref.watch(devicePreferenceStateProvider)['forceWide'];
+    return data;
+  }
+
+  void rev() {
+    ref.read(devicePreferenceStateProvider.notifier).update('forceWide', !state);
+  }
+}
+
+@riverpod
+class ClipboardMaximumCapacity extends _$ClipboardMaximumCapacity {
+  @override
+  int build() {
+    return ref.watch(devicePreferenceStateProvider)['clipboardMaximumCapacity'];
+  }
+
+  void setVariable(int value) {
+    ref.read(devicePreferenceStateProvider.notifier).update('clipboardMaximumCapacity', value);
+  }
+}
+
+@riverpod
+int maximumSize(MaximumSizeRef ref) {
   if (ConstList.isMobile()) {
     return ref.watch(forceWideProvider) ? 12 : 6;
   }
   return 12;
-});
+}

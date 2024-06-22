@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:cyoap_core/option.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart'
@@ -10,6 +9,7 @@ import 'package:cyoap_flutter/view/view_font_source.dart';
 import 'package:cyoap_flutter/view/view_make_platform.dart';
 import 'package:cyoap_flutter/view/view_play.dart';
 import 'package:cyoap_flutter/view/view_start.dart';
+import 'package:cyoap_flutter/viewModel/vm_start.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -143,10 +143,9 @@ class ConstList {
 
   static Future<void> preInit() async {
     await platform_specified.loadLibrary();
+    await DevicePreference().load();
     platform_specified.PlatformSpecified().preInit();
-    currentLocaleName = (await DevicePreference.getLocaleName())?.trim();
-    Option().locale = currentLocaleName?.toLowerCase();
-    currentThemeMode = await DevicePreference.getThemeMode();
+    // currentLocaleName = (await DevicePreferenceUtil.getLocaleName())?.trim();
     return;
   }
 
@@ -154,21 +153,11 @@ class ConstList {
     return isSmallDisplay(context) ? 0.85 : 1.0;
   }
 
-  static String? currentLocaleName;
-
-  static Locale? get currentLocale =>
-      currentLocaleName == null ? null : localeMap[currentLocaleName];
-
-  static ThemeMode currentThemeMode = ThemeMode.light;
-
-  static Map<String, Locale> localeMap = const {
-    'English': Locale('en'),
-    '한국어': Locale('ko'),
-  };
-
   static TextTheme getCurrentFont(BuildContext context) {
     return Theme.of(context).textTheme;
   }
+
+  static int clipboardMaximumCapacity = 10;
 }
 
 const String sentryDsn =
@@ -176,16 +165,17 @@ const String sentryDsn =
 
 final localeStateProvider = StateProvider<Locale?>((ref) {
   ref.listenSelf((previous, next) {
+    ref.read(devicePreferenceStateProvider.notifier).update("cyoap_language", next?.toString().toLowerCase());
     Option().locale = next?.toString().toLowerCase();
   });
-  return ConstList.currentLocale;
+  return DevicePreference().getLocale();
 });
 
 final themeStateProvider = StateProvider<ThemeMode>((ref) {
   ref.listenSelf((previous, next) {
-    DevicePreference.setThemeMode(next);
+    ref.read(devicePreferenceStateProvider.notifier).update("cyoap_theme", next == ThemeMode.dark ? "dark" : "light");
   });
-  return ConstList.currentThemeMode;
+  return DevicePreference().getThemeMode();
 });
 
 void main() async {
@@ -210,11 +200,11 @@ void main() async {
     },
     appRunner: () => runApp(
       ProviderScope(
-        child: I18n(
-          initialLocale: ConstList.currentLocale,
-          child: Consumer(
-            builder: (context, ref, child) {
-              return MaterialApp(
+        child: Consumer(
+          builder: (context, ref, child) {
+            return I18n(
+              initialLocale: ref.watch(localeStateProvider),
+              child: MaterialApp(
                 locale: ref.watch(localeStateProvider),
                 localizationsDelegates: [
                   GlobalMaterialLocalizations.delegate,
@@ -237,9 +227,9 @@ void main() async {
                 darkTheme: appThemeDark,
                 themeMode: ref.watch(themeStateProvider),
                 debugShowCheckedModeBanner: false,
-              );
-            },
-          ),
+              ),
+            );
+          }
         ),
       ),
     ),

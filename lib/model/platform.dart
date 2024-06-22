@@ -9,12 +9,13 @@ import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:flutter/material.dart';
 
+import '../main.dart';
 import 'clipboard.dart';
 
 const int designSamplePosition = -100;
 
 class AbstractPlatform extends PlayablePlatform {
-  Clipboard clipboard = Clipboard();
+  Clipboard clipboard;
 
   ListQueue<Color> lastColorList =
       ListQueue.from(List.filled(10, Colors.black));
@@ -42,8 +43,13 @@ class AbstractPlatform extends PlayablePlatform {
     updateStatus();
   }
 
-  AbstractPlatform.none() : super();
-  AbstractPlatform.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
+  AbstractPlatform.none()
+      : clipboard = Clipboard(ConstList.clipboardMaximumCapacity),
+        super();
+
+  AbstractPlatform.fromJson(Map<String, dynamic> json)
+      : clipboard = Clipboard.fromJson(json['clipboard'] ?? {}),
+        super.fromJson(json) {
     if (json['lastColorList'] != null) {
       lastColorList = ListQueue.from(
           (json['lastColorList'] as List).map((e) => Color(e)).toList());
@@ -58,6 +64,7 @@ class AbstractPlatform extends PlayablePlatform {
       'globalSetting': globalSetting.map((e) => [e.$1, e.$2.toJson()]).toList(),
       'currentFileVersion': super.currentFileVersion,
       'lastColorList': lastColorList.map((e) => e.value).toList(),
+      'clipboard': clipboard.toJson(),
     };
     out.addAll(designSetting.toJson());
     return out;

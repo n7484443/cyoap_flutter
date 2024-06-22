@@ -31,4 +31,18 @@ class Clipboard {
       choice.checkDataCorrect();
     }
   }
+
+  Clipboard(this.length);
+
+  Map<String, dynamic> toJson() {
+    return {
+      'queue': queue.map((e) => e.toJson()).toList(),
+      'length': length,
+    };
+  }
+
+  Clipboard.fromJson(Map<String, dynamic> json) {
+    queue = Queue.from(((json['queue'] as List?) ?? []).map((e) => ChoiceNode.fromJson(e)).toList());
+    length = json['length'] ?? 3;
+  }
 }
