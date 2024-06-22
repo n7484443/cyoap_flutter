@@ -16,11 +16,6 @@ class DevicePreferenceUtil {
     await directory.delete(recursive: true);
   }
 
-  static Future<bool> setFrequentPathFromData(List<String> pathList) async {
-    var prefs = await SharedPreferences.getInstance();
-    return prefs.setStringList('cyoap_frequent_path', pathList);
-  }
-
   Future<bool> getBoolVariable(String option, {defaultValue = true}) async {
     var prefs = await SharedPreferences.getInstance();
     return prefs.getBool(option) ?? defaultValue;
