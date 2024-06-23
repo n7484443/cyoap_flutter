@@ -249,6 +249,7 @@ extension Localization on String {
           'selected': 'Selected',
 
           'modify_size': 'Modify size',
+          'modify_preset': 'Modify design preset',
           'random_show': 'Random',
           'copy': 'Copy',
           'delete': 'Delete',
@@ -352,6 +353,7 @@ extension Localization on String {
           'selected': '선택',
 
           'modify_size': '크기 수정',
+          'modify_preset': '디자인 프리셋 수정',
           'random_show': '랜덤',
           'copy': '복사',
           'delete': '삭제',

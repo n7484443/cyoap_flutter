@@ -35,11 +35,11 @@ class ChoiceNodeClipboardNotifier extends ChangeNotifier {
 
   ChoiceNode getIndexPos(Pos pos) {
     var node = getIndex(-pos.first - constClipboard);
-    if(pos.length == 1){
+    if (pos.length == 1) {
       return node;
     }
     var pointer = pos.removeFirst();
-    while(pointer.length > 0){
+    while (pointer.length > 0) {
       node = node.children[pointer.first] as ChoiceNode;
       pointer = pointer.removeFirst();
     }

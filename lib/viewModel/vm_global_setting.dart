@@ -17,7 +17,9 @@ class SaveAsWebp extends _$SaveAsWebp {
 
   void rev() {
     WebpConverter.instance?.saveAsWebp = !state;
-    ref.read(devicePreferenceStateProvider.notifier).update('saveAsWebp', !state);
+    ref
+        .read(devicePreferenceStateProvider.notifier)
+        .update('saveAsWebp', !state);
   }
 }
 
@@ -30,7 +32,9 @@ class ForceWide extends _$ForceWide {
   }
 
   void rev() {
-    ref.read(devicePreferenceStateProvider.notifier).update('forceWide', !state);
+    ref
+        .read(devicePreferenceStateProvider.notifier)
+        .update('forceWide', !state);
   }
 }
 
@@ -42,7 +46,9 @@ class ClipboardMaximumCapacity extends _$ClipboardMaximumCapacity {
   }
 
   void setVariable(int value) {
-    ref.read(devicePreferenceStateProvider.notifier).update('clipboardMaximumCapacity', value);
+    ref
+        .read(devicePreferenceStateProvider.notifier)
+        .update('clipboardMaximumCapacity', value);
   }
 }
 

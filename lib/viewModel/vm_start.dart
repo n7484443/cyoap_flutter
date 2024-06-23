@@ -50,14 +50,19 @@ class FrequentlyUsedPath extends _$FrequentlyUsedPath {
     return ref.watch(devicePreferenceStateProvider)['cyoap_frequent_path'];
   }
 
-  void addPath(String newString){
+  void addPath(String newString) {
     state = [...state, newString];
-    ref.read(devicePreferenceStateProvider.notifier).update('cyoap_frequent_path', state);
+    ref
+        .read(devicePreferenceStateProvider.notifier)
+        .update('cyoap_frequent_path', state);
   }
-  void deletePath(int index){
+
+  void deletePath(int index) {
     state.removeAt(index);
     state = [...state];
-    ref.read(devicePreferenceStateProvider.notifier).update('cyoap_frequent_path', state);
+    ref
+        .read(devicePreferenceStateProvider.notifier)
+        .update('cyoap_frequent_path', state);
   }
 
   Future<bool> addDirectory() async {
@@ -85,7 +90,6 @@ class FrequentlyUsedPath extends _$FrequentlyUsedPath {
     }
     return 0;
   }
-
 
   Future<LoadProjectState> openProject() async {
     getPlatformFileSystem.clear();

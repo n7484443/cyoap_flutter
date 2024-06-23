@@ -81,7 +81,8 @@ final controllerIdeProvider = Provider.autoDispose<QuillController>((ref) {
             shouldNotifyListeners: false);
       }
     });
-    node.conditionalCodeHandler.executeCodeString = controller.document.toPlainText();
+    node.conditionalCodeHandler.executeCodeString =
+        controller.document.toPlainText();
   });
   ref.onDispose(() {
     controller.dispose();

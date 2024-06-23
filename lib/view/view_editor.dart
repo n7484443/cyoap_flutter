@@ -352,8 +352,11 @@ class _ViewTextContentsEditorState
     var design = ref.watch(nodeEditorDesignProvider);
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
 
-    var fontSize = [10, 11, 12, 14, 16, 18, 21, 24, 36, 48, 60, 72].map((e) => e.toString()).toList();
-    print(ConstList.textFontList.map((k, v) => MapEntry(k, v.fontFamily!.split("_")[0])));
+    var fontSize = [10, 11, 12, 14, 16, 18, 21, 24, 36, 48, 60, 72]
+        .map((e) => e.toString())
+        .toList();
+    print(ConstList.textFontList
+        .map((k, v) => MapEntry(k, v.fontFamily!.split("_")[0])));
     return Column(
       children: [
         Padding(
@@ -378,7 +381,8 @@ class _ViewTextContentsEditorState
               multiRowsDisplay: true,
               showIndent: true,
               showFontFamily: true,
-              fontFamilyValues: ConstList.textFontList.map((k, v) => MapEntry(k, v.fontFamily!)),
+              fontFamilyValues: ConstList.textFontList
+                  .map((k, v) => MapEntry(k, v.fontFamily!)),
               fontSizesValues: Map.fromIterables(fontSize, fontSize),
               customButtons: [
                 QuillToolbarCustomButtonOptions(

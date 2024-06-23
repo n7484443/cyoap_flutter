@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:context_menus/context_menus.dart';
 import 'package:cyoap_core/option.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart'
     deferred as platform_specified;
@@ -165,7 +166,9 @@ const String sentryDsn =
 
 final localeStateProvider = StateProvider<Locale?>((ref) {
   ref.listenSelf((previous, next) {
-    ref.read(devicePreferenceStateProvider.notifier).update("cyoap_language", next?.toString().toLowerCase());
+    ref
+        .read(devicePreferenceStateProvider.notifier)
+        .update("cyoap_language", next?.toString().toLowerCase());
     Option().locale = next?.toString().toLowerCase();
   });
   return DevicePreference().getLocale();
@@ -173,7 +176,9 @@ final localeStateProvider = StateProvider<Locale?>((ref) {
 
 final themeStateProvider = StateProvider<ThemeMode>((ref) {
   ref.listenSelf((previous, next) {
-    ref.read(devicePreferenceStateProvider.notifier).update("cyoap_theme", next == ThemeMode.dark ? "dark" : "light");
+    ref
+        .read(devicePreferenceStateProvider.notifier)
+        .update("cyoap_theme", next == ThemeMode.dark ? "dark" : "light");
   });
   return DevicePreference().getThemeMode();
 });
@@ -200,10 +205,10 @@ void main() async {
     },
     appRunner: () => runApp(
       ProviderScope(
-        child: Consumer(
-          builder: (context, ref, child) {
-            return I18n(
-              initialLocale: ref.watch(localeStateProvider),
+        child: Consumer(builder: (context, ref, child) {
+          return I18n(
+            initialLocale: ref.watch(localeStateProvider),
+            child: ContextMenuOverlay(
               child: MaterialApp(
                 locale: ref.watch(localeStateProvider),
                 localizationsDelegates: [
@@ -228,9 +233,9 @@ void main() async {
                 themeMode: ref.watch(themeStateProvider),
                 debugShowCheckedModeBanner: false,
               ),
-            );
-          }
-        ),
+            ),
+          );
+        }),
       ),
     ),
   );

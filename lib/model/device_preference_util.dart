@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class DevicePreferenceUtil {
   Future<int> get androidVersion async {
     var deviceInfoPlugin = DeviceInfoPlugin();
@@ -36,7 +35,8 @@ class DevicePreferenceUtil {
     await prefs.setInt(option, data);
   }
 
-  Future<List<String>> getStringListVariable(String option, {List<String> defaultValue = const []}) async {
+  Future<List<String>> getStringListVariable(String option,
+      {List<String> defaultValue = const []}) async {
     var prefs = await SharedPreferences.getInstance();
     return prefs.getStringList(option) ?? defaultValue;
   }

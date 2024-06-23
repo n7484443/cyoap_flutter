@@ -61,7 +61,8 @@ class DevicePreference {
       if (!await directory.exists()) {
         await directory.create(recursive: true);
       }
-      data["cyoap_frequent_path"] = directory.listSync().map((e) => e.path).toList();
+      data["cyoap_frequent_path"] =
+          directory.listSync().map((e) => e.path).toList();
     }
   }
 
@@ -117,23 +118,23 @@ class DevicePreference {
     return name!;
   }
 
-  ThemeMode getThemeMode(){
+  ThemeMode getThemeMode() {
     return data['cyoap_theme'] == 'dark' ? ThemeMode.dark : ThemeMode.light;
   }
 
   static Map<String, String> localeMap = const {
-    'en': 'English' ,
+    'en': 'English',
     'ko': '한국어',
   };
 
-  Locale getLocale(){
+  Locale getLocale() {
     return Locale(data['cyoap_language'] ?? 'en');
   }
 
-  void setThemeMode(ThemeMode mode){
-    if(mode == ThemeMode.light){
+  void setThemeMode(ThemeMode mode) {
+    if (mode == ThemeMode.light) {
       data['cyoap_theme'] == 'light';
-    }else{
+    } else {
       data['cyoap_theme'] == 'dark';
     }
   }

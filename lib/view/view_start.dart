@@ -481,8 +481,7 @@ class _MaximumClipboardSettingInputState
   void initState() {
     super.initState();
     _controller = TextEditingController(
-      text: ref.read(clipboardMaximumCapacityProvider).toString()
-    );
+        text: ref.read(clipboardMaximumCapacityProvider).toString());
   }
 
   @override
@@ -511,7 +510,9 @@ class _MaximumClipboardSettingInputState
             onChanged: (String value) {
               var t = int.tryParse(value);
               if (t != null) {
-                ref.read(clipboardMaximumCapacityProvider.notifier).setVariable(t);
+                ref
+                    .read(clipboardMaximumCapacityProvider.notifier)
+                    .setVariable(t);
               }
             },
           ),

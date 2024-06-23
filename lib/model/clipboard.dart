@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 
 const int constClipboard = 1;
+
 class Clipboard {
   Queue<ChoiceNode> queue = Queue();
   int length = 10;
@@ -24,8 +25,8 @@ class Clipboard {
     return node.clone();
   }
 
-  void update(){
-    for(var i = 0; i < queue.length; i++){
+  void update() {
+    for (var i = 0; i < queue.length; i++) {
       var choice = queue.elementAt(i);
       choice.currentPos = -i - constClipboard;
       choice.checkDataCorrect();
@@ -42,7 +43,9 @@ class Clipboard {
   }
 
   Clipboard.fromJson(Map<String, dynamic> json) {
-    queue = Queue.from(((json['queue'] as List?) ?? []).map((e) => ChoiceNode.fromJson(e)).toList());
-    length = json['length'] ?? 3;
+    queue = Queue.from(((json['queue'] as List?) ?? [])
+        .map((e) => ChoiceNode.fromJson(e))
+        .toList());
+    length = json['length'] ?? length;
   }
 }

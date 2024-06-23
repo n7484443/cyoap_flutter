@@ -67,6 +67,7 @@ dependencies:
   flutter_riverpod: ^2.4.9
   riverpod_annotation: ^2.3.3
   super_drag_and_drop: ^0.8.12
+  context_menus: ^2.0.0
 
 dev_dependencies:
   flutter_test:

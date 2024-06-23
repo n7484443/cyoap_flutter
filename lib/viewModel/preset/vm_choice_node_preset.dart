@@ -181,11 +181,16 @@ final choiceNodePresetCurrentEditRoundProvider =
     ref.invalidateSelf();
   });
   var controller = TextEditingController(
-      text: ref.read(choiceNodePresetCurrentEditProvider).roundEdge[index].toString());
+      text: ref
+          .read(choiceNodePresetCurrentEditProvider)
+          .roundEdge[index]
+          .toString());
   controller.addListener(() {
     EasyDebounce.debounce('Round Input $index', ConstList.debounceDuration, () {
       var round = double.tryParse(controller.text) ?? 0.0;
-      var currentRound = [...ref.read(choiceNodePresetCurrentEditProvider).roundEdge];
+      var currentRound = [
+        ...ref.read(choiceNodePresetCurrentEditProvider).roundEdge
+      ];
       currentRound[index] = round;
       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
           ref.watch(currentPresetIndexProvider),
@@ -207,7 +212,10 @@ final choiceNodePresetCurrentEditPaddingProvider =
     ref.invalidateSelf();
   });
   var controller = TextEditingController(
-      text: ref.read(choiceNodePresetCurrentEditProvider).paddingAround[0].toString());
+      text: ref
+          .read(choiceNodePresetCurrentEditProvider)
+          .paddingAround[0]
+          .toString());
   controller.addListener(() {
     EasyDebounce.debounce('Padding Input', ConstList.debounceDuration, () {
       var padding = double.tryParse(controller.text) ?? 0.0;

@@ -2,14 +2,16 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:context_menus/context_menus.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
+import 'package:cyoap_flutter/view/choice/view_choice_node_dialog.dart';
+import 'package:cyoap_flutter/view/choice/view_wrap_custom.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
-import 'package:cyoap_flutter/view/choice/view_wrap_custom.dart';
 import 'package:cyoap_flutter/viewModel/choice/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/vm_editor.dart'
     show nodeEditorTargetPosProvider;
@@ -53,7 +55,6 @@ class NodeDraggable extends ConsumerWidget {
   }
 }
 
-
 class ViewChoiceNode extends ConsumerWidget {
   final Pos pos;
   final bool ignoreOpacity;
@@ -74,13 +75,45 @@ class ViewChoiceNode extends ConsumerWidget {
     }
 
     if (ref.watch(isEditableProvider(pos: pos)) && !ignoreOption) {
-      return Opacity(
-        opacity: ref.watch(opacityProvider(pos)),
-        child: Stack(
-          children: [
-            ViewChoiceNodeMain(pos,
-                ignoreChild: ignoreChild, ignoreOption: ignoreOption),
-            if (ref.watch(isEditableProvider(pos: pos)) && !ignoreOption)
+      var popupList = [
+        (
+          'modify_size'.i18n,
+          () {
+            showDialog(
+              context: context,
+              builder: (builder) => SizeDialog(pos),
+            );
+          }
+        ),
+        (
+          'modify_preset'.i18n,
+          () {
+            showDialog(
+              context: context,
+              builder: (builder) => PresetDialog(pos),
+            );
+          }
+        ),
+        (
+          'copy'.i18n,
+          () {
+            ref.read(choiceStatusProvider(pos)).copyData();
+          }
+        ),
+        (
+          'delete'.i18n,
+          () {
+            ref.read(choiceStatusProvider(pos)).removeData();
+          }
+        ),
+      ];
+      if (ConstList.isMobile()) {
+        return Opacity(
+          opacity: ref.watch(opacityProvider(pos)),
+          child: Stack(
+            children: [
+              ViewChoiceNodeMain(pos,
+                  ignoreChild: ignoreChild, ignoreOption: ignoreOption),
               Align(
                 alignment: Alignment.topRight,
                 child: CircleAvatar(
@@ -88,42 +121,44 @@ class ViewChoiceNode extends ConsumerWidget {
                   child: PopupMenuButton<int>(
                     padding: EdgeInsets.zero,
                     icon: const Icon(Icons.more_vert),
-                    popUpAnimationStyle: AnimationStyle(duration: ConstList.durationAnimation),
+                    popUpAnimationStyle:
+                        AnimationStyle(duration: ConstList.durationAnimation),
                     onSelected: (result) {
-                      switch (result) {
-                        case 0:
-                          showDialog(
-                            context: context,
-                            builder: (builder) => SizeDialog(pos),
-                          );
-                          break;
-                        case 1:
-                          ref.read(choiceStatusProvider(pos)).copyData();
-                          break;
-                        case 2:
-                          ref.read(choiceStatusProvider(pos)).removeData();
-                          break;
-                      }
+                      popupList[result].$2();
                     },
                     itemBuilder: (context) {
-                      return [
-                        PopupMenuItem(
-                          value: 0,
-                          child: Text('modify_size'.i18n),
-                        ),
-                        PopupMenuItem(
-                          value: 1,
-                          child: Text('copy'.i18n),
-                        ),
-                        PopupMenuItem(
-                          value: 2,
-                          child: Text('delete'.i18n),
-                        ),
-                      ];
+                      return List.generate(
+                          popupList.length,
+                          (index) => PopupMenuItem(
+                                value: index,
+                                child: Text(popupList[index].$1),
+                              ));
                     },
                   ),
                 ),
               ),
+            ],
+          ),
+        );
+      }
+      return Opacity(
+        opacity: ref.watch(opacityProvider(pos)),
+        child: Stack(
+          children: [
+            ContextMenuRegion(
+              contextMenu: GenericContextMenu(
+                buttonConfigs: List.generate(
+                  popupList.length,
+                  (index) => ContextMenuButtonConfig(
+                    popupList[index].$1,
+                    onPressed: popupList[index].$2,
+                  ),
+                ),
+              ),
+              isEnabled: !ConstList.isMobile(),
+              child: ViewChoiceNodeMain(pos,
+                  ignoreChild: ignoreChild, ignoreOption: ignoreOption),
+            ),
           ],
         ),
       );
@@ -254,46 +289,6 @@ class ViewChoiceNodeMain extends ConsumerWidget {
       elevation: preset.elevation,
       color: Colors.transparent,
       child: innerWidget,
-    );
-  }
-}
-
-class SizeDialog extends ConsumerWidget {
-  final Pos pos;
-
-  const SizeDialog(this.pos, {super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    var width = ref.watch(choiceNodeSizeProvider(pos));
-    var str = width == 0 ? 'max' : width.toString();
-    return AlertDialog(
-      scrollable: true,
-      alignment: Alignment.center,
-      title: Text('modify_size'.i18n, textAlign: TextAlign.center),
-      content: SizedBox(
-        width: 400,
-        height: 100,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('${'length'.i18n} : $str',
-                style: Theme.of(context).textTheme.titleMedium),
-            Slider(
-              onChanged: (double value) {
-                ref
-                    .read(choiceNodeSizeProvider(pos).notifier)
-                    .sizeChange(value.toInt());
-              },
-              value: width.toDouble(),
-              divisions: defaultMaxSize,
-              max: defaultMaxSize.toDouble(),
-              min: 0,
-              label: str,
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
