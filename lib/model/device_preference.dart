@@ -21,7 +21,7 @@ class DevicePreference {
     "saveAsWebp": false,
     "forceWide": true,
     "clipboardMaximumCapacity": 10,
-    "cyoap_frequent_path": [],
+    "cyoap_frequent_path": <String>[],
     "cyoap_language": "en",
     "cyoap_theme": "light",
   };
@@ -54,6 +54,14 @@ class DevicePreference {
           break;
       }
       data[name] = value;
+    }
+    if (ConstList.isMobile()) {
+      var dir = await getProjectFolder(null);
+      var directory = Directory(dir);
+      if (!await directory.exists()) {
+        await directory.create(recursive: true);
+      }
+      data["cyoap_frequent_path"] = directory.listSync().map((e) => e.path).toList();
     }
   }
 
@@ -107,19 +115,6 @@ class DevicePreference {
       return "${dir.path}/project/$name";
     }
     return name!;
-  }
-
-  Future<List<String>> get frequentPathFromData async {
-    if (ConstList.isMobile()) {
-      var dir = await getProjectFolder(null);
-      var directory = Directory(dir);
-      if (!await directory.exists()) {
-        await directory.create(recursive: true);
-      }
-      return directory.listSync().map((e) => e.path).toList();
-    } else {
-      return data["cyoap_frequent_path"];
-    }
   }
 
   ThemeMode getThemeMode(){
