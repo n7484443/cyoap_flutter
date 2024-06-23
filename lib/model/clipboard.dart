@@ -5,7 +5,7 @@ import 'package:cyoap_core/choiceNode/choice_node.dart';
 const int constClipboard = 1;
 class Clipboard {
   Queue<ChoiceNode> queue = Queue();
-  int length = 3;
+  int length = 10;
 
   void addData(ChoiceNode choiceNode) {
     choiceNode.parent = null;

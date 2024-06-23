@@ -19,9 +19,9 @@ extension ColorHelper on ColorOption {
       case GradientType.linear:
         return LinearGradient(
           begin: Alignment(
-              gradientData[0].gradientPos.$1, gradientData[0].gradientPos.$2),
+              gradientData[0].gradientPos.$1 * 2 - 1, gradientData[0].gradientPos.$2 * 2 - 1),
           end: Alignment(
-              gradientData[1].gradientPos.$1, gradientData[1].gradientPos.$2),
+              gradientData[1].gradientPos.$1 * 2 - 1, gradientData[1].gradientPos.$2 * 2 - 1),
           colors: [Color(gradientData[0].color), Color(gradientData[1].color)],
         );
       case GradientType.radial:

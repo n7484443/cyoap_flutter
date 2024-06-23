@@ -323,7 +323,7 @@ class _ViewTextContentsEditorState
                   onColorChanged: (color) {
                     ref.read(textColorProvider.notifier).state = color;
                   },
-                  hasAlpha: false,
+                  hasAlpha: true,
                 ),
               ),
             ),
@@ -351,6 +351,9 @@ class _ViewTextContentsEditorState
 
     var design = ref.watch(nodeEditorDesignProvider);
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
+
+    var fontSize = [10, 11, 12, 14, 16, 18, 21, 24, 36, 48, 60, 72].map((e) => e.toString()).toList();
+    print(ConstList.textFontList.map((k, v) => MapEntry(k, v.fontFamily!.split("_")[0])));
     return Column(
       children: [
         Padding(
@@ -369,12 +372,14 @@ class _ViewTextContentsEditorState
               showAlignmentButtons: true,
               showColorButton: false,
               showBackgroundColorButton: false,
-              showFontFamily: false,
               showSearchButton: false,
-              showIndent: false,
-              showSuperscript: false,
-              showSubscript: false,
-              multiRowsDisplay: false,
+              showSuperscript: true,
+              showSubscript: true,
+              multiRowsDisplay: true,
+              showIndent: true,
+              showFontFamily: true,
+              fontFamilyValues: ConstList.textFontList.map((k, v) => MapEntry(k, v.fontFamily!)),
+              fontSizesValues: Map.fromIterables(fontSize, fontSize),
               customButtons: [
                 QuillToolbarCustomButtonOptions(
                   icon: const Icon(Icons.color_lens),
