@@ -6,6 +6,7 @@ import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/util/view_circle_button.dart';
+import 'package:cyoap_flutter/viewModel/vm_global_setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
@@ -21,14 +22,14 @@ const double defaultHeight = 70.0;
 class DropRegionRow extends ConsumerStatefulWidget {
   final List<Expanded> widgets;
   final List<(int, Pos)> sizeData;
-  final int maxSize;
+  final int maxChildrenPerRow;
   final bool isEmpty;
 
   const DropRegionRow(
       {super.key,
       required this.widgets,
       required this.sizeData,
-      required this.maxSize,
+      required this.maxChildrenPerRow,
       this.isEmpty = false});
 
   @override
@@ -109,7 +110,7 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
         var drag = Pos(data: (item.localData as List).cast<int>());
         var mousePos = event.position;
         var width = context.size?.width ?? 0;
-        var spaceWidth = width / widget.maxSize;
+        var spaceWidth = width / widget.maxChildrenPerRow;
         var x = mousePos.local.dx / spaceWidth;
         var minLength = 0.25;
         var before = 0;
@@ -204,49 +205,61 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
 
 class ViewWrapCustomReorder extends ConsumerWidget {
   final Pos parentPos;
-  final int maxSize;
+  final int parentMaxSize;
   final bool isInner;
 
   const ViewWrapCustomReorder(this.parentPos,
-      {this.maxSize = defaultMaxSize, this.isInner = true, super.key});
+      {this.parentMaxSize = 100, this.isInner = true, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<Widget> outputWidget = List<Widget>.empty(growable: true);
     var node = ref.watch(choiceStatusProvider(parentPos));
     var children = node.getChildrenList();
+    var presetMaxChildrenPerRow = parentMaxSize;
+    if(!isInner){
+      presetMaxChildrenPerRow = ref.watch(lineOptionProvider(pos: parentPos)).maxChildrenPerRow;
+    }
+    var maxChildrenPerRow = min(parentMaxSize, ref.watch(maximumSizeProvider));
+    maxChildrenPerRow = min(maxChildrenPerRow, presetMaxChildrenPerRow);
     int stack = 0;
     List<Expanded> subWidget = List<Expanded>.empty(growable: true);
     List<(int, Pos)> sizeData = List<(int, Pos)>.empty(growable: true);
     for (var child in children) {
-      int size = child.width == 0 ? maxSize : min(child.width, maxSize);
+      int size = child.width == 0
+          ? maxChildrenPerRow
+          : min(child.width, maxChildrenPerRow);
       var node = Expanded(
         flex: size,
         child: NodeDraggable(child.pos),
       );
 
-      if (stack + size < maxSize) {
+      if (stack + size < maxChildrenPerRow) {
         subWidget.add(node);
         sizeData.add((size, child.pos));
         stack += size;
-      } else if (stack + size == maxSize) {
+      } else if (stack + size == maxChildrenPerRow) {
         subWidget.add(node);
         sizeData.add((size, child.pos));
         outputWidget.add(DropRegionRow(
-            widgets: subWidget, maxSize: maxSize, sizeData: sizeData));
+            widgets: subWidget,
+            maxChildrenPerRow: maxChildrenPerRow,
+            sizeData: sizeData));
         subWidget = List<Expanded>.empty(growable: true);
         sizeData = List<(int, Pos)>.empty(growable: true);
         stack = 0;
       } else {
         subWidget.add(Expanded(
-          flex: maxSize - stack,
+          flex: maxChildrenPerRow - stack,
           child: const SizedBox(
             height: defaultHeight,
           ),
         ));
-        sizeData.add((maxSize - stack, child.pos));
+        sizeData.add((maxChildrenPerRow - stack, child.pos));
         outputWidget.add(DropRegionRow(
-            widgets: subWidget, maxSize: maxSize, sizeData: sizeData));
+            widgets: subWidget,
+            maxChildrenPerRow: maxChildrenPerRow,
+            sizeData: sizeData));
         subWidget = List<Expanded>.empty(growable: true);
         sizeData = List<(int, Pos)>.empty(growable: true);
         subWidget.add(node);
@@ -255,18 +268,19 @@ class ViewWrapCustomReorder extends ConsumerWidget {
       }
     }
     if (subWidget.isNotEmpty || children.isEmpty) {
-      if (stack != maxSize) {
+      if (stack != maxChildrenPerRow) {
         subWidget.add(Expanded(
-          flex: maxSize - stack,
+          flex: maxChildrenPerRow - stack,
           child: const SizedBox(
             height: defaultHeight,
           ),
         ));
-        sizeData.add((maxSize - stack, parentPos.addLast(children.length)));
+        sizeData.add(
+            (maxChildrenPerRow - stack, parentPos.addLast(children.length)));
       }
       outputWidget.add(DropRegionRow(
         widgets: subWidget,
-        maxSize: maxSize,
+        maxChildrenPerRow: maxChildrenPerRow,
         sizeData: sizeData,
         isEmpty: children.isEmpty,
       ));
@@ -327,16 +341,22 @@ class ViewWrapCustomReorder extends ConsumerWidget {
 class ViewWrapCustom extends ConsumerWidget {
   final Pos parentPos;
   final Widget Function(int) builder;
-  final int maxSize;
+  final int parentMaxSize;
   final bool isInner;
 
   const ViewWrapCustom(this.parentPos, this.builder,
-      {this.isInner = true, this.maxSize = defaultMaxSize, super.key});
+      {this.parentMaxSize = 100, this.isInner = true, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<Widget> outputWidget = List<Widget>.empty(growable: true);
     var children = ref.watch(choiceStatusProvider(parentPos)).getChildrenList();
+    var presetMaxChildrenPerRow = parentMaxSize;
+    if(!isInner){
+      presetMaxChildrenPerRow = ref.watch(lineOptionProvider(pos: parentPos)).maxChildrenPerRow;
+    }
+    var maxChildrenPerRow = min(parentMaxSize, ref.watch(maximumSizeProvider));
+    maxChildrenPerRow = min(maxChildrenPerRow, presetMaxChildrenPerRow);
     if (children.isEmpty && isInner) {
       return const SizedBox.shrink();
     }
@@ -347,13 +367,15 @@ class ViewWrapCustom extends ConsumerWidget {
       if (child.isHide()) {
         continue;
       }
-      int size = child.width == 0 ? maxSize : min(child.width, maxSize);
+      int size = child.width == 0
+          ? maxChildrenPerRow
+          : min(child.width, maxChildrenPerRow);
 
-      if (stack + size > maxSize) {
-        if (maxSize > stack) {
+      if (stack + size > maxChildrenPerRow) {
+        if (maxChildrenPerRow > stack) {
           subWidget.add(
             Expanded(
-              flex: maxSize - stack,
+              flex: maxChildrenPerRow - stack,
               child: const SizedBox.shrink(),
             ),
           );
@@ -370,7 +392,7 @@ class ViewWrapCustom extends ConsumerWidget {
         stack = 0;
         i -= 1;
         continue;
-      } else if (size == maxSize) {
+      } else if (size == maxChildrenPerRow) {
         outputWidget.add(SizedBox(width: double.infinity, child: builder(i)));
         subWidget = List.empty(growable: true);
       } else {
@@ -378,9 +400,9 @@ class ViewWrapCustom extends ConsumerWidget {
         stack += size;
       }
     }
-    if (0 < stack && stack < maxSize) {
-      subWidget
-          .add(Expanded(flex: maxSize - stack, child: const SizedBox.shrink()));
+    if (0 < stack && stack < maxChildrenPerRow) {
+      subWidget.add(Expanded(
+          flex: maxChildrenPerRow - stack, child: const SizedBox.shrink()));
     }
     if (subWidget.isNotEmpty) {
       outputWidget.add(

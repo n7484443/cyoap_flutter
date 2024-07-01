@@ -1,7 +1,7 @@
-import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/viewModel/choice/vm_choice.dart';
+import 'package:cyoap_flutter/viewModel/choice/vm_choice_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -53,6 +53,7 @@ class SizeDialog extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var width = ref.watch(choiceNodeSizeProvider(pos));
     var str = width == 0 ? 'max' : width.toString();
+    var lineOption = ref.watch(lineOptionProvider(pos: Pos(data: pos.data.getRange(0, 2).toList())));
     return AlertDialog(
       scrollable: true,
       alignment: Alignment.center,
@@ -72,8 +73,8 @@ class SizeDialog extends ConsumerWidget {
                     .sizeChange(value.toInt());
               },
               value: width.toDouble(),
-              divisions: defaultMaxSize,
-              max: defaultMaxSize.toDouble(),
+              divisions: lineOption.maxChildrenPerRow,
+              max: lineOption.maxChildrenPerRow.toDouble(),
               min: 0,
               label: str,
             ),

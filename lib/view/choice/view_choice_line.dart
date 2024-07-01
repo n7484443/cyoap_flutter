@@ -5,7 +5,6 @@ import 'package:cyoap_flutter/view/choice/view_choice_node.dart';
 import 'package:cyoap_flutter/view/choice/view_wrap_custom.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/util/view_circle_button.dart';
-import 'package:cyoap_flutter/viewModel/vm_global_setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -62,7 +61,6 @@ class ViewChoiceLine extends ConsumerWidget {
       return ViewWrapCustomReorder(
         pos,
         isInner: false,
-        maxSize: ref.watch(maximumSizeProvider),
       );
     }
     return ViewWrapCustom(
@@ -71,7 +69,6 @@ class ViewChoiceLine extends ConsumerWidget {
         return ViewChoiceNode(pos.addLast(index));
       },
       isInner: false,
-      maxSize: ref.watch(maximumSizeProvider),
     );
   }
 }
@@ -284,62 +281,60 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (ConstList.isMobile()) Text('lineSetting_tooltip_0'.i18n),
-          if (ConstList.isMobile())
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.chevron_left),
-                  onPressed: () {
-                    ref
-                        .read(lineOptionProvider(pos: widget.pos).notifier)
-                        .setValue(lineOption.copyWith(
-                            maxSelect: lineOption.maxSelect >= 0
-                                ? lineOption.maxSelect - 1
-                                : lineOption.maxSelect));
-                  },
-                ),
-                Text(maxSelectString),
-                IconButton(
-                  icon: const Icon(Icons.chevron_right),
-                  onPressed: () {
-                    ref
-                        .read(lineOptionProvider(pos: widget.pos).notifier)
-                        .setValue(lineOption.copyWith(
-                            maxSelect: lineOption.maxSelect + 1));
-                  },
-                ),
-              ],
-            ),
-          if (!ConstList.isMobile())
-            Row(
-              children: [
-                Text('lineSetting_tooltip_0'.i18n),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(Icons.chevron_left),
-                  onPressed: () {
-                    ref
-                        .read(lineOptionProvider(pos: widget.pos).notifier)
-                        .setValue(lineOption.copyWith(
-                            maxSelect: lineOption.maxSelect >= 0
-                                ? lineOption.maxSelect - 1
-                                : lineOption.maxSelect));
-                  },
-                ),
-                Text(maxSelectString),
-                IconButton(
-                  icon: const Icon(Icons.chevron_right),
-                  onPressed: () {
-                    ref
-                        .read(lineOptionProvider(pos: widget.pos).notifier)
-                        .setValue(lineOption.copyWith(
-                            maxSelect: lineOption.maxSelect + 1));
-                  },
-                ),
-              ],
-            ),
+          Row(
+            children: [
+              Text('lineSetting_tooltip_0'.i18n),
+              const Spacer(),
+              IconButton(
+                icon: const Icon(Icons.chevron_left),
+                onPressed: () {
+                  ref
+                      .read(lineOptionProvider(pos: widget.pos).notifier)
+                      .setValue(lineOption.copyWith(
+                          maxSelect: lineOption.maxSelect >= 0
+                              ? lineOption.maxSelect - 1
+                              : lineOption.maxSelect));
+                },
+              ),
+              Text(maxSelectString),
+              IconButton(
+                icon: const Icon(Icons.chevron_right),
+                onPressed: () {
+                  ref
+                      .read(lineOptionProvider(pos: widget.pos).notifier)
+                      .setValue(lineOption.copyWith(
+                          maxSelect: lineOption.maxSelect + 1));
+                },
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Text('lineSetting_maxChildrenPerRow'.i18n),
+              const Spacer(),
+              IconButton(
+                icon: const Icon(Icons.chevron_left),
+                onPressed: () {
+                  ref
+                      .read(lineOptionProvider(pos: widget.pos).notifier)
+                      .setValue(lineOption.copyWith(
+                      maxChildrenPerRow: lineOption.maxChildrenPerRow >= 0
+                          ? lineOption.maxChildrenPerRow - 1
+                          : lineOption.maxChildrenPerRow));
+                },
+              ),
+              Text(lineOption.maxChildrenPerRow.toString()),
+              IconButton(
+                icon: const Icon(Icons.chevron_right),
+                onPressed: () {
+                  ref
+                      .read(lineOptionProvider(pos: widget.pos).notifier)
+                      .setValue(lineOption.copyWith(
+                      maxChildrenPerRow: lineOption.maxChildrenPerRow + 1));
+                },
+              ),
+            ],
+          ),
           const SizedBox(height: ConstList.padding),
           DropdownButtonFormField<String>(
             decoration:

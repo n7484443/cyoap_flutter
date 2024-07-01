@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:context_menus/context_menus.dart';
@@ -27,7 +26,6 @@ import '../../main.dart';
 import '../../model/platform_system.dart';
 import '../../viewModel/choice/vm_choice.dart';
 import '../../viewModel/preset/vm_choice_node_preset.dart';
-import '../../viewModel/vm_global_setting.dart';
 import '../../viewModel/vm_make_platform.dart';
 import '../../viewModel/vm_variable_table.dart';
 
@@ -503,7 +501,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
     if (ref.watch(isEditableProvider(pos: pos)) && !ignoreOption) {
       child = ViewWrapCustomReorder(
         pos,
-        maxSize: min(ref.watch(maximumSizeProvider), node.getMaxSize(true)),
+        parentMaxSize: node.getMaxSize(true),
       );
     } else if (!ignoreChild) {
       child = ViewWrapCustom(
@@ -513,7 +511,6 @@ class ViewChoiceNodeContent extends ConsumerWidget {
           ignoreOption: ignoreOption,
           ignoreChild: ignoreChild,
         ),
-        maxSize: min(ref.watch(maximumSizeProvider), node.getMaxSize(true)),
       );
     }
     child ??= const SizedBox.shrink();

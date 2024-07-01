@@ -152,6 +152,7 @@ extension Localization on String {
         "en": {
           //make page
           'lineSetting_tooltip_0': 'Number of selections available',
+          'lineSetting_maxChildrenPerRow': 'Number of children in row',
           'lineSetting_tooltip_1': 'Allowed Choices %s',
           'lineSetting_tooltip_2': "ChoiceLine's name",
           'lineSetting_tooltip_3': "Code of ChoiceLine",
@@ -259,6 +260,7 @@ extension Localization on String {
         "ko": {
           //make page
           'lineSetting_tooltip_0': '선택 가능 개수',
+          'lineSetting_maxChildrenPerRow': '한 줄 당 최대 자식 개수',
           'lineSetting_tooltip_1': '최대 %s 개만큼 선택 가능',
           'lineSetting_tooltip_2': "선택지 줄 명칭",
           'lineSetting_tooltip_3': "라인 코드",
