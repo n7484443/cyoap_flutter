@@ -44,7 +44,7 @@ class ChoiceStatus extends ChangeNotifier {
       )..currentPos = -1;
 
       choiceNode.choiceNodeOption = choiceNode.choiceNodeOption.copyWith(
-          presetName: ref.read(choiceNodePresetCurrentEditProvider).name);
+          presetName: ref.read(choiceNodePresetCurrentEditProvider).name!);
       choiceNode.select = ref.read(choiceNodePresetTestSelectProvider) ? 1 : 0;
       node = choiceNode;
     } else if (pos.first < 0) {

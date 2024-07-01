@@ -44,7 +44,7 @@ class ChoiceLinePresetListNotifier
   void rename(int index, String after) {
     var before = state[index].name;
     updateIndex(index, state[index].copyWith(name: after));
-    getPlatform.updateLinePresetNameAll(before, after);
+    getPlatform.updateLinePresetNameAll(before!, after);
     ref.read(currentChoicePageProvider.notifier).refresh();
   }
 
@@ -74,7 +74,7 @@ class ChoiceLinePresetListNotifier
     if (state.length >= 2) {
       state.removeWhere((preset) => preset.name == name);
       state = [...state];
-      getPlatform.updateLinePresetNameAll(name, state.first.name);
+      getPlatform.updateLinePresetNameAll(name, state.first.name!);
     }
   }
 
@@ -82,7 +82,7 @@ class ChoiceLinePresetListNotifier
     if (state.length >= 2) {
       var removed = state.removeAt(index);
       state = [...state];
-      getPlatform.updateLinePresetNameAll(removed.name, state.first.name);
+      getPlatform.updateLinePresetNameAll(removed.name!, state.first.name!);
     }
   }
 

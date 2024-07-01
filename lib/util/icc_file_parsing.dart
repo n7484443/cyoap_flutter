@@ -64,7 +64,7 @@ class IccProjectParser {
         imageString: imageName,
       );
       choiceRow.choiceNodeOption =
-          choiceRow.choiceNodeOption.copyWith(presetName: preset.name);
+          choiceRow.choiceNodeOption.copyWith(presetName: preset.name!);
       choiceRow.choiceNodeMode = ChoiceNodeMode.unSelectableMode;
       var lineSetting = ChoiceLine()..addChildren(choiceRow);
       var rowWidth = int.tryParse((row['objectWidth'] as String? ?? '')
@@ -103,7 +103,7 @@ class IccProjectParser {
             contents: toContent(object["text"] ?? parsed['defaultChoiceText']),
             imageString: imageName);
         choiceNode.choiceNodeOption =
-            choiceNode.choiceNodeOption.copyWith(presetName: preset.name);
+            choiceNode.choiceNodeOption.copyWith(presetName: preset.name!);
         for (var addon in object['addons']) {
           var addonTitle = addon["title"] ?? parsed['defaultAddonTitle'];
           var out = await checkImage(addon, addon["id"], addonTitle, ref);
@@ -117,7 +117,7 @@ class IccProjectParser {
               contents: toContent(addon["text"] ?? parsed['defaultAddonText']),
               imageString: imageName);
           addonNode.choiceNodeOption =
-              addonNode.choiceNodeOption.copyWith(presetName: preset.name);
+              addonNode.choiceNodeOption.copyWith(presetName: preset.name!);
           choiceNode.addChildren(addonNode);
         }
         lineSetting.addChildren(choiceNode);

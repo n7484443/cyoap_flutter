@@ -25,7 +25,7 @@ class PresetDialog extends ConsumerWidget {
         items: ref
             .watch(choiceNodePresetListProvider)
             .map<DropdownMenuItem<String>>((preset) =>
-                DropdownMenuItem(value: preset.name, child: Text(preset.name)))
+                DropdownMenuItem(value: preset.name, child: Text(preset.name!)))
             .toList(),
         onChanged: (String? t) {
           if (t != null) {

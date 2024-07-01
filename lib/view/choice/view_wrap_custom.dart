@@ -300,12 +300,12 @@ class ViewWrapCustomReorder extends ConsumerWidget {
     }
     var preset = ref.watch(lineDesignPresetProvider(pos: parentPos));
     return DecoratedSliver(
-      decoration: preset.backgroundColorOption.colorType == ColorType.gradient
+      decoration: preset.backgroundColorOption!.colorType == ColorType.gradient
           ? BoxDecoration(
-              gradient: preset.backgroundColorOption.getGradient(),
+              gradient: preset.backgroundColorOption!.getGradient(),
             )
           : BoxDecoration(
-              color: Color(preset.backgroundColorOption.color),
+              color: Color(preset.backgroundColorOption!.color),
             ),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
@@ -402,12 +402,12 @@ class ViewWrapCustom extends ConsumerWidget {
     }
     var preset = ref.watch(lineDesignPresetProvider(pos: parentPos));
     return DecoratedSliver(
-      decoration: preset.backgroundColorOption.colorType == ColorType.gradient
+      decoration: preset.backgroundColorOption!.colorType == ColorType.gradient
           ? BoxDecoration(
-              gradient: preset.backgroundColorOption.getGradient(),
+              gradient: preset.backgroundColorOption!.getGradient(),
             )
           : BoxDecoration(
-              color: Color(preset.backgroundColorOption.color),
+              color: Color(preset.backgroundColorOption!.color),
             ),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(

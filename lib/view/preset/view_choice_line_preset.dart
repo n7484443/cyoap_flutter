@@ -19,7 +19,7 @@ class ChoiceLineSample extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var colorOption =
-        ref.watch(choiceLinePresetCurrentEditProvider).backgroundColorOption;
+        ref.watch(choiceLinePresetCurrentEditProvider).backgroundColorOption!;
     return Container(
       decoration: BoxDecoration(
         image: ImageDB().checkers,
@@ -68,7 +68,7 @@ class ChoiceLinePresetList extends ConsumerWidget {
               var preset = list[index];
               return ListTile(
                 key: Key('$index'),
-                title: Text(preset.name),
+                title: Text(preset.name!),
                 trailing: preset.name == "default"
                     ? null
                     : IconButton(
@@ -89,7 +89,7 @@ class ChoiceLinePresetList extends ConsumerWidget {
                           var text = await showDialog(
                               context: context,
                               builder: (context) {
-                                return PresetRenameDialog(preset.name);
+                                return PresetRenameDialog(preset.name!);
                               },
                               barrierDismissible: false);
                           if (text != null && text.trim().isNotEmpty) {
@@ -136,9 +136,9 @@ class ViewLineOptionEditor extends ConsumerWidget {
                       .updateIndex(
                           index,
                           preset.copyWith(
-                              alwaysVisibleLine: !preset.alwaysVisibleLine)),
+                              alwaysVisibleLine: !preset.alwaysVisibleLine!)),
                   label: 'black_line'.i18n,
-                  state: preset.alwaysVisibleLine)
+                  state: preset.alwaysVisibleLine!)
             ]),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 3,
@@ -154,7 +154,7 @@ class ViewLineOptionEditor extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.all(ConstList.padding),
                 child: ViewColorOptionEditor(
-                  colorOption: colorOption,
+                  colorOption: colorOption!,
                   changeFunction: (ColorOption after) {
                     ref.read(choiceLinePresetListProvider.notifier).updateIndex(
                         index, preset.copyWith(backgroundColorOption: after));

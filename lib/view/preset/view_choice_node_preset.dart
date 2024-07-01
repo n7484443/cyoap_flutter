@@ -120,7 +120,7 @@ class ChoiceNodePresetList extends ConsumerWidget {
               var preset = list[index];
               return ListTile(
                 key: Key('$index'),
-                title: Text(preset.name),
+                title: Text(preset.name!),
                 trailing: preset.name == "default"
                     ? null
                     : IconButton(
@@ -141,7 +141,7 @@ class ChoiceNodePresetList extends ConsumerWidget {
                           var text = await showDialog(
                               context: context,
                               builder: (context) {
-                                return PresetRenameDialog(preset.name);
+                                return PresetRenameDialog(preset.name!);
                               },
                               barrierDismissible: false);
                           if (text != null && text.trim().isNotEmpty) {
@@ -365,28 +365,28 @@ class _ViewNodeGeneralOptionEditorState
                   ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                       presetIndex,
                       preset.copyWith(
-                          maximizingImage: !preset.maximizingImage));
+                          maximizingImage: !preset.maximizingImage!));
                 },
                 label: 'maximize_image'.i18n,
-                state: preset.maximizingImage,
+                state: preset.maximizingImage!,
               ),
               CustomSwitch(
                 updateState: () {
                   ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                       presetIndex,
-                      preset.copyWith(hideTitle: !preset.hideTitle));
+                      preset.copyWith(hideTitle: !preset.hideTitle!));
                 },
                 label: 'hide_title'.i18n,
-                state: preset.hideTitle,
+                state: preset.hideTitle!,
               ),
               CustomSwitch(
                 updateState: () {
                   ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                       presetIndex,
-                      preset.copyWith(titlePosition: !preset.titlePosition));
+                      preset.copyWith(titlePosition: !preset.titlePosition!));
                 },
                 label: 'title_up'.i18n,
-                state: preset.titlePosition,
+                state: preset.titlePosition!,
               ),
               CustomSwitch(
                 updateState: () {
@@ -434,7 +434,7 @@ class _ViewNodeGeneralOptionEditorState
                         .updateIndex(index, preset.copyWith(titleFont: t));
                   }
                 },
-                value: preset.titleFont,
+                value: preset.titleFont!,
                 items: ConstList.textFontList.keys
                     .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
                         value: name,
@@ -451,7 +451,7 @@ class _ViewNodeGeneralOptionEditorState
                         .updateIndex(index, preset.copyWith(mainFont: t));
                   }
                 },
-                value: preset.mainFont,
+                value: preset.mainFont!,
                 items: ConstList.textFontList.keys
                     .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
                         value: name,
@@ -494,7 +494,7 @@ class _ViewNodeOutlineOptionEditorState
   Widget build(BuildContext context) {
     var preset = ref.watch(choiceNodePresetCurrentEditProvider);
     var presetIndex = ref.watch(currentPresetIndexProvider);
-    var opacity = preset.selectOutlineEnable ? 1.0 : 0.3;
+    var opacity = preset.selectOutlineEnable! ? 1.0 : 0.3;
     return Scrollbar(
       controller: _scrollController,
       thumbVisibility: true,
@@ -508,11 +508,11 @@ class _ViewNodeOutlineOptionEditorState
                 padding: const EdgeInsets.all(ConstList.padding),
                 child: ViewColorPicker(
                   text: 'node_outline_color'.i18n,
-                  color: preset.defaultOutlineOption.outlineColor.getColor()!,
+                  color: preset.defaultOutlineOption!.outlineColor.getColor()!,
                   onColorChanged: (Color value) {
                     ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                         presetIndex,
-                        preset.copyWith.defaultOutlineOption
+                        preset.copyWith.defaultOutlineOption!
                             .outlineColor(color: value.value));
                   },
                   hasAlpha: true,
@@ -530,10 +530,10 @@ class _ViewNodeOutlineOptionEditorState
                   if (t != null) {
                     ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                         presetIndex,
-                        preset.copyWith.defaultOutlineOption(outlineType: t));
+                        preset.copyWith.defaultOutlineOption!(outlineType: t));
                   }
                 },
-                value: preset.defaultOutlineOption.outlineType,
+                value: preset.defaultOutlineOption!.outlineType,
                 items: OutlineType.values
                     .map<DropdownMenuItem<OutlineType>>((type) =>
                         DropdownMenuItem(value: type, child: Text(type.name)))
@@ -593,13 +593,13 @@ class _ViewNodeOutlineOptionEditorState
                       child: ViewColorPicker(
                         text: 'node_outline_color'.i18n,
                         color:
-                            preset.selectOutlineOption.outlineColor.getColor()!,
+                            preset.selectOutlineOption!.outlineColor.getColor()!,
                         onColorChanged: (Color value) {
                           ref
                               .read(choiceNodePresetListProvider.notifier)
                               .updateIndex(
                                   presetIndex,
-                                  preset.copyWith.selectOutlineOption
+                                  preset.copyWith.selectOutlineOption!
                                       .outlineColor(color: value.value));
                         },
                         hasAlpha: true,
@@ -618,7 +618,7 @@ class _ViewNodeOutlineOptionEditorState
               delegate: SliverChildListDelegate([
                 CustomDropdownButton<OutlineType>(
                   label: 'outline_shape'.i18n,
-                  value: preset.selectOutlineOption.outlineType,
+                  value: preset.selectOutlineOption!.outlineType,
                   items: OutlineType.values
                       .map<DropdownMenuItem<OutlineType>>((type) =>
                           DropdownMenuItem(value: type, child: Text(type.name)))
@@ -630,7 +630,7 @@ class _ViewNodeOutlineOptionEditorState
                           .updateIndex(
                               presetIndex,
                               preset.copyWith
-                                  .selectOutlineOption(outlineType: t));
+                                  .selectOutlineOption!(outlineType: t));
                     }
                   },
                 ),
@@ -691,7 +691,7 @@ class _ViewNodeColorOptionEditorState
               child: Padding(
                 padding: const EdgeInsets.all(ConstList.padding),
                 child: ViewColorOptionEditor(
-                  colorOption: preset.defaultColorOption,
+                  colorOption: preset.defaultColorOption!,
                   changeFunction: (ColorOption after) {
                     ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                         presetIndex,
@@ -728,9 +728,9 @@ class _ViewNodeColorOptionEditorState
                       ],
                     ),
                     Opacity(
-                      opacity: preset.selectColorEnable ? 1.0 : 0.3,
+                      opacity: preset.selectColorEnable! ? 1.0 : 0.3,
                       child: ViewColorOptionEditor(
-                        colorOption: preset.selectColorOption,
+                        colorOption: preset.selectColorOption!,
                         changeFunction: (ColorOption after) {
                           ref
                               .read(choiceNodePresetListProvider.notifier)

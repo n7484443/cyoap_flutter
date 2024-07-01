@@ -185,18 +185,18 @@ class ViewChoiceNodeMain extends ConsumerWidget {
     var design = ref.watch(choiceNodeDesignSettingProvider(pos: pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     var isSelected = node.select > 0;
-    var defaultColor = isSelected && preset.selectColorEnable
-        ? preset.selectColorOption
-        : preset.defaultColorOption;
-    var outline = isSelected && preset.selectOutlineEnable
-        ? preset.selectOutlineOption
-        : preset.defaultOutlineOption;
+    var defaultColor = isSelected && preset.selectColorEnable!
+        ? preset.selectColorOption!
+        : preset.defaultColorOption!;
+    var outline = isSelected && preset.selectOutlineEnable!
+        ? preset.selectOutlineOption!
+        : preset.defaultOutlineOption!;
 
     var borderRadius = BorderRadius.only(
-      topLeft: Radius.circular(preset.roundEdge[0]),
-      topRight: Radius.circular(preset.roundEdge[1]),
-      bottomRight: Radius.circular(preset.roundEdge[2]),
-      bottomLeft: Radius.circular(preset.roundEdge[3]),
+      topLeft: Radius.circular(preset.roundEdge![0]),
+      topRight: Radius.circular(preset.roundEdge![1]),
+      bottomRight: Radius.circular(preset.roundEdge![2]),
+      bottomLeft: Radius.circular(preset.roundEdge![3]),
     );
     var innerWidget = Ink(
       decoration: BoxDecoration(
@@ -220,10 +220,10 @@ class ViewChoiceNodeMain extends ConsumerWidget {
             : null,
         child: Padding(
           padding: EdgeInsets.only(
-              top: preset.paddingAround[0],
-              right: preset.paddingAround[1],
-              bottom: preset.paddingAround[2],
-              left: preset.paddingAround[3]),
+              top: preset.paddingAround![0],
+              right: preset.paddingAround![1],
+              bottom: preset.paddingAround![2],
+              left: preset.paddingAround![3]),
           child: ViewChoiceNodeContent(pos,
               ignoreOption: ignoreOption, ignoreChild: ignoreChild),
         ),
@@ -243,10 +243,10 @@ class ViewChoiceNodeMain extends ConsumerWidget {
           Rect rect = Rect.fromLTWH(0, 0, size.width, size.height);
           Path path = Path()
             ..addRRect(RRect.fromRectAndCorners(rect,
-                topLeft: Radius.circular(preset.roundEdge[0]),
-                topRight: Radius.circular(preset.roundEdge[1]),
-                bottomRight: Radius.circular(preset.roundEdge[2]),
-                bottomLeft: Radius.circular(preset.roundEdge[3])));
+                topLeft: Radius.circular(preset.roundEdge![0]),
+                topRight: Radius.circular(preset.roundEdge![1]),
+                bottomRight: Radius.circular(preset.roundEdge![2]),
+                bottomLeft: Radius.circular(preset.roundEdge![3])));
           return path;
         },
         dashPattern:
@@ -302,13 +302,13 @@ class ViewTitleWithEdit extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var design = ref.watch(choiceNodeDesignSettingProvider(pos: pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
-    if (!preset.hideTitle) {
+    if (!preset.hideTitle!) {
       return Center(
           child: Text(
         ref.watch(titleStringProvider(pos)),
-        style: ConstList.getFont(preset.titleFont).copyWith(
+        style: ConstList.getFont(preset.titleFont!).copyWith(
           fontSize: 20 * ConstList.scale(context),
-          color: Color(preset.colorTitle),
+          color: Color(preset.colorTitle!),
         ),
       ));
     } else {
@@ -460,7 +460,7 @@ class _ViewContentsState extends ConsumerState<ViewContents> {
         enableInteractiveSelection: false,
         customStyles: ConstList.getDefaultThemeData(
             context, ConstList.scale(context),
-            fontStyle: ConstList.getFontWithColor(preset.mainFont)),
+            fontStyle: ConstList.getFontWithColor(preset.mainFont!)),
       ),
       focusNode: _focusNode!,
       scrollController: _scrollController!,
@@ -486,7 +486,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
     if (ref.watch(imageStringProvider(pos: pos)).isNotEmpty) {
       image = ConstrainedBox(
         constraints: BoxConstraints(
-          maxHeight: preset.maximizingImage
+          maxHeight: preset.maximizingImage!
               ? MediaQuery.of(context).size.height / 1.25
               : MediaQuery.of(context).size.height / 2,
         ),
@@ -554,7 +554,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
         ],
       );
     }
-    List<Widget> subWidget = preset.titlePosition
+    List<Widget> subWidget = preset.titlePosition!
         ? [
             ViewTitleWithEdit(pos),
             image,

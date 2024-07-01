@@ -33,7 +33,7 @@ final choiceNodePresetCurrentEditOutlinePaddingProvider =
   var controller = TextEditingController(
       text: ref
           .read(choiceNodePresetCurrentEditProvider)
-          .defaultOutlineOption
+          .defaultOutlineOption!
           .outlinePadding
           .toString());
   controller.addListener(() {
@@ -44,7 +44,7 @@ final choiceNodePresetCurrentEditOutlinePaddingProvider =
           ref
               .read(choiceNodePresetCurrentEditProvider)
               .copyWith
-              .defaultOutlineOption(
+              .defaultOutlineOption!(
                   outlinePadding: double.tryParse(controller.text) ?? 0.0));
     });
   });
@@ -63,7 +63,7 @@ final choiceNodePresetSelectedEditOutlinePaddingProvider =
   var controller = TextEditingController(
       text: ref
           .read(choiceNodePresetCurrentEditProvider)
-          .selectOutlineOption
+          .selectOutlineOption!
           .outlinePadding
           .toString());
   controller.addListener(() {
@@ -74,7 +74,7 @@ final choiceNodePresetSelectedEditOutlinePaddingProvider =
           ref
               .read(choiceNodePresetCurrentEditProvider)
               .copyWith
-              .selectOutlineOption(
+              .selectOutlineOption!(
                   outlinePadding: double.tryParse(controller.text) ?? 0.0));
     });
   });
@@ -93,7 +93,7 @@ final choiceNodePresetCurrentEditOutlineWidthProvider =
   var controller = TextEditingController(
       text: ref
           .read(choiceNodePresetCurrentEditProvider)
-          .defaultOutlineOption
+          .defaultOutlineOption!
           .outlineWidth
           .toString());
   controller.addListener(() {
@@ -104,7 +104,7 @@ final choiceNodePresetCurrentEditOutlineWidthProvider =
           ref
               .read(choiceNodePresetCurrentEditProvider)
               .copyWith
-              .defaultOutlineOption(
+              .defaultOutlineOption!(
                   outlineWidth: double.tryParse(controller.text) ?? 0.0));
     });
   });
@@ -123,7 +123,7 @@ final choiceNodePresetSelectedEditOutlineWidthProvider =
   var controller = TextEditingController(
       text: ref
           .read(choiceNodePresetCurrentEditProvider)
-          .selectOutlineOption
+          .selectOutlineOption!
           .outlineWidth
           .toString());
   controller.addListener(() {
@@ -134,7 +134,7 @@ final choiceNodePresetSelectedEditOutlineWidthProvider =
           ref
               .read(choiceNodePresetCurrentEditProvider)
               .copyWith
-              .selectOutlineOption(
+              .selectOutlineOption!(
                   outlineWidth: double.tryParse(controller.text) ?? 0.0));
     });
   });
@@ -183,13 +183,13 @@ final choiceNodePresetCurrentEditRoundProvider =
   var controller = TextEditingController(
       text: ref
           .read(choiceNodePresetCurrentEditProvider)
-          .roundEdge[index]
+          .roundEdge![index]
           .toString());
   controller.addListener(() {
     EasyDebounce.debounce('Round Input $index', ConstList.debounceDuration, () {
       var round = double.tryParse(controller.text) ?? 0.0;
       var currentRound = [
-        ...ref.read(choiceNodePresetCurrentEditProvider).roundEdge
+        ...ref.read(choiceNodePresetCurrentEditProvider).roundEdge!
       ];
       currentRound[index] = round;
       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
@@ -214,7 +214,7 @@ final choiceNodePresetCurrentEditPaddingProvider =
   var controller = TextEditingController(
       text: ref
           .read(choiceNodePresetCurrentEditProvider)
-          .paddingAround[0]
+          .paddingAround![0]
           .toString());
   controller.addListener(() {
     EasyDebounce.debounce('Padding Input', ConstList.debounceDuration, () {
@@ -254,7 +254,7 @@ class ChoiceNodePresetListNotifier
   void rename(int index, String after) {
     var before = state[index].name;
     updateIndex(index, state[index].copyWith(name: after));
-    getPlatform.updateNodePresetNameAll(before, after);
+    getPlatform.updateNodePresetNameAll(before!, after);
     ref.invalidate(choiceNodeDesignSettingProvider);
   }
 
@@ -284,7 +284,7 @@ class ChoiceNodePresetListNotifier
     if (state.length >= 2) {
       state.removeWhere((preset) => preset.name == name);
       state = [...state];
-      getPlatform.updateNodePresetNameAll(name, state.first.name);
+      getPlatform.updateNodePresetNameAll(name, state.first.name!);
     }
   }
 
@@ -292,7 +292,7 @@ class ChoiceNodePresetListNotifier
     if (state.length >= 2) {
       var removed = state.removeAt(index);
       state = [...state];
-      getPlatform.updateNodePresetNameAll(removed.name, state.first.name);
+      getPlatform.updateNodePresetNameAll(removed.name!, state.first.name!);
     }
   }
 

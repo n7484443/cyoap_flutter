@@ -93,7 +93,7 @@ class ViewChoiceLineHeader extends ConsumerWidget {
     }
     var lineOption = ref.watch(lineOptionProvider(pos: pos));
     var preset = ref.watch(lineDesignPresetProvider(pos: pos));
-    if (!preset.alwaysVisibleLine && !isPlatformEditable) {
+    if (!preset.alwaysVisibleLine! && !isPlatformEditable) {
       return const SizedBox.shrink();
     }
     if (isPlatformEditable) {
@@ -103,7 +103,7 @@ class ViewChoiceLineHeader extends ConsumerWidget {
           Divider(
             thickness: 4,
             color:
-                preset.alwaysVisibleLine ? Colors.blueAccent : Colors.white54,
+                preset.alwaysVisibleLine! ? Colors.blueAccent : Colors.white54,
           ),
           Card(
             elevation: 0,
@@ -227,7 +227,7 @@ class ViewChoiceLineHeader extends ConsumerWidget {
           Divider(
             thickness: 4,
             color:
-                preset.alwaysVisibleLine ? Colors.blueAccent : Colors.white54,
+                preset.alwaysVisibleLine! ? Colors.blueAccent : Colors.white54,
           ),
           Visibility(
             visible: lineOption.maxSelect != -1,
@@ -349,7 +349,7 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
                 .map<DropdownMenuItem<String>>(
                   (preset) => DropdownMenuItem(
                     value: preset.name,
-                    child: Text(preset.name),
+                    child: Text(preset.name!),
                   ),
                 )
                 .toList(),

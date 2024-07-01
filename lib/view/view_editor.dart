@@ -196,11 +196,11 @@ class _ViewTitleTextFieldInputState
       textAlign: TextAlign.center,
       decoration: InputDecoration(
         hintText: 'title'.i18n,
-        hintStyle: ConstList.getFont(preset.titleFont)
+        hintStyle: ConstList.getFont(preset.titleFont!)
             .copyWith(fontSize: 24, color: Colors.red),
         filled: true,
       ),
-      style: ConstList.getFont(preset.titleFont).copyWith(
+      style: ConstList.getFont(preset.titleFont!).copyWith(
         fontSize: 24,
       ),
     );
@@ -415,7 +415,7 @@ class _ViewTextContentsEditorState
                 autoFocus: true,
                 showCursor: true,
                 customStyles: ConstList.getDefaultThemeData(context, 1,
-                    fontStyle: ConstList.getFontWithColor(preset.mainFont)),
+                    fontStyle: ConstList.getFontWithColor(preset.mainFont!)),
                 sharedConfigurations: QuillSharedConfigurations(
                   locale: ref.watch(localeStateProvider),
                 ),
@@ -507,7 +507,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
               items: ref
                   .watch(choiceNodePresetListProvider)
                   .map<DropdownMenuItem<String>>((preset) => DropdownMenuItem(
-                      value: preset.name, child: Text(preset.name)))
+                      value: preset.name, child: Text(preset.name!)))
                   .toList(),
               onChanged: (String? t) {
                 if (t != null) {
