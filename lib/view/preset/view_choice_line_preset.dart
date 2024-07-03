@@ -1,3 +1,4 @@
+import 'package:cyoap_core/preset/line_preset.dart';
 import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
@@ -171,6 +172,23 @@ class ViewLineOptionEditor extends ConsumerWidget {
                       ),
                     ],
                   ),
+                ),
+              ),
+              Card(
+                child: DropdownButtonFormField<ChoiceLineAlignment>(
+                  decoration: InputDecoration(labelText: 'lineSetting_alignment'.i18n),
+                  items: ChoiceLineAlignment.values
+                      .map<DropdownMenuItem<ChoiceLineAlignment>>((type) =>
+                          DropdownMenuItem(value: type, child: Text(type.name)))
+                      .toList(),
+                  onChanged: (ChoiceLineAlignment? t) {
+                    if (t != null) {
+                      ref
+                          .read(choiceLinePresetListProvider.notifier)
+                          .updateIndex(index, preset.copyWith(alignment: t));
+                    }
+                  },
+                  value: preset.alignment,
                 ),
               ),
             ]),

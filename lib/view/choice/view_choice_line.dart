@@ -60,14 +60,14 @@ class ViewChoiceLine extends ConsumerWidget {
         ref.watch(isEditableProvider(pos: pos))) {
       return ViewWrapCustomReorder(
         pos,
+        isReorderAble: true,
         isInner: false,
       );
     }
-    return ViewWrapCustom(
+    return ViewWrapCustomReorder(
       pos,
-      (index) {
-        return ViewChoiceNode(pos.addLast(index));
-      },
+      isReorderAble: false,
+      builder: (i) => ViewChoiceNode(pos.addLast(i)),
       isInner: false,
     );
   }

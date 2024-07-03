@@ -501,12 +501,14 @@ class ViewChoiceNodeContent extends ConsumerWidget {
     if (ref.watch(isEditableProvider(pos: pos)) && !ignoreOption) {
       child = ViewWrapCustomReorder(
         pos,
+        isReorderAble: true,
         parentMaxSize: node.getMaxSize(true),
       );
     } else if (!ignoreChild) {
-      child = ViewWrapCustom(
+      child = ViewWrapCustomReorder(
         pos,
-        (i) => ViewChoiceNode(
+        isReorderAble: false,
+        builder: (i) => ViewChoiceNode(
           pos.addLast(i),
           ignoreOption: ignoreOption,
           ignoreChild: ignoreChild,

@@ -74,8 +74,9 @@ void main() {
     await tester.pumpWidget(MaterialApp(
       home: ProviderScope(
         overrides: [],
-        child: ViewWrapCustom(
-            parentPos1, (i) => ViewChoiceNode(parentPos1.addLast(i))),
+        child: ViewWrapCustomReorder(parentPos1,
+            isReorderAble: false,
+            builder: (i) => ViewChoiceNode(parentPos1.addLast(i))),
       ),
     ));
     var node1 = getPlatform.getChoiceNode(pos1_0)!;
@@ -90,8 +91,9 @@ void main() {
     await tester.pumpWidget(MaterialApp(
       home: ProviderScope(
         overrides: [],
-        child: ViewWrapCustom(
-            parentPos1, (i) => ViewChoiceNode(parentPos1.addLast(i))),
+        child: ViewWrapCustomReorder(parentPos1,
+            isReorderAble: false,
+            builder: (i) => ViewChoiceNode(parentPos1.addLast(i))),
       ),
     ));
     var node1 = getPlatform.getChoiceNode(pos1_0)!;

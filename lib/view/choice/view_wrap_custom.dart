@@ -1,7 +1,9 @@
 import 'dart:math';
 
+import 'package:cyoap_core/choiceNode/choice.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
+import 'package:cyoap_core/preset/line_preset.dart';
 import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
@@ -9,6 +11,7 @@ import 'package:cyoap_flutter/view/util/view_circle_button.dart';
 import 'package:cyoap_flutter/viewModel/vm_global_setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 
 import '../../viewModel/choice/vm_choice.dart';
@@ -17,11 +20,13 @@ import '../../viewModel/vm_design_setting.dart';
 import '../../viewModel/vm_draggable_nested_map.dart';
 import 'view_choice_node.dart';
 
+part 'view_wrap_custom.freezed.dart';
+
 const double defaultHeight = 70.0;
 
 class DropRegionRow extends ConsumerStatefulWidget {
   final List<Expanded> widgets;
-  final List<(int, Pos)> sizeData;
+  final List<SizeData> sizeData;
   final int maxChildrenPerRow;
   final bool isEmpty;
 
@@ -110,12 +115,13 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
         var drag = Pos(data: (item.localData as List).cast<int>());
         var mousePos = event.position;
         var width = context.size?.width ?? 0;
-        var spaceWidth = width / widget.maxChildrenPerRow;
+        var flexSum = widget.sizeData.fold<int>(0, (a, b) => a + b.width);
+        var spaceWidth = width / flexSum;
         var x = mousePos.local.dx / spaceWidth;
         var minLength = 0.25;
         var before = 0;
         if (widget.isEmpty) {
-          var (_, pos) = widget.sizeData.first;
+          var pos = widget.sizeData.first.pos!;
           if (drag.isParent(pos)) {
             setState(() {
               index = -1;
@@ -129,37 +135,49 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
         }
 
         for (var index = 0; index < widget.sizeData.length; index++) {
-          var (i, pos) = widget.sizeData[index];
+          var sizeData = widget.sizeData[index];
+          var (width, pos) = (sizeData.width, sizeData.pos);
           if (x < before) {
             setState(() {
               this.index = -1;
             });
             return DropOperation.none;
           }
-          if (x > before + i) {
-            before += i;
+          if (x > before + width) {
+            before += width;
             continue;
           }
-          if (drag.isParent(pos)) {
+          if (pos == null) {
+            if (index == 0) {
+              setState(() {
+                this.index = index + 1;
+              });
+            } else {
+              setState(() {
+                this.index = index;
+              });
+            }
+          } else if (drag.isParent(pos)) {
             setState(() {
               this.index = -1;
             });
             return DropOperation.none;
-          }
-          var left = x - before;
-          var right = before + i - x;
-          if (0 <= left && left <= minLength) {
-            setState(() {
-              this.index = index;
-            });
-          } else if (0 <= right && right <= minLength) {
-            setState(() {
-              this.index = index + 1;
-            });
           } else {
-            setState(() {
-              this.index = -1;
-            });
+            var left = x - before;
+            var right = before + width - x;
+            if (0 <= left && left <= minLength) {
+              setState(() {
+                this.index = index;
+              });
+            } else if (0 <= right && right <= minLength) {
+              setState(() {
+                this.index = index + 1;
+              });
+            } else {
+              setState(() {
+                this.index = -1;
+              });
+            }
           }
           return DropOperation.copy;
         }
@@ -168,13 +186,21 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
       onPerformDrop: (PerformDropEvent event) async {
         var item = event.session.items.first;
         var data = Pos(data: (item.localData as List).cast<int>());
-        if (isEntered && index >= 0) {
-          if (index == widget.sizeData.length) {
-            var (_, pos) = widget.sizeData.last;
-            add(data, pos.removeLast().addLast(pos.last + 1), ref);
+        if (isEntered) {
+          if (widget.sizeData[index].pos == null) {
+            Iterator<SizeData> iterator;
+            if (index == 0) {
+              iterator = widget.sizeData.iterator;
+            } else {
+              iterator = widget.sizeData.reversed.iterator;
+            }
+            Pos? pos;
+            while (iterator.moveNext() && pos == null) {
+              pos = iterator.current.pos;
+            }
+            add(data, pos!.removeLast().addLast(pos.last + 1), ref);
           } else {
-            var (_, pos) = widget.sizeData[index];
-            add(data, pos, ref);
+            add(data, widget.sizeData[index].pos!, ref);
           }
         }
       },
@@ -203,219 +229,158 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
   }
 }
 
+@freezed
+class SizeData with _$SizeData {
+  const factory SizeData({required int width, Pos? pos}) = _SizeData;
+}
+
 class ViewWrapCustomReorder extends ConsumerWidget {
   final Pos parentPos;
   final int parentMaxSize;
   final bool isInner;
+  final bool isReorderAble;
+  final Widget Function(int)? builder;
 
   const ViewWrapCustomReorder(this.parentPos,
-      {this.parentMaxSize = 100, this.isInner = true, super.key});
+      {required this.isReorderAble, this.builder, this.parentMaxSize = 100, this.isInner = true, super.key});
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    List<Widget> outputWidget = List<Widget>.empty(growable: true);
-    var node = ref.watch(choiceStatusProvider(parentPos));
-    var children = node.getChildrenList();
-    var presetMaxChildrenPerRow = parentMaxSize;
-    if(!isInner){
-      presetMaxChildrenPerRow = ref.watch(lineDesignPresetProvider(pos: parentPos)).maxChildrenPerRow!;
-    }
-    var maxChildrenPerRow = min(parentMaxSize, ref.watch(maximumSizeProvider));
-    maxChildrenPerRow = min(maxChildrenPerRow, presetMaxChildrenPerRow);
+  List<List<SizeData>> refreshSizeData({
+    required List<Choice> children,
+    required ChoiceLineAlignment align,
+    required int maxChildrenPerRow,
+  }) {
+    var sizeDataList = List<List<SizeData>>.empty(growable: true);
+    var subSizeDataList = List<SizeData>.empty(growable: true);
     int stack = 0;
-    List<Expanded> subWidget = List<Expanded>.empty(growable: true);
-    List<(int, Pos)> sizeData = List<(int, Pos)>.empty(growable: true);
     for (var child in children) {
       int size = child.width == 0
           ? maxChildrenPerRow
           : min(child.width, maxChildrenPerRow);
-      var node = Expanded(
-        flex: size,
-        child: NodeDraggable(child.pos),
-      );
-
+      var node = SizeData(width: size * 2, pos: child.pos);
       if (stack + size < maxChildrenPerRow) {
-        subWidget.add(node);
-        sizeData.add((size, child.pos));
+        subSizeDataList.add(node);
         stack += size;
       } else if (stack + size == maxChildrenPerRow) {
-        subWidget.add(node);
-        sizeData.add((size, child.pos));
-        outputWidget.add(DropRegionRow(
-            widgets: subWidget,
-            maxChildrenPerRow: maxChildrenPerRow,
-            sizeData: sizeData));
-        subWidget = List<Expanded>.empty(growable: true);
-        sizeData = List<(int, Pos)>.empty(growable: true);
+        subSizeDataList.add(node);
+        sizeDataList.add(subSizeDataList);
+        subSizeDataList = List<SizeData>.empty(growable: true);
         stack = 0;
       } else {
-        subWidget.add(Expanded(
-          flex: maxChildrenPerRow - stack,
-          child: const SizedBox(
-            height: defaultHeight,
-          ),
-        ));
-        sizeData.add((maxChildrenPerRow - stack, child.pos));
-        outputWidget.add(DropRegionRow(
-            widgets: subWidget,
-            maxChildrenPerRow: maxChildrenPerRow,
-            sizeData: sizeData));
-        subWidget = List<Expanded>.empty(growable: true);
-        sizeData = List<(int, Pos)>.empty(growable: true);
-        subWidget.add(node);
-        sizeData.add((size, child.pos));
+        int leftSize = maxChildrenPerRow - stack;
+        switch (align) {
+          case ChoiceLineAlignment.left:
+            subSizeDataList.add(SizeData(width: leftSize * 2));
+            break;
+          case ChoiceLineAlignment.center:
+            subSizeDataList.insert(0, SizeData(width: leftSize));
+            subSizeDataList.add(SizeData(width: leftSize));
+            break;
+          case ChoiceLineAlignment.right:
+            subSizeDataList.insert(0, SizeData(width: leftSize * 2));
+            break;
+        }
+        sizeDataList.add(subSizeDataList);
+        subSizeDataList = List<SizeData>.empty(growable: true);
+        subSizeDataList.add(node);
         stack = size;
       }
     }
-    if (subWidget.isNotEmpty || children.isEmpty) {
-      if (stack != maxChildrenPerRow) {
-        subWidget.add(Expanded(
-          flex: maxChildrenPerRow - stack,
-          child: const SizedBox(
-            height: defaultHeight,
-          ),
-        ));
-        sizeData.add(
-            (maxChildrenPerRow - stack, parentPos.addLast(children.length)));
+    if (stack < maxChildrenPerRow) {
+      int leftSize = maxChildrenPerRow - stack;
+      switch (align) {
+        case ChoiceLineAlignment.left:
+          subSizeDataList.add(SizeData(width: leftSize * 2));
+          break;
+        case ChoiceLineAlignment.center:
+          subSizeDataList.insert(0, SizeData(width: leftSize));
+          subSizeDataList.add(SizeData(width: leftSize));
+          break;
+        case ChoiceLineAlignment.right:
+          subSizeDataList.insert(0, SizeData(width: leftSize * 2));
+          break;
       }
-      outputWidget.add(DropRegionRow(
-        widgets: subWidget,
-        maxChildrenPerRow: maxChildrenPerRow,
-        sizeData: sizeData,
-        isEmpty: children.isEmpty,
-      ));
+      sizeDataList.add(subSizeDataList);
     }
-    Widget addButton = Card(
-      child: CircleButton(
-        onPressed: () {
-          ref
-              .read(choiceStatusProvider(parentPos).notifier)
-              .addChoice(ChoiceNode.empty()..width = 3, index: children.length);
-        },
-        tooltip: 'create_tooltip_node'.i18n,
-        child: const Icon(Icons.add),
-      ),
-    );
-    outputWidget.add(
-      Stack(
-        children: [
-          Center(
-            child: addButton,
-          ),
-        ],
-      ),
-    );
-
-    if (isInner) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: outputWidget,
-      );
-    }
-    var preset = ref.watch(lineDesignPresetProvider(pos: parentPos));
-    return DecoratedSliver(
-      decoration: preset.backgroundColorOption!.colorType == ColorType.gradient
-          ? BoxDecoration(
-              gradient: preset.backgroundColorOption!.getGradient(),
-            )
-          : BoxDecoration(
-              color: Color(preset.backgroundColorOption!.color),
-            ),
-      sliver: SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            return Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical:
-                      ref.watch(platformDesignSettingProvider).marginVertical),
-              child: outputWidget[index],
-            );
-          },
-          childCount: outputWidget.length,
-        ),
-      ),
-    );
+    return sizeDataList;
   }
-}
-
-class ViewWrapCustom extends ConsumerWidget {
-  final Pos parentPos;
-  final Widget Function(int) builder;
-  final int parentMaxSize;
-  final bool isInner;
-
-  const ViewWrapCustom(this.parentPos, this.builder,
-      {this.parentMaxSize = 100, this.isInner = true, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<Widget> outputWidget = List<Widget>.empty(growable: true);
-    var children = ref.watch(choiceStatusProvider(parentPos)).getChildrenList();
+    var node = ref.watch(choiceStatusProvider(parentPos));
+    var children = node.getChildrenList();
     var presetMaxChildrenPerRow = parentMaxSize;
-    if(!isInner){
-      presetMaxChildrenPerRow = ref.watch(lineDesignPresetProvider(pos: parentPos)).maxChildrenPerRow!;
+    var align = ChoiceLineAlignment.left;
+    var height = isReorderAble ? defaultHeight : 0.0;
+    if (!isInner) {
+      var preset = ref.watch(lineDesignPresetProvider(pos: parentPos));
+      presetMaxChildrenPerRow =
+          preset.maxChildrenPerRow ?? presetMaxChildrenPerRow;
+      align = preset.alignment ?? align;
     }
     var maxChildrenPerRow = min(parentMaxSize, ref.watch(maximumSizeProvider));
     maxChildrenPerRow = min(maxChildrenPerRow, presetMaxChildrenPerRow);
-    if (children.isEmpty && isInner) {
-      return const SizedBox.shrink();
-    }
-    int stack = 0;
-    List<Widget> subWidget = List<Widget>.empty(growable: true);
-    for (int i = 0; i < children.length; i++) {
-      var child = children[i] as ChoiceNode;
-      if (child.isHide()) {
-        continue;
-      }
-      int size = child.width == 0
-          ? maxChildrenPerRow
-          : min(child.width, maxChildrenPerRow);
 
-      if (stack + size > maxChildrenPerRow) {
-        if (maxChildrenPerRow > stack) {
-          subWidget.add(
-            Expanded(
-              flex: maxChildrenPerRow - stack,
-              child: const SizedBox.shrink(),
-            ),
-          );
+    var sizeDataList = refreshSizeData(
+        children: children, align: align, maxChildrenPerRow: maxChildrenPerRow);
+    List<Widget> outputWidget = List<Widget>.empty(growable: true);
+    for (var verticalList in sizeDataList) {
+      var elementList = List<Expanded>.empty(growable: true);
+      for (var element in verticalList) {
+        if (element.pos != null) {
+          elementList.add(Expanded(
+            flex: element.width,
+            child: isReorderAble ? NodeDraggable(element.pos!) : builder!(element.pos!.last),
+          ));
+        } else {
+          elementList.add(Expanded(
+              flex: element.width,
+              child: SizedBox(
+                height: height,
+              )));
         }
+      }
+      if(isReorderAble){
+        outputWidget.add(DropRegionRow(
+          widgets: elementList,
+          sizeData: verticalList,
+          maxChildrenPerRow: maxChildrenPerRow,
+        ));
+      }else{
         outputWidget.add(
           IntrinsicHeight(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: subWidget,
+              children: elementList,
             ),
           ),
         );
-        subWidget = List.empty(growable: true);
-        stack = 0;
-        i -= 1;
-        continue;
-      } else if (size == maxChildrenPerRow) {
-        outputWidget.add(SizedBox(width: double.infinity, child: builder(i)));
-        subWidget = List.empty(growable: true);
-      } else {
-        subWidget.add(Expanded(flex: size, child: builder(i)));
-        stack += size;
       }
+      // outputWidgetList.add(value)
     }
-    if (0 < stack && stack < maxChildrenPerRow) {
-      subWidget.add(Expanded(
-          flex: maxChildrenPerRow - stack, child: const SizedBox.shrink()));
-    }
-    if (subWidget.isNotEmpty) {
+    if(isReorderAble){
       outputWidget.add(
-        IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: subWidget,
-          ),
+        Stack(
+          children: [
+            Center(
+              child: Card(
+                child: CircleButton(
+                  onPressed: () {
+                    ref
+                        .read(choiceStatusProvider(parentPos).notifier)
+                        .addChoice(ChoiceNode.empty()..width = 3, index: children.length);
+                  },
+                  tooltip: 'create_tooltip_node'.i18n,
+                  child: const Icon(Icons.add),
+                ),
+              ),
+            ),
+          ],
         ),
       );
-    } else if (!isInner) {
+    }else if(outputWidget.isEmpty){
       outputWidget.add(const SizedBox.square(dimension: defaultHeight));
     }
+
     if (isInner) {
       return Column(
         mainAxisSize: MainAxisSize.min,
