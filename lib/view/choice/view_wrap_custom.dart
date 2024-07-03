@@ -218,7 +218,7 @@ class ViewWrapCustomReorder extends ConsumerWidget {
     var children = node.getChildrenList();
     var presetMaxChildrenPerRow = parentMaxSize;
     if(!isInner){
-      presetMaxChildrenPerRow = ref.watch(lineOptionProvider(pos: parentPos)).maxChildrenPerRow;
+      presetMaxChildrenPerRow = ref.watch(lineDesignPresetProvider(pos: parentPos)).maxChildrenPerRow!;
     }
     var maxChildrenPerRow = min(parentMaxSize, ref.watch(maximumSizeProvider));
     maxChildrenPerRow = min(maxChildrenPerRow, presetMaxChildrenPerRow);
@@ -353,7 +353,7 @@ class ViewWrapCustom extends ConsumerWidget {
     var children = ref.watch(choiceStatusProvider(parentPos)).getChildrenList();
     var presetMaxChildrenPerRow = parentMaxSize;
     if(!isInner){
-      presetMaxChildrenPerRow = ref.watch(lineOptionProvider(pos: parentPos)).maxChildrenPerRow;
+      presetMaxChildrenPerRow = ref.watch(lineDesignPresetProvider(pos: parentPos)).maxChildrenPerRow!;
     }
     var maxChildrenPerRow = min(parentMaxSize, ref.watch(maximumSizeProvider));
     maxChildrenPerRow = min(maxChildrenPerRow, presetMaxChildrenPerRow);

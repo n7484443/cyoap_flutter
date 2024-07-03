@@ -138,10 +138,44 @@ class ViewLineOptionEditor extends ConsumerWidget {
                           preset.copyWith(
                               alwaysVisibleLine: !preset.alwaysVisibleLine!)),
                   label: 'black_line'.i18n,
-                  state: preset.alwaysVisibleLine!)
+                  state: preset.alwaysVisibleLine!),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(ConstList.padding),
+                  child: Row(
+                    children: [
+                      Text('lineSetting_maxChildrenPerRow'.i18n),
+                      const Spacer(),
+                      IconButton(
+                        icon: const Icon(Icons.chevron_left),
+                        onPressed: () => ref
+                            .read(choiceLinePresetListProvider.notifier)
+                            .updateIndex(
+                                index,
+                                preset.copyWith(
+                                    maxChildrenPerRow:
+                                        preset.maxChildrenPerRow! >= 0
+                                            ? preset.maxChildrenPerRow! - 1
+                                            : preset.maxChildrenPerRow!)),
+                      ),
+                      Text(preset.maxChildrenPerRow.toString()),
+                      IconButton(
+                        icon: const Icon(Icons.chevron_right),
+                        onPressed: () => ref
+                            .read(choiceLinePresetListProvider.notifier)
+                            .updateIndex(
+                                index,
+                                preset.copyWith(
+                                    maxChildrenPerRow:
+                                        preset.maxChildrenPerRow! + 1)),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ]),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 3,
+              crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
               crossAxisSpacing: 2,
               mainAxisExtent: 80,
               mainAxisSpacing: 2,

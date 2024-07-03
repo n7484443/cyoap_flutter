@@ -237,6 +237,7 @@ extension Localization on String {
 
           //design
           'general': 'General',
+          'inner_line': 'Inner Line Setting',
           'background': 'Background',
           'font_score': 'Score font',
           'margin_vertical':
@@ -343,6 +344,7 @@ extension Localization on String {
 
           //design
           'general': '일반',
+          'inner_line': '내부 라인',
           'background': '배경',
           'font_score': '점수 폰트',
           'margin_vertical': '선택지 간 세로 여백\n기본 값 %.1f',

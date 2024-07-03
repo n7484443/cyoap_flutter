@@ -53,7 +53,8 @@ class SizeDialog extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var width = ref.watch(choiceNodeSizeProvider(pos));
     var str = width == 0 ? 'max' : width.toString();
-    var lineOption = ref.watch(lineOptionProvider(pos: Pos(data: pos.data.getRange(0, 2).toList())));
+    var linePos = Pos(data: pos.data.getRange(0, 2).toList());
+    var preset = ref.watch(lineDesignPresetProvider(pos: linePos));
     return AlertDialog(
       scrollable: true,
       alignment: Alignment.center,
@@ -73,8 +74,8 @@ class SizeDialog extends ConsumerWidget {
                     .sizeChange(value.toInt());
               },
               value: width.toDouble(),
-              divisions: lineOption.maxChildrenPerRow,
-              max: lineOption.maxChildrenPerRow.toDouble(),
+              divisions: preset.maxChildrenPerRow,
+              max: preset.maxChildrenPerRow!.toDouble(),
               min: 0,
               label: str,
             ),

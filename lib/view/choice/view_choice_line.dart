@@ -308,33 +308,6 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
               ),
             ],
           ),
-          Row(
-            children: [
-              Text('lineSetting_maxChildrenPerRow'.i18n),
-              const Spacer(),
-              IconButton(
-                icon: const Icon(Icons.chevron_left),
-                onPressed: () {
-                  ref
-                      .read(lineOptionProvider(pos: widget.pos).notifier)
-                      .setValue(lineOption.copyWith(
-                      maxChildrenPerRow: lineOption.maxChildrenPerRow >= 0
-                          ? lineOption.maxChildrenPerRow - 1
-                          : lineOption.maxChildrenPerRow));
-                },
-              ),
-              Text(lineOption.maxChildrenPerRow.toString()),
-              IconButton(
-                icon: const Icon(Icons.chevron_right),
-                onPressed: () {
-                  ref
-                      .read(lineOptionProvider(pos: widget.pos).notifier)
-                      .setValue(lineOption.copyWith(
-                      maxChildrenPerRow: lineOption.maxChildrenPerRow + 1));
-                },
-              ),
-            ],
-          ),
           const SizedBox(height: ConstList.padding),
           DropdownButtonFormField<String>(
             decoration:
