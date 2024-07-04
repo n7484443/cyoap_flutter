@@ -11,7 +11,6 @@ import 'package:cyoap_flutter/view/util/view_circle_button.dart';
 import 'package:cyoap_flutter/viewModel/vm_global_setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 
 import '../../viewModel/choice/vm_choice.dart';
@@ -19,8 +18,6 @@ import '../../viewModel/choice/vm_choice_line.dart';
 import '../../viewModel/vm_design_setting.dart';
 import '../../viewModel/vm_draggable_nested_map.dart';
 import 'view_choice_node.dart';
-
-part 'view_wrap_custom.freezed.dart';
 
 const double defaultHeight = 70.0;
 
@@ -229,11 +226,6 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
   }
 }
 
-@freezed
-class SizeData with _$SizeData {
-  const factory SizeData({required int width, Pos? pos}) = _SizeData;
-}
-
 class ViewWrapCustomReorder extends ConsumerWidget {
   final Pos parentPos;
   final int parentMaxSize;
@@ -242,67 +234,11 @@ class ViewWrapCustomReorder extends ConsumerWidget {
   final Widget Function(int)? builder;
 
   const ViewWrapCustomReorder(this.parentPos,
-      {required this.isReorderAble, this.builder, this.parentMaxSize = 100, this.isInner = true, super.key});
-
-  List<List<SizeData>> refreshSizeData({
-    required List<Choice> children,
-    required ChoiceLineAlignment align,
-    required int maxChildrenPerRow,
-  }) {
-    var sizeDataList = List<List<SizeData>>.empty(growable: true);
-    var subSizeDataList = List<SizeData>.empty(growable: true);
-    int stack = 0;
-    for (var child in children) {
-      int size = child.width == 0
-          ? maxChildrenPerRow
-          : min(child.width, maxChildrenPerRow);
-      var node = SizeData(width: size * 2, pos: child.pos);
-      if (stack + size < maxChildrenPerRow) {
-        subSizeDataList.add(node);
-        stack += size;
-      } else if (stack + size == maxChildrenPerRow) {
-        subSizeDataList.add(node);
-        sizeDataList.add(subSizeDataList);
-        subSizeDataList = List<SizeData>.empty(growable: true);
-        stack = 0;
-      } else {
-        int leftSize = maxChildrenPerRow - stack;
-        switch (align) {
-          case ChoiceLineAlignment.left:
-            subSizeDataList.add(SizeData(width: leftSize * 2));
-            break;
-          case ChoiceLineAlignment.center:
-            subSizeDataList.insert(0, SizeData(width: leftSize));
-            subSizeDataList.add(SizeData(width: leftSize));
-            break;
-          case ChoiceLineAlignment.right:
-            subSizeDataList.insert(0, SizeData(width: leftSize * 2));
-            break;
-        }
-        sizeDataList.add(subSizeDataList);
-        subSizeDataList = List<SizeData>.empty(growable: true);
-        subSizeDataList.add(node);
-        stack = size;
-      }
-    }
-    if (stack < maxChildrenPerRow) {
-      int leftSize = maxChildrenPerRow - stack;
-      switch (align) {
-        case ChoiceLineAlignment.left:
-          subSizeDataList.add(SizeData(width: leftSize * 2));
-          break;
-        case ChoiceLineAlignment.center:
-          subSizeDataList.insert(0, SizeData(width: leftSize));
-          subSizeDataList.add(SizeData(width: leftSize));
-          break;
-        case ChoiceLineAlignment.right:
-          subSizeDataList.insert(0, SizeData(width: leftSize * 2));
-          break;
-      }
-      sizeDataList.add(subSizeDataList);
-    }
-    return sizeDataList;
-  }
+      {required this.isReorderAble,
+      this.builder,
+      this.parentMaxSize = 100,
+      this.isInner = true,
+      super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -320,8 +256,8 @@ class ViewWrapCustomReorder extends ConsumerWidget {
     var maxChildrenPerRow = min(parentMaxSize, ref.watch(maximumSizeProvider));
     maxChildrenPerRow = min(maxChildrenPerRow, presetMaxChildrenPerRow);
 
-    var sizeDataList = refreshSizeData(
-        children: children, align: align, maxChildrenPerRow: maxChildrenPerRow);
+    var (sizeDataList, _) = node.node
+        .getSizeDataList(align: align, maxChildrenPerRow: maxChildrenPerRow);
     List<Widget> outputWidget = List<Widget>.empty(growable: true);
     for (var verticalList in sizeDataList) {
       var elementList = List<Expanded>.empty(growable: true);
@@ -329,7 +265,9 @@ class ViewWrapCustomReorder extends ConsumerWidget {
         if (element.pos != null) {
           elementList.add(Expanded(
             flex: element.width,
-            child: isReorderAble ? NodeDraggable(element.pos!) : builder!(element.pos!.last),
+            child: isReorderAble
+                ? NodeDraggable(element.pos!)
+                : builder!(element.pos!.last),
           ));
         } else {
           elementList.add(Expanded(
@@ -339,13 +277,13 @@ class ViewWrapCustomReorder extends ConsumerWidget {
               )));
         }
       }
-      if(isReorderAble){
+      if (isReorderAble) {
         outputWidget.add(DropRegionRow(
           widgets: elementList,
           sizeData: verticalList,
           maxChildrenPerRow: maxChildrenPerRow,
         ));
-      }else{
+      } else {
         outputWidget.add(
           IntrinsicHeight(
             child: Row(
@@ -357,7 +295,7 @@ class ViewWrapCustomReorder extends ConsumerWidget {
       }
       // outputWidgetList.add(value)
     }
-    if(isReorderAble){
+    if (isReorderAble) {
       outputWidget.add(
         Stack(
           children: [
@@ -367,7 +305,8 @@ class ViewWrapCustomReorder extends ConsumerWidget {
                   onPressed: () {
                     ref
                         .read(choiceStatusProvider(parentPos).notifier)
-                        .addChoice(ChoiceNode.empty()..width = 3, index: children.length);
+                        .addChoice(ChoiceNode.empty()..width = 3,
+                            index: children.length);
                   },
                   tooltip: 'create_tooltip_node'.i18n,
                   child: const Icon(Icons.add),
@@ -377,7 +316,7 @@ class ViewWrapCustomReorder extends ConsumerWidget {
           ],
         ),
       );
-    }else if(outputWidget.isEmpty){
+    } else if (outputWidget.isEmpty) {
       outputWidget.add(const SizedBox.square(dimension: defaultHeight));
     }
 
