@@ -76,7 +76,7 @@ class ChoiceStatus extends ChangeNotifier {
   }
 
   void swapChoice(Pos target) {
-    var lca = Pos.lca(pos, target);
+    var lca = Pos.lca(pos, target).removeLast();
     if (pos.last == nonPositioned) {
       getPlatform.addData(target, getPlatform.createTempNode());
     } else {
