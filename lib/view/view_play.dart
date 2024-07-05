@@ -78,7 +78,7 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
                       var status = await ref
                           .read(playDataProvider.notifier)
                           .savePlayData();
-                      showSnackbar(context, status);
+                      showSnackBar(context, status);
                     },
                     icon: const Icon(Icons.save)),
                 IconButton(
@@ -87,7 +87,7 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
                           .read(playDataProvider.notifier)
                           .loadPlayData();
                       if (status != null) {
-                        showSnackbar(context, status);
+                        showSnackBar(context, status);
                       }
                     },
                     icon: const Icon(Icons.file_upload_outlined)),
@@ -126,7 +126,7 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
                     var status = await ref
                         .read(playDataProvider.notifier)
                         .savePlayData();
-                    showSnackbar(context, status);
+                    showSnackBar(context, status);
                   },
                   icon: const Icon(Icons.save)),
               IconButton(
@@ -135,7 +135,7 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
                         .read(playDataProvider.notifier)
                         .loadPlayData();
                     if (status != null) {
-                      showSnackbar(context, status);
+                      showSnackBar(context, status);
                     }
                   },
                   icon: const Icon(Icons.file_upload_outlined)),

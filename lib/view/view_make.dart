@@ -100,8 +100,8 @@ class ViewSaveIcons extends ConsumerWidget {
               barrierDismissible: false);
           await savePlatform(ref, true);
           Navigator.of(context).pop();
-          showSnackbar(context, "save_successfully".i18n,
-              ref: ref, hasErrorLog: Analyser().errorList.isNotEmpty);
+          showSnackBar(context, "save_successfully".i18n,
+              ref: ref, errorLog: Analyser().errorList, autoHide: true);
         },
       );
     }
@@ -123,8 +123,8 @@ class ViewSaveIcons extends ConsumerWidget {
             await savePlatform(ref, true);
             break;
         }
-        showSnackbar(context, 'save_successfully'.i18n,
-            ref: ref, hasErrorLog: Analyser().errorList.isNotEmpty);
+        showSnackBar(context, 'save_successfully'.i18n,
+            ref: ref, errorLog: Analyser().errorList, autoHide: true);
         Navigator.of(context).pop();
       },
       itemBuilder: (BuildContext context) {

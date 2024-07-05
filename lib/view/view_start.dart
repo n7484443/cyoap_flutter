@@ -236,12 +236,12 @@ class SelectMode extends ConsumerWidget {
                   ref.read(snackBarErrorProvider.notifier).update();
                   break;
                 case ProjectState.nonExist:
-                  showSnackbar(context, 'failed_load_project_non_exist'.i18n,
+                  showSnackBar(context, 'failed_load_project_non_exist'.i18n,
                       autoHide: false);
                   break;
                 case ProjectState.fail:
                   print(loadState.version!);
-                  showSnackbar(
+                  showSnackBar(
                       context,
                       'failed_load_project_version'
                           .i18n
@@ -249,7 +249,7 @@ class SelectMode extends ConsumerWidget {
                       autoHide: false);
                   break;
                 default:
-                  showSnackbar(context, 'failed_load_project_cyoap_error'.i18n,
+                  showSnackBar(context, 'failed_load_project_cyoap_error'.i18n,
                       autoHide: false);
                   break;
               }
@@ -281,12 +281,12 @@ class SelectMode extends ConsumerWidget {
                   Navigator.of(context).pushReplacementNamed('/viewMake');
                   break;
                 case ProjectState.nonExist:
-                  showSnackbar(context, 'failed_load_project_non_exist'.i18n,
+                  showSnackBar(context, 'failed_load_project_non_exist'.i18n,
                       autoHide: false);
                   break;
                 case ProjectState.fail:
                   print(loadState.version!);
-                  showSnackbar(
+                  showSnackBar(
                       context,
                       'failed_load_project_version'
                           .i18n
@@ -294,7 +294,7 @@ class SelectMode extends ConsumerWidget {
                       autoHide: false);
                   break;
                 default:
-                  showSnackbar(context, 'failed_load_project_cyoap_error'.i18n,
+                  showSnackBar(context, 'failed_load_project_cyoap_error'.i18n,
                       autoHide: false);
                   break;
               }

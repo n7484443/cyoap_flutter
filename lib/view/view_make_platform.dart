@@ -108,7 +108,7 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
         const SingleActivator(LogicalKeyboardKey.keyS, control: true):
             () async {
           await savePlatform(ref, getPlatformFileSystem.openAsFile);
-          showSnackbar(context, "save_successfully".i18n);
+          showSnackBar(context, "save_successfully".i18n);
         }
       },
       child: Focus(

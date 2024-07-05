@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../viewModel/vm_snackbar.dart';
-
-void showSnackbar(BuildContext context, String text,
+void showSnackBar(BuildContext context, String text,
     {String? describe,
     bool autoHide = true,
-    bool hasErrorLog = false,
+    List<String>? errorLog,
     WidgetRef? ref}) {
-  autoHide = autoHide && !hasErrorLog;
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Row(
@@ -16,23 +13,15 @@ void showSnackbar(BuildContext context, String text,
         children: [
           Text(text),
           if (describe != null) Text(describe),
-          if (!autoHide)
-            Card(
-              child: IconButton(
-                onPressed: () =>
-                    ScaffoldMessenger.of(context).hideCurrentSnackBar(),
-                icon: const Icon(Icons.close),
-              ),
-            ),
-          if (hasErrorLog)
+          if (errorLog != null && errorLog.isNotEmpty)
             Column(
               mainAxisSize: MainAxisSize.min,
-              children:
-                  ref!.read(snackBarErrorProvider).map((e) => Text(e)).toList(),
+              children: errorLog.map((e) => Text(e)).toList(),
             ),
         ],
       ),
       duration: autoHide ? const Duration(seconds: 2) : const Duration(days: 1),
+      showCloseIcon: !autoHide,
     ),
   );
 }
