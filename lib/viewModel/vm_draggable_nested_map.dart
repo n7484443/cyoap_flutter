@@ -8,14 +8,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../model/clipboard.dart';
 
 final choiceNodeClipboardStatusProvider =
-    ChangeNotifierProvider<ChoiceNodeClipboardNotifier>(
+    ChangeNotifierProvider.autoDispose<ChoiceNodeClipboardNotifier>(
         (ref) => ChoiceNodeClipboardNotifier(ref));
 
 class ChoiceNodeClipboardNotifier extends ChangeNotifier {
   List<ChoiceNode> choiceNodeQueue = [];
   Ref ref;
 
-  ChoiceNodeClipboardNotifier(this.ref);
+  ChoiceNodeClipboardNotifier(this.ref){
+    choiceNodeQueue = getPlatform.clipboard.queue.toList();
+  }
 
   void add(ChoiceNode original) {
     var choiceNode = original.clone();
