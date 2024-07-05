@@ -24,6 +24,7 @@ const double defaultHeight = 70.0;
 class DropRegionRow extends ConsumerStatefulWidget {
   final List<Expanded> widgets;
   final List<SizeData> sizeData;
+  final Pos startPos;
   final int maxChildrenPerRow;
   final bool isEmpty;
 
@@ -32,6 +33,7 @@ class DropRegionRow extends ConsumerStatefulWidget {
       required this.widgets,
       required this.sizeData,
       required this.maxChildrenPerRow,
+      required this.startPos,
       this.isEmpty = false});
 
   @override
@@ -117,7 +119,7 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
         var x = mousePos.local.dx / spaceWidth;
         var minLength = 0.25;
         var before = 0;
-        if (widget.isEmpty) {
+        if (widget.sizeData.isEmpty) {
           var pos = widget.sizeData.first.pos!;
           if (drag.isParent(pos)) {
             setState(() {
@@ -145,36 +147,52 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
             continue;
           }
           if (pos == null) {
+            Pos dragPos;
+            int indexNew = index;
             if (index == 0) {
-              setState(() {
-                this.index = index + 1;
-              });
+              if (index + 1 < widget.sizeData.length) {
+                dragPos = widget.sizeData[index + 1].pos!;
+              } else {
+                dragPos = widget.startPos;
+              }
+              indexNew += 1;
             } else {
-              setState(() {
-                this.index = index;
-              });
+              dragPos = widget.sizeData[index - 1].pos!;
+              indexNew -= 1;
             }
-          } else if (drag.isParent(pos)) {
+            if (drag.isParent(dragPos)) {
+              setState(() {
+                this.index = -1;
+              });
+              return DropOperation.none;
+            }
+            setState(() {
+              this.index = indexNew;
+            });
+            return DropOperation.copy;
+          }
+
+          if (drag.isParent(pos)) {
             setState(() {
               this.index = -1;
             });
             return DropOperation.none;
+          }
+
+          var left = x - before;
+          var right = before + width - x;
+          if (0 <= left && left <= minLength) {
+            setState(() {
+              this.index = index;
+            });
+          } else if (0 <= right && right <= minLength) {
+            setState(() {
+              this.index = index + 1;
+            });
           } else {
-            var left = x - before;
-            var right = before + width - x;
-            if (0 <= left && left <= minLength) {
-              setState(() {
-                this.index = index;
-              });
-            } else if (0 <= right && right <= minLength) {
-              setState(() {
-                this.index = index + 1;
-              });
-            } else {
-              setState(() {
-                this.index = -1;
-              });
-            }
+            setState(() {
+              this.index = -1;
+            });
           }
           return DropOperation.copy;
         }
@@ -184,7 +202,10 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
         var item = event.session.items.first;
         var data = Pos(data: (item.localData as List).cast<int>());
         if (isEntered) {
-          if (widget.sizeData[index].pos == null) {
+          if (index < widget.sizeData.length &&
+              widget.sizeData[index].pos != null) {
+            add(data, widget.sizeData[index].pos!, ref);
+          } else {
             Iterator<SizeData> iterator;
             if (index == 0) {
               iterator = widget.sizeData.iterator;
@@ -195,9 +216,11 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
             while (iterator.moveNext() && pos == null) {
               pos = iterator.current.pos;
             }
-            add(data, pos!.removeLast().addLast(pos.last + 1), ref);
-          } else {
-            add(data, widget.sizeData[index].pos!, ref);
+            if (pos == null) {
+              add(data, widget.startPos, ref);
+            } else {
+              add(data, pos.removeLast().addLast(pos.last + 1), ref);
+            }
           }
         }
       },
@@ -257,9 +280,10 @@ class ViewWrapCustomReorder extends ConsumerWidget {
     maxChildrenPerRow = min(maxChildrenPerRow, presetMaxChildrenPerRow);
 
     var (sizeDataList, _) = node.node
-        .getSizeDataList(align: align, maxChildrenPerRow: maxChildrenPerRow);
+        .getSizeDataList(align: align, maxChildrenPerRow: maxChildrenPerRow, showAll: isReorderAble);
     List<Widget> outputWidget = List<Widget>.empty(growable: true);
-    for (var verticalList in sizeDataList) {
+    for (var y = 0; y < sizeDataList.length; y++) {
+      var verticalList = sizeDataList[y];
       var elementList = List<Expanded>.empty(growable: true);
       for (var element in verticalList) {
         if (element.pos != null) {
@@ -278,7 +302,17 @@ class ViewWrapCustomReorder extends ConsumerWidget {
         }
       }
       if (isReorderAble) {
+        var startPos = parentPos.addLast(0);
+        if (y != 0) {
+          var iterator = sizeDataList[y - 1].iterator;
+          Pos? pointer;
+          while (iterator.moveNext() && pointer == null) {
+            pointer = iterator.current.pos;
+          }
+          startPos = pointer ?? parentPos.addLast(0);
+        }
         outputWidget.add(DropRegionRow(
+          startPos: startPos,
           widgets: elementList,
           sizeData: verticalList,
           maxChildrenPerRow: maxChildrenPerRow,

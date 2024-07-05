@@ -355,8 +355,6 @@ class _ViewTextContentsEditorState
     var fontSize = [10, 11, 12, 14, 16, 18, 21, 24, 36, 48, 60, 72]
         .map((e) => e.toString())
         .toList();
-    print(ConstList.textFontList
-        .map((k, v) => MapEntry(k, v.fontFamily!.split("_")[0])));
     return Column(
       children: [
         Padding(

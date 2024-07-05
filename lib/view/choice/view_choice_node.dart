@@ -508,6 +508,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
       child = ViewWrapCustomReorder(
         pos,
         isReorderAble: false,
+        parentMaxSize: node.getMaxSize(true),
         builder: (i) => ViewChoiceNode(
           pos.addLast(i),
           ignoreOption: ignoreOption,
