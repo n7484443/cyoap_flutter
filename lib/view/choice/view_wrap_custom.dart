@@ -92,7 +92,7 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
       render = widget.widgets;
     } else {
       render = widget.widgets
-          .map((e) => Expanded(flex: e.flex * 2, child: e.child))
+          .map((e) => Expanded(flex: e.flex * 4, child: e.child))
           .toList();
       int i = index;
       int flex = 2;
@@ -136,7 +136,7 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
           var flexSum = widget.sizeData.fold<int>(0, (a, b) => a + b.width);
           var spaceWidth = width / flexSum;
           var x = mousePos.local.dx / spaceWidth;
-          var minLength = 0.5;
+          var minLength = 2/(4*2);
           var before = 0;
           if (widget.sizeData.isEmpty) {
             var pos = widget.startPos;
