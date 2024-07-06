@@ -102,7 +102,7 @@ final ideVariableListProvider = Provider.autoDispose<List<String>>((ref) {
   return VariableDataBase()
       .varMapGlobal
       .keys
-      .where((e) => e.startsWith(ref.watch(ideCurrentInputProvider)))
+      .where((e) => e.contains(ref.watch(ideCurrentInputProvider)))
       .toList();
 });
 
@@ -152,15 +152,17 @@ class IdeCurrentInputNotifier extends StateNotifier<String> {
   void insertText(String text) {
     if (lastFocusText != null) {
       int end = lastFocusText!.selection.end;
-      String input = lastFocusText!.text.replaceRange(end - len, end, "$text ");
+      int start = end - len - 1;
+      String input = lastFocusText!.text.replaceRange(start, end, "$text ");
       lastFocusText!.value = TextEditingValue(
           text: input,
           selection:
-              TextSelection.collapsed(offset: end - len + text.length + 1));
+              TextSelection.collapsed(offset: start + text.length - 1));
     } else if (lastFocusQuill != null) {
       int end = lastFocusQuill!.selection.end;
-      lastFocusQuill!.document.replace(end - len, len, "$text ");
-      lastFocusQuill!.moveCursorToPosition(end - len + text.length + 1);
+      int start = end - len - 1;
+      lastFocusQuill!.document.replace(start, len, "$text ");
+      lastFocusQuill!.moveCursorToPosition(start + text.length - 1);
     }
     state = "";
     len = 0;

@@ -23,8 +23,6 @@ import '../viewModel/preset/vm_choice_node_preset.dart';
 import '../viewModel/vm_editor.dart';
 import '../viewModel/vm_make_platform.dart';
 
-import 'package:flutter_quill/src/models/config/raw_editor/raw_editor_configurations.dart' show QuillRawEditorConfigurations;
-
 class ViewEditor extends ConsumerStatefulWidget {
   const ViewEditor({
     super.key,
@@ -420,7 +418,6 @@ class _ViewTextContentsEditorState
                 sharedConfigurations: QuillSharedConfigurations(
                   locale: ref.watch(localeStateProvider),
                 ),
-                contextMenuBuilder: ConstList.isDesktop() ? (context, state) => const SizedBox.shrink() : null,
               ),
               focusNode: _focusNode!,
               scrollController: _scrollController!,
