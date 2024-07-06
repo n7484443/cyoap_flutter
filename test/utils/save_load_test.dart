@@ -37,8 +37,8 @@ void main() async {
   platform_specified.PlatformSpecified().preInit();
   platform_specified.PlatformSpecified().init();
   test('save load zip', () async {
-    var pathZip = "test\\save_load_folder\\extract.zip";
-    var pathFolder = "test\\save_load_folder";
+    var pathZip = "test\\utils\\save_load_folder\\extract.zip";
+    var pathFolder = "test\\utils\\save_load_folder";
     File fileZip = File(pathZip);
     if (await fileZip.exists()) {
       await fileZip.delete();
@@ -55,7 +55,7 @@ void main() async {
   });
 
   test('save load folder', () async {
-    var pathFolder = "test\\save_load_folder\\folder";
+    var pathFolder = "test\\utils\\save_load_folder\\folder";
     Directory dir = Directory(pathFolder);
     if(await dir.exists()){
       await dir.delete(recursive: true);
