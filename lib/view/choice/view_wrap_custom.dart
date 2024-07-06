@@ -79,14 +79,17 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
     List<Expanded> render;
     if (checkEmpty()) {
       render = [
-        const Expanded(
+        Expanded(
           flex: 1,
           child: Card(
             color: Colors.transparent,
             elevation: ConstList.elevation,
-            child: SizedBox(height: defaultHeight),
+            child: SizedBox(
+              height: defaultHeight,
+              child: widget.widgets.first.child,
+            ),
           ),
-        )
+        ),
       ];
     } else if (!(isEntered && index >= 0)) {
       render = widget.widgets;
@@ -136,7 +139,7 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
           var flexSum = widget.sizeData.fold<int>(0, (a, b) => a + b.width);
           var spaceWidth = width / flexSum;
           var x = mousePos.local.dx / spaceWidth;
-          var minLength = 2/(4*2);
+          var minLength = 2 / (4 * 2);
           var before = 0;
           if (widget.sizeData.isEmpty) {
             var pos = widget.startPos;
@@ -355,35 +358,34 @@ class ViewWrapCustomReorder extends ConsumerWidget {
       }
     }
     if (isReorderAble) {
+      var addIcon = Stack(
+        children: [
+          Center(
+            child: Card(
+              child: CircleButton(
+                onPressed: () {
+                  ref.read(choiceStatusProvider(parentPos).notifier).addChoice(
+                      ChoiceNode.empty()..width = 3,
+                      index: children.length);
+                },
+                tooltip: 'create_tooltip_node'.i18n,
+                child: const Icon(Icons.add),
+              ),
+            ),
+          ),
+        ],
+      );
       if (sizeDataList.isEmpty) {
         var startPos = parentPos.addLast(0);
         outputWidget.add(DropRegionRow(
           startPos: startPos,
-          widgets: [],
+          widgets: [Expanded(child: addIcon)],
           sizeData: [],
           maxChildrenPerRow: maxChildrenPerRow,
         ));
+      } else {
+        outputWidget.add(addIcon);
       }
-      outputWidget.add(
-        Stack(
-          children: [
-            Center(
-              child: Card(
-                child: CircleButton(
-                  onPressed: () {
-                    ref
-                        .read(choiceStatusProvider(parentPos).notifier)
-                        .addChoice(ChoiceNode.empty()..width = 3,
-                            index: children.length);
-                  },
-                  tooltip: 'create_tooltip_node'.i18n,
-                  child: const Icon(Icons.add),
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
     } else if (outputWidget.isEmpty) {
       outputWidget.add(const SizedBox.square(dimension: defaultHeight));
     }
