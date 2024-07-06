@@ -77,6 +77,7 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
   @override
   Widget build(BuildContext context) {
     List<Expanded> render;
+    int multiplier = ConstList.isLargeDisplay(context) ? 6 : 4;
     if (checkEmpty()) {
       render = [
         Expanded(
@@ -95,7 +96,7 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
       render = widget.widgets;
     } else {
       render = widget.widgets
-          .map((e) => Expanded(flex: e.flex * 4, child: e.child))
+          .map((e) => Expanded(flex: e.flex * multiplier, child: e.child))
           .toList();
       int i = index;
       int flex = 2;
@@ -139,7 +140,7 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
           var flexSum = widget.sizeData.fold<int>(0, (a, b) => a + b.width);
           var spaceWidth = width / flexSum;
           var x = mousePos.local.dx / spaceWidth;
-          var minLength = 2 / (4 * 2);
+          var minLength = 2 / (multiplier * 2);
           var before = 0;
           if (widget.sizeData.isEmpty) {
             var pos = widget.startPos;

@@ -66,6 +66,11 @@ class ConstList {
     return false;
   }
 
+  static bool isLargeDisplay(BuildContext context) {
+    if (getScreenWidth(context) < 1300) return false;
+    return true;
+  }
+
   static String? _version;
 
   static String get version => _version ?? '';
