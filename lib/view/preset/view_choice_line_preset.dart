@@ -176,7 +176,8 @@ class ViewLineOptionEditor extends ConsumerWidget {
               ),
               Card(
                 child: DropdownButtonFormField<ChoiceLineAlignment>(
-                  decoration: InputDecoration(labelText: 'lineSetting_alignment'.i18n),
+                  decoration:
+                      InputDecoration(labelText: 'lineSetting_alignment'.i18n),
                   items: ChoiceLineAlignment.values
                       .map<DropdownMenuItem<ChoiceLineAlignment>>((type) =>
                           DropdownMenuItem(value: type, child: Text(type.name)))

@@ -42,10 +42,10 @@ final choiceNodePresetCurrentEditOutlinePaddingProvider =
       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
           ref.watch(currentPresetIndexProvider),
           ref
-              .read(choiceNodePresetCurrentEditProvider)
-              .copyWith
-              .defaultOutlineOption!(
-                  outlinePadding: double.tryParse(controller.text) ?? 0.0));
+                  .read(choiceNodePresetCurrentEditProvider)
+                  .copyWith
+                  .defaultOutlineOption!(
+              outlinePadding: double.tryParse(controller.text) ?? 0.0));
     });
   });
   ref.onDispose(() {
@@ -72,10 +72,10 @@ final choiceNodePresetSelectedEditOutlinePaddingProvider =
       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
           ref.watch(currentPresetIndexProvider),
           ref
-              .read(choiceNodePresetCurrentEditProvider)
-              .copyWith
-              .selectOutlineOption!(
-                  outlinePadding: double.tryParse(controller.text) ?? 0.0));
+                  .read(choiceNodePresetCurrentEditProvider)
+                  .copyWith
+                  .selectOutlineOption!(
+              outlinePadding: double.tryParse(controller.text) ?? 0.0));
     });
   });
   ref.onDispose(() {
@@ -102,10 +102,10 @@ final choiceNodePresetCurrentEditOutlineWidthProvider =
       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
           ref.watch(currentPresetIndexProvider),
           ref
-              .read(choiceNodePresetCurrentEditProvider)
-              .copyWith
-              .defaultOutlineOption!(
-                  outlineWidth: double.tryParse(controller.text) ?? 0.0));
+                  .read(choiceNodePresetCurrentEditProvider)
+                  .copyWith
+                  .defaultOutlineOption!(
+              outlineWidth: double.tryParse(controller.text) ?? 0.0));
     });
   });
   ref.onDispose(() {
@@ -132,10 +132,10 @@ final choiceNodePresetSelectedEditOutlineWidthProvider =
       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
           ref.watch(currentPresetIndexProvider),
           ref
-              .read(choiceNodePresetCurrentEditProvider)
-              .copyWith
-              .selectOutlineOption!(
-                  outlineWidth: double.tryParse(controller.text) ?? 0.0));
+                  .read(choiceNodePresetCurrentEditProvider)
+                  .copyWith
+                  .selectOutlineOption!(
+              outlineWidth: double.tryParse(controller.text) ?? 0.0));
     });
   });
   ref.onDispose(() {

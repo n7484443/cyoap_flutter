@@ -279,8 +279,10 @@ class ViewWrapCustomReorder extends ConsumerWidget {
     var maxChildrenPerRow = min(parentMaxSize, ref.watch(maximumSizeProvider));
     maxChildrenPerRow = min(maxChildrenPerRow, presetMaxChildrenPerRow);
 
-    var (sizeDataList, _) = node.node
-        .getSizeDataList(align: align, maxChildrenPerRow: maxChildrenPerRow, showAll: isReorderAble);
+    var (sizeDataList, _) = node.node.getSizeDataList(
+        align: align,
+        maxChildrenPerRow: maxChildrenPerRow,
+        showAll: isReorderAble);
     List<Widget> outputWidget = List<Widget>.empty(growable: true);
     for (var y = 0; y < sizeDataList.length; y++) {
       var verticalList = sizeDataList[y];

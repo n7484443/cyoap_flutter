@@ -15,7 +15,7 @@ class ChoiceNodeClipboardNotifier extends ChangeNotifier {
   List<ChoiceNode> choiceNodeQueue = [];
   Ref ref;
 
-  ChoiceNodeClipboardNotifier(this.ref){
+  ChoiceNodeClipboardNotifier(this.ref) {
     choiceNodeQueue = getPlatform.clipboard.queue.toList();
   }
 

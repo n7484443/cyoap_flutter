@@ -156,8 +156,7 @@ class IdeCurrentInputNotifier extends StateNotifier<String> {
       String input = lastFocusText!.text.replaceRange(start, end, "$text ");
       lastFocusText!.value = TextEditingValue(
           text: input,
-          selection:
-              TextSelection.collapsed(offset: start + text.length - 1));
+          selection: TextSelection.collapsed(offset: start + text.length - 1));
     } else if (lastFocusQuill != null) {
       int end = lastFocusQuill!.selection.end;
       int start = end - len - 1;

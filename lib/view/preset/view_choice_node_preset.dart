@@ -592,8 +592,8 @@ class _ViewNodeOutlineOptionEditorState
                       opacity: opacity,
                       child: ViewColorPicker(
                         text: 'node_outline_color'.i18n,
-                        color:
-                            preset.selectOutlineOption!.outlineColor.getColor()!,
+                        color: preset.selectOutlineOption!.outlineColor
+                            .getColor()!,
                         onColorChanged: (Color value) {
                           ref
                               .read(choiceNodePresetListProvider.notifier)
@@ -629,8 +629,8 @@ class _ViewNodeOutlineOptionEditorState
                           .read(choiceNodePresetListProvider.notifier)
                           .updateIndex(
                               presetIndex,
-                              preset.copyWith
-                                  .selectOutlineOption!(outlineType: t));
+                              preset.copyWith.selectOutlineOption!(
+                                  outlineType: t));
                     }
                   },
                 ),
