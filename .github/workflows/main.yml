@@ -14,8 +14,10 @@ jobs:
           channel: 'stable'
           flutter-version: '3.22.2'
           cache: true
-          cache-key: flutter
-          cache-path: ${{ runner.tool_cache }}/flutter
+          cache-key: "flutter-:channel:-:version:" # optional, change this to force refresh cache
+          cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:" # optional, change this to specify the cache path
+          pub-cache-key: "flutter-pub:os:-:channel:-:version:-:arch:-:hash:" # optional, change this to force refresh cache of dart pub get dependencies
+          pub-cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:" # optional, change this to specify the cache path
       - uses: actions/setup-java@v4
         with:
           cache: 'gradle'
@@ -48,8 +50,10 @@ jobs:
           channel: 'stable'
           flutter-version: '3.22.2'
           cache: true
-          cache-key: flutter
-          cache-path: ${{ runner.tool_cache }}/flutter
+          cache-key: "flutter-:channel:-:version:" # optional, change this to force refresh cache
+          cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:" # optional, change this to specify the cache path
+          pub-cache-key: "flutter-pub:os:-:channel:-:version:-:arch:-:hash:" # optional, change this to force refresh cache of dart pub get dependencies
+          pub-cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:" # optional, change this to specify the cache path
 
       - run: flutter build windows --release
 
@@ -73,8 +77,10 @@ jobs:
           channel: 'stable'
           flutter-version: '3.22.2'
           cache: true
-          cache-key: flutter
-          cache-path: ${{ runner.tool_cache }}/flutter
+          cache-key: "flutter-:channel:-:version:" # optional, change this to force refresh cache
+          cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:" # optional, change this to specify the cache path
+          pub-cache-key: "flutter-pub:os:-:channel:-:version:-:arch:-:hash:" # optional, change this to force refresh cache of dart pub get dependencies
+          pub-cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:" # optional, change this to specify the cache path
 
       - run: flutter build web --web-renderer canvaskit --base-href=/cyoap_flutter/ --release
 
