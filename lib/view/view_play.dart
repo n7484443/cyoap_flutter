@@ -93,6 +93,31 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
                       }
                     },
                     icon: const Icon(Icons.file_upload_outlined)),
+                FilledButton(
+                  style: OutlinedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6.0),
+                    ),
+                  ),
+                  onPressed: () {
+                    if (ref
+                        .watch(selectedchoiceNodeStatusProvider)
+                        .isNotEmpty) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => const ViewSelectedGrid(),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('summary_error'.i18n),
+                          duration: const Duration(seconds: 1),
+                        ),
+                      );
+                    }
+                  },
+                  child: Text("summary".i18n),
+                ),
               ],
             ),
           ),
@@ -163,7 +188,6 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
                     );
                   }
                 },
-
                 child: Text("summary".i18n),
               ),
             ],
