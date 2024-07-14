@@ -1,10 +1,8 @@
 import 'dart:math';
 
-import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/choice/view_choice_line.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
-import 'package:cyoap_flutter/view/view_selected_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
@@ -13,7 +11,6 @@ import '../../main.dart';
 import '../../model/platform_system.dart';
 import '../../viewModel/choice/vm_choice.dart';
 import '../../viewModel/vm_design_setting.dart';
-import '../../viewModel/vm_selected_grid.dart';
 
 class ViewChoicePage extends ConsumerStatefulWidget {
   const ViewChoicePage({super.key});
@@ -86,31 +83,6 @@ class _ViewChoicePageState extends ConsumerState<ViewChoicePage> {
         );
       },
     );
-    if (!ref.watch(isEditableProvider(pos: pos))) {
-      sliverList.add(SliverToBoxAdapter(
-        child: TextButton(
-          onPressed: () {
-            if (ref.watch(selectedchoiceNodeStatusProvider).isNotEmpty) {
-              showDialog(
-                context: context,
-                builder: (context) => const ViewSelectedGrid(),
-              );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('summary_error'.i18n),
-                  duration: const Duration(seconds: 1),
-                ),
-              );
-            }
-          },
-          child: Text("summary".i18n),
-        ),
-      ));
-      sliverList.add(const SliverPadding(
-        padding: EdgeInsets.all(50),
-      ));
-    }
     return DropMonitor(
       formats: Formats.standardFormats,
       onDropOver: (details) {

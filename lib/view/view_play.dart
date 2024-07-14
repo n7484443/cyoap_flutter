@@ -1,6 +1,7 @@
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/view/choice/view_choice_page.dart';
+import 'package:cyoap_flutter/view/view_selected_grid.dart';
 import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../util/custom_snackbar.dart';
 import '../viewModel/vm_play.dart';
+import '../viewModel/vm_selected_grid.dart';
 import '../viewModel/vm_snackbar.dart';
 
 class ViewPlay extends ConsumerStatefulWidget {
@@ -139,6 +141,31 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
                     }
                   },
                   icon: const Icon(Icons.file_upload_outlined)),
+              const Spacer(),
+              FilledButton(
+                style: OutlinedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6.0),
+                  ),
+                ),
+                onPressed: () {
+                  if (ref.watch(selectedchoiceNodeStatusProvider).isNotEmpty) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => const ViewSelectedGrid(),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('summary_error'.i18n),
+                        duration: const Duration(seconds: 1),
+                      ),
+                    );
+                  }
+                },
+
+                child: Text("summary".i18n),
+              ),
             ],
           ),
         ),

@@ -81,7 +81,7 @@ extension Localization on String {
           'copy_clipboard': 'Copy to clipboard and close',
         },
         "ko": {
-          'summary': '요약',
+          'summary': '결과창 보기',
           'summary_error': '선택한 선택지가 없습니다.',
           'show_image_source': '이미지 출처 보기',
           'debug_mode': '디버그 모드 활성화',

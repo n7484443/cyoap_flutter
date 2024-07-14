@@ -26,6 +26,29 @@ import 'package:window_manager/window_manager.dart';
 import 'color_schemes.g.dart';
 import 'model/device_preference.dart';
 
+enum DisplaySize {
+  small,
+  medium,
+  large;
+}
+
+extension DisplaySizeExtension on DisplaySize {
+  static DisplaySize getDisplaySize(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
+    if(width < 640) return DisplaySize.small;
+    if(width > 1008) return DisplaySize.large;
+    return DisplaySize.medium;
+  }
+
+  bool isSmall() {
+    return this == DisplaySize.small;
+  }
+
+  bool isLarge() {
+    return this == DisplaySize.large;
+  }
+}
+
 class ConstList {
   static const Duration debounceDuration = Duration(milliseconds: 50);
   static const Duration durationAnimation = Duration(milliseconds: 150);
@@ -60,14 +83,15 @@ class ConstList {
     return MediaQuery.of(context).size.height;
   }
 
+
   static bool isSmallDisplay(BuildContext context) {
     if (isMobile()) return true;
-    if (getScreenWidth(context) < 900) return true;
+    if (DisplaySizeExtension.getDisplaySize(context).isSmall()) return true;
     return false;
   }
 
   static bool isLargeDisplay(BuildContext context) {
-    if (getScreenWidth(context) < 1300) return false;
+    if (DisplaySizeExtension.getDisplaySize(context).isLarge()) return true;
     return true;
   }
 
