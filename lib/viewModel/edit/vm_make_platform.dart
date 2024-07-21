@@ -13,29 +13,29 @@ class ChangeTabNotifier extends StateNotifier<int> {
   ChangeTabNotifier(this.ref) : super(0);
 
   void entryFunction(int index, BuildContext context) {
-    switch (index) {
-      case 0:
+    switch (tabList[index]) {
+      case "viewMake":
         ref.read(editEndProvider.notifier).state = false;
         break;
-      case 6:
+      case "viewEditorLine":
         ref.read(editEndProvider.notifier).state = false;
         break;
     }
   }
 
   Future<bool> removeFunction(int index, BuildContext context) async {
-    switch (index) {
-      case 1:
+    switch (tabList[index]) {
+      case "viewEditor":
         ref.read(editEndProvider.notifier).state = true;
         break;
-      case 2:
+      case "viewProjectSetting":
         if (ref
             .read(valueTypeWrapperListProvider.notifier)
             .isDifferentFromOrigin()) {
           ref.read(valueTypeWrapperListProvider.notifier).save();
         }
         break;
-      case 6:
+      case "viewEditorLine":
         ref.read(editEndProvider.notifier).state = true;
         break;
     }

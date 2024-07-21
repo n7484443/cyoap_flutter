@@ -254,7 +254,7 @@ void main() async {
                 routes: {
                   '/': (context) => const ViewStart(),
                   '/viewPlay': (context) => const ViewPlay(),
-                  '/viewMake': (context) => const ViewMakePlatform(),
+                  '/viewEdit': (context) => const ViewMakePlatform(),
                   '/viewLicense': (context) => const ViewFontSource(),
                 },
                 theme: appThemeLight,

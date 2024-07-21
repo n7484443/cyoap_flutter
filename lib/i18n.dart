@@ -150,7 +150,7 @@ extension Localization on String {
       } +
       const {
         "en": {
-          //make page
+          //edit page
           'lineSetting_tooltip_0': 'Number of selections available',
           'lineSetting_maxChildrenPerRow': 'Number of children in row',
           'lineSetting_alignment': 'Child alignment',
@@ -260,7 +260,7 @@ extension Localization on String {
           'sample_title': 'Design',
         },
         "ko": {
-          //make page
+          //edit page
           'lineSetting_tooltip_0': '선택 가능 개수',
           'lineSetting_maxChildrenPerRow': '한 줄당 최대 자식 개수',
           'lineSetting_alignment': '자식의 정렬 방식',

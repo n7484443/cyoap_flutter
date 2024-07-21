@@ -278,7 +278,7 @@ class SelectMode extends ConsumerWidget {
               switch (loadState.state) {
                 case ProjectState.success:
                   getPlatformFileSystem.isEditable = true;
-                  Navigator.of(context).pushReplacementNamed('/viewMake');
+                  Navigator.of(context).pushReplacementNamed('/viewEdit');
                   break;
                 case ProjectState.nonExist:
                   showSnackBar(context, 'failed_load_project_non_exist'.i18n,
@@ -301,7 +301,7 @@ class SelectMode extends ConsumerWidget {
             },
             child: Center(
               child: Text(
-                'Make',
+                'Edit',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.displayLarge,
               ),
