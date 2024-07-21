@@ -20,6 +20,7 @@ import '../../main.dart';
 import '../../model/platform_system.dart';
 import '../../util/custom_snackbar.dart';
 import '../../viewModel/edit/vm_draggable_nested_map.dart';
+import '../../viewModel/vm_global_setting.dart';
 import '../../viewModel/vm_platform.dart';
 import '../../viewModel/vm_variable_table.dart';
 import '../code/view_ide_line.dart';
@@ -372,6 +373,8 @@ class BackButton extends ConsumerWidget {
               if (i != 0) {
                 ref.read(nodeEditorTargetPosProvider.notifier).state = null;
                 ref.read(lineEditorTargetPosProvider.notifier).state = null;
+
+                ref.read(backupTimerProvider.notifier).stop();
                 Navigator.of(context).pushReplacementNamed("/");
               }
             }),
@@ -379,6 +382,8 @@ class BackButton extends ConsumerWidget {
         } else {
           ref.read(nodeEditorTargetPosProvider.notifier).state = null;
           ref.read(lineEditorTargetPosProvider.notifier).state = null;
+
+          ref.read(backupTimerProvider.notifier).stop();
           Navigator.of(context).pushReplacementNamed("/");
         }
       },

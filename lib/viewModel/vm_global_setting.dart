@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/viewModel/vm_start.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -54,7 +57,7 @@ class ClipboardMaximumCapacity extends _$ClipboardMaximumCapacity {
 }
 
 @riverpod
-class BackupFrequency extends _$ClipboardMaximumCapacity {
+class BackupFrequency extends _$BackupFrequency {
   @override
   int build() {
     return ref.watch(devicePreferenceStateProvider)['backup_frequency'];
@@ -64,6 +67,36 @@ class BackupFrequency extends _$ClipboardMaximumCapacity {
     ref
         .read(devicePreferenceStateProvider.notifier)
         .update('backup_frequency', value);
+  }
+}
+
+@riverpod
+class BackupTimer extends _$BackupTimer {
+  @override
+  Timer? build() {
+    ref.keepAlive();
+    return null;
+  }
+
+  void start(){
+    print("Start Backup");
+    if(getPlatformFileSystem.openAsFile){
+      return;
+    }
+    int min = ref.read(backupFrequencyProvider);
+    state = Timer.periodic(Duration(minutes: min), (timer){
+      backup();
+    });
+  }
+
+  void stop(){
+    print("Stop Backup");
+    state?.cancel();
+  }
+
+  void backup(){
+    print("Backup");
+    getPlatformFileSystem.saveBackup();
   }
 }
 

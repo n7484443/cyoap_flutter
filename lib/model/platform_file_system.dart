@@ -284,6 +284,15 @@ class PlatformFileSystem {
 
     return input;
   }
+  Future<void> saveBackup() async{
+    //only work on desktop/mobile with folder system
+    if(ConstList.isWeb() || openAsFile){
+      return;
+    }
+
+    var data = await saveDataMap;
+    await PlatformSpecified().saveProject!.saveBackup(path!, data);
+  }
 
   Future<void> save(bool asFile) async {
     var data = await saveDataMap;

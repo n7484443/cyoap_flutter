@@ -41,6 +41,20 @@ class SaveProjectImp extends SaveProject {
   }
 
   @override
+  Future<void> saveBackup(String path, Map<String, Uint8List> dataInput) async {
+    var uint8data = await compute(mapToArchive, dataInput);
+    var currentTime = DateTime.now();
+    var formatDate =
+        "${currentTime.year}-${currentTime.month}-${currentTime.day}_${currentTime.hour}-${currentTime.minute}";
+    var name = '$path/backup/$formatDate.zip';
+    if (!await Directory('$path/backup').exists()) {
+      await Directory('$path/backup').create();
+    }
+    var file = File(name);
+    await file.writeAsBytes(uint8data);
+  }
+
+  @override
   Future<void> saveRaw(String path, Map<String, Uint8List> dataInput) async {
     var existMap = List<String>.empty(growable: true);
     Directory dirNode = Directory('$path/nodes');

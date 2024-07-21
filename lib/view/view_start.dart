@@ -271,6 +271,7 @@ class SelectMode extends ConsumerWidget {
                 context: context,
                 builder: (context) => const ViewLoadingDialog(),
               );
+              ref.read(backupTimerProvider.notifier).start();
               LoadProjectState loadState = await ref
                   .read(frequentlyUsedPathProvider.notifier)
                   .openProject();
@@ -451,9 +452,29 @@ class ViewGlobalSettingDialog extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.all(ConstList.padding),
-            child: MaximumClipboardSettingInput(),
+          Padding(
+            padding: const EdgeInsets.all(ConstList.padding),
+            child: IntSettingInput(
+              text: 'backup_frequency'.i18n,
+              initialValue: ref.read(backupFrequencyProvider),
+              onChanged: (value) {
+                ref
+                    .read(backupFrequencyProvider.notifier)
+                    .setVariable(value);
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(ConstList.padding),
+            child: IntSettingInput(
+              text: 'clipboard_maximum'.i18n,
+              initialValue: ref.read(clipboardMaximumCapacityProvider),
+              onChanged: (value) {
+                ref
+                    .read(clipboardMaximumCapacityProvider.notifier)
+                    .setVariable(value);
+              },
+            ),
           ),
           TextButton(
               onPressed: () {
@@ -467,21 +488,31 @@ class ViewGlobalSettingDialog extends ConsumerWidget {
   }
 }
 
-class MaximumClipboardSettingInput extends ConsumerStatefulWidget {
-  const MaximumClipboardSettingInput({super.key});
+class IntSettingInput extends ConsumerStatefulWidget {
+  final String text;
+  final int textLength;
+  final int initialValue;
+  final void Function(int afterValue) onChanged;
+
+  const IntSettingInput(
+      {required this.text,
+      this.textLength = 3,
+      required this.initialValue,
+      required this.onChanged,
+      super.key});
 
   @override
-  ConsumerState createState() => _MaximumClipboardSettingInputState();
+  ConsumerState createState() => _IntSettingInputState();
 }
 
-class _MaximumClipboardSettingInputState
-    extends ConsumerState<MaximumClipboardSettingInput> {
+class _IntSettingInputState
+    extends ConsumerState<IntSettingInput> {
   TextEditingController? _controller;
+
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(
-        text: ref.read(clipboardMaximumCapacityProvider).toString());
+    _controller = TextEditingController(text: widget.initialValue.toString());
   }
 
   @override
@@ -494,25 +525,24 @@ class _MaximumClipboardSettingInputState
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Text('clipboard_maximum'.i18n),
+        Text(widget.text),
         Expanded(
           child: TextField(
             controller: _controller,
             keyboardType: TextInputType.number,
-            maxLength: 3,
+            maxLength: widget.textLength,
             decoration: const InputDecoration(
               isDense: true,
               isCollapsed: true,
               counterText: '',
             ),
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.right,
             onChanged: (String value) {
               var t = int.tryParse(value);
               if (t != null) {
-                ref
-                    .read(clipboardMaximumCapacityProvider.notifier)
-                    .setVariable(t);
+                widget.onChanged(t);
               }
             },
           ),

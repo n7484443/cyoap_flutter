@@ -37,4 +37,8 @@ abstract class SaveProject {
   }
 
   Future<void> saveRaw(String path, Map<String, Uint8List> dataInput) async {}
+
+  Future<void> saveBackup(String path, Map<String, Uint8List> dataInput) async {
+    throw UnimplementedError();
+  }
 }

@@ -66,7 +66,7 @@ final clipboardMaximumCapacityProvider =
 );
 
 typedef _$ClipboardMaximumCapacity = AutoDisposeNotifier<int>;
-String _$backupFrequencyHash() => r'49227b3648a167034a363cce26413162f2c7c631';
+String _$backupFrequencyHash() => r'a1e9d4f9e7735e38a399c8e4ea5f10bb030bdb2a';
 
 /// See also [BackupFrequency].
 @ProviderFor(BackupFrequency)
@@ -82,5 +82,20 @@ final backupFrequencyProvider =
 );
 
 typedef _$BackupFrequency = AutoDisposeNotifier<int>;
+String _$backupTimerHash() => r'bd72bb231e6fd12e527e16496d60405089d4c063';
+
+/// See also [BackupTimer].
+@ProviderFor(BackupTimer)
+final backupTimerProvider =
+    AutoDisposeNotifierProvider<BackupTimer, Timer?>.internal(
+  BackupTimer.new,
+  name: r'backupTimerProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$backupTimerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$BackupTimer = AutoDisposeNotifier<Timer?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
