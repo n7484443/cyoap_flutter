@@ -10,7 +10,7 @@ part 'vm_global_setting.g.dart';
 class SaveAsWebp extends _$SaveAsWebp {
   @override
   bool build() {
-    var data = ref.watch(devicePreferenceStateProvider)['saveAsWebp'];
+    var data = ref.watch(devicePreferenceStateProvider)['save_as_webp'];
     WebpConverter.instance?.saveAsWebp = data;
     return data;
   }
@@ -19,7 +19,7 @@ class SaveAsWebp extends _$SaveAsWebp {
     WebpConverter.instance?.saveAsWebp = !state;
     ref
         .read(devicePreferenceStateProvider.notifier)
-        .update('saveAsWebp', !state);
+        .update('save_as_webp', !state);
   }
 }
 
@@ -27,14 +27,14 @@ class SaveAsWebp extends _$SaveAsWebp {
 class ForceWide extends _$ForceWide {
   @override
   bool build() {
-    var data = ref.watch(devicePreferenceStateProvider)['forceWide'];
+    var data = ref.watch(devicePreferenceStateProvider)['force_wide'];
     return data;
   }
 
   void rev() {
     ref
         .read(devicePreferenceStateProvider.notifier)
-        .update('forceWide', !state);
+        .update('force_wide', !state);
   }
 }
 
@@ -42,13 +42,28 @@ class ForceWide extends _$ForceWide {
 class ClipboardMaximumCapacity extends _$ClipboardMaximumCapacity {
   @override
   int build() {
-    return ref.watch(devicePreferenceStateProvider)['clipboardMaximumCapacity'];
+    return ref
+        .watch(devicePreferenceStateProvider)['clipboard_maximum_capacity'];
   }
 
   void setVariable(int value) {
     ref
         .read(devicePreferenceStateProvider.notifier)
-        .update('clipboardMaximumCapacity', value);
+        .update('clipboard_maximum_capacity', value);
+  }
+}
+
+@riverpod
+class BackupFrequency extends _$ClipboardMaximumCapacity {
+  @override
+  int build() {
+    return ref.watch(devicePreferenceStateProvider)['backup_frequency'];
+  }
+
+  void setVariable(int value) {
+    ref
+        .read(devicePreferenceStateProvider.notifier)
+        .update('backup_frequency', value);
   }
 }
 

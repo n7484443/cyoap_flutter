@@ -1,10 +1,10 @@
 import 'package:cyoap_core/design_setting.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
-import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
+import 'package:cyoap_flutter/viewModel/edit/vm_draggable_nested_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../model/image_db.dart';
+import '../../model/image_db.dart';
 
 final platformDesignSettingProvider =
     StateProvider.autoDispose<PlatformDesignSetting>((ref) {

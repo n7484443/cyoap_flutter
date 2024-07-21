@@ -32,7 +32,7 @@ class WebpConverterImpWindows implements WebpConverterImp {
 
   @override
   void init() async {
-    saveAsWebp = await DevicePreferenceUtil().getBoolVariable('saveAsWebp');
+    saveAsWebp = await DevicePreferenceUtil().getBoolVariable('save_as_webp');
 
     var startPath = Platform.script.resolve("libwebp.dll").toFilePath();
     // 'windows/libwebp.dll'
@@ -190,7 +190,7 @@ class WebpConverterImpAndroid implements WebpConverterImp {
 
   @override
   void init() async {
-    saveAsWebp = await DevicePreferenceUtil().getBoolVariable('saveAsWebp');
+    saveAsWebp = await DevicePreferenceUtil().getBoolVariable('save_as_webp');
   }
 
   @override

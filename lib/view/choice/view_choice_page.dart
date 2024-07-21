@@ -10,7 +10,7 @@ import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 import '../../main.dart';
 import '../../model/platform_system.dart';
 import '../../viewModel/choice/vm_choice.dart';
-import '../../viewModel/vm_design_setting.dart';
+import '../../viewModel/edit/vm_design_setting.dart';
 
 class ViewChoicePage extends ConsumerStatefulWidget {
   const ViewChoicePage({super.key});

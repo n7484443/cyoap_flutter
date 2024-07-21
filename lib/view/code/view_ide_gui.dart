@@ -7,7 +7,7 @@ import '../../main.dart';
 import '../../model/code_gui.dart';
 import '../../viewModel/code/vm_ide.dart';
 import '../../viewModel/code/vm_ide_gui.dart';
-import '../../viewModel/vm_editor.dart';
+import '../../viewModel/edit/vm_editor.dart';
 
 class ViewIdeGui extends ConsumerWidget {
   const ViewIdeGui({
@@ -48,8 +48,8 @@ class ViewIdeGui extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     DragTarget<Pos>(
-                      onAccept: (Pos? pos) {
-                        if (pos == null) return;
+                      onAcceptWithDetails: (DragTargetDetails<Pos> dragDetails) {
+                        var pos = dragDetails.data;
                         if (pos.first < 0) return;
                         ref.read(codeBlockProvider.notifier).removeBlock(pos);
                       },
@@ -394,10 +394,8 @@ class ViewDragTargetNode extends ConsumerWidget {
           ),
         );
       },
-      onAccept: (Pos? data) {
-        if (data == null) {
-          return;
-        }
+      onAcceptWithDetails: (DragTargetDetails<Pos> dragDetails) {
+        var data = dragDetails.data;
         if (onAccept == null) {
           if (data.first >= 0) {
             var removed = ref.read(codeBlockProvider).removeBlock(data);

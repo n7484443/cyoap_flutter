@@ -1,5 +1,5 @@
-import 'package:cyoap_flutter/viewModel/vm_editor.dart';
-import 'package:cyoap_flutter/viewModel/vm_project_setting.dart';
+import 'package:cyoap_flutter/viewModel/edit/vm_editor.dart';
+import 'package:cyoap_flutter/viewModel/edit/vm_project_setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

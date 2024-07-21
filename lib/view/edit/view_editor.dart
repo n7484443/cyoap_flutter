@@ -17,10 +17,10 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/src/utils/color.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../main.dart';
-import '../viewModel/preset/vm_choice_node_preset.dart';
-import '../viewModel/vm_editor.dart';
-import '../viewModel/vm_make_platform.dart';
+import '../../main.dart';
+import '../../viewModel/edit/preset/vm_choice_node_preset.dart';
+import '../../viewModel/edit/vm_editor.dart';
+import '../../viewModel/edit/vm_make_platform.dart';
 
 class ViewEditor extends ConsumerStatefulWidget {
   const ViewEditor({

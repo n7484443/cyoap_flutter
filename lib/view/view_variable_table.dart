@@ -2,7 +2,7 @@ import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
-import 'package:cyoap_flutter/viewModel/vm_editor.dart';
+import 'package:cyoap_flutter/viewModel/edit/vm_editor.dart';
 import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +10,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/platform_system.dart';
-import '../viewModel/vm_design_setting.dart';
-import '../viewModel/vm_make_platform.dart';
+import '../viewModel/edit/vm_design_setting.dart';
+import '../viewModel/edit/vm_make_platform.dart';
 
 class ViewChangeRotation extends ConsumerWidget {
   const ViewChangeRotation({

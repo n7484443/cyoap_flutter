@@ -1,12 +1,12 @@
 import 'package:cyoap_flutter/i18n.dart';
-import 'package:cyoap_flutter/view/preset/view_choice_line_preset.dart';
-import 'package:cyoap_flutter/view/preset/view_choice_node_preset.dart';
+import 'package:cyoap_flutter/view/edit/preset/view_choice_line_preset.dart';
+import 'package:cyoap_flutter/view/edit/preset/view_choice_node_preset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../main.dart';
-import '../../viewModel/preset/vm_preset.dart';
-import '../util/controller_adjustable_scroll.dart';
+import '../../../main.dart';
+import '../../../viewModel/edit/preset/vm_preset.dart';
+import '../../util/controller_adjustable_scroll.dart';
 
 class ViewPresetTab extends ConsumerWidget {
   final List<String> tabName = ['node'.i18n, 'line'.i18n];

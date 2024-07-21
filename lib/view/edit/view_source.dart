@@ -8,11 +8,11 @@ import 'package:cyoap_flutter/view/util/view_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../model/platform_system.dart';
-import '../viewModel/vm_design_setting.dart';
-import '../viewModel/vm_editor.dart';
-import '../viewModel/vm_make_platform.dart';
-import '../viewModel/vm_source.dart';
+import '../../model/platform_system.dart';
+import '../../viewModel/edit/vm_design_setting.dart';
+import '../../viewModel/edit/vm_editor.dart';
+import '../../viewModel/edit/vm_make_platform.dart';
+import '../../viewModel/edit/vm_source.dart';
 
 class ViewSource extends ConsumerStatefulWidget {
   const ViewSource({

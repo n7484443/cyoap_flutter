@@ -12,7 +12,7 @@ import 'package:cyoap_flutter/view/choice/view_wrap_custom.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/viewModel/choice/vm_choice_node.dart';
-import 'package:cyoap_flutter/viewModel/vm_editor.dart'
+import 'package:cyoap_flutter/viewModel/edit/vm_editor.dart'
     show nodeEditorTargetPosProvider;
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -25,8 +25,8 @@ import 'package:url_launcher/url_launcher_string.dart';
 import '../../main.dart';
 import '../../model/platform_system.dart';
 import '../../viewModel/choice/vm_choice.dart';
-import '../../viewModel/preset/vm_choice_node_preset.dart';
-import '../../viewModel/vm_make_platform.dart';
+import '../../viewModel/edit/preset/vm_choice_node_preset.dart';
+import '../../viewModel/edit/vm_make_platform.dart';
 import '../../viewModel/vm_variable_table.dart';
 
 class NodeDraggable extends ConsumerWidget {

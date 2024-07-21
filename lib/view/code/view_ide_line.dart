@@ -2,8 +2,8 @@ import 'package:cyoap_flutter/view/code/view_ide.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../viewModel/vm_editor.dart';
-import '../../viewModel/vm_make_platform.dart';
+import '../../viewModel/edit/vm_editor.dart';
+import '../../viewModel/edit/vm_make_platform.dart';
 
 class ViewIdeLine extends ConsumerWidget {
   const ViewIdeLine({super.key});

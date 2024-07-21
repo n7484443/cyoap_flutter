@@ -5,7 +5,7 @@ import 'package:cyoap_core/grammar/analyser.dart';
 import 'package:cyoap_core/grammar/analyser_const.dart';
 import 'package:cyoap_core/grammar/ast.dart';
 import 'package:cyoap_core/variable_db.dart';
-import 'package:cyoap_flutter/viewModel/vm_editor.dart';
+import 'package:cyoap_flutter/viewModel/edit/vm_editor.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';

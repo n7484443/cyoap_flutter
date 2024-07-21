@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
+import 'package:cyoap_flutter/viewModel/edit/vm_draggable_nested_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/platform_system.dart';

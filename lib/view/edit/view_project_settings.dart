@@ -3,11 +3,11 @@ import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
-import 'package:cyoap_flutter/viewModel/vm_project_setting.dart';
+import 'package:cyoap_flutter/viewModel/edit/vm_project_setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../viewModel/vm_make_platform.dart';
+import '../../viewModel/edit/vm_make_platform.dart';
 
 class ViewProjectSetting extends ConsumerWidget {
   const ViewProjectSetting({super.key});
@@ -151,7 +151,7 @@ class _ViewGlobalVariableEditorState
                 leading: MenuBar(
                   style: const MenuStyle(
                     surfaceTintColor:
-                        MaterialStatePropertyAll<Color?>(Colors.transparent),
+                        WidgetStatePropertyAll<Color?>(Colors.transparent),
                   ),
                   children: [
                     SubmenuButton(

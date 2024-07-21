@@ -16,8 +16,8 @@ import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 
 import '../../viewModel/choice/vm_choice.dart';
 import '../../viewModel/choice/vm_choice_line.dart';
-import '../../viewModel/vm_design_setting.dart';
-import '../../viewModel/vm_draggable_nested_map.dart';
+import '../../viewModel/edit/vm_design_setting.dart';
+import '../../viewModel/edit/vm_draggable_nested_map.dart';
 import 'view_choice_node.dart';
 
 const double defaultHeight = 70.0;

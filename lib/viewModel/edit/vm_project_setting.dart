@@ -1,13 +1,13 @@
 import 'package:cyoap_core/grammar/value_type.dart';
 import 'package:cyoap_core/variable_db.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
-import 'package:cyoap_flutter/viewModel/vm_draggable_nested_map.dart';
+import 'package:cyoap_flutter/viewModel/edit/vm_draggable_nested_map.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../main.dart';
+import '../../main.dart';
 
 part 'vm_project_setting.g.dart';
 

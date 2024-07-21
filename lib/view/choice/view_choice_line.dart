@@ -12,9 +12,9 @@ import '../../main.dart';
 import '../../model/platform_system.dart';
 import '../../viewModel/choice/vm_choice.dart';
 import '../../viewModel/choice/vm_choice_line.dart';
-import '../../viewModel/preset/vm_choice_line_preset.dart';
-import '../../viewModel/vm_editor.dart';
-import '../../viewModel/vm_make_platform.dart';
+import '../../viewModel/edit/preset/vm_choice_line_preset.dart';
+import '../../viewModel/edit/vm_editor.dart';
+import '../../viewModel/edit/vm_make_platform.dart';
 
 class ViewChoiceLine extends ConsumerWidget {
   final Pos pos;

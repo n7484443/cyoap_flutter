@@ -18,21 +18,23 @@ class DevicePreference {
   final DevicePreferenceUtil _util = DevicePreferenceUtil();
 
   Map<String, dynamic> data = {
-    "saveAsWebp": false,
-    "forceWide": true,
-    "clipboardMaximumCapacity": 10,
+    "save_as_webp": false,
+    "force_wide": true,
+    "clipboard_maximum_capacity": 10,
+    "backup_frequency": 30,
     "cyoap_frequent_path": <String>[],
     "cyoap_language": "en",
     "cyoap_theme": "light",
   };
 
-  final Map<String, String> dataType = {
-    "saveAsWebp": "bool",
-    "forceWide": "bool",
-    "clipboardMaximumCapacity": "int",
-    "cyoap_frequent_path": "list",
-    "cyoap_language": "string",
-    "cyoap_theme": "string",
+  final Map<String, Type> dataType = {
+    "save_as_webp": bool,
+    "force_wide": bool,
+    "clipboard_maximum_capacity": int,
+    "backup_frequency": int,
+    "cyoap_frequent_path": List,
+    "cyoap_language": String,
+    "cyoap_theme": String,
   };
 
   Future<void> load() async {
@@ -40,16 +42,16 @@ class DevicePreference {
       var type = dataType[name];
       var value = data[name];
       switch (type) {
-        case "bool":
+        case const (bool):
           value = await _util.getBoolVariable(name, defaultValue: value);
           break;
-        case "int":
+        case const (int):
           value = await _util.getIntVariable(name, defaultValue: value);
           break;
-        case "string":
+        case const (String):
           value = await _util.getStringVariable(name, defaultValue: value);
           break;
-        case "list":
+        case const (List):
           value = await _util.getStringListVariable(name, defaultValue: value);
           break;
       }
@@ -73,13 +75,13 @@ class DevicePreference {
       var value = data[name];
       Future future;
       switch (type) {
-        case "bool":
+        case const (bool):
           future = _util.setBoolVariable(name, value as bool);
           break;
-        case "int":
+        case const (int):
           future = _util.setIntVariable(name, value as int);
           break;
-        case "string":
+        case const (String):
           future = _util.setStringVariable(name, value as String);
           break;
         default:

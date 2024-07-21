@@ -1,13 +1,13 @@
 import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
-import 'package:cyoap_flutter/viewModel/preset/vm_preset.dart';
+import 'package:cyoap_flutter/viewModel/edit/preset/vm_preset.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../main.dart';
-import '../../model/platform_system.dart';
-import '../choice/vm_choice_node.dart';
+import '../../../main.dart';
+import '../../../model/platform_system.dart';
+import '../../choice/vm_choice_node.dart';
 import '../vm_draggable_nested_map.dart';
 
 final choiceNodePresetCurrentEditProvider =

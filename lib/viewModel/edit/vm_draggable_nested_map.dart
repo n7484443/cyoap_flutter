@@ -5,7 +5,7 @@ import 'package:cyoap_flutter/viewModel/choice/vm_choice.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../model/clipboard.dart';
+import '../../model/clipboard.dart';
 
 final choiceNodeClipboardStatusProvider =
     ChangeNotifierProvider.autoDispose<ChoiceNodeClipboardNotifier>(

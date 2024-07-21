@@ -1,12 +1,12 @@
 import 'package:cyoap_flutter/i18n.dart';
-import 'package:cyoap_flutter/viewModel/vm_editor.dart';
-import 'package:cyoap_flutter/viewModel/vm_image_editor.dart';
+import 'package:cyoap_flutter/viewModel/edit/vm_editor.dart';
+import 'package:cyoap_flutter/viewModel/edit/vm_image_editor.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../viewModel/choice/vm_choice.dart';
-import '../viewModel/vm_make_platform.dart';
+import '../../viewModel/choice/vm_choice.dart';
+import '../../viewModel/edit/vm_make_platform.dart';
 
 class ViewImageEditor extends ConsumerWidget {
   const ViewImageEditor({super.key});

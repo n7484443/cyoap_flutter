@@ -8,10 +8,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../main.dart';
 import '../../model/image_db.dart';
 import '../../model/platform_system.dart';
-import '../../viewModel/vm_editor.dart';
-import '../../viewModel/vm_image_editor.dart';
-import '../../viewModel/vm_make_platform.dart';
-import '../view_editor.dart';
+import '../../viewModel/edit/vm_editor.dart';
+import '../../viewModel/edit/vm_image_editor.dart';
+import '../../viewModel/edit/vm_make_platform.dart';
+import '../edit/view_editor.dart';
 import 'controller_adjustable_scroll.dart';
 
 class ViewImageDraggable extends ConsumerWidget {

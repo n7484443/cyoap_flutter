@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../viewModel/choice/vm_choice_node.dart';
-import '../../viewModel/preset/vm_choice_node_preset.dart';
+import '../../viewModel/edit/preset/vm_choice_node_preset.dart';
 
 class PresetDialog extends ConsumerWidget {
   final Pos pos;

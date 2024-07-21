@@ -1,28 +1,28 @@
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
-import 'package:cyoap_flutter/view/view_clipboard.dart';
-import 'package:cyoap_flutter/view/view_design.dart';
-import 'package:cyoap_flutter/view/view_editor.dart';
-import 'package:cyoap_flutter/view/view_image_editor.dart';
-import 'package:cyoap_flutter/view/view_make.dart';
-import 'package:cyoap_flutter/view/view_project_settings.dart';
-import 'package:cyoap_flutter/view/view_source.dart';
+import 'package:cyoap_flutter/view/edit/view_clipboard.dart';
+import 'package:cyoap_flutter/view/edit/view_design.dart';
+import 'package:cyoap_flutter/view/edit/view_editor.dart';
+import 'package:cyoap_flutter/view/edit/view_image_editor.dart';
+import 'package:cyoap_flutter/view/edit/view_make.dart';
+import 'package:cyoap_flutter/view/edit/view_project_settings.dart';
+import 'package:cyoap_flutter/view/edit/view_source.dart';
 import 'package:cyoap_flutter/view/view_variable_table.dart';
-import 'package:cyoap_flutter/viewModel/vm_editor.dart';
-import 'package:cyoap_flutter/viewModel/vm_make_platform.dart';
+import 'package:cyoap_flutter/viewModel/edit/vm_editor.dart';
+import 'package:cyoap_flutter/viewModel/edit/vm_make_platform.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../main.dart';
-import '../model/platform_system.dart';
-import '../util/custom_snackbar.dart';
-import '../viewModel/vm_draggable_nested_map.dart';
-import '../viewModel/vm_platform.dart';
-import '../viewModel/vm_variable_table.dart';
-import 'code/view_ide_line.dart';
+import '../../main.dart';
+import '../../model/platform_system.dart';
+import '../../util/custom_snackbar.dart';
+import '../../viewModel/edit/vm_draggable_nested_map.dart';
+import '../../viewModel/vm_platform.dart';
+import '../../viewModel/vm_variable_table.dart';
+import '../code/view_ide_line.dart';
 
 class ViewMakePlatform extends ConsumerStatefulWidget {
   const ViewMakePlatform({

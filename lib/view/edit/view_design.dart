@@ -1,7 +1,7 @@
 import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
-import 'package:cyoap_flutter/view/preset/view_preset.dart';
+import 'package:cyoap_flutter/view/edit/preset/view_preset.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_color_picker.dart';
 import 'package:cyoap_flutter/view/util/view_options.dart';
@@ -9,9 +9,9 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../main.dart';
-import '../viewModel/vm_design_setting.dart';
-import '../viewModel/vm_make_platform.dart';
+import '../../main.dart';
+import '../../viewModel/edit/vm_design_setting.dart';
+import '../../viewModel/edit/vm_make_platform.dart';
 
 class ViewDesignSetting extends ConsumerWidget {
   const ViewDesignSetting({super.key});

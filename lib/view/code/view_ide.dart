@@ -13,7 +13,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../main.dart';
 import '../../viewModel/code/vm_ide.dart';
 import '../../viewModel/code/vm_ide_gui.dart';
-import '../../viewModel/vm_editor.dart';
+import '../../viewModel/edit/vm_editor.dart';
 
 class ViewIde extends ConsumerStatefulWidget {
   final bool isChoiceNode;

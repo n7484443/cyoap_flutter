@@ -7,7 +7,7 @@ import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.da
     deferred as platform_specified;
 import 'package:cyoap_flutter/util/platform_specified_util/webp_converter.dart';
 import 'package:cyoap_flutter/view/view_font_source.dart';
-import 'package:cyoap_flutter/view/view_make_platform.dart';
+import 'package:cyoap_flutter/view/edit/view_make_platform.dart';
 import 'package:cyoap_flutter/view/view_play.dart';
 import 'package:cyoap_flutter/view/view_start.dart';
 import 'package:cyoap_flutter/viewModel/vm_start.dart';
