@@ -39,7 +39,7 @@ dependencies:
   shared_preferences: ^2.0.15
   google_fonts: ^6.2.1
   archive: ^3.3.1
-  flutter_quill: ^9.3.7
+  flutter_quill: ^10.1.1
   package_info_plus: ^8.0.0
   github: ^9.14.0
   flex_color_picker: ^3.0.2
@@ -54,7 +54,7 @@ dependencies:
   freezed_annotation: any
   json_annotation: any
   js: ^0.7.1
-  sentry_flutter: ^8.1.0
+  sentry_flutter: ^8.5.0
   easy_debounce: ^2.0.2+1
   desktop_drop: ^0.4.4
   shared_storage: ^0.8.1
@@ -66,7 +66,7 @@ dependencies:
 
   flutter_riverpod: ^2.4.9
   riverpod_annotation: ^2.3.3
-  super_drag_and_drop: ^0.8.12
+  super_drag_and_drop: ^0.8.18
   context_menus: ^2.0.0
 
 dev_dependencies:
