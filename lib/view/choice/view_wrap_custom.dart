@@ -61,7 +61,7 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
     } else {
       ref.read(choiceStatusProvider(drag).notifier).swapChoice(target);
     }
-    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+    ref.read(currentProjectChangedProvider.notifier).changed();
   }
 
   bool checkEmpty() {
@@ -368,6 +368,7 @@ class ViewWrapCustomReorder extends ConsumerWidget {
                   ref.read(choiceStatusProvider(parentPos).notifier).addChoice(
                       ChoiceNode.empty()..width = 3,
                       index: children.length);
+                  ref.read(currentProjectChangedProvider.notifier).changed();
                 },
                 tooltip: 'create_tooltip_node'.i18n,
                 child: const Icon(Icons.add),

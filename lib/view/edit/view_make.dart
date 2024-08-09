@@ -13,8 +13,8 @@ import '../../model/platform_system.dart';
 class ViewSaveDialog extends ConsumerWidget {
   final bool asZip;
 
-  const ViewSaveDialog(
-    this.asZip, {
+  const ViewSaveDialog({
+    required this.asZip,
     super.key,
   });
 
@@ -45,11 +45,11 @@ class ViewMake extends ConsumerWidget {
         canPop: false,
         child: Scaffold(
           appBar: AppBar(
-            title: const Row(
+            title: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                ViewSaveIcons(),
-                ViewRefreshIcons(),
+                const ViewSaveIcons(),
+                if (!getPlatformFileSystem.openAsFile) const ViewCompressIcon(),
               ],
             ),
             actions: [
@@ -67,19 +67,25 @@ class ViewMake extends ConsumerWidget {
   }
 }
 
-class ViewRefreshIcons extends ConsumerWidget {
-  const ViewRefreshIcons({super.key});
+class ViewCompressIcon extends ConsumerWidget {
+  const ViewCompressIcon({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return IconButton(
-      icon: const Icon(Icons.refresh),
-      tooltip: 'update_variable_tooltip'.i18n,
-      onPressed: () {
-        getPlatform.generateRecursiveParser();
-        getPlatform.updateStatus();
-      },
-    );
+        tooltip: 'extract'.i18n,
+        onPressed: () async {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) =>
+                  const ViewSaveDialog(asZip: true),
+              barrierDismissible: false);
+          await savePlatform(ref, asZip: true);
+          showSnackBar(context, 'save_successfully'.i18n,
+              ref: ref, errorLog: Analyser().errorList, autoHide: true);
+          Navigator.of(context).pop();
+        },
+        icon: const Icon(Icons.folder_zip));
   }
 }
 
@@ -90,54 +96,19 @@ class ViewSaveIcons extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (getPlatformFileSystem.openAsFile) {
-      return IconButton(
-        icon: const Icon(Icons.save),
-        onPressed: () async {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) => const ViewSaveDialog(true),
-              barrierDismissible: false);
-          await savePlatform(ref, true);
-          Navigator.of(context).pop();
-          showSnackBar(context, "save_successfully".i18n,
-              ref: ref, errorLog: Analyser().errorList, autoHide: true);
-        },
-      );
-    }
-    return PopupMenuButton(
+    return IconButton(
+      tooltip: 'save'.i18n,
       icon: const Icon(Icons.save),
-      tooltip: 'save_option'.i18n,
-      popUpAnimationStyle:
-          AnimationStyle(duration: ConstList.durationAnimation),
-      onSelected: (int selected) async {
+      onPressed: () async {
         showDialog(
             context: context,
-            builder: (BuildContext context) => ViewSaveDialog(selected != 0),
+            builder: (BuildContext context) =>
+                ViewSaveDialog(asZip: getPlatformFileSystem.openAsFile),
             barrierDismissible: false);
-        switch (selected) {
-          case 0:
-            await savePlatform(ref, false);
-            break;
-          case 1:
-            await savePlatform(ref, true);
-            break;
-        }
-        showSnackBar(context, 'save_successfully'.i18n,
-            ref: ref, errorLog: Analyser().errorList, autoHide: true);
+        await savePlatform(ref, asZip: getPlatformFileSystem.openAsFile);
         Navigator.of(context).pop();
-      },
-      itemBuilder: (BuildContext context) {
-        return [
-          PopupMenuItem(
-            value: 0,
-            child: Text('save'.i18n),
-          ),
-          PopupMenuItem(
-            value: 1,
-            child: Text('extract'.i18n),
-          ),
-        ];
+        showSnackBar(context, "save_successfully".i18n,
+            ref: ref, errorLog: Analyser().errorList, autoHide: true);
       },
     );
   }

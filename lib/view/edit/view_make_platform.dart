@@ -108,7 +108,7 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
       bindings: {
         const SingleActivator(LogicalKeyboardKey.keyS, control: true):
             () async {
-          await savePlatform(ref, getPlatformFileSystem.openAsFile);
+          await savePlatform(ref, asZip: getPlatformFileSystem.openAsFile);
           showSnackBar(context, "save_successfully".i18n);
         }
       },
@@ -118,13 +118,13 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
           canPop: false,
           child: Scaffold(
             appBar: AppBar(
-              title: const Row(
+              title: Row(
                 children: [
-                  ViewSaveIcons(),
-                  SizedBox(width: 10),
-                  ViewRefreshIcons(),
-                  Expanded(child: SizedBox.shrink()),
-                  BackButton(),
+                  const ViewSaveIcons(),
+                  if(!getPlatformFileSystem.openAsFile) const ViewCompressIcon(),
+                  const SizedBox(width: 20),
+                  const Expanded(child: SizedBox.shrink()),
+                  const BackButton(),
                 ],
               ),
             ),
@@ -353,8 +353,8 @@ class BackButton extends ConsumerWidget {
     return IconButton(
       tooltip: 'back'.i18n,
       icon: const Icon(Icons.close),
-      onPressed: () {
-        if (ref.read(draggableNestedMapChangedProvider)) {
+      onPressed: (){
+        if (ref.read(currentProjectChangedProvider)) {
           showDialog(
             context: context,
             builder: (_) => ViewBackDialog(() async {
@@ -362,12 +362,11 @@ class BackButton extends ConsumerWidget {
               showDialog(
                   context: context,
                   builder: (BuildContext context) =>
-                      ViewSaveDialog(getPlatformFileSystem.openAsFile),
+                      ViewSaveDialog(asZip: getPlatformFileSystem.openAsFile),
                   barrierDismissible: false);
-              await savePlatform(ref, getPlatformFileSystem.openAsFile);
+              await savePlatform(ref, asZip: getPlatformFileSystem.openAsFile);
               navigator.pop();
-              ref.read(draggableNestedMapChangedProvider.notifier).state =
-                  false;
+              ref.read(currentProjectChangedProvider.notifier).save();
             }, (i) {
               Navigator.of(context).pop();
               if (i != 0) {

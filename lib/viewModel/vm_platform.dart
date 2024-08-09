@@ -27,7 +27,7 @@ class SaveStopWatch extends StateNotifier<String> {
   }
 }
 
-Future<void> savePlatform(WidgetRef ref, bool asZip) async {
+Future<void> savePlatform(WidgetRef ref, {required bool asZip}) async {
   ref.read(stopWatchProvider.notifier).start();
 
   getPlatform.checkDataCorrect();
@@ -35,5 +35,5 @@ Future<void> savePlatform(WidgetRef ref, bool asZip) async {
 
   await getPlatformFileSystem.save(asZip);
   ref.read(stopWatchProvider.notifier).stop();
-  ref.read(draggableNestedMapChangedProvider.notifier).state = false;
+  ref.read(currentProjectChangedProvider.notifier).save();
 }

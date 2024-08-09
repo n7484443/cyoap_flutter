@@ -13,6 +13,7 @@ import '../../model/platform_system.dart';
 import '../../viewModel/choice/vm_choice.dart';
 import '../../viewModel/choice/vm_choice_line.dart';
 import '../../viewModel/edit/preset/vm_choice_line_preset.dart';
+import '../../viewModel/edit/vm_draggable_nested_map.dart';
 import '../../viewModel/edit/vm_editor.dart';
 import '../../viewModel/edit/vm_make_platform.dart';
 
@@ -40,6 +41,7 @@ class ViewChoiceLine extends ConsumerWidget {
             ref
                 .read(choiceStatusProvider(pos.removeLast()).notifier)
                 .addChoice(ChoiceLine(), index: pos.last);
+            ref.read(currentProjectChangedProvider.notifier).changed();
           },
           tooltip: 'create_tooltip_line'.i18n,
           child: const Icon(Icons.add_box),

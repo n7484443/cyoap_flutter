@@ -10,7 +10,7 @@ final platformDesignSettingProvider =
     StateProvider.autoDispose<PlatformDesignSetting>((ref) {
   ref.listenSelf((PlatformDesignSetting? previous, PlatformDesignSetting next) {
     if (previous == null || previous == next) return;
-    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+    ref.read(currentProjectChangedProvider.notifier).changed();
     getPlatform.designSetting = next;
   });
   return getPlatform.designSetting;

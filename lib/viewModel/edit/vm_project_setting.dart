@@ -148,7 +148,7 @@ class ValueTypeWrapperList extends _$ValueTypeWrapperList {
   void save() {
     getPlatform.setGlobalSetting(state);
     VariableDataBase().updateVariableTiles();
-    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+    ref.read(currentProjectChangedProvider.notifier).changed();
   }
 
   String? getEditTargetName(int index) {

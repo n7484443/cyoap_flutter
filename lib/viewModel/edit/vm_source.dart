@@ -29,6 +29,6 @@ class VMSource extends StateNotifier<List<String>> {
     }
     state = List<String>.from(ImageDB().imageList);
     updateImageAll(ref);
-    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+    ref.read(currentProjectChangedProvider.notifier).changed();
   }
 }

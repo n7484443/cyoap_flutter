@@ -4,8 +4,11 @@ import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/viewModel/choice/vm_choice.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../model/clipboard.dart';
+
+part 'vm_draggable_nested_map.g.dart';
 
 final choiceNodeClipboardStatusProvider =
     ChangeNotifierProvider.autoDispose<ChoiceNodeClipboardNotifier>(
@@ -58,7 +61,23 @@ class ChoiceNodeClipboardNotifier extends ChangeNotifier {
   }
 }
 
-final draggableNestedMapChangedProvider = StateProvider<bool>((ref) => false);
+@riverpod
+class CurrentProjectChanged extends _$CurrentProjectChanged {
+  @override
+  bool build() {
+    return false;
+  }
+
+  void changed(){
+    state = true;
+    getPlatform.generateRecursiveParser();
+    getPlatform.updateStatus();
+  }
+
+  void save(){
+    state = false;
+  }
+}
 
 class DragChoiceNodeNotifier extends StateNotifier<Pos?> {
   Ref ref;

@@ -48,7 +48,7 @@ dependencies:
   ffi: ^2.1.0
   device_info_plus: ^10.1.0
   isolated_worker: ^0.1.1
-  url_strategy: ^0.2.0
+  url_strategy: ^0.3.0
   path_provider: ^2.0.11
   path: ^1.8.3
   freezed_annotation: any
@@ -60,7 +60,7 @@ dependencies:
   shared_storage: ^0.8.1
   i18n_extension: ^12.0.1
   dotted_border: ^2.1.0
-  window_manager: ^0.3.7
+  window_manager: ^0.4.0
   flutter_localizations:
     sdk: flutter
 

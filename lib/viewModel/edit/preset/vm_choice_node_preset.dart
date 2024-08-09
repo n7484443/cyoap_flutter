@@ -239,7 +239,7 @@ final choiceNodePresetListProvider = StateNotifierProvider.autoDispose<
     if (previous == null || previous == next) return;
     getPlatform.designSetting =
         getPlatform.designSetting.copyWith(choiceNodePresetList: next);
-    ref.read(draggableNestedMapChangedProvider.notifier).state = true;
+    ref.read(currentProjectChangedProvider.notifier).changed();
   });
   return ChoiceNodePresetListNotifier(ref);
 });

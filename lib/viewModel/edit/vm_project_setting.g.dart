@@ -78,7 +78,7 @@ final globalVariableFilteredListProvider =
 
 typedef GlobalVariableFilteredListRef = AutoDisposeProviderRef<List<int>>;
 String _$valueTypeWrapperListHash() =>
-    r'1ef4c0e376541c42e9de74222f9e9882b21f5aa7';
+    r'960d52b5849a87d2cb67ccd203bae6b109e14fd8';
 
 /// See also [ValueTypeWrapperList].
 @ProviderFor(ValueTypeWrapperList)
