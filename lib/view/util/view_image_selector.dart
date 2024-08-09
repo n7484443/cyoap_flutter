@@ -1,9 +1,10 @@
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:cyoap_flutter/i18n.dart';
-import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 
 import '../../main.dart';
 import '../../model/image_db.dart';
@@ -47,8 +48,7 @@ class ViewImageDraggable extends ConsumerWidget {
           child: IconButton(
             icon: const Icon(Icons.crop),
             onPressed: () {
-              openImageEditor(ref, context, imageName(ref, index),
-                  change: true);
+              openImageEditor(ref, context, imageName(ref, index));
             },
           ),
         ),
@@ -115,29 +115,7 @@ class ViewImageDraggable extends ConsumerWidget {
           ],
         ),
         Expanded(
-          child: DropTarget(
-            onDragDone: (detail) async {
-              for (var file in detail.files) {
-                var fileName = file.name;
-                if (!ImageDB.regCheckImage.hasMatch(fileName)) {
-                  continue;
-                }
-                var fileData = await file.readAsBytes();
-                ref
-                    .read(lastImageProvider.notifier)
-                    .update((state) => fileData);
-                openImageEditor(ref, context, fileName);
-                break;
-              }
-            },
-            onDragEntered: (detail) {
-              ref.read(editorImageDragDropColorProvider.notifier).state =
-                  Colors.lightBlueAccent;
-            },
-            onDragExited: (detail) {
-              ref.read(editorImageDragDropColorProvider.notifier).state =
-                  Colors.black12;
-            },
+          child: DropRegion(
             child: Container(
               decoration: BoxDecoration(
                 border: Border.all(
@@ -149,50 +127,101 @@ class ViewImageDraggable extends ConsumerWidget {
               child: ViewImageSelector(
                   widgetBuilder: widgetBuilderEdit, widgetLength: widgetLength),
             ),
+            formats: [...Formats.standardFormats]
+              ..remove(Formats.plainText)
+              ..remove(Formats.htmlText)
+              ..remove(Formats.uri)
+              ..remove(Formats.fileUri),
+            onDropOver: (DropOverEvent event) async {
+              return DropOperation.copy;
+            },
+            onPerformDrop: (PerformDropEvent event) async {
+              var items = event.session.items;
+              for (var item in items) {
+                var nameFuture = item.dataReader?.getSuggestedName();
+                if (nameFuture == null) {
+                  continue;
+                }
+                var name = await nameFuture;
+                if (name == null) {
+                  continue;
+                }
+                item.dataReader!.getFile(null, (file) async {
+                  var fileName =
+                      file.fileName ?? Random().nextInt(10000000).toString();
+                  if (!ImageDB.regCheckImage.hasMatch(fileName)) {
+                    return;
+                  }
+                  var fileData = await file.readAll();
+                  if (items.length == 1) {
+                    openImageEditor(ref, context, fileName, data: fileData);
+                  } else {
+                    addImageToDatabase(ref, fileName, fileData);
+                  }
+                  file.close();
+                });
+              }
+            },
+            onDropEnter: (DropEvent event) {
+              ref.read(editorImageDragDropColorProvider.notifier).state =
+                  Colors.lightBlueAccent;
+            },
+            onDropLeave: (DropEvent event) {
+              ref.read(editorImageDragDropColorProvider.notifier).state =
+                  Colors.black12;
+            },
           ),
         )
       ],
     );
   }
 
+  void addImageToDatabase(WidgetRef ref, String name, Uint8List data) {
+    if (name == '') {
+      return;
+    }
+    ref.read(lastImageProvider.notifier).update((state) => data);
+    var defaultName = name;
+    while (ImageDB().imageList.contains(name) ||
+        ImageDB()
+            .imageList
+            .contains(name.replaceAll(ImageDB.regCheckImage, ".webp"))) {
+      name = defaultName + Random().nextInt(999999).toString();
+    }
+    ref.read(imageListStateProvider.notifier).addImageToList(name);
+  }
+
   void openImageEditor(WidgetRef ref, BuildContext context, String name,
-      {bool change = false}) {
-    if (name != '') {
-      if (change) {
-        ref
-            .read(imageProvider.notifier)
-            .update((state) => (name, ImageDB().getImage(name)!));
-        ref
-            .read(changeTabProvider.notifier)
-            .changePageString('viewImageEditor', context);
-        addImageFunction(ref, name);
-      } else {
-        var defaultName = name;
-        while (ImageDB().imageList.contains(name) ||
-            ImageDB()
-                .imageList
-                .contains(name.replaceAll(ImageDB.regCheckImage, ".webp"))) {
-          name = defaultName + Random().nextInt(999999).toString();
+      {Uint8List? data}) {
+    if (data == null) {
+      ref
+          .read(imageProvider.notifier)
+          .update((state) => (name, ImageDB().getImage(name)!));
+      ref
+          .read(changeTabProvider.notifier)
+          .changePageString('viewImageEditor', context);
+      addImageFunction(ref, name);
+    } else {
+      addImageToDatabase(ref, name, data);
+      showDialog<(bool, String)>(
+        builder: (_) => ImageSourceDialog(name),
+        context: context,
+        barrierDismissible: false,
+      ).then((value) {
+        getPlatformFileSystem.addSource(name, value?.$2 ?? '');
+        if (value?.$1 ?? false) {
+          ref.read(lastImageProvider.notifier).update((state) => data);
+          ref
+              .read(imageProvider.notifier)
+              .update((state) => (name, ref.watch(lastImageProvider)!));
+          ref
+              .read(changeTabProvider.notifier)
+              .changePageString('viewImageEditor', context);
+        } else {
+          ref.read(imageListStateProvider.notifier).addImageToList(name);
         }
-        showDialog<(bool, String)>(
-          builder: (_) => ImageSourceDialog(name),
-          context: context,
-          barrierDismissible: false,
-        ).then((value) {
-          getPlatformFileSystem.addSource(name, value?.$2 ?? '');
-          if (value?.$1 ?? false) {
-            ref
-                .read(imageProvider.notifier)
-                .update((state) => (name, ref.watch(lastImageProvider)!));
-            ref
-                .read(changeTabProvider.notifier)
-                .changePageString('viewImageEditor', context);
-          } else {
-            ref.read(imageListStateProvider.notifier).addImageToList(name);
-          }
-          addImageFunction(ref, name);
-        });
-      }
+        addImageFunction(ref, name);
+      });
     }
   }
 }
