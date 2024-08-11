@@ -336,8 +336,7 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
         onChanged: (value) {
           var valueInt = value.toInt();
           if (!ref.watch(isEditableProvider(pos: pos)) && valueInt != select) {
-            int t = valueInt - select;
-            ref.read(choiceStatusProvider(pos).notifier).select(t);
+            ref.read(choiceStatusProvider(pos).notifier).select(valueInt);
           }
         },
       );
@@ -362,7 +361,7 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
           ),
           onTap: () {
             if (!ref.watch(isEditableProvider(pos: pos))) {
-              ref.read(choiceStatusProvider(pos).notifier).select(-1);
+              ref.read(choiceStatusProvider(pos).notifier).select(select - 1);
             }
           },
         ),
@@ -391,7 +390,7 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
           ),
           onTap: () {
             if (!ref.watch(isEditableProvider(pos: pos))) {
-              ref.read(choiceStatusProvider(pos).notifier).select(1);
+              ref.read(choiceStatusProvider(pos).notifier).select(select + 1);
             }
           },
         )
@@ -448,8 +447,8 @@ class _ViewContentsState extends ConsumerState<ViewContents> {
     var design = ref.watch(choiceNodeDesignSettingProvider(pos: widget.pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     return QuillEditor(
+      controller: _controller!,
       configurations: QuillEditorConfigurations(
-        controller: _controller!,
         autoFocus: false,
         expands: false,
         padding: const EdgeInsets.symmetric(vertical: 4),
@@ -504,7 +503,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
         isReorderAble: true,
         parentMaxSize: node.getMaxSize(true),
       );
-    } else if (!ignoreChild) {
+    } else if (!ignoreChild && node.children.isNotEmpty) {
       child = ViewWrapCustomReorder(
         pos,
         isReorderAble: false,
