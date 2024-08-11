@@ -65,6 +65,7 @@ class ChoiceNodeClipboardNotifier extends ChangeNotifier {
 class CurrentProjectChanged extends _$CurrentProjectChanged {
   @override
   bool build() {
+    ref.keepAlive();
     return false;
   }
 
