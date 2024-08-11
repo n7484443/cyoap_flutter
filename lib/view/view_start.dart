@@ -458,9 +458,7 @@ class ViewGlobalSettingDialog extends ConsumerWidget {
               text: 'backup_frequency'.i18n,
               initialValue: ref.read(backupFrequencyProvider),
               onChanged: (value) {
-                ref
-                    .read(backupFrequencyProvider.notifier)
-                    .setVariable(value);
+                ref.read(backupFrequencyProvider.notifier).setVariable(value);
               },
             ),
           ),
@@ -505,8 +503,7 @@ class IntSettingInput extends ConsumerStatefulWidget {
   ConsumerState createState() => _IntSettingInputState();
 }
 
-class _IntSettingInputState
-    extends ConsumerState<IntSettingInput> {
+class _IntSettingInputState extends ConsumerState<IntSettingInput> {
   TextEditingController? _controller;
 
   @override

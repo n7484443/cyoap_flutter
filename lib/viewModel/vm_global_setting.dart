@@ -78,23 +78,23 @@ class BackupTimer extends _$BackupTimer {
     return null;
   }
 
-  void start(){
+  void start() {
     print("Start Backup");
-    if(getPlatformFileSystem.openAsFile){
+    if (getPlatformFileSystem.openAsFile) {
       return;
     }
     int min = ref.read(backupFrequencyProvider);
-    state = Timer.periodic(Duration(minutes: min), (timer){
+    state = Timer.periodic(Duration(minutes: min), (timer) {
       backup();
     });
   }
 
-  void stop(){
+  void stop() {
     print("Stop Backup");
     state?.cancel();
   }
 
-  void backup(){
+  void backup() {
     print("Backup");
     getPlatformFileSystem.saveBackup();
   }

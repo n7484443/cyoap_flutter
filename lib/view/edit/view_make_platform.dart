@@ -1,6 +1,4 @@
 import 'package:cyoap_flutter/i18n.dart';
-import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
-import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/edit/view_clipboard.dart';
 import 'package:cyoap_flutter/view/edit/view_design.dart';
 import 'package:cyoap_flutter/view/edit/view_editor.dart';
@@ -8,6 +6,8 @@ import 'package:cyoap_flutter/view/edit/view_image_editor.dart';
 import 'package:cyoap_flutter/view/edit/view_make.dart';
 import 'package:cyoap_flutter/view/edit/view_project_settings.dart';
 import 'package:cyoap_flutter/view/edit/view_source.dart';
+import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
+import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:cyoap_flutter/viewModel/edit/vm_editor.dart';
 import 'package:cyoap_flutter/viewModel/edit/vm_make_platform.dart';
@@ -121,7 +121,8 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
               title: Row(
                 children: [
                   const ViewSaveIcons(),
-                  if(!getPlatformFileSystem.openAsFile) const ViewCompressIcon(),
+                  if (!getPlatformFileSystem.openAsFile)
+                    const ViewCompressIcon(),
                   const SizedBox(width: 20),
                   const Expanded(child: SizedBox.shrink()),
                   const BackButton(),
@@ -353,7 +354,7 @@ class BackButton extends ConsumerWidget {
     return IconButton(
       tooltip: 'back'.i18n,
       icon: const Icon(Icons.close),
-      onPressed: (){
+      onPressed: () {
         if (ref.read(currentProjectChangedProvider)) {
           showDialog(
             context: context,

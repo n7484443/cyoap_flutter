@@ -6,8 +6,8 @@ import 'package:cyoap_core/option.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart'
     deferred as platform_specified;
 import 'package:cyoap_flutter/util/platform_specified_util/webp_converter.dart';
-import 'package:cyoap_flutter/view/view_font_source.dart';
 import 'package:cyoap_flutter/view/edit/view_make_platform.dart';
+import 'package:cyoap_flutter/view/view_font_source.dart';
 import 'package:cyoap_flutter/view/view_play.dart';
 import 'package:cyoap_flutter/view/view_start.dart';
 import 'package:cyoap_flutter/viewModel/vm_start.dart';
@@ -35,8 +35,8 @@ enum DisplaySize {
 extension DisplaySizeExtension on DisplaySize {
   static DisplaySize getDisplaySize(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    if(width < 640) return DisplaySize.small;
-    if(width > 1008) return DisplaySize.large;
+    if (width < 640) return DisplaySize.small;
+    if (width > 1008) return DisplaySize.large;
     return DisplaySize.medium;
   }
 
@@ -82,7 +82,6 @@ class ConstList {
   static double getScreenHeight(BuildContext context) {
     return MediaQuery.of(context).size.height;
   }
-
 
   static bool isSmallDisplay(BuildContext context) {
     if (isMobile()) return true;
@@ -130,8 +129,12 @@ class ConstList {
       {TextStyle? fontStyle}) {
     var defaultTextStyle = fontStyle ?? DefaultTextStyle.of(context).style;
     return DefaultStyles(
-      paragraph: DefaultTextBlockStyle(defaultTextStyle, const HorizontalSpacing(0, 0),
-          const VerticalSpacing(0, 0), const VerticalSpacing(0, 0), null),
+      paragraph: DefaultTextBlockStyle(
+          defaultTextStyle,
+          const HorizontalSpacing(0, 0),
+          const VerticalSpacing(0, 0),
+          const VerticalSpacing(0, 0),
+          null),
     );
   }
 

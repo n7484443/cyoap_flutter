@@ -77,7 +77,7 @@ class ChoiceStatus extends ChangeNotifier {
 
   void swapChoice(Pos target) {
     var lca = Pos.lca(pos, target);
-    if(lca.length - 1 > 0){
+    if (lca.length - 1 > 0) {
       lca = lca.removeLast();
     }
     if (pos.last == nonPositioned) {

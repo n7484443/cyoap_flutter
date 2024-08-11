@@ -284,9 +284,10 @@ class PlatformFileSystem {
 
     return input;
   }
-  Future<void> saveBackup() async{
+
+  Future<void> saveBackup() async {
     //only work on desktop/mobile with folder system
-    if(ConstList.isWeb() || openAsFile){
+    if (ConstList.isWeb() || openAsFile) {
       return;
     }
 

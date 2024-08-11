@@ -48,7 +48,8 @@ class ViewIdeGui extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     DragTarget<Pos>(
-                      onAcceptWithDetails: (DragTargetDetails<Pos> dragDetails) {
+                      onAcceptWithDetails:
+                          (DragTargetDetails<Pos> dragDetails) {
                         var pos = dragDetails.data;
                         if (pos.first < 0) return;
                         ref.read(codeBlockProvider.notifier).removeBlock(pos);
