@@ -292,7 +292,7 @@ class _ViewColorOptionEditorState extends State<ViewColorOptionEditor> {
   @override
   Widget build(BuildContext context) {
     var dropdown = DropdownButtonFormField<ColorType>(
-      decoration: InputDecoration(labelText: 'node_color'.i18n),
+      decoration: InputDecoration(labelText: 'color_type'.i18n),
       items: ColorType.values
           .getRange(0, 2)
           .map<DropdownMenuItem<ColorType>>(

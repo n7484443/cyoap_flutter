@@ -20,13 +20,7 @@ class ViewSwitchLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var child = [
-      Text(
-        label,
-        style: Theme.of(context)
-            .textTheme
-            .labelLarge
-            ?.copyWith(fontSize: labelSize),
-      ),
+      Text(label),
       ConstrainedBox(
         constraints: const BoxConstraints(
           maxHeight: 28,

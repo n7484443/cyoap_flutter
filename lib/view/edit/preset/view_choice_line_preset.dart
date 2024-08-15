@@ -175,21 +175,31 @@ class ViewLineOptionEditor extends ConsumerWidget {
                 ),
               ),
               Card(
-                child: DropdownButtonFormField<ChoiceLineAlignment>(
-                  decoration:
-                      InputDecoration(labelText: 'lineSetting_alignment'.i18n),
-                  items: ChoiceLineAlignment.values
-                      .map<DropdownMenuItem<ChoiceLineAlignment>>((type) =>
-                          DropdownMenuItem(value: type, child: Text(type.name)))
-                      .toList(),
-                  onChanged: (ChoiceLineAlignment? t) {
-                    if (t != null) {
-                      ref
-                          .read(choiceLinePresetListProvider.notifier)
-                          .updateIndex(index, preset.copyWith(alignment: t));
-                    }
-                  },
-                  value: preset.alignment,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('lineSetting_alignment'.i18n),
+                      SizedBox(
+                        width: 80,
+                        child: DropdownButtonFormField<ChoiceLineAlignment>(
+                          items: ChoiceLineAlignment.values
+                              .map<DropdownMenuItem<ChoiceLineAlignment>>((type) =>
+                                  DropdownMenuItem(value: type, child: Text(type.name)))
+                              .toList(),
+                          onChanged: (ChoiceLineAlignment? t) {
+                            if (t != null) {
+                              ref
+                                  .read(choiceLinePresetListProvider.notifier)
+                                  .updateIndex(index, preset.copyWith(alignment: t));
+                            }
+                          },
+                          value: preset.alignment,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ]),
@@ -205,13 +215,21 @@ class ViewLineOptionEditor extends ConsumerWidget {
           SliverToBoxAdapter(
             child: Card(
               child: Padding(
-                padding: const EdgeInsets.all(ConstList.padding),
-                child: ViewColorOptionEditor(
-                  colorOption: colorOption!,
-                  changeFunction: (ColorOption after) {
-                    ref.read(choiceLinePresetListProvider.notifier).updateIndex(
-                        index, preset.copyWith(backgroundColorOption: after));
-                  },
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Text("background_color".i18n, style: Theme.of(context).textTheme.titleMedium),
+                    Padding(
+                      padding: const EdgeInsets.all(ConstList.padding),
+                      child: ViewColorOptionEditor(
+                        colorOption: colorOption!,
+                        changeFunction: (ColorOption after) {
+                          ref.read(choiceLinePresetListProvider.notifier).updateIndex(
+                              index, preset.copyWith(backgroundColorOption: after));
+                        },
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),

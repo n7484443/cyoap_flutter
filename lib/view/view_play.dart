@@ -63,6 +63,44 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
         }
       },
     );
+    var saveButton = Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: IconButton(
+          onPressed: () async {
+            var status = await ref.read(playDataProvider.notifier).savePlayData();
+            showSnackBar(context, status);
+          },
+          icon: const Icon(Icons.save)),
+    );
+    var loadButton = Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: IconButton(
+          onPressed: () async {
+            var status = await ref.read(playDataProvider.notifier).loadPlayData();
+            if (status != null) {
+              showSnackBar(context, status);
+            }
+          },
+          icon: const Icon(Icons.file_upload_outlined)),
+    );
+    var resultButton = TextButton(
+      onPressed: () {
+        if (ref.watch(selectedchoiceNodeStatusProvider).isNotEmpty) {
+          showDialog(
+            context: context,
+            builder: (context) => const ViewSelectedGrid(),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('summary_error'.i18n),
+              duration: const Duration(seconds: 1),
+            ),
+          );
+        }
+      },
+      child: Text("summary".i18n),
+    );
     if (ConstList.isSmallDisplay(context)) {
       return PopScope(
         canPop: false,
@@ -75,49 +113,9 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                IconButton(
-                    onPressed: () async {
-                      var status = await ref
-                          .read(playDataProvider.notifier)
-                          .savePlayData();
-                      showSnackBar(context, status);
-                    },
-                    icon: const Icon(Icons.save)),
-                IconButton(
-                    onPressed: () async {
-                      var status = await ref
-                          .read(playDataProvider.notifier)
-                          .loadPlayData();
-                      if (status != null) {
-                        showSnackBar(context, status);
-                      }
-                    },
-                    icon: const Icon(Icons.file_upload_outlined)),
-                FilledButton(
-                  style: OutlinedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6.0),
-                    ),
-                  ),
-                  onPressed: () {
-                    if (ref
-                        .watch(selectedchoiceNodeStatusProvider)
-                        .isNotEmpty) {
-                      showDialog(
-                        context: context,
-                        builder: (context) => const ViewSelectedGrid(),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('summary_error'.i18n),
-                          duration: const Duration(seconds: 1),
-                        ),
-                      );
-                    }
-                  },
-                  child: Text("summary".i18n),
-                ),
+                saveButton,
+                loadButton,
+                resultButton,
               ],
             ),
           ),
@@ -148,48 +146,10 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              IconButton(
-                  onPressed: () async {
-                    var status = await ref
-                        .read(playDataProvider.notifier)
-                        .savePlayData();
-                    showSnackBar(context, status);
-                  },
-                  icon: const Icon(Icons.save)),
-              IconButton(
-                  onPressed: () async {
-                    var status = await ref
-                        .read(playDataProvider.notifier)
-                        .loadPlayData();
-                    if (status != null) {
-                      showSnackBar(context, status);
-                    }
-                  },
-                  icon: const Icon(Icons.file_upload_outlined)),
+              saveButton,
+              loadButton,
               const Spacer(),
-              FilledButton(
-                style: OutlinedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6.0),
-                  ),
-                ),
-                onPressed: () {
-                  if (ref.watch(selectedchoiceNodeStatusProvider).isNotEmpty) {
-                    showDialog(
-                      context: context,
-                      builder: (context) => const ViewSelectedGrid(),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('summary_error'.i18n),
-                        duration: const Duration(seconds: 1),
-                      ),
-                    );
-                  }
-                },
-                child: Text("summary".i18n),
-              ),
+              resultButton,
             ],
           ),
         ),

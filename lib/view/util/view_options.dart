@@ -65,9 +65,9 @@ class CustomDropdownButton<T> extends ConsumerWidget {
         padding: const EdgeInsets.all(ConstList.padding),
         child: Row(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(ConstList.padding),
-              child: Text(label),
+            Text(label),
+            const Padding(
+              padding: EdgeInsets.all(ConstList.padding),
             ),
             Expanded(
               child: DropdownButtonFormField<T>(

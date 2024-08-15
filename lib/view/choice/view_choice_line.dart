@@ -96,128 +96,118 @@ class ViewChoiceLineHeader extends ConsumerWidget {
       return const SizedBox.shrink();
     }
     if (isPlatformEditable) {
-      return Stack(
-        alignment: Alignment.center,
-        children: [
-          Divider(
-            thickness: 4,
-            color:
-                preset.alwaysVisibleLine! ? Colors.blueAccent : Colors.white54,
-          ),
-          Card(
-            elevation: 0,
-            color: ref.watch(themeStateProvider) == ThemeMode.light
-                ? Colors.white70
-                : Colors.black54,
-            child: Padding(
-              padding: const EdgeInsets.all(1.0),
-              child: Row(
-                children: [
-                  CircleButton(
-                    onPressed: () {
-                      ref.read(lineFoldProvider(pos: pos).notifier).reverse();
-                    },
-                    child: ref.watch(lineFoldProvider(pos: pos))
-                        ? const Icon(
-                            Icons.unfold_more,
-                          )
-                        : const Icon(
-                            Icons.unfold_less,
-                          ),
-                  ),
-                  const Spacer(),
-                  if (lineOption.name != null && isPlatformEditable)
-                    Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Text(
-                        lineOption.name!,
-                        style: ConstList.getFont("notoSans").copyWith(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                        ),
+      return Card(
+        elevation: 0,
+        color: ref.watch(themeStateProvider) == ThemeMode.light
+            ? Colors.white70
+            : Colors.black54,
+        child: Padding(
+          padding: const EdgeInsets.all(1.0),
+          child: Row(
+            children: [
+              CircleButton(
+                onPressed: () {
+                  ref.read(lineFoldProvider(pos: pos).notifier).reverse();
+                },
+                child: ref.watch(lineFoldProvider(pos: pos))
+                    ? const Icon(
+                        Icons.unfold_more,
+                      )
+                    : const Icon(
+                        Icons.unfold_less,
                       ),
-                    ),
-                  const Spacer(),
-                  CircleButton(
-                    onPressed: () {
-                      ref.read(isEditableStateProvider(pos).notifier).state =
-                          !ref.watch(isEditableStateProvider(pos));
-                    },
-                    child: ref.watch(isEditableStateProvider(pos))
-                        ? const Icon(
-                            Icons.visibility,
-                          )
-                        : const Icon(
-                            Icons.edit,
-                          ),
-                  ),
-                  const SizedBox.square(
-                    dimension: 5,
-                  ),
-                  CircleButton(
-                    onPressed: () {
-                      if (pos.last - 1 >= 0) {
-                        var upPos = pos.removeLast().addLast(pos.last - 1);
-                        ref.read(choiceStatusProvider(pos)).swapChoice(upPos);
-                      }
-                    },
-                    child: const Icon(
-                      Icons.arrow_upward,
-                    ),
-                  ),
-                  const SizedBox.square(
-                    dimension: 5,
-                  ),
-                  CircleButton(
-                    onPressed: () {
-                      var downPos = pos.removeLast().addLast(pos.last + 1);
-                      ref.read(choiceStatusProvider(pos)).swapChoice(downPos);
-                    },
-                    child: const Icon(
-                      Icons.arrow_downward,
-                    ),
-                  ),
-                  const SizedBox.square(
-                    dimension: 5,
-                  ),
-                  CircleButton(
-                    onPressed: () async {
-                      var name = await showDialog<String>(
-                          context: context,
-                          builder: (_) => NodeDividerDialog(pos: pos),
-                          barrierDismissible: false);
-                      ref
-                          .read(lineOptionProvider(pos: pos).notifier)
-                          .setName(name ?? '');
-                    },
-                    child: const Icon(
-                      Icons.settings,
-                    ),
-                  ),
-                  CircleButton(
-                    onPressed: () async {
-                      await showDialog<bool?>(
-                          context: context,
-                          builder: (_) => ViewWarningDialog(
-                                acceptFunction: () {
-                                  ref
-                                      .read(choiceStatusProvider(pos))
-                                      .removeData();
-                                },
-                                cancelFunction: () {},
-                                content: 'warning_message_line_delete'.i18n,
-                              ),
-                          barrierDismissible: false);
-                    },
-                    child: const Icon(
-                      Icons.delete,
-                    ),
-                  ),
-                ],
               ),
-            ),
+              const Spacer(),
+              if (lineOption.name != null && isPlatformEditable)
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    lineOption.name!,
+                    style: ConstList.getFont("notoSans").copyWith(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              const Spacer(),
+              CircleButton(
+                onPressed: () {
+                  ref.read(isEditableStateProvider(pos).notifier).state =
+                      !ref.watch(isEditableStateProvider(pos));
+                },
+                child: ref.watch(isEditableStateProvider(pos))
+                    ? const Icon(
+                        Icons.visibility,
+                      )
+                    : const Icon(
+                        Icons.edit,
+                      ),
+              ),
+              const SizedBox.square(
+                dimension: 5,
+              ),
+              CircleButton(
+                onPressed: () {
+                  if (pos.last - 1 >= 0) {
+                    var upPos = pos.removeLast().addLast(pos.last - 1);
+                    ref.read(choiceStatusProvider(pos)).swapChoice(upPos);
+                  }
+                },
+                child: const Icon(
+                  Icons.arrow_upward,
+                ),
+              ),
+              const SizedBox.square(
+                dimension: 5,
+              ),
+              CircleButton(
+                onPressed: () {
+                  var downPos = pos.removeLast().addLast(pos.last + 1);
+                  ref.read(choiceStatusProvider(pos)).swapChoice(downPos);
+                },
+                child: const Icon(
+                  Icons.arrow_downward,
+                ),
+              ),
+              const SizedBox.square(
+                dimension: 5,
+              ),
+              CircleButton(
+                onPressed: () async {
+                  var name = await showDialog<String>(
+                      context: context,
+                      builder: (_) => NodeDividerDialog(pos: pos),
+                      barrierDismissible: false);
+                  ref
+                      .read(lineOptionProvider(pos: pos).notifier)
+                      .setName(name ?? '');
+                },
+                child: const Icon(
+                  Icons.settings,
+                ),
+              ),
+              CircleButton(
+                onPressed: () async {
+                  await showDialog<bool?>(
+                      context: context,
+                      builder: (_) => ViewWarningDialog(
+                            acceptFunction: () {
+                              ref
+                                  .read(choiceStatusProvider(pos))
+                                  .removeData();
+                            },
+                            cancelFunction: () {},
+                            content: 'warning_message_line_delete'.i18n,
+                          ),
+                      barrierDismissible: false);
+                },
+                child: const Icon(
+                  Icons.delete,
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       );
     } else {
       return Stack(

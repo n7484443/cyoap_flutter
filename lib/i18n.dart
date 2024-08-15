@@ -55,7 +55,7 @@ extension Localization on String {
           'create': 'Create',
           'font_licenses': 'Font licenses',
           'version_check': 'New version available!',
-          'version_latest': 'Latest version : ',
+          'version_latest': 'Latest version',
         },
         "ko": {
           'add_file': '파일 추가',
@@ -69,7 +69,7 @@ extension Localization on String {
           'create': '생성',
           'font_licenses': '폰트 라이센스',
           'version_check': '새로운 버전이 있습니다!',
-          'version_latest': '최신 버전 : ',
+          'version_latest': '최신 버전',
         }
       } +
       const {
@@ -111,7 +111,7 @@ extension Localization on String {
           'title_up': 'Title up',
           'horizontal_mode': 'Horizontal mode',
           'image_left': 'Image left',
-          'node_color': 'Choices background color',
+          'color_type': 'Color Type',
           'grad_type': 'Gradient Type',
           'node_outline_color': 'Border color when choice is selected',
           'font_title': 'Title font',
@@ -139,7 +139,7 @@ extension Localization on String {
           'title_up': '제목을 위로',
           'horizontal_mode': '가로 모드',
           'image_left': '이미지 왼쪽으로',
-          'node_color': '선택지 색상',
+          'color_type': '색상 종류',
           'grad_type': '그라데이션 타입',
           'node_outline_color': '외곽선 색상',
           'font_title': '제목 폰트',

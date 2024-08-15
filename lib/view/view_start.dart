@@ -4,6 +4,7 @@ import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/util/custom_snackbar.dart';
+import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:flutter/material.dart';
@@ -25,132 +26,164 @@ class ViewStart extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Align(
-              alignment: Alignment.topCenter,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                          '${'version'.i18n} : ${ref.watch(versionProvider).value ?? ""}'),
-                      Visibility(
-                        visible: ref.watch(needUpdateStateProvider) != null,
-                        child: TextButton(
-                          onPressed: () {
-                            if (ConstList.isMobile()) {
-                              launchUrlString(
-                                  'market://details?id=com.clearApple.cyoap_flutter');
-                            } else {
-                              launchUrlString(
-                                  'https://github.com/n7484443/FlutterCyoap/releases');
-                            }
-                          },
-                          child: Text('version_check'.i18n,
-                              style: const TextStyle(color: Colors.redAccent)),
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            '${'version'.i18n} : ${ref.watch(versionProvider).value ?? ""} | ${'version_latest'.i18n} : ${ref.watch(needUpdateStateProvider) ?? ''}',
+                            style: Theme.of(context).textTheme.labelMedium,
+                          ),
+                          Visibility(
+                            visible: ref.watch(needUpdateStateProvider) != null,
+                            child: TextButton(
+                              onPressed: () {
+                                if (ConstList.isMobile()) {
+                                  launchUrlString(
+                                      'market://details?id=com.clearApple.cyoap_flutter');
+                                } else {
+                                  launchUrlString(
+                                      'https://github.com/n7484443/FlutterCyoap/releases');
+                                }
+                              },
+                              child: Text('version_check'.i18n),
+                            ),
+                          ),
+                        ],
                       ),
-                      Visibility(
-                        visible: ref.watch(needUpdateStateProvider) != null,
-                        child: Text(
-                            'version_latest'.i18n +
-                                (ref.watch(needUpdateStateProvider) ?? ''),
-                            style: const TextStyle(color: Colors.redAccent)),
+                      const Spacer(),
+                      IconButton(
+                          icon: const Icon(Icons.info),
+                          onPressed: () {
+                            launchUrlString(
+                                'https://github.com/n7484443/cyoap_flutter/wiki');
+                          }),
+                      IconButton(
+                        icon: ref.watch(themeStateProvider) == ThemeMode.light
+                            ? const Icon(Icons.dark_mode)
+                            : const Icon(Icons.light_mode),
+                        onPressed: () {
+                          if (ref.watch(themeStateProvider) ==
+                              ThemeMode.light) {
+                            ref.read(themeStateProvider.notifier).state =
+                                ThemeMode.dark;
+                          } else {
+                            ref.read(themeStateProvider.notifier).state =
+                                ThemeMode.light;
+                          }
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.language),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => const ViewLanguageDialog(),
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.settings),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) =>
+                                const ViewGlobalSettingDialog(),
+                          );
+                        },
                       ),
                     ],
                   ),
-                  const Spacer(),
-                  IconButton(
-                      icon: const Icon(Icons.info),
-                      onPressed: () {
-                        launchUrlString(
-                            'https://github.com/n7484443/cyoap_flutter/wiki');
-                      }),
-                  IconButton(
-                    icon: ref.watch(themeStateProvider) == ThemeMode.light
-                        ? const Icon(Icons.dark_mode)
-                        : const Icon(Icons.light_mode),
-                    onPressed: () {
-                      if (ref.watch(themeStateProvider) == ThemeMode.light) {
-                        ref.read(themeStateProvider.notifier).state =
-                            ThemeMode.dark;
-                      } else {
-                        ref.read(themeStateProvider.notifier).state =
-                            ThemeMode.light;
-                      }
-                    },
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.language),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => const ViewLanguageDialog(),
-                      );
-                    },
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.settings),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => const ViewGlobalSettingDialog(),
-                      );
-                    },
-                  ),
-                ],
+                ),
               ),
-            ),
-            const Expanded(
-              flex: 9,
-              child: ViewProjectList(),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                TextButton(
-                  child: Text('add_file'.i18n),
-                  onPressed: () async {
-                    if (await ref
-                            .read(frequentlyUsedPathProvider.notifier)
-                            .addFile() ==
-                        0) {
-                      ref.read(pathListSelectedProvider.notifier).state = 0;
-                    }
-                  },
+              const Expanded(
+                flex: 9,
+                child: Card(child: ViewProjectList()),
+              ),
+              SizedBox(
+                height: 68,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Card(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextButton(
+                              child: Text('add_file'.i18n),
+                              onPressed: () async {
+                                if (await ref
+                                        .read(
+                                            frequentlyUsedPathProvider.notifier)
+                                        .addFile() ==
+                                    0) {
+                                  ref
+                                      .read(pathListSelectedProvider.notifier)
+                                      .state = 0;
+                                }
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Visibility(
+                              visible: !ConstList.isWeb(),
+                              child: TextButton(
+                                child: Text('add_folder'.i18n),
+                                onPressed: () async {
+                                  if (ConstList.isMobile()) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) =>
+                                          const ViewAddProjectDialog(),
+                                      barrierDismissible: false,
+                                    );
+                                  } else if (await ref
+                                      .read(frequentlyUsedPathProvider.notifier)
+                                      .addDirectory()) {
+                                    ref
+                                        .read(pathListSelectedProvider.notifier)
+                                        .state = ref
+                                            .read(frequentlyUsedPathProvider)
+                                            .length -
+                                        1;
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Card(
+                        child: Row(
+                      children: [
+                        SelectModeButton(isPlay: true),
+                        Padding(padding: const EdgeInsets.all(8.0)),
+                        SelectModeButton(isPlay: false),
+                      ],
+                    )),
+                  ],
                 ),
-                Visibility(
-                  visible: !ConstList.isWeb(),
-                  child: TextButton(
-                    child: Text('add_folder'.i18n),
-                    onPressed: () async {
-                      if (ConstList.isMobile()) {
-                        showDialog(
-                          context: context,
-                          builder: (context) => const ViewAddProjectDialog(),
-                          barrierDismissible: false,
-                        );
-                      } else if (await ref
-                          .read(frequentlyUsedPathProvider.notifier)
-                          .addDirectory()) {
-                        ref.read(pathListSelectedProvider.notifier).state =
-                            ref.read(frequentlyUsedPathProvider).length - 1;
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
-            const Divider(
-              thickness: 1.5,
-            ),
-            const SelectMode(),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -167,149 +200,123 @@ class ViewProjectList extends ConsumerStatefulWidget {
 }
 
 class _ViewProjectListState extends ConsumerState<ViewProjectList> {
+  AdjustableScrollController? _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = AdjustableScrollController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController?.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: ref.watch(frequentlyUsedPathProvider).length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: OutlinedButton(
-            onPressed: () =>
-                ref.read(pathListSelectedProvider.notifier).state = index,
-            style: ref.watch(pathListSelectedProvider) == index
-                ? OutlinedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.lightBlueAccent)
-                : null,
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Text(ref.watch(frequentlyUsedPathProvider)[index]),
-            ),
-          ),
-          trailing: ConstList.isWeb()
-              ? null
-              : IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () {
-                    ref
-                        .read(frequentlyUsedPathProvider.notifier)
-                        .removeFrequentPath(
-                          index,
-                          () async => await showDialog<bool?>(
-                            context: context,
-                            builder: (_) => ViewWarningDialog(
-                              content: 'warning_message_project_delete'.i18n,
-                            ),
-                          ),
-                        );
-                  },
+    return Scrollbar(
+      thumbVisibility: true,
+      controller: _scrollController,
+      child: ListView.builder(
+        itemCount: ref.watch(frequentlyUsedPathProvider).length,
+        controller: _scrollController,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: FilterChip.elevated(
+              onSelected: (bool value) {
+                ref.read(pathListSelectedProvider.notifier).state = index;
+              },
+              selected: ref.watch(pathListSelectedProvider) == index,
+              label: SizedBox(
+                width: double.infinity,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(ref.watch(frequentlyUsedPathProvider)[index]),
                 ),
-        );
-      },
+              ),
+              onDeleted: () {
+                ref
+                    .read(frequentlyUsedPathProvider.notifier)
+                    .removeFrequentPath(
+                      index,
+                      () async => await showDialog<bool?>(
+                        context: context,
+                        builder: (_) => ViewWarningDialog(
+                          content: 'warning_message_project_delete'.i18n,
+                        ),
+                      ),
+                    );
+              },
+              deleteIcon: const Icon(Icons.delete),
+            ),
+          );
+        },
+      ),
     );
   }
 }
 
-class SelectMode extends ConsumerWidget {
-  const SelectMode({super.key});
+class SelectModeButton extends ConsumerWidget {
+  final bool isPlay;
+
+  const SelectModeButton({required this.isPlay, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Row(
-      children: [
-        Expanded(
-          child: InkWell(
-            onTap: () async {
-              showDialog(
-                barrierDismissible: false,
-                context: context,
-                builder: (context) => const ViewLoadingDialog(),
-              );
-              LoadProjectState loadState = await ref
-                  .read(frequentlyUsedPathProvider.notifier)
-                  .openProject();
-              Navigator.pop(context);
-              switch (loadState.state) {
-                case ProjectState.success:
-                  getPlatformFileSystem.isEditable = false;
-                  Navigator.of(context).pushReplacementNamed('/viewPlay');
-                  ref.read(snackBarErrorProvider.notifier).update();
-                  break;
-                case ProjectState.nonExist:
-                  showSnackBar(context, 'failed_load_project_non_exist'.i18n,
-                      autoHide: false);
-                  break;
-                case ProjectState.fail:
-                  print(loadState.version!);
-                  showSnackBar(
-                      context,
-                      'failed_load_project_version'
-                          .i18n
-                          .fill([loadState.version!, fileVersion]),
-                      autoHide: false);
-                  break;
-                default:
-                  showSnackBar(context, 'failed_load_project_cyoap_error'.i18n,
-                      autoHide: false);
-                  break;
-              }
-            },
-            child: Center(
-              child: Text(
-                'Play',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.displayLarge,
-              ),
-            ),
-          ),
+    return TextButton(
+      onPressed: () async {
+        showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) => const ViewLoadingDialog(),
+        );
+        if (!isPlay) {
+          ref.read(backupTimerProvider.notifier).start();
+        }
+        LoadProjectState loadState =
+            await ref.read(frequentlyUsedPathProvider.notifier).openProject();
+        Navigator.pop(context);
+        switch (loadState.state) {
+          case ProjectState.success:
+            if (isPlay) {
+              getPlatformFileSystem.isEditable = false;
+              Navigator.of(context).pushReplacementNamed('/viewPlay');
+              ref.read(snackBarErrorProvider.notifier).update();
+            } else {
+              getPlatformFileSystem.isEditable = true;
+              Navigator.of(context).pushReplacementNamed('/viewEdit');
+            }
+            break;
+          case ProjectState.nonExist:
+            showSnackBar(context, 'failed_load_project_non_exist'.i18n,
+                autoHide: false);
+            break;
+          case ProjectState.fail:
+            print(loadState.version!);
+            showSnackBar(
+                context,
+                'failed_load_project_version'
+                    .i18n
+                    .fill([loadState.version!, fileVersion]),
+                autoHide: false);
+            break;
+          default:
+            showSnackBar(context, 'failed_load_project_cyoap_error'.i18n,
+                autoHide: false);
+            break;
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          isPlay ? 'Play' : 'Edit',
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.displaySmall,
         ),
-        Expanded(
-          child: InkWell(
-            onTap: () async {
-              showDialog(
-                barrierDismissible: false,
-                context: context,
-                builder: (context) => const ViewLoadingDialog(),
-              );
-              ref.read(backupTimerProvider.notifier).start();
-              LoadProjectState loadState = await ref
-                  .read(frequentlyUsedPathProvider.notifier)
-                  .openProject();
-              Navigator.pop(context);
-              switch (loadState.state) {
-                case ProjectState.success:
-                  getPlatformFileSystem.isEditable = true;
-                  Navigator.of(context).pushReplacementNamed('/viewEdit');
-                  break;
-                case ProjectState.nonExist:
-                  showSnackBar(context, 'failed_load_project_non_exist'.i18n,
-                      autoHide: false);
-                  break;
-                case ProjectState.fail:
-                  print(loadState.version!);
-                  showSnackBar(
-                      context,
-                      'failed_load_project_version'
-                          .i18n
-                          .fill([loadState.version!, fileVersion]),
-                      autoHide: false);
-                  break;
-                default:
-                  showSnackBar(context, 'failed_load_project_cyoap_error'.i18n,
-                      autoHide: false);
-                  break;
-              }
-            },
-            child: Center(
-              child: Text(
-                'Edit',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.displayLarge,
-              ),
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
