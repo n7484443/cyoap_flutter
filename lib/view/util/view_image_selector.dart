@@ -115,61 +115,56 @@ class ViewImageDraggable extends ConsumerWidget {
           ],
         ),
         Expanded(
-          child: DropRegion(
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                    color: ref.watch(editorImageDragDropColorProvider),
-                    width: 5),
-                borderRadius: BorderRadius.circular(8),
+          child: Card(
+            color: ref.watch(editorImageDragDropColorProvider) ? Theme.of(context).highlightColor : null,
+            child: DropRegion(
+              formats: [...Formats.standardFormats]
+                ..remove(Formats.plainText)
+                ..remove(Formats.htmlText)
+                ..remove(Formats.uri)
+                ..remove(Formats.fileUri),
+              onDropOver: (DropOverEvent event) async {
+                return DropOperation.copy;
+              },
+              onPerformDrop: (PerformDropEvent event) async {
+                var items = event.session.items;
+                for (var item in items) {
+                  var nameFuture = item.dataReader?.getSuggestedName();
+                  if (nameFuture == null) {
+                    continue;
+                  }
+                  var name = await nameFuture;
+                  if (name == null) {
+                    continue;
+                  }
+                  item.dataReader!.getFile(null, (file) async {
+                    var fileName =
+                        file.fileName ?? Random().nextInt(10000000).toString();
+                    if (!ImageDB.regCheckImage.hasMatch(fileName)) {
+                      return;
+                    }
+                    var fileData = await file.readAll();
+                    if (items.length == 1) {
+                      openImageEditor(ref, context, fileName, data: fileData);
+                    } else {
+                      addImageToDatabase(ref, fileName, fileData);
+                    }
+                    file.close();
+                  });
+                }
+              },
+              onDropEnter: (DropEvent event) {
+                ref.read(editorImageDragDropColorProvider.notifier).state = true;
+              },
+              onDropLeave: (DropEvent event) {
+                ref.read(editorImageDragDropColorProvider.notifier).state = false;
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ViewImageSelector(
+                    widgetBuilder: widgetBuilderEdit, widgetLength: widgetLength),
               ),
-              padding: const EdgeInsets.all(4.0),
-              child: ViewImageSelector(
-                  widgetBuilder: widgetBuilderEdit, widgetLength: widgetLength),
             ),
-            formats: [...Formats.standardFormats]
-              ..remove(Formats.plainText)
-              ..remove(Formats.htmlText)
-              ..remove(Formats.uri)
-              ..remove(Formats.fileUri),
-            onDropOver: (DropOverEvent event) async {
-              return DropOperation.copy;
-            },
-            onPerformDrop: (PerformDropEvent event) async {
-              var items = event.session.items;
-              for (var item in items) {
-                var nameFuture = item.dataReader?.getSuggestedName();
-                if (nameFuture == null) {
-                  continue;
-                }
-                var name = await nameFuture;
-                if (name == null) {
-                  continue;
-                }
-                item.dataReader!.getFile(null, (file) async {
-                  var fileName =
-                      file.fileName ?? Random().nextInt(10000000).toString();
-                  if (!ImageDB.regCheckImage.hasMatch(fileName)) {
-                    return;
-                  }
-                  var fileData = await file.readAll();
-                  if (items.length == 1) {
-                    openImageEditor(ref, context, fileName, data: fileData);
-                  } else {
-                    addImageToDatabase(ref, fileName, fileData);
-                  }
-                  file.close();
-                });
-              }
-            },
-            onDropEnter: (DropEvent event) {
-              ref.read(editorImageDragDropColorProvider.notifier).state =
-                  Colors.lightBlueAccent;
-            },
-            onDropLeave: (DropEvent event) {
-              ref.read(editorImageDragDropColorProvider.notifier).state =
-                  Colors.black12;
-            },
           ),
         )
       ],

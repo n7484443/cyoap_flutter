@@ -61,8 +61,9 @@ class _HorizontalScrollState extends State<HorizontalScroll> {
           itemBuilder: widget.itemBuilder,
           itemCount: widget.itemCount,
           separatorBuilder: (BuildContext context, int index) {
-            return const VerticalDivider();
+            return const Padding(padding: EdgeInsets.all(2.0));
           },
+
         ),
       ),
     );

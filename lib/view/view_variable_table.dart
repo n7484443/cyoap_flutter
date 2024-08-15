@@ -167,7 +167,7 @@ class BottomDisplayedVariableWidget extends ConsumerWidget {
       }
     }
     return SizedBox(
-      height: 48,
+      height: 46,
       child: HorizontalScroll(
         itemBuilder: (BuildContext context, int index) {
           return variableList[index];
