@@ -69,10 +69,12 @@ class CurrentProjectChanged extends _$CurrentProjectChanged {
     return false;
   }
 
-  void changed() {
+  void changed({required bool needUpdateCode}) {
     state = true;
-    getPlatform.generateRecursiveParser();
-    getPlatform.updateStatus();
+    if(needUpdateCode){
+      getPlatform.generateRecursiveParser();
+      getPlatform.updateStatus();
+    }
   }
 
   void save() {

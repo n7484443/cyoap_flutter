@@ -41,7 +41,7 @@ class ViewChoiceLine extends ConsumerWidget {
             ref
                 .read(choiceStatusProvider(pos.removeLast()).notifier)
                 .addChoice(ChoiceLine(), index: pos.last);
-            ref.read(currentProjectChangedProvider.notifier).changed();
+            ref.read(currentProjectChangedProvider.notifier).changed(needUpdateCode: true);
           },
           tooltip: 'create_tooltip_line'.i18n,
           child: const Icon(Icons.add_box),

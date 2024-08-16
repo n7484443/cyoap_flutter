@@ -21,7 +21,7 @@ part 'vm_editor.g.dart';
 final editEndProvider = StateProvider<bool>((ref) {
   ref.listenSelf((previous, next) {
     if (next) {
-      ref.read(currentProjectChangedProvider.notifier).changed();
+      ref.read(currentProjectChangedProvider.notifier).changed(needUpdateCode: true);
       var pos = (ref.read(nodeEditorTargetPosProvider) ??
           ref.read(lineEditorTargetPosProvider))!;
       ref.read(choiceStatusProvider(pos)).refreshParent();
@@ -155,7 +155,7 @@ class ImageListState extends _$ImageListState {
     ImageDB().uploadImages(out.$1, out.$2);
     ref.read(imageStateProvider.notifier).state =
         ImageDB().getImageIndex(out.$1);
-    ref.read(currentProjectChangedProvider.notifier).changed();
+    ref.read(currentProjectChangedProvider.notifier).changed(needUpdateCode: false);
     ref.read(lastImageProvider.notifier).update((state) => null);
     ref.invalidate(vmSourceProvider);
     state = [...ImageDB().imageList];
