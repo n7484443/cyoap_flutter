@@ -29,11 +29,7 @@ class ChangeTabNotifier extends StateNotifier<int> {
         ref.read(editEndProvider.notifier).state = true;
         break;
       case "viewProjectSetting":
-        if (ref
-            .read(valueTypeWrapperListProvider.notifier)
-            .isDifferentFromOrigin()) {
-          ref.read(valueTypeWrapperListProvider.notifier).save();
-        }
+        ref.read(valueTypeWrapperListProvider.notifier).save();
         break;
       case "viewEditorLine":
         ref.read(editEndProvider.notifier).state = true;

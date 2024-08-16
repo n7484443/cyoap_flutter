@@ -29,25 +29,46 @@ import '../../viewModel/edit/preset/vm_choice_node_preset.dart';
 import '../../viewModel/edit/vm_make_platform.dart';
 import '../../viewModel/vm_variable_table.dart';
 
-class NodeDraggable extends ConsumerWidget {
+class NodeDraggable extends ConsumerStatefulWidget {
   final Pos pos;
   final bool ignoreOption;
-
-  const NodeDraggable(this.pos, {this.ignoreOption = false, super.key});
+  NodeDraggable(this.pos, {this.ignoreOption = false}):
+        super(key: GlobalKey());
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    var node = ref.watch(choiceStatusProvider(pos)).asChoiceNode();
+  ConsumerState createState() => _NodeDraggableState();
+}
+
+class _NodeDraggableState extends ConsumerState<NodeDraggable> {
+  @override
+  void initState() {
+    Future((){
+      ref.read(currentVisiblePosListProvider.notifier).add(widget.pos, widget.key as GlobalKey);
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    Future((){
+      ref.read(currentVisiblePosListProvider.notifier).remove(widget.pos, widget.key as GlobalKey);
+    });
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var node = ref.watch(choiceStatusProvider(widget.pos)).asChoiceNode();
     if (node == null) {
       return const SizedBox.shrink();
     }
-    var widget = ViewChoiceNode(pos, ignoreOption: ignoreOption);
+    var subWidget = ViewChoiceNode(widget.pos, ignoreOption: widget.ignoreOption);
     return DragItemWidget(
       dragItemProvider: (DragItemRequest request) =>
-          DragItem(localData: Int32List.fromList(pos.data)),
+          DragItem(localData: Int32List.fromList(widget.pos.data)),
       allowedOperations: () => [DropOperation.copy],
       child: DraggableWidget(
-        child: widget,
+        child: subWidget,
       ),
     );
   }

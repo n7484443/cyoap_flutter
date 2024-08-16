@@ -7,7 +7,7 @@ part of 'vm_project_setting.dart';
 // **************************************************************************
 
 String _$projectSettingNameTextEditingHash() =>
-    r'bad9664aa3fb0f98c847e1f2d9344fcdbcff5569';
+    r'6fc4152a32a50ca533f1307f79fa92e6f6080ae2';
 
 /// See also [projectSettingNameTextEditing].
 @ProviderFor(projectSettingNameTextEditing)
@@ -25,7 +25,7 @@ final projectSettingNameTextEditingProvider =
 typedef ProjectSettingNameTextEditingRef
     = AutoDisposeProviderRef<TextEditingController>;
 String _$projectSettingValueTextEditingHash() =>
-    r'ed7ba162f2a14ba238807cbe0d6319d755658dc6';
+    r'95e2de9812cb5d3298a356ebef96182a6d1b5ecf';
 
 /// See also [projectSettingValueTextEditing].
 @ProviderFor(projectSettingValueTextEditing)
@@ -43,7 +43,7 @@ final projectSettingValueTextEditingProvider =
 typedef ProjectSettingValueTextEditingRef
     = AutoDisposeProviderRef<TextEditingController>;
 String _$projectSettingDisplayNameTextEditingHash() =>
-    r'92cece99768bf579b9a4a7fe10735d0a4bc35cbb';
+    r'ebcce61a3718cf6d624bc16ae4d179a9b6f400ef';
 
 /// See also [projectSettingDisplayNameTextEditing].
 @ProviderFor(projectSettingDisplayNameTextEditing)
@@ -78,7 +78,7 @@ final globalVariableFilteredListProvider =
 
 typedef GlobalVariableFilteredListRef = AutoDisposeProviderRef<List<int>>;
 String _$valueTypeWrapperListHash() =>
-    r'960d52b5849a87d2cb67ccd203bae6b109e14fd8';
+    r'f7d5306db4f9b1335ec615a0b6632f4e9cdf07c4';
 
 /// See also [ValueTypeWrapperList].
 @ProviderFor(ValueTypeWrapperList)

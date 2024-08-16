@@ -17,9 +17,6 @@ TextEditingController projectSettingNameTextEditing(
   var index = ref.watch(currentEditGlobalVariableProvider)!;
   var name =
       ref.read(valueTypeWrapperListProvider.notifier).getEditTargetName(index)!;
-  var value = ref
-      .read(valueTypeWrapperListProvider.notifier)
-      .getEditTargetValueTypeWrapper(index)!;
   var controller = TextEditingController(text: name);
   controller.addListener(() {
     EasyDebounce.debounce(
@@ -31,7 +28,7 @@ TextEditingController projectSettingNameTextEditing(
       }
       ref
           .read(valueTypeWrapperListProvider.notifier)
-          .editInitialValue(index, newName, value);
+          .editInitialValue(index, name: newName);
     });
   });
   ref.onDispose(() {
@@ -45,8 +42,6 @@ TextEditingController projectSettingNameTextEditing(
 TextEditingController projectSettingValueTextEditing(
     ProjectSettingValueTextEditingRef ref) {
   var index = ref.watch(currentEditGlobalVariableProvider)!;
-  var name =
-      ref.read(valueTypeWrapperListProvider.notifier).getEditTargetName(index)!;
   var value = ref
       .read(valueTypeWrapperListProvider.notifier)
       .getEditTargetValueTypeWrapper(index)!;
@@ -61,10 +56,12 @@ TextEditingController projectSettingValueTextEditing(
       if (newValue.isEmpty) {
         return;
       }
-      ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(
-          index,
-          name,
-          value.copyWith(valueType: getValueTypeFromStringInput(newValue)));
+      var value = ref
+          .read(valueTypeWrapperListProvider.notifier)
+          .getEditTargetValueTypeWrapper(index)!;
+      ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(index,
+          value:
+              value.copyWith(valueType: getValueTypeFromStringInput(newValue)));
     });
   });
   ref.onDispose(() {
@@ -78,8 +75,6 @@ TextEditingController projectSettingValueTextEditing(
 TextEditingController projectSettingDisplayNameTextEditing(
     ProjectSettingDisplayNameTextEditingRef ref) {
   var index = ref.watch(currentEditGlobalVariableProvider)!;
-  var name =
-      ref.read(valueTypeWrapperListProvider.notifier).getEditTargetName(index)!;
   var value = ref
       .read(valueTypeWrapperListProvider.notifier)
       .getEditTargetValueTypeWrapper(index)!;
@@ -89,10 +84,15 @@ TextEditingController projectSettingDisplayNameTextEditing(
         ConstList.debounceDuration, () {
       var newDisplayName = controller.text.trim();
       if (newDisplayName.isEmpty) {
-        newDisplayName = name;
+        newDisplayName = ref
+            .read(valueTypeWrapperListProvider.notifier)
+            .getEditTargetName(index)!;
       }
+      var value = ref
+          .read(valueTypeWrapperListProvider.notifier)
+          .getEditTargetValueTypeWrapper(index)!;
       ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(
-          index, name, value.copyWith(displayName: newDisplayName));
+          index, value: value.copyWith(displayName: newDisplayName));
     });
   });
   ref.onDispose(() {
@@ -131,18 +131,21 @@ class ValueTypeWrapperList extends _$ValueTypeWrapperList {
         }
       }
     }
+    save();
   }
 
   void deleteInitialValue(int index) {
     state.removeAt(index);
     state = [...state];
+    save();
   }
 
-  void editInitialValue(int index, String name, ValueTypeWrapper value) {
-    if (index != -1) {
-      deleteInitialValue(index);
-    }
-    state = [...state]..insert(index, (name, value));
+  void editInitialValue(int index, {String? name, ValueTypeWrapper? value}) {
+    ValueTypeWrapper newValue = value ?? state[index].$2;
+    String newName = name ?? state[index].$1;
+    state[index] = (newName, newValue);
+    state = [...state];
+    save();
   }
 
   void save() {
@@ -172,6 +175,7 @@ class ValueTypeWrapperList extends _$ValueTypeWrapperList {
     var element = state.removeAt(oldIndex);
     state.insert(newIndex, element);
     state = [...state];
+    save();
   }
 
   void swap(int indexA, int indexB) {
@@ -180,21 +184,7 @@ class ValueTypeWrapperList extends _$ValueTypeWrapperList {
     state[indexA] = elementB;
     state[indexB] = elementA;
     state = [...state];
-  }
-
-  bool isDifferentFromOrigin() {
-    if (state.length != getPlatform.globalSetting.length) {
-      return true;
-    }
-    for (int i = 0; i < state.length; i++) {
-      if (state[i].$1 != getPlatform.globalSetting[i].$1) {
-        return true;
-      }
-      if (state[i].$2 != getPlatform.globalSetting[i].$2) {
-        return true;
-      }
-    }
-    return false;
+    save();
   }
 }
 

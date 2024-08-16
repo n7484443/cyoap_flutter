@@ -308,7 +308,7 @@ class _ViewGlobalVariableInnerEditorState
       return const SizedBox();
     }
     var currentEditValueList = ref.watch(valueTypeWrapperListProvider);
-    var (currentEditName, currentEditValue) =
+    var (_, currentEditValue) =
         currentEditValueList[currentIndex];
     return Scrollbar(
       thumbVisibility: true,
@@ -320,8 +320,7 @@ class _ViewGlobalVariableInnerEditorState
             () {
               ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(
                   currentIndex,
-                  currentEditName,
-                  currentEditValue.copyWith(
+                  value: currentEditValue.copyWith(
                       visible: !currentEditValue.visible));
             },
             currentEditValue.visible,
