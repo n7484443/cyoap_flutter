@@ -158,7 +158,7 @@ class ChoiceStatus extends ChangeNotifier {
 @riverpod
 class CurrentChoicePage extends _$CurrentChoicePage {
   @override
-  Pos build() {
+  Pos build() { 
     return const Pos(data: [0]);
   }
 
