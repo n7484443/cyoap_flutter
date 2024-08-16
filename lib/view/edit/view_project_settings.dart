@@ -208,8 +208,10 @@ class _ViewGlobalVariableEditorState
                   (context, index) {
                     index = filteredList[index];
                     return Card(
-                      elevation: 0.0,
                       child: ListTile(
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                        ),
                         title: Text(
                           ref.watch(valueTypeWrapperListProvider)[index].$1,
                           style: Theme.of(context).textTheme.titleMedium,
