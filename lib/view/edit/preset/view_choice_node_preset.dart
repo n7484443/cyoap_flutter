@@ -203,28 +203,43 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
         currentChild = const ViewNodeGeneralOptionEditor();
       case 1:
         currentChild = const ViewNodeOutlineOptionEditor();
-      default:
+      case 2:
         currentChild = const ViewNodeColorOptionEditor();
+      default:
+        currentChild = const ViewNodeComponentOptionEditor();
     }
+    List<(Widget, String)> destinations = [
+      (const Icon(Icons.settings), 'general'.i18n),
+      (const Icon(Icons.check_box_outline_blank), 'outline'.i18n),
+      (const Icon(Icons.square_rounded), 'inner'.i18n),
+      (
+        Stack(
+          children: [
+            const Icon(Icons.horizontal_rule),
+            Positioned.fill(
+              child: Center(
+                child: ColoredBox(
+                  color: Theme.of(context).colorScheme.error,
+                  child: const SizedBox(width: 2, height: 10),
+                ),
+              ),
+            ),
+          ],
+        ),
+        'component'.i18n
+      ),
+    ];
     if (ConstList.isSmallDisplay(context)) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           NavigationBar(
-            destinations: [
-              NavigationDestination(
-                icon: const Icon(Icons.settings),
-                label: 'general'.i18n,
-              ),
-              NavigationDestination(
-                icon: const Icon(Icons.check_box_outline_blank),
-                label: 'outline'.i18n,
-              ),
-              NavigationDestination(
-                icon: const Icon(Icons.square_rounded),
-                label: 'inner'.i18n,
-              ),
-            ],
+            destinations: List.generate(destinations.length, (int index) {
+              return NavigationDestination(
+                icon: destinations[index].$1,
+                label: destinations[index].$2,
+              );
+            }),
             selectedIndex: ref.watch(choiceNodePresetCurrentTabProvider),
             onDestinationSelected: (int index) {
               ref.read(choiceNodePresetCurrentTabProvider.notifier).state =
@@ -244,23 +259,13 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         NavigationRail(
-          destinations: [
-            NavigationRailDestination(
-              icon: const Icon(Icons.settings),
-              label: Text('general'.i18n),
+          destinations: List.generate(destinations.length, (int index) {
+            return NavigationRailDestination(
+              icon: destinations[index].$1,
+              label: Text(destinations[index].$2),
               padding: const EdgeInsets.symmetric(vertical: 8),
-            ),
-            NavigationRailDestination(
-              icon: const Icon(Icons.check_box_outline_blank),
-              label: Text('outline'.i18n),
-              padding: const EdgeInsets.symmetric(vertical: 8),
-            ),
-            NavigationRailDestination(
-              icon: const Icon(Icons.square_rounded),
-              label: Text('inner'.i18n),
-              padding: const EdgeInsets.symmetric(vertical: 8),
-            ),
-          ],
+            );
+          }),
           selectedIndex: ref.watch(choiceNodePresetCurrentTabProvider),
           onDestinationSelected: (int index) {
             ref.read(choiceNodePresetCurrentTabProvider.notifier).state = index;
@@ -651,6 +656,79 @@ class _ViewNodeOutlineOptionEditorState
               ),
             ),
           )
+        ],
+      ),
+    );
+  }
+}
+
+class ViewNodeComponentOptionEditor extends ConsumerStatefulWidget {
+  const ViewNodeComponentOptionEditor({super.key});
+
+  @override
+  ConsumerState createState() => _ViewNodeComponentOptionEditorState();
+}
+
+class _ViewNodeComponentOptionEditorState
+    extends ConsumerState<ViewNodeComponentOptionEditor> {
+  final AdjustableScrollController _scrollController =
+  AdjustableScrollController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var preset = ref.watch(choiceNodePresetCurrentEditProvider);
+    var presetIndex = ref.watch(currentPresetIndexProvider);
+    return Scrollbar(
+      controller: _scrollController,
+      thumbVisibility: true,
+      child: CustomScrollView(
+        shrinkWrap: true,
+        controller: _scrollController,
+        slivers: [
+          SliverToBoxAdapter(
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(ConstList.padding),
+                child: ViewColorPicker(
+                  text: 'slider_thumb_color'.i18n,
+                  color: preset.sliderOption!.sliderThumbColor.getColor()!,
+                  onColorChanged: (Color value) {
+                    ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+                        presetIndex,
+                        preset.copyWith.sliderOption!
+                            .sliderThumbColor(color: value.value));
+                  },
+                  hasAlpha: true,
+                ),
+              ),
+            ),
+          ),
+          const SliverPadding(
+              padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
+          SliverToBoxAdapter(
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(ConstList.padding),
+                child: ViewColorPicker(
+                  text: 'slider_track_color'.i18n,
+                  color: preset.sliderOption!.sliderTrackColor.getColor()!,
+                  onColorChanged: (Color value) {
+                    ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+                        presetIndex,
+                        preset.copyWith.sliderOption!
+                            .sliderTrackColor(color: value.value));
+                  },
+                  hasAlpha: true,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

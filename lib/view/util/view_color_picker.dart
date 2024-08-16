@@ -33,7 +33,7 @@ class ViewColorPicker extends ConsumerWidget {
             heading: text == null
                 ? null
                 : Center(
-                    child: Text(text!),
+                    child: Text(text!, style: Theme.of(context).textTheme.titleMedium,),
                   ),
             color: color,
             onColorChanged: onColorChanged,

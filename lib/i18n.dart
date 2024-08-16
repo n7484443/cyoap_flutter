@@ -237,29 +237,6 @@ extension Localization on String {
           'gui': 'Change editing type',
           'editor_simple': 'Simple',
           'editor_code': 'Code',
-
-          //design
-          'general': 'General',
-          'inner_line': 'Inner Line Setting',
-          'background': 'Background',
-          'font_score': 'Score font',
-          'margin_vertical':
-              'Vertical margin between choices\nDefault value %.1f',
-          'background_image_batch_option': 'Background image batch option',
-          'inner': 'Inner',
-          'outline': 'Outline',
-          'outline_shape': 'Outline shape',
-          'outline_padding': 'Outline padding',
-          'outline_width': 'Outline width',
-          'selected': 'Selected',
-
-          'modify_size': 'Modify size',
-          'modify_preset': 'Modify design preset',
-          'random_show': 'Random',
-          'copy': 'Copy',
-          'delete': 'Delete',
-          'sample_node': 'Adjust and view layouts, fonts, designs and more.',
-          'sample_title': 'Design',
         },
         "ko": {
           //edit page
@@ -345,8 +322,37 @@ extension Localization on String {
           'gui': '에디터 변경',
           'editor_simple': '간편',
           'editor_code': '코드',
+        },
+      } +
+      //design
+      const {
+        "en": {
+          'general': 'General',
+          'inner_line': 'Inner Line Setting',
+          'background': 'Background',
+          'font_score': 'Score font',
+          'margin_vertical':
+          'Vertical margin between choices\nDefault value %.1f',
+          'background_image_batch_option': 'Background image batch option',
+          'inner': 'Inner',
+          'outline': 'Outline',
+          'component': 'Component',
+          'outline_shape': 'Outline shape',
+          'outline_padding': 'Outline padding',
+          'outline_width': 'Outline width',
+          'slider_thumb_color': 'Slider thumb color',
+          'slider_track_color': 'Slider track color',
+          'selected': 'Selected',
 
-          //design
+          'modify_size': 'Modify size',
+          'modify_preset': 'Modify design preset',
+          'random_show': 'Random',
+          'copy': 'Copy',
+          'delete': 'Delete',
+          'sample_node': 'Adjust and view layouts, fonts, designs and more.',
+          'sample_title': 'Design',
+        },
+        "ko": {
           'general': '일반',
           'inner_line': '내부 라인',
           'background': '배경',
@@ -355,9 +361,12 @@ extension Localization on String {
           'background_image_batch_option': '배경 이미지 배치 방식',
           'inner': '내부',
           'outline': '외곽선',
+          'component': '요소',
           'outline_shape': '외곽선',
           'outline_padding': '외곽선 여백',
           'outline_width': '외곽선 두께',
+          'slider_thumb_color': '슬라이더 thumb 색상',
+          'slider_track_color': '슬라이더 트랙 색상',
           'selected': '선택',
 
           'modify_size': '크기 수정',
@@ -367,7 +376,7 @@ extension Localization on String {
           'delete': '삭제',
           'sample_node': '레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.',
           'sample_title': '디자인',
-        },
+        }
       } +
       const {
         "en": {

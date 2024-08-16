@@ -42,6 +42,7 @@ class NodeDraggable extends ConsumerStatefulWidget {
 class _NodeDraggableState extends ConsumerState<NodeDraggable> {
   @override
   void initState() {
+    print(1);
     Future((){
       ref.read(currentVisiblePosListProvider.notifier).add(widget.pos, widget.key as GlobalKey);
     });
