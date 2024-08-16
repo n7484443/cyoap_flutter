@@ -172,7 +172,7 @@ final currentChoicePageProvider =
 
 typedef _$CurrentChoicePage = AutoDisposeNotifier<Pos>;
 String _$currentListviewTargetPosHash() =>
-    r'4e2535375d9594481a4c5435e004e85b493d9eef';
+    r'cff37a082835579881fae9d67656217fe1686fde';
 
 /// See also [CurrentListviewTargetPos].
 @ProviderFor(CurrentListviewTargetPos)
@@ -188,22 +188,5 @@ final currentListviewTargetPosProvider =
 );
 
 typedef _$CurrentListviewTargetPos = AutoDisposeNotifier<Pos?>;
-String _$currentVisiblePosListHash() =>
-    r'329f6fe7ea8bed3b8aad80164485fd8e437ddc10';
-
-/// See also [CurrentVisiblePosList].
-@ProviderFor(CurrentVisiblePosList)
-final currentVisiblePosListProvider = AutoDisposeNotifierProvider<
-    CurrentVisiblePosList, Map<Pos, GlobalKey>>.internal(
-  CurrentVisiblePosList.new,
-  name: r'currentVisiblePosListProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$currentVisiblePosListHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$CurrentVisiblePosList = AutoDisposeNotifier<Map<Pos, GlobalKey>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

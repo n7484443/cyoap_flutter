@@ -29,44 +29,21 @@ import '../../viewModel/edit/preset/vm_choice_node_preset.dart';
 import '../../viewModel/edit/vm_make_platform.dart';
 import '../../viewModel/vm_variable_table.dart';
 
-class NodeDraggable extends ConsumerStatefulWidget {
+class NodeDraggable extends ConsumerWidget {
   final Pos pos;
   final bool ignoreOption;
-  NodeDraggable(this.pos, {this.ignoreOption = false}):
-        super(key: GlobalKey());
+  const NodeDraggable(this.pos, {this.ignoreOption = false, super.key});
 
   @override
-  ConsumerState createState() => _NodeDraggableState();
-}
-
-class _NodeDraggableState extends ConsumerState<NodeDraggable> {
-  @override
-  void initState() {
-    print(1);
-    Future((){
-      ref.read(currentVisiblePosListProvider.notifier).add(widget.pos, widget.key as GlobalKey);
-    });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    Future((){
-      ref.read(currentVisiblePosListProvider.notifier).remove(widget.pos, widget.key as GlobalKey);
-    });
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var node = ref.watch(choiceStatusProvider(widget.pos)).asChoiceNode();
+  Widget build(BuildContext context, WidgetRef ref) {
+    var node = ref.watch(choiceStatusProvider(pos)).asChoiceNode();
     if (node == null) {
       return const SizedBox.shrink();
     }
-    var subWidget = ViewChoiceNode(widget.pos, ignoreOption: widget.ignoreOption);
+    var subWidget = ViewChoiceNode(pos, ignoreOption: ignoreOption);
     return DragItemWidget(
       dragItemProvider: (DragItemRequest request) =>
-          DragItem(localData: Int32List.fromList(widget.pos.data)),
+          DragItem(localData: Int32List.fromList(pos.data)),
       allowedOperations: () => [DropOperation.copy],
       child: DraggableWidget(
         child: subWidget,
@@ -74,6 +51,13 @@ class _NodeDraggableState extends ConsumerState<NodeDraggable> {
     );
   }
 }
+
+// Future((){
+//   ref.read(currentListviewTargetPosProvider.notifier).currentVisiblePosList.add(widget.pos, widget.key as GlobalKey);
+// });
+// Future((){
+//   ref.read(currentListviewTargetPosProvider.notifier).currentVisiblePosList.remove(widget.pos, widget.key as GlobalKey);
+// });
 
 class ViewChoiceNode extends ConsumerWidget {
   final Pos pos;

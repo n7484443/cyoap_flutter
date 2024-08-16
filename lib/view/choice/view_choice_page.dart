@@ -59,11 +59,11 @@ class _ViewChoicePageState extends ConsumerState<ViewChoicePage> {
       const move = 128;
       if(after == null) return;
       bool checkInside(){
-        var (relative, key) = ref.read(currentVisiblePosListProvider.notifier).getRelativePosition(after);
+        var (relative, key) = ref.read(currentListviewTargetPosProvider.notifier).currentVisiblePosList.getRelativePosition(after);
         switch(relative){
           case RelativePosition.visible || RelativePosition.contain:
             if(key!.currentContext == null){
-              ref.read(currentVisiblePosListProvider.notifier).removeValue(key);
+              ref.read(currentListviewTargetPosProvider.notifier).currentVisiblePosList.removeValue(key);
               return false;
             }
             Scrollable.ensureVisible(key.currentContext!);

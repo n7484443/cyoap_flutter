@@ -188,6 +188,7 @@ enum RelativePosition{
 
 @riverpod
 class CurrentListviewTargetPos extends _$CurrentListviewTargetPos {
+  CurrentVisiblePosList currentVisiblePosList = CurrentVisiblePosList();
   @override
   Pos? build() {
     return null;
@@ -198,25 +199,18 @@ class CurrentListviewTargetPos extends _$CurrentListviewTargetPos {
   }
 }
 
-@riverpod
-class CurrentVisiblePosList extends _$CurrentVisiblePosList {
-  @override
-  Map<Pos, GlobalKey> build() {
-    ref.keepAlive();
-    return {};
-  }
+class CurrentVisiblePosList{
+  Map<Pos, GlobalKey> state = {};
 
   void add(Pos pos, GlobalKey key) {
-    state = {...state, pos: key};
+    state[pos] = key;
   }
 
   void remove(Pos pos, GlobalKey key){
     state.remove(pos);
-    state = {...state};
   }
   void removeValue(GlobalKey ke){
     state.removeWhere((key, value) => value == ke);
-    state = {...state};
   }
 
   (RelativePosition, GlobalKey?) getRelativePosition(Pos pos){
@@ -230,7 +224,6 @@ class CurrentVisiblePosList extends _$CurrentVisiblePosList {
     GlobalKey? maxMatchedKey;
     RelativePosition relativePosition = RelativePosition.contain;
     state.removeWhere((key, value) => value.currentContext == null);
-    state = {...state};
     for(var key in state.keys){
       for(int i = 0; i < min(key.data.length, pos.length); i++) {
         if (key.data[i] != pos.data[i]) {
