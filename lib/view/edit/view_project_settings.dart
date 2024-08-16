@@ -145,14 +145,12 @@ class _ViewGlobalVariableEditorState
                 title: Text(
                   'project_variable'.i18n,
                   style: Theme.of(context).textTheme.titleMedium,
+                  textAlign: TextAlign.center,
                 ),
-                toolbarHeight: 36,
+                toolbarHeight: 45,
                 centerTitle: true,
+                leadingWidth: 65,
                 leading: MenuBar(
-                  style: const MenuStyle(
-                    surfaceTintColor:
-                        WidgetStatePropertyAll<Color?>(Colors.transparent),
-                  ),
                   children: [
                     SubmenuButton(
                       menuChildren: [

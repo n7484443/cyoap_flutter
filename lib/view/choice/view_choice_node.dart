@@ -141,23 +141,19 @@ class ViewChoiceNode extends ConsumerWidget {
       }
       return Opacity(
         opacity: ref.watch(opacityProvider(pos)),
-        child: Stack(
-          children: [
-            ContextMenuRegion(
-              contextMenu: GenericContextMenu(
-                buttonConfigs: List.generate(
-                  popupList.length,
-                  (index) => ContextMenuButtonConfig(
-                    popupList[index].$1,
-                    onPressed: popupList[index].$2,
-                  ),
-                ),
+        child: ContextMenuRegion(
+          contextMenu: GenericContextMenu(
+            buttonConfigs: List.generate(
+              popupList.length,
+              (index) => ContextMenuButtonConfig(
+                popupList[index].$1,
+                onPressed: popupList[index].$2,
               ),
-              isEnabled: !ConstList.isMobile(),
-              child: ViewChoiceNodeMain(pos,
-                  ignoreChild: ignoreChild, ignoreOption: ignoreOption),
             ),
-          ],
+          ),
+          isEnabled: !ConstList.isMobile(),
+          child: ViewChoiceNodeMain(pos,
+              ignoreChild: ignoreChild, ignoreOption: ignoreOption),
         ),
       );
     }
