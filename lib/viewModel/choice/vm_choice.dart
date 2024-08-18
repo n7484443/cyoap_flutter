@@ -43,11 +43,14 @@ class ChoiceStatus extends ChangeNotifier {
         title: "sample_title".i18n,
         contents: "[{\"insert\":\"${'sample_node'.i18n}\\n\"}]",
         imageString: "noImage",
-      )..currentPos = -1;
+      )
+        ..currentPos = -1
+        ..choiceNodeMode = ChoiceNodeMode.multiSelect
+        ..maximumStatus = 4;
 
       choiceNode.choiceNodeOption = choiceNode.choiceNodeOption.copyWith(
-          presetName: ref.read(choiceNodePresetCurrentEditProvider).name!);
-      choiceNode.select = ref.read(choiceNodePresetTestSelectProvider) ? 1 : 0;
+          presetName: ref.read(choiceNodePresetCurrentEditProvider).name!, showAsSlider: true);
+      choiceNode.select = ref.read(choiceNodePresetTestSelectProvider) ? choiceNode.maximumStatus ~/ 2 : 0;
       node = choiceNode;
     } else if (pos.first < 0) {
       node = ref.read(choiceNodeClipboardStatusProvider).getIndexPos(pos);
@@ -158,7 +161,7 @@ class ChoiceStatus extends ChangeNotifier {
 @riverpod
 class CurrentChoicePage extends _$CurrentChoicePage {
   @override
-  Pos build() { 
+  Pos build() {
     return const Pos(data: [0]);
   }
 
@@ -179,58 +182,57 @@ bool isEditable(IsEditableRef ref, {required Pos pos}) {
       ref.watch(isEditableStateProvider(Pos(data: [pos.data[0], pos.data[1]])));
 }
 
-enum RelativePosition{
-  up,
-  down,
-  contain,
-  visible
-}
+enum RelativePosition { up, down, contain, visible }
 
 @riverpod
 class CurrentListviewTargetPos extends _$CurrentListviewTargetPos {
   CurrentVisiblePosList currentVisiblePosList = CurrentVisiblePosList();
+
   @override
   Pos? build() {
     return null;
   }
 
-  void set(Pos? pos){
+  void set(Pos? pos) {
     state = pos;
   }
 }
 
-class CurrentVisiblePosList{
+class CurrentVisiblePosList {
   Map<Pos, GlobalKey> state = {};
 
   void add(Pos pos, GlobalKey key) {
     state[pos] = key;
   }
 
-  void remove(Pos pos, GlobalKey key){
+  void remove(Pos pos, GlobalKey key) {
     state.remove(pos);
   }
-  void removeValue(GlobalKey ke){
+
+  void removeValue(GlobalKey ke) {
     state.removeWhere((key, value) => value == ke);
   }
 
-  (RelativePosition, GlobalKey?) getRelativePosition(Pos pos){
-    if(state.isEmpty){
+  (RelativePosition, GlobalKey?) getRelativePosition(Pos pos) {
+    if (state.isEmpty) {
       return (RelativePosition.contain, null);
     }
-    if(state.containsKey(pos)){
+    if (state.containsKey(pos)) {
       return (RelativePosition.visible, state[pos]);
     }
     var maxMatched = 0;
     GlobalKey? maxMatchedKey;
     RelativePosition relativePosition = RelativePosition.contain;
     state.removeWhere((key, value) => value.currentContext == null);
-    for(var key in state.keys){
-      for(int i = 0; i < min(key.data.length, pos.length); i++) {
+    for (var key in state.keys) {
+      for (int i = 0; i < min(key.data.length, pos.length); i++) {
         if (key.data[i] != pos.data[i]) {
-          if(i > maxMatched){
+          if (i > maxMatched) {
             maxMatched = i;
             maxMatchedKey = state[key];
-            relativePosition = key.data[i] > pos.data[i] ? RelativePosition.up : RelativePosition.down;
+            relativePosition = key.data[i] > pos.data[i]
+                ? RelativePosition.up
+                : RelativePosition.down;
           }
           break;
         }

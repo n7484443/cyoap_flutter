@@ -28,12 +28,14 @@ import '../../viewModel/choice/vm_choice.dart';
 import '../../viewModel/edit/preset/vm_choice_node_preset.dart';
 import '../../viewModel/edit/vm_make_platform.dart';
 import '../../viewModel/vm_variable_table.dart';
+import '../util/SliderThumbStyle.dart';
 
 class NodeDraggable extends ConsumerStatefulWidget {
   final Pos pos;
   final bool ignoreOption;
-  NodeDraggable(this.pos, {this.ignoreOption = false}):
-        super(key: GlobalKey());
+
+  NodeDraggable(this.pos, {this.ignoreOption = false})
+      : super(key: GlobalKey());
 
   @override
   ConsumerState createState() => _NodeDraggableState();
@@ -42,16 +44,22 @@ class NodeDraggable extends ConsumerStatefulWidget {
 class _NodeDraggableState extends ConsumerState<NodeDraggable> {
   @override
   void initState() {
-    Future((){
-      ref.read(currentListviewTargetPosProvider.notifier).currentVisiblePosList.add(widget.pos, widget.key as GlobalKey);
+    Future(() {
+      ref
+          .read(currentListviewTargetPosProvider.notifier)
+          .currentVisiblePosList
+          .add(widget.pos, widget.key as GlobalKey);
     });
     super.initState();
   }
 
   @override
   void dispose() {
-    Future((){
-      ref.read(currentListviewTargetPosProvider.notifier).currentVisiblePosList.remove(widget.pos, widget.key as GlobalKey);
+    Future(() {
+      ref
+          .read(currentListviewTargetPosProvider.notifier)
+          .currentVisiblePosList
+          .remove(widget.pos, widget.key as GlobalKey);
     });
     super.dispose();
   }
@@ -62,7 +70,8 @@ class _NodeDraggableState extends ConsumerState<NodeDraggable> {
     if (node == null) {
       return const SizedBox.shrink();
     }
-    var subWidget = ViewChoiceNode(widget.pos, ignoreOption: widget.ignoreOption);
+    var subWidget =
+        ViewChoiceNode(widget.pos, ignoreOption: widget.ignoreOption);
     return DragItemWidget(
       dragItemProvider: (DragItemRequest request) =>
           DragItem(localData: Int32List.fromList(widget.pos.data)),
@@ -340,22 +349,40 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var design = ref.watch(choiceNodeDesignSettingProvider(pos: pos));
+    var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     int select = ref.watch(choiceStatusProvider(pos)).asChoiceNode()!.select;
     if (design.showAsSlider) {
-      return Slider(
-        value: select.toDouble(),
-        min: 0,
-        max: ref
-            .watch(choiceStatusProvider(pos).notifier)
-            .maxSelect()
-            .toDouble(),
-        label: select.toString(),
-        onChanged: (value) {
-          var valueInt = value.toInt();
-          if (!ref.watch(isEditableProvider(pos: pos)) && valueInt != select) {
-            ref.read(choiceStatusProvider(pos).notifier).select(valueInt);
-          }
-        },
+      return SizedBox(
+        height: 36,
+        child: SliderTheme(
+          data: Theme.of(context).sliderTheme.copyWith(
+                thumbShape: preset.sliderOption?.sliderThumbShape ==
+                        SliderThumbShape.circle
+                    ? null
+                    : const RoundedRectangleSliderShape(
+                        thumbRadius: 10, cornerRadius: 2),
+              ),
+          child: Slider(
+            value: select.toDouble(),
+            min: 0,
+            max: ref
+                .watch(choiceStatusProvider(pos).notifier)
+                .maxSelect()
+                .toDouble(),
+            label: select.toString(),
+            thumbColor: preset.sliderOption!.sliderThumbColor.getColor(),
+            activeColor: preset.sliderOption!.sliderTrackActiveColor.getColor(),
+            inactiveColor:
+                preset.sliderOption!.sliderTrackInactiveColor.getColor(),
+            onChanged: (value) {
+              var valueInt = value.toInt();
+              if (!ref.watch(isEditableProvider(pos: pos)) &&
+                  valueInt != select) {
+                ref.read(choiceStatusProvider(pos).notifier).select(valueInt);
+              }
+            },
+          ),
+        ),
       );
     }
     return Row(

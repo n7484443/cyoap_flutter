@@ -672,7 +672,7 @@ class ViewNodeComponentOptionEditor extends ConsumerStatefulWidget {
 class _ViewNodeComponentOptionEditorState
     extends ConsumerState<ViewNodeComponentOptionEditor> {
   final AdjustableScrollController _scrollController =
-  AdjustableScrollController();
+      AdjustableScrollController();
 
   @override
   void dispose() {
@@ -691,6 +691,24 @@ class _ViewNodeComponentOptionEditorState
         shrinkWrap: true,
         controller: _scrollController,
         slivers: [
+          SliverToBoxAdapter(
+            child: CustomDropdownButton<SliderThumbShape>(
+              label: 'slider_thumb_shape'.i18n,
+              onChanged: (SliderThumbShape? t) {
+                if (t != null) {
+                  ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+                      presetIndex,
+                      preset.copyWith.sliderOption!(sliderThumbShape: t));
+                }
+              },
+              value: SliderThumbShape.circle,
+              items: SliderThumbShape.values
+                  .map<DropdownMenuItem<SliderThumbShape>>((shape) =>
+                      DropdownMenuItem(
+                          value: shape, child: Text(shape.toString())))
+                  .toList(),
+            ),
+          ),
           SliverToBoxAdapter(
             child: Card(
               child: Padding(
@@ -716,13 +734,35 @@ class _ViewNodeComponentOptionEditorState
               child: Padding(
                 padding: const EdgeInsets.all(ConstList.padding),
                 child: ViewColorPicker(
-                  text: 'slider_track_color'.i18n,
-                  color: preset.sliderOption!.sliderTrackColor.getColor()!,
+                  text: 'slider_track_active_color'.i18n,
+                  color:
+                      preset.sliderOption!.sliderTrackActiveColor.getColor()!,
                   onColorChanged: (Color value) {
                     ref.read(choiceNodePresetListProvider.notifier).updateIndex(
                         presetIndex,
                         preset.copyWith.sliderOption!
-                            .sliderTrackColor(color: value.value));
+                            .sliderTrackActiveColor(color: value.value));
+                  },
+                  hasAlpha: true,
+                ),
+              ),
+            ),
+          ),
+          const SliverPadding(
+              padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
+          SliverToBoxAdapter(
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(ConstList.padding),
+                child: ViewColorPicker(
+                  text: 'slider_track_inactive_color'.i18n,
+                  color:
+                      preset.sliderOption!.sliderTrackInactiveColor.getColor()!,
+                  onColorChanged: (Color value) {
+                    ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+                        presetIndex,
+                        preset.copyWith.sliderOption!
+                            .sliderTrackInactiveColor(color: value.value));
                   },
                   hasAlpha: true,
                 ),

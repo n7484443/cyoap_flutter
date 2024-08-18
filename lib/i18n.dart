@@ -340,8 +340,10 @@ extension Localization on String {
           'outline_shape': 'Outline shape',
           'outline_padding': 'Outline padding',
           'outline_width': 'Outline width',
+          'slider_thumb_shape': 'Slider thumb shape',
           'slider_thumb_color': 'Slider thumb color',
-          'slider_track_color': 'Slider track color',
+          'slider_track_active_color': 'Slider track activate color',
+          'slider_track_inactive_color': 'Slider track inactivate color',
           'selected': 'Selected',
 
           'modify_size': 'Modify size',
@@ -365,8 +367,10 @@ extension Localization on String {
           'outline_shape': '외곽선',
           'outline_padding': '외곽선 여백',
           'outline_width': '외곽선 두께',
+          'slider_thumb_shape': '슬라이더 thumb 모양',
           'slider_thumb_color': '슬라이더 thumb 색상',
-          'slider_track_color': '슬라이더 트랙 색상',
+          'slider_track_active_color': '슬라이더 활성 트랙 색상',
+          'slider_track_inactive_color': '슬라이더 비활성 트랙 색상',
           'selected': '선택',
 
           'modify_size': '크기 수정',
