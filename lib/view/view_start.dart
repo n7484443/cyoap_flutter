@@ -170,12 +170,13 @@ class ViewStart extends ConsumerWidget {
                         ],
                       ),
                     ),
-                    const Card(
+                    Card(
                         child: Row(
                       children: [
-                        SelectModeButton(isPlay: true),
-                        Padding(padding: const EdgeInsets.all(8.0)),
-                        SelectModeButton(isPlay: false),
+                        const SelectModeButton(isPlay: true),
+                        if (ConstList.isSmallDisplay(context))
+                          const Padding(padding: EdgeInsets.all(8.0)),
+                        const SelectModeButton(isPlay: false),
                       ],
                     )),
                   ],
@@ -313,7 +314,9 @@ class SelectModeButton extends ConsumerWidget {
         child: Text(
           isPlay ? 'Play' : 'Edit',
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.displaySmall,
+          style: ConstList.isSmallDisplay(context)
+              ? Theme.of(context).textTheme.titleLarge
+              : Theme.of(context).textTheme.displaySmall,
         ),
       ),
     );
