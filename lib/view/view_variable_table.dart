@@ -9,7 +9,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/platform_system.dart';
-import '../viewModel/choice/vm_choice.dart';
 import '../viewModel/edit/vm_design_setting.dart';
 import '../viewModel/edit/vm_make_platform.dart';
 
@@ -269,9 +268,9 @@ class NodeTiles extends ConsumerWidget {
                       await ref.read(changeTabProvider.notifier).home(context);
                       await Future.delayed(const Duration(milliseconds: 200));
                     }
-                    ref
-                        .read(currentListviewTargetPosProvider.notifier)
-                        .set(e.pos);
+                    // ref
+                    //     .read(currentListviewTargetPosProvider.notifier)
+                    //     .set(e.pos);
                   }
                 },
               ),

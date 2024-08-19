@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cyoap_core/choiceNode/choice.dart';
 import 'package:cyoap_core/choiceNode/choice_line.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
@@ -180,64 +178,4 @@ bool isEditable(IsEditableRef ref, {required Pos pos}) {
   }
   return isPlatformEditable &&
       ref.watch(isEditableStateProvider(Pos(data: [pos.data[0], pos.data[1]])));
-}
-
-enum RelativePosition { up, down, contain, visible }
-
-@riverpod
-class CurrentListviewTargetPos extends _$CurrentListviewTargetPos {
-  CurrentVisiblePosList currentVisiblePosList = CurrentVisiblePosList();
-
-  @override
-  Pos? build() {
-    return null;
-  }
-
-  void set(Pos? pos) {
-    state = pos;
-  }
-}
-
-class CurrentVisiblePosList {
-  Map<Pos, GlobalKey> state = {};
-
-  void add(Pos pos, GlobalKey key) {
-    state[pos] = key;
-  }
-
-  void remove(Pos pos, GlobalKey key) {
-    state.remove(pos);
-  }
-
-  void removeValue(GlobalKey ke) {
-    state.removeWhere((key, value) => value == ke);
-  }
-
-  (RelativePosition, GlobalKey?) getRelativePosition(Pos pos) {
-    if (state.isEmpty) {
-      return (RelativePosition.contain, null);
-    }
-    if (state.containsKey(pos)) {
-      return (RelativePosition.visible, state[pos]);
-    }
-    var maxMatched = 0;
-    GlobalKey? maxMatchedKey;
-    RelativePosition relativePosition = RelativePosition.contain;
-    state.removeWhere((key, value) => value.currentContext == null);
-    for (var key in state.keys) {
-      for (int i = 0; i < min(key.data.length, pos.length); i++) {
-        if (key.data[i] != pos.data[i]) {
-          if (i > maxMatched) {
-            maxMatched = i;
-            maxMatchedKey = state[key];
-            relativePosition = key.data[i] > pos.data[i]
-                ? RelativePosition.up
-                : RelativePosition.down;
-          }
-          break;
-        }
-      }
-    }
-    return (relativePosition, maxMatchedKey);
-  }
 }

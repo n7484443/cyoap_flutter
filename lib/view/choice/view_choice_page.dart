@@ -53,40 +53,6 @@ class _ViewChoicePageState extends ConsumerState<ViewChoicePage> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(currentListviewTargetPosProvider, (before, after){
-      const move = 128;
-      if(after == null) return;
-      bool checkInside(){
-        var (relative, key) = ref.read(currentListviewTargetPosProvider.notifier).currentVisiblePosList.getRelativePosition(after);
-        switch(relative){
-          case RelativePosition.visible || RelativePosition.contain:
-            if(key!.currentContext == null){
-              ref.read(currentListviewTargetPosProvider.notifier).currentVisiblePosList.removeValue(key);
-              return false;
-            }
-            Scrollable.ensureVisible(key.currentContext!);
-            return true;
-          case RelativePosition.up:
-            if(_scrollController.offset - move <= 0) return true;
-            _scrollController.jumpTo(_scrollController.offset - move);
-            return false;
-          case RelativePosition.down:
-            if(_scrollController.offset + move >= _scrollController.position.maxScrollExtent) return true;
-            _scrollController.jumpTo(_scrollController.offset + move);
-            return false;
-        }
-      }
-      void recursive(){
-        if(checkInside()){
-          ref.read(currentListviewTargetPosProvider.notifier).set(null);
-          return;
-        }
-        WidgetsBinding.instance.addPostFrameCallback((duration){
-          recursive();
-        });
-      }
-      recursive();
-    });
     var pos = ref.watch(currentChoicePageProvider);
     var designSetting = ref.watch(platformDesignSettingProvider);
     var childrenLength =
