@@ -7,7 +7,7 @@ part of 'vm_draggable_nested_map.dart';
 // **************************************************************************
 
 String _$currentProjectChangedHash() =>
-    r'63ff73416297c771d00b12c068c9a7e93f5c34e6';
+    r'eeb7772bdfb93373945462c615bf71e7f7714e53';
 
 /// See also [CurrentProjectChanged].
 @ProviderFor(CurrentProjectChanged)
