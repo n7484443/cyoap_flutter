@@ -1,7 +1,6 @@
 import 'package:cyoap_core/design_setting.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
-import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_image_selector.dart';
 import 'package:cyoap_flutter/view/util/view_options.dart';
@@ -28,7 +27,7 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
 
   @override
   void initState() {
-    _controller = AdjustableScrollController();
+    _controller = ScrollController();
     super.initState();
   }
 

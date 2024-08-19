@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../main.dart';
 import '../../../viewModel/edit/preset/vm_preset.dart';
-import '../../util/controller_adjustable_scroll.dart';
 
 class ViewPresetTab extends ConsumerWidget {
   final List<String> tabName = ['node'.i18n, 'line'.i18n];
@@ -19,7 +18,7 @@ class ViewPresetTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var currentIndex = ref.watch(currentPresetTab);
     var first = ListView.builder(
-      controller: AdjustableScrollController(),
+      controller: ScrollController(),
       itemBuilder: (context, index) {
         return ListTile(
           title: Text(tabName[index]),

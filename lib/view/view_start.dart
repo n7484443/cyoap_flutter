@@ -4,7 +4,6 @@ import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/util/custom_snackbar.dart';
-import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:flutter/material.dart';
@@ -200,12 +199,12 @@ class ViewProjectList extends ConsumerStatefulWidget {
 }
 
 class _ViewProjectListState extends ConsumerState<ViewProjectList> {
-  AdjustableScrollController? _scrollController;
+  ScrollController? _scrollController;
 
   @override
   void initState() {
     super.initState();
-    _scrollController = AdjustableScrollController();
+    _scrollController = ScrollController();
   }
 
   @override

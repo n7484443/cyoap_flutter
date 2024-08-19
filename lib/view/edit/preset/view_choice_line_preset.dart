@@ -11,7 +11,6 @@ import '../../../main.dart';
 import '../../../model/image_db.dart';
 import '../../../viewModel/edit/preset/vm_choice_line_preset.dart';
 import '../../../viewModel/edit/preset/vm_preset.dart';
-import '../../util/controller_adjustable_scroll.dart';
 import '../../util/view_color_picker.dart';
 
 class ChoiceLineSample extends ConsumerWidget {
@@ -62,7 +61,7 @@ class ChoiceLinePresetList extends ConsumerWidget {
         ),
         Expanded(
           child: ListView.builder(
-            controller: AdjustableScrollController(),
+            controller: ScrollController(),
             shrinkWrap: true,
             itemCount: list.length,
             itemBuilder: (BuildContext context, int index) {
@@ -126,7 +125,7 @@ class ViewLineOptionEditor extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.all(ConstList.padding),
       child: CustomScrollView(
-        controller: AdjustableScrollController(),
+        controller: ScrollController(),
         shrinkWrap: true,
         slivers: [
           SliverGrid(

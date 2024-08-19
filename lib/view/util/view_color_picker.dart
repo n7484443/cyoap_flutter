@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'controller_adjustable_scroll.dart';
-
 class ViewColorPicker extends ConsumerWidget {
   final String? text;
   final ValueChanged<Color> onColorChanged;
@@ -382,7 +380,7 @@ class ViewGradientOption extends StatelessWidget {
           width: 100,
           height: 300,
           child: ListView(
-            controller: AdjustableScrollController(),
+            controller: ScrollController(),
             shrinkWrap: true,
             children: List.generate(colorOption.gradientData.length, (index) {
               return ListTile(

@@ -39,7 +39,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
 
   @override
   void initState() {
-    _scrollController = AdjustableScrollController();
+    _scrollController = ScrollController();
     _controllerClickable = TextEditingController(
       text: widget.choice.conditionalCodeHandler.conditionClickableString,
     );
@@ -232,8 +232,8 @@ class ViewQuillCodeIde extends ConsumerStatefulWidget {
 
 class _ViewQuillCodeIdeState extends ConsumerState<ViewQuillCodeIde> {
   final FocusNode _focusNode = FocusNode();
-  final AdjustableScrollController _scrollController =
-      AdjustableScrollController();
+  final ScrollController _scrollController =
+  ScrollController();
 
   @override
   void dispose() {
@@ -256,8 +256,8 @@ class _ViewQuillCodeIdeState extends ConsumerState<ViewQuillCodeIde> {
                     ref.watch(controllerIdeProvider);
               },
               child: QuillEditor(
+                controller: ref.watch(controllerIdeProvider),
                 configurations: QuillEditorConfigurations(
-                  controller: ref.watch(controllerIdeProvider),
                   sharedConfigurations: QuillSharedConfigurations(
                     locale: ref.watch(localeStateProvider),
                   ),

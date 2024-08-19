@@ -6,7 +6,6 @@ import 'package:cyoap_flutter/view/edit/view_image_editor.dart';
 import 'package:cyoap_flutter/view/edit/view_make.dart';
 import 'package:cyoap_flutter/view/edit/view_project_settings.dart';
 import 'package:cyoap_flutter/view/edit/view_source.dart';
-import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_back_dialog.dart';
 import 'package:cyoap_flutter/view/view_variable_table.dart';
 import 'package:cyoap_flutter/viewModel/edit/vm_editor.dart';
@@ -281,7 +280,7 @@ class ViewEditDrawer extends ConsumerStatefulWidget {
 
 class _ViewEditDrawerState extends ConsumerState<ViewEditDrawer> {
   final TextEditingController _controller = TextEditingController();
-  final ScrollController _scrollController = AdjustableScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {

@@ -13,7 +13,6 @@ import '../../../viewModel/choice/vm_choice.dart';
 import '../../../viewModel/edit/preset/vm_choice_node_preset.dart';
 import '../../../viewModel/edit/preset/vm_preset.dart';
 import '../../choice/view_choice_node.dart';
-import '../../util/controller_adjustable_scroll.dart';
 import '../../util/view_color_picker.dart';
 import '../../util/view_options.dart';
 
@@ -113,7 +112,7 @@ class ChoiceNodePresetList extends ConsumerWidget {
         ),
         Expanded(
           child: ListView.builder(
-            controller: AdjustableScrollController(),
+            controller: ScrollController(),
             shrinkWrap: true,
             itemCount: list.length,
             itemBuilder: (BuildContext context, int index) {
@@ -181,12 +180,12 @@ class ViewNodeOptionEditor extends ConsumerStatefulWidget {
 }
 
 class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
-  AdjustableScrollController? _scrollController;
+  ScrollController? _scrollController;
 
   @override
   void initState() {
     super.initState();
-    _scrollController = AdjustableScrollController();
+    _scrollController = ScrollController();
   }
 
   @override
@@ -295,8 +294,8 @@ class ViewNodeGeneralOptionEditor extends ConsumerStatefulWidget {
 
 class _ViewNodeGeneralOptionEditorState
     extends ConsumerState<ViewNodeGeneralOptionEditor> {
-  final AdjustableScrollController _scrollController =
-      AdjustableScrollController();
+  final ScrollController _scrollController =
+  ScrollController();
 
   @override
   void dispose() {
@@ -486,8 +485,8 @@ class ViewNodeOutlineOptionEditor extends ConsumerStatefulWidget {
 
 class _ViewNodeOutlineOptionEditorState
     extends ConsumerState<ViewNodeOutlineOptionEditor> {
-  final AdjustableScrollController _scrollController =
-      AdjustableScrollController();
+  final ScrollController _scrollController =
+  ScrollController();
 
   @override
   void dispose() {
@@ -671,8 +670,8 @@ class ViewNodeComponentOptionEditor extends ConsumerStatefulWidget {
 
 class _ViewNodeComponentOptionEditorState
     extends ConsumerState<ViewNodeComponentOptionEditor> {
-  final AdjustableScrollController _scrollController =
-      AdjustableScrollController();
+  final ScrollController _scrollController =
+  ScrollController();
 
   @override
   void dispose() {
@@ -784,8 +783,8 @@ class ViewNodeColorOptionEditor extends ConsumerStatefulWidget {
 
 class _ViewNodeColorOptionEditorState
     extends ConsumerState<ViewNodeColorOptionEditor> {
-  final AdjustableScrollController _scrollController =
-      AdjustableScrollController();
+  final ScrollController _scrollController =
+  ScrollController();
 
   @override
   void dispose() {

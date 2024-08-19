@@ -9,7 +9,6 @@ import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/choice/view_choice_node_dialog.dart';
 import 'package:cyoap_flutter/view/choice/view_wrap_custom.dart';
-import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/viewModel/choice/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/edit/vm_editor.dart'
@@ -463,7 +462,7 @@ class _ViewContentsState extends ConsumerState<ViewContents> {
   @override
   void initState() {
     _focusNode = FocusNode();
-    _scrollController = AdjustableScrollController();
+    _scrollController = ScrollController();
     _controller = QuillController(
       configurations: const QuillControllerConfigurations(),
       document: Document(),

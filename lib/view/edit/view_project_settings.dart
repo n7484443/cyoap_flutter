@@ -1,7 +1,6 @@
 import 'package:cyoap_core/grammar/value_type.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
-import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
 import 'package:cyoap_flutter/viewModel/edit/vm_project_setting.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +49,7 @@ class ViewGlobalVariableEditor extends ConsumerStatefulWidget {
 
 class _ViewGlobalVariableEditorState
     extends ConsumerState<ViewGlobalVariableEditor> {
-  AdjustableScrollController controller = AdjustableScrollController();
+  ScrollController controller = ScrollController();
 
   @override
   void dispose() {
@@ -289,7 +288,7 @@ class ViewGlobalVariableInnerEditor extends ConsumerStatefulWidget {
 
 class _ViewGlobalVariableInnerEditorState
     extends ConsumerState<ViewGlobalVariableInnerEditor> {
-  AdjustableScrollController controller = AdjustableScrollController();
+  ScrollController controller = ScrollController();
   int index = 1;
 
   @override

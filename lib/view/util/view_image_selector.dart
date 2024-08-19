@@ -13,7 +13,6 @@ import '../../viewModel/edit/vm_editor.dart';
 import '../../viewModel/edit/vm_image_editor.dart';
 import '../../viewModel/edit/vm_make_platform.dart';
 import '../edit/view_editor.dart';
-import 'controller_adjustable_scroll.dart';
 
 class ViewImageDraggable extends ConsumerWidget {
   final void Function(WidgetRef, String) addImageFunction;
@@ -240,7 +239,7 @@ class _ViewImageSelectorState extends ConsumerState<ViewImageSelector> {
 
   @override
   void initState() {
-    _controller = AdjustableScrollController();
+    _controller = ScrollController();
     super.initState();
   }
 

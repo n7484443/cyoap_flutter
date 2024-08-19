@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/choice/view_choice_line.dart';
-import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
@@ -20,8 +19,7 @@ class ViewChoicePage extends ConsumerStatefulWidget {
 }
 
 class _ViewChoicePageState extends ConsumerState<ViewChoicePage> {
-  final AdjustableScrollController _scrollController =
-      AdjustableScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {

@@ -70,7 +70,7 @@ class ViewPlayDrawer extends ConsumerStatefulWidget {
 
 class _ViewPlayDrawerState extends ConsumerState<ViewPlayDrawer> {
   final TextEditingController _controller = TextEditingController();
-  final ScrollController _scrollController = AdjustableScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {

@@ -5,7 +5,6 @@ import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/view/code/view_ide.dart';
-import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_color_picker.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/view/util/view_image_selector.dart';
@@ -264,7 +263,7 @@ class _ViewTextContentsEditorState
               jsonEncode(_quillController?.document.toDelta().toJson()));
       });
     });
-    _scrollController = AdjustableScrollController();
+    _scrollController = ScrollController();
     super.initState();
   }
 
@@ -360,8 +359,8 @@ class _ViewTextContentsEditorState
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: QuillToolbar.simple(
+            controller: _quillController!,
             configurations: QuillSimpleToolbarConfigurations(
-              controller: _quillController!,
               sharedConfigurations: QuillSharedConfigurations(
                 locale: ref.watch(localeStateProvider),
               ),
@@ -405,8 +404,8 @@ class _ViewTextContentsEditorState
             elevation: ConstList.elevation,
             color: Colors.blue.shade50,
             child: QuillEditor(
+              controller: _quillController!,
               configurations: QuillEditorConfigurations(
-                controller: _quillController!,
                 padding: const EdgeInsets.all(3),
                 expands: true,
                 scrollable: true,
