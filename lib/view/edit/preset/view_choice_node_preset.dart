@@ -37,7 +37,7 @@ class ChoiceNodeSample extends ConsumerWidget {
                 child: IgnorePointer(
                   child: ViewChoiceNode(
                     Pos(data: [designSamplePosition]),
-                    ignoreOption: true,
+                    ignoreOption: ChoiceNodeChildRender.onlySelf,
                   ),
                 ),
               ),
@@ -70,7 +70,7 @@ class ChoiceNodeSample extends ConsumerWidget {
             child: IgnorePointer(
               child: ViewChoiceNode(
                 Pos(data: [designSamplePosition]),
-                ignoreOption: true,
+                ignoreOption: ChoiceNodeChildRender.onlySelf,
               ),
             ),
           ),

@@ -10,9 +10,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/device_preference.dart';
 
-final selectedchoiceNodeStatusProvider =
-    Provider.autoDispose<List<(Pos, int)>>((ref) {
-  return getPlatform.selectedPos;
+final separateChildProvider = StateProvider<bool>((ref) {
+  return true;
+});
+
+final separateLineProvider = StateProvider<bool>((ref) {
+  return true;
+});
+
+final numRowProvider = StateProvider<int>((ref) {
+  return ConstList.isMobile() ? 4 : 6;
 });
 
 void saveAsImage(GlobalKey globalKey) async {

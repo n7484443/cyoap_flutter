@@ -22,7 +22,7 @@ class _ViewClipboardState extends ConsumerState<ViewClipboard> {
           padding: const EdgeInsets.all(4.0),
           child: NodeDraggable(
             pos,
-            ignoreOption: true,
+            ignoreOption: ChoiceNodeChildRender.noOptionWithViewOnly,
           ),
         );
       },

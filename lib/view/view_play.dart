@@ -85,19 +85,10 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
     );
     var resultButton = TextButton(
       onPressed: () {
-        if (ref.watch(selectedchoiceNodeStatusProvider).isNotEmpty) {
-          showDialog(
-            context: context,
-            builder: (context) => const ViewSelectedGrid(),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('summary_error'.i18n),
-              duration: const Duration(seconds: 1),
-            ),
-          );
-        }
+        showDialog(
+          context: context,
+          builder: (context) => const ViewSelectedResultGrid(),
+        );
       },
       child: Text("summary".i18n),
     );

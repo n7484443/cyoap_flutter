@@ -81,6 +81,9 @@ extension Localization on String {
           'debug_mode': 'Enable debug mode',
           'save_as_image': 'Save as image',
           'copy_clipboard': 'Copy to clipboard and close',
+          'separate_line': 'Separate Line',
+          'separate_child': 'Separate Child',
+          'change_result_size': 'Change Result Size',
         },
         "ko": {
           'summary': '결과창 보기',
@@ -89,6 +92,9 @@ extension Localization on String {
           'debug_mode': '디버그 모드 활성화',
           'save_as_image': '이미지로 저장',
           'copy_clipboard': '클립보드로 복사 후 닫기',
+          'separate_line': '라인 구분',
+          'separate_child': '자식 분리',
+          'change_result_size': '결과창 크기 변경'
         }
       } +
       const {

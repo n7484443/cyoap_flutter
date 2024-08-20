@@ -29,10 +29,19 @@ import '../../viewModel/edit/vm_make_platform.dart';
 import '../../viewModel/vm_variable_table.dart';
 import '../util/SliderThumbStyle.dart';
 
+enum ChoiceNodeChildRender {
+  noOption, /*default option*/
+  onlySelf,
+  selected,
+  noOptionWithViewOnly
+}
+
 class NodeDraggable extends ConsumerWidget {
   final Pos pos;
-  final bool ignoreOption;
-  const NodeDraggable(this.pos, {this.ignoreOption = false, super.key});
+  final ChoiceNodeChildRender ignoreOption;
+
+  const NodeDraggable(this.pos,
+      {this.ignoreOption = ChoiceNodeChildRender.noOption, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,8 +49,7 @@ class NodeDraggable extends ConsumerWidget {
     if (node == null) {
       return const SizedBox.shrink();
     }
-    var subWidget =
-    ViewChoiceNode(pos, ignoreOption: ignoreOption);
+    var subWidget = ViewChoiceNode(pos, ignoreOption: ignoreOption);
     return DragItemWidget(
       dragItemProvider: (DragItemRequest request) =>
           DragItem(localData: Int32List.fromList(pos.data)),
@@ -56,23 +64,21 @@ class NodeDraggable extends ConsumerWidget {
 class ViewChoiceNode extends ConsumerWidget {
   final Pos pos;
   final bool ignoreOpacity;
-  final bool ignoreChild;
-  final bool ignoreOption;
+  final ChoiceNodeChildRender ignoreOption;
 
   const ViewChoiceNode(this.pos,
       {this.ignoreOpacity = false,
-      this.ignoreChild = false,
-      this.ignoreOption = false,
+      this.ignoreOption = ChoiceNodeChildRender.noOption,
       super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (ignoreOpacity) {
-      return ViewChoiceNodeMain(pos,
-          ignoreChild: ignoreChild, ignoreOption: ignoreOption);
+      return ViewChoiceNodeMain(pos, ignoreOption: ignoreOption);
     }
 
-    if (ref.watch(isEditableProvider(pos: pos)) && !ignoreOption) {
+    if (ref.watch(isEditableProvider(pos: pos)) &&
+        ignoreOption == ChoiceNodeChildRender.noOption) {
       var popupList = [
         (
           'modify_size'.i18n,
@@ -110,8 +116,7 @@ class ViewChoiceNode extends ConsumerWidget {
           opacity: ref.watch(opacityProvider(pos)),
           child: Stack(
             children: [
-              ViewChoiceNodeMain(pos,
-                  ignoreChild: ignoreChild, ignoreOption: ignoreOption),
+              ViewChoiceNodeMain(pos, ignoreOption: ignoreOption),
               Align(
                 alignment: Alignment.topRight,
                 child: CircleAvatar(
@@ -152,15 +157,13 @@ class ViewChoiceNode extends ConsumerWidget {
             ),
           ),
           isEnabled: !ConstList.isMobile(),
-          child: ViewChoiceNodeMain(pos,
-              ignoreChild: ignoreChild, ignoreOption: ignoreOption),
+          child: ViewChoiceNodeMain(pos, ignoreOption: ignoreOption),
         ),
       );
     }
     return Opacity(
       opacity: ref.watch(opacityProvider(pos)),
-      child: ViewChoiceNodeMain(pos,
-          ignoreChild: ignoreChild, ignoreOption: ignoreOption),
+      child: ViewChoiceNodeMain(pos, ignoreOption: ignoreOption),
     );
   }
 }
@@ -168,10 +171,10 @@ class ViewChoiceNode extends ConsumerWidget {
 class ViewChoiceNodeMain extends ConsumerWidget {
   final Pos pos;
   final bool ignoreChild;
-  final bool ignoreOption;
+  final ChoiceNodeChildRender ignoreOption;
 
   const ViewChoiceNodeMain(this.pos,
-      {this.ignoreChild = false, this.ignoreOption = false, super.key});
+      {this.ignoreChild = false, required this.ignoreOption, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -482,7 +485,7 @@ class _ViewContentsState extends ConsumerState<ViewContents> {
 class ViewChoiceNodeContent extends ConsumerWidget {
   final Pos pos;
   final bool ignoreChild;
-  final bool ignoreOption;
+  final ChoiceNodeChildRender ignoreOption;
 
   const ViewChoiceNodeContent(this.pos,
       {this.ignoreChild = false, required this.ignoreOption, super.key});
@@ -511,22 +514,31 @@ class ViewChoiceNodeContent extends ConsumerWidget {
     }
 
     Widget? child;
-    if (ref.watch(isEditableProvider(pos: pos)) && !ignoreOption) {
+    if (ref.watch(isEditableProvider(pos: pos)) &&
+        ignoreOption == ChoiceNodeChildRender.noOption) {
       child = ViewWrapCustomReorder(
         pos,
-        isReorderAble: true,
+        isReorderAble: ignoreOption != ChoiceNodeChildRender.noOptionWithViewOnly,
         parentMaxSize: node.getMaxSize(true),
       );
-    } else if (!ignoreChild && node.children.isNotEmpty) {
+    } else if (!ignoreChild &&
+        node.children.isNotEmpty &&
+        ignoreOption != ChoiceNodeChildRender.onlySelf) {
       child = ViewWrapCustomReorder(
         pos,
         isReorderAble: false,
         parentMaxSize: node.getMaxSize(true),
-        builder: (i) => ViewChoiceNode(
-          pos.addLast(i),
-          ignoreOption: ignoreOption,
-          ignoreChild: ignoreChild,
-        ),
+        builder: (i) {
+          if (ignoreOption == ChoiceNodeChildRender.selected &&
+              !getPlatform.checkIsSelected(
+                  node.children[i] as ChoiceNode, true)) {
+            return const SizedBox.shrink();
+          }
+          return ViewChoiceNode(
+            pos.addLast(i),
+            ignoreOption: ignoreOption,
+          );
+        },
       );
     }
     child ??= const SizedBox.shrink();
