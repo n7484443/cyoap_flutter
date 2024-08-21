@@ -8,7 +8,6 @@ import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 
 import '../../main.dart';
 import '../../model/image_db.dart';
-import '../../model/platform_system.dart';
 import '../../viewModel/edit/vm_editor.dart';
 import '../../viewModel/edit/vm_image_editor.dart';
 import '../../viewModel/edit/vm_make_platform.dart';
@@ -47,7 +46,8 @@ class ViewImageDraggable extends ConsumerWidget {
           child: IconButton(
             icon: const Icon(Icons.crop),
             onPressed: () {
-              openImageEditor(ref, context, imageName(ref, index));
+              openImageEditor(ref, context, imageName(ref, index),
+                  justOpen: true);
             },
           ),
         ),
@@ -71,11 +71,11 @@ class ViewImageDraggable extends ConsumerWidget {
       return Column(
         children: [
           TextButton(
-            onPressed: () {
-              ref
-                  .read(imageListStateProvider.notifier)
-                  .addImage()
-                  .then((name) => openImageEditor(ref, context, name));
+            onPressed: () async {
+              var name =
+                  await ref.read(imageListStateProvider.notifier).addImage();
+              addImageToDatabase(ref, name, ref.read(lastImageProvider)!);
+              openImageEditor(ref, context, name, justOpen: false);
             },
             child: Text('add_image'.i18n),
           ),
@@ -94,11 +94,11 @@ class ViewImageDraggable extends ConsumerWidget {
               'add_image_description'.i18n,
             ),
             TextButton(
-              onPressed: () {
-                ref
-                    .read(imageListStateProvider.notifier)
-                    .addImage()
-                    .then((name) => openImageEditor(ref, context, name));
+              onPressed: () async {
+                var name =
+                    await ref.read(imageListStateProvider.notifier).addImage();
+                addImageToDatabase(ref, name, ref.read(lastImageProvider)!);
+                openImageEditor(ref, context, name, justOpen: false);
               },
               child: Text('add_image'.i18n),
             ),
@@ -115,7 +115,9 @@ class ViewImageDraggable extends ConsumerWidget {
         ),
         Expanded(
           child: Card(
-            color: ref.watch(editorImageDragDropColorProvider) ? Theme.of(context).highlightColor : null,
+            color: ref.watch(editorImageDragDropColorProvider)
+                ? Theme.of(context).highlightColor
+                : null,
             child: DropRegion(
               formats: [...Formats.standardFormats]
                 ..remove(Formats.plainText)
@@ -143,25 +145,27 @@ class ViewImageDraggable extends ConsumerWidget {
                       return;
                     }
                     var fileData = await file.readAll();
+                    addImageToDatabase(ref, fileName, fileData);
                     if (items.length == 1) {
-                      openImageEditor(ref, context, fileName, data: fileData);
-                    } else {
-                      addImageToDatabase(ref, fileName, fileData);
+                      openImageEditor(ref, context, fileName, justOpen: false);
                     }
                     file.close();
                   });
                 }
               },
               onDropEnter: (DropEvent event) {
-                ref.read(editorImageDragDropColorProvider.notifier).state = true;
+                ref.read(editorImageDragDropColorProvider.notifier).state =
+                    true;
               },
               onDropLeave: (DropEvent event) {
-                ref.read(editorImageDragDropColorProvider.notifier).state = false;
+                ref.read(editorImageDragDropColorProvider.notifier).state =
+                    false;
               },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ViewImageSelector(
-                    widgetBuilder: widgetBuilderEdit, widgetLength: widgetLength),
+                    widgetBuilder: widgetBuilderEdit,
+                    widgetLength: widgetLength),
               ),
             ),
           ),
@@ -186,37 +190,24 @@ class ViewImageDraggable extends ConsumerWidget {
   }
 
   void openImageEditor(WidgetRef ref, BuildContext context, String name,
-      {Uint8List? data}) {
-    if (data == null) {
-      ref
-          .read(imageProvider.notifier)
-          .update((state) => (name, ImageDB().getImage(name)!));
-      ref
-          .read(changeTabProvider.notifier)
-          .changePageString('viewImageEditor', context);
-      addImageFunction(ref, name);
-    } else {
-      addImageToDatabase(ref, name, data);
-      showDialog<(bool, String)>(
+      {required bool justOpen}) async {
+    if(!justOpen){
+      var value = await showDialog<(bool, String)>(
         builder: (_) => ImageSourceDialog(name),
         context: context,
         barrierDismissible: false,
-      ).then((value) {
-        getPlatformFileSystem.addSource(name, value?.$2 ?? '');
-        if (value?.$1 ?? false) {
-          ref.read(lastImageProvider.notifier).update((state) => data);
-          ref
-              .read(imageProvider.notifier)
-              .update((state) => (name, ref.watch(lastImageProvider)!));
-          ref
-              .read(changeTabProvider.notifier)
-              .changePageString('viewImageEditor', context);
-        } else {
-          ref.read(imageListStateProvider.notifier).addImageToList(name);
-        }
-        addImageFunction(ref, name);
-      });
+      );
+      if(!(value?.$1 ?? false)){
+        return;
+      }
     }
+    ref
+        .read(imageProvider.notifier)
+        .update((state) => (name, ImageDB().getImage(name)!));
+    ref
+        .read(changeTabProvider.notifier)
+        .changePageString('viewImageEditor', context);
+    addImageFunction(ref, name);
   }
 }
 
