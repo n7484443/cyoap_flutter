@@ -367,6 +367,7 @@ class BackButton extends ConsumerWidget {
               ref.read(currentProjectChangedProvider.notifier).save();
             }, (i) {
               Navigator.of(context).pop();
+              ref.read(currentProjectChangedProvider.notifier).save();
               if (i != 0) {
                 ref.read(nodeEditorTargetPosProvider.notifier).state = null;
                 ref.read(lineEditorTargetPosProvider.notifier).state = null;

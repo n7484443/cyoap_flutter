@@ -301,6 +301,9 @@ final ThemeData appThemeLight = ThemeData.from(
   inputDecorationTheme: const InputDecorationTheme(
     border: InputBorder.none,
   ),
+  scrollbarTheme: ScrollbarThemeData(
+    thickness: WidgetStateProperty.all(10.0),
+  ),
 );
 
 final ThemeData appThemeDark = ThemeData.from(
@@ -327,5 +330,8 @@ final ThemeData appThemeDark = ThemeData.from(
   ),
   inputDecorationTheme: const InputDecorationTheme(
     border: InputBorder.none,
+  ),
+  scrollbarTheme: ScrollbarThemeData(
+    thickness: WidgetStateProperty.all(10.0),
   ),
 );

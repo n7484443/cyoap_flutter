@@ -41,7 +41,9 @@ class ViewChoiceLine extends ConsumerWidget {
             ref
                 .read(choiceStatusProvider(pos.removeLast()).notifier)
                 .addChoice(ChoiceLine(), index: pos.last);
-            ref.read(currentProjectChangedProvider.notifier).changed(needUpdateCode: true);
+            ref
+                .read(currentProjectChangedProvider.notifier)
+                .changed(needUpdateCode: true);
           },
           tooltip: 'create_tooltip_line'.i18n,
           child: const Icon(Icons.add_box),
@@ -96,6 +98,9 @@ class ViewChoiceLineHeader extends ConsumerWidget {
       return const SizedBox.shrink();
     }
     if (isPlatformEditable) {
+      var margin = const SizedBox.square(
+        dimension: 1,
+      );
       return Card(
         elevation: 0,
         color: ref.watch(themeStateProvider) == ThemeMode.light
@@ -143,9 +148,55 @@ class ViewChoiceLineHeader extends ConsumerWidget {
                         Icons.edit,
                       ),
               ),
-              const SizedBox.square(
-                dimension: 5,
+              margin,
+              CircleButton(
+                onPressed: () {
+                  ref
+                      .read(choiceStatusProvider(pos.removeLast()).notifier)
+                      .addChoice(ChoiceLine(), index: pos.last);
+                  ref
+                      .read(currentProjectChangedProvider.notifier)
+                      .changed(needUpdateCode: true);
+                },
+                child:  const Stack(
+                  children: [
+                    Positioned(
+                      right: 0,
+                      child: Icon(
+                        Icons.add, size: 11.0,
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_upward,
+                    )
+                  ],
+                ),
               ),
+              margin,
+              CircleButton(
+                onPressed: () {
+                  ref
+                      .read(choiceStatusProvider(pos.removeLast()).notifier)
+                      .addChoice(ChoiceLine(), index: pos.last + 1);
+                  ref
+                      .read(currentProjectChangedProvider.notifier)
+                      .changed(needUpdateCode: true);
+                },
+                child:  const Stack(
+                  children: [
+                    Positioned(
+                      right: 0,
+                      child: Icon(
+                        Icons.add, size: 11.0,
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_downward,
+                    )
+                  ],
+                ),
+              ),
+              margin,
               CircleButton(
                 onPressed: () {
                   if (pos.last - 1 >= 0) {
@@ -157,9 +208,7 @@ class ViewChoiceLineHeader extends ConsumerWidget {
                   Icons.arrow_upward,
                 ),
               ),
-              const SizedBox.square(
-                dimension: 5,
-              ),
+              margin,
               CircleButton(
                 onPressed: () {
                   var downPos = pos.removeLast().addLast(pos.last + 1);
@@ -169,9 +218,7 @@ class ViewChoiceLineHeader extends ConsumerWidget {
                   Icons.arrow_downward,
                 ),
               ),
-              const SizedBox.square(
-                dimension: 5,
-              ),
+              margin,
               CircleButton(
                 onPressed: () async {
                   var name = await showDialog<String>(
@@ -186,15 +233,14 @@ class ViewChoiceLineHeader extends ConsumerWidget {
                   Icons.settings,
                 ),
               ),
+              margin,
               CircleButton(
                 onPressed: () async {
                   await showDialog<bool?>(
                       context: context,
                       builder: (_) => ViewWarningDialog(
                             acceptFunction: () {
-                              ref
-                                  .read(choiceStatusProvider(pos))
-                                  .removeData();
+                              ref.read(choiceStatusProvider(pos)).removeData();
                             },
                             cancelFunction: () {},
                             content: 'warning_message_line_delete'.i18n,
