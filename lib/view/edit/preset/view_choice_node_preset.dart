@@ -1,3 +1,4 @@
+import 'package:context_menus/context_menus.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
@@ -99,6 +100,37 @@ class ChoiceNodePresetList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var list = ref.watch(choiceNodePresetListProvider);
+    var popupDefaultPreset = [
+      ('clone'.i18n, (index, preset) async{
+        ref
+            .read(choiceNodePresetListProvider.notifier)
+            .cloneIndex(index);
+      }),
+    ];
+    var popupNonDefaultPreset = [
+      ('rename'.i18n, (index, preset) async{
+        var text = await showDialog(
+            context: context,
+            builder: (context) {
+              return PresetRenameDialog(preset.name!);
+            },
+            barrierDismissible: false);
+        if (text != null && text.trim().isNotEmpty) {
+          ref
+              .read(choiceNodePresetListProvider.notifier)
+              .rename(index, text.trim());
+          var pos = const Pos(data: [designSamplePosition]);
+
+          ref.read(choiceStatusProvider(pos)).refreshSelf();
+        }
+      }),
+      ...popupDefaultPreset,
+      ('delete'.i18n, (index, preset) async{
+        ref
+            .read(choiceNodePresetListProvider.notifier)
+            .deleteIndex(index);
+      }),
+    ];
     return Column(
       children: [
         ListTile(
@@ -117,50 +149,33 @@ class ChoiceNodePresetList extends ConsumerWidget {
             itemCount: list.length,
             itemBuilder: (BuildContext context, int index) {
               var preset = list[index];
-              return ListTile(
-                key: Key('$index'),
-                title: Text(preset.name!),
-                trailing: preset.name == "default"
-                    ? null
-                    : IconButton(
-                        icon: Icon(Icons.delete,
-                            size: (IconTheme.of(context).size ?? 18) * 0.8),
-                        onPressed: () {
-                          ref
-                              .read(choiceNodePresetListProvider.notifier)
-                              .deleteIndex(index);
-                        },
-                      ),
-                leading: preset.name == "default"
-                    ? null
-                    : IconButton(
-                        icon: Icon(Icons.drive_file_rename_outline,
-                            size: (IconTheme.of(context).size ?? 18) * 0.8),
-                        onPressed: () async {
-                          var text = await showDialog(
-                              context: context,
-                              builder: (context) {
-                                return PresetRenameDialog(preset.name!);
-                              },
-                              barrierDismissible: false);
-                          if (text != null && text.trim().isNotEmpty) {
-                            ref
-                                .read(choiceNodePresetListProvider.notifier)
-                                .rename(index, text.trim());
-                            var pos = const Pos(data: [designSamplePosition]);
-
-                            ref.read(choiceStatusProvider(pos)).refreshSelf();
-                          }
-                        },
-                      ),
-                onTap: () {
-                  ref
-                      .read(currentPresetIndexProvider.notifier)
-                      .update((state) => index);
-                  var pos = const Pos(data: [designSamplePosition]);
-                  ref.read(choiceStatusProvider(pos)).refreshSelf();
-                },
-                selected: index == ref.watch(currentPresetIndexProvider),
+              var popupList = preset.name == "default"
+                  ? popupDefaultPreset
+                  : popupNonDefaultPreset;
+              return ContextMenuRegion(
+                contextMenu: GenericContextMenu(
+                  buttonConfigs: List.generate(
+                    popupList.length,
+                    (popupIndex) => ContextMenuButtonConfig(
+                      popupList[popupIndex].$1,
+                      onPressed: (){
+                        popupList[popupIndex].$2(index, preset);
+                      },
+                    ),
+                  ),
+                ),
+                child: ListTile(
+                  key: Key('$index'),
+                  title: Text(preset.name!),
+                  onTap: () {
+                    ref
+                        .read(currentPresetIndexProvider.notifier)
+                        .update((state) => index);
+                    var pos = const Pos(data: [designSamplePosition]);
+                    ref.read(choiceStatusProvider(pos)).refreshSelf();
+                  },
+                  selected: index == ref.watch(currentPresetIndexProvider),
+                ),
               );
             },
           ),
@@ -294,8 +309,7 @@ class ViewNodeGeneralOptionEditor extends ConsumerStatefulWidget {
 
 class _ViewNodeGeneralOptionEditorState
     extends ConsumerState<ViewNodeGeneralOptionEditor> {
-  final ScrollController _scrollController =
-  ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void dispose() {
@@ -485,8 +499,7 @@ class ViewNodeOutlineOptionEditor extends ConsumerStatefulWidget {
 
 class _ViewNodeOutlineOptionEditorState
     extends ConsumerState<ViewNodeOutlineOptionEditor> {
-  final ScrollController _scrollController =
-  ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void dispose() {
@@ -670,8 +683,7 @@ class ViewNodeComponentOptionEditor extends ConsumerStatefulWidget {
 
 class _ViewNodeComponentOptionEditorState
     extends ConsumerState<ViewNodeComponentOptionEditor> {
-  final ScrollController _scrollController =
-  ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void dispose() {
@@ -783,8 +795,7 @@ class ViewNodeColorOptionEditor extends ConsumerStatefulWidget {
 
 class _ViewNodeColorOptionEditorState
     extends ConsumerState<ViewNodeColorOptionEditor> {
-  final ScrollController _scrollController =
-  ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void dispose() {

@@ -5,6 +5,7 @@ import 'package:cyoap_flutter/viewModel/edit/preset/vm_preset.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../model/platform_system.dart';
+import '../../../util/easy_clone.dart';
 import '../vm_draggable_nested_map.dart';
 
 final choiceLinePresetCurrentEditProvider =
@@ -86,6 +87,15 @@ class ChoiceLinePresetListNotifier
     }
   }
 
+  void cloneIndex(index) {
+    var original = state[index];
+    var newName = getCloneName(original.name!, (considerName){
+      return state.any((preset) => preset.name == considerName);
+    });
+    var clone = original.copyWith(name: newName);
+    state = [...state, clone];
+  }
+
   void reorder(int oldIndex, int newIndex) {
     if (oldIndex < newIndex) {
       newIndex -= 1;
@@ -94,4 +104,5 @@ class ChoiceLinePresetListNotifier
     state.insert(newIndex, preset);
     state = [...state];
   }
+
 }

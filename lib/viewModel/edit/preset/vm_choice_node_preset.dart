@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../main.dart';
 import '../../../model/platform_system.dart';
+import '../../../util/easy_clone.dart';
 import '../../choice/vm_choice_node.dart';
 import '../vm_draggable_nested_map.dart';
 
@@ -271,12 +272,9 @@ class ChoiceNodePresetListNotifier
 
   void create() {
     var name = 'preset_new'.i18n;
-    var rename = name;
-    var i = 0;
-    while (state.any((preset) => preset.name == rename)) {
-      rename = '$name $i';
-      i++;
-    }
+    var rename = getCloneName(name, (considerName){
+      return state.any((preset) => preset.name == considerName);
+    });
     state = [...state, ChoiceNodeDesignPreset(name: rename)];
   }
 
@@ -294,6 +292,15 @@ class ChoiceNodePresetListNotifier
       state = [...state];
       getPlatform.updateNodePresetNameAll(removed.name!, state.first.name!);
     }
+  }
+
+  void cloneIndex(index) {
+    var original = state[index];
+    var newName = getCloneName(original.name!, (considerName){
+      return state.any((preset) => preset.name == considerName);
+    });
+    var clone = original.copyWith(name: newName);
+    state = [...state, clone];
   }
 
   void reorder(int oldIndex, int newIndex) {

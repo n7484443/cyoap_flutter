@@ -1,3 +1,4 @@
+import 'package:context_menus/context_menus.dart';
 import 'package:cyoap_core/preset/line_preset.dart';
 import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
@@ -48,6 +49,41 @@ class ChoiceLinePresetList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var list = ref.watch(choiceLinePresetListProvider);
+    var popupDefaultPreset = [
+      (
+        'clone'.i18n,
+        (index, preset) async {
+          ref.read(choiceLinePresetListProvider.notifier).cloneIndex(index);
+        }
+      ),
+    ];
+    var popupNonDefaultPreset = [
+      (
+        'rename'.i18n,
+        (index, preset) async {
+          var text = await showDialog(
+              context: context,
+              builder: (context) {
+                return PresetRenameDialog(preset.name!);
+              },
+              barrierDismissible: false);
+          if (text != null && text.trim().isNotEmpty) {
+            ref
+                .read(choiceLinePresetListProvider.notifier)
+                .rename(index, text.trim());
+          }
+        }
+      ),
+      ...popupDefaultPreset,
+      (
+        'delete'.i18n,
+        (index, preset) async {
+          ref
+              .read(choiceLinePresetListProvider.notifier)
+              .deleteIndex(index);
+        }
+      ),
+    ];
     return Column(
       children: [
         ListTile(
@@ -66,46 +102,31 @@ class ChoiceLinePresetList extends ConsumerWidget {
             itemCount: list.length,
             itemBuilder: (BuildContext context, int index) {
               var preset = list[index];
-              return ListTile(
-                key: Key('$index'),
-                title: Text(preset.name!),
-                trailing: preset.name == "default"
-                    ? null
-                    : IconButton(
-                        icon: Icon(Icons.delete,
-                            size: (IconTheme.of(context).size ?? 18) * 0.8),
+              var popupList = preset.name == "default"
+                  ? popupDefaultPreset
+                  : popupNonDefaultPreset;
+              return ContextMenuRegion(
+                  contextMenu: GenericContextMenu(
+                    buttonConfigs: List.generate(
+                      popupList.length,
+                      (popupIndex) => ContextMenuButtonConfig(
+                        popupList[popupIndex].$1,
                         onPressed: () {
-                          ref
-                              .read(choiceLinePresetListProvider.notifier)
-                              .deleteIndex(index);
+                          popupList[popupIndex].$2(index, preset);
                         },
                       ),
-                leading: preset.name == "default"
-                    ? null
-                    : IconButton(
-                        icon: Icon(Icons.drive_file_rename_outline,
-                            size: (IconTheme.of(context).size ?? 18) * 0.8),
-                        onPressed: () async {
-                          var text = await showDialog(
-                              context: context,
-                              builder: (context) {
-                                return PresetRenameDialog(preset.name!);
-                              },
-                              barrierDismissible: false);
-                          if (text != null && text.trim().isNotEmpty) {
-                            ref
-                                .read(choiceLinePresetListProvider.notifier)
-                                .rename(index, text.trim());
-                          }
-                        },
-                      ),
-                onTap: () {
-                  ref
-                      .read(currentPresetIndexProvider.notifier)
-                      .update((state) => index);
-                },
-                selected: index == ref.watch(currentPresetIndexProvider),
-              );
+                    ),
+                  ),
+                  child: ListTile(
+                    key: Key('$index'),
+                    title: Text(preset.name!),
+                    onTap: () {
+                      ref
+                          .read(currentPresetIndexProvider.notifier)
+                          .update((state) => index);
+                    },
+                    selected: index == ref.watch(currentPresetIndexProvider),
+                  ));
             },
           ),
         ),
@@ -184,14 +205,16 @@ class ViewLineOptionEditor extends ConsumerWidget {
                         width: 80,
                         child: DropdownButtonFormField<ChoiceLineAlignment>(
                           items: ChoiceLineAlignment.values
-                              .map<DropdownMenuItem<ChoiceLineAlignment>>((type) =>
-                                  DropdownMenuItem(value: type, child: Text(type.name)))
+                              .map<DropdownMenuItem<ChoiceLineAlignment>>(
+                                  (type) => DropdownMenuItem(
+                                      value: type, child: Text(type.name)))
                               .toList(),
                           onChanged: (ChoiceLineAlignment? t) {
                             if (t != null) {
                               ref
                                   .read(choiceLinePresetListProvider.notifier)
-                                  .updateIndex(index, preset.copyWith(alignment: t));
+                                  .updateIndex(
+                                      index, preset.copyWith(alignment: t));
                             }
                           },
                           value: preset.alignment,
@@ -217,14 +240,19 @@ class ViewLineOptionEditor extends ConsumerWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
-                    Text("background_color".i18n, style: Theme.of(context).textTheme.titleMedium),
+                    Text("background_color".i18n,
+                        style: Theme.of(context).textTheme.titleMedium),
                     Padding(
                       padding: const EdgeInsets.all(ConstList.padding),
                       child: ViewColorOptionEditor(
                         colorOption: colorOption!,
                         changeFunction: (ColorOption after) {
-                          ref.read(choiceLinePresetListProvider.notifier).updateIndex(
-                              index, preset.copyWith(backgroundColorOption: after));
+                          ref
+                              .read(choiceLinePresetListProvider.notifier)
+                              .updateIndex(
+                                  index,
+                                  preset.copyWith(
+                                      backgroundColorOption: after));
                         },
                       ),
                     )
