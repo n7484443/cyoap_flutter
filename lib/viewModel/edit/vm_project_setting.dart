@@ -91,8 +91,8 @@ TextEditingController projectSettingDisplayNameTextEditing(
       var value = ref
           .read(valueTypeWrapperListProvider.notifier)
           .getEditTargetValueTypeWrapper(index)!;
-      ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(
-          index, value: value.copyWith(displayName: newDisplayName));
+      ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(index,
+          value: value.copyWith(displayName: newDisplayName));
     });
   });
   ref.onDispose(() {
@@ -151,7 +151,9 @@ class ValueTypeWrapperList extends _$ValueTypeWrapperList {
   void save() {
     getPlatform.setGlobalSetting(state);
     VariableDataBase().updateVariableTiles();
-    ref.read(currentProjectChangedProvider.notifier).changed(needUpdateCode: true);
+    ref
+        .read(currentProjectChangedProvider.notifier)
+        .changed(needUpdateCode: true);
   }
 
   String? getEditTargetName(int index) {

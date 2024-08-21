@@ -338,7 +338,7 @@ extension Localization on String {
           'background': 'Background',
           'font_score': 'Score font',
           'margin_vertical':
-          'Vertical margin between choices\nDefault value %.1f',
+              'Vertical margin between choices\nDefault value %.1f',
           'background_image_batch_option': 'Background image batch option',
           'inner': 'Inner',
           'outline': 'Outline',
@@ -351,7 +351,6 @@ extension Localization on String {
           'slider_track_active_color': 'Slider track activate color',
           'slider_track_inactive_color': 'Slider track inactivate color',
           'selected': 'Selected',
-
           'modify_size': 'Modify size',
           'modify_preset': 'Modify design preset',
           'random_show': 'Random',
@@ -380,7 +379,6 @@ extension Localization on String {
           'slider_track_active_color': '슬라이더 활성 트랙 색상',
           'slider_track_inactive_color': '슬라이더 비활성 트랙 색상',
           'selected': '선택',
-
           'modify_size': '크기 수정',
           'modify_preset': '디자인 프리셋 수정',
           'random_show': '랜덤',

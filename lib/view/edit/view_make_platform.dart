@@ -149,17 +149,20 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
                     ),
                     NavigationRailDestination(
                       icon: const Icon(Icons.layers),
-                      label: Text('design_settings'.i18n, textAlign: TextAlign.center),
+                      label: Text('design_settings'.i18n,
+                          textAlign: TextAlign.center),
                       padding: const EdgeInsets.symmetric(vertical: 10),
                     ),
                     NavigationRailDestination(
                       icon: const Icon(Icons.image),
-                      label: Text('image_settings'.i18n, textAlign: TextAlign.center),
+                      label: Text('image_settings'.i18n,
+                          textAlign: TextAlign.center),
                       padding: const EdgeInsets.symmetric(vertical: 10),
                     ),
                     NavigationRailDestination(
                       icon: const Icon(Icons.settings),
-                      label: Text('project_settings'.i18n, textAlign: TextAlign.center),
+                      label: Text('project_settings'.i18n,
+                          textAlign: TextAlign.center),
                       padding: const EdgeInsets.symmetric(vertical: 10),
                     ),
                   ],

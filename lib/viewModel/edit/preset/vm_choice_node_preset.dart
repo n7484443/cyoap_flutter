@@ -240,7 +240,9 @@ final choiceNodePresetListProvider = StateNotifierProvider.autoDispose<
     if (previous == null || previous == next) return;
     getPlatform.designSetting =
         getPlatform.designSetting.copyWith(choiceNodePresetList: next);
-    ref.read(currentProjectChangedProvider.notifier).changed(needUpdateCode: false);
+    ref
+        .read(currentProjectChangedProvider.notifier)
+        .changed(needUpdateCode: false);
   });
   return ChoiceNodePresetListNotifier(ref);
 });
@@ -272,7 +274,7 @@ class ChoiceNodePresetListNotifier
 
   void create() {
     var name = 'preset_new'.i18n;
-    var rename = getCloneName(name, (considerName){
+    var rename = getCloneName(name, (considerName) {
       return state.any((preset) => preset.name == considerName);
     });
     state = [...state, ChoiceNodeDesignPreset(name: rename)];
@@ -296,7 +298,7 @@ class ChoiceNodePresetListNotifier
 
   void cloneIndex(index) {
     var original = state[index];
-    var newName = getCloneName(original.name!, (considerName){
+    var newName = getCloneName(original.name!, (considerName) {
       return state.any((preset) => preset.name == considerName);
     });
     var clone = original.copyWith(name: newName);

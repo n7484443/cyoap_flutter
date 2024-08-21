@@ -158,12 +158,13 @@ class ViewChoiceLineHeader extends ConsumerWidget {
                       .read(currentProjectChangedProvider.notifier)
                       .changed(needUpdateCode: true);
                 },
-                child:  const Stack(
+                child: const Stack(
                   children: [
                     Positioned(
                       right: 0,
                       child: Icon(
-                        Icons.add, size: 11.0,
+                        Icons.add,
+                        size: 11.0,
                       ),
                     ),
                     Icon(
@@ -182,12 +183,13 @@ class ViewChoiceLineHeader extends ConsumerWidget {
                       .read(currentProjectChangedProvider.notifier)
                       .changed(needUpdateCode: true);
                 },
-                child:  const Stack(
+                child: const Stack(
                   children: [
                     Positioned(
                       right: 0,
                       child: Icon(
-                        Icons.add, size: 11.0,
+                        Icons.add,
+                        size: 11.0,
                       ),
                     ),
                     Icon(

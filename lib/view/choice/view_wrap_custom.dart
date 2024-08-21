@@ -61,7 +61,9 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
     } else {
       ref.read(choiceStatusProvider(drag).notifier).swapChoice(target);
     }
-    ref.read(currentProjectChangedProvider.notifier).changed(needUpdateCode: true);
+    ref
+        .read(currentProjectChangedProvider.notifier)
+        .changed(needUpdateCode: true);
   }
 
   bool checkEmpty() {
@@ -368,7 +370,9 @@ class ViewWrapCustomReorder extends ConsumerWidget {
                   ref.read(choiceStatusProvider(parentPos).notifier).addChoice(
                       ChoiceNode.empty()..width = 3,
                       index: children.length);
-                  ref.read(currentProjectChangedProvider.notifier).changed(needUpdateCode: true);
+                  ref
+                      .read(currentProjectChangedProvider.notifier)
+                      .changed(needUpdateCode: true);
                 },
                 tooltip: 'create_tooltip_node'.i18n,
                 child: const Icon(Icons.add),

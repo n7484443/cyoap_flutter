@@ -9,7 +9,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../util/custom_snackbar.dart';
 import '../viewModel/vm_play.dart';
-import '../viewModel/vm_selected_grid.dart';
 import '../viewModel/vm_snackbar.dart';
 
 class ViewPlay extends ConsumerStatefulWidget {
@@ -67,7 +66,8 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
       padding: const EdgeInsets.all(8.0),
       child: IconButton(
           onPressed: () async {
-            var status = await ref.read(playDataProvider.notifier).savePlayData();
+            var status =
+                await ref.read(playDataProvider.notifier).savePlayData();
             showSnackBar(context, status);
           },
           icon: const Icon(Icons.save)),
@@ -76,7 +76,8 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
       padding: const EdgeInsets.all(8.0),
       child: IconButton(
           onPressed: () async {
-            var status = await ref.read(playDataProvider.notifier).loadPlayData();
+            var status =
+                await ref.read(playDataProvider.notifier).loadPlayData();
             if (status != null) {
               showSnackBar(context, status);
             }

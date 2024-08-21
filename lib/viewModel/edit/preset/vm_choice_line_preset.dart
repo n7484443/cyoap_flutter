@@ -30,7 +30,9 @@ final choiceLinePresetListProvider = StateNotifierProvider.autoDispose<
     if (previous == null || previous == next) return;
     getPlatform.designSetting =
         getPlatform.designSetting.copyWith(choiceLinePresetList: next);
-    ref.read(currentProjectChangedProvider.notifier).changed(needUpdateCode: false);
+    ref
+        .read(currentProjectChangedProvider.notifier)
+        .changed(needUpdateCode: false);
   });
   return ChoiceLinePresetListNotifier(ref);
 });
@@ -89,7 +91,7 @@ class ChoiceLinePresetListNotifier
 
   void cloneIndex(index) {
     var original = state[index];
-    var newName = getCloneName(original.name!, (considerName){
+    var newName = getCloneName(original.name!, (considerName) {
       return state.any((preset) => preset.name == considerName);
     });
     var clone = original.copyWith(name: newName);
@@ -104,5 +106,4 @@ class ChoiceLinePresetListNotifier
     state.insert(newIndex, preset);
     state = [...state];
   }
-
 }

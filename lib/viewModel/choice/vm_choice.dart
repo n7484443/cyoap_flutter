@@ -47,8 +47,11 @@ class ChoiceStatus extends ChangeNotifier {
         ..maximumStatus = 4;
 
       choiceNode.choiceNodeOption = choiceNode.choiceNodeOption.copyWith(
-          presetName: ref.read(choiceNodePresetCurrentEditProvider).name!, showAsSlider: true);
-      choiceNode.select = ref.read(choiceNodePresetTestSelectProvider) ? choiceNode.maximumStatus ~/ 2 : 0;
+          presetName: ref.read(choiceNodePresetCurrentEditProvider).name!,
+          showAsSlider: true);
+      choiceNode.select = ref.read(choiceNodePresetTestSelectProvider)
+          ? choiceNode.maximumStatus ~/ 2
+          : 0;
       node = choiceNode;
     } else if (pos.first < 0) {
       node = ref.read(choiceNodeClipboardStatusProvider).getIndexPos(pos);

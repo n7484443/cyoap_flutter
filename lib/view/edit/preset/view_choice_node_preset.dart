@@ -101,35 +101,40 @@ class ChoiceNodePresetList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var list = ref.watch(choiceNodePresetListProvider);
     var popupDefaultPreset = [
-      ('clone'.i18n, (index, preset) async{
-        ref
-            .read(choiceNodePresetListProvider.notifier)
-            .cloneIndex(index);
-      }),
+      (
+        'clone'.i18n,
+        (index, preset) async {
+          ref.read(choiceNodePresetListProvider.notifier).cloneIndex(index);
+        }
+      ),
     ];
     var popupNonDefaultPreset = [
-      ('rename'.i18n, (index, preset) async{
-        var text = await showDialog(
-            context: context,
-            builder: (context) {
-              return PresetRenameDialog(preset.name!);
-            },
-            barrierDismissible: false);
-        if (text != null && text.trim().isNotEmpty) {
-          ref
-              .read(choiceNodePresetListProvider.notifier)
-              .rename(index, text.trim());
-          var pos = const Pos(data: [designSamplePosition]);
+      (
+        'rename'.i18n,
+        (index, preset) async {
+          var text = await showDialog(
+              context: context,
+              builder: (context) {
+                return PresetRenameDialog(preset.name!);
+              },
+              barrierDismissible: false);
+          if (text != null && text.trim().isNotEmpty) {
+            ref
+                .read(choiceNodePresetListProvider.notifier)
+                .rename(index, text.trim());
+            var pos = const Pos(data: [designSamplePosition]);
 
-          ref.read(choiceStatusProvider(pos)).refreshSelf();
+            ref.read(choiceStatusProvider(pos)).refreshSelf();
+          }
         }
-      }),
+      ),
       ...popupDefaultPreset,
-      ('delete'.i18n, (index, preset) async{
-        ref
-            .read(choiceNodePresetListProvider.notifier)
-            .deleteIndex(index);
-      }),
+      (
+        'delete'.i18n,
+        (index, preset) async {
+          ref.read(choiceNodePresetListProvider.notifier).deleteIndex(index);
+        }
+      ),
     ];
     return Column(
       children: [
@@ -158,7 +163,7 @@ class ChoiceNodePresetList extends ConsumerWidget {
                     popupList.length,
                     (popupIndex) => ContextMenuButtonConfig(
                       popupList[popupIndex].$1,
-                      onPressed: (){
+                      onPressed: () {
                         popupList[popupIndex].$2(index, preset);
                       },
                     ),

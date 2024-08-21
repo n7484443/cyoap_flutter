@@ -30,7 +30,8 @@ import '../../viewModel/vm_variable_table.dart';
 import '../util/SliderThumbStyle.dart';
 
 enum ChoiceNodeChildRender {
-  noOption, /*default option*/
+  noOption,
+  /*default option*/
   onlySelf,
   selected,
   noOptionWithViewOnly
@@ -518,7 +519,8 @@ class ViewChoiceNodeContent extends ConsumerWidget {
         ignoreOption == ChoiceNodeChildRender.noOption) {
       child = ViewWrapCustomReorder(
         pos,
-        isReorderAble: ignoreOption != ChoiceNodeChildRender.noOptionWithViewOnly,
+        isReorderAble:
+            ignoreOption != ChoiceNodeChildRender.noOptionWithViewOnly,
         parentMaxSize: node.getMaxSize(true),
       );
     } else if (!ignoreChild &&

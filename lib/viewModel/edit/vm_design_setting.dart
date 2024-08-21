@@ -10,7 +10,9 @@ final platformDesignSettingProvider =
     StateProvider.autoDispose<PlatformDesignSetting>((ref) {
   ref.listenSelf((PlatformDesignSetting? previous, PlatformDesignSetting next) {
     if (previous == null || previous == next) return;
-    ref.read(currentProjectChangedProvider.notifier).changed(needUpdateCode: false);
+    ref
+        .read(currentProjectChangedProvider.notifier)
+        .changed(needUpdateCode: false);
     getPlatform.designSetting = next;
   });
   return getPlatform.designSetting;

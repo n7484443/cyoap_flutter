@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 class HorizontalScroll extends StatefulWidget {
   final int itemCount;
@@ -41,7 +40,6 @@ class _HorizontalScrollState extends State<HorizontalScroll> {
           separatorBuilder: (BuildContext context, int index) {
             return const Padding(padding: EdgeInsets.all(2.0));
           },
-
         ),
       ),
     );

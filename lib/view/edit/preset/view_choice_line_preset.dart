@@ -78,9 +78,7 @@ class ChoiceLinePresetList extends ConsumerWidget {
       (
         'delete'.i18n,
         (index, preset) async {
-          ref
-              .read(choiceLinePresetListProvider.notifier)
-              .deleteIndex(index);
+          ref.read(choiceLinePresetListProvider.notifier).deleteIndex(index);
         }
       ),
     ];

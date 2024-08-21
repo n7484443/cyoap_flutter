@@ -232,8 +232,7 @@ class ViewQuillCodeIde extends ConsumerStatefulWidget {
 
 class _ViewQuillCodeIdeState extends ConsumerState<ViewQuillCodeIde> {
   final FocusNode _focusNode = FocusNode();
-  final ScrollController _scrollController =
-  ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void dispose() {

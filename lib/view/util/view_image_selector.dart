@@ -191,13 +191,13 @@ class ViewImageDraggable extends ConsumerWidget {
 
   void openImageEditor(WidgetRef ref, BuildContext context, String name,
       {required bool justOpen}) async {
-    if(!justOpen){
+    if (!justOpen) {
       var value = await showDialog<(bool, String)>(
         builder: (_) => ImageSourceDialog(name),
         context: context,
         barrierDismissible: false,
       );
-      if(!(value?.$1 ?? false)){
+      if (!(value?.$1 ?? false)) {
         return;
       }
     }
