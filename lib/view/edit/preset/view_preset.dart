@@ -131,8 +131,8 @@ class _ViewPresetPositionState extends ConsumerState<ViewPresetPosition> {
                   ),
                 ),
                 const Divider(height: 2),
-                Expanded(
-                  flex: 7,
+                SizedBox(
+                  height: 350,
                   child: Padding(
                     padding: const EdgeInsets.all(2.0),
                     child: widget.sample!,
