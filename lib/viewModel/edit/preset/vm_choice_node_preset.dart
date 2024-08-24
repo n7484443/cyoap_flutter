@@ -30,24 +30,34 @@ final choiceNodePresetCurrentTabProvider =
 });
 
 @riverpod
-TextEditingController choiceNodePresetDefaultOutlineDistance(
-    ChoiceNodePresetDefaultOutlineDistanceRef ref, String position) {
+TextEditingController choiceNodePresetOutlineDistance(
+  ChoiceNodePresetOutlineDistanceRef ref, {
+  required String position,
+  required bool isSelected,
+}) {
   ref.listen(currentPresetIndexProvider, (previous, next) {
     ref.invalidateSelf();
   });
-  var distance = ref
-      .read(choiceNodePresetCurrentEditProvider)
-      .defaultOutlineOption!
-      .outlineDistance;
-  var controller =
-      TextEditingController(text: distance.getValue(position).toString());
-  controller.addListener(() {
-    EasyDebounce.debounce(
-        'Default Outline Distance Input', ConstList.debounceDuration, () {
-      var distance = ref
+  EdgeValue getValue() {
+    if (isSelected) {
+      return ref
+          .read(choiceNodePresetCurrentEditProvider)
+          .selectOutlineOption!
+          .distance;
+    } else {
+      return ref
           .read(choiceNodePresetCurrentEditProvider)
           .defaultOutlineOption!
-          .outlineDistance;
+          .distance;
+    }
+  }
+
+  var controller =
+      TextEditingController(text: getValue().getValue(position).toString());
+  controller.addListener(() {
+    EasyDebounce.debounce('Outline Distance Input $position $isSelected',
+        ConstList.debounceDuration, () {
+      EdgeValue distance = getValue();
       Map<String, double> values = {
         'top': distance.top,
         'right': distance.right,
@@ -55,69 +65,106 @@ TextEditingController choiceNodePresetDefaultOutlineDistance(
         'left': distance.left
       };
       values[position] = double.tryParse(controller.text) ?? 0.0;
-      var newValue = ref
-          .read(choiceNodePresetCurrentEditProvider)
-          .copyWith
-          .defaultOutlineOption
-          ?.outlineDistance(
-              top: values['top']!,
-              right: values['right']!,
-              bottom: values['bottom']!,
-              left: values['left']!);
+      ChoiceNodeDesignPreset? newValue;
+      if (isSelected) {
+        newValue = ref
+            .read(choiceNodePresetCurrentEditProvider)
+            .copyWith
+            .selectOutlineOption
+            ?.distance(
+                top: values['top']!,
+                right: values['right']!,
+                bottom: values['bottom']!,
+                left: values['left']!);
+      } else {
+        newValue = ref
+            .read(choiceNodePresetCurrentEditProvider)
+            .copyWith
+            .defaultOutlineOption
+            ?.distance(
+                top: values['top']!,
+                right: values['right']!,
+                bottom: values['bottom']!,
+                left: values['left']!);
+      }
       ref
           .read(choiceNodePresetListProvider.notifier)
           .updateIndex(ref.watch(currentPresetIndexProvider), newValue!);
     });
   });
   ref.onDispose(() {
-    EasyDebounce.cancel('Default Outline Distance Input');
+    EasyDebounce.cancel('Outline Distance Input $position $isSelected');
     controller.dispose();
   });
   return controller;
 }
 
 @riverpod
-TextEditingController choiceNodePresetSelectedOutlineDistance(
-    ChoiceNodePresetSelectedOutlineDistanceRef ref, String position) {
+TextEditingController choiceNodePresetOutlineRound(
+  ChoiceNodePresetOutlineRoundRef ref, {
+  required String position,
+  required bool isSelected,
+}) {
   ref.listen(currentPresetIndexProvider, (previous, next) {
     ref.invalidateSelf();
   });
-  var distance = ref
-      .read(choiceNodePresetCurrentEditProvider)
-      .selectOutlineOption!
-      .outlineDistance;
-  var controller =
-      TextEditingController(text: distance.getValue(position).toString());
-  controller.addListener(() {
-    EasyDebounce.debounce(
-        'Selected Outline Distance Input', ConstList.debounceDuration, () {
-      var distance = ref
+  VertexValue getValue() {
+    if (isSelected) {
+      return ref
           .read(choiceNodePresetCurrentEditProvider)
           .selectOutlineOption!
-          .outlineDistance;
+          .round;
+    } else {
+      return ref
+          .read(choiceNodePresetCurrentEditProvider)
+          .defaultOutlineOption!
+          .round;
+    }
+  }
+
+  var controller =
+      TextEditingController(text: getValue().getValue(position).toString());
+  controller.addListener(() {
+    EasyDebounce.debounce(
+        'Outline Round Input $position $isSelected', ConstList.debounceDuration,
+        () {
+      VertexValue round = getValue();
       Map<String, double> values = {
-        'top': distance.top,
-        'right': distance.right,
-        'bottom': distance.bottom,
-        'left': distance.left
+        'topLeft': round.topLeft,
+        'topRight': round.topRight,
+        'bottomLeft': round.bottomLeft,
+        'bottomRight': round.bottomRight
       };
       values[position] = double.tryParse(controller.text) ?? 0.0;
-      var newValue = ref
-          .read(choiceNodePresetCurrentEditProvider)
-          .copyWith
-          .selectOutlineOption
-          ?.outlineDistance(
-              top: values['top']!,
-              right: values['right']!,
-              bottom: values['bottom']!,
-              left: values['left']!);
+      ChoiceNodeDesignPreset? newValue;
+      if (isSelected) {
+        newValue = ref
+            .read(choiceNodePresetCurrentEditProvider)
+            .copyWith
+            .selectOutlineOption
+            ?.round(
+                topLeft: values['topLeft']!,
+                topRight: values['topRight']!,
+                bottomLeft: values['bottomLeft']!,
+                bottomRight: values['bottomRight']!);
+      } else {
+        newValue = ref
+            .read(choiceNodePresetCurrentEditProvider)
+            .copyWith
+            .defaultOutlineOption
+            ?.round(
+                topLeft: values['topLeft']!,
+                topRight: values['topRight']!,
+                bottomLeft: values['bottomLeft']!,
+                bottomRight: values['bottomRight']!);
+      }
       ref
           .read(choiceNodePresetListProvider.notifier)
           .updateIndex(ref.watch(currentPresetIndexProvider), newValue!);
     });
   });
   ref.onDispose(() {
-    EasyDebounce.cancel('Selected Outline Distance Input');
+    EasyDebounce.cancel('Outline Round Input $position $isSelected');
     controller.dispose();
   });
   return controller;
@@ -213,63 +260,63 @@ final choiceNodePresetProvider = Provider.family
         .firstWhere((element) => element.name == presetName,
             orElse: () => const ChoiceNodeDesignPreset(name: 'default')));
 
-final choiceNodePresetCurrentEditRoundProvider =
-    Provider.autoDispose.family<TextEditingController, int>((ref, index) {
-  ref.listen(currentPresetIndexProvider, (previous, next) {
-    ref.invalidateSelf();
-  });
-  var controller = TextEditingController(
-      text: ref
-          .read(choiceNodePresetCurrentEditProvider)
-          .roundEdge![index]
-          .toString());
-  controller.addListener(() {
-    EasyDebounce.debounce('Round Input $index', ConstList.debounceDuration, () {
-      var round = double.tryParse(controller.text) ?? 0.0;
-      var currentRound = [
-        ...ref.read(choiceNodePresetCurrentEditProvider).roundEdge!
-      ];
-      currentRound[index] = round;
-      ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-          ref.watch(currentPresetIndexProvider),
-          ref
-              .read(choiceNodePresetCurrentEditProvider)
-              .copyWith(roundEdge: currentRound));
-    });
-  });
-  ref.onDispose(() {
-    EasyDebounce.cancel('Round Input $index');
-    controller.dispose();
-  });
-  return controller;
-});
-
-final choiceNodePresetCurrentEditPaddingProvider =
-    Provider.autoDispose<TextEditingController>((ref) {
-  ref.listen(currentPresetIndexProvider, (previous, next) {
-    ref.invalidateSelf();
-  });
-  var controller = TextEditingController(
-      text: ref
-          .read(choiceNodePresetCurrentEditProvider)
-          .paddingAround![0]
-          .toString());
-  controller.addListener(() {
-    EasyDebounce.debounce('Padding Input', ConstList.debounceDuration, () {
-      var padding = double.tryParse(controller.text) ?? 0.0;
-      ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-          ref.watch(currentPresetIndexProvider),
-          ref
-              .read(choiceNodePresetCurrentEditProvider)
-              .copyWith(paddingAround: [padding, padding, padding, padding]));
-    });
-  });
-  ref.onDispose(() {
-    EasyDebounce.cancel('Padding Input');
-    controller.dispose();
-  });
-  return controller;
-});
+// final choiceNodePresetCurrentEditRoundProvider =
+//     Provider.autoDispose.family<TextEditingController, String>((ref, key) {
+//   ref.listen(currentPresetIndexProvider, (previous, next) {
+//     ref.invalidateSelf();
+//   });
+//   var controller = TextEditingController(
+//       text: ref
+//           .read(choiceNodePresetCurrentEditProvider)
+//           .round?.getValue(key)
+//           .toString());
+//   controller.addListener(() {
+//     EasyDebounce.debounce('Round Input $key', ConstList.debounceDuration, () {
+//       var round = double.tryParse(controller.text) ?? 0.0;
+//       var currentRound = [
+//         ...ref.read(choiceNodePresetCurrentEditProvider).roundEdge!
+//       ];
+//       currentRound[index] = round;
+//       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+//           ref.watch(currentPresetIndexProvider),
+//           ref
+//               .read(choiceNodePresetCurrentEditProvider)
+//               .copyWith(roundEdge: currentRound));
+//     });
+//   });
+//   ref.onDispose(() {
+//     EasyDebounce.cancel('Round Input $key');
+//     controller.dispose();
+//   });
+//   return controller;
+// });
+//
+// final choiceNodePresetCurrentEditPaddingProvider =
+//     Provider.autoDispose<TextEditingController>((ref) {
+//   ref.listen(currentPresetIndexProvider, (previous, next) {
+//     ref.invalidateSelf();
+//   });
+//   var controller = TextEditingController(
+//       text: ref
+//           .read(choiceNodePresetCurrentEditProvider)
+//           .paddingAround![0]
+//           .toString());
+//   controller.addListener(() {
+//     EasyDebounce.debounce('Padding Input', ConstList.debounceDuration, () {
+//       var padding = double.tryParse(controller.text) ?? 0.0;
+//       ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+//           ref.watch(currentPresetIndexProvider),
+//           ref
+//               .read(choiceNodePresetCurrentEditProvider)
+//               .copyWith(paddingAround: [padding, padding, padding, padding]));
+//     });
+//   });
+//   ref.onDispose(() {
+//     EasyDebounce.cancel('Padding Input');
+//     controller.dispose();
+//   });
+//   return controller;
+// });
 
 final choiceNodePresetListProvider = StateNotifierProvider.autoDispose<
     ChoiceNodePresetListNotifier, List<ChoiceNodeDesignPreset>>((ref) {

@@ -192,10 +192,10 @@ class ViewChoiceNodeMain extends ConsumerWidget {
         : preset.defaultOutlineOption!;
 
     var borderRadius = BorderRadius.only(
-      topLeft: Radius.circular(preset.roundEdge![0]),
-      topRight: Radius.circular(preset.roundEdge![1]),
-      bottomRight: Radius.circular(preset.roundEdge![2]),
-      bottomLeft: Radius.circular(preset.roundEdge![3]),
+      topLeft: Radius.circular(preset.round!.topLeft),
+      topRight: Radius.circular(preset.round!.topRight),
+      bottomRight: Radius.circular(preset.round!.bottomRight),
+      bottomLeft: Radius.circular(preset.round!.bottomLeft),
     );
 
     var shape = RoundedRectangleBorder(
@@ -232,10 +232,10 @@ class ViewChoiceNodeMain extends ConsumerWidget {
               : null,
           child: Padding(
             padding: EdgeInsets.only(
-                top: preset.paddingAround![0],
-                right: preset.paddingAround![1],
-                bottom: preset.paddingAround![2],
-                left: preset.paddingAround![3]),
+                top: preset.padding!.top,
+                right: preset.padding!.right,
+                bottom: preset.padding!.bottom,
+                left: preset.padding!.left),
             child: ViewChoiceNodeContent(pos,
                 ignoreOption: ignoreOption, ignoreChild: ignoreChild),
           ),
@@ -243,14 +243,20 @@ class ViewChoiceNodeMain extends ConsumerWidget {
       ),
     );
 
-    var margin = EdgeInsets.only(
-        top: outline.outlineDistance.top,
-        right: outline.outlineDistance.right,
-        bottom: outline.outlineDistance.bottom,
-        left: outline.outlineDistance.left);
+    var outlineEdgeInsets = EdgeInsets.only(
+        top: outline.distance.top,
+        right: outline.distance.right,
+        bottom: outline.distance.bottom,
+        left: outline.distance.left);
+    var outlineRound = BorderRadius.only(
+        topLeft: Radius.circular(outline.round.topLeft),
+        topRight: Radius.circular(outline.round.topRight),
+        bottomLeft: Radius.circular(outline.round.bottomLeft),
+        bottomRight: Radius.circular(outline.round.bottomRight));
+
     return OutlineOverlay(
-      edgeInsets: margin,
-      borderRadius: borderRadius,
+      edgeInsets: outlineEdgeInsets,
+      borderRadius: outlineRound,
       outlineType: outline.outlineType,
       color: outline.outlineColor.getColorIgnoreGradient(),
       strokeWidth: outline.outlineWidth,

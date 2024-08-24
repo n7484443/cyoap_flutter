@@ -6,8 +6,8 @@ part of 'vm_choice_node_preset.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$choiceNodePresetDefaultOutlineDistanceHash() =>
-    r'09d93661bb74e5e3a16d16cc9fd506ea2815ca32';
+String _$choiceNodePresetOutlineDistanceHash() =>
+    r'66caa571048d6bb38b81dafe9534ec853cb02cab';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,32 +30,35 @@ class _SystemHash {
   }
 }
 
-/// See also [choiceNodePresetDefaultOutlineDistance].
-@ProviderFor(choiceNodePresetDefaultOutlineDistance)
-const choiceNodePresetDefaultOutlineDistanceProvider =
-    ChoiceNodePresetDefaultOutlineDistanceFamily();
+/// See also [choiceNodePresetOutlineDistance].
+@ProviderFor(choiceNodePresetOutlineDistance)
+const choiceNodePresetOutlineDistanceProvider =
+    ChoiceNodePresetOutlineDistanceFamily();
 
-/// See also [choiceNodePresetDefaultOutlineDistance].
-class ChoiceNodePresetDefaultOutlineDistanceFamily
+/// See also [choiceNodePresetOutlineDistance].
+class ChoiceNodePresetOutlineDistanceFamily
     extends Family<TextEditingController> {
-  /// See also [choiceNodePresetDefaultOutlineDistance].
-  const ChoiceNodePresetDefaultOutlineDistanceFamily();
+  /// See also [choiceNodePresetOutlineDistance].
+  const ChoiceNodePresetOutlineDistanceFamily();
 
-  /// See also [choiceNodePresetDefaultOutlineDistance].
-  ChoiceNodePresetDefaultOutlineDistanceProvider call(
-    String position,
-  ) {
-    return ChoiceNodePresetDefaultOutlineDistanceProvider(
-      position,
+  /// See also [choiceNodePresetOutlineDistance].
+  ChoiceNodePresetOutlineDistanceProvider call({
+    required String position,
+    required bool isSelected,
+  }) {
+    return ChoiceNodePresetOutlineDistanceProvider(
+      position: position,
+      isSelected: isSelected,
     );
   }
 
   @override
-  ChoiceNodePresetDefaultOutlineDistanceProvider getProviderOverride(
-    covariant ChoiceNodePresetDefaultOutlineDistanceProvider provider,
+  ChoiceNodePresetOutlineDistanceProvider getProviderOverride(
+    covariant ChoiceNodePresetOutlineDistanceProvider provider,
   ) {
     return call(
-      provider.position,
+      position: provider.position,
+      isSelected: provider.isSelected,
     );
   }
 
@@ -71,35 +74,36 @@ class ChoiceNodePresetDefaultOutlineDistanceFamily
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'choiceNodePresetDefaultOutlineDistanceProvider';
+  String? get name => r'choiceNodePresetOutlineDistanceProvider';
 }
 
-/// See also [choiceNodePresetDefaultOutlineDistance].
-class ChoiceNodePresetDefaultOutlineDistanceProvider
+/// See also [choiceNodePresetOutlineDistance].
+class ChoiceNodePresetOutlineDistanceProvider
     extends AutoDisposeProvider<TextEditingController> {
-  /// See also [choiceNodePresetDefaultOutlineDistance].
-  ChoiceNodePresetDefaultOutlineDistanceProvider(
-    String position,
-  ) : this._internal(
-          (ref) => choiceNodePresetDefaultOutlineDistance(
-            ref as ChoiceNodePresetDefaultOutlineDistanceRef,
-            position,
+  /// See also [choiceNodePresetOutlineDistance].
+  ChoiceNodePresetOutlineDistanceProvider({
+    required String position,
+    required bool isSelected,
+  }) : this._internal(
+          (ref) => choiceNodePresetOutlineDistance(
+            ref as ChoiceNodePresetOutlineDistanceRef,
+            position: position,
+            isSelected: isSelected,
           ),
-          from: choiceNodePresetDefaultOutlineDistanceProvider,
-          name: r'choiceNodePresetDefaultOutlineDistanceProvider',
+          from: choiceNodePresetOutlineDistanceProvider,
+          name: r'choiceNodePresetOutlineDistanceProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$choiceNodePresetDefaultOutlineDistanceHash,
-          dependencies:
-              ChoiceNodePresetDefaultOutlineDistanceFamily._dependencies,
+                  : _$choiceNodePresetOutlineDistanceHash,
+          dependencies: ChoiceNodePresetOutlineDistanceFamily._dependencies,
           allTransitiveDependencies:
-              ChoiceNodePresetDefaultOutlineDistanceFamily
-                  ._allTransitiveDependencies,
+              ChoiceNodePresetOutlineDistanceFamily._allTransitiveDependencies,
           position: position,
+          isSelected: isSelected,
         );
 
-  ChoiceNodePresetDefaultOutlineDistanceProvider._internal(
+  ChoiceNodePresetOutlineDistanceProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -107,95 +111,107 @@ class ChoiceNodePresetDefaultOutlineDistanceProvider
     required super.debugGetCreateSourceHash,
     required super.from,
     required this.position,
+    required this.isSelected,
   }) : super.internal();
 
   final String position;
+  final bool isSelected;
 
   @override
   Override overrideWith(
-    TextEditingController Function(
-            ChoiceNodePresetDefaultOutlineDistanceRef provider)
+    TextEditingController Function(ChoiceNodePresetOutlineDistanceRef provider)
         create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: ChoiceNodePresetDefaultOutlineDistanceProvider._internal(
-        (ref) => create(ref as ChoiceNodePresetDefaultOutlineDistanceRef),
+      override: ChoiceNodePresetOutlineDistanceProvider._internal(
+        (ref) => create(ref as ChoiceNodePresetOutlineDistanceRef),
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
         position: position,
+        isSelected: isSelected,
       ),
     );
   }
 
   @override
   AutoDisposeProviderElement<TextEditingController> createElement() {
-    return _ChoiceNodePresetDefaultOutlineDistanceProviderElement(this);
+    return _ChoiceNodePresetOutlineDistanceProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is ChoiceNodePresetDefaultOutlineDistanceProvider &&
-        other.position == position;
+    return other is ChoiceNodePresetOutlineDistanceProvider &&
+        other.position == position &&
+        other.isSelected == isSelected;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, position.hashCode);
+    hash = _SystemHash.combine(hash, isSelected.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
-mixin ChoiceNodePresetDefaultOutlineDistanceRef
+mixin ChoiceNodePresetOutlineDistanceRef
     on AutoDisposeProviderRef<TextEditingController> {
   /// The parameter `position` of this provider.
   String get position;
+
+  /// The parameter `isSelected` of this provider.
+  bool get isSelected;
 }
 
-class _ChoiceNodePresetDefaultOutlineDistanceProviderElement
+class _ChoiceNodePresetOutlineDistanceProviderElement
     extends AutoDisposeProviderElement<TextEditingController>
-    with ChoiceNodePresetDefaultOutlineDistanceRef {
-  _ChoiceNodePresetDefaultOutlineDistanceProviderElement(super.provider);
+    with ChoiceNodePresetOutlineDistanceRef {
+  _ChoiceNodePresetOutlineDistanceProviderElement(super.provider);
 
   @override
   String get position =>
-      (origin as ChoiceNodePresetDefaultOutlineDistanceProvider).position;
+      (origin as ChoiceNodePresetOutlineDistanceProvider).position;
+  @override
+  bool get isSelected =>
+      (origin as ChoiceNodePresetOutlineDistanceProvider).isSelected;
 }
 
-String _$choiceNodePresetSelectedOutlineDistanceHash() =>
-    r'3fb491440c96d164c25296105b0663b032566949';
+String _$choiceNodePresetOutlineRoundHash() =>
+    r'264c1c8333b1da99d872760cbc5282e3a107c008';
 
-/// See also [choiceNodePresetSelectedOutlineDistance].
-@ProviderFor(choiceNodePresetSelectedOutlineDistance)
-const choiceNodePresetSelectedOutlineDistanceProvider =
-    ChoiceNodePresetSelectedOutlineDistanceFamily();
+/// See also [choiceNodePresetOutlineRound].
+@ProviderFor(choiceNodePresetOutlineRound)
+const choiceNodePresetOutlineRoundProvider =
+    ChoiceNodePresetOutlineRoundFamily();
 
-/// See also [choiceNodePresetSelectedOutlineDistance].
-class ChoiceNodePresetSelectedOutlineDistanceFamily
-    extends Family<TextEditingController> {
-  /// See also [choiceNodePresetSelectedOutlineDistance].
-  const ChoiceNodePresetSelectedOutlineDistanceFamily();
+/// See also [choiceNodePresetOutlineRound].
+class ChoiceNodePresetOutlineRoundFamily extends Family<TextEditingController> {
+  /// See also [choiceNodePresetOutlineRound].
+  const ChoiceNodePresetOutlineRoundFamily();
 
-  /// See also [choiceNodePresetSelectedOutlineDistance].
-  ChoiceNodePresetSelectedOutlineDistanceProvider call(
-    String position,
-  ) {
-    return ChoiceNodePresetSelectedOutlineDistanceProvider(
-      position,
+  /// See also [choiceNodePresetOutlineRound].
+  ChoiceNodePresetOutlineRoundProvider call({
+    required String position,
+    required bool isSelected,
+  }) {
+    return ChoiceNodePresetOutlineRoundProvider(
+      position: position,
+      isSelected: isSelected,
     );
   }
 
   @override
-  ChoiceNodePresetSelectedOutlineDistanceProvider getProviderOverride(
-    covariant ChoiceNodePresetSelectedOutlineDistanceProvider provider,
+  ChoiceNodePresetOutlineRoundProvider getProviderOverride(
+    covariant ChoiceNodePresetOutlineRoundProvider provider,
   ) {
     return call(
-      provider.position,
+      position: provider.position,
+      isSelected: provider.isSelected,
     );
   }
 
@@ -211,35 +227,36 @@ class ChoiceNodePresetSelectedOutlineDistanceFamily
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'choiceNodePresetSelectedOutlineDistanceProvider';
+  String? get name => r'choiceNodePresetOutlineRoundProvider';
 }
 
-/// See also [choiceNodePresetSelectedOutlineDistance].
-class ChoiceNodePresetSelectedOutlineDistanceProvider
+/// See also [choiceNodePresetOutlineRound].
+class ChoiceNodePresetOutlineRoundProvider
     extends AutoDisposeProvider<TextEditingController> {
-  /// See also [choiceNodePresetSelectedOutlineDistance].
-  ChoiceNodePresetSelectedOutlineDistanceProvider(
-    String position,
-  ) : this._internal(
-          (ref) => choiceNodePresetSelectedOutlineDistance(
-            ref as ChoiceNodePresetSelectedOutlineDistanceRef,
-            position,
+  /// See also [choiceNodePresetOutlineRound].
+  ChoiceNodePresetOutlineRoundProvider({
+    required String position,
+    required bool isSelected,
+  }) : this._internal(
+          (ref) => choiceNodePresetOutlineRound(
+            ref as ChoiceNodePresetOutlineRoundRef,
+            position: position,
+            isSelected: isSelected,
           ),
-          from: choiceNodePresetSelectedOutlineDistanceProvider,
-          name: r'choiceNodePresetSelectedOutlineDistanceProvider',
+          from: choiceNodePresetOutlineRoundProvider,
+          name: r'choiceNodePresetOutlineRoundProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$choiceNodePresetSelectedOutlineDistanceHash,
-          dependencies:
-              ChoiceNodePresetSelectedOutlineDistanceFamily._dependencies,
+                  : _$choiceNodePresetOutlineRoundHash,
+          dependencies: ChoiceNodePresetOutlineRoundFamily._dependencies,
           allTransitiveDependencies:
-              ChoiceNodePresetSelectedOutlineDistanceFamily
-                  ._allTransitiveDependencies,
+              ChoiceNodePresetOutlineRoundFamily._allTransitiveDependencies,
           position: position,
+          isSelected: isSelected,
         );
 
-  ChoiceNodePresetSelectedOutlineDistanceProvider._internal(
+  ChoiceNodePresetOutlineRoundProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -247,64 +264,74 @@ class ChoiceNodePresetSelectedOutlineDistanceProvider
     required super.debugGetCreateSourceHash,
     required super.from,
     required this.position,
+    required this.isSelected,
   }) : super.internal();
 
   final String position;
+  final bool isSelected;
 
   @override
   Override overrideWith(
-    TextEditingController Function(
-            ChoiceNodePresetSelectedOutlineDistanceRef provider)
+    TextEditingController Function(ChoiceNodePresetOutlineRoundRef provider)
         create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: ChoiceNodePresetSelectedOutlineDistanceProvider._internal(
-        (ref) => create(ref as ChoiceNodePresetSelectedOutlineDistanceRef),
+      override: ChoiceNodePresetOutlineRoundProvider._internal(
+        (ref) => create(ref as ChoiceNodePresetOutlineRoundRef),
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
         position: position,
+        isSelected: isSelected,
       ),
     );
   }
 
   @override
   AutoDisposeProviderElement<TextEditingController> createElement() {
-    return _ChoiceNodePresetSelectedOutlineDistanceProviderElement(this);
+    return _ChoiceNodePresetOutlineRoundProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is ChoiceNodePresetSelectedOutlineDistanceProvider &&
-        other.position == position;
+    return other is ChoiceNodePresetOutlineRoundProvider &&
+        other.position == position &&
+        other.isSelected == isSelected;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, position.hashCode);
+    hash = _SystemHash.combine(hash, isSelected.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
-mixin ChoiceNodePresetSelectedOutlineDistanceRef
+mixin ChoiceNodePresetOutlineRoundRef
     on AutoDisposeProviderRef<TextEditingController> {
   /// The parameter `position` of this provider.
   String get position;
+
+  /// The parameter `isSelected` of this provider.
+  bool get isSelected;
 }
 
-class _ChoiceNodePresetSelectedOutlineDistanceProviderElement
+class _ChoiceNodePresetOutlineRoundProviderElement
     extends AutoDisposeProviderElement<TextEditingController>
-    with ChoiceNodePresetSelectedOutlineDistanceRef {
-  _ChoiceNodePresetSelectedOutlineDistanceProviderElement(super.provider);
+    with ChoiceNodePresetOutlineRoundRef {
+  _ChoiceNodePresetOutlineRoundProviderElement(super.provider);
 
   @override
   String get position =>
-      (origin as ChoiceNodePresetSelectedOutlineDistanceProvider).position;
+      (origin as ChoiceNodePresetOutlineRoundProvider).position;
+  @override
+  bool get isSelected =>
+      (origin as ChoiceNodePresetOutlineRoundProvider).isSelected;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

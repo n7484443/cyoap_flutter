@@ -366,6 +366,13 @@ extension Localization on String {
           'bottom': 'Bottom',
           'left': 'Left',
           'right': 'Right',
+          'topLeft': 'Top Left',
+          'bottomLeft': 'Bottom Left',
+          'topRight': 'Top Right',
+          'bottomRight': 'Bottom Right',
+
+          'distance': 'padding/margin',
+          'round': 'round',
         },
         "ko": {
           'general': '일반',
@@ -400,6 +407,13 @@ extension Localization on String {
           'bottom': '아래',
           'left': '왼쪽',
           'right': '오른쪽',
+          'topLeft': '왼쪽 위',
+          'bottomLeft': '왼쪽 아래',
+          'topRight': '오른쪽 위',
+          'bottomRight': '오른쪽 아래',
+
+          'distance': '패딩/마진',
+          'round': '라운드',
         }
       } +
       const {

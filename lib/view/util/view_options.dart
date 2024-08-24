@@ -25,38 +25,34 @@ class CustomTextField extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Widget? labelWidget;
-    if (label != null && subLabel != null) {
-      labelWidget = Stack(
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(label!),
-          ),
-          Align(
-              alignment: Alignment.bottomLeft,
-              child: Text(
-                subLabel!,
-                style: Theme.of(context)
-                    .textTheme
-                    .labelSmall
-                    ?.copyWith(color: const Color(0xFF666666)),
-              )),
-        ],
-      );
-    } else if (label != null) {
-      labelWidget = Text(label!);
-    }
     return SizedBox(
       width: forceWidth,
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(ConstList.padding),
-          child: Row(
+          child: Stack(
+            alignment: Alignment.center,
             children: [
               if (icon != null) icon!,
-              if (labelWidget != null) labelWidget,
-              Expanded(
+              if (label != null)
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(label!),
+                ),
+              if (subLabel != null)
+                Positioned(
+                  left: 0,
+                  bottom: 0,
+                  child: Text(
+                    subLabel!,
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelSmall
+                        ?.copyWith(color: const Color(0xFF666666)),
+                  ),
+                ),
+              Align(
+                alignment: Alignment.centerRight,
                 child: TextField(
                   textAlign: TextAlign.end,
                   minLines: 1,

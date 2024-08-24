@@ -340,11 +340,11 @@ class _ViewNodeGeneralOptionEditorState
                     ref.watch(choiceNodePresetCurrentEditElevationProvider),
                 label: 'height'.i18n,
               ),
-              CustomTextField(
-                controller:
-                    ref.watch(choiceNodePresetCurrentEditPaddingProvider),
-                label: 'padding'.i18n,
-              ),
+              // CustomTextField(
+              //   controller:
+              //       ref.watch(choiceNodePresetCurrentEditPaddingProvider),
+              //   label: 'padding'.i18n,
+              // ),
             ]),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
@@ -355,30 +355,30 @@ class _ViewNodeGeneralOptionEditorState
           ),
           const SliverPadding(
               padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
-          SliverGrid(
-            delegate: SliverChildListDelegate(
-                (ConstList.isMobile() ? [0, 1, 2, 3] : [0, 1, 3, 2])
-                    .map(
-                      (index) => CustomTextField(
-                        controller: ref.watch(
-                            choiceNodePresetCurrentEditRoundProvider(index)),
-                        icon: Padding(
-                          padding: const EdgeInsets.all(ConstList.paddingSmall),
-                          child: RotatedBox(
-                            quarterTurns: (index - 1) % 4,
-                            child: const Icon(Icons.rounded_corner),
-                          ),
-                        ),
-                      ),
-                    )
-                    .toList()),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
-              crossAxisSpacing: 10,
-              mainAxisExtent: 80,
-              mainAxisSpacing: 2,
-            ),
-          ),
+          // SliverGrid(
+          //   delegate: SliverChildListDelegate(
+          //       (ConstList.isMobile() ? [0, 1, 2, 3] : [0, 1, 3, 2])
+          //           .map(
+          //             (index) => CustomTextField(
+          //               controller: ref.watch(
+          //                   choiceNodePresetCurrentEditRoundProvider(index)),
+          //               icon: Padding(
+          //                 padding: const EdgeInsets.all(ConstList.paddingSmall),
+          //                 child: RotatedBox(
+          //                   quarterTurns: (index - 1) % 4,
+          //                   child: const Icon(Icons.rounded_corner),
+          //                 ),
+          //               ),
+          //             ),
+          //           )
+          //           .toList()),
+          //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          //     crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
+          //     crossAxisSpacing: 10,
+          //     mainAxisExtent: 80,
+          //     mainAxisSpacing: 2,
+          //   ),
+          // ),
           const SliverPadding(
               padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           SliverGrid(
@@ -576,9 +576,14 @@ class _ViewNodeOutlineOptionEditorState
             ),
           ),
           SliverToBoxAdapter(
-            child: ViewOutlineDistance(
-                provider: (str) => ref.watch(
-                    ChoiceNodePresetDefaultOutlineDistanceProvider(str))),
+            child: ViewVertexEdgeEditor(
+              edgeProvider: (String str) => ref.watch(
+                  ChoiceNodePresetOutlineDistanceProvider(position: str, isSelected: false)),
+              vertexProvider: (String str) => ref.watch(
+                  ChoiceNodePresetOutlineRoundProvider(position: str, isSelected: false)),
+              edgeFillLabel: 'distance'.i18n,
+              vertexFillLabel: 'round'.i18n,
+            ),
           ),
           const SliverPadding(
               padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
@@ -634,10 +639,14 @@ class _ViewNodeOutlineOptionEditorState
           SliverOpacity(
             opacity: opacity,
             sliver: SliverToBoxAdapter(
-              child: ViewOutlineDistance(
-                  provider: (str) => ref.watch(
-                      ChoiceNodePresetSelectedOutlineDistanceProvider(
-                          str))),
+              child: ViewVertexEdgeEditor(
+                edgeProvider: (String str) => ref.watch(
+                    ChoiceNodePresetOutlineDistanceProvider(position: str, isSelected: true)),
+                vertexProvider: (String str) => ref.watch(
+                    ChoiceNodePresetOutlineRoundProvider(position: str, isSelected: true)),
+                edgeFillLabel: 'distance'.i18n,
+                vertexFillLabel: 'round'.i18n,
+              ),
             ),
           ),
           const SliverPadding(
@@ -887,10 +896,14 @@ class _ViewNodeColorOptionEditorState
   }
 }
 
-class ViewOutlineDistance extends ConsumerWidget {
-  final TextEditingController Function(String str) provider;
+class ViewVertexEdgeEditor extends ConsumerWidget {
+  final TextEditingController Function(String str) edgeProvider;
+  final TextEditingController Function(String str) vertexProvider;
+  final String edgeFillLabel;
+  final String vertexFillLabel;
 
-  const ViewOutlineDistance({required this.provider, super.key});
+  const ViewVertexEdgeEditor(
+      {required this.edgeProvider, required this.vertexProvider, required this.edgeFillLabel, required this.vertexFillLabel, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -912,58 +925,78 @@ class ViewOutlineDistance extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomTextField(
-                    forceWidth: 200,
-                    label: 'top'.i18n,
-                    keyboardType: TextInputType.number,
-                    controller: provider('top'),
-                  ),
-                ],
+              Expanded(
+                child: CustomTextField(
+                  label: 'topLeft'.i18n,
+                  subLabel: vertexFillLabel,
+                  keyboardType: TextInputType.number,
+                  controller: vertexProvider('topLeft'),
+                ),
+              ),
+              Expanded(
+                child: CustomTextField(
+                  label: 'top'.i18n,
+                  subLabel: edgeFillLabel,
+                  keyboardType: TextInputType.number,
+                  controller: edgeProvider('top'),
+                ),
+              ),
+              Expanded(
+                child: CustomTextField(
+                  label: 'topRight'.i18n,
+                  subLabel: vertexFillLabel,
+                  keyboardType: TextInputType.number,
+                  controller: vertexProvider('topRight'),
+                ),
               ),
             ],
           ),
           Row(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomTextField(
-                    forceWidth: 200,
-                    label: 'left'.i18n,
-                    keyboardType: TextInputType.number,
-                    controller: provider('left'),
-                  ),
-                ],
+              Expanded(
+                child: CustomTextField(
+                  label: 'left'.i18n,
+                  subLabel: edgeFillLabel,
+                  keyboardType: TextInputType.number,
+                  controller: edgeProvider('left'),
+                ),
               ),
               const Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomTextField(
-                    forceWidth: 200,
-                    label: 'right'.i18n,
-                    keyboardType: TextInputType.number,
-                    controller: provider('right'),
-                  ),
-                ],
+              Expanded(
+                child: CustomTextField(
+                  label: 'right'.i18n,
+                  subLabel: edgeFillLabel,
+                  keyboardType: TextInputType.number,
+                  controller: edgeProvider('right'),
+                ),
               ),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomTextField(
-                      forceWidth: 200,
-                      label: 'bottom'.i18n,
-                      keyboardType: TextInputType.number,
-                      controller: provider('bottom')),
-                ],
+              Expanded(
+                child: CustomTextField(
+                  label: 'bottomLeft'.i18n,
+                  subLabel: vertexFillLabel,
+                  keyboardType: TextInputType.number,
+                  controller: vertexProvider('bottomLeft'),
+                ),
+              ),
+              Expanded(
+                child: CustomTextField(
+                  label: 'bottom'.i18n,
+                  subLabel: edgeFillLabel,
+                  keyboardType: TextInputType.number,
+                  controller: edgeProvider('bottom'),
+                ),
+              ),
+              Expanded(
+                child: CustomTextField(
+                    label: 'bottomRight'.i18n,
+                    subLabel: vertexFillLabel,
+                    keyboardType: TextInputType.number,
+                    controller: vertexProvider('bottomRight')),
               ),
             ],
           ),
