@@ -6,39 +6,68 @@ import '../../main.dart';
 
 class CustomTextField extends ConsumerWidget {
   final String? label;
+  final String? subLabel;
   final Widget? icon;
   final TextEditingController controller;
   final TextInputType keyboardType;
   final int? maxLength;
+  final double? forceWidth;
 
   const CustomTextField(
       {super.key,
       required this.controller,
       this.label,
+      this.subLabel,
       this.icon,
       this.keyboardType = TextInputType.number,
-      this.maxLength});
+      this.maxLength,
+      this.forceWidth});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(ConstList.padding),
-        child: Row(
-          children: [
-            if (icon != null) icon!,
-            if (label != null) Text(label!),
-            Expanded(
-              child: TextField(
-                textAlign: TextAlign.end,
-                minLines: 1,
-                maxLines: 1,
-                maxLength: maxLength,
-                keyboardType: keyboardType,
-                controller: controller,
-              ),
-            )
-          ],
+    Widget? labelWidget;
+    if (label != null && subLabel != null) {
+      labelWidget = Stack(
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(label!),
+          ),
+          Align(
+              alignment: Alignment.bottomLeft,
+              child: Text(
+                subLabel!,
+                style: Theme.of(context)
+                    .textTheme
+                    .labelSmall
+                    ?.copyWith(color: const Color(0xFF666666)),
+              )),
+        ],
+      );
+    } else if (label != null) {
+      labelWidget = Text(label!);
+    }
+    return SizedBox(
+      width: forceWidth,
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(ConstList.padding),
+          child: Row(
+            children: [
+              if (icon != null) icon!,
+              if (labelWidget != null) labelWidget,
+              Expanded(
+                child: TextField(
+                  textAlign: TextAlign.end,
+                  minLines: 1,
+                  maxLines: 1,
+                  maxLength: maxLength,
+                  keyboardType: keyboardType,
+                  controller: controller,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

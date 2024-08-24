@@ -13,8 +13,8 @@ import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/viewModel/choice/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/edit/vm_editor.dart'
     show nodeEditorTargetPosProvider;
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,6 +28,7 @@ import '../../viewModel/edit/preset/vm_choice_node_preset.dart';
 import '../../viewModel/edit/vm_make_platform.dart';
 import '../../viewModel/vm_variable_table.dart';
 import '../util/SliderThumbStyle.dart';
+import '../util/view_outline_overlay.dart';
 
 enum ChoiceNodeChildRender {
   noOption,
@@ -196,96 +197,63 @@ class ViewChoiceNodeMain extends ConsumerWidget {
       bottomRight: Radius.circular(preset.roundEdge![2]),
       bottomLeft: Radius.circular(preset.roundEdge![3]),
     );
-    var innerWidget = Ink(
-      decoration: BoxDecoration(
-        color: defaultColor.getColor(),
-        gradient: defaultColor.getGradient(),
-        borderRadius: borderRadius,
-      ),
-      child: InkWell(
-        onDoubleTap: ref.watch(isEditableProvider(pos: pos))
-            ? () {
-                ref.read(nodeEditorTargetPosProvider.notifier).state = node.pos;
-                ref
-                    .read(changeTabProvider.notifier)
-                    .changePageString("viewEditor", context);
-              }
-            : null,
-        onTap: !ref.watch(isEditableProvider(pos: pos))
-            ? () {
-                ref.read(choiceStatusProvider(pos).notifier).select(0);
-              }
-            : null,
-        child: Padding(
-          padding: EdgeInsets.only(
-              top: preset.paddingAround![0],
-              right: preset.paddingAround![1],
-              bottom: preset.paddingAround![2],
-              left: preset.paddingAround![3]),
-          child: ViewChoiceNodeContent(pos,
-              ignoreOption: ignoreOption, ignoreChild: ignoreChild),
-        ),
-      ),
-    );
 
     var shape = RoundedRectangleBorder(
       borderRadius: borderRadius,
       side: const BorderSide(width: 0, style: BorderStyle.none),
     );
-    if (outline.outlineType == OutlineType.dotted ||
-        outline.outlineType == OutlineType.dashed) {
-      return DottedBorder(
-        borderType: BorderType.RRect,
-        strokeWidth: outline.outlineWidth,
-        customPath: (size) {
-          Rect rect = Rect.fromLTWH(0, 0, size.width, size.height);
-          Path path = Path()
-            ..addRRect(RRect.fromRectAndCorners(rect,
-                topLeft: Radius.circular(preset.roundEdge![0]),
-                topRight: Radius.circular(preset.roundEdge![1]),
-                bottomRight: Radius.circular(preset.roundEdge![2]),
-                bottomLeft: Radius.circular(preset.roundEdge![3])));
-          return path;
-        },
-        dashPattern:
-            outline.outlineType == OutlineType.dashed ? [6, 2] : [3, 1],
-        color: outline.outlineColor.getColorIgnoreGradient(),
-        padding: EdgeInsets.all(outline.outlinePadding),
-        child: Card(
-          shape: shape,
-          clipBehavior: Clip.antiAlias,
-          elevation: preset.elevation,
-          color: Colors.transparent,
-          margin: EdgeInsets.zero,
-          child: innerWidget,
-        ),
-      );
-    }
-    if (outline.outlineType == OutlineType.solid) {
-      return DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: borderRadius,
-          border: Border.all(
-            color: outline.outlineColor.getColorIgnoreGradient(),
-            width: outline.outlineWidth,
-          ),
-        ),
-        child: Card(
-          elevation: preset.elevation,
-          margin: EdgeInsets.all(outline.outlinePadding),
-          clipBehavior: Clip.antiAlias,
-          shape: shape,
-          color: Colors.transparent,
-          child: innerWidget,
-        ),
-      );
-    }
 
-    return Card(
+    var innerWidget = Card(
       shape: shape,
       clipBehavior: Clip.antiAlias,
       elevation: preset.elevation,
       color: Colors.transparent,
+      margin: EdgeInsets.zero,
+      child: Ink(
+        decoration: BoxDecoration(
+          color: defaultColor.getColor(),
+          gradient: defaultColor.getGradient(),
+          borderRadius: borderRadius,
+        ),
+        child: InkWell(
+          onDoubleTap: ref.watch(isEditableProvider(pos: pos))
+              ? () {
+                  ref.read(nodeEditorTargetPosProvider.notifier).state =
+                      node.pos;
+                  ref
+                      .read(changeTabProvider.notifier)
+                      .changePageString("viewEditor", context);
+                }
+              : null,
+          onTap: !ref.watch(isEditableProvider(pos: pos))
+              ? () {
+                  ref.read(choiceStatusProvider(pos).notifier).select(0);
+                }
+              : null,
+          child: Padding(
+            padding: EdgeInsets.only(
+                top: preset.paddingAround![0],
+                right: preset.paddingAround![1],
+                bottom: preset.paddingAround![2],
+                left: preset.paddingAround![3]),
+            child: ViewChoiceNodeContent(pos,
+                ignoreOption: ignoreOption, ignoreChild: ignoreChild),
+          ),
+        ),
+      ),
+    );
+
+    var margin = EdgeInsets.only(
+        top: outline.outlineDistance.top,
+        right: outline.outlineDistance.right,
+        bottom: outline.outlineDistance.bottom,
+        left: outline.outlineDistance.left);
+    return OutlineOverlay(
+      edgeInsets: margin,
+      borderRadius: borderRadius,
+      outlineType: outline.outlineType,
+      color: outline.outlineColor.getColorIgnoreGradient(),
+      strokeWidth: outline.outlineWidth,
       child: innerWidget,
     );
   }

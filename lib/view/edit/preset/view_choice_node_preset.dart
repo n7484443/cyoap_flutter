@@ -562,12 +562,6 @@ class _ViewNodeOutlineOptionEditorState
                     .toList(),
               ),
               CustomTextField(
-                label: 'outline_padding'.i18n,
-                keyboardType: TextInputType.number,
-                controller: ref
-                    .watch(choiceNodePresetCurrentEditOutlinePaddingProvider),
-              ),
-              CustomTextField(
                 label: 'outline_width'.i18n,
                 keyboardType: TextInputType.number,
                 controller:
@@ -580,6 +574,11 @@ class _ViewNodeOutlineOptionEditorState
               mainAxisExtent: 80,
               mainAxisSpacing: 2,
             ),
+          ),
+          SliverToBoxAdapter(
+            child: ViewOutlineDistance(
+                provider: (str) => ref.watch(
+                    ChoiceNodePresetDefaultOutlineDistanceProvider(str))),
           ),
           const SliverPadding(
               padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
@@ -632,6 +631,15 @@ class _ViewNodeOutlineOptionEditorState
               ),
             ),
           ),
+          SliverOpacity(
+            opacity: opacity,
+            sliver: SliverToBoxAdapter(
+              child: ViewOutlineDistance(
+                  provider: (str) => ref.watch(
+                      ChoiceNodePresetSelectedOutlineDistanceProvider(
+                          str))),
+            ),
+          ),
           const SliverPadding(
               padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           SliverOpacity(
@@ -658,10 +666,6 @@ class _ViewNodeOutlineOptionEditorState
                 ),
                 CustomTextField(
                     controller: ref.watch(
-                        choiceNodePresetSelectedEditOutlinePaddingProvider),
-                    label: 'outline_padding'.i18n),
-                CustomTextField(
-                    controller: ref.watch(
                         choiceNodePresetSelectedEditOutlineWidthProvider),
                     label: 'outline_width'.i18n),
               ]),
@@ -672,7 +676,7 @@ class _ViewNodeOutlineOptionEditorState
                 mainAxisSpacing: 2,
               ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -876,6 +880,92 @@ class _ViewNodeColorOptionEditorState
                 ),
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ViewOutlineDistance extends ConsumerWidget {
+  final TextEditingController Function(String str) provider;
+
+  const ViewOutlineDistance({required this.provider, super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Card(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 4.0, bottom: 2.0),
+            child: Text('outline_distance'.i18n),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 4.0),
+            child: Text('outline_distance_sub'.i18n,
+                style: Theme.of(context)
+                    .textTheme
+                    .labelSmall
+                    ?.copyWith(color: const Color(0xFF666666))),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomTextField(
+                    forceWidth: 200,
+                    label: 'top'.i18n,
+                    keyboardType: TextInputType.number,
+                    controller: provider('top'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomTextField(
+                    forceWidth: 200,
+                    label: 'left'.i18n,
+                    keyboardType: TextInputType.number,
+                    controller: provider('left'),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomTextField(
+                    forceWidth: 200,
+                    label: 'right'.i18n,
+                    keyboardType: TextInputType.number,
+                    controller: provider('right'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomTextField(
+                      forceWidth: 200,
+                      label: 'bottom'.i18n,
+                      keyboardType: TextInputType.number,
+                      controller: provider('bottom')),
+                ],
+              ),
+            ],
           ),
         ],
       ),
