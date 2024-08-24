@@ -230,15 +230,8 @@ class ViewChoiceNodeMain extends ConsumerWidget {
                   ref.read(choiceStatusProvider(pos).notifier).select(0);
                 }
               : null,
-          child: Padding(
-            padding: EdgeInsets.only(
-                top: preset.padding!.top,
-                right: preset.padding!.right,
-                bottom: preset.padding!.bottom,
-                left: preset.padding!.left),
-            child: ViewChoiceNodeContent(pos,
-                ignoreOption: ignoreOption, ignoreChild: ignoreChild),
-          ),
+          child: ViewChoiceNodeContent(pos,
+              ignoreOption: ignoreOption, ignoreChild: ignoreChild),
         ),
       ),
     );
@@ -260,7 +253,14 @@ class ViewChoiceNodeMain extends ConsumerWidget {
       outlineType: outline.outlineType,
       color: outline.outlineColor.getColorIgnoreGradient(),
       strokeWidth: outline.outlineWidth,
-      child: innerWidget,
+      child: Padding(
+        padding: EdgeInsets.only(
+            top: preset.padding!.top,
+            right: preset.padding!.right,
+            bottom: preset.padding!.bottom,
+            left: preset.padding!.left),
+        child: innerWidget,
+      ),
     );
   }
 }
