@@ -12,6 +12,7 @@ class CustomTextField extends ConsumerWidget {
   final TextInputType keyboardType;
   final int? maxLength;
   final double? forceWidth;
+  final double? outPadding;
 
   const CustomTextField(
       {super.key,
@@ -21,48 +22,52 @@ class CustomTextField extends ConsumerWidget {
       this.icon,
       this.keyboardType = TextInputType.number,
       this.maxLength,
-      this.forceWidth});
+      this.forceWidth,
+      this.outPadding});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SizedBox(
-      width: forceWidth,
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(ConstList.padding),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              if (icon != null) icon!,
-              if (label != null)
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(label!),
-                ),
-              if (subLabel != null)
-                Positioned(
-                  left: 0,
-                  bottom: 0,
-                  child: Text(
-                    subLabel!,
-                    style: Theme.of(context)
-                        .textTheme
-                        .labelSmall
-                        ?.copyWith(color: const Color(0xFF666666)),
+    return Padding(
+      padding: EdgeInsets.all(outPadding ?? 0.0),
+      child: SizedBox(
+        width: forceWidth,
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(ConstList.padding),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                if (icon != null) icon!,
+                if (label != null)
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(label!),
                   ),
-                ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextField(
-                  textAlign: TextAlign.end,
-                  minLines: 1,
-                  maxLines: 1,
-                  maxLength: maxLength,
-                  keyboardType: keyboardType,
-                  controller: controller,
-                ),
-              )
-            ],
+                if (subLabel != null)
+                  Positioned(
+                    left: 0,
+                    bottom: 0,
+                    child: Text(
+                      subLabel!,
+                      style: Theme.of(context)
+                          .textTheme
+                          .labelSmall
+                          ?.copyWith(color: const Color(0xFF666666)),
+                    ),
+                  ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextField(
+                    textAlign: TextAlign.end,
+                    minLines: 1,
+                    maxLines: 1,
+                    maxLength: maxLength,
+                    keyboardType: keyboardType,
+                    controller: controller,
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

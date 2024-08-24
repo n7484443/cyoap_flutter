@@ -30,6 +30,88 @@ final choiceNodePresetCurrentTabProvider =
 });
 
 @riverpod
+TextEditingController choiceNodePresetDistance(ChoiceNodePresetDistanceRef ref,
+    {required String position}) {
+  ref.listen(currentPresetIndexProvider, (previous, next) {
+    ref.invalidateSelf();
+  });
+  EdgeValue getValue() {
+    return ref.read(choiceNodePresetCurrentEditProvider).padding!;
+  }
+
+  var controller =
+      TextEditingController(text: getValue().getValue(position).toString());
+  controller.addListener(() {
+    EasyDebounce.debounce(
+        'Choice Distance Input $position', ConstList.debounceDuration, () {
+      EdgeValue distance = getValue();
+      Map<String, double> values = {
+        'top': distance.top,
+        'right': distance.right,
+        'bottom': distance.bottom,
+        'left': distance.left
+      };
+      values[position] = double.tryParse(controller.text) ?? 0.0;
+      ChoiceNodeDesignPreset newValue =
+          ref.read(choiceNodePresetCurrentEditProvider).copyWith.padding!(
+              top: values['top']!,
+              right: values['right']!,
+              bottom: values['bottom']!,
+              left: values['left']!);
+      ref
+          .read(choiceNodePresetListProvider.notifier)
+          .updateIndex(ref.watch(currentPresetIndexProvider), newValue);
+    });
+  });
+  ref.onDispose(() {
+    EasyDebounce.cancel('Choice Distance Input $position');
+    controller.dispose();
+  });
+  return controller;
+}
+
+@riverpod
+TextEditingController choiceNodePresetRound(ChoiceNodePresetRoundRef ref,
+    {required String position}) {
+  ref.listen(currentPresetIndexProvider, (previous, next) {
+    ref.invalidateSelf();
+  });
+  VertexValue getValue() {
+    return ref.read(choiceNodePresetCurrentEditProvider).round!;
+  }
+
+  var controller =
+      TextEditingController(text: getValue().getValue(position).toString());
+  controller.addListener(() {
+    EasyDebounce.debounce(
+        'Choice Round Input $position', ConstList.debounceDuration, () {
+      VertexValue round = getValue();
+      Map<String, double> values = {
+        'topLeft': round.topLeft,
+        'topRight': round.topRight,
+        'bottomLeft': round.bottomLeft,
+        'bottomRight': round.bottomRight
+      };
+      values[position] = double.tryParse(controller.text) ?? 0.0;
+      ChoiceNodeDesignPreset newValue =
+          ref.read(choiceNodePresetCurrentEditProvider).copyWith.round!(
+              topLeft: values['topLeft']!,
+              topRight: values['topRight']!,
+              bottomLeft: values['bottomLeft']!,
+              bottomRight: values['bottomRight']!);
+      ref
+          .read(choiceNodePresetListProvider.notifier)
+          .updateIndex(ref.watch(currentPresetIndexProvider), newValue);
+    });
+  });
+  ref.onDispose(() {
+    EasyDebounce.cancel('Choice Round Input $position');
+    controller.dispose();
+  });
+  return controller;
+}
+
+@riverpod
 TextEditingController choiceNodePresetOutlineDistance(
   ChoiceNodePresetOutlineDistanceRef ref, {
   required String position,

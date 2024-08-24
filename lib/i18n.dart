@@ -119,7 +119,8 @@ extension Localization on String {
           'image_left': 'Image left',
           'color_type': 'Color Type',
           'grad_type': 'Gradient Type',
-          'node_outline_color': 'Border color when choice is selected',
+          'node_outline_color': 'Border color',
+          'node_outline_color_selected': 'Border color when choice is selected',
           'font_title': 'Title font',
           'font_content': 'Content font',
           'node_select_color_enable': 'Enable select color',
@@ -148,6 +149,7 @@ extension Localization on String {
           'color_type': '색상 종류',
           'grad_type': '그라데이션 타입',
           'node_outline_color': '외곽선 색상',
+          'node_outline_color_selected': '선택 시 외곽선 색상',
           'font_title': '제목 폰트',
           'font_content': '내용 폰트',
           'node_select_color_enable': '선택시 색상 변경 활성화',
@@ -344,8 +346,9 @@ extension Localization on String {
           'outline': 'Outline',
           'component': 'Component',
           'outline_shape': 'Outline shape',
-          'outline_distance': 'Outline distance',
-          'outline_distance_sub': 'Positive(Margin) / Negative(Padding)',
+          'outline_distance_round_nonactive': 'Outline distance(No-select)',
+          'outline_distance_round_active': 'Outline distance(Select)',
+          'outline_distance_round_sub': 'Edge: Positive(Margin) / Negative(Padding)',
           'outline_width': 'Outline width',
           'slider_thumb_shape': 'Slider thumb shape',
           'slider_thumb_color': 'Slider thumb color',
@@ -373,6 +376,7 @@ extension Localization on String {
 
           'distance': 'padding/margin',
           'round': 'round',
+          'padding_round': 'Padding / Round'
         },
         "ko": {
           'general': '일반',
@@ -385,8 +389,9 @@ extension Localization on String {
           'outline': '외곽선',
           'component': '요소',
           'outline_shape': '외곽선',
-          'outline_distance': '외곽선 거리',
-          'outline_distance_sub': '양수면 마진 / 음수면 패딩',
+          'outline_distance_round_nonactive': '외곽선 거리(비선택)',
+          'outline_distance_round_active': '외곽선 거리(선택)',
+          'outline_distance_round_sub': '변의 경우 양수면 마진 / 음수면 패딩',
           'outline_width': '외곽선 두께',
           'slider_thumb_shape': '슬라이더 thumb 모양',
           'slider_thumb_color': '슬라이더 thumb 색상',
@@ -414,6 +419,7 @@ extension Localization on String {
 
           'distance': '패딩/마진',
           'round': '라운드',
+          'padding_round': '패딩 / 라운드'
         }
       } +
       const {
