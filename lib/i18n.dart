@@ -348,7 +348,8 @@ extension Localization on String {
           'outline_shape': 'Outline shape',
           'outline_distance_round_nonactive': 'Outline distance(No-select)',
           'outline_distance_round_active': 'Outline distance(Select)',
-          'outline_distance_round_sub': 'Edge: Positive(Margin) / Negative(Padding)',
+          'outline_distance_round_sub':
+              'Edge: Positive(Margin) / Negative(Padding)',
           'outline_width': 'Outline width',
           'slider_thumb_shape': 'Slider thumb shape',
           'slider_thumb_color': 'Slider thumb color',
@@ -364,7 +365,6 @@ extension Localization on String {
           'delete': 'Delete',
           'sample_node': 'Adjust and view layouts, fonts, designs and more.',
           'sample_title': 'Design',
-
           'top': 'Top',
           'bottom': 'Bottom',
           'left': 'Left',
@@ -373,7 +373,6 @@ extension Localization on String {
           'bottomLeft': 'Bottom Left',
           'topRight': 'Top Right',
           'bottomRight': 'Bottom Right',
-
           'distance': 'padding/margin',
           'round': 'round',
           'padding_round': 'Padding / Round'
@@ -407,7 +406,6 @@ extension Localization on String {
           'delete': '삭제',
           'sample_node': '레이아웃과 폰트, 디자인, 크기 등을 조정하고 확인할 수 있습니다.',
           'sample_title': '디자인',
-
           'top': '위',
           'bottom': '아래',
           'left': '왼쪽',
@@ -416,7 +414,6 @@ extension Localization on String {
           'bottomLeft': '왼쪽 아래',
           'topRight': '오른쪽 위',
           'bottomRight': '오른쪽 아래',
-
           'distance': '패딩/마진',
           'round': '라운드',
           'padding_round': '패딩 / 라운드'

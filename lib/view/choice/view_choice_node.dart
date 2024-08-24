@@ -14,7 +14,6 @@ import 'package:cyoap_flutter/viewModel/choice/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/edit/vm_editor.dart'
     show nodeEditorTargetPosProvider;
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
