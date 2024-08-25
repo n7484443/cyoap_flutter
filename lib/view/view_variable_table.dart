@@ -161,6 +161,7 @@ class BottomDisplayedVariableWidget extends ConsumerWidget {
             label: Text("$name   ${valueTypeWrapper.valueType.data.toString()}",
                 style: ConstList.getFont(
                     ref.watch(platformDesignSettingProvider).variableFont)),
+            padding: const EdgeInsets.all(0),
           ),
         );
       }
