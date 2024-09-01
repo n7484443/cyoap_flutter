@@ -191,7 +191,6 @@ class VariableTiles extends ConsumerWidget {
     var variableList = List<Widget>.empty(growable: true);
     for (var key in ref.watch(vmVariableTableProvider).keys) {
       var values = ref.watch(vmVariableTableProvider)[key]!;
-
       if (isPlatformEditable) {
         if (isVisibleHideVariable ||
             (!isVisibleHideVariable && values.visible)) {
