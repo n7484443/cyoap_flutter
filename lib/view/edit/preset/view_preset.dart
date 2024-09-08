@@ -96,7 +96,7 @@ class _ViewPresetPositionState extends ConsumerState<ViewPresetPosition> {
             if (widget.sample != null) const Divider(height: 1),
             if (widget.sample != null)
               Padding(
-                padding: const EdgeInsets.all(2.0),
+                padding: const EdgeInsets.all(8.0),
                 child: widget.sample!,
               ),
             const Divider(height: 1),
@@ -134,7 +134,7 @@ class _ViewPresetPositionState extends ConsumerState<ViewPresetPosition> {
                 SizedBox(
                   height: 350,
                   child: Padding(
-                    padding: const EdgeInsets.all(2.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: widget.sample!,
                   ),
                 )

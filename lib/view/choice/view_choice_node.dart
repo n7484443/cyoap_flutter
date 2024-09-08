@@ -11,6 +11,7 @@ import 'package:cyoap_flutter/view/choice/view_choice_node_dialog.dart';
 import 'package:cyoap_flutter/view/choice/view_wrap_custom.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/viewModel/choice/vm_choice_node.dart';
+import 'package:cyoap_flutter/viewModel/choice/vm_choice_page_edit.dart';
 import 'package:cyoap_flutter/viewModel/edit/vm_editor.dart'
     show nodeEditorTargetPosProvider;
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ import 'package:flutter_quill/quill_delta.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../main.dart';
 import '../../model/platform_system.dart';
@@ -50,13 +52,26 @@ class NodeDraggable extends ConsumerWidget {
     if (node == null) {
       return const SizedBox.shrink();
     }
-    var subWidget = ViewChoiceNode(pos, ignoreOption: ignoreOption);
-    return DragItemWidget(
-      dragItemProvider: (DragItemRequest request) =>
-          DragItem(localData: Int32List.fromList(pos.data)),
-      allowedOperations: () => [DropOperation.copy],
-      child: DraggableWidget(
-        child: subWidget,
+    return VisibilityDetector(
+      key: ValueKey(pos.data),
+      onVisibilityChanged: (info) {
+        if(!getPlatformFileSystem.isEditable){
+          return;
+        }
+        var visible = info.visibleFraction >= 0.1;
+        if(visible){
+          ChoicePageFindUtil().addPos(pos, context);
+        }else{
+          ChoicePageFindUtil().deletePos(pos, context);
+        }
+      },
+      child: DragItemWidget(
+        dragItemProvider: (DragItemRequest request) =>
+            DragItem(localData: Int32List.fromList(pos.data)),
+        allowedOperations: () => [DropOperation.copy],
+        child: DraggableWidget(
+          child: ViewChoiceNode(pos, ignoreOption: ignoreOption),
+        ),
       ),
     );
   }

@@ -1,7 +1,9 @@
 import 'dart:math';
 
+import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/choice/view_choice_line.dart';
+import 'package:cyoap_flutter/viewModel/choice/vm_choice_page_edit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
@@ -51,8 +53,51 @@ class _ViewChoicePageState extends ConsumerState<ViewChoicePage> {
     _scrollController.jumpTo(max(_scrollController.offset + move, 0));
   }
 
+  void findAndScrollToChoiceRecursively(Pos pos) {
+    var find = ChoicePageFindUtil().checkInside();
+    var move = 40.0;
+    switch (find) {
+      case RelativePosition.moveSomething:
+        if (_scrollController.offset - move <= 0) {
+          _scrollController.jumpTo(_scrollController.offset + move / 4.0);
+        }else{
+          _scrollController.jumpTo(_scrollController.offset - move / 4.0);
+        }
+        break;
+      case RelativePosition.contain:
+        if (ChoicePageFindUtil().context != null) {
+          Scrollable.ensureVisible(ChoicePageFindUtil().context!);
+        }
+        ChoicePageFindUtil().clear();
+        return;
+      case RelativePosition.up:
+        if (_scrollController.offset - move <= 0) {
+          ChoicePageFindUtil().clear();
+          return;
+        }
+        _scrollController.jumpTo(_scrollController.offset - move);
+        break;
+      case RelativePosition.down:
+        if (_scrollController.offset + move >=
+            _scrollController.position.maxScrollExtent) {
+          ChoicePageFindUtil().clear();
+          return;
+        }
+        _scrollController.jumpTo(_scrollController.offset + move);
+        break;
+    }
+
+    WidgetsBinding.instance.scheduleFrameCallback((duration) {
+      findAndScrollToChoiceRecursively(pos);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    ref.listen(choicePageTargetProvider, (before, after) {
+      if (after == null) return;
+      findAndScrollToChoiceRecursively(after);
+    });
     var pos = ref.watch(currentChoicePageProvider);
     var designSetting = ref.watch(platformDesignSettingProvider);
     var childrenLength =

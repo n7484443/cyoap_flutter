@@ -2,6 +2,7 @@ import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_switch_label.dart';
+import 'package:cyoap_flutter/viewModel/edit/vm_editor.dart';
 import 'package:cyoap_flutter/viewModel/vm_variable_table.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
@@ -268,9 +269,10 @@ class NodeTiles extends ConsumerWidget {
                       await ref.read(changeTabProvider.notifier).home(context);
                       await Future.delayed(const Duration(milliseconds: 200));
                     }
-                    // ref
-                    //     .read(currentListviewTargetPosProvider.notifier)
-                    //     .set(e.pos);
+                    ref.read(nodeEditorTargetPosProvider.notifier).update((before) => e.pos);
+                    await ref.read(changeTabProvider.notifier).changePageString("viewEditor", context);
+
+                    // ref.read(choicePageTargetProvider.notifier).set(e.pos);
                   }
                 },
               ),
