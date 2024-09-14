@@ -90,6 +90,7 @@ class _ViewSelectedResultGridState
                 ],
               ),
               const Padding(padding: EdgeInsets.all(8.0)),
+              if(posList.isNotEmpty)
               Expanded(
                 child: RepaintBoundary(
                   key: globalKey,
