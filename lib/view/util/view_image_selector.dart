@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:cyoap_flutter/i18n.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
@@ -29,6 +30,26 @@ class ViewImageDraggable extends ConsumerWidget {
       this.isRemovable = false,
       this.removeFunction,
       super.key});
+
+  void addImage(BuildContext context, WidgetRef ref) async {
+    List<PlatformFile>? platformFileList =
+        await ref.read(imageListStateProvider.notifier).addImage();
+    if (platformFileList == null) {
+      return;
+    }
+    for (var file in platformFileList) {
+      if (file.bytes == null) {
+        continue;
+      }
+      addImageToDatabase(ref, file.name, file.bytes!);
+    }
+    if (platformFileList.length == 1) {
+      var file = platformFileList.single;
+      var name = file.name;
+      ref.read(lastImageProvider.notifier).update((state) => file.bytes);
+      openImageEditor(ref, context, name, justOpen: false);
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -71,12 +92,7 @@ class ViewImageDraggable extends ConsumerWidget {
       return Column(
         children: [
           TextButton(
-            onPressed: () async {
-              var name =
-                  await ref.read(imageListStateProvider.notifier).addImage();
-              addImageToDatabase(ref, name, ref.read(lastImageProvider)!);
-              openImageEditor(ref, context, name, justOpen: false);
-            },
+            onPressed: () => addImage(context, ref),
             child: Text('add_image'.i18n),
           ),
           Expanded(
@@ -94,12 +110,7 @@ class ViewImageDraggable extends ConsumerWidget {
               'add_image_description'.i18n,
             ),
             TextButton(
-              onPressed: () async {
-                var name =
-                    await ref.read(imageListStateProvider.notifier).addImage();
-                addImageToDatabase(ref, name, ref.read(lastImageProvider)!);
-                openImageEditor(ref, context, name, justOpen: false);
-              },
+              onPressed: () => addImage(context, ref),
               child: Text('add_image'.i18n),
             ),
             const Spacer(),

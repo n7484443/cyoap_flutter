@@ -134,20 +134,15 @@ class ImageListState extends _$ImageListState {
     return ImageDB().imageList;
   }
 
-  Future<String> addImage() async {
+  Future<List<PlatformFile>?> addImage() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       withData: true,
       allowedExtensions: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp'],
       type: FileType.custom,
+      allowMultiple: true,
+      allowCompression: false,
     );
-    String name = '';
-    if (result != null) {
-      name = result.files.single.name;
-      ref
-          .read(lastImageProvider.notifier)
-          .update((state) => result.files.single.bytes);
-    }
-    return name;
+    return result?.files;
   }
 
   Future<void> addImageToList(String name, {Uint8List? data}) async {
