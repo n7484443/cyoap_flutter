@@ -100,7 +100,7 @@ final controllerIdeProvider = Provider.autoDispose<QuillController>((ref) {
 
 final ideVariableListProvider = Provider.autoDispose<List<String>>((ref) {
   return VariableDataBase()
-      .varMapGlobal
+      .stackFrames.first.getVariableMap()
       .keys
       .where((e) => e.contains(ref.watch(ideCurrentInputProvider)))
       .toList();

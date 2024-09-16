@@ -11,7 +11,7 @@ import '../model/platform_system.dart';
 
 final vmVariableTableProvider = StateNotifierProvider<
     VariableTilesStateNotifier, Map<String, ValueTypeWrapper>>((ref) {
-  return VariableTilesStateNotifier(VariableDataBase().varMapGlobal);
+  return VariableTilesStateNotifier(VariableDataBase().stackFrames.first.getVariableMap());
 });
 
 final displayedVariablesProvider =
@@ -48,7 +48,7 @@ class VariableTilesStateNotifier
   }
 
   void update() {
-    state = HashMap.from(VariableDataBase().varMapGlobal);
+    state = HashMap.from(VariableDataBase().stackFrames.first.getVariableMap());
   }
 }
 
