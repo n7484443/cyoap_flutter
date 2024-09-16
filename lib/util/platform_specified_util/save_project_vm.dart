@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:archive/archive.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:shared_storage/shared_storage.dart';
@@ -19,21 +20,24 @@ class SaveProjectImp extends SaveProject {
   }
 
   @override
-  Future<void> saveZip(String name, Map<String, Uint8List> dataInput) async {
+  Future<void> saveZip(String? path, Map<String, Uint8List> dataInput) async {
     var uint8data = await compute(mapToArchive, dataInput);
 
     if (ConstList.isMobile()) {
-      var grantedUri = (await openDocumentTree())!;
+      var grantedUri = (await openDocumentTree());
+      if (grantedUri == null) return;
       await createFile(grantedUri,
           mimeType: 'application/zip',
           displayName: 'extract.zip',
           bytes: uint8data);
       return;
     }
-    var file = File('$name/extract.zip');
+    path ??= await FilePicker.platform.getDirectoryPath();
+    if (path == null) return;
+    var file = File('$path/extract.zip');
     int i = 0;
     while (file.existsSync()) {
-      file = File('$name/extract_$i.zip');
+      file = File('$path/extract_$i.zip');
       i++;
     }
     await file.create();

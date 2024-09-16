@@ -227,7 +227,11 @@ class _ViewProjectListState extends ConsumerState<ViewProjectList> {
             padding: const EdgeInsets.all(4.0),
             child: FilterChip.elevated(
               onSelected: (bool value) {
-                ref.read(pathListSelectedProvider.notifier).state = index;
+                if(ref.read(pathListSelectedProvider) != index){
+                  ref.read(pathListSelectedProvider.notifier).state = index;
+                }else{
+                  ref.read(pathListSelectedProvider.notifier).state = -1;
+                }
               },
               selected: ref.watch(pathListSelectedProvider) == index,
               label: SizedBox(
@@ -302,6 +306,17 @@ class SelectModeButton extends ConsumerWidget {
                     .i18n
                     .fill([loadState.version!, fileVersion]),
                 autoHide: false);
+            break;
+          case ProjectState.nonSelected:
+            if (isPlay) {
+              showSnackBar(context, 'failed_load_project_non_exist'.i18n,
+                  autoHide: false);
+            }else{
+              getPlatformFileSystem.isEditable = true;
+              getPlatformFileSystem.openAsFile = true;
+              Navigator.of(context).pushReplacementNamed('/viewEdit');
+              getPlatformFileSystem.path = null;
+            }
             break;
           default:
             showSnackBar(context, 'failed_load_project_cyoap_error'.i18n,

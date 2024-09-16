@@ -99,7 +99,7 @@ class FrequentlyUsedPath extends _$FrequentlyUsedPath {
           .openPlatformZipForWeb(ref.watch(pathListFileProvider));
     }
     if (index == -1 || index >= state.length) {
-      return LoadProjectState(ProjectState.cyoapError);
+      return LoadProjectState(ProjectState.nonSelected);
     }
     var path = state[index];
 

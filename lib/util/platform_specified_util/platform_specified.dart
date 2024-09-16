@@ -32,7 +32,7 @@ abstract class SaveProject {
     throw UnimplementedError();
   }
 
-  Future<void> saveZip(String name, Map<String, Uint8List> dataInput) async {
+  Future<void> saveZip(String? path, Map<String, Uint8List> dataInput) async {
     throw UnimplementedError();
   }
 

@@ -13,10 +13,9 @@ import 'package:path/path.dart';
 import '../main.dart';
 import '../util/icc_file_parsing.dart';
 import '../util/platform_specified_util/platform_specified.dart';
-import 'device_preference.dart';
 import 'platform.dart';
 
-enum ProjectState { nonExist, success, fail, cyoapError }
+enum ProjectState { nonExist, success, fail, cyoapError, nonSelected }
 
 class LoadProjectState {
   final ProjectState state;
@@ -300,12 +299,8 @@ class PlatformFileSystem {
     if (asFile) {
       if (ConstList.isWeb()) {
         await PlatformSpecified().saveProject!.saveZip('exported.zip', data);
-      } else if (ConstList.isMobile()) {
-        await PlatformSpecified()
-            .saveProject!
-            .saveZip(await DevicePreference.getDownloadFolder(), data);
       } else {
-        await PlatformSpecified().saveProject!.saveZip(path!, data);
+        await PlatformSpecified().saveProject!.saveZip(path, data);
       }
     } else {
       await PlatformSpecified().saveProject!.saveRaw(path!, data);
