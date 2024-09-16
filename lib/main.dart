@@ -277,7 +277,7 @@ void main() async {
 
 final ThemeData appThemeLight = ThemeData.from(
   colorScheme: MaterialTheme.lightScheme(),
-  textTheme: GoogleFonts.notoSansTextTheme(),
+  textTheme: GoogleFonts.notoSansTextTheme(ThemeData.light().textTheme),
 ).copyWith(
   appBarTheme: const AppBarTheme(
     toolbarHeight: ConstList.appBarSize,
@@ -308,6 +308,7 @@ final ThemeData appThemeLight = ThemeData.from(
 
 final ThemeData appThemeDark = ThemeData.from(
   colorScheme: MaterialTheme.darkScheme(),
+  textTheme: GoogleFonts.notoSansTextTheme(ThemeData.dark().textTheme),
 ).copyWith(
   appBarTheme: const AppBarTheme(
     toolbarHeight: ConstList.appBarSize,
