@@ -29,9 +29,9 @@ void saveAsImage(GlobalKey globalKey) async {
   var pngBytes = image?.buffer.asUint8List();
   var name = "result.png";
   if (ConstList.isWeb()) {
-    PlatformSpecified().saveProject?.downloadCapture("", name, pngBytes!);
+    PlatformUtil().platform.saveProject.downloadCapture("", name, pngBytes!);
   } else {
-    PlatformSpecified().saveProject?.downloadCapture(
+    PlatformUtil().platform.saveProject.downloadCapture(
         await DevicePreference.getDownloadFolder(), name, pngBytes!);
   }
 }

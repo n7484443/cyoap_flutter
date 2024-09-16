@@ -34,8 +34,8 @@ bool checkSamePlatform(AbstractPlatform a, AbstractPlatform b) {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await platform_specified.loadLibrary();
-  platform_specified.PlatformSpecified().preInit();
-  platform_specified.PlatformSpecified().init();
+  platform_specified.PlatformUtil().platform.preInit();
+  platform_specified.PlatformUtil().platform.init();
   test('save load zip', () async {
     var pathZip = "test\\utils\\save_load_folder\\extract.zip";
     var pathFolder = "test\\utils\\save_load_folder";

@@ -14,7 +14,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../main.dart';
-import '../../util/platform_specified_util/webp_converter.dart';
+import '../../util/platform_specified_util/platform_specified.dart';
 
 part 'vm_editor.g.dart';
 
@@ -147,7 +147,7 @@ class ImageListState extends _$ImageListState {
 
   Future<void> addImageToList(String name, {Uint8List? data}) async {
     var before = data ?? ref.read(lastImageProvider)!;
-    var out = await WebpConverter.instance!.convert(before, name);
+    var out = await PlatformUtil().platform.webpConverter.convert(before, name);
 
     ImageDB().uploadImages(out.$1, out.$2);
     ref.read(imageStateProvider.notifier).state =

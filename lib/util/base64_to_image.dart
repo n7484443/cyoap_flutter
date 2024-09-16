@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:cyoap_flutter/util/platform_specified_util/webp_converter.dart';
+import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
 
 class Base64ToImage {
 //   data:image/jpeg;base64,  base64blah blah blah
@@ -15,7 +15,7 @@ class Base64ToImage {
     var imageType = type[1];
 
     Uint8List data = base64.decode(split[1]);
-    getWebpConverterInstance().saveAsWebp = false;
-    return await getWebpConverterInstance().convert(data, imageType);
+    PlatformUtil().platform.webpConverter.saveAsWebp = false;
+    return await PlatformUtil().platform.webpConverter.convert(data, imageType);
   }
 }

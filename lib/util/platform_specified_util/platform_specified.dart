@@ -1,15 +1,26 @@
 import 'dart:typed_data';
 
-import 'platform_specified_vm.dart'
-    if (dart.library.html) 'platform_specified_web.dart';
+import 'vm/export_list.dart' if (dart.library.html) 'web/export_list.dart';
 
-abstract class PlatformSpecified {
-  static final PlatformSpecified _instance = PlatformSpecifiedImp();
-  factory PlatformSpecified() {
+class PlatformUtil{
+  static final PlatformUtil _instance = PlatformUtil._internal();
+  final PlatformSpecified platform = PlatformSpecifiedImp();
+
+  factory PlatformUtil() {
     return _instance;
   }
-  late final SaveProject? saveProject;
-  void init() {}
+
+  PlatformUtil._internal();
+}
+
+abstract class PlatformSpecified {
+  SaveProject saveProject = SaveProjectImp();
+  WebpConverter webpConverter = WebpConverterImp();
+
+  void init() {
+    webpConverter.init();
+  }
+
   void preInit() {}
 }
 
@@ -41,4 +52,13 @@ abstract class SaveProject {
   Future<void> saveBackup(String path, Map<String, Uint8List> dataInput) async {
     throw UnimplementedError();
   }
+}
+
+abstract class WebpConverter {
+  Future<(String, Uint8List)> convert(Uint8List input, String name) async =>
+      throw "doesn't work in this platform";
+
+  void init() async {}
+  bool saveAsWebp = false;
+  bool get canConvert => false;
 }

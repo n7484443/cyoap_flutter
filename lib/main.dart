@@ -5,7 +5,6 @@ import 'package:context_menus/context_menus.dart';
 import 'package:cyoap_core/option.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart'
     deferred as platform_specified;
-import 'package:cyoap_flutter/util/platform_specified_util/webp_converter.dart';
 import 'package:cyoap_flutter/view/edit/view_make_platform.dart';
 import 'package:cyoap_flutter/view/view_font_source.dart';
 import 'package:cyoap_flutter/view/view_play.dart';
@@ -99,7 +98,7 @@ class ConstList {
   static String get version => _version ?? '';
 
   static Future<void> init() async {
-    platform_specified.PlatformSpecified().init();
+    platform_specified.PlatformUtil().platform.init();
     var packageInfo = await PackageInfo.fromPlatform();
     _version = packageInfo.version;
 
@@ -116,7 +115,6 @@ class ConstList {
           (await DeviceInfoPlugin().androidInfo).version.sdkInt.toString();
     }
     Sentry.configureScope((scope) => scope.setContexts('USER_INFO', userInfo));
-    WebpConverter.instance?.init();
     Option().isDebugMode = false;
     Option().enableCode = true;
     Option().enableToken = true;
@@ -177,7 +175,7 @@ class ConstList {
   static Future<void> preInit() async {
     await platform_specified.loadLibrary();
     await DevicePreference().load();
-    platform_specified.PlatformSpecified().preInit();
+    platform_specified.PlatformUtil().platform.preInit();
     // currentLocaleName = (await DevicePreferenceUtil.getLocaleName())?.trim();
     return;
   }

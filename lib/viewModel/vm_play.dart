@@ -19,15 +19,14 @@ class PlayDataNotifier extends StateNotifier<void> {
 
   Future<String> savePlayData() async {
     var json = getPlatform.getSelectedPosInternal();
-    var saveProject = PlatformSpecified().saveProject!;
     var data = Uint8List.fromList(json.codeUnits);
 
     if (ConstList.isWeb()) {
-      await saveProject.downloadCapture('', 'save.json', data);
+      await PlatformUtil().platform.saveProject.downloadCapture('', 'save.json', data);
       return 'save_web'.i18n;
     } else {
       var path = await DevicePreference.getDownloadFolder();
-      await saveProject.downloadCapture(path, 'save.json', data);
+      await PlatformUtil().platform.saveProject.downloadCapture(path, 'save.json', data);
       return 'save_non_web'.i18n.fill([path]);
     }
   }

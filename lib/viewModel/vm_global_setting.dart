@@ -5,7 +5,7 @@ import 'package:cyoap_flutter/viewModel/vm_start.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../main.dart';
-import '../util/platform_specified_util/webp_converter.dart';
+import '../util/platform_specified_util/platform_specified.dart';
 
 part 'vm_global_setting.g.dart';
 
@@ -14,12 +14,12 @@ class SaveAsWebp extends _$SaveAsWebp {
   @override
   bool build() {
     var data = ref.watch(devicePreferenceStateProvider)['save_as_webp'];
-    WebpConverter.instance?.saveAsWebp = data;
+    PlatformUtil().platform.webpConverter.saveAsWebp = data;
     return data;
   }
 
   void rev() {
-    WebpConverter.instance?.saveAsWebp = !state;
+    PlatformUtil().platform.webpConverter.saveAsWebp = !state;
     ref
         .read(devicePreferenceStateProvider.notifier)
         .update('save_as_webp', !state);

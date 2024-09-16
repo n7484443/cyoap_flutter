@@ -291,19 +291,19 @@ class PlatformFileSystem {
     }
 
     var data = await saveDataMap;
-    await PlatformSpecified().saveProject!.saveBackup(path!, data);
+    await PlatformUtil().platform.saveProject.saveBackup(path!, data);
   }
 
   Future<void> save(bool asFile) async {
     var data = await saveDataMap;
     if (asFile) {
       if (ConstList.isWeb()) {
-        await PlatformSpecified().saveProject!.saveZip('exported.zip', data);
+        await PlatformUtil().platform.saveProject.saveZip('exported.zip', data);
       } else {
-        await PlatformSpecified().saveProject!.saveZip(path, data);
+        await PlatformUtil().platform.saveProject.saveZip(path, data);
       }
     } else {
-      await PlatformSpecified().saveProject!.saveRaw(path!, data);
+      await PlatformUtil().platform.saveProject.saveRaw(path!, data);
     }
   }
 
