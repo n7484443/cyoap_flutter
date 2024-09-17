@@ -196,7 +196,7 @@ const String sentryDsn =
 
 final localeStateProvider = StateProvider<Locale?>((ref) {
   ref.listenSelf((previous, next) {
-    if(previous == null)return;
+    if (previous == null) return;
     ref
         .read(devicePreferenceStateProvider.notifier)
         .update("cyoap_language", next?.toString().toLowerCase());
@@ -207,7 +207,7 @@ final localeStateProvider = StateProvider<Locale?>((ref) {
 
 final themeStateProvider = StateProvider<ThemeMode>((ref) {
   ref.listenSelf((previous, next) {
-    if(previous == null)return;
+    if (previous == null) return;
     ref
         .read(devicePreferenceStateProvider.notifier)
         .update("cyoap_theme", next == ThemeMode.dark ? "dark" : "light");
@@ -216,7 +216,6 @@ final themeStateProvider = StateProvider<ThemeMode>((ref) {
 });
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
   await ConstList.preInit();
   if (ConstList.isDesktop()) {
     await windowManager.ensureInitialized();
@@ -231,46 +230,50 @@ void main() async {
     });
     windowManager.setTitleBarStyle(TitleBarStyle.normal);
   }
+
   await SentryFlutter.init(
     (options) {
       options.dsn = kDebugMode ? '' : sentryDsn;
       options.attachStacktrace = true;
     },
-    appRunner: () => runApp(
-      ProviderScope(
-        child: Consumer(builder: (context, ref, child) {
-          return I18n(
-            initialLocale: ref.watch(localeStateProvider),
-            child: ContextMenuOverlay(
-              child: MaterialApp(
-                locale: ref.watch(localeStateProvider),
-                localizationsDelegates: [
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                ],
-                supportedLocales: [
-                  const Locale('en'),
-                  const Locale('ko'),
-                ],
-                title: 'CYOAP',
-                initialRoute: '/',
-                routes: {
-                  '/': (context) => const ViewStart(),
-                  '/viewPlay': (context) => const ViewPlay(),
-                  '/viewEdit': (context) => const ViewMakePlatform(),
-                  '/viewLicense': (context) => const ViewFontSource(),
-                },
-                theme: appThemeLight,
-                darkTheme: appThemeDark,
-                themeMode: ref.watch(themeStateProvider),
-                debugShowCheckedModeBanner: false,
+    appRunner: () {
+      WidgetsFlutterBinding.ensureInitialized();
+      return runApp(
+        ProviderScope(
+          child: Consumer(builder: (context, ref, child) {
+            return I18n(
+              initialLocale: ref.watch(localeStateProvider),
+              child: ContextMenuOverlay(
+                child: MaterialApp(
+                  locale: ref.watch(localeStateProvider),
+                  localizationsDelegates: [
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                  ],
+                  supportedLocales: [
+                    const Locale('en'),
+                    const Locale('ko'),
+                  ],
+                  title: 'CYOAP',
+                  initialRoute: '/',
+                  routes: {
+                    '/': (context) => const ViewStart(),
+                    '/viewPlay': (context) => const ViewPlay(),
+                    '/viewEdit': (context) => const ViewMakePlatform(),
+                    '/viewLicense': (context) => const ViewFontSource(),
+                  },
+                  theme: appThemeLight,
+                  darkTheme: appThemeDark,
+                  themeMode: ref.watch(themeStateProvider),
+                  debugShowCheckedModeBanner: false,
+                ),
               ),
-            ),
-          );
-        }),
-      ),
-    ),
+            );
+          }),
+        ),
+      );
+    },
   );
   ConstList.init();
 }
