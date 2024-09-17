@@ -196,6 +196,7 @@ const String sentryDsn =
 
 final localeStateProvider = StateProvider<Locale?>((ref) {
   ref.listenSelf((previous, next) {
+    if(previous == null)return;
     ref
         .read(devicePreferenceStateProvider.notifier)
         .update("cyoap_language", next?.toString().toLowerCase());
@@ -206,6 +207,7 @@ final localeStateProvider = StateProvider<Locale?>((ref) {
 
 final themeStateProvider = StateProvider<ThemeMode>((ref) {
   ref.listenSelf((previous, next) {
+    if(previous == null)return;
     ref
         .read(devicePreferenceStateProvider.notifier)
         .update("cyoap_theme", next == ThemeMode.dark ? "dark" : "light");
