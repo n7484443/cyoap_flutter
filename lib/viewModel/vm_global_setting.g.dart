@@ -20,7 +20,7 @@ final maximumSizeProvider = AutoDisposeProvider<int>.internal(
 );
 
 typedef MaximumSizeRef = AutoDisposeProviderRef<int>;
-String _$saveAsWebpHash() => r'fcb5fa0e329480fffca22bb36a7eafd47f2128b8';
+String _$saveAsWebpHash() => r'1b332887de99567f274110af5762bd40160cc233';
 
 /// See also [SaveAsWebp].
 @ProviderFor(SaveAsWebp)

@@ -2,6 +2,7 @@ import 'package:cyoap_flutter/view/code/view_ide.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../viewModel/code/vm_ide.dart';
 import '../../viewModel/edit/vm_editor.dart';
 import '../../viewModel/edit/vm_make_platform.dart';
 
@@ -21,7 +22,7 @@ class ViewIdeLine extends ConsumerWidget {
           ),
         ),
         body: ViewIde(
-          isChoiceNode: false,
+          choiceType: ChoiceType.line,
           choice: ref.watch(lineEditorTargetProvider),
         ),
       ),

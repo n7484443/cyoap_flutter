@@ -6,7 +6,7 @@ part of 'vm_choice_page_edit.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$choicePageTargetHash() => r'3515021410da6f884b385521ca17386ef29b7b69';
+String _$choicePageTargetHash() => r'60d7fc5827fdc3788a0e40fa4265744dcaa4621a';
 
 /// See also [ChoicePageTarget].
 @ProviderFor(ChoicePageTarget)

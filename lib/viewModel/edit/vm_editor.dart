@@ -15,18 +15,24 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../main.dart';
 import '../../util/platform_specified_util/platform_specified.dart';
+import '../code/vm_ide.dart';
 
 part 'vm_editor.g.dart';
 
-final editEndProvider = StateProvider<bool>((ref) {
+final editEndProvider =
+    StateProvider.family<bool, ChoiceType>((ref, choiceType) {
   ref.listenSelf((previous, next) {
     if (next) {
       ref
           .read(currentProjectChangedProvider.notifier)
           .changed(needUpdateCode: true);
-      var pos = (ref.read(nodeEditorTargetPosProvider) ??
-          ref.read(lineEditorTargetPosProvider))!;
-      ref.read(choiceStatusProvider(pos)).refreshParent();
+      Pos? pos;
+      if (choiceType == ChoiceType.node) {
+        pos = ref.read(nodeEditorTargetPosProvider);
+      } else if (choiceType == ChoiceType.line) {
+        pos = ref.read(lineEditorTargetPosProvider);
+      }
+      ref.read(choiceStatusProvider(pos!)).refreshParent();
     }
   });
   return false;

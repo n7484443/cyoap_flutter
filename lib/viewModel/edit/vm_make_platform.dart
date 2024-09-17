@@ -3,6 +3,8 @@ import 'package:cyoap_flutter/viewModel/edit/vm_project_setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../code/vm_ide.dart';
+
 final changeTabProvider = StateNotifierProvider<ChangeTabNotifier, int>((ref) {
   return ChangeTabNotifier(ref);
 });
@@ -15,10 +17,10 @@ class ChangeTabNotifier extends StateNotifier<int> {
   void entryFunction(int index, BuildContext context) {
     switch (tabList[index]) {
       case "viewMake":
-        ref.read(editEndProvider.notifier).state = false;
+        ref.read(editEndProvider(ChoiceType.node).notifier).state = false;
         break;
       case "viewEditorLine":
-        ref.read(editEndProvider.notifier).state = false;
+        ref.read(editEndProvider(ChoiceType.line).notifier).state = false;
         break;
     }
   }
@@ -26,13 +28,13 @@ class ChangeTabNotifier extends StateNotifier<int> {
   Future<bool> removeFunction(int index, BuildContext context) async {
     switch (tabList[index]) {
       case "viewEditor":
-        ref.read(editEndProvider.notifier).state = true;
+        ref.read(editEndProvider(ChoiceType.node).notifier).state = true;
         break;
       case "viewProjectSetting":
         ref.read(valueTypeWrapperListProvider.notifier).save();
         break;
       case "viewEditorLine":
-        ref.read(editEndProvider.notifier).state = true;
+        ref.read(editEndProvider(ChoiceType.line).notifier).state = true;
         break;
     }
     return true;

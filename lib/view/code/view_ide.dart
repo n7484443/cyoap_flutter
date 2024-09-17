@@ -16,11 +16,11 @@ import '../../viewModel/code/vm_ide_gui.dart';
 import '../../viewModel/edit/vm_editor.dart';
 
 class ViewIde extends ConsumerStatefulWidget {
-  final bool isChoiceNode;
+  final ChoiceType choiceType;
   final Choice choice;
 
   const ViewIde({
-    this.isChoiceNode = true,
+    this.choiceType = ChoiceType.node,
     required this.choice,
     super.key,
   });
@@ -144,7 +144,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
         ),
         SliverList(
           delegate: SliverChildListDelegate([
-            if (widget.isChoiceNode &&
+            if (widget.choiceType == ChoiceType.node &&
                 ref.watch(nodeEditorTargetProvider).isSelectableMode)
               rowColumn(
                 leftOrTop: SizedBox(
@@ -171,10 +171,10 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                   ),
                 ),
               ),
-            if (widget.isChoiceNode &&
+            if (widget.choiceType == ChoiceType.node &&
                 ref.watch(nodeEditorTargetProvider).isSelectableMode)
               const Divider(),
-            if (!widget.isChoiceNode ||
+            if (widget.choiceType != ChoiceType.node ||
                 ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode)
               rowColumn(
                 leftOrTop: SizedBox(
@@ -205,14 +205,14 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
             rowColumn(
               leftOrTop: SizedBox(
                 width: size,
-                child: Text(widget.isChoiceNode
+                child: Text(widget.choiceType == ChoiceType.node
                     ? "code_hint_execute".i18n
                     : "code_hint_fin".i18n),
               ),
-              rightOrBottom: const Card(
+              rightOrBottom: Card(
                 child: Padding(
-                  padding: EdgeInsets.all(ConstList.padding),
-                  child: ViewQuillCodeIde(),
+                  padding: const EdgeInsets.all(ConstList.padding),
+                  child: ViewQuillCodeIde(choiceType: widget.choiceType),
                 ),
               ),
             ),
@@ -224,7 +224,9 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
 }
 
 class ViewQuillCodeIde extends ConsumerStatefulWidget {
-  const ViewQuillCodeIde({super.key});
+  final ChoiceType choiceType;
+
+  const ViewQuillCodeIde({required this.choiceType, super.key});
 
   @override
   ConsumerState createState() => _ViewQuillCodeIdeState();
@@ -252,10 +254,10 @@ class _ViewQuillCodeIdeState extends ConsumerState<ViewQuillCodeIde> {
               onFocusChange: (bool hasFocus) {
                 ref.read(ideCurrentInputProvider.notifier).lastFocusText = null;
                 ref.read(ideCurrentInputProvider.notifier).lastFocusQuill =
-                    ref.watch(controllerIdeProvider);
+                    ref.watch(ideControllerProvider(widget.choiceType));
               },
               child: QuillEditor(
-                controller: ref.watch(controllerIdeProvider),
+                controller: ref.watch(ideControllerProvider(widget.choiceType)),
                 configurations: QuillEditorConfigurations(
                   sharedConfigurations: QuillSharedConfigurations(
                     locale: ref.watch(localeStateProvider),
@@ -279,8 +281,10 @@ class _ViewQuillCodeIdeState extends ConsumerState<ViewQuillCodeIde> {
                   icon: const Icon(Icons.reorder),
                   tooltip: "sort".i18n,
                   onPressed: () {
-                    var text =
-                        ref.read(controllerIdeProvider).document.toPlainText();
+                    var text = ref
+                        .read(IdeControllerProvider(ChoiceType.node))
+                        .document
+                        .toPlainText();
                     var output = ref
                         .read(ideCurrentInputProvider.notifier)
                         .formatting(text);
@@ -290,9 +294,9 @@ class _ViewQuillCodeIdeState extends ConsumerState<ViewQuillCodeIde> {
                       ));
                     }
                     ref.read(ideCurrentInputProvider.notifier).reformat = true;
-                    ref.read(controllerIdeProvider).clear();
+                    ref.read(ideControllerProvider(widget.choiceType)).clear();
                     ref
-                        .read(controllerIdeProvider)
+                        .read(ideControllerProvider(widget.choiceType))
                         .document
                         .insert(0, output.$1);
                     ref.read(ideCurrentInputProvider.notifier).reformat = false;
@@ -305,7 +309,7 @@ class _ViewQuillCodeIdeState extends ConsumerState<ViewQuillCodeIde> {
                     onPressed: () {
                       var ast = Analyser().toAst(
                           ref
-                              .read(controllerIdeProvider)
+                              .read(ideControllerProvider(widget.choiceType))
                               .document
                               .toPlainText(),
                           isCondition: false);

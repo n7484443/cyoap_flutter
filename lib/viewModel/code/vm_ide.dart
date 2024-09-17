@@ -11,21 +11,39 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../main.dart';
 
-final controllerIdeProvider = Provider.autoDispose<QuillController>((ref) {
-  Choice node;
-  ConditionalCodeHandler handler;
+part 'vm_ide.g.dart';
+
+enum ChoiceType {
+  node,
+  line,
+  page;
+
+  @override
+  String toString() => 'ChoiceType.$name';
+}
+
+@riverpod
+QuillController ideController(IdeControllerRef ref, ChoiceType type) {
+  Choice? choice;
+  ConditionalCodeHandler? handler;
   String? str;
-  if (ref.watch(nodeEditorTargetPosProvider) != null) {
-    node = ref.watch(nodeEditorTargetProvider);
-    handler = node.conditionalCodeHandler;
-  } else {
-    node = ref.watch(lineEditorTargetProvider);
-    handler = (node as ChoiceLine).conditionalCodeHandlerFinalize;
+  switch (type) {
+    case ChoiceType.node:
+      choice = ref.watch(nodeEditorTargetProvider);
+      handler = choice!.conditionalCodeHandler;
+      break;
+    case ChoiceType.line:
+      choice = ref.watch(lineEditorTargetProvider);
+      handler = (choice as ChoiceLine).conditionalCodeHandlerFinalize;
+      break;
+    case ChoiceType.page:
+      break;
   }
-  str = handler.executeCodeString;
+  str = handler!.executeCodeString;
 
   var data = [
     {"insert": "${str ?? ''}\n"}
@@ -34,7 +52,7 @@ final controllerIdeProvider = Provider.autoDispose<QuillController>((ref) {
       document: Document.fromJson(data),
       selection: const TextSelection.collapsed(offset: 0));
   controller.addListener(() {
-    EasyDebounce.debounce('code-ide', ConstList.debounceDuration, () {
+    EasyDebounce.debounce('code-ide-$type', ConstList.debounceDuration, () {
       const styleNull = Attribute.color;
       final styleDeepOrange = ColorAttribute('#${Colors.deepOrangeAccent.hex}');
       final styleDeepPurple = ColorAttribute('#${Colors.deepPurpleAccent.hex}');
@@ -81,12 +99,17 @@ final controllerIdeProvider = Provider.autoDispose<QuillController>((ref) {
             shouldNotifyListeners: false);
       }
     });
-    node.conditionalCodeHandler.executeCodeString =
-        controller.document.toPlainText();
+    if(type == ChoiceType.node) {
+      choice!.conditionalCodeHandler.executeCodeString =
+          controller.document.toPlainText();
+    }else{
+      (choice as ChoiceLine).conditionalCodeHandlerFinalize.executeCodeString =
+          controller.document.toPlainText();
+    }
   });
   ref.onDispose(() {
     controller.dispose();
-    EasyDebounce.cancel('code-ide');
+    EasyDebounce.cancel('code-ide-$type');
   });
 
   controller.onReplaceText = (int index, int len, Object? data) {
@@ -96,11 +119,13 @@ final controllerIdeProvider = Provider.autoDispose<QuillController>((ref) {
     return true;
   };
   return controller;
-});
+}
 
 final ideVariableListProvider = Provider.autoDispose<List<String>>((ref) {
   return VariableDataBase()
-      .stackFrames.first.getVariableMap()
+      .stackFrames
+      .first
+      .getVariableMap()
       .keys
       .where((e) => e.contains(ref.watch(ideCurrentInputProvider)))
       .toList();

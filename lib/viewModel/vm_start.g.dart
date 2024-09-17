@@ -24,7 +24,7 @@ final devicePreferenceStateProvider = AutoDisposeNotifierProvider<
 
 typedef _$DevicePreferenceState = AutoDisposeNotifier<Map<String, dynamic>>;
 String _$frequentlyUsedPathHash() =>
-    r'd828b640de89104cef807b7015c7e2c2ccf69e23';
+    r'8afe76e3fab8424df2613a207826b954eef8a00c';
 
 /// See also [FrequentlyUsedPath].
 @ProviderFor(FrequentlyUsedPath)

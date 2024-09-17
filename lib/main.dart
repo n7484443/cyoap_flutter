@@ -216,28 +216,27 @@ final themeStateProvider = StateProvider<ThemeMode>((ref) {
 });
 
 void main() async {
-  await ConstList.preInit();
-  if (ConstList.isDesktop()) {
-    await windowManager.ensureInitialized();
-    var windowOptions = const WindowOptions(
-      size: Size(1280, 720),
-      center: true,
-      minimumSize: Size(960, 640),
-    );
-    windowManager.waitUntilReadyToShow(windowOptions, () async {
-      await windowManager.show();
-      await windowManager.focus();
-    });
-    windowManager.setTitleBarStyle(TitleBarStyle.normal);
-  }
-
   await SentryFlutter.init(
     (options) {
       options.dsn = kDebugMode ? '' : sentryDsn;
       options.attachStacktrace = true;
     },
-    appRunner: () {
+    appRunner: () async{
       WidgetsFlutterBinding.ensureInitialized();
+      await ConstList.preInit();
+      if (ConstList.isDesktop()) {
+        await windowManager.ensureInitialized();
+        var windowOptions = const WindowOptions(
+          size: Size(1280, 720),
+          center: true,
+          minimumSize: Size(960, 640),
+        );
+        windowManager.waitUntilReadyToShow(windowOptions, () async {
+          await windowManager.show();
+          await windowManager.focus();
+        });
+        windowManager.setTitleBarStyle(TitleBarStyle.normal);
+      }
       return runApp(
         ProviderScope(
           child: Consumer(builder: (context, ref, child) {
