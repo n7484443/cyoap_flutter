@@ -65,7 +65,6 @@ class ChoiceStatus extends ChangeNotifier {
   }
 
   void refreshSelf() {
-    print(getPlatform.getChoice(pos));
     build();
     notifyListeners();
 
