@@ -65,6 +65,7 @@ class ChoiceStatus extends ChangeNotifier {
   }
 
   void refreshSelf() {
+    print(getPlatform.getChoice(pos));
     build();
     notifyListeners();
 
@@ -119,7 +120,7 @@ class ChoiceStatus extends ChangeNotifier {
   }
 
   void addChoice(Choice choice, {int? index}) {
-    node.addChildren(choice, pos: index);
+    node.addChild(choice, pos: index);
     refreshSelf();
   }
 
@@ -150,6 +151,7 @@ class ChoiceStatus extends ChangeNotifier {
       ref.read(randomStateNotifierProvider(pos).notifier).startRandom();
     }
     getPlatform.updateStatus();
+    print(getPlatform.getSelectedPosInternal());
     ref.read(snackBarErrorProvider.notifier).update();
     refreshAll();
   }

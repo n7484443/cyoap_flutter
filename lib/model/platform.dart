@@ -72,7 +72,7 @@ class AbstractPlatform extends PlayablePlatform {
 
   void addLineSettingData(ChoiceLine choiceLine, int y) {
     while (choicePage.choiceLines.length <= y) {
-      choicePage.addChildren(ChoiceLine());
+      choicePage.addChild(ChoiceLine());
     }
     choiceLine.parent = choicePage;
     choicePage.choiceLines[y] = choiceLine;
@@ -83,14 +83,14 @@ class AbstractPlatform extends PlayablePlatform {
     for (int i = 1; i < pos.data.length - 1; i++) {
       while (parent.children.length <= pos.data[i]) {
         if (i == 1) {
-          parent.addChildren(ChoiceLine());
+          parent.addChild(ChoiceLine());
         } else {
-          parent.addChildren(ChoiceNode.empty());
+          parent.addChild(ChoiceNode.empty());
         }
       }
       parent = parent.children[pos.data[i]];
     }
-    parent.addChildren(node, pos: pos.last);
+    parent.addChild(node, pos: pos.last);
     checkDataCorrect();
   }
 
@@ -100,7 +100,7 @@ class AbstractPlatform extends PlayablePlatform {
     var posB = b.currentPos;
 
     parentA.removeChildren(a);
-    parentB.addChildren(a, pos: posB);
+    parentB.addChild(a, pos: posB);
     checkDataCorrect();
   }
 
@@ -108,7 +108,7 @@ class AbstractPlatform extends PlayablePlatform {
     var parentA = a.parent!;
 
     parentA.removeChildren(a);
-    parentB.addChildren(a);
+    parentB.addChild(a);
     checkDataCorrect();
   }
 
@@ -160,6 +160,7 @@ class AbstractPlatform extends PlayablePlatform {
             node.choiceNodeOption =
                 node.choiceNodeOption.copyWith(presetName: after);
           }
+          return true;
         });
       }
     }

@@ -66,7 +66,7 @@ class IccProjectParser {
       choiceRow.choiceNodeOption =
           choiceRow.choiceNodeOption.copyWith(presetName: preset.name!);
       choiceRow.choiceNodeMode = ChoiceNodeMode.unSelectableMode;
-      var lineSetting = ChoiceLine()..addChildren(choiceRow);
+      var lineSetting = ChoiceLine()..addChild(choiceRow);
       var rowWidth = int.tryParse((row['objectWidth'] as String? ?? '')
               .replaceAll("md-", "")
               .replaceAll("col-", "")) ??
@@ -118,9 +118,9 @@ class IccProjectParser {
               imageString: imageName);
           addonNode.choiceNodeOption =
               addonNode.choiceNodeOption.copyWith(presetName: preset.name!);
-          choiceNode.addChildren(addonNode);
+          choiceNode.addChild(addonNode);
         }
-        lineSetting.addChildren(choiceNode);
+        lineSetting.addChild(choiceNode);
       }
       platform.choicePage.choiceLines.add(lineSetting);
     }

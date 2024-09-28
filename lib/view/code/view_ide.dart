@@ -285,20 +285,17 @@ class _ViewQuillCodeIdeState extends ConsumerState<ViewQuillCodeIde> {
                         .read(IdeControllerProvider(ChoiceType.node))
                         .document
                         .toPlainText();
-                    var output = ref
+                    var (output, checkGrammerWrong) = ref
                         .read(ideCurrentInputProvider.notifier)
                         .formatting(text);
-                    if (output.$2) {
+                    if (checkGrammerWrong) {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text("sort_error".i18n),
                       ));
                     }
                     ref.read(ideCurrentInputProvider.notifier).reformat = true;
-                    ref.read(ideControllerProvider(widget.choiceType)).clear();
-                    ref
-                        .read(ideControllerProvider(widget.choiceType))
-                        .document
-                        .insert(0, output.$1);
+                    var length = ref.read(ideControllerProvider(widget.choiceType)).plainTextEditingValue.text.length - 1;
+                    ref.read(ideControllerProvider(widget.choiceType)).replaceText(0, length, output, const TextSelection.collapsed(offset: 0));
                     ref.read(ideCurrentInputProvider.notifier).reformat = false;
                   },
                 ),
