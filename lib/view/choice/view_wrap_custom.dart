@@ -392,8 +392,6 @@ class ViewWrapCustomReorder extends ConsumerWidget {
       } else {
         outputWidget.add(addIcon);
       }
-    } else if (outputWidget.isEmpty) {
-      outputWidget.add(const SizedBox.square(dimension: defaultHeight));
     }
     if (isInner) {
       return Column(

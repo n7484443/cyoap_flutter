@@ -139,10 +139,11 @@ class ConstList {
   static Map<String, TextStyle> textFontList = {
     "jua": GoogleFonts.jua(
         fontFeatures: const [FontFeature.proportionalFigures()]),
-    "notoSans": GoogleFonts.notoSans(
+    "notoSans": GoogleFonts.notoSansKr(
         fontFeatures: const [FontFeature.proportionalFigures()]),
-    "notoSerif": GoogleFonts.notoSerif(
-        fontFeatures: const [FontFeature.proportionalFigures()]),
+    "notoSerif": const TextStyle(
+        fontFamily: 'NotoSerifKR',
+        fontFeatures: [FontFeature.proportionalFigures()]),
     "나눔고딕": GoogleFonts.nanumGothic(
         fontFeatures: const [FontFeature.proportionalFigures()]),
     "나눔손글씨 붓": GoogleFonts.nanumBrushScript(
