@@ -312,6 +312,29 @@ final choiceNodePresetSelectedEditOutlineWidthProvider =
   return controller;
 });
 
+@riverpod
+TextEditingController choiceNodePresetImageMaxHeightRatio(ChoiceNodePresetImageMaxHeightRatioRef ref) {
+  ref.listen(currentPresetIndexProvider, (previous, next) {
+    ref.invalidateSelf();
+  });
+  var controller = TextEditingController(
+      text: ref.read(choiceNodePresetCurrentEditProvider).imageMaxHeightRatio.toString());
+  controller.addListener(() {
+    EasyDebounce.debounce('ImageMaxHeightRatio Input', ConstList.debounceDuration, () {
+      ref.read(choiceNodePresetListProvider.notifier).updateIndex(
+          ref.watch(currentPresetIndexProvider),
+          ref
+              .read(choiceNodePresetCurrentEditProvider)
+              .copyWith(imageMaxHeightRatio: double.tryParse(controller.text)?.clamp(0.01, 5.0) ?? 1.0));
+    });
+  });
+  ref.onDispose(() {
+    EasyDebounce.cancel('ImageMaxHeightRatio Input');
+    controller.dispose();
+  });
+  return controller;
+}
+
 final choiceNodePresetCurrentEditElevationProvider =
     Provider.autoDispose<TextEditingController>((ref) {
   ref.listen(currentPresetIndexProvider, (previous, next) {

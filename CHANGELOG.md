@@ -1,3 +1,5 @@
+### 5.5.0
+* maximize image 의 애매모호한 변수를 image maxHeight ratio로 변경
 ### 5.4.5
 * 일부 폰트가 한글에서 정상작동하지 않는 버그(NotoSans, NotoSerif)
 * 숨긴 라인이 자리를 차지하는 문제(추후 옵션 추가 예정)

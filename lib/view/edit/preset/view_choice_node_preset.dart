@@ -348,15 +348,16 @@ class _ViewNodeGeneralOptionEditorState
               padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           SliverGrid(
             delegate: SliverChildListDelegate([
-              CustomSwitch(
-                updateState: () {
-                  ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                      presetIndex,
-                      preset.copyWith(
-                          maximizingImage: !preset.maximizingImage!));
-                },
-                label: 'maximize_image'.i18n,
-                state: preset.maximizingImage!,
+              CustomTextField(
+                controller:
+                ref.watch(choiceNodePresetCurrentEditElevationProvider),
+                label: 'height'.i18n,
+              ),
+              CustomTextField(
+                controller:
+                ref.watch(choiceNodePresetImageMaxHeightRatioProvider),
+                label: 'image_maxHeight_ratio'.i18n,
+                tooltip: 'image_maxHeight_ratio_tooltip'.i18n,
               ),
               CustomSwitch(
                 updateState: () {

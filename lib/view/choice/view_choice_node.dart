@@ -489,9 +489,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
     if (ref.watch(imageStringProvider(pos: pos)).isNotEmpty) {
       image = ConstrainedBox(
         constraints: BoxConstraints(
-          maxHeight: preset.maximizingImage!
-              ? MediaQuery.of(context).size.height / 1.25
-              : MediaQuery.of(context).size.height / 2,
+          maxHeight: MediaQuery.of(context).size.height * preset.imageMaxHeightRatio!,
         ),
         child: ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(5)),

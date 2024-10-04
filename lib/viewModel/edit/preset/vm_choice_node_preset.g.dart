@@ -598,5 +598,24 @@ class _ChoiceNodePresetOutlineRoundProviderElement
   bool get isSelected =>
       (origin as ChoiceNodePresetOutlineRoundProvider).isSelected;
 }
+
+String _$choiceNodePresetImageMaxHeightRatioHash() =>
+    r'99afdb842083ae258f35ad1655337dea945945db';
+
+/// See also [choiceNodePresetImageMaxHeightRatio].
+@ProviderFor(choiceNodePresetImageMaxHeightRatio)
+final choiceNodePresetImageMaxHeightRatioProvider =
+    AutoDisposeProvider<TextEditingController>.internal(
+  choiceNodePresetImageMaxHeightRatio,
+  name: r'choiceNodePresetImageMaxHeightRatioProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$choiceNodePresetImageMaxHeightRatioHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef ChoiceNodePresetImageMaxHeightRatioRef
+    = AutoDisposeProviderRef<TextEditingController>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
