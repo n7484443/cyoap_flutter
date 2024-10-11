@@ -1,5 +1,6 @@
 import 'package:context_menus/context_menus.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
+import 'package:cyoap_core/preset/layout.dart' hide Text;
 import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
@@ -224,6 +225,8 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
         currentChild = const ViewNodeOutlineOptionEditor();
       case 2:
         currentChild = const ViewNodeColorOptionEditor();
+      case 3:
+        currentChild = const ViewNodeLayoutEditor();
       default:
         currentChild = const ViewNodeComponentOptionEditor();
     }
@@ -239,13 +242,43 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
               child: Center(
                 child: ColoredBox(
                   color: Theme.of(context).colorScheme.error,
-                  child: const SizedBox(width: 2, height: 10),
+                  child: const SizedBox(width: 2, height: 8),
                 ),
               ),
             ),
           ],
         ),
         'component'.i18n
+      ),
+      (
+        Stack(
+          children: [
+            SizedBox(
+              width: 24,
+              height: 24,
+              child: ColoredBox(
+                  color:
+                      Theme.of(context).colorScheme.primary.withOpacity(0.3)),
+            ),
+            Positioned(
+              top: 0,
+              left: 0,
+              child: ColoredBox(
+                color: Theme.of(context).colorScheme.error.withOpacity(0.4),
+                child: const SizedBox.square(dimension: 8),
+              ),
+            ),
+            Positioned(
+              right: 0,
+              bottom: 0,
+              child: ColoredBox(
+                color: Theme.of(context).colorScheme.secondary.withOpacity(0.4),
+                child: const SizedBox.square(dimension: 16),
+              ),
+            ),
+          ],
+        ),
+        'layout'.i18n
       ),
     ];
     if (ConstList.isSmallDisplay(context)) {
@@ -305,6 +338,15 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
   }
 }
 
+class ViewNodeLayoutEditor extends ConsumerWidget {
+  const ViewNodeLayoutEditor({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    throw UnimplementedError();
+  }
+}
+
 class ViewNodeGeneralOptionEditor extends ConsumerStatefulWidget {
   const ViewNodeGeneralOptionEditor({super.key});
 
@@ -350,12 +392,12 @@ class _ViewNodeGeneralOptionEditorState
             delegate: SliverChildListDelegate([
               CustomTextField(
                 controller:
-                ref.watch(choiceNodePresetCurrentEditElevationProvider),
+                    ref.watch(choiceNodePresetCurrentEditElevationProvider),
                 label: 'height'.i18n,
               ),
               CustomTextField(
                 controller:
-                ref.watch(choiceNodePresetImageMaxHeightRatioProvider),
+                    ref.watch(choiceNodePresetImageMaxHeightRatioProvider),
                 label: 'image_maxHeight_ratio'.i18n,
                 tooltip: 'image_maxHeight_ratio_tooltip'.i18n,
               ),

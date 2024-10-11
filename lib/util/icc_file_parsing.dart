@@ -7,6 +7,7 @@ import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cyoap_core/preset/layout.dart' hide Text;
 
 import '../model/platform.dart';
 import '../viewModel/vm_start.dart';

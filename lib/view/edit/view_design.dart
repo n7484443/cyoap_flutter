@@ -1,4 +1,3 @@
-import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/edit/preset/view_preset.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../main.dart';
 import '../../viewModel/edit/vm_design_setting.dart';
 import '../../viewModel/edit/vm_make_platform.dart';
+import 'package:cyoap_core/preset/layout.dart' hide Text;
 
 class ViewDesignSetting extends ConsumerWidget {
   const ViewDesignSetting({super.key});

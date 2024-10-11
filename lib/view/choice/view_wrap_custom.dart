@@ -4,7 +4,6 @@ import 'package:cyoap_core/choiceNode/choice.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/choiceNode/pos.dart';
 import 'package:cyoap_core/preset/line_preset.dart';
-import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
@@ -19,6 +18,7 @@ import '../../viewModel/choice/vm_choice_line.dart';
 import '../../viewModel/edit/vm_design_setting.dart';
 import '../../viewModel/edit/vm_draggable_nested_map.dart';
 import 'view_choice_node.dart';
+import 'package:cyoap_core/preset/layout.dart' hide Text;
 
 const double defaultHeight = 70.0;
 
