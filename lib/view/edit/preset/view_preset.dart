@@ -1,6 +1,6 @@
 import 'package:cyoap_flutter/i18n.dart';
-import 'package:cyoap_flutter/view/edit/preset/view_choice_line_preset.dart';
-import 'package:cyoap_flutter/view/edit/preset/view_choice_node_preset.dart';
+import 'package:cyoap_flutter/view/edit/preset/view_line_preset.dart';
+import 'package:cyoap_flutter/view/edit/preset/view_node_preset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

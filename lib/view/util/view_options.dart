@@ -81,39 +81,45 @@ class CustomTextField extends ConsumerWidget {
 }
 
 class CustomDropdownButton<T> extends ConsumerWidget {
-  final String label;
+  final String? label;
   final void Function(T?)? onChanged;
   final List<DropdownMenuItem<T>> items;
   final T value;
+  final bool coverCard;
 
   const CustomDropdownButton(
       {super.key,
-      required this.label,
+      this.label,
       this.onChanged,
+        this.coverCard = true,
       required this.value,
       required this.items});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var innerWidget = Row(
+      children: [
+        if(label != null) Text(label!),
+        const Padding(
+          padding: EdgeInsets.all(ConstList.padding),
+        ),
+        Expanded(
+          child: DropdownButtonFormField<T>(
+            items: items,
+            onChanged: onChanged,
+            value: value,
+            isExpanded: true,
+          ),
+        ),
+      ],
+    );
+    if(!coverCard) {
+      return innerWidget;
+    }
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(ConstList.padding),
-        child: Row(
-          children: [
-            Text(label),
-            const Padding(
-              padding: EdgeInsets.all(ConstList.padding),
-            ),
-            Expanded(
-              child: DropdownButtonFormField<T>(
-                items: items,
-                onChanged: onChanged,
-                value: value,
-                isExpanded: true,
-              ),
-            ),
-          ],
-        ),
+        child: innerWidget,
       ),
     );
   }

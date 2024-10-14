@@ -7,7 +7,7 @@ import 'package:cyoap_core/i18n.dart';
 import 'package:cyoap_core/playable_platform.dart';
 import 'package:cyoap_flutter/viewModel/choice/vm_choice_line.dart';
 import 'package:cyoap_flutter/viewModel/choice/vm_choice_node.dart';
-import 'package:cyoap_flutter/viewModel/edit/preset/vm_choice_node_preset.dart';
+import 'package:cyoap_flutter/viewModel/edit/preset/vm_node_preset.dart';
 import 'package:cyoap_flutter/viewModel/edit/vm_draggable_nested_map.dart';
 import 'package:cyoap_flutter/viewModel/vm_snackbar.dart';
 import 'package:flutter/cupertino.dart';

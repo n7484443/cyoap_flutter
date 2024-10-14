@@ -10,7 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../main.dart';
 import '../../../model/image_db.dart';
-import '../../../viewModel/edit/preset/vm_choice_line_preset.dart';
+import '../../../viewModel/edit/preset/vm_line_preset.dart';
 import '../../../viewModel/edit/preset/vm_preset.dart';
 import '../../util/view_color_picker.dart';
 

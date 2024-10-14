@@ -25,7 +25,7 @@ import 'package:visibility_detector/visibility_detector.dart';
 import '../../main.dart';
 import '../../model/platform_system.dart';
 import '../../viewModel/choice/vm_choice.dart';
-import '../../viewModel/edit/preset/vm_choice_node_preset.dart';
+import '../../viewModel/edit/preset/vm_node_preset.dart';
 import '../../viewModel/edit/vm_make_platform.dart';
 import '../../viewModel/vm_variable_table.dart';
 import '../util/SliderThumbStyle.dart';

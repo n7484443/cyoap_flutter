@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'vm_choice_node_preset.dart';
+part of 'vm_node_preset.dart';
 
 // **************************************************************************
 // RiverpodGenerator

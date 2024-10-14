@@ -12,7 +12,7 @@ import '../../../util/easy_clone.dart';
 import '../../choice/vm_choice_node.dart';
 import '../vm_draggable_nested_map.dart';
 
-part 'vm_choice_node_preset.g.dart';
+part 'vm_node_preset.g.dart';
 
 final choiceNodePresetCurrentEditProvider =
     Provider.autoDispose<ChoiceNodeDesignPreset>((ref) {

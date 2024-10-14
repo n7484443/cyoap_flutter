@@ -4,6 +4,7 @@ import 'package:cyoap_core/preset/layout.dart' hide Text;
 import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
+import 'package:cyoap_flutter/view/edit/preset/view_node_layout.dart';
 import 'package:cyoap_flutter/view/edit/preset/view_preset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,7 +13,7 @@ import '../../../main.dart';
 import '../../../model/image_db.dart';
 import '../../../model/platform.dart';
 import '../../../viewModel/choice/vm_choice.dart';
-import '../../../viewModel/edit/preset/vm_choice_node_preset.dart';
+import '../../../viewModel/edit/preset/vm_node_preset.dart';
 import '../../../viewModel/edit/preset/vm_preset.dart';
 import '../../choice/view_choice_node.dart';
 import '../../util/view_color_picker.dart';
@@ -226,9 +227,9 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
       case 2:
         currentChild = const ViewNodeColorOptionEditor();
       case 3:
-        currentChild = const ViewNodeLayoutEditor();
-      default:
         currentChild = const ViewNodeComponentOptionEditor();
+      default:
+        currentChild = const ViewNodeLayoutEditor();
     }
     List<(Widget, String)> destinations = [
       (const Icon(Icons.settings), 'general'.i18n),
@@ -325,25 +326,13 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
           labelType: NavigationRailLabelType.all,
         ),
         const SizedBox(
-          width: 8,
+          width: 4,
         ),
         Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(ConstList.padding),
-            child: currentChild,
-          ),
+          child: currentChild,
         ),
       ],
     );
-  }
-}
-
-class ViewNodeLayoutEditor extends ConsumerWidget {
-  const ViewNodeLayoutEditor({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    throw UnimplementedError();
   }
 }
 

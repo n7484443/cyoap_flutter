@@ -12,7 +12,7 @@ import '../../main.dart';
 import '../../model/platform_system.dart';
 import '../../viewModel/choice/vm_choice.dart';
 import '../../viewModel/choice/vm_choice_line.dart';
-import '../../viewModel/edit/preset/vm_choice_line_preset.dart';
+import '../../viewModel/edit/preset/vm_line_preset.dart';
 import '../../viewModel/edit/vm_draggable_nested_map.dart';
 import '../../viewModel/edit/vm_editor.dart';
 import '../../viewModel/edit/vm_make_platform.dart';
