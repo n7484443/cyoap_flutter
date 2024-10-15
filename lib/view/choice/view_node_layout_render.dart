@@ -52,7 +52,7 @@ class RenderNodeLayout extends RenderBox
       }
     } else {
       _childrenLayout = value;
-      markNeedsPaint();
+      markNeedsLayout();
     }
   }
 
