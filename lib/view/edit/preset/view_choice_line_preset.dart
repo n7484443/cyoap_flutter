@@ -1,6 +1,6 @@
 import 'package:context_menus/context_menus.dart';
 import 'package:cyoap_core/preset/line_preset.dart';
-import 'package:cyoap_core/preset/node_preset.dart';
+import 'package:cyoap_core/preset/preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/edit/preset/view_preset.dart';

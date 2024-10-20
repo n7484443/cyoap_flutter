@@ -61,7 +61,7 @@ class PlatformSystem {
   }
 }
 
-AbstractPlatform get getPlatform {
+EditablePlatform get getPlatform {
   if (getPlatformFileSystem.platform == null) {
     PlatformSystem().openPlatformVoid();
   }

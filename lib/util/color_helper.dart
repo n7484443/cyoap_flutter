@@ -2,7 +2,7 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui show Gradient;
 
-import 'package:cyoap_core/preset/node_preset.dart';
+import 'package:cyoap_core/preset/preset.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

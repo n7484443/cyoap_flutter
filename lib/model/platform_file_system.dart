@@ -26,7 +26,7 @@ class LoadProjectState {
 }
 
 class PlatformFileSystem {
-  AbstractPlatform? platform;
+  EditablePlatform? platform;
 
   final Map<String, String> _imageSource = {};
 
@@ -53,7 +53,7 @@ class PlatformFileSystem {
         throw Exception('folder is empty');
       }
       if (dirDirectory.listSync().isEmpty) {
-        platform = AbstractPlatform.none();
+        platform = EditablePlatform.none();
         platform?.init();
         return LoadProjectState(ProjectState.success,
             version: version, description: description);
@@ -74,7 +74,7 @@ class PlatformFileSystem {
         throw Exception('platform.json is empty');
       }
       version = jsonDecode(data)['currentFileVersion'] ?? 0;
-      platform = AbstractPlatform.fromJson(jsonDecode(data));
+      platform = EditablePlatform.fromJson(jsonDecode(data));
 
       var existImages = await dirImages.exists();
       if (!existImages) {
@@ -158,7 +158,7 @@ class PlatformFileSystem {
         _imageSource[source] = map[source];
       }
 
-      platform = AbstractPlatform.fromJson(jsonDecode(platformData));
+      platform = EditablePlatform.fromJson(jsonDecode(platformData));
       platform!.addDataAll(lineSettingList);
       platform!.init();
       projectState = ProjectState.success;
@@ -215,9 +215,9 @@ class PlatformFileSystem {
       }
       if (platformJson != null) {
         version = jsonDecode(platformJson)['currentFileVersion'] ?? 0;
-        platform = AbstractPlatform.fromJson(jsonDecode(platformJson));
+        platform = EditablePlatform.fromJson(jsonDecode(platformJson));
       } else {
-        platform = AbstractPlatform.none();
+        platform = EditablePlatform.none();
       }
 
       platform!.addDataAll(lineSettingList);
@@ -254,7 +254,7 @@ class PlatformFileSystem {
 
   void createFromVoid() {
     openAsFile = true;
-    platform = AbstractPlatform.none();
+    platform = EditablePlatform.none();
   }
 
   Future<Map<String, Uint8List>> get saveDataMap async {

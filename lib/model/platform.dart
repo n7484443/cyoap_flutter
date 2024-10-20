@@ -14,7 +14,7 @@ import 'clipboard.dart';
 
 const int designSamplePosition = -100;
 
-class AbstractPlatform extends PlayablePlatform {
+class EditablePlatform extends PlayablePlatform {
   Clipboard clipboard;
 
   ListQueue<Color> lastColorList =
@@ -43,11 +43,11 @@ class AbstractPlatform extends PlayablePlatform {
     updateStatus();
   }
 
-  AbstractPlatform.none()
+  EditablePlatform.none()
       : clipboard = Clipboard(ConstList.clipboardMaximumCapacity),
         super();
 
-  AbstractPlatform.fromJson(Map<String, dynamic> json)
+  EditablePlatform.fromJson(Map<String, dynamic> json)
       : clipboard = Clipboard.fromJson(json['clipboard'] ?? {}),
         super.fromJson(json) {
     if (json['lastColorList'] != null) {

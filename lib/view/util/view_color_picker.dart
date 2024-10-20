@@ -1,4 +1,4 @@
-import 'package:cyoap_core/preset/node_preset.dart';
+import 'package:cyoap_core/preset/preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';

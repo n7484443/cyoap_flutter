@@ -11,8 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart'
 deferred as platform_specified;
 
-AbstractPlatform createPlatform() {
-  AbstractPlatform platform = AbstractPlatform.none();
+EditablePlatform createPlatform() {
+  EditablePlatform platform = EditablePlatform.none();
   platform.addData(const Pos(data: [0, 0, 0]),
       ChoiceNode(title: "save load test 1", width: 12, contents: "testData 1"));
   platform.addData(
@@ -25,7 +25,7 @@ AbstractPlatform createPlatform() {
   return platform;
 }
 
-bool checkSamePlatform(AbstractPlatform a, AbstractPlatform b) {
+bool checkSamePlatform(EditablePlatform a, EditablePlatform b) {
   var aData = jsonEncode(a.toJson());
   var bData = jsonEncode(b.toJson());
   return aData == bData;
@@ -43,7 +43,7 @@ void main() async {
     if (await fileZip.exists()) {
       await fileZip.delete();
     }
-    AbstractPlatform platform = createPlatform();
+    EditablePlatform platform = createPlatform();
     PlatformFileSystem fileSystem = PlatformSystem.platformFileSystem;
     fileSystem.path = pathFolder;
     fileSystem.openAsFile = true;
@@ -61,7 +61,7 @@ void main() async {
       await dir.delete(recursive: true);
     }
     await dir.create();
-    AbstractPlatform platform = createPlatform();
+    EditablePlatform platform = createPlatform();
     PlatformFileSystem fileSystem = PlatformSystem.platformFileSystem;
     fileSystem.path = pathFolder;
     fileSystem.openAsFile = false;

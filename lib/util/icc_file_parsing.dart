@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:cyoap_core/choiceNode/choice_line.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/preset/node_preset.dart';
+import 'package:cyoap_core/preset/preset.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,11 +18,11 @@ class IccProjectParser {
 
   IccProjectParser(this.path);
 
-  Future<(AbstractPlatform, Map<String, Uint8List>)> getPlatform(
+  Future<(EditablePlatform, Map<String, Uint8List>)> getPlatform(
       String input, Ref ref) async {
     Map<String, dynamic> parsed = jsonDecode(input);
     Map<String, Uint8List> imageList = {};
-    var platform = AbstractPlatform.none();
+    var platform = EditablePlatform.none();
     if (parsed['rows'] == null) {
       return (platform, imageList);
     }
