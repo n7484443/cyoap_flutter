@@ -1,4 +1,4 @@
-### 5.5.0
+### 5.4.6
 * maximize image 의 애매모호한 변수를 image maxHeight ratio로 변경
 * 초기 빈 platform 디자인 개선
 ### 5.4.5
