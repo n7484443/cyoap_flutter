@@ -352,7 +352,7 @@ class _ViewNodeGeneralOptionEditorState
               CustomTextField(
                 controller:
                 ref.watch(choiceNodePresetCurrentEditElevationProvider),
-                label: 'height'.i18n,
+                label: 'elevation'.i18n,
               ),
               CustomTextField(
                 controller:
@@ -401,11 +401,6 @@ class _ViewNodeGeneralOptionEditorState
                 label: 'image_left'.i18n,
                 disable: preset.imagePosition == 0,
                 state: preset.imagePosition == 2,
-              ),
-              CustomTextField(
-                controller:
-                    ref.watch(choiceNodePresetCurrentEditElevationProvider),
-                label: 'height'.i18n,
               ),
             ]),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
