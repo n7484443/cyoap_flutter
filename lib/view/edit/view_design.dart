@@ -154,7 +154,7 @@ class _ViewGeneralSettingTabState extends ConsumerState<ViewGeneralSettingTab> {
                 ]),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  mainAxisExtent: 80,
+                  mainAxisExtent: 68,
                   mainAxisSpacing: 60,
                   crossAxisSpacing: 60,
                 ),
@@ -208,7 +208,8 @@ class _ViewPositionSettingState extends ConsumerState<ViewPositionSetting> {
   Widget build(BuildContext context) {
     return CustomTextField(
       controller: _controller!,
-      label: 'margin_vertical'.i18n.fill([12.0]),
+      label: 'margin_vertical'.i18n,
+      subLabel: 'margin_vertical_sub'.i18n.fill([12.0]),
       keyboardType: const TextInputType.numberWithOptions(
         decimal: true,
         signed: false,

@@ -6,9 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../main.dart';
 import '../../../viewModel/edit/preset/vm_preset.dart';
+import '../../util/view_options.dart';
 
 class ViewPresetTab extends ConsumerWidget {
-  final List<String> tabName = ['node'.i18n, 'line'.i18n];
+  final List<String> tabName = ['node', 'line'];
 
   ViewPresetTab({
     super.key,
@@ -17,19 +18,28 @@ class ViewPresetTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var currentIndex = ref.watch(currentPresetTab);
-    var first = ListView.builder(
-      controller: ScrollController(),
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(tabName[index]),
-          selected: ref.watch(currentPresetTab) == index,
-          onTap: () {
-            ref.read(currentPresetTab.notifier).state = index;
-          },
-        );
+    var first = CustomDropdownButton<String>(
+      label: 'preset'.i18n,
+      items: tabName.map((name) => DropdownMenuItem(value: name, child: Text(name.i18n))).toList(),
+      value: tabName[currentIndex],
+      useCard: false,
+      onChanged: (value) {
+        ref.read(currentPresetTab.notifier).state = tabName.indexOf(value!);
       },
-      itemCount: tabName.length,
     );
+    // var first = ListView.builder(
+    //   controller: ScrollController(),
+    //   itemBuilder: (context, index) {
+    //     return ListTile(
+    //       title: Text(tabName[index]),
+    //       selected: ref.watch(currentPresetTab) == index,
+    //       onTap: () {
+    //         ref.read(currentPresetTab.notifier).state = index;
+    //       },
+    //     );
+    //   },
+    //   itemCount: tabName.length,
+    // );
     if (currentIndex == 0) {
       return ViewPresetPosition(
         first: first,
@@ -53,12 +63,7 @@ class ViewPresetPosition extends ConsumerStatefulWidget {
   final Widget describe;
   final Widget? sample;
 
-  const ViewPresetPosition(
-      {required this.first,
-      required this.second,
-      required this.describe,
-      required this.sample,
-      super.key});
+  const ViewPresetPosition({required this.first, required this.second, required this.describe, required this.sample, super.key});
 
   @override
   ConsumerState<ViewPresetPosition> createState() => _ViewPresetPositionState();
@@ -110,32 +115,25 @@ class _ViewPresetPositionState extends ConsumerState<ViewPresetPosition> {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Expanded(
-            flex: 7,
+          SizedBox(
+            width: 300,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                widget.first,
                 Expanded(
                   flex: 5,
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 90,
-                        child: widget.first,
-                      ),
-                      const VerticalDivider(width: 2),
-                      Expanded(
-                        child: widget.second,
-                      )
-                    ],
-                  ),
+                  child: widget.second,
                 ),
                 const Divider(height: 2),
                 SizedBox(
-                  height: 350,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: widget.sample!,
+                  height: 300,
+                  child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: widget.sample!,
+                    ),
                   ),
                 )
               ],

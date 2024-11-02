@@ -25,35 +25,32 @@ class ViewColorPicker extends ConsumerWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(
-          height: hasAlpha ? 420 : 360,
-          child: ColorPicker(
-            heading: text == null
-                ? null
-                : Center(
-                    child: Text(
-                      text!,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
+        ColorPicker(
+          heading: text == null
+              ? null
+              : Center(
+                  child: Text(
+                    text!,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
-            color: color,
-            onColorChanged: onColorChanged,
-            pickersEnabled: {
-              ColorPickerType.wheel: true,
-              ColorPickerType.accent: false,
-              ColorPickerType.custom: true,
-            },
-            pickerTypeLabels: {
-              ColorPickerType.primary: "color_select".i18n,
-              ColorPickerType.wheel: "color_direct_select".i18n,
-            },
-            recentColors: getPlatform.lastColorList.toList(),
-            showRecentColors: true,
-            width: 18,
-            height: 18,
-            borderRadius: 22,
-            enableOpacity: hasAlpha,
-          ),
+                ),
+          color: color,
+          onColorChanged: onColorChanged,
+          pickersEnabled: {
+            ColorPickerType.wheel: true,
+            ColorPickerType.accent: false,
+            ColorPickerType.custom: true,
+          },
+          pickerTypeLabels: {
+            ColorPickerType.primary: "color_select".i18n,
+            ColorPickerType.wheel: "color_direct_select".i18n,
+          },
+          recentColors: getPlatform.lastColorList.toList(),
+          showRecentColors: true,
+          width: 18,
+          height: 18,
+          borderRadius: 22,
+          enableOpacity: hasAlpha,
         ),
         ViewRGBAInput(
           onColorChanged: onColorChanged,

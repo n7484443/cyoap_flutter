@@ -16,62 +16,52 @@ class CustomTextField extends ConsumerWidget {
   final double? outPadding;
 
   const CustomTextField(
-      {super.key,
-      required this.controller,
-      this.label,
-      this.subLabel,
-      this.tooltip,
-      this.icon,
-      this.keyboardType = TextInputType.number,
-      this.maxLength,
-      this.forceWidth,
-      this.outPadding});
+      {super.key, required this.controller, this.label, this.subLabel, this.tooltip, this.icon, this.keyboardType = TextInputType.number, this.maxLength, this.forceWidth, this.outPadding});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Padding(
-      padding: EdgeInsets.all(outPadding ?? 0.0),
-      child: SizedBox(
-        width: forceWidth,
-        child: Tooltip(
-          message: tooltip ?? '',
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(ConstList.padding),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  if (icon != null) icon!,
-                  if (label != null)
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(label!),
-                    ),
-                  if (subLabel != null)
-                    Positioned(
-                      left: 0,
-                      bottom: 0,
-                      child: Text(
-                        subLabel!,
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelSmall
-                            ?.copyWith(color: const Color(0xFF666666)),
-                      ),
-                    ),
+    return SizedBox(
+      width: forceWidth,
+      height: subLabel != null ? 70 : null,
+      child: Tooltip(
+        message: tooltip ?? '',
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(ConstList.padding),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                if (icon != null) icon!,
+                if (label != null)
                   Align(
-                    alignment: Alignment.centerRight,
-                    child: TextField(
-                      textAlign: TextAlign.end,
-                      minLines: 1,
-                      maxLines: 1,
-                      maxLength: maxLength,
-                      keyboardType: keyboardType,
-                      controller: controller,
+                    alignment: Alignment.centerLeft,
+                    child: Text(label!),
+                  ),
+                if (subLabel != null)
+                  Positioned(
+                    left: 0,
+                    bottom: 0,
+                    child: Text(
+                      subLabel!,
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(color: const Color(0xFF666666)),
                     ),
-                  )
-                ],
-              ),
+                  ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextField(
+                    textAlign: TextAlign.end,
+                    minLines: 1,
+                    maxLines: 1,
+                    maxLength: maxLength,
+                    keyboardType: keyboardType,
+                    controller: controller,
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.all(0),
+                      isCollapsed: true,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -85,36 +75,40 @@ class CustomDropdownButton<T> extends ConsumerWidget {
   final void Function(T?)? onChanged;
   final List<DropdownMenuItem<T>> items;
   final T value;
+  final bool useCard;
 
-  const CustomDropdownButton(
-      {super.key,
-      required this.label,
-      this.onChanged,
-      required this.value,
-      required this.items});
+  const CustomDropdownButton({super.key, required this.label, this.onChanged, required this.value, required this.items, this.useCard = true});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(ConstList.padding),
-        child: Row(
-          children: [
-            Text(label),
-            const Padding(
-              padding: EdgeInsets.all(ConstList.padding),
-            ),
-            Expanded(
-              child: DropdownButtonFormField<T>(
-                items: items,
-                onChanged: onChanged,
-                value: value,
-                isExpanded: true,
+    var child = Padding(
+      padding: const EdgeInsets.all(ConstList.padding),
+      child: Row(
+        children: [
+          Text(label),
+          const Padding(
+            padding: EdgeInsets.all(ConstList.padding),
+          ),
+          Expanded(
+            child: DropdownButtonFormField<T>(
+              items: items,
+              onChanged: onChanged,
+              value: value,
+              isExpanded: true,
+              decoration: const InputDecoration(
+                contentPadding: EdgeInsets.all(0),
+                isCollapsed: true,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
+    );
+    if (!useCard) {
+      return child;
+    }
+    return Card(
+      child: child,
     );
   }
 }
@@ -125,12 +119,7 @@ class CustomSwitch extends ConsumerWidget {
   final bool state;
   final bool disable;
 
-  const CustomSwitch(
-      {super.key,
-      required this.updateState,
-      required this.label,
-      required this.state,
-      this.disable = false});
+  const CustomSwitch({super.key, required this.updateState, required this.label, required this.state, this.disable = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

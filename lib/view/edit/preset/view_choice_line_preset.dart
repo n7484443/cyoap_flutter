@@ -19,9 +19,10 @@ class ChoiceLineSample extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print("updated");
     var colorOption = ref.watch(choiceLinePresetCurrentEditProvider)!.backgroundColorOption!;
     return Container(
+      width: 300,
+      height: 300,
       decoration: BoxDecoration(
         image: ImageDB().checkers,
       ),
@@ -31,9 +32,6 @@ class ChoiceLineSample extends ConsumerWidget {
           decoration: BoxDecoration(
             color: colorOption.getColor(),
             gradient: colorOption.getGradient(),
-          ),
-          constraints: const BoxConstraints.expand(
-            height: 300,
           ),
         ),
       ),
@@ -82,15 +80,6 @@ class ChoiceLinePresetList extends ConsumerWidget {
     ];
     return Column(
       children: [
-        ListTile(
-          title: Text('preset'.i18n),
-          trailing: IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              ref.read(choiceLinePresetListProvider.notifier).create();
-            },
-          ),
-        ),
         Expanded(
           child: ListView.builder(
             controller: ScrollController(),
@@ -123,6 +112,14 @@ class ChoiceLinePresetList extends ConsumerWidget {
             },
           ),
         ),
+        ListTile(
+          title: IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              ref.read(choiceLinePresetListProvider.notifier).create();
+            },
+          ),
+        ),
       ],
     );
   }
@@ -134,7 +131,7 @@ class ViewLineOptionEditor extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var preset = ref.watch(choiceLinePresetCurrentEditProvider)!;
-    var name = ref.watch(currentPresetNameProvider)!;
+    var name = ref.watch(currentPresetNameProvider);
     var colorOption = preset.backgroundColorOption;
     return Padding(
       padding: const EdgeInsets.all(ConstList.padding),

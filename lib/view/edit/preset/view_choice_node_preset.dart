@@ -129,15 +129,6 @@ class ChoiceNodePresetList extends ConsumerWidget {
     ];
     return Column(
       children: [
-        ListTile(
-          title: Text('preset'.i18n),
-          trailing: IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              ref.read(choiceNodePresetListProvider.notifier).create();
-            },
-          ),
-        ),
         Expanded(
           child: ListView.builder(
             controller: ScrollController(),
@@ -170,6 +161,14 @@ class ChoiceNodePresetList extends ConsumerWidget {
                   selected: name == ref.watch(currentPresetNameProvider),
                 ),
               );
+            },
+          ),
+        ),
+        ListTile(
+          title: IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              ref.read(choiceNodePresetListProvider.notifier).create();
             },
           ),
         ),
@@ -264,6 +263,12 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(left: ConstList.padding),
+            child: currentChild,
+          ),
+        ),
         NavigationRail(
           destinations: List.generate(destinations.length, (int index) {
             return NavigationRailDestination(
@@ -277,15 +282,6 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
             ref.read(choiceNodePresetCurrentTabProvider.notifier).state = index;
           },
           labelType: NavigationRailLabelType.all,
-        ),
-        const SizedBox(
-          width: 8,
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(ConstList.padding),
-            child: currentChild,
-          ),
         ),
       ],
     );
@@ -377,7 +373,7 @@ class _ViewNodeGeneralOptionEditorState extends ConsumerState<ViewNodeGeneralOpt
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
               crossAxisSpacing: 10,
-              mainAxisExtent: 80,
+              mainAxisExtent: 64,
               mainAxisSpacing: 2,
             ),
           ),
@@ -408,7 +404,7 @@ class _ViewNodeGeneralOptionEditorState extends ConsumerState<ViewNodeGeneralOpt
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
               crossAxisSpacing: 10,
-              mainAxisExtent: 80,
+              mainAxisExtent: 64,
               mainAxisSpacing: 2,
             ),
           ),
@@ -483,7 +479,7 @@ class _ViewNodeOutlineOptionEditorState extends ConsumerState<ViewNodeOutlineOpt
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
               crossAxisSpacing: 10,
-              mainAxisExtent: 80,
+              mainAxisExtent: 64,
               mainAxisSpacing: 2,
             ),
           ),
@@ -568,7 +564,7 @@ class _ViewNodeOutlineOptionEditorState extends ConsumerState<ViewNodeOutlineOpt
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
                 crossAxisSpacing: 10,
-                mainAxisExtent: 80,
+                mainAxisExtent: 64,
                 mainAxisSpacing: 2,
               ),
             ),
