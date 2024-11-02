@@ -22,17 +22,10 @@ class PresetDialog extends ConsumerWidget {
       title: Text('modify_preset'.i18n, textAlign: TextAlign.center),
       content: DropdownButtonFormField<String>(
         decoration: InputDecoration(labelText: 'preset_setting'.i18n),
-        items: ref
-            .watch(choiceNodePresetListProvider)
-            .map<DropdownMenuItem<String>>((preset) =>
-                DropdownMenuItem(value: preset.name, child: Text(preset.name!)))
-            .toList(),
+        items: ref.watch(choiceNodePresetListProvider).keys.map<DropdownMenuItem<String>>((name) => DropdownMenuItem(value: name, child: Text(name))).toList(),
         onChanged: (String? t) {
           if (t != null) {
-            ref
-                .read(choiceStatusProvider(pos).notifier)
-                .asChoiceNode()
-                ?.choiceNodeOption = design.copyWith(
+            ref.read(choiceStatusProvider(pos).notifier).asChoiceNode()?.choiceNodeOption = design.copyWith(
               presetName: t,
             );
             ref.read(choiceStatusProvider(pos).notifier).refreshSelf();
@@ -65,13 +58,10 @@ class SizeDialog extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('${'length'.i18n} : $str',
-                style: Theme.of(context).textTheme.titleMedium),
+            Text('${'length'.i18n} : $str', style: Theme.of(context).textTheme.titleMedium),
             Slider(
               onChanged: (double value) {
-                ref
-                    .read(choiceNodeSizeProvider(pos).notifier)
-                    .sizeChange(value.toInt());
+                ref.read(choiceNodeSizeProvider(pos).notifier).sizeChange(value.toInt());
               },
               value: width.toDouble(),
               divisions: preset.maxChildrenPerRow,

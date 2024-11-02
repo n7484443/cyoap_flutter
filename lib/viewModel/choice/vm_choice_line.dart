@@ -11,24 +11,17 @@ import '../../model/platform_system.dart';
 part 'vm_choice_line.g.dart';
 
 @riverpod
-ChoiceLineDesignPreset lineDesignPreset(LineDesignPresetRef ref,
-    {required Pos pos}) {
+ChoiceLineDesignPreset lineDesignPreset(Ref ref, {required Pos pos}) {
   var line = ref.watch(choiceStatusProvider(pos)).asChoiceLine();
-  var presetList = ref.watch(choiceLinePresetListProvider);
   var presetName = line?.choiceLineOption.presetName;
-  return presetList.firstWhere((element) => element.name == presetName,
-      orElse: () => const ChoiceLineDesignPreset(name: 'default'));
+  return ref.watch(choiceLinePresetProvider(presetName!));
 }
 
 @riverpod
 class LineOption extends _$LineOption {
   @override
   ChoiceLineOption build({required Pos pos}) {
-    return ref
-            .watch(choiceStatusProvider(pos))
-            .asChoiceLine()
-            ?.choiceLineOption ??
-        const ChoiceLineOption();
+    return ref.watch(choiceStatusProvider(pos)).asChoiceLine()?.choiceLineOption ?? const ChoiceLineOption();
   }
 
   void setValue(ChoiceLineOption value) {
@@ -54,7 +47,6 @@ class LineFold extends _$LineFold {
   }
 }
 
-final isEditableStateProvider =
-    StateProvider.autoDispose.family<bool, Pos>((ref, pos) {
+final isEditableStateProvider = StateProvider.autoDispose.family<bool, Pos>((ref, pos) {
   return true;
 });

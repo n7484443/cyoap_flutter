@@ -144,6 +144,8 @@ class ChoiceNodeDesignSettingProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ChoiceNodeDesignSettingRef on AutoDisposeProviderRef<ChoiceNodeOption> {
   /// The parameter `pos` of this provider.
   Pos get pos;
@@ -273,6 +275,8 @@ class ImageStringProvider extends AutoDisposeProvider<String> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ImageStringRef on AutoDisposeProviderRef<String> {
   /// The parameter `pos` of this provider.
   Pos get pos;
@@ -401,6 +405,8 @@ class ContentsQuillProvider extends AutoDisposeProvider<String?> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ContentsQuillRef on AutoDisposeProviderRef<String?> {
   /// The parameter `pos` of this provider.
   Pos get pos;
@@ -414,4 +420,4 @@ class _ContentsQuillProviderElement extends AutoDisposeProviderElement<String?>
   Pos get pos => (origin as ContentsQuillProvider).pos;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

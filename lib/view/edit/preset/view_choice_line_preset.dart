@@ -19,8 +19,8 @@ class ChoiceLineSample extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var colorOption =
-        ref.watch(choiceLinePresetCurrentEditProvider).backgroundColorOption!;
+    print("updated");
+    var colorOption = ref.watch(choiceLinePresetCurrentEditProvider)!.backgroundColorOption!;
     return Container(
       decoration: BoxDecoration(
         image: ImageDB().checkers,
@@ -49,36 +49,34 @@ class ChoiceLinePresetList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var list = ref.watch(choiceLinePresetListProvider);
-    var popupDefaultPreset = [
+    List<(String, void Function(String name, ChoiceLineDesignPreset preset))> popupDefaultPreset = [
       (
         'clone'.i18n,
-        (index, preset) async {
-          ref.read(choiceLinePresetListProvider.notifier).cloneIndex(index);
+        (name, preset) async {
+          ref.read(choiceLinePresetListProvider.notifier).clone(name);
         }
       ),
     ];
-    var popupNonDefaultPreset = [
+    List<(String, void Function(String name, ChoiceLineDesignPreset preset))> popupNonDefaultPreset = [
       (
         'rename'.i18n,
-        (index, preset) async {
+        (name, preset) async {
           var text = await showDialog(
               context: context,
               builder: (context) {
-                return PresetRenameDialog(preset.name!);
+                return PresetRenameDialog(name);
               },
               barrierDismissible: false);
           if (text != null && text.trim().isNotEmpty) {
-            ref
-                .read(choiceLinePresetListProvider.notifier)
-                .rename(index, text.trim());
+            ref.read(choiceLinePresetListProvider.notifier).rename(name, text.trim());
           }
         }
       ),
       ...popupDefaultPreset,
       (
         'delete'.i18n,
-        (index, preset) async {
-          ref.read(choiceLinePresetListProvider.notifier).deleteIndex(index);
+        (name, preset) async {
+          ref.read(choiceLinePresetListProvider.notifier).delete(name);
         }
       ),
     ];
@@ -99,10 +97,9 @@ class ChoiceLinePresetList extends ConsumerWidget {
             shrinkWrap: true,
             itemCount: list.length,
             itemBuilder: (BuildContext context, int index) {
-              var preset = list[index];
-              var popupList = preset.name == "default"
-                  ? popupDefaultPreset
-                  : popupNonDefaultPreset;
+              var name = list.keys.toList()[index];
+              var preset = list[name]!;
+              var popupList = name == "default" ? popupDefaultPreset : popupNonDefaultPreset;
               return ContextMenuRegion(
                   contextMenu: GenericContextMenu(
                     buttonConfigs: List.generate(
@@ -110,20 +107,18 @@ class ChoiceLinePresetList extends ConsumerWidget {
                       (popupIndex) => ContextMenuButtonConfig(
                         popupList[popupIndex].$1,
                         onPressed: () {
-                          popupList[popupIndex].$2(index, preset);
+                          popupList[popupIndex].$2(name, preset);
                         },
                       ),
                     ),
                   ),
                   child: ListTile(
                     key: Key('$index'),
-                    title: Text(preset.name!),
+                    title: Text(name),
                     onTap: () {
-                      ref
-                          .read(currentPresetIndexProvider.notifier)
-                          .update((state) => index);
+                      ref.read(currentPresetNameProvider.notifier).update((state) => name);
                     },
-                    selected: index == ref.watch(currentPresetIndexProvider),
+                    selected: name == ref.watch(currentPresetNameProvider),
                   ));
             },
           ),
@@ -138,8 +133,8 @@ class ViewLineOptionEditor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var preset = ref.watch(choiceLinePresetCurrentEditProvider);
-    var index = ref.watch(currentPresetIndexProvider);
+    var preset = ref.watch(choiceLinePresetCurrentEditProvider)!;
+    var name = ref.watch(currentPresetNameProvider)!;
     var colorOption = preset.backgroundColorOption;
     return Padding(
       padding: const EdgeInsets.all(ConstList.padding),
@@ -150,12 +145,7 @@ class ViewLineOptionEditor extends ConsumerWidget {
           SliverGrid(
             delegate: SliverChildListDelegate([
               CustomSwitch(
-                  updateState: () => ref
-                      .read(choiceLinePresetListProvider.notifier)
-                      .updateIndex(
-                          index,
-                          preset.copyWith(
-                              alwaysVisibleLine: !preset.alwaysVisibleLine!)),
+                  updateState: () => ref.read(choiceLinePresetListProvider.notifier).update(name, preset.copyWith(alwaysVisibleLine: !preset.alwaysVisibleLine!)),
                   label: 'black_line'.i18n,
                   state: preset.alwaysVisibleLine!),
               Card(
@@ -169,24 +159,12 @@ class ViewLineOptionEditor extends ConsumerWidget {
                         icon: const Icon(Icons.chevron_left),
                         onPressed: () => ref
                             .read(choiceLinePresetListProvider.notifier)
-                            .updateIndex(
-                                index,
-                                preset.copyWith(
-                                    maxChildrenPerRow:
-                                        preset.maxChildrenPerRow! >= 0
-                                            ? preset.maxChildrenPerRow! - 1
-                                            : preset.maxChildrenPerRow!)),
+                            .update(name, preset.copyWith(maxChildrenPerRow: preset.maxChildrenPerRow! >= 0 ? preset.maxChildrenPerRow! - 1 : preset.maxChildrenPerRow!)),
                       ),
                       Text(preset.maxChildrenPerRow.toString()),
                       IconButton(
                         icon: const Icon(Icons.chevron_right),
-                        onPressed: () => ref
-                            .read(choiceLinePresetListProvider.notifier)
-                            .updateIndex(
-                                index,
-                                preset.copyWith(
-                                    maxChildrenPerRow:
-                                        preset.maxChildrenPerRow! + 1)),
+                        onPressed: () => ref.read(choiceLinePresetListProvider.notifier).update(name, preset.copyWith(maxChildrenPerRow: preset.maxChildrenPerRow! + 1)),
                       ),
                     ],
                   ),
@@ -202,17 +180,10 @@ class ViewLineOptionEditor extends ConsumerWidget {
                       SizedBox(
                         width: 80,
                         child: DropdownButtonFormField<ChoiceLineAlignment>(
-                          items: ChoiceLineAlignment.values
-                              .map<DropdownMenuItem<ChoiceLineAlignment>>(
-                                  (type) => DropdownMenuItem(
-                                      value: type, child: Text(type.name)))
-                              .toList(),
+                          items: ChoiceLineAlignment.values.map<DropdownMenuItem<ChoiceLineAlignment>>((type) => DropdownMenuItem(value: type, child: Text(type.name))).toList(),
                           onChanged: (ChoiceLineAlignment? t) {
                             if (t != null) {
-                              ref
-                                  .read(choiceLinePresetListProvider.notifier)
-                                  .updateIndex(
-                                      index, preset.copyWith(alignment: t));
+                              ref.read(choiceLinePresetListProvider.notifier).update(name, preset.copyWith(alignment: t));
                             }
                           },
                           value: preset.alignment,
@@ -230,27 +201,20 @@ class ViewLineOptionEditor extends ConsumerWidget {
               mainAxisSpacing: 2,
             ),
           ),
-          const SliverPadding(
-              padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
+          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           SliverToBoxAdapter(
             child: Card(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
-                    Text("background_color".i18n,
-                        style: Theme.of(context).textTheme.titleMedium),
+                    Text("background_color".i18n, style: Theme.of(context).textTheme.titleMedium),
                     Padding(
                       padding: const EdgeInsets.all(ConstList.padding),
                       child: ViewColorOptionEditor(
                         colorOption: colorOption!,
                         changeFunction: (ColorOption after) {
-                          ref
-                              .read(choiceLinePresetListProvider.notifier)
-                              .updateIndex(
-                                  index,
-                                  preset.copyWith(
-                                      backgroundColorOption: after));
+                          ref.read(choiceLinePresetListProvider.notifier).update(name, preset.copyWith(backgroundColorOption: after));
                         },
                       ),
                     )

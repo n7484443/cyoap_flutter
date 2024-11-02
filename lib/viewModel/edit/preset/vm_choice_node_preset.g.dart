@@ -7,7 +7,7 @@ part of 'vm_choice_node_preset.dart';
 // **************************************************************************
 
 String _$choiceNodePresetDistanceHash() =>
-    r'bf14c25b2391e4ec478537a8c77e8e50f6915ddb';
+    r'5cf2b52b528c0358d11621efbff4521ab4c48082';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -145,6 +145,8 @@ class ChoiceNodePresetDistanceProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ChoiceNodePresetDistanceRef
     on AutoDisposeProviderRef<TextEditingController> {
   /// The parameter `position` of this provider.
@@ -161,7 +163,7 @@ class _ChoiceNodePresetDistanceProviderElement
 }
 
 String _$choiceNodePresetRoundHash() =>
-    r'c56b0ea60f14108d497e5f9fba477ac701d10ca9';
+    r'68d04b92188b6c281e217b61aa165ac62309179e';
 
 /// See also [choiceNodePresetRound].
 @ProviderFor(choiceNodePresetRound)
@@ -277,6 +279,8 @@ class ChoiceNodePresetRoundProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ChoiceNodePresetRoundRef
     on AutoDisposeProviderRef<TextEditingController> {
   /// The parameter `position` of this provider.
@@ -293,7 +297,7 @@ class _ChoiceNodePresetRoundProviderElement
 }
 
 String _$choiceNodePresetOutlineDistanceHash() =>
-    r'66caa571048d6bb38b81dafe9534ec853cb02cab';
+    r'9e36d43d5afa4354b02bafda4b8256a7ca80402f';
 
 /// See also [choiceNodePresetOutlineDistance].
 @ProviderFor(choiceNodePresetOutlineDistance)
@@ -424,6 +428,8 @@ class ChoiceNodePresetOutlineDistanceProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ChoiceNodePresetOutlineDistanceRef
     on AutoDisposeProviderRef<TextEditingController> {
   /// The parameter `position` of this provider.
@@ -447,7 +453,7 @@ class _ChoiceNodePresetOutlineDistanceProviderElement
 }
 
 String _$choiceNodePresetOutlineRoundHash() =>
-    r'264c1c8333b1da99d872760cbc5282e3a107c008';
+    r'710c8a6256c40ed4acbee5f955599e3fd4a78be9';
 
 /// See also [choiceNodePresetOutlineRound].
 @ProviderFor(choiceNodePresetOutlineRound)
@@ -577,6 +583,8 @@ class ChoiceNodePresetOutlineRoundProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ChoiceNodePresetOutlineRoundRef
     on AutoDisposeProviderRef<TextEditingController> {
   /// The parameter `position` of this provider.
@@ -600,7 +608,7 @@ class _ChoiceNodePresetOutlineRoundProviderElement
 }
 
 String _$choiceNodePresetImageMaxHeightRatioHash() =>
-    r'99afdb842083ae258f35ad1655337dea945945db';
+    r'09d6f97f4255e4e1cc8e6df123bb8e1253c6e9e7';
 
 /// See also [choiceNodePresetImageMaxHeightRatio].
 @ProviderFor(choiceNodePresetImageMaxHeightRatio)
@@ -615,7 +623,9 @@ final choiceNodePresetImageMaxHeightRatioProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ChoiceNodePresetImageMaxHeightRatioRef
     = AutoDisposeProviderRef<TextEditingController>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -16,6 +16,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../model/platform.dart';
 import '../../model/platform_system.dart';
+import '../edit/preset/vm_preset.dart';
 
 part 'vm_choice.g.dart';
 
@@ -47,7 +48,7 @@ class ChoiceStatus extends ChangeNotifier {
         ..maximumStatus = 4;
 
       choiceNode.choiceNodeOption = choiceNode.choiceNodeOption.copyWith(
-          presetName: ref.read(choiceNodePresetCurrentEditProvider).name!,
+          presetName: ref.read(currentPresetNameProvider)!,
           showAsSlider: true);
       choiceNode.select = ref.read(choiceNodePresetTestSelectProvider)
           ? choiceNode.maximumStatus ~/ 2
@@ -173,7 +174,7 @@ class CurrentChoicePage extends _$CurrentChoicePage {
 }
 
 @riverpod
-bool isEditable(IsEditableRef ref, {required Pos pos}) {
+bool isEditable(Ref ref, {required Pos pos}) {
   if (pos.length == 1) {
     return isPlatformEditable;
   }

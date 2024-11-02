@@ -6,7 +6,7 @@ part of 'vm_choice_line.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$lineDesignPresetHash() => r'0f94dd897500860e90a8e318c29dd893fae6ddc8';
+String _$lineDesignPresetHash() => r'68d0b43703c3982a329fce458c1863fecd649766';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -143,6 +143,8 @@ class LineDesignPresetProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin LineDesignPresetRef on AutoDisposeProviderRef<ChoiceLineDesignPreset> {
   /// The parameter `pos` of this provider.
   Pos get pos;
@@ -287,6 +289,8 @@ class LineOptionProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin LineOptionRef on AutoDisposeNotifierProviderRef<ChoiceLineOption> {
   /// The parameter `pos` of this provider.
   Pos get pos;
@@ -427,6 +431,8 @@ class LineFoldProvider extends AutoDisposeNotifierProviderImpl<LineFold, bool> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin LineFoldRef on AutoDisposeNotifierProviderRef<bool> {
   /// The parameter `pos` of this provider.
   Pos get pos;
@@ -441,4 +447,4 @@ class _LineFoldProviderElement
   Pos get pos => (origin as LineFoldProvider).pos;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

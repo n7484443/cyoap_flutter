@@ -22,6 +22,8 @@ final projectSettingNameTextEditingProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ProjectSettingNameTextEditingRef
     = AutoDisposeProviderRef<TextEditingController>;
 String _$projectSettingValueTextEditingHash() =>
@@ -40,6 +42,8 @@ final projectSettingValueTextEditingProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ProjectSettingValueTextEditingRef
     = AutoDisposeProviderRef<TextEditingController>;
 String _$projectSettingDisplayNameTextEditingHash() =>
@@ -58,6 +62,8 @@ final projectSettingDisplayNameTextEditingProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ProjectSettingDisplayNameTextEditingRef
     = AutoDisposeProviderRef<TextEditingController>;
 String _$globalVariableFilteredListHash() =>
@@ -76,6 +82,8 @@ final globalVariableFilteredListProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GlobalVariableFilteredListRef = AutoDisposeProviderRef<List<int>>;
 String _$valueTypeWrapperListHash() =>
     r'f51ac20084a926ddd7141bf42748466c80de38e4';
@@ -96,4 +104,4 @@ final valueTypeWrapperListProvider = AutoDisposeNotifierProvider<
 typedef _$ValueTypeWrapperList
     = AutoDisposeNotifier<List<(String, ValueTypeWrapper)>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

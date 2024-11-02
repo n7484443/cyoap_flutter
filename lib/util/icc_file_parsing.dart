@@ -18,8 +18,7 @@ class IccProjectParser {
 
   IccProjectParser(this.path);
 
-  Future<(EditablePlatform, Map<String, Uint8List>)> getPlatform(
-      String input, Ref ref) async {
+  Future<(EditablePlatform, Map<String, Uint8List>)> getPlatform(String input, Ref ref) async {
     Map<String, dynamic> parsed = jsonDecode(input);
     Map<String, Uint8List> imageList = {};
     var platform = EditablePlatform.none();
@@ -27,17 +26,13 @@ class IccProjectParser {
       return (platform, imageList);
     }
     var rows = parsed['rows'] as List;
-    List<ChoiceNodeDesignPreset> nodePresets = [];
+    Map<String, ChoiceNodeDesignPreset> nodePresets = {};
     var styles = parsed['styling'];
 
-    int backgroundColor =
-        HexColor.fromHex(styles['backgroundColor']).value; //background color
-    int objectBackgroundColor =
-        HexColor.fromHex(styles['objectBgColor']).value; //object color
-    int rowBackgroundColor =
-        HexColor.fromHex(styles['rowBgColor']).value; //row color
-    int objectSelectBackgroundColor =
-        HexColor.fromHex(styles['selFilterBgColor']).value; //select color
+    int backgroundColor = HexColor.fromHex(styles['backgroundColor']).value; //background color
+    int objectBackgroundColor = HexColor.fromHex(styles['objectBgColor']).value; //object color
+    int rowBackgroundColor = HexColor.fromHex(styles['rowBgColor']).value; //row color
+    int objectSelectBackgroundColor = HexColor.fromHex(styles['selFilterBgColor']).value; //select color
 
     for (int i = 0; i < rows.length; i++) {
       var row = rows[i];
@@ -47,31 +42,25 @@ class IccProjectParser {
       if (out != null && out.$2 != null) {
         imageList[imageName] = out.$2!;
       }
-      var preset = checkContained(
-        nodePresets,
-        parseStyle(
-          row["styling"],
-          template: parseAsInt(row["template"]),
-          isRow: true,
-          globalSelectFilterBgColor: objectSelectBackgroundColor,
-          globalObjectBackgroundColor: objectBackgroundColor,
-          globalRowBackgroundColor: rowBackgroundColor,
-        ),
+      var (name, style) = parseStyle(
+        row["styling"],
+        template: parseAsInt(row["template"]),
+        isRow: true,
+        globalSelectFilterBgColor: objectSelectBackgroundColor,
+        globalObjectBackgroundColor: objectBackgroundColor,
+        globalRowBackgroundColor: rowBackgroundColor,
       );
+      var preset = checkContained(nodePresets, name, style);
       var choiceRow = ChoiceNode(
         width: 0,
         title: rowTitle,
         contents: toContent(row["titleText"] ?? parsed['defaultRowText']),
         imageString: imageName,
       );
-      choiceRow.choiceNodeOption =
-          choiceRow.choiceNodeOption.copyWith(presetName: preset.name!);
+      choiceRow.choiceNodeOption = choiceRow.choiceNodeOption.copyWith(presetName: preset.$1);
       choiceRow.choiceNodeMode = ChoiceNodeMode.unSelectableMode;
       var lineSetting = ChoiceLine()..addChild(choiceRow);
-      var rowWidth = int.tryParse((row['objectWidth'] as String? ?? '')
-              .replaceAll("md-", "")
-              .replaceAll("col-", "")) ??
-          0;
+      var rowWidth = int.tryParse((row['objectWidth'] as String? ?? '').replaceAll("md-", "").replaceAll("col-", "")) ?? 0;
 
       for (var object in row["objects"]) {
         var objectTitle = object["title"] ?? parsed['defaultChoiceTitle'];
@@ -80,17 +69,15 @@ class IccProjectParser {
         if (out != null && out.$2 != null) {
           imageList[imageName] = out.$2!;
         }
-        var preset = checkContained(
-          nodePresets,
-          parseStyle(
-            object["styling"],
-            template: parseAsInt(object["template"]),
-            isRow: false,
-            globalSelectFilterBgColor: objectSelectBackgroundColor,
-            globalObjectBackgroundColor: objectBackgroundColor,
-            globalRowBackgroundColor: rowBackgroundColor,
-          ),
+        var (name, style) = parseStyle(
+          row["styling"],
+          template: parseAsInt(row["template"]),
+          isRow: true,
+          globalSelectFilterBgColor: objectSelectBackgroundColor,
+          globalObjectBackgroundColor: objectBackgroundColor,
+          globalRowBackgroundColor: rowBackgroundColor,
         );
+        var preset = checkContained(nodePresets, name, style);
         int width;
         if (object['objectWidth'] == null || object['objectWidth'].isEmpty) {
           width = rowWidth;
@@ -98,13 +85,8 @@ class IccProjectParser {
           var str = object['objectWidth'] as String? ?? '';
           width = int.tryParse(str[str.length - 1]) ?? 0;
         }
-        var choiceNode = ChoiceNode(
-            width: width,
-            title: objectTitle,
-            contents: toContent(object["text"] ?? parsed['defaultChoiceText']),
-            imageString: imageName);
-        choiceNode.choiceNodeOption =
-            choiceNode.choiceNodeOption.copyWith(presetName: preset.name!);
+        var choiceNode = ChoiceNode(width: width, title: objectTitle, contents: toContent(object["text"] ?? parsed['defaultChoiceText']), imageString: imageName);
+        choiceNode.choiceNodeOption = choiceNode.choiceNodeOption.copyWith(presetName: preset.$1);
         for (var addon in object['addons']) {
           var addonTitle = addon["title"] ?? parsed['defaultAddonTitle'];
           var out = await checkImage(addon, addon["id"], addonTitle, ref);
@@ -112,13 +94,8 @@ class IccProjectParser {
           if (out != null && out.$2 != null) {
             imageList[imageName] = out.$2!;
           }
-          var addonNode = ChoiceNode(
-              width: 0,
-              title: addonTitle,
-              contents: toContent(addon["text"] ?? parsed['defaultAddonText']),
-              imageString: imageName);
-          addonNode.choiceNodeOption =
-              addonNode.choiceNodeOption.copyWith(presetName: preset.name!);
+          var addonNode = ChoiceNode(width: 0, title: addonTitle, contents: toContent(addon["text"] ?? parsed['defaultAddonText']), imageString: imageName);
+          addonNode.choiceNodeOption = addonNode.choiceNodeOption.copyWith(presetName: preset.$1);
           choiceNode.addChild(addonNode);
         }
         lineSetting.addChild(choiceNode);
@@ -130,7 +107,7 @@ class IccProjectParser {
         color: backgroundColor,
         colorType: ColorType.solid,
       ),
-      choiceNodePresetList: nodePresets,
+      choiceNodePresetMap: nodePresets,
     );
 
     return (platform, imageList);
@@ -143,8 +120,7 @@ class IccProjectParser {
     return int.tryParse(input) ?? 0;
   }
 
-  Future<(String, Uint8List?)?> checkImage(
-      dynamic input, String? first, String second, Ref ref) async {
+  Future<(String, Uint8List?)?> checkImage(dynamic input, String? first, String second, Ref ref) async {
     var image = input['image'] as String?;
     if (image == null || image.isEmpty) {
       return null;
@@ -174,97 +150,86 @@ class IccProjectParser {
     ]);
   }
 
-  ChoiceNodeDesignPreset checkContained(
-      List<ChoiceNodeDesignPreset> lists, ChoiceNodeDesignPreset target) {
+  (String, ChoiceNodeDesignPreset) checkContained(Map<String, ChoiceNodeDesignPreset> map, String name, ChoiceNodeDesignPreset target) {
     var targetJson = target.toJson();
-    targetJson.remove("name");
-    for (var item in lists) {
-      var itemJson = item.toJson();
-      itemJson.remove("name");
+    for (var entry in map.entries) {
+      var key = entry.key;
+      var value = entry.value;
+      var itemJson = value.toJson();
       if (mapEquals(targetJson, itemJson)) {
-        return item;
+        return (key, value);
       }
     }
 
-    lists.add(target);
-    return target;
+    map[name] = target;
+    return (name, target);
   }
 
-  ChoiceNodeDesignPreset parseStyle(Map<String, dynamic>? styles,
-      {required int template,
-      required bool isRow,
-      required int globalObjectBackgroundColor,
-      required int globalRowBackgroundColor,
-      required int globalSelectFilterBgColor}) {
+  (String, ChoiceNodeDesignPreset) parseStyle(Map<String, dynamic>? styles,
+      {required int template, required bool isRow, required int globalObjectBackgroundColor, required int globalRowBackgroundColor, required int globalSelectFilterBgColor}) {
     if (styles == null) {
-      return ChoiceNodeDesignPreset(
-        name: generateRandomString(10),
-        imagePosition: template == 4 ? 1 : template,
-        defaultColorOption: ColorOption(
-          color: isRow ? globalRowBackgroundColor : globalObjectBackgroundColor,
-          colorType: ColorType.solid,
-        ),
-        defaultOutlineOption: OutlineOption(
-          outlineColor: ColorOption(
-            color: isRow ? globalRowBackgroundColor : globalSelectFilterBgColor,
+      return (
+        generateRandomString(10),
+        ChoiceNodeDesignPreset(
+          imagePosition: template == 4 ? 1 : template,
+          defaultColorOption: ColorOption(
+            color: isRow ? globalRowBackgroundColor : globalObjectBackgroundColor,
             colorType: ColorType.solid,
           ),
-        ),
+          defaultOutlineOption: OutlineOption(
+            outlineColor: ColorOption(
+              color: isRow ? globalRowBackgroundColor : globalSelectFilterBgColor,
+              colorType: ColorType.solid,
+            ),
+          ),
+        )
       );
     }
     // var backgroundColor =
     //     HexColor.fromHex(styles['backgroundColor']).value; //selected color
-    var objectBackgroundColor =
-        HexColor.fromHex(styles['objectBgColor']).value; //required color
-    var rowBackgroundColor =
-        HexColor.fromHex(styles['rowBgColor']).value; //required color
-    var objectSelectBackgroundColor =
-        HexColor.fromHex(styles['selFilterBgColor']).value; //required color
+    var objectBackgroundColor = HexColor.fromHex(styles['objectBgColor']).value; //required color
+    var rowBackgroundColor = HexColor.fromHex(styles['rowBgColor']).value; //required color
+    var objectSelectBackgroundColor = HexColor.fromHex(styles['selFilterBgColor']).value; //required color
     if (isRow) {
-      return ChoiceNodeDesignPreset(
-        name: generateRandomString(10),
+      return (
+        generateRandomString(10),
+        ChoiceNodeDesignPreset(
+          imagePosition: template == 4 ? 1 : template,
+          defaultColorOption: ColorOption(
+            color: rowBackgroundColor == 0xFFFFFFFF ? globalRowBackgroundColor : rowBackgroundColor,
+            colorType: ColorType.solid,
+          ),
+          defaultOutlineOption: OutlineOption(
+            outlineColor: ColorOption(
+              color: rowBackgroundColor == 0xFFFFFFFF ? globalRowBackgroundColor : rowBackgroundColor,
+              colorType: ColorType.solid,
+            ),
+          ),
+        )
+      );
+    }
+    return (
+      generateRandomString(10),
+      ChoiceNodeDesignPreset(
         imagePosition: template == 4 ? 1 : template,
         defaultColorOption: ColorOption(
-          color: rowBackgroundColor == 0xFFFFFFFF
-              ? globalRowBackgroundColor
-              : rowBackgroundColor,
+          color: objectBackgroundColor == 0xFFFFFFFF ? globalObjectBackgroundColor : objectBackgroundColor,
           colorType: ColorType.solid,
         ),
         defaultOutlineOption: OutlineOption(
           outlineColor: ColorOption(
-            color: rowBackgroundColor == 0xFFFFFFFF
-                ? globalRowBackgroundColor
-                : rowBackgroundColor,
+            color: objectSelectBackgroundColor == 0xFFFFFFFF ? globalSelectFilterBgColor : objectSelectBackgroundColor,
             colorType: ColorType.solid,
           ),
         ),
-      );
-    }
-    return ChoiceNodeDesignPreset(
-      name: generateRandomString(10),
-      imagePosition: template == 4 ? 1 : template,
-      defaultColorOption: ColorOption(
-        color: objectBackgroundColor == 0xFFFFFFFF
-            ? globalObjectBackgroundColor
-            : objectBackgroundColor,
-        colorType: ColorType.solid,
-      ),
-      defaultOutlineOption: OutlineOption(
-        outlineColor: ColorOption(
-          color: objectSelectBackgroundColor == 0xFFFFFFFF
-              ? globalSelectFilterBgColor
-              : objectSelectBackgroundColor,
-          colorType: ColorType.solid,
-        ),
-      ),
+      )
     );
   }
 }
 
 String generateRandomString(int len) {
   var r = Random();
-  const chars =
-      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  const chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   return List.generate(len, (index) => chars[r.nextInt(chars.length)]).join();
 }
 

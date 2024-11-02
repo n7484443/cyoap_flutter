@@ -8,102 +8,70 @@ import '../../../model/platform_system.dart';
 import '../../../util/easy_clone.dart';
 import '../vm_draggable_nested_map.dart';
 
-final choiceLinePresetCurrentEditProvider =
-    Provider.autoDispose<ChoiceLineDesignPreset>((ref) {
-  var list = ref.watch(choiceLinePresetListProvider);
-  var index = ref.watch(currentPresetIndexProvider);
-  if (index >= list.length) {
-    return const ChoiceLineDesignPreset(name: 'default');
-  }
-  return list[index];
+final choiceLinePresetCurrentEditProvider = Provider.autoDispose<ChoiceLineDesignPreset?>((ref) {
+  var name = ref.watch(currentPresetNameProvider);
+  return ref.watch(choiceLinePresetProvider(name));
 });
 
-final choiceLinePresetProvider = Provider.family
-    .autoDispose<ChoiceLineDesignPreset, String>((ref, presetName) => ref
-        .watch(choiceLinePresetListProvider)
-        .firstWhere((element) => element.name == presetName,
-            orElse: () => const ChoiceLineDesignPreset(name: 'default')));
+final choiceLinePresetProvider = Provider.family.autoDispose<ChoiceLineDesignPreset, String>((ref, presetName){
+  var map = ref.watch(choiceLinePresetListProvider);
+  return map[presetName] ?? map["default"] ?? const ChoiceLineDesignPreset();
+});
 
-final choiceLinePresetListProvider = StateNotifierProvider.autoDispose<
-    ChoiceLinePresetListNotifier, List<ChoiceLineDesignPreset>>((ref) {
+final choiceLinePresetListProvider = StateNotifierProvider.autoDispose<ChoiceLinePresetListNotifier, Map<String, ChoiceLineDesignPreset>>((ref) {
   ref.listenSelf((previous, next) {
     if (previous == null || previous == next) return;
-    getPlatform.designSetting =
-        getPlatform.designSetting.copyWith(choiceLinePresetList: next);
-    ref
-        .read(currentProjectChangedProvider.notifier)
-        .changed(needUpdateCode: false);
+    getPlatform.designSetting = getPlatform.designSetting.copyWith(choiceLinePresetMap: next);
+    ref.read(currentProjectChangedProvider.notifier).changed(needUpdateCode: false);
   });
   return ChoiceLinePresetListNotifier(ref);
 });
 
-class ChoiceLinePresetListNotifier
-    extends StateNotifier<List<ChoiceLineDesignPreset>> {
+class ChoiceLinePresetListNotifier extends StateNotifier<Map<String, ChoiceLineDesignPreset>> {
   Ref ref;
 
-  ChoiceLinePresetListNotifier(this.ref)
-      : super([...getPlatform.designSetting.choiceLinePresetList]);
+  ChoiceLinePresetListNotifier(this.ref) : super({...getPlatform.designSetting.choiceLinePresetMap});
 
-  void rename(int index, String after) {
-    var before = state[index].name;
-    updateIndex(index, state[index].copyWith(name: after));
-    getPlatform.updateLinePresetNameAll(before!, after);
+  void rename(String before, String after) {
+    var removed = state.remove(before);
+    if (removed != null) {
+      state[after] = removed;
+      state = {...state};
+    }
+    getPlatform.updateLinePresetNameAll(before, after);
     ref.read(currentChoicePageProvider.notifier).refresh();
-  }
-
-  void updateName(String name, ChoiceLineDesignPreset preset) {
-    int index = state.indexWhere((preset) => preset.name == name);
-    updateIndex(index, preset);
-  }
-
-  void updateIndex(int index, ChoiceLineDesignPreset preset) {
-    state.removeAt(index);
-    state.insert(index, preset);
-    state = [...state];
   }
 
   void create() {
     var name = 'preset_new'.i18n;
     var rename = name;
     var i = 0;
-    while (state.any((preset) => preset.name == rename)) {
+    while (state[rename] != null) {
       rename = '$name $i';
       i++;
     }
-    state = [...state, ChoiceLineDesignPreset(name: rename)];
+    state = {...state, rename: const ChoiceLineDesignPreset()};
   }
 
-  void deleteName(String name) {
+  void delete(String name) {
     if (state.length >= 2) {
-      state.removeWhere((preset) => preset.name == name);
-      state = [...state];
-      getPlatform.updateLinePresetNameAll(name, state.first.name!);
+      state.remove(name);
+      state = {...state};
+      getPlatform.updateLinePresetNameAll(name, "default");
     }
   }
 
-  void deleteIndex(int index) {
-    if (state.length >= 2) {
-      var removed = state.removeAt(index);
-      state = [...state];
-      getPlatform.updateLinePresetNameAll(removed.name!, state.first.name!);
-    }
-  }
-
-  void cloneIndex(index) {
-    var original = state[index];
-    var newName = getCloneName(original.name!, (considerName) {
-      return state.any((preset) => preset.name == considerName);
+  void clone(String name) {
+    var original = state[name]!;
+    var newName = getCloneName(name, (considerName) {
+      return state.containsKey(considerName);
     });
-    var clone = original.copyWith(name: newName);
-    state = [...state, clone];
+    var clone = original.copyWith();
+    state = {...state, newName: clone};
   }
 
-  void reorder(int oldIndex, int newIndex) {
-    if (oldIndex < newIndex) {
-      newIndex -= 1;
-    }
-    var preset = state.removeAt(oldIndex);
-    state.insert(newIndex, preset);
-    state = [...state];
+  void update(String name, ChoiceLineDesignPreset newValue) {
+    state[name] = newValue;
+    state = {...state};
   }
 }

@@ -46,15 +46,11 @@ class ChoiceNodeSample extends ConsumerWidget {
             ),
             IconButton(
                 onPressed: () {
-                  ref
-                      .read(choiceNodePresetTestSelectProvider.notifier)
-                      .update((state) => !state);
+                  ref.read(choiceNodePresetTestSelectProvider.notifier).update((state) => !state);
                   var pos = const Pos(data: [designSamplePosition]);
                   ref.read(choiceStatusProvider(pos)).refreshSelf();
                 },
-                icon: ref.watch(choiceNodePresetTestSelectProvider)
-                    ? const Icon(Icons.check_box_outlined)
-                    : const Icon(Icons.check_box_outline_blank)),
+                icon: ref.watch(choiceNodePresetTestSelectProvider) ? const Icon(Icons.check_box_outlined) : const Icon(Icons.check_box_outline_blank)),
           ],
         ),
       );
@@ -79,15 +75,11 @@ class ChoiceNodeSample extends ConsumerWidget {
         ),
         IconButton(
             onPressed: () {
-              ref
-                  .read(choiceNodePresetTestSelectProvider.notifier)
-                  .update((state) => !state);
+              ref.read(choiceNodePresetTestSelectProvider.notifier).update((state) => !state);
               var pos = const Pos(data: [designSamplePosition]);
               ref.read(choiceStatusProvider(pos)).refreshSelf();
             },
-            icon: ref.watch(choiceNodePresetTestSelectProvider)
-                ? const Icon(Icons.check_box_outlined)
-                : const Icon(Icons.check_box_outline_blank)),
+            icon: ref.watch(choiceNodePresetTestSelectProvider) ? const Icon(Icons.check_box_outlined) : const Icon(Icons.check_box_outline_blank)),
       ],
     );
   }
@@ -101,28 +93,26 @@ class ChoiceNodePresetList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var list = ref.watch(choiceNodePresetListProvider);
-    var popupDefaultPreset = [
+    List<(String, void Function(String name, ChoiceNodeDesignPreset preset))> popupDefaultPreset = [
       (
         'clone'.i18n,
-        (index, preset) async {
-          ref.read(choiceNodePresetListProvider.notifier).cloneIndex(index);
+        (name, preset) async {
+          ref.read(choiceNodePresetListProvider.notifier).clone(name);
         }
       ),
     ];
-    var popupNonDefaultPreset = [
+    List<(String, void Function(String name, ChoiceNodeDesignPreset preset))> popupNonDefaultPreset = [
       (
         'rename'.i18n,
-        (index, preset) async {
+        (name, preset) async {
           var text = await showDialog(
               context: context,
               builder: (context) {
-                return PresetRenameDialog(preset.name!);
+                return PresetRenameDialog(name);
               },
               barrierDismissible: false);
           if (text != null && text.trim().isNotEmpty) {
-            ref
-                .read(choiceNodePresetListProvider.notifier)
-                .rename(index, text.trim());
+            ref.read(choiceNodePresetListProvider.notifier).rename(name, text.trim());
             var pos = const Pos(data: [designSamplePosition]);
 
             ref.read(choiceStatusProvider(pos)).refreshSelf();
@@ -132,8 +122,8 @@ class ChoiceNodePresetList extends ConsumerWidget {
       ...popupDefaultPreset,
       (
         'delete'.i18n,
-        (index, preset) async {
-          ref.read(choiceNodePresetListProvider.notifier).deleteIndex(index);
+        (name, preset) async {
+          ref.read(choiceNodePresetListProvider.notifier).delete(name);
         }
       ),
     ];
@@ -154,10 +144,9 @@ class ChoiceNodePresetList extends ConsumerWidget {
             shrinkWrap: true,
             itemCount: list.length,
             itemBuilder: (BuildContext context, int index) {
-              var preset = list[index];
-              var popupList = preset.name == "default"
-                  ? popupDefaultPreset
-                  : popupNonDefaultPreset;
+              var name = list.keys.toList()[index];
+              var preset = list[name]!;
+              var popupList = name == "default" ? popupDefaultPreset : popupNonDefaultPreset;
               return ContextMenuRegion(
                 contextMenu: GenericContextMenu(
                   buttonConfigs: List.generate(
@@ -165,22 +154,20 @@ class ChoiceNodePresetList extends ConsumerWidget {
                     (popupIndex) => ContextMenuButtonConfig(
                       popupList[popupIndex].$1,
                       onPressed: () {
-                        popupList[popupIndex].$2(index, preset);
+                        popupList[popupIndex].$2(name, preset);
                       },
                     ),
                   ),
                 ),
                 child: ListTile(
                   key: Key('$index'),
-                  title: Text(preset.name!),
+                  title: Text(name),
                   onTap: () {
-                    ref
-                        .read(currentPresetIndexProvider.notifier)
-                        .update((state) => index);
+                    ref.read(currentPresetNameProvider.notifier).update((state) => name);
                     var pos = const Pos(data: [designSamplePosition]);
                     ref.read(choiceStatusProvider(pos)).refreshSelf();
                   },
-                  selected: index == ref.watch(currentPresetIndexProvider),
+                  selected: name == ref.watch(currentPresetNameProvider),
                 ),
               );
             },
@@ -262,8 +249,7 @@ class _ViewNodeOptionEditorState extends ConsumerState<ViewNodeOptionEditor> {
             }),
             selectedIndex: ref.watch(choiceNodePresetCurrentTabProvider),
             onDestinationSelected: (int index) {
-              ref.read(choiceNodePresetCurrentTabProvider.notifier).state =
-                  index;
+              ref.read(choiceNodePresetCurrentTabProvider.notifier).state = index;
             },
             surfaceTintColor: Colors.transparent,
           ),
@@ -313,8 +299,7 @@ class ViewNodeGeneralOptionEditor extends ConsumerStatefulWidget {
   ConsumerState createState() => _ViewNodeGeneralOptionEditorState();
 }
 
-class _ViewNodeGeneralOptionEditorState
-    extends ConsumerState<ViewNodeGeneralOptionEditor> {
+class _ViewNodeGeneralOptionEditorState extends ConsumerState<ViewNodeGeneralOptionEditor> {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -325,8 +310,8 @@ class _ViewNodeGeneralOptionEditorState
 
   @override
   Widget build(BuildContext context) {
-    var preset = ref.watch(choiceNodePresetCurrentEditProvider);
-    var presetIndex = ref.watch(currentPresetIndexProvider);
+    var preset = ref.watch(choiceNodePresetCurrentEditProvider)!;
+    var presetName = ref.watch(currentPresetNameProvider);
     return Scrollbar(
       controller: _scrollController,
       thumbVisibility: true,
@@ -337,53 +322,41 @@ class _ViewNodeGeneralOptionEditorState
           SliverToBoxAdapter(
             child: ViewVertexEdgeEditor(
               label: 'padding_round'.i18n,
-              edgeProvider: (String str) =>
-                  ref.watch(ChoiceNodePresetDistanceProvider(position: str)),
-              vertexProvider: (String str) =>
-                  ref.watch(ChoiceNodePresetRoundProvider(position: str)),
+              edgeProvider: (String str) => ref.watch(ChoiceNodePresetDistanceProvider(position: str)),
+              vertexProvider: (String str) => ref.watch(ChoiceNodePresetRoundProvider(position: str)),
               edgeFillLabel: 'distance'.i18n,
               vertexFillLabel: 'round'.i18n,
             ),
           ),
-          const SliverPadding(
-              padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
+          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           SliverGrid(
             delegate: SliverChildListDelegate([
               CustomTextField(
-                controller:
-                ref.watch(choiceNodePresetCurrentEditElevationProvider),
+                controller: ref.watch(choiceNodePresetCurrentEditElevationProvider),
                 label: 'elevation'.i18n,
               ),
               CustomTextField(
-                controller:
-                ref.watch(choiceNodePresetImageMaxHeightRatioProvider),
+                controller: ref.watch(choiceNodePresetImageMaxHeightRatioProvider),
                 label: 'image_maxHeight_ratio'.i18n,
                 tooltip: 'image_maxHeight_ratio_tooltip'.i18n,
               ),
               CustomSwitch(
                 updateState: () {
-                  ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                      presetIndex,
-                      preset.copyWith(hideTitle: !preset.hideTitle!));
+                  ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(hideTitle: !preset.hideTitle!));
                 },
                 label: 'hide_title'.i18n,
                 state: preset.hideTitle!,
               ),
               CustomSwitch(
                 updateState: () {
-                  ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                      presetIndex,
-                      preset.copyWith(titlePosition: !preset.titlePosition!));
+                  ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(titlePosition: !preset.titlePosition!));
                 },
                 label: 'title_up'.i18n,
                 state: preset.titlePosition!,
               ),
               CustomSwitch(
                 updateState: () {
-                  ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                      presetIndex,
-                      preset.copyWith(
-                          imagePosition: preset.imagePosition == 0 ? 1 : 0));
+                  ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(imagePosition: preset.imagePosition == 0 ? 1 : 0));
                 },
                 label: 'horizontal_mode'.i18n,
                 state: preset.imagePosition != 0,
@@ -391,11 +364,9 @@ class _ViewNodeGeneralOptionEditorState
               CustomSwitch(
                 updateState: () {
                   if (preset.imagePosition == 1) {
-                    ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                        presetIndex, preset.copyWith(imagePosition: 2));
+                    ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(imagePosition: 2));
                   } else if (preset.imagePosition == 2) {
-                    ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                        presetIndex, preset.copyWith(imagePosition: 1));
+                    ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(imagePosition: 1));
                   }
                 },
                 label: 'image_left'.i18n,
@@ -410,43 +381,28 @@ class _ViewNodeGeneralOptionEditorState
               mainAxisSpacing: 2,
             ),
           ),
-          const SliverPadding(
-              padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
+          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           SliverGrid(
             delegate: SliverChildListDelegate([
               CustomDropdownButton<String>(
                 label: 'font_title'.i18n,
                 onChanged: (String? t) {
                   if (t != null) {
-                    var index = ref.read(currentPresetIndexProvider);
-                    ref
-                        .read(choiceNodePresetListProvider.notifier)
-                        .updateIndex(index, preset.copyWith(titleFont: t));
+                    ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(titleFont: t));
                   }
                 },
                 value: preset.titleFont!,
-                items: ConstList.textFontList.keys
-                    .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
-                        value: name,
-                        child: Text(name, style: ConstList.getFont(name))))
-                    .toList(),
+                items: ConstList.textFontList.keys.map<DropdownMenuItem<String>>((name) => DropdownMenuItem(value: name, child: Text(name, style: ConstList.getFont(name)))).toList(),
               ),
               CustomDropdownButton<String>(
                 label: 'font_content'.i18n,
                 onChanged: (String? t) {
                   if (t != null) {
-                    var index = ref.read(currentPresetIndexProvider);
-                    ref
-                        .read(choiceNodePresetListProvider.notifier)
-                        .updateIndex(index, preset.copyWith(mainFont: t));
+                    ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(mainFont: t));
                   }
                 },
                 value: preset.mainFont!,
-                items: ConstList.textFontList.keys
-                    .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
-                        value: name,
-                        child: Text(name, style: ConstList.getFont(name))))
-                    .toList(),
+                items: ConstList.textFontList.keys.map<DropdownMenuItem<String>>((name) => DropdownMenuItem(value: name, child: Text(name, style: ConstList.getFont(name)))).toList(),
               ),
             ]),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -469,8 +425,7 @@ class ViewNodeOutlineOptionEditor extends ConsumerStatefulWidget {
   ConsumerState createState() => _ViewNodeOutlineOptionEditorState();
 }
 
-class _ViewNodeOutlineOptionEditorState
-    extends ConsumerState<ViewNodeOutlineOptionEditor> {
+class _ViewNodeOutlineOptionEditorState extends ConsumerState<ViewNodeOutlineOptionEditor> {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -481,8 +436,8 @@ class _ViewNodeOutlineOptionEditorState
 
   @override
   Widget build(BuildContext context) {
-    var preset = ref.watch(choiceNodePresetCurrentEditProvider);
-    var presetIndex = ref.watch(currentPresetIndexProvider);
+    var preset = ref.watch(choiceNodePresetCurrentEditProvider)!;
+    var presetName = ref.watch(currentPresetNameProvider);
     var opacity = preset.selectOutlineEnable! ? 1.0 : 0.3;
     return Scrollbar(
       controller: _scrollController,
@@ -499,40 +454,30 @@ class _ViewNodeOutlineOptionEditorState
                   text: 'node_outline_color'.i18n,
                   color: preset.defaultOutlineOption!.outlineColor.getColor()!,
                   onColorChanged: (Color value) {
-                    ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                        presetIndex,
-                        preset.copyWith.defaultOutlineOption!
-                            .outlineColor(color: value.value));
+                    ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith.defaultOutlineOption!.outlineColor(color: value.value));
                   },
                   hasAlpha: true,
                 ),
               ),
             ),
           ),
-          const SliverPadding(
-              padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
+          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           SliverGrid(
             delegate: SliverChildListDelegate([
               CustomDropdownButton<OutlineType>(
                 label: 'outline_shape'.i18n,
                 onChanged: (OutlineType? t) {
                   if (t != null) {
-                    ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                        presetIndex,
-                        preset.copyWith.defaultOutlineOption!(outlineType: t));
+                    ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith.defaultOutlineOption!(outlineType: t));
                   }
                 },
                 value: preset.defaultOutlineOption!.outlineType,
-                items: OutlineType.values
-                    .map<DropdownMenuItem<OutlineType>>((type) =>
-                        DropdownMenuItem(value: type, child: Text(type.name)))
-                    .toList(),
+                items: OutlineType.values.map<DropdownMenuItem<OutlineType>>((type) => DropdownMenuItem(value: type, child: Text(type.name))).toList(),
               ),
               CustomTextField(
                 label: 'outline_width'.i18n,
                 keyboardType: TextInputType.number,
-                controller:
-                    ref.watch(choiceNodePresetCurrentEditOutlineWidthProvider),
+                controller: ref.watch(choiceNodePresetCurrentEditOutlineWidthProvider),
               ),
             ]),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -546,21 +491,15 @@ class _ViewNodeOutlineOptionEditorState
             child: ViewVertexEdgeEditor(
               label: 'outline_distance_round_nonactive'.i18n,
               subLabel: 'outline_distance_round_sub'.i18n,
-              edgeProvider: (String str) => ref.watch(
-                  ChoiceNodePresetOutlineDistanceProvider(
-                      position: str, isSelected: false)),
-              vertexProvider: (String str) => ref.watch(
-                  ChoiceNodePresetOutlineRoundProvider(
-                      position: str, isSelected: false)),
+              edgeProvider: (String str) => ref.watch(ChoiceNodePresetOutlineDistanceProvider(position: str, isSelected: false)),
+              vertexProvider: (String str) => ref.watch(ChoiceNodePresetOutlineRoundProvider(position: str, isSelected: false)),
               edgeFillLabel: 'distance'.i18n,
               vertexFillLabel: 'round'.i18n,
             ),
           ),
-          const SliverPadding(
-              padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
+          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           const SliverToBoxAdapter(child: Divider()),
-          const SliverPadding(
-              padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
+          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           SliverToBoxAdapter(
             child: Card(
               child: Padding(
@@ -574,12 +513,7 @@ class _ViewNodeOutlineOptionEditorState
                           value: preset.selectOutlineEnable,
                           onChanged: (bool? value) {
                             if (value != null) {
-                              ref
-                                  .read(choiceNodePresetListProvider.notifier)
-                                  .updateIndex(
-                                      presetIndex,
-                                      preset.copyWith(
-                                          selectOutlineEnable: value));
+                              ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(selectOutlineEnable: value));
                             }
                           },
                         ),
@@ -589,15 +523,9 @@ class _ViewNodeOutlineOptionEditorState
                       opacity: opacity,
                       child: ViewColorPicker(
                         text: 'node_outline_color_selected'.i18n,
-                        color: preset.selectOutlineOption!.outlineColor
-                            .getColor()!,
+                        color: preset.selectOutlineOption!.outlineColor.getColor()!,
                         onColorChanged: (Color value) {
-                          ref
-                              .read(choiceNodePresetListProvider.notifier)
-                              .updateIndex(
-                                  presetIndex,
-                                  preset.copyWith.selectOutlineOption!
-                                      .outlineColor(color: value.value));
+                          ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith.selectOutlineOption!.outlineColor(color: value.value));
                         },
                         hasAlpha: true,
                       ),
@@ -613,19 +541,14 @@ class _ViewNodeOutlineOptionEditorState
               child: ViewVertexEdgeEditor(
                 label: 'outline_distance_round_active'.i18n,
                 subLabel: 'outline_distance_round_sub'.i18n,
-                edgeProvider: (String str) => ref.watch(
-                    ChoiceNodePresetOutlineDistanceProvider(
-                        position: str, isSelected: true)),
-                vertexProvider: (String str) => ref.watch(
-                    ChoiceNodePresetOutlineRoundProvider(
-                        position: str, isSelected: true)),
+                edgeProvider: (String str) => ref.watch(ChoiceNodePresetOutlineDistanceProvider(position: str, isSelected: true)),
+                vertexProvider: (String str) => ref.watch(ChoiceNodePresetOutlineRoundProvider(position: str, isSelected: true)),
                 edgeFillLabel: 'distance'.i18n,
                 vertexFillLabel: 'round'.i18n,
               ),
             ),
           ),
-          const SliverPadding(
-              padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
+          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           SliverOpacity(
             opacity: opacity,
             sliver: SliverGrid(
@@ -633,25 +556,14 @@ class _ViewNodeOutlineOptionEditorState
                 CustomDropdownButton<OutlineType>(
                   label: 'outline_shape'.i18n,
                   value: preset.selectOutlineOption!.outlineType,
-                  items: OutlineType.values
-                      .map<DropdownMenuItem<OutlineType>>((type) =>
-                          DropdownMenuItem(value: type, child: Text(type.name)))
-                      .toList(),
+                  items: OutlineType.values.map<DropdownMenuItem<OutlineType>>((type) => DropdownMenuItem(value: type, child: Text(type.name))).toList(),
                   onChanged: (OutlineType? t) {
                     if (t != null) {
-                      ref
-                          .read(choiceNodePresetListProvider.notifier)
-                          .updateIndex(
-                              presetIndex,
-                              preset.copyWith.selectOutlineOption!(
-                                  outlineType: t));
+                      ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith.selectOutlineOption!(outlineType: t));
                     }
                   },
                 ),
-                CustomTextField(
-                    controller: ref.watch(
-                        choiceNodePresetSelectedEditOutlineWidthProvider),
-                    label: 'outline_width'.i18n),
+                CustomTextField(controller: ref.watch(choiceNodePresetSelectedEditOutlineWidthProvider), label: 'outline_width'.i18n),
               ]),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
@@ -674,8 +586,7 @@ class ViewNodeComponentOptionEditor extends ConsumerStatefulWidget {
   ConsumerState createState() => _ViewNodeComponentOptionEditorState();
 }
 
-class _ViewNodeComponentOptionEditorState
-    extends ConsumerState<ViewNodeComponentOptionEditor> {
+class _ViewNodeComponentOptionEditorState extends ConsumerState<ViewNodeComponentOptionEditor> {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -686,8 +597,8 @@ class _ViewNodeComponentOptionEditorState
 
   @override
   Widget build(BuildContext context) {
-    var preset = ref.watch(choiceNodePresetCurrentEditProvider);
-    var presetIndex = ref.watch(currentPresetIndexProvider);
+    var preset = ref.watch(choiceNodePresetCurrentEditProvider)!;
+    var presetName = ref.watch(currentPresetNameProvider);
     return Scrollbar(
       controller: _scrollController,
       thumbVisibility: true,
@@ -700,17 +611,11 @@ class _ViewNodeComponentOptionEditorState
               label: 'slider_thumb_shape'.i18n,
               onChanged: (SliderThumbShape? t) {
                 if (t != null) {
-                  ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                      presetIndex,
-                      preset.copyWith.sliderOption!(sliderThumbShape: t));
+                  ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith.sliderOption!(sliderThumbShape: t));
                 }
               },
               value: SliderThumbShape.circle,
-              items: SliderThumbShape.values
-                  .map<DropdownMenuItem<SliderThumbShape>>((shape) =>
-                      DropdownMenuItem(
-                          value: shape, child: Text(shape.toString())))
-                  .toList(),
+              items: SliderThumbShape.values.map<DropdownMenuItem<SliderThumbShape>>((shape) => DropdownMenuItem(value: shape, child: Text(shape.toString()))).toList(),
             ),
           ),
           SliverToBoxAdapter(
@@ -721,52 +626,39 @@ class _ViewNodeComponentOptionEditorState
                   text: 'slider_thumb_color'.i18n,
                   color: preset.sliderOption!.sliderThumbColor.getColor()!,
                   onColorChanged: (Color value) {
-                    ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                        presetIndex,
-                        preset.copyWith.sliderOption!
-                            .sliderThumbColor(color: value.value));
+                    ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith.sliderOption!.sliderThumbColor(color: value.value));
                   },
                   hasAlpha: true,
                 ),
               ),
             ),
           ),
-          const SliverPadding(
-              padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
+          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           SliverToBoxAdapter(
             child: Card(
               child: Padding(
                 padding: const EdgeInsets.all(ConstList.padding),
                 child: ViewColorPicker(
                   text: 'slider_track_active_color'.i18n,
-                  color:
-                      preset.sliderOption!.sliderTrackActiveColor.getColor()!,
+                  color: preset.sliderOption!.sliderTrackActiveColor.getColor()!,
                   onColorChanged: (Color value) {
-                    ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                        presetIndex,
-                        preset.copyWith.sliderOption!
-                            .sliderTrackActiveColor(color: value.value));
+                    ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith.sliderOption!.sliderTrackActiveColor(color: value.value));
                   },
                   hasAlpha: true,
                 ),
               ),
             ),
           ),
-          const SliverPadding(
-              padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
+          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           SliverToBoxAdapter(
             child: Card(
               child: Padding(
                 padding: const EdgeInsets.all(ConstList.padding),
                 child: ViewColorPicker(
                   text: 'slider_track_inactive_color'.i18n,
-                  color:
-                      preset.sliderOption!.sliderTrackInactiveColor.getColor()!,
+                  color: preset.sliderOption!.sliderTrackInactiveColor.getColor()!,
                   onColorChanged: (Color value) {
-                    ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                        presetIndex,
-                        preset.copyWith.sliderOption!
-                            .sliderTrackInactiveColor(color: value.value));
+                    ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith.sliderOption!.sliderTrackInactiveColor(color: value.value));
                   },
                   hasAlpha: true,
                 ),
@@ -786,8 +678,7 @@ class ViewNodeColorOptionEditor extends ConsumerStatefulWidget {
   ConsumerState createState() => _ViewNodeColorOptionEditorState();
 }
 
-class _ViewNodeColorOptionEditorState
-    extends ConsumerState<ViewNodeColorOptionEditor> {
+class _ViewNodeColorOptionEditorState extends ConsumerState<ViewNodeColorOptionEditor> {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -798,8 +689,8 @@ class _ViewNodeColorOptionEditorState
 
   @override
   Widget build(BuildContext context) {
-    var preset = ref.watch(choiceNodePresetCurrentEditProvider);
-    var presetIndex = ref.watch(currentPresetIndexProvider);
+    var preset = ref.watch(choiceNodePresetCurrentEditProvider)!;
+    var presetName = ref.watch(currentPresetNameProvider);
     return Scrollbar(
       controller: _scrollController,
       thumbVisibility: true,
@@ -814,16 +705,13 @@ class _ViewNodeColorOptionEditorState
                 child: ViewColorOptionEditor(
                   colorOption: preset.defaultColorOption!,
                   changeFunction: (ColorOption after) {
-                    ref.read(choiceNodePresetListProvider.notifier).updateIndex(
-                        presetIndex,
-                        preset.copyWith(defaultColorOption: after));
+                    ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(defaultColorOption: after));
                   },
                 ),
               ),
             ),
           ),
-          const SliverPadding(
-              padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
+          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
           SliverToBoxAdapter(
             child: Card(
               child: Padding(
@@ -837,12 +725,7 @@ class _ViewNodeColorOptionEditorState
                           value: preset.selectColorEnable,
                           onChanged: (bool? value) {
                             if (value != null) {
-                              ref
-                                  .read(choiceNodePresetListProvider.notifier)
-                                  .updateIndex(
-                                      presetIndex,
-                                      preset.copyWith(
-                                          selectColorEnable: value));
+                              ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(selectColorEnable: value));
                             }
                           },
                         ),
@@ -853,10 +736,7 @@ class _ViewNodeColorOptionEditorState
                       child: ViewColorOptionEditor(
                         colorOption: preset.selectColorOption!,
                         changeFunction: (ColorOption after) {
-                          ref
-                              .read(choiceNodePresetListProvider.notifier)
-                              .updateIndex(presetIndex,
-                                  preset.copyWith(selectColorOption: after));
+                          ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(selectColorOption: after));
                         },
                       ),
                     ),
@@ -879,14 +759,7 @@ class ViewVertexEdgeEditor extends ConsumerWidget {
   final String edgeFillLabel;
   final String vertexFillLabel;
 
-  const ViewVertexEdgeEditor(
-      {required this.label,
-      this.subLabel,
-      required this.edgeProvider,
-      required this.vertexProvider,
-      required this.edgeFillLabel,
-      required this.vertexFillLabel,
-      super.key});
+  const ViewVertexEdgeEditor({required this.label, this.subLabel, required this.edgeProvider, required this.vertexProvider, required this.edgeFillLabel, required this.vertexFillLabel, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -902,11 +775,7 @@ class ViewVertexEdgeEditor extends ConsumerWidget {
             if (subLabel != null)
               Padding(
                 padding: const EdgeInsets.only(bottom: 4.0),
-                child: Text(subLabel!,
-                    style: Theme.of(context)
-                        .textTheme
-                        .labelSmall
-                        ?.copyWith(color: const Color(0xFF666666))),
+                child: Text(subLabel!, style: Theme.of(context).textTheme.labelSmall?.copyWith(color: const Color(0xFF666666))),
               ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

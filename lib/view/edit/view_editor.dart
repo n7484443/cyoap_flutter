@@ -30,8 +30,7 @@ class ViewEditor extends ConsumerStatefulWidget {
   ConsumerState createState() => _ViewEditorState();
 }
 
-class _ViewEditorState extends ConsumerState<ViewEditor>
-    with TickerProviderStateMixin {
+class _ViewEditorState extends ConsumerState<ViewEditor> with TickerProviderStateMixin {
   TabController? _tabController;
 
   @override
@@ -57,18 +56,14 @@ class _ViewEditorState extends ConsumerState<ViewEditor>
       const ViewNodeOptionEditor(),
       ViewImageDraggable(
         addImageFunction: (ref, name) {
-          ref
-              .read(nodeEditorTargetProvider.notifier)
-              .setState((node) => node..imageString = name);
+          ref.read(nodeEditorTargetProvider.notifier).setState((node) => node..imageString = name);
         },
         widgetBuilder: (ref, index) {
           return Container(
             decoration: BoxDecoration(
               border: Border.all(
                 width: 3,
-                color: index == ref.watch(imageStateProvider)
-                    ? Colors.redAccent
-                    : Colors.white,
+                color: index == ref.watch(imageStateProvider) ? Colors.redAccent : Colors.white,
               ),
             ),
             child: GestureDetector(
@@ -87,8 +82,7 @@ class _ViewEditorState extends ConsumerState<ViewEditor>
         imageName: (ref, index) => ref.watch(imageListStateProvider)[index],
       ),
     ];
-    var childrenText =
-        const ["content", "code", "setting", "image"].map((e) => e.i18n);
+    var childrenText = const ["content", "code", "setting", "image"].map((e) => e.i18n);
     return PopScope(
       canPop: false,
       onPopInvoked: (onPopInvoked) {
@@ -165,8 +159,7 @@ class ViewTitleTextFieldInput extends ConsumerStatefulWidget {
   ConsumerState createState() => _ViewTitleTextFieldInputState();
 }
 
-class _ViewTitleTextFieldInputState
-    extends ConsumerState<ViewTitleTextFieldInput> {
+class _ViewTitleTextFieldInputState extends ConsumerState<ViewTitleTextFieldInput> {
   TextEditingController? _controller;
 
   @override
@@ -195,8 +188,7 @@ class _ViewTitleTextFieldInputState
       textAlign: TextAlign.center,
       decoration: InputDecoration(
         hintText: 'title'.i18n,
-        hintStyle: ConstList.getFont(preset.titleFont!)
-            .copyWith(fontSize: 24, color: Colors.red),
+        hintStyle: ConstList.getFont(preset.titleFont!).copyWith(fontSize: 24, color: Colors.red),
         filled: true,
       ),
       style: ConstList.getFont(preset.titleFont!).copyWith(
@@ -217,8 +209,7 @@ class ViewTextContentsEditor extends ConsumerStatefulWidget {
 
 final RegExp textFinder = RegExp(r"\{\{.*?\}\}");
 
-class _ViewTextContentsEditorState
-    extends ConsumerState<ViewTextContentsEditor> {
+class _ViewTextContentsEditorState extends ConsumerState<ViewTextContentsEditor> {
   FocusNode? _focusNode;
   ScrollController? _scrollController;
   QuillController? _quillController;
@@ -230,18 +221,14 @@ class _ViewTextContentsEditorState
     if (node.contentsOriginalString.isEmpty) {
       _quillController = QuillController.basic();
     } else {
-      _quillController = QuillController(
-          document: Document.fromJson(jsonDecode(node.contentsOriginalString)),
-          selection: const TextSelection.collapsed(offset: 0));
+      _quillController = QuillController(document: Document.fromJson(jsonDecode(node.contentsOriginalString)), selection: const TextSelection.collapsed(offset: 0));
     }
     _quillController?.addListener(() {
       EasyDebounce.debounce('content-editor', ConstList.debounceDuration, () {
-        var pos = textFinder
-            .allMatches(_quillController?.document.toPlainText() ?? '');
+        var pos = textFinder.allMatches(_quillController?.document.toPlainText() ?? '');
         if (pos.isNotEmpty) {
           for (var data in pos) {
-            final styles = _quillController?.document
-                .collectAllStyles(data.start, data.end - data.start);
+            final styles = _quillController?.document.collectAllStyles(data.start, data.end - data.start);
             if (styles == null) {
               continue;
             }
@@ -252,15 +239,12 @@ class _ViewTextContentsEditorState
               }
             }
             for (final attr in attrs) {
-              _quillController?.formatText(data.start, data.end - data.start,
-                  Attribute.clone(attr, null));
+              _quillController?.formatText(data.start, data.end - data.start, Attribute.clone(attr, null));
             }
           }
         }
 
-        ref.read(nodeEditorTargetProvider.notifier).setState((node) => node
-          ..contentsString =
-              jsonEncode(_quillController?.document.toDelta().toJson()));
+        ref.read(nodeEditorTargetProvider.notifier).setState((node) => node..contentsString = jsonEncode(_quillController?.document.toDelta().toJson()));
       });
     });
     _scrollController = ScrollController();
@@ -282,8 +266,7 @@ class _ViewTextContentsEditorState
       hex = hex.substring(2);
     }
     hex = '#$hex';
-    controller.formatSelection(
-        background ? BackgroundAttribute(hex) : ColorAttribute(hex));
+    controller.formatSelection(background ? BackgroundAttribute(hex) : ColorAttribute(hex));
     getPlatform.addLastColor(color);
   }
 
@@ -310,8 +293,7 @@ class _ViewTextContentsEditorState
       showDialog(
         context: context,
         builder: (context) => Consumer(
-          builder: (BuildContext context, WidgetRef ref, Widget? _) =>
-              AlertDialog(
+          builder: (BuildContext context, WidgetRef ref, Widget? _) => AlertDialog(
             backgroundColor: Theme.of(context).canvasColor,
             content: SizedBox(
               width: ConstList.isSmallDisplay(context) ? 400 : 370,
@@ -337,8 +319,7 @@ class _ViewTextContentsEditorState
               IconButton(
                 icon: const Icon(Icons.check),
                 onPressed: () {
-                  changeColor(_quillController!, ref.read(textColorProvider),
-                      background);
+                  changeColor(_quillController!, ref.read(textColorProvider), background);
                   Navigator.pop(context);
                 },
               ),
@@ -351,9 +332,7 @@ class _ViewTextContentsEditorState
     var design = ref.watch(nodeEditorDesignProvider);
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
 
-    var fontSize = [10, 11, 12, 14, 16, 18, 21, 24, 36, 48, 60, 72]
-        .map((e) => e.toString())
-        .toList();
+    var fontSize = [10, 11, 12, 14, 16, 18, 21, 24, 36, 48, 60, 72].map((e) => e.toString()).toList();
     return Column(
       children: [
         Padding(
@@ -378,8 +357,7 @@ class _ViewTextContentsEditorState
               multiRowsDisplay: true,
               showIndent: true,
               showFontFamily: true,
-              fontFamilyValues: ConstList.textFontList
-                  .map((k, v) => MapEntry(k, v.fontFamily!)),
+              fontFamilyValues: ConstList.textFontList.map((k, v) => MapEntry(k, v.fontFamily!)),
               fontSizesValues: Map.fromIterables(fontSize, fontSize),
               customButtons: [
                 QuillToolbarCustomButtonOptions(
@@ -411,8 +389,7 @@ class _ViewTextContentsEditorState
                 scrollable: true,
                 autoFocus: true,
                 showCursor: true,
-                customStyles: ConstList.getDefaultThemeData(context, 1,
-                    fontStyle: ConstList.getFontWithColor(preset.mainFont!)),
+                customStyles: ConstList.getDefaultThemeData(context, 1, fontStyle: ConstList.getFontWithColor(preset.mainFont!)),
                 sharedConfigurations: QuillSharedConfigurations(
                   locale: ref.watch(localeStateProvider),
                 ),
@@ -501,16 +478,10 @@ class ViewNodeOptionEditor extends ConsumerWidget {
           children: [
             DropdownButtonFormField<String>(
               decoration: InputDecoration(labelText: 'preset_setting'.i18n),
-              items: ref
-                  .watch(choiceNodePresetListProvider)
-                  .map<DropdownMenuItem<String>>((preset) => DropdownMenuItem(
-                      value: preset.name, child: Text(preset.name!)))
-                  .toList(),
+              items: ref.watch(choiceNodePresetListProvider).keys.map<DropdownMenuItem<String>>((name) => DropdownMenuItem(value: name, child: Text(name))).toList(),
               onChanged: (String? t) {
                 if (t != null) {
-                  ref
-                      .read(nodeEditorDesignProvider.notifier)
-                      .update((state) => state.copyWith(presetName: t));
+                  ref.read(nodeEditorDesignProvider.notifier).update((state) => state.copyWith(presetName: t));
                 }
               },
               value: design.presetName,
@@ -518,21 +489,11 @@ class ViewNodeOptionEditor extends ConsumerWidget {
             DropdownButtonFormField<ChoiceNodeMode>(
               decoration: InputDecoration(labelText: 'node_mode'.i18n),
               items: [
-                DropdownMenuItem(
-                    value: ChoiceNodeMode.defaultMode,
-                    child: Text('default'.i18n)),
-                DropdownMenuItem(
-                    value: ChoiceNodeMode.randomMode,
-                    child: Text('random'.i18n)),
-                DropdownMenuItem(
-                    value: ChoiceNodeMode.multiSelect,
-                    child: Text('multiple'.i18n)),
-                DropdownMenuItem(
-                    value: ChoiceNodeMode.unSelectableMode,
-                    child: Text('unselect'.i18n)),
-                DropdownMenuItem(
-                    value: ChoiceNodeMode.onlyCode,
-                    child: Text('onlyCode'.i18n)),
+                DropdownMenuItem(value: ChoiceNodeMode.defaultMode, child: Text('default'.i18n)),
+                DropdownMenuItem(value: ChoiceNodeMode.randomMode, child: Text('random'.i18n)),
+                DropdownMenuItem(value: ChoiceNodeMode.multiSelect, child: Text('multiple'.i18n)),
+                DropdownMenuItem(value: ChoiceNodeMode.unSelectableMode, child: Text('unselect'.i18n)),
+                DropdownMenuItem(value: ChoiceNodeMode.onlyCode, child: Text('onlyCode'.i18n)),
               ],
               onChanged: (ChoiceNodeMode? value) {
                 if (value != null) {
@@ -556,14 +517,11 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Visibility(
-                    visible: nodeMode == ChoiceNodeMode.multiSelect ||
-                        nodeMode == ChoiceNodeMode.randomMode,
+                    visible: nodeMode == ChoiceNodeMode.multiSelect || nodeMode == ChoiceNodeMode.randomMode,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                            '${'variable_name'.i18n} \n${title.replaceAll(" ", "")}:${nodeMode == ChoiceNodeMode.multiSelect ? 'multi' : 'random'}',
-                            style: Theme.of(context).textTheme.labelLarge),
+                        Text('${'variable_name'.i18n} \n${title.replaceAll(" ", "")}:${nodeMode == ChoiceNodeMode.multiSelect ? 'multi' : 'random'}', style: Theme.of(context).textTheme.labelLarge),
                         const SizedBox(width: 40),
                         SizedBox(
                           width: 120,
@@ -572,16 +530,11 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                             maxLength: 3,
                             minLines: 1,
                             maxLines: 1,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            keyboardType: const TextInputType.numberWithOptions(
-                                signed: false, decimal: false),
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                            keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
                             controller: ref.watch(maximumProvider),
                             decoration: InputDecoration(
-                              label: Text(nodeMode == ChoiceNodeMode.multiSelect
-                                  ? 'max_select'.i18n
-                                  : 'max_random'.i18n),
+                              label: Text(nodeMode == ChoiceNodeMode.multiSelect ? 'max_select'.i18n : 'max_random'.i18n),
                             ),
                           ),
                         ),
@@ -589,41 +542,30 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                     ),
                   ),
                 ),
-                if (nodeMode != ChoiceNodeMode.unSelectableMode &&
-                    nodeMode != ChoiceNodeMode.onlyCode)
+                if (nodeMode != ChoiceNodeMode.unSelectableMode && nodeMode != ChoiceNodeMode.onlyCode)
                   ViewSwitchLabel(
-                    () => ref.read(nodeEditorDesignProvider.notifier).update(
-                        (state) => state.copyWith(
-                            hideAsResult: !design.hideAsResult,
-                            showAsResult: false)),
+                    () => ref.read(nodeEditorDesignProvider.notifier).update((state) => state.copyWith(hideAsResult: !design.hideAsResult, showAsResult: false)),
                     design.hideAsResult,
                     label: 'hide_result'.i18n,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   ),
                 if (nodeMode == ChoiceNodeMode.unSelectableMode)
                   ViewSwitchLabel(
-                    () => ref.read(nodeEditorDesignProvider.notifier).update(
-                        (state) => state.copyWith(
-                            showAsResult: !design.showAsResult,
-                            hideAsResult: false)),
+                    () => ref.read(nodeEditorDesignProvider.notifier).update((state) => state.copyWith(showAsResult: !design.showAsResult, hideAsResult: false)),
                     design.showAsResult,
                     label: 'show_result'.i18n,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   ),
                 if (nodeMode == ChoiceNodeMode.unSelectableMode)
                   ViewSwitchLabel(
-                    () => ref.read(nodeEditorDesignProvider.notifier).update(
-                        (state) => state.copyWith(
-                            executeWhenVisible: design.executeWhenVisible)),
+                    () => ref.read(nodeEditorDesignProvider.notifier).update((state) => state.copyWith(executeWhenVisible: design.executeWhenVisible)),
                     design.executeWhenVisible,
                     label: 'execute_when_visible'.i18n,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   ),
                 if (nodeMode == ChoiceNodeMode.multiSelect)
                   ViewSwitchLabel(
-                    () => ref.read(nodeEditorDesignProvider.notifier).update(
-                        (state) =>
-                            state.copyWith(showAsSlider: !design.showAsSlider)),
+                    () => ref.read(nodeEditorDesignProvider.notifier).update((state) => state.copyWith(showAsSlider: !design.showAsSlider)),
                     design.showAsSlider,
                     label: 'slider_mode'.i18n,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

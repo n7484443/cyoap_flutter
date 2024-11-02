@@ -21,12 +21,10 @@ class ViewChoiceLine extends ConsumerWidget {
   final Pos pos;
   final bool isOutOfLength;
 
-  const ViewChoiceLine(
-      {super.key, required this.pos, required this.isOutOfLength});
+  const ViewChoiceLine({super.key, required this.pos, required this.isOutOfLength});
 
   Color getColorLine(bool alwaysVisible) {
-    if (pos.last < getPlatform.choicePage.choiceLines.length &&
-        !alwaysVisible) {
+    if (pos.last < getPlatform.choicePage.choiceLines.length && !alwaysVisible) {
       return Colors.blueAccent;
     }
     return Colors.white54;
@@ -38,12 +36,8 @@ class ViewChoiceLine extends ConsumerWidget {
       Widget addButton = Card(
         child: CircleButton(
           onPressed: () {
-            ref
-                .read(choiceStatusProvider(pos.removeLast()).notifier)
-                .addChoice(ChoiceLine(), index: pos.last);
-            ref
-                .read(currentProjectChangedProvider.notifier)
-                .changed(needUpdateCode: true);
+            ref.read(choiceStatusProvider(pos.removeLast()).notifier).addChoice(ChoiceLine(), index: pos.last);
+            ref.read(currentProjectChangedProvider.notifier).changed(needUpdateCode: true);
           },
           tooltip: 'create_tooltip_line'.i18n,
           child: const Icon(Icons.add_box),
@@ -60,8 +54,7 @@ class ViewChoiceLine extends ConsumerWidget {
         ),
       );
     }
-    if (getPlatformFileSystem.isEditable &&
-        ref.watch(isEditableProvider(pos: pos))) {
+    if (getPlatformFileSystem.isEditable && ref.watch(isEditableProvider(pos: pos))) {
       return ViewWrapCustomReorder(
         pos,
         isReorderAble: true,
@@ -81,8 +74,7 @@ class ViewChoiceLineHeader extends ConsumerWidget {
   final Pos pos;
   final bool isOutOfLength;
 
-  const ViewChoiceLineHeader(
-      {super.key, required this.pos, required this.isOutOfLength});
+  const ViewChoiceLineHeader({super.key, required this.pos, required this.isOutOfLength});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -103,9 +95,7 @@ class ViewChoiceLineHeader extends ConsumerWidget {
       );
       return Card(
         elevation: 0,
-        color: ref.watch(themeStateProvider) == ThemeMode.light
-            ? Colors.white70
-            : Colors.black54,
+        color: ref.watch(themeStateProvider) == ThemeMode.light ? Colors.white70 : Colors.black54,
         child: Padding(
           padding: const EdgeInsets.all(1.0),
           child: Row(
@@ -137,8 +127,7 @@ class ViewChoiceLineHeader extends ConsumerWidget {
               const Spacer(),
               CircleButton(
                 onPressed: () {
-                  ref.read(isEditableStateProvider(pos).notifier).state =
-                      !ref.watch(isEditableStateProvider(pos));
+                  ref.read(isEditableStateProvider(pos).notifier).state = !ref.watch(isEditableStateProvider(pos));
                 },
                 child: ref.watch(isEditableStateProvider(pos))
                     ? const Icon(
@@ -151,12 +140,8 @@ class ViewChoiceLineHeader extends ConsumerWidget {
               margin,
               CircleButton(
                 onPressed: () {
-                  ref
-                      .read(choiceStatusProvider(pos.removeLast()).notifier)
-                      .addChoice(ChoiceLine(), index: pos.last);
-                  ref
-                      .read(currentProjectChangedProvider.notifier)
-                      .changed(needUpdateCode: true);
+                  ref.read(choiceStatusProvider(pos.removeLast()).notifier).addChoice(ChoiceLine(), index: pos.last);
+                  ref.read(currentProjectChangedProvider.notifier).changed(needUpdateCode: true);
                 },
                 child: const Stack(
                   children: [
@@ -176,12 +161,8 @@ class ViewChoiceLineHeader extends ConsumerWidget {
               margin,
               CircleButton(
                 onPressed: () {
-                  ref
-                      .read(choiceStatusProvider(pos.removeLast()).notifier)
-                      .addChoice(ChoiceLine(), index: pos.last + 1);
-                  ref
-                      .read(currentProjectChangedProvider.notifier)
-                      .changed(needUpdateCode: true);
+                  ref.read(choiceStatusProvider(pos.removeLast()).notifier).addChoice(ChoiceLine(), index: pos.last + 1);
+                  ref.read(currentProjectChangedProvider.notifier).changed(needUpdateCode: true);
                 },
                 child: const Stack(
                   children: [
@@ -223,13 +204,8 @@ class ViewChoiceLineHeader extends ConsumerWidget {
               margin,
               CircleButton(
                 onPressed: () async {
-                  var name = await showDialog<String>(
-                      context: context,
-                      builder: (_) => NodeDividerDialog(pos: pos),
-                      barrierDismissible: false);
-                  ref
-                      .read(lineOptionProvider(pos: pos).notifier)
-                      .setName(name ?? '');
+                  var name = await showDialog<String>(context: context, builder: (_) => NodeDividerDialog(pos: pos), barrierDismissible: false);
+                  ref.read(lineOptionProvider(pos: pos).notifier).setName(name ?? '');
                 },
                 child: const Icon(
                   Icons.settings,
@@ -263,8 +239,7 @@ class ViewChoiceLineHeader extends ConsumerWidget {
         children: [
           Divider(
             thickness: 4,
-            color:
-                preset.alwaysVisibleLine! ? Colors.blueAccent : Colors.white54,
+            color: preset.alwaysVisibleLine! ? Colors.blueAccent : Colors.white54,
           ),
           Visibility(
             visible: lineOption.maxSelect != -1,
@@ -300,9 +275,7 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
 
   @override
   void initState() {
-    _nameController = TextEditingController(
-        text: ref.read(lineOptionProvider(pos: widget.pos)).name ??
-            "ChoiceLine_${widget.pos.last}");
+    _nameController = TextEditingController(text: ref.read(lineOptionProvider(pos: widget.pos)).name ?? "ChoiceLine_${widget.pos.last}");
     super.initState();
   }
 
@@ -315,8 +288,7 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
   @override
   Widget build(BuildContext context) {
     var lineOption = ref.watch(lineOptionProvider(pos: widget.pos));
-    var maxSelectString =
-        lineOption.maxSelect == -1 ? "max" : lineOption.maxSelect.toString();
+    var maxSelectString = lineOption.maxSelect == -1 ? "max" : lineOption.maxSelect.toString();
     return AlertDialog(
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -328,44 +300,34 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
               IconButton(
                 icon: const Icon(Icons.chevron_left),
                 onPressed: () {
-                  ref
-                      .read(lineOptionProvider(pos: widget.pos).notifier)
-                      .setValue(lineOption.copyWith(
-                          maxSelect: lineOption.maxSelect >= 0
-                              ? lineOption.maxSelect - 1
-                              : lineOption.maxSelect));
+                  ref.read(lineOptionProvider(pos: widget.pos).notifier).setValue(lineOption.copyWith(maxSelect: lineOption.maxSelect >= 0 ? lineOption.maxSelect - 1 : lineOption.maxSelect));
                 },
               ),
               Text(maxSelectString),
               IconButton(
                 icon: const Icon(Icons.chevron_right),
                 onPressed: () {
-                  ref
-                      .read(lineOptionProvider(pos: widget.pos).notifier)
-                      .setValue(lineOption.copyWith(
-                          maxSelect: lineOption.maxSelect + 1));
+                  ref.read(lineOptionProvider(pos: widget.pos).notifier).setValue(lineOption.copyWith(maxSelect: lineOption.maxSelect + 1));
                 },
               ),
             ],
           ),
           const SizedBox(height: ConstList.padding),
           DropdownButtonFormField<String>(
-            decoration:
-                InputDecoration(labelText: 'preset_setting_tooltip'.i18n),
+            decoration: InputDecoration(labelText: 'preset_setting_tooltip'.i18n),
             items: ref
                 .watch(choiceLinePresetListProvider)
+                .keys
                 .map<DropdownMenuItem<String>>(
-                  (preset) => DropdownMenuItem(
-                    value: preset.name,
-                    child: Text(preset.name!),
+                  (name) => DropdownMenuItem(
+                    value: name,
+                    child: Text(name),
                   ),
                 )
                 .toList(),
             onChanged: (String? t) {
               if (t != null) {
-                ref
-                    .read(lineOptionProvider(pos: widget.pos).notifier)
-                    .setValue(lineOption.copyWith(presetName: t));
+                ref.read(lineOptionProvider(pos: widget.pos).notifier).setValue(lineOption.copyWith(presetName: t));
               }
             },
             value: ref.watch(lineOptionProvider(pos: widget.pos)).presetName,
@@ -384,9 +346,7 @@ class _NodeDividerDialogState extends ConsumerState<NodeDividerDialog> {
           onPressed: () {
             ref.read(lineEditorTargetPosProvider.notifier).state = widget.pos;
             Navigator.of(context).pop(_nameController!.text);
-            ref
-                .read(changeTabProvider.notifier)
-                .changePageString("viewEditorLine", context);
+            ref.read(changeTabProvider.notifier).changePageString("viewEditorLine", context);
           },
           child: Text("lineSetting_tooltip_3".i18n),
         ),

@@ -6,7 +6,7 @@ part of 'vm_choice.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$isEditableHash() => r'4143c081df9137ef4ba4d5f0cded069abbe93d08';
+String _$isEditableHash() => r'3619fbac4ae0c9e5cba05bdbf31e1345b0b56a64';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -142,6 +142,8 @@ class IsEditableProvider extends AutoDisposeProvider<bool> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin IsEditableRef on AutoDisposeProviderRef<bool> {
   /// The parameter `pos` of this provider.
   Pos get pos;
@@ -172,4 +174,4 @@ final currentChoicePageProvider =
 
 typedef _$CurrentChoicePage = AutoDisposeNotifier<Pos>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
