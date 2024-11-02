@@ -1,6 +1,5 @@
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/edit/view_clipboard.dart';
-import 'package:cyoap_flutter/view/edit/view_design.dart';
 import 'package:cyoap_flutter/view/edit/view_editor.dart';
 import 'package:cyoap_flutter/view/edit/view_image_editor.dart';
 import 'package:cyoap_flutter/view/edit/view_make.dart';
@@ -23,6 +22,7 @@ import '../../viewModel/vm_global_setting.dart';
 import '../../viewModel/vm_platform.dart';
 import '../../viewModel/vm_variable_table.dart';
 import '../code/view_ide_line.dart';
+import 'design/view_design.dart';
 
 class ViewMakePlatform extends ConsumerStatefulWidget {
   const ViewMakePlatform({

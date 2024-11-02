@@ -76,8 +76,9 @@ class CustomDropdownButton<T> extends ConsumerWidget {
   final List<DropdownMenuItem<T>> items;
   final T value;
   final bool useCard;
+  final double? forceWidth;
 
-  const CustomDropdownButton({super.key, required this.label, this.onChanged, required this.value, required this.items, this.useCard = true});
+  const CustomDropdownButton({super.key, required this.label, this.onChanged, required this.value, required this.items, this.forceWidth, this.useCard = true});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -105,10 +106,13 @@ class CustomDropdownButton<T> extends ConsumerWidget {
       ),
     );
     if (!useCard) {
-      return child;
+      return SizedBox(width: forceWidth, child: child);
     }
-    return Card(
-      child: child,
+    return SizedBox(
+      width: forceWidth,
+      child: Card(
+        child: child,
+      ),
     );
   }
 }
@@ -118,20 +122,24 @@ class CustomSwitch extends ConsumerWidget {
   final String label;
   final bool state;
   final bool disable;
+  final double? forceWidth;
 
-  const CustomSwitch({super.key, required this.updateState, required this.label, required this.state, this.disable = false});
+  const CustomSwitch({super.key, required this.updateState, required this.label, required this.state, this.forceWidth, this.disable = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(ConstList.padding),
-        child: ViewSwitchLabel(
-          updateState,
-          state,
-          label: label,
-          disable: disable,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return SizedBox(
+      width: forceWidth,
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(ConstList.padding),
+          child: ViewSwitchLabel(
+            updateState,
+            state,
+            label: label,
+            disable: disable,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          ),
         ),
       ),
     );

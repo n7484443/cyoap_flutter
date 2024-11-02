@@ -3,7 +3,7 @@ import 'package:cyoap_core/preset/line_preset.dart';
 import 'package:cyoap_core/preset/preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
-import 'package:cyoap_flutter/view/edit/preset/view_preset.dart';
+import 'package:cyoap_flutter/view/edit/design/view_preset.dart';
 import 'package:cyoap_flutter/view/util/view_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -125,102 +125,113 @@ class ChoiceLinePresetList extends ConsumerWidget {
   }
 }
 
-class ViewLineOptionEditor extends ConsumerWidget {
+class ViewLineOptionEditor extends ConsumerStatefulWidget {
   const ViewLineOptionEditor({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState createState() => _ViewLineOptionEditorState();
+}
+
+class _ViewLineOptionEditorState extends ConsumerState<ViewLineOptionEditor> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
     var preset = ref.watch(choiceLinePresetCurrentEditProvider)!;
     var name = ref.watch(currentPresetNameProvider);
     var colorOption = preset.backgroundColorOption;
     return Padding(
       padding: const EdgeInsets.all(ConstList.padding),
-      child: CustomScrollView(
-        controller: ScrollController(),
-        shrinkWrap: true,
-        slivers: [
-          SliverGrid(
-            delegate: SliverChildListDelegate([
-              CustomSwitch(
-                  updateState: () => ref.read(choiceLinePresetListProvider.notifier).update(name, preset.copyWith(alwaysVisibleLine: !preset.alwaysVisibleLine!)),
-                  label: 'black_line'.i18n,
-                  state: preset.alwaysVisibleLine!),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(ConstList.padding),
-                  child: Row(
-                    children: [
-                      Text('lineSetting_maxChildrenPerRow'.i18n),
-                      const Spacer(),
-                      IconButton(
-                        icon: const Icon(Icons.chevron_left),
-                        onPressed: () => ref
-                            .read(choiceLinePresetListProvider.notifier)
-                            .update(name, preset.copyWith(maxChildrenPerRow: preset.maxChildrenPerRow! >= 0 ? preset.maxChildrenPerRow! - 1 : preset.maxChildrenPerRow!)),
-                      ),
-                      Text(preset.maxChildrenPerRow.toString()),
-                      IconButton(
-                        icon: const Icon(Icons.chevron_right),
-                        onPressed: () => ref.read(choiceLinePresetListProvider.notifier).update(name, preset.copyWith(maxChildrenPerRow: preset.maxChildrenPerRow! + 1)),
-                      ),
-                    ],
+      child: Scrollbar(
+        controller: _scrollController,
+        thumbVisibility: true,
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          child: Wrap(
+            children: [
+              SizedBox(
+                width: unitWidth,
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Text("background_color".i18n, style: Theme.of(context).textTheme.titleMedium),
+                        Padding(
+                          padding: const EdgeInsets.all(ConstList.padding),
+                          child: ViewColorOptionEditor(
+                            colorOption: colorOption!,
+                            changeFunction: (ColorOption after) {
+                              ref.read(choiceLinePresetListProvider.notifier).update(name, preset.copyWith(backgroundColorOption: after));
+                            },
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('lineSetting_alignment'.i18n),
-                      SizedBox(
-                        width: 80,
-                        child: DropdownButtonFormField<ChoiceLineAlignment>(
-                          items: ChoiceLineAlignment.values.map<DropdownMenuItem<ChoiceLineAlignment>>((type) => DropdownMenuItem(value: type, child: Text(type.name))).toList(),
-                          onChanged: (ChoiceLineAlignment? t) {
-                            if (t != null) {
-                              ref.read(choiceLinePresetListProvider.notifier).update(name, preset.copyWith(alignment: t));
-                            }
-                          },
-                          value: preset.alignment,
+              Column(
+                children: [
+                  CustomSwitch(
+                    forceWidth: unitWidth,
+                    updateState: () => ref.read(choiceLinePresetListProvider.notifier).update(name, preset.copyWith(alwaysVisibleLine: !preset.alwaysVisibleLine!)),
+                    label: 'black_line'.i18n,
+                    state: preset.alwaysVisibleLine!,
+                  ),
+                  SizedBox(
+                    width: unitWidth,
+                    height: 56,
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(ConstList.padding),
+                        child: Row(
+                          children: [
+                            Text('lineSetting_maxChildrenPerRow'.i18n),
+                            const Spacer(),
+                            FittedBox(
+                              child: IconButton(
+                                icon: const Icon(Icons.chevron_left),
+                                onPressed: () => ref
+                                    .read(choiceLinePresetListProvider.notifier)
+                                    .update(name, preset.copyWith(maxChildrenPerRow: preset.maxChildrenPerRow! >= 0 ? preset.maxChildrenPerRow! - 1 : preset.maxChildrenPerRow!)),
+                              ),
+                            ),
+                            Text(preset.maxChildrenPerRow.toString()),
+                            FittedBox(
+                              child: IconButton(
+                                icon: const Icon(Icons.chevron_right),
+                                onPressed: () => ref.read(choiceLinePresetListProvider.notifier).update(name, preset.copyWith(maxChildrenPerRow: preset.maxChildrenPerRow! + 1)),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                  CustomDropdownButton<ChoiceLineAlignment>(
+                    forceWidth: unitWidth,
+                    label: 'lineSetting_alignment'.i18n,
+                    value: preset.alignment ?? ChoiceLineAlignment.left,
+                    items: ChoiceLineAlignment.values.map<DropdownMenuItem<ChoiceLineAlignment>>((type) => DropdownMenuItem(value: type, child: Text(type.name))).toList(),
+                    onChanged: (ChoiceLineAlignment? t) {
+                      if (t != null) {
+                        ref.read(choiceLinePresetListProvider.notifier).update(name, preset.copyWith(alignment: t));
+                      }
+                    },
+                  ),
+                ],
               ),
-            ]),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
-              crossAxisSpacing: 2,
-              mainAxisExtent: 80,
-              mainAxisSpacing: 2,
-            ),
+            ],
           ),
-          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
-          SliverToBoxAdapter(
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Text("background_color".i18n, style: Theme.of(context).textTheme.titleMedium),
-                    Padding(
-                      padding: const EdgeInsets.all(ConstList.padding),
-                      child: ViewColorOptionEditor(
-                        colorOption: colorOption!,
-                        changeFunction: (ColorOption after) {
-                          ref.read(choiceLinePresetListProvider.notifier).update(name, preset.copyWith(backgroundColorOption: after));
-                        },
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

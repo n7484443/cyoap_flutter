@@ -1,6 +1,6 @@
 import 'package:cyoap_flutter/i18n.dart';
-import 'package:cyoap_flutter/view/edit/preset/view_choice_line_preset.dart';
-import 'package:cyoap_flutter/view/edit/preset/view_choice_node_preset.dart';
+import 'package:cyoap_flutter/view/edit/design/view_choice_line_preset.dart';
+import 'package:cyoap_flutter/view/edit/design/view_choice_node_preset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,6 +8,8 @@ import '../../../main.dart';
 import '../../../viewModel/edit/preset/vm_preset.dart';
 import '../../util/view_options.dart';
 
+const double unitWidth = 300.0;
+const double largeUnitWidth = unitWidth * 2.1;
 class ViewPresetTab extends ConsumerWidget {
   final List<String> tabName = ['node', 'line'];
 
@@ -85,24 +87,22 @@ class _ViewPresetPositionState extends ConsumerState<ViewPresetPosition> {
         controller: _scrollController,
         child: Column(
           children: [
+            widget.first,
             SizedBox(
               height: 200,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: widget.first,
-                  ),
-                  Expanded(
-                    child: widget.second,
-                  )
-                ],
-              ),
+              child: widget.second,
             ),
             if (widget.sample != null) const Divider(height: 1),
             if (widget.sample != null)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: widget.sample!,
+              SizedBox(
+                height: 300,
+                child: FittedBox(
+                  fit: BoxFit.contain,
+                  child: SizedBox(
+                    height: 320,
+                    child: widget.sample!,
+                  ),
+                ),
               ),
             const Divider(height: 1),
             widget.describe,

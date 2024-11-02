@@ -4,7 +4,7 @@ import 'package:cyoap_core/preset/node_preset.dart';
 import 'package:cyoap_core/preset/preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
-import 'package:cyoap_flutter/view/edit/preset/view_preset.dart';
+import 'package:cyoap_flutter/view/edit/design/view_preset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -311,104 +311,108 @@ class _ViewNodeGeneralOptionEditorState extends ConsumerState<ViewNodeGeneralOpt
     return Scrollbar(
       controller: _scrollController,
       thumbVisibility: true,
-      child: CustomScrollView(
-        shrinkWrap: true,
+      child: SingleChildScrollView(
         controller: _scrollController,
-        slivers: [
-          SliverToBoxAdapter(
-            child: ViewVertexEdgeEditor(
-              label: 'padding_round'.i18n,
-              edgeProvider: (String str) => ref.watch(ChoiceNodePresetDistanceProvider(position: str)),
-              vertexProvider: (String str) => ref.watch(ChoiceNodePresetRoundProvider(position: str)),
-              edgeFillLabel: 'distance'.i18n,
-              vertexFillLabel: 'round'.i18n,
+        child: Wrap(
+          spacing: 15,
+          runSpacing: 15,
+          children: [
+            SizedBox(
+              width: unitWidth * 2,
+              child: ViewVertexEdgeEditor(
+                label: 'padding_round'.i18n,
+                edgeProvider: (String str) => ref.watch(ChoiceNodePresetDistanceProvider(position: str)),
+                vertexProvider: (String str) => ref.watch(ChoiceNodePresetRoundProvider(position: str)),
+                edgeFillLabel: 'distance'.i18n,
+                vertexFillLabel: 'round'.i18n,
+              ),
             ),
-          ),
-          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
-          SliverGrid(
-            delegate: SliverChildListDelegate([
-              CustomTextField(
-                controller: ref.watch(choiceNodePresetCurrentEditElevationProvider),
-                label: 'elevation'.i18n,
+            SizedBox(
+              width: largeUnitWidth,
+              child: Wrap(
+                children: [
+                  CustomTextField(
+                    forceWidth: unitWidth,
+                    controller: ref.watch(choiceNodePresetCurrentEditElevationProvider),
+                    label: 'elevation'.i18n,
+                  ),
+                  CustomTextField(
+                    forceWidth: unitWidth,
+                    controller: ref.watch(choiceNodePresetImageMaxHeightRatioProvider),
+                    label: 'image_maxHeight_ratio'.i18n,
+                    tooltip: 'image_maxHeight_ratio_tooltip'.i18n,
+                  ),
+                  CustomSwitch(
+                    forceWidth: unitWidth,
+                    updateState: () {
+                      ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(hideTitle: !preset.hideTitle!));
+                    },
+                    label: 'hide_title'.i18n,
+                    state: preset.hideTitle!,
+                  ),
+                  CustomSwitch(
+                    forceWidth: unitWidth,
+                    updateState: () {
+                      ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(titlePosition: !preset.titlePosition!));
+                    },
+                    label: 'title_up'.i18n,
+                    state: preset.titlePosition!,
+                  ),
+                  CustomSwitch(
+                    forceWidth: unitWidth,
+                    updateState: () {
+                      ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(imagePosition: preset.imagePosition == 0 ? 1 : 0));
+                    },
+                    label: 'horizontal_mode'.i18n,
+                    state: preset.imagePosition != 0,
+                  ),
+                  CustomSwitch(
+                    forceWidth: unitWidth,
+                    updateState: () {
+                      if (preset.imagePosition == 1) {
+                        ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(imagePosition: 2));
+                      } else if (preset.imagePosition == 2) {
+                        ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(imagePosition: 1));
+                      }
+                    },
+                    label: 'image_left'.i18n,
+                    disable: preset.imagePosition == 0,
+                    state: preset.imagePosition == 2,
+                  ),
+                ],
               ),
-              CustomTextField(
-                controller: ref.watch(choiceNodePresetImageMaxHeightRatioProvider),
-                label: 'image_maxHeight_ratio'.i18n,
-                tooltip: 'image_maxHeight_ratio_tooltip'.i18n,
-              ),
-              CustomSwitch(
-                updateState: () {
-                  ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(hideTitle: !preset.hideTitle!));
-                },
-                label: 'hide_title'.i18n,
-                state: preset.hideTitle!,
-              ),
-              CustomSwitch(
-                updateState: () {
-                  ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(titlePosition: !preset.titlePosition!));
-                },
-                label: 'title_up'.i18n,
-                state: preset.titlePosition!,
-              ),
-              CustomSwitch(
-                updateState: () {
-                  ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(imagePosition: preset.imagePosition == 0 ? 1 : 0));
-                },
-                label: 'horizontal_mode'.i18n,
-                state: preset.imagePosition != 0,
-              ),
-              CustomSwitch(
-                updateState: () {
-                  if (preset.imagePosition == 1) {
-                    ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(imagePosition: 2));
-                  } else if (preset.imagePosition == 2) {
-                    ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(imagePosition: 1));
-                  }
-                },
-                label: 'image_left'.i18n,
-                disable: preset.imagePosition == 0,
-                state: preset.imagePosition == 2,
-              ),
-            ]),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
-              crossAxisSpacing: 10,
-              mainAxisExtent: 64,
-              mainAxisSpacing: 2,
             ),
-          ),
-          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
-          SliverGrid(
-            delegate: SliverChildListDelegate([
-              CustomDropdownButton<String>(
-                label: 'font_title'.i18n,
-                onChanged: (String? t) {
-                  if (t != null) {
-                    ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(titleFont: t));
-                  }
-                },
-                value: preset.titleFont!,
-                items: ConstList.textFontList.keys.map<DropdownMenuItem<String>>((name) => DropdownMenuItem(value: name, child: Text(name, style: ConstList.getFont(name)))).toList(),
+            SizedBox(
+              width: largeUnitWidth,
+              child: Wrap(
+                children: [
+                  CustomDropdownButton<String>(
+                    forceWidth: unitWidth,
+                    label: 'font_title'.i18n,
+                    onChanged: (String? t) {
+                      if (t != null) {
+                        ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(titleFont: t));
+                      }
+                    },
+                    value: preset.titleFont!,
+                    items: ConstList.textFontList.keys.map<DropdownMenuItem<String>>((name) => DropdownMenuItem(value: name, child: Text(name, style: ConstList.getFont(name)))).toList(),
+                  ),
+                  CustomDropdownButton<String>(
+                    forceWidth: unitWidth,
+                    label: 'font_content'.i18n,
+                    onChanged: (String? t) {
+                      if (t != null) {
+                        ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(mainFont: t));
+                      }
+                    },
+                    value: preset.mainFont!,
+                    items: ConstList.textFontList.keys.map<DropdownMenuItem<String>>((name) => DropdownMenuItem(value: name, child: Text(name, style: ConstList.getFont(name)))).toList(),
+                  ),
+                ],
               ),
-              CustomDropdownButton<String>(
-                label: 'font_content'.i18n,
-                onChanged: (String? t) {
-                  if (t != null) {
-                    ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(mainFont: t));
-                  }
-                },
-                value: preset.mainFont!,
-                items: ConstList.textFontList.keys.map<DropdownMenuItem<String>>((name) => DropdownMenuItem(value: name, child: Text(name, style: ConstList.getFont(name)))).toList(),
-              ),
-            ]),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
-              crossAxisSpacing: 10,
-              mainAxisExtent: 64,
-              mainAxisSpacing: 2,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -438,138 +442,143 @@ class _ViewNodeOutlineOptionEditorState extends ConsumerState<ViewNodeOutlineOpt
     return Scrollbar(
       controller: _scrollController,
       thumbVisibility: true,
-      child: CustomScrollView(
-        shrinkWrap: true,
+      child: SingleChildScrollView(
         controller: _scrollController,
-        slivers: [
-          SliverToBoxAdapter(
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(ConstList.padding),
-                child: ViewColorPicker(
-                  text: 'node_outline_color'.i18n,
-                  color: preset.defaultOutlineOption!.outlineColor.getColor()!,
-                  onColorChanged: (Color value) {
-                    ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith.defaultOutlineOption!.outlineColor(color: value.value));
-                  },
-                  hasAlpha: true,
-                ),
-              ),
-            ),
-          ),
-          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
-          SliverGrid(
-            delegate: SliverChildListDelegate([
-              CustomDropdownButton<OutlineType>(
-                label: 'outline_shape'.i18n,
-                onChanged: (OutlineType? t) {
-                  if (t != null) {
-                    ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith.defaultOutlineOption!(outlineType: t));
-                  }
-                },
-                value: preset.defaultOutlineOption!.outlineType,
-                items: OutlineType.values.map<DropdownMenuItem<OutlineType>>((type) => DropdownMenuItem(value: type, child: Text(type.name))).toList(),
-              ),
-              CustomTextField(
-                label: 'outline_width'.i18n,
-                keyboardType: TextInputType.number,
-                controller: ref.watch(choiceNodePresetCurrentEditOutlineWidthProvider),
-              ),
-            ]),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
-              crossAxisSpacing: 10,
-              mainAxisExtent: 64,
-              mainAxisSpacing: 2,
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: ViewVertexEdgeEditor(
-              label: 'outline_distance_round_nonactive'.i18n,
-              subLabel: 'outline_distance_round_sub'.i18n,
-              edgeProvider: (String str) => ref.watch(ChoiceNodePresetOutlineDistanceProvider(position: str, isSelected: false)),
-              vertexProvider: (String str) => ref.watch(ChoiceNodePresetOutlineRoundProvider(position: str, isSelected: false)),
-              edgeFillLabel: 'distance'.i18n,
-              vertexFillLabel: 'round'.i18n,
-            ),
-          ),
-          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
-          const SliverToBoxAdapter(child: Divider()),
-          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
-          SliverToBoxAdapter(
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(ConstList.padding),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Text('node_select_color_enable'.i18n),
-                        Checkbox(
-                          value: preset.selectOutlineEnable,
-                          onChanged: (bool? value) {
-                            if (value != null) {
-                              ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(selectOutlineEnable: value));
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                    Opacity(
-                      opacity: opacity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Wrap(
+              children: [
+                SizedBox(
+                  width: unitWidth,
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(ConstList.padding),
                       child: ViewColorPicker(
-                        text: 'node_outline_color_selected'.i18n,
-                        color: preset.selectOutlineOption!.outlineColor.getColor()!,
+                        text: 'node_outline_color'.i18n,
+                        color: preset.defaultOutlineOption!.outlineColor.getColor()!,
                         onColorChanged: (Color value) {
-                          ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith.selectOutlineOption!.outlineColor(color: value.value));
+                          ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith.defaultOutlineOption!.outlineColor(color: value.value));
                         },
                         hasAlpha: true,
                       ),
                     ),
+                  ),
+                ),
+                Column(
+                  children: [
+                    CustomDropdownButton<OutlineType>(
+                      forceWidth: unitWidth,
+                      label: 'outline_shape'.i18n,
+                      onChanged: (OutlineType? t) {
+                        if (t != null) {
+                          ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith.defaultOutlineOption!(outlineType: t));
+                        }
+                      },
+                      value: preset.defaultOutlineOption!.outlineType,
+                      items: OutlineType.values.map<DropdownMenuItem<OutlineType>>((type) => DropdownMenuItem(value: type, child: Text(type.name))).toList(),
+                    ),
+                    CustomTextField(
+                      forceWidth: unitWidth,
+                      label: 'outline_width'.i18n,
+                      keyboardType: TextInputType.number,
+                      controller: ref.watch(choiceNodePresetCurrentEditOutlineWidthProvider),
+                    ),
                   ],
                 ),
-              ),
+                SizedBox(
+                  width: largeUnitWidth,
+                  child: ViewVertexEdgeEditor(
+                    label: 'outline_distance_round_nonactive'.i18n,
+                    subLabel: 'outline_distance_round_sub'.i18n,
+                    edgeProvider: (String str) => ref.watch(ChoiceNodePresetOutlineDistanceProvider(position: str, isSelected: false)),
+                    vertexProvider: (String str) => ref.watch(ChoiceNodePresetOutlineRoundProvider(position: str, isSelected: false)),
+                    edgeFillLabel: 'distance'.i18n,
+                    vertexFillLabel: 'round'.i18n,
+                  ),
+                )
+              ],
             ),
-          ),
-          SliverOpacity(
-            opacity: opacity,
-            sliver: SliverToBoxAdapter(
-              child: ViewVertexEdgeEditor(
-                label: 'outline_distance_round_active'.i18n,
-                subLabel: 'outline_distance_round_sub'.i18n,
-                edgeProvider: (String str) => ref.watch(ChoiceNodePresetOutlineDistanceProvider(position: str, isSelected: true)),
-                vertexProvider: (String str) => ref.watch(ChoiceNodePresetOutlineRoundProvider(position: str, isSelected: true)),
-                edgeFillLabel: 'distance'.i18n,
-                vertexFillLabel: 'round'.i18n,
-              ),
-            ),
-          ),
-          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
-          SliverOpacity(
-            opacity: opacity,
-            sliver: SliverGrid(
-              delegate: SliverChildListDelegate([
-                CustomDropdownButton<OutlineType>(
-                  label: 'outline_shape'.i18n,
-                  value: preset.selectOutlineOption!.outlineType,
-                  items: OutlineType.values.map<DropdownMenuItem<OutlineType>>((type) => DropdownMenuItem(value: type, child: Text(type.name))).toList(),
-                  onChanged: (OutlineType? t) {
-                    if (t != null) {
-                      ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith.selectOutlineOption!(outlineType: t));
+            const SizedBox(height: ConstList.paddingHuge),
+            const Divider(),
+            const SizedBox(height: ConstList.paddingHuge),
+            Row(
+              children: [
+                Text('node_select_color_enable'.i18n),
+                Checkbox(
+                  value: preset.selectOutlineEnable,
+                  onChanged: (bool? value) {
+                    if (value != null) {
+                      ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(selectOutlineEnable: value));
                     }
                   },
                 ),
-                CustomTextField(controller: ref.watch(choiceNodePresetSelectedEditOutlineWidthProvider), label: 'outline_width'.i18n),
-              ]),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: ConstList.isSmallDisplay(context) ? 1 : 2,
-                crossAxisSpacing: 10,
-                mainAxisExtent: 64,
-                mainAxisSpacing: 2,
-              ),
+              ],
             ),
-          ),
-        ],
+            Wrap(
+              children: [
+                SizedBox(
+                  width: unitWidth,
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(ConstList.padding),
+                      child: Column(
+                        children: [
+                          Opacity(
+                            opacity: opacity,
+                            child: ViewColorPicker(
+                              text: 'node_outline_color_selected'.i18n,
+                              color: preset.selectOutlineOption!.outlineColor.getColor()!,
+                              onColorChanged: (Color value) {
+                                ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith.selectOutlineOption!.outlineColor(color: value.value));
+                              },
+                              hasAlpha: true,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: unitWidth,
+                  child: Opacity(
+                    opacity: opacity,
+                    child: Column(
+                      children: [
+                        CustomDropdownButton<OutlineType>(
+                          label: 'outline_shape'.i18n,
+                          value: preset.selectOutlineOption!.outlineType,
+                          items: OutlineType.values.map<DropdownMenuItem<OutlineType>>((type) => DropdownMenuItem(value: type, child: Text(type.name))).toList(),
+                          onChanged: (OutlineType? t) {
+                            if (t != null) {
+                              ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith.selectOutlineOption!(outlineType: t));
+                            }
+                          },
+                        ),
+                        CustomTextField(controller: ref.watch(choiceNodePresetSelectedEditOutlineWidthProvider), label: 'outline_width'.i18n),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: largeUnitWidth,
+                  child: Opacity(
+                    opacity: opacity,
+                    child: ViewVertexEdgeEditor(
+                      label: 'outline_distance_round_active'.i18n,
+                      subLabel: 'outline_distance_round_sub'.i18n,
+                      edgeProvider: (String str) => ref.watch(ChoiceNodePresetOutlineDistanceProvider(position: str, isSelected: true)),
+                      vertexProvider: (String str) => ref.watch(ChoiceNodePresetOutlineRoundProvider(position: str, isSelected: true)),
+                      edgeFillLabel: 'distance'.i18n,
+                      vertexFillLabel: 'round'.i18n,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -598,12 +607,14 @@ class _ViewNodeComponentOptionEditorState extends ConsumerState<ViewNodeComponen
     return Scrollbar(
       controller: _scrollController,
       thumbVisibility: true,
-      child: CustomScrollView(
-        shrinkWrap: true,
+      child: SingleChildScrollView(
         controller: _scrollController,
-        slivers: [
-          SliverToBoxAdapter(
-            child: CustomDropdownButton<SliderThumbShape>(
+        child: Wrap(
+          spacing: 15,
+          runSpacing: 15,
+          children: [
+            CustomDropdownButton<SliderThumbShape>(
+              forceWidth: unitWidth,
               label: 'slider_thumb_shape'.i18n,
               onChanged: (SliderThumbShape? t) {
                 if (t != null) {
@@ -613,55 +624,56 @@ class _ViewNodeComponentOptionEditorState extends ConsumerState<ViewNodeComponen
               value: SliderThumbShape.circle,
               items: SliderThumbShape.values.map<DropdownMenuItem<SliderThumbShape>>((shape) => DropdownMenuItem(value: shape, child: Text(shape.toString()))).toList(),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(ConstList.padding),
-                child: ViewColorPicker(
-                  text: 'slider_thumb_color'.i18n,
-                  color: preset.sliderOption!.sliderThumbColor.getColor()!,
-                  onColorChanged: (Color value) {
-                    ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith.sliderOption!.sliderThumbColor(color: value.value));
-                  },
-                  hasAlpha: true,
+            SizedBox(
+              width: unitWidth,
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(ConstList.padding),
+                  child: ViewColorPicker(
+                    text: 'slider_thumb_color'.i18n,
+                    color: preset.sliderOption!.sliderThumbColor.getColor()!,
+                    onColorChanged: (Color value) {
+                      ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith.sliderOption!.sliderThumbColor(color: value.value));
+                    },
+                    hasAlpha: true,
+                  ),
                 ),
               ),
             ),
-          ),
-          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
-          SliverToBoxAdapter(
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(ConstList.padding),
-                child: ViewColorPicker(
-                  text: 'slider_track_active_color'.i18n,
-                  color: preset.sliderOption!.sliderTrackActiveColor.getColor()!,
-                  onColorChanged: (Color value) {
-                    ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith.sliderOption!.sliderTrackActiveColor(color: value.value));
-                  },
-                  hasAlpha: true,
+            SizedBox(
+              width: unitWidth,
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(ConstList.padding),
+                  child: ViewColorPicker(
+                    text: 'slider_track_active_color'.i18n,
+                    color: preset.sliderOption!.sliderTrackActiveColor.getColor()!,
+                    onColorChanged: (Color value) {
+                      ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith.sliderOption!.sliderTrackActiveColor(color: value.value));
+                    },
+                    hasAlpha: true,
+                  ),
                 ),
               ),
             ),
-          ),
-          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
-          SliverToBoxAdapter(
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(ConstList.padding),
-                child: ViewColorPicker(
-                  text: 'slider_track_inactive_color'.i18n,
-                  color: preset.sliderOption!.sliderTrackInactiveColor.getColor()!,
-                  onColorChanged: (Color value) {
-                    ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith.sliderOption!.sliderTrackInactiveColor(color: value.value));
-                  },
-                  hasAlpha: true,
+            SizedBox(
+              width: unitWidth,
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(ConstList.padding),
+                  child: ViewColorPicker(
+                    text: 'slider_track_inactive_color'.i18n,
+                    color: preset.sliderOption!.sliderTrackInactiveColor.getColor()!,
+                    onColorChanged: (Color value) {
+                      ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith.sliderOption!.sliderTrackInactiveColor(color: value.value));
+                    },
+                    hasAlpha: true,
+                  ),
                 ),
               ),
-            ),
-          ),
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -690,58 +702,62 @@ class _ViewNodeColorOptionEditorState extends ConsumerState<ViewNodeColorOptionE
     return Scrollbar(
       controller: _scrollController,
       thumbVisibility: true,
-      child: CustomScrollView(
-        shrinkWrap: true,
+      child: SingleChildScrollView(
         controller: _scrollController,
-        slivers: [
-          SliverToBoxAdapter(
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(ConstList.padding),
-                child: ViewColorOptionEditor(
-                  colorOption: preset.defaultColorOption!,
-                  changeFunction: (ColorOption after) {
-                    ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(defaultColorOption: after));
-                  },
+        child: Wrap(
+          spacing: 15,
+          runSpacing: 15,
+          children: [
+            SizedBox(
+              width: unitWidth,
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(ConstList.padding),
+                  child: ViewColorOptionEditor(
+                    colorOption: preset.defaultColorOption!,
+                    changeFunction: (ColorOption after) {
+                      ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(defaultColorOption: after));
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-          const SliverPadding(padding: EdgeInsets.symmetric(vertical: ConstList.paddingHuge)),
-          SliverToBoxAdapter(
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(ConstList.padding),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Text('node_select_color_enable'.i18n),
-                        Checkbox(
-                          value: preset.selectColorEnable,
-                          onChanged: (bool? value) {
-                            if (value != null) {
-                              ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(selectColorEnable: value));
-                            }
+            SizedBox(
+              width: unitWidth,
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(ConstList.padding),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Text('node_select_color_enable'.i18n),
+                          Checkbox(
+                            value: preset.selectColorEnable,
+                            onChanged: (bool? value) {
+                              if (value != null) {
+                                ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(selectColorEnable: value));
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                      Opacity(
+                        opacity: preset.selectColorEnable! ? 1.0 : 0.3,
+                        child: ViewColorOptionEditor(
+                          colorOption: preset.selectColorOption!,
+                          changeFunction: (ColorOption after) {
+                            ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(selectColorOption: after));
                           },
                         ),
-                      ],
-                    ),
-                    Opacity(
-                      opacity: preset.selectColorEnable! ? 1.0 : 0.3,
-                      child: ViewColorOptionEditor(
-                        colorOption: preset.selectColorOption!,
-                        changeFunction: (ColorOption after) {
-                          ref.read(choiceNodePresetListProvider.notifier).update(presetName, preset.copyWith(selectColorOption: after));
-                        },
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ),
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
