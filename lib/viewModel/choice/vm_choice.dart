@@ -151,7 +151,6 @@ class ChoiceStatus extends ChangeNotifier {
       ref.read(randomStateNotifierProvider(pos).notifier).startRandom();
     }
     getPlatform.updateStatus();
-    print(getPlatform.getSelectedPosInternal());
     ref.read(snackBarErrorProvider.notifier).update();
     refreshAll();
   }
