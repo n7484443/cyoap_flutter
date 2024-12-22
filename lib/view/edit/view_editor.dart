@@ -20,6 +20,7 @@ import '../../main.dart';
 import '../../viewModel/edit/preset/vm_choice_node_preset.dart';
 import '../../viewModel/edit/vm_editor.dart';
 import '../../viewModel/edit/vm_make_platform.dart';
+import '../code/view_ide_node.dart';
 
 class ViewEditor extends ConsumerStatefulWidget {
   const ViewEditor({
@@ -52,7 +53,7 @@ class _ViewEditorState extends ConsumerState<ViewEditor> with TickerProviderStat
     }
     var children = [
       const ViewContentsEditor(),
-      ViewIde(choice: ref.watch(nodeEditorTargetProvider)),
+      ViewIdeNode(choice: ref.watch(nodeEditorTargetProvider)),
       const ViewNodeOptionEditor(),
       ViewImageDraggable(
         addImageFunction: (ref, name) {

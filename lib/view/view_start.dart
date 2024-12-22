@@ -218,6 +218,7 @@ class _ViewProjectListState extends ConsumerState<ViewProjectList> {
   Widget build(BuildContext context) {
     return Scrollbar(
       thumbVisibility: true,
+      trackVisibility: true,
       controller: _scrollController,
       child: ListView.builder(
         itemCount: ref.watch(frequentlyUsedPathProvider).length,

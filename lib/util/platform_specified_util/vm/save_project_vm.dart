@@ -17,7 +17,7 @@ class SaveProjectImp extends SaveProject {
       archive.addFile(ArchiveFile(name, data.length, data));
     }
 
-    return ZipEncoder().encode(archive, level: Deflate.BEST_SPEED) as Uint8List;
+    return ZipEncoder().encode(archive, level: DeflateLevel.bestSpeed) as Uint8List;
   }
 
   @override
@@ -53,9 +53,9 @@ class SaveProjectImp extends SaveProject {
     for (int i = 0; i < archiveA.length; i++) {
       if (archiveA[i].name != archiveB[i].name) return false;
       var hashA =
-          await calculateFileHash(data: archiveA[i].rawContent!.toUint8List());
+          await calculateFileHash(data: archiveA[i].rawContent!.readBytes());
       var hashB =
-          await calculateFileHash(data: archiveB[i].rawContent!.toUint8List());
+          await calculateFileHash(data: archiveB[i].rawContent!.readBytes());
       if (hashA != hashB) return false;
     }
     return true;

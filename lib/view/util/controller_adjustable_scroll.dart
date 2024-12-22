@@ -72,6 +72,7 @@ class _HorizontalScrollSingleChildState
       radius: const Radius.circular(20.0),
       thickness: 12.0,
       thumbVisibility: true,
+      trackVisibility: true,
       child: ScrollConfiguration(
         behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
           PointerDeviceKind.touch,

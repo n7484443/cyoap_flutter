@@ -11,6 +11,18 @@ class ViewIdeLine extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    Widget editor;
+    if(false){
+      editor = SimpleCodeEditor(
+        choiceType: ChoiceType.line,
+        choice: ref.watch(lineEditorTargetProvider),
+      );
+    }else{
+      editor = ViewIde(
+        choiceType: ChoiceType.line,
+        choice: ref.watch(lineEditorTargetProvider),
+      );
+    }
     return PopScope(
       child: Scaffold(
         appBar: AppBar(
@@ -21,10 +33,7 @@ class ViewIdeLine extends ConsumerWidget {
             },
           ),
         ),
-        body: ViewIde(
-          choiceType: ChoiceType.line,
-          choice: ref.watch(lineEditorTargetProvider),
-        ),
+        body: editor,
       ),
     );
   }

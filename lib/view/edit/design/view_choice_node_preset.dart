@@ -311,6 +311,7 @@ class _ViewNodeGeneralOptionEditorState extends ConsumerState<ViewNodeGeneralOpt
     return Scrollbar(
       controller: _scrollController,
       thumbVisibility: true,
+      trackVisibility: true,
       child: SingleChildScrollView(
         controller: _scrollController,
         child: Wrap(
@@ -442,6 +443,7 @@ class _ViewNodeOutlineOptionEditorState extends ConsumerState<ViewNodeOutlineOpt
     return Scrollbar(
       controller: _scrollController,
       thumbVisibility: true,
+      trackVisibility: true,
       child: SingleChildScrollView(
         controller: _scrollController,
         child: Column(
@@ -607,6 +609,7 @@ class _ViewNodeComponentOptionEditorState extends ConsumerState<ViewNodeComponen
     return Scrollbar(
       controller: _scrollController,
       thumbVisibility: true,
+      trackVisibility: true,
       child: SingleChildScrollView(
         controller: _scrollController,
         child: Wrap(
@@ -702,6 +705,7 @@ class _ViewNodeColorOptionEditorState extends ConsumerState<ViewNodeColorOptionE
     return Scrollbar(
       controller: _scrollController,
       thumbVisibility: true,
+      trackVisibility: true,
       child: SingleChildScrollView(
         controller: _scrollController,
         child: Wrap(

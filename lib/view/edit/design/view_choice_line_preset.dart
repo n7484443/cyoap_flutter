@@ -152,6 +152,7 @@ class _ViewLineOptionEditorState extends ConsumerState<ViewLineOptionEditor> {
       child: Scrollbar(
         controller: _scrollController,
         thumbVisibility: true,
+        trackVisibility: true,
         child: SingleChildScrollView(
           controller: _scrollController,
           child: Wrap(

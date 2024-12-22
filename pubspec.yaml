@@ -38,7 +38,7 @@ dependencies:
   http: ^1.2.0
   shared_preferences: ^2.0.15
   google_fonts: ^6.2.1
-  archive: ^3.3.1
+  archive: ^4.0.2
   flutter_quill: ^10.4.4
   package_info_plus: ^8.0.0
   github: ^9.14.0

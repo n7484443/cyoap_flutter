@@ -203,6 +203,7 @@ final localeStateProvider = StateProvider<Locale?>((ref) {
         .update("cyoap_language", next?.toString().toLowerCase());
     Option().locale = next?.toString().toLowerCase();
   });
+  Option().locale = DevicePreference().getLocale().toString().toLowerCase();
   return DevicePreference().getLocale();
 });
 

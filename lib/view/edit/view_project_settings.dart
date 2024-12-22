@@ -133,6 +133,7 @@ class _ViewGlobalVariableEditorState
         flex: 2,
         child: Scrollbar(
           thumbVisibility: true,
+          trackVisibility: true,
           controller: controller,
           child: CustomScrollView(
             controller: controller,
@@ -312,6 +313,7 @@ class _ViewGlobalVariableInnerEditorState
     var (_, currentEditValue) = currentEditValueList[currentIndex];
     return Scrollbar(
       thumbVisibility: true,
+      trackVisibility: true,
       controller: controller,
       child: ListView(
         controller: controller,
