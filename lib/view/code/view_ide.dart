@@ -5,7 +5,7 @@ import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_options.dart';
 import 'package:easy_debounce/easy_debounce.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Action;
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -211,7 +211,7 @@ class SimpleCodeEditor extends ConsumerStatefulWidget {
 }
 
 class _SimpleCodeEditorState extends ConsumerState<SimpleCodeEditor> {
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -220,6 +220,7 @@ class _SimpleCodeEditorState extends ConsumerState<SimpleCodeEditor> {
 
   @override
   void dispose() {
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -237,14 +238,17 @@ class _SimpleCodeEditorState extends ConsumerState<SimpleCodeEditor> {
           SimpleCodeBlockEditor(
             title: 'code_hint_execute_condition'.i18n,
             simpleCodes: codeHandler.conditionClickableSimple,
+            codeActivationType: CodeActivationType.clickable,
           ),
           SimpleCodeBlockEditor(
             title: 'code_hint_visible_condition'.i18n,
             simpleCodes: codeHandler.conditionVisibleSimple,
+            codeActivationType: CodeActivationType.visible,
           ),
           SimpleCodeBlockEditor(
             title: 'code_hint_execute'.i18n,
             simpleCodes: codeHandler.executeSimple,
+            codeActivationType: CodeActivationType.execute,
           ),
         ],
       ),
@@ -252,56 +256,50 @@ class _SimpleCodeEditorState extends ConsumerState<SimpleCodeEditor> {
   }
 }
 
-class SimpleCodeBlockEditor extends ConsumerWidget {
+class SimpleCodeBlockEditor extends ConsumerStatefulWidget {
   final SimpleCodes? simpleCodes;
   final String title;
+  final CodeActivationType codeActivationType;
 
-  const SimpleCodeBlockEditor({this.simpleCodes, required this.title, super.key});
+  const SimpleCodeBlockEditor({this.simpleCodes, required this.title, required this.codeActivationType, super.key});
 
-  Widget buildFromSimpleCodeBlock(SimpleCodeBlock simpleCodeBlock) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(2.0),
-        child: Column(
-          children: [
-            CustomDropdownButton<SimpleConditionType>(
-              value: SimpleConditionType.alwaysOn,
-              items: SimpleConditionType.values
-                  .map(
-                    (e) => DropdownMenuItem(
-                      value: e,
-                      child: Text(e.toString()),
-                    ),
-                  )
-                  .toList(),
-              onChanged: (d) {},
-              forceWidth: 230,
-              useCard: false,
-            ),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text('asdf'),
-                Text('asdf'),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
+  @override
+  ConsumerState createState() => _SimpleCodeBlockEditorState();
+}
+
+class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     var addButton = IconButton(
       icon: const Icon(Icons.add),
-      onPressed: () {},
+      onPressed: () {
+        ref.read(simpleCodesIdeProvider(widget.codeActivationType).notifier).addSimpleCodeBlock(getDefaultValue());
+      },
     );
+    var children = ref.watch(simpleCodesIdeProvider(widget.codeActivationType))?.code.indexed.map((e) {
+          var (index, data) = e;
+          return buildFromSimpleCodeBlock(data, index);
+        }).toList() ??
+        [];
+    children.add(addButton);
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(title),
+          child: Text(widget.title),
         ),
         const ColoredBox(
           color: Colors.black12,
@@ -313,13 +311,84 @@ class SimpleCodeBlockEditor extends ConsumerWidget {
         Flexible(
           child: SizedBox(
             width: 320,
-            child: ListView(
-              children: [...simpleCodes?.code.map((e) => buildFromSimpleCodeBlock(e)).toList() ?? [], addButton],
+            child: Scrollbar(
+              thumbVisibility: true,
+              trackVisibility: true,
+              controller: _scrollController,
+              child: ListView(
+                controller: _scrollController,
+                children: children,
+              ),
             ),
           ),
         ),
       ],
     );
+  }
+
+  Widget buildFromSimpleCodeBlock(SimpleCodeBlock simpleCodeBlock, int index) {
+    Widget dropdown;
+    if (simpleCodeBlock is Action) {
+      dropdown = CustomDropdownButton<SimpleActionType>(
+        value: SimpleActionType.nothing,
+        items: SimpleActionType.values
+            .map(
+              (e) => DropdownMenuItem(
+                value: e,
+                child: Text(e.toString()),
+              ),
+            )
+            .toList(),
+        onChanged: (SimpleActionType? type) {
+          if (type == null) return;
+          simpleCodeBlock = (simpleCodeBlock as Action).copyWith(type: type);
+          ref.read(simpleCodesIdeProvider(widget.codeActivationType).notifier).setSimpleCodeBlock(simpleCodeBlock, index);
+        },
+        forceWidth: 230,
+        useCard: false,
+      );
+    } else {
+      dropdown = CustomDropdownButton<SimpleConditionType>(
+        value: SimpleConditionType.alwaysOn,
+        items: SimpleConditionType.values
+            .map(
+              (e) => DropdownMenuItem(
+                value: e,
+                child: Text(e.toString()),
+              ),
+            )
+            .toList(),
+        onChanged: (SimpleConditionType? type) {
+          if (type == null) return;
+          simpleCodeBlock = (simpleCodeBlock as Condition).copyWith(type: type);
+          ref.read(simpleCodesIdeProvider(widget.codeActivationType).notifier).setSimpleCodeBlock(simpleCodeBlock, index);
+        },
+        forceWidth: 230,
+        useCard: false,
+      );
+    }
+    var count = simpleCodeBlock.argumentLength;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(2.0),
+        child: Column(
+          children: [
+            dropdown,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: List.filled(count, const Text('asdf')),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  SimpleCodeBlock getDefaultValue() {
+    if (widget.codeActivationType == CodeActivationType.execute) {
+      return const SimpleCodeBlock.action();
+    }
+    return const SimpleCodeBlock.condition();
   }
 }
 

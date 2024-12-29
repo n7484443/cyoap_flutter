@@ -1,5 +1,6 @@
 import 'package:cyoap_core/choiceNode/choice.dart';
 import 'package:cyoap_flutter/view/code/view_ide.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,7 +15,7 @@ class ViewIdeNode extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Widget editor;
-    if (false) {
+    if (!kReleaseMode) {
       editor = SimpleCodeEditor(
         choiceType: ChoiceType.node,
         choice: ref.watch(nodeEditorTargetProvider),
