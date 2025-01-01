@@ -269,6 +269,7 @@ class SimpleCodeBlockEditor extends ConsumerStatefulWidget {
 
 class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
   final ScrollController _scrollController = ScrollController();
+  final Map<int, List<TextEditingController>> _controllers = {};
 
   @override
   void initState() {
@@ -279,6 +280,11 @@ class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
   void dispose() {
     super.dispose();
     _scrollController.dispose();
+    for (var key in _controllers.keys) {
+      for(var controller in _controllers[key]!){
+        controller.dispose();
+      }
+    }
   }
 
   @override
@@ -330,7 +336,7 @@ class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
     Widget dropdown;
     if (simpleCodeBlock is Action) {
       dropdown = CustomDropdownButton<SimpleActionType>(
-        value: SimpleActionType.nothing,
+        value: simpleCodeBlock.type,
         items: SimpleActionType.values
             .map(
               (e) => DropdownMenuItem(
@@ -348,8 +354,9 @@ class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
         useCard: false,
       );
     } else {
+      simpleCodeBlock = simpleCodeBlock as Condition;
       dropdown = CustomDropdownButton<SimpleConditionType>(
-        value: SimpleConditionType.alwaysOn,
+        value: simpleCodeBlock.type,
         items: SimpleConditionType.values
             .map(
               (e) => DropdownMenuItem(
@@ -368,15 +375,40 @@ class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
       );
     }
     var count = simpleCodeBlock.argumentLength;
+    if(_controllers[index] == null){
+      _controllers[index] = [];
+    }
+    var currentControllerList = _controllers[index]!;
+    for(var i = 0; i < count; i++){
+      if(currentControllerList.length <= i){
+        currentControllerList.add(TextEditingController());
+      }
+      if(simpleCodeBlock.arguments.length <= i){
+        currentControllerList[i].text = "";
+      }else{
+        currentControllerList[i].text = simpleCodeBlock.arguments[i].data;
+      }
+    }
+
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(2.0),
+        padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
         child: Column(
           children: [
             dropdown,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: List.filled(count, const Text('asdf')),
+              children: List.generate(
+                count,
+                  (index){
+                    return Expanded(
+                      child: CustomTextField(
+                        controller: currentControllerList[index],
+                        label: "asdf",
+                      ),
+                    );
+                  }
+              ),
             ),
           ],
         ),
@@ -386,9 +418,9 @@ class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
 
   SimpleCodeBlock getDefaultValue() {
     if (widget.codeActivationType == CodeActivationType.execute) {
-      return const SimpleCodeBlock.action();
+      return const SimpleCodeBlock.action(type: SimpleActionType.nothing);
     }
-    return const SimpleCodeBlock.condition();
+    return const SimpleCodeBlock.condition(type: SimpleConditionType.alwaysOn);
   }
 }
 
