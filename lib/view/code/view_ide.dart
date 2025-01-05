@@ -1,6 +1,7 @@
 import 'package:cyoap_core/choiceNode/choice.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/grammar/simple_code.dart';
+import 'package:cyoap_core/variable_db.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
 import 'package:cyoap_flutter/view/util/view_options.dart';
@@ -8,6 +9,7 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart' hide Action;
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:searchfield/searchfield.dart';
 
 import '../../main.dart';
 import '../../viewModel/code/vm_ide.dart';
@@ -269,6 +271,7 @@ class SimpleCodeBlockEditor extends ConsumerStatefulWidget {
 
 class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
   final ScrollController _scrollController = ScrollController();
+  final ScrollController _searchScrollController = ScrollController();
   final Map<int, List<TextEditingController>> _controllers = {};
 
   @override
@@ -280,8 +283,9 @@ class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
   void dispose() {
     super.dispose();
     _scrollController.dispose();
+    _searchScrollController.dispose();
     for (var key in _controllers.keys) {
-      for(var controller in _controllers[key]!){
+      for (var controller in _controllers[key]!) {
         controller.dispose();
       }
     }
@@ -375,20 +379,23 @@ class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
       );
     }
     var count = simpleCodeBlock.argumentLength;
-    if(_controllers[index] == null){
+    if (_controllers[index] == null) {
       _controllers[index] = [];
     }
     var currentControllerList = _controllers[index]!;
-    for(var i = 0; i < count; i++){
-      if(currentControllerList.length <= i){
+    for (var i = 0; i < count; i++) {
+      if (currentControllerList.length <= i) {
         currentControllerList.add(TextEditingController());
       }
-      if(simpleCodeBlock.arguments.length <= i){
+      if (simpleCodeBlock.arguments.length <= i) {
         currentControllerList[i].text = "";
-      }else{
+      } else {
         currentControllerList[i].text = simpleCodeBlock.arguments[i].data;
       }
     }
+
+    var variableList = VariableDataBase().stackFrames.last.getVariableMap();
+    print(variableList.keys);
 
     return Card(
       child: Padding(
@@ -398,17 +405,20 @@ class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
             dropdown,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: List.generate(
-                count,
-                  (index){
-                    return Expanded(
-                      child: CustomTextField(
-                        controller: currentControllerList[index],
-                        label: "asdf",
-                      ),
-                    );
-                  }
-              ),
+              children: List.generate(count, (index) {
+                return Expanded(
+                  child: SearchField<String>(
+                    controller: currentControllerList[index],
+                    suggestions: variableList.keys.map((name) => SearchFieldListItem<String>(name)).toList(),
+                    onSuggestionTap: (SearchFieldListItem<String> suggestion) {
+                      currentControllerList[index].text = suggestion.searchKey;
+                      return suggestion.searchKey;
+                    },
+                    scrollController: _searchScrollController,
+                    scrollbarDecoration: ScrollbarDecoration(),
+                  ),
+                );
+              }),
             ),
           ],
         ),
