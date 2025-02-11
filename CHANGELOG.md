@@ -1,3 +1,6 @@
+### 5.4.8
+* ChoiceLine 의 최대 칸수에 대응하여 ChoiceNode의 크기를 조절할 수 없고, 12까지로만 가능하던 버그 수정 
+* 라이브러리 업데이트
 ### 5.4.7
 * maximize image 의 애매모호한 변수를 image maxHeight ratio로 변경
 * 초기 빈 platform 디자인 개선

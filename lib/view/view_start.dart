@@ -304,8 +304,7 @@ class SelectModeButton extends ConsumerWidget {
             showSnackBar(
                 context,
                 'failed_load_project_version'
-                    .i18n
-                    .fill([loadState.version!, fileVersion]),
+                    .i18nF([loadState.version!, fileVersion]),
                 autoHide: false);
             break;
           case ProjectState.nonSelected:

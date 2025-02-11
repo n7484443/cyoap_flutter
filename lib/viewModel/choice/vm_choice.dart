@@ -120,7 +120,7 @@ class ChoiceStatus extends ChangeNotifier {
   }
 
   void addChoice(Choice choice, {int? index}) {
-    node.addChild(choice, pos: index);
+    node.addChild(getPlatform, choice, pos: index);
     refreshSelf();
   }
 

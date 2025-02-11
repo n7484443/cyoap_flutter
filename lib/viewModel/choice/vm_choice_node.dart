@@ -103,11 +103,11 @@ class ChoiceNodeSizeNotifier extends StateNotifier<int> {
           ref
               .read(choiceStatusProvider(pos))
               .asChoiceNode()!
-              .getMaxSize(false)) {
-        state = node.getMaxSize(false);
+              .getMaxSize(getPlatform, false)) {
+        state = node.getMaxSize(getPlatform, false);
       }
     } else {
-      state = width.clamp(0, node.getMaxSize(false));
+      state = width.clamp(0, node.getMaxSize(getPlatform, false));
     }
     node.width = state;
     for (var child in node.children) {

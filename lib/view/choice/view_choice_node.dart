@@ -507,7 +507,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
         pos,
         isReorderAble:
             ignoreOption != ChoiceNodeChildRender.noOptionWithViewOnly,
-        parentMaxSize: node.getMaxSize(true),
+        parentMaxSize: node.getMaxSize(getPlatform, true),
       );
     } else if (!ignoreChild &&
         node.children.isNotEmpty &&
@@ -515,7 +515,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
       child = ViewWrapCustomReorder(
         pos,
         isReorderAble: false,
-        parentMaxSize: node.getMaxSize(true),
+        parentMaxSize: node.getMaxSize(getPlatform, true),
         builder: (i) {
           if (ignoreOption == ChoiceNodeChildRender.selected &&
               !getPlatform.checkIsSelected(

@@ -72,7 +72,7 @@ class EditablePlatform extends PlayablePlatform {
 
   void addLineSettingData(ChoiceLine choiceLine, int y) {
     while (choicePage.choiceLines.length <= y) {
-      choicePage.addChild(ChoiceLine());
+      choicePage.addChild(this, ChoiceLine());
     }
     choiceLine.parent = choicePage;
     choicePage.choiceLines[y] = choiceLine;
@@ -83,14 +83,14 @@ class EditablePlatform extends PlayablePlatform {
     for (int i = 1; i < pos.data.length - 1; i++) {
       while (parent.children.length <= pos.data[i]) {
         if (i == 1) {
-          parent.addChild(ChoiceLine());
+          parent.addChild(this, ChoiceLine());
         } else {
-          parent.addChild(ChoiceNode.empty());
+          parent.addChild(this, ChoiceNode.empty());
         }
       }
       parent = parent.children[pos.data[i]];
     }
-    parent.addChild(node, pos: pos.last);
+    parent.addChild(this, node, pos: pos.last);
     checkDataCorrect();
   }
 
@@ -100,7 +100,7 @@ class EditablePlatform extends PlayablePlatform {
     var posB = b.currentPos;
 
     parentA.removeChildren(a);
-    parentB.addChild(a, pos: posB);
+    parentB.addChild(this, a, pos: posB);
     checkDataCorrect();
   }
 
@@ -108,7 +108,7 @@ class EditablePlatform extends PlayablePlatform {
     var parentA = a.parent!;
 
     parentA.removeChildren(a);
-    parentB.addChild(a);
+    parentB.addChild(this, a);
     checkDataCorrect();
   }
 

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/viewModel/vm_start.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../main.dart';
@@ -101,9 +102,9 @@ class BackupTimer extends _$BackupTimer {
 }
 
 @riverpod
-int maximumSize(MaximumSizeRef ref) {
+int maximumSize(Ref ref) {
   if (ConstList.isMobile()) {
-    return ref.watch(forceWideProvider) ? 12 : 6;
+    return ref.watch(forceWideProvider) ? 50 : 6;
   }
-  return 12;
+  return 50;
 }

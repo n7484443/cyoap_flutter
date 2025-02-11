@@ -59,7 +59,7 @@ class IccProjectParser {
       );
       choiceRow.choiceNodeOption = choiceRow.choiceNodeOption.copyWith(presetName: preset.$1);
       choiceRow.choiceNodeMode = ChoiceNodeMode.unSelectableMode;
-      var lineSetting = ChoiceLine()..addChild(choiceRow);
+      var lineSetting = ChoiceLine()..addChild(platform, choiceRow);
       var rowWidth = int.tryParse((row['objectWidth'] as String? ?? '').replaceAll("md-", "").replaceAll("col-", "")) ?? 0;
 
       for (var object in row["objects"]) {
@@ -96,9 +96,9 @@ class IccProjectParser {
           }
           var addonNode = ChoiceNode(width: 0, title: addonTitle, contents: toContent(addon["text"] ?? parsed['defaultAddonText']), imageString: imageName);
           addonNode.choiceNodeOption = addonNode.choiceNodeOption.copyWith(presetName: preset.$1);
-          choiceNode.addChild(addonNode);
+          choiceNode.addChild(platform, addonNode);
         }
-        lineSetting.addChild(choiceNode);
+        lineSetting.addChild(platform, choiceNode);
       }
       platform.choicePage.choiceLines.add(lineSetting);
     }
