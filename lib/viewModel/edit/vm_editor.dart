@@ -55,6 +55,7 @@ class NodeEditorTarget extends _$NodeEditorTarget {
 
   void setState(ChoiceNode Function(ChoiceNode) func) {
     state = func(state);
+    ref.notifyListeners();
   }
   void setChoiceNodeOption(ChoiceNodeOption option) {
     setState((node) {
@@ -103,20 +104,6 @@ final nodeEditorDesignProvider = Provider<ChoiceNodeOption>((ref) {
 
 final nodeTitleProvider = StateProvider.autoDispose<String>(
     (ref) => ref.watch(nodeEditorTargetProvider).title);
-
-@riverpod
-TextEditingController maximum(Ref ref) {
-  var node = ref.watch(nodeEditorTargetProvider);
-  var controller = TextEditingController(text: node.maximumStatus.toString());
-  controller.addListener(() {
-    ref.read(nodeEditorTargetProvider.notifier).setState((node) {
-      node.maximumStatus = int.tryParse(controller.text) ?? 0;
-      return node;
-    });
-  });
-  ref.onDispose(() => controller.dispose());
-  return controller;
-}
 
 @riverpod
 class ImageListState extends _$ImageListState {

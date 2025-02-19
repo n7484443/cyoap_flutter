@@ -493,13 +493,11 @@ class ViewNodeOptionEditor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var title = ref.watch(nodeTitleProvider);
     var design = ref.watch(nodeEditorDesignProvider);
     var nodeMode = ref.watch(nodeEditorTargetProvider).choiceNodeMode;
     var nodeOption = ref
         .watch(nodeEditorTargetProvider)
         .choiceNodeOption;
-
     var left = Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -547,36 +545,9 @@ class ViewNodeOptionEditor extends ConsumerWidget {
           slivers: [
             SliverList(
               delegate: SliverChildListDelegate([
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Visibility(
-                    visible: nodeMode == ChoiceNodeMode.multiSelect || nodeMode == ChoiceNodeMode.randomMode,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('${'variable_name'.i18n} \n${title.replaceAll(" ", "")}:${nodeMode == ChoiceNodeMode.multiSelect ? 'multi' : 'random'}', style: Theme
-                            .of(context)
-                            .textTheme
-                            .labelLarge),
-                        const SizedBox(width: 40),
-                        SizedBox(
-                          width: 120,
-                          child: TextField(
-                            textAlign: TextAlign.end,
-                            maxLength: 3,
-                            minLines: 1,
-                            maxLines: 1,
-                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                            keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
-                            controller: ref.watch(maximumProvider),
-                            decoration: InputDecoration(
-                              label: Text(nodeMode == ChoiceNodeMode.multiSelect ? 'max_select'.i18n : 'max_random'.i18n),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: MaximumStateEditor(),
                 ),
                 if (nodeMode != ChoiceNodeMode.unSelectableMode && nodeMode != ChoiceNodeMode.onlyCode)
                   ViewSwitchLabel(
@@ -633,5 +604,69 @@ class ViewNodeOptionEditor extends ConsumerWidget {
         child: right,
       ),
     ]);
+  }
+}
+
+class MaximumStateEditor extends ConsumerStatefulWidget {
+  const MaximumStateEditor({super.key});
+
+  @override
+  ConsumerState createState() => _MaximumStateEditorState();
+}
+
+class _MaximumStateEditorState extends ConsumerState<MaximumStateEditor> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = TextEditingController(text: ref.read(nodeEditorTargetProvider).maximumStatus.toString());
+    _controller.addListener(() {
+      ref.read(nodeEditorTargetProvider.notifier).setState((node) {
+        node.maximumStatus = int.tryParse(_controller.text) ?? 0;
+        return node;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var title = ref.watch(nodeTitleProvider);
+    var nodeMode = ref.watch(nodeEditorTargetProvider).choiceNodeMode;
+    return Visibility(
+      visible: nodeMode == ChoiceNodeMode.multiSelect || nodeMode == ChoiceNodeMode.randomMode,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('${'variable_name'.i18n} \n${title.replaceAll(" ", "")}:${nodeMode == ChoiceNodeMode.multiSelect ? 'multi' : 'random'}', style: Theme
+              .of(context)
+              .textTheme
+              .labelLarge),
+          const SizedBox(width: 40),
+          SizedBox(
+            width: 120,
+            child: TextField(
+              textAlign: TextAlign.end,
+              maxLength: 3,
+              minLines: 1,
+              maxLines: 1,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
+              controller: _controller,
+              decoration: InputDecoration(
+                label: Text(nodeMode == ChoiceNodeMode.multiSelect ? 'max_select'.i18n : 'max_random'.i18n),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
