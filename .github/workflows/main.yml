@@ -82,7 +82,7 @@ jobs:
           pub-cache-key: "flutter-pub:os:-:channel:-:version:-:arch:-:hash:" # optional, change this to force refresh cache of dart pub get dependencies
           pub-cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:" # optional, change this to specify the cache path
 
-      - run: flutter build web --web-renderer canvaskit --base-href=/cyoap_flutter/ --release
+      - run: flutter build web --base-href=/cyoap_flutter/ --release
 
       - name: modify version of index.html
         run: |
