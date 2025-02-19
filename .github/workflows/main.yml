@@ -12,7 +12,7 @@ jobs:
       - uses: subosito/flutter-action@v2.16.0
         with:
           channel: 'stable'
-          flutter-version: '3.27.4'
+          flutter-version: '3.29.0'
           cache: true
           cache-key: "flutter-:channel:-:version:" # optional, change this to force refresh cache
           cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:" # optional, change this to specify the cache path
@@ -48,7 +48,7 @@ jobs:
       - uses: subosito/flutter-action@v2.16.0
         with:
           channel: 'stable'
-          flutter-version: '3.27.4'
+          flutter-version: '3.29.0'
           cache: true
           cache-key: "flutter-:channel:-:version:" # optional, change this to force refresh cache
           cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:" # optional, change this to specify the cache path
@@ -75,7 +75,7 @@ jobs:
       - uses: subosito/flutter-action@v2.16.0
         with:
           channel: 'stable'
-          flutter-version: '3.27.4'
+          flutter-version: '3.29.0'
           cache: true
           cache-key: "flutter-:channel:-:version:" # optional, change this to force refresh cache
           cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:" # optional, change this to specify the cache path

@@ -6,7 +6,7 @@ part of 'vm_ide.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ideControllerHash() => r'00847e4205966fcb1cc4d429275cf93908b35b35';
+String _$ideControllerHash() => r'9f2ea719e19c1262853ead4d0281ce7c9796ac08';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -157,7 +157,7 @@ class _IdeControllerProviderElement
   ChoiceType get type => (origin as IdeControllerProvider).type;
 }
 
-String _$simpleCodesIdeHash() => r'99b671b65a97a85d55fa6999684bd08bc0f0f911';
+String _$simpleCodesIdeHash() => r'd89263cbeb3fec0973cb3f74b931088bbab94b82';
 
 abstract class _$SimpleCodesIde
     extends BuildlessAutoDisposeNotifier<SimpleCodes?> {

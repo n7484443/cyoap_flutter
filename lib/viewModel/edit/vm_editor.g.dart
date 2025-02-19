@@ -6,7 +6,7 @@ part of 'vm_editor.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$maximumHash() => r'2454c467577441aa2851069758cde1ec13a0e2ce';
+String _$maximumHash() => r'b46a48cac9792bcdd1860989955783807bb54d97';
 
 /// See also [maximum].
 @ProviderFor(maximum)
@@ -22,7 +22,7 @@ final maximumProvider = AutoDisposeProvider<TextEditingController>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef MaximumRef = AutoDisposeProviderRef<TextEditingController>;
-String _$nodeEditorTargetHash() => r'a700b765ea3b8b853396649e34ee5a0a896fdcad';
+String _$nodeEditorTargetHash() => r'e5fac282c4542468a52af2aba4b97cee4564d6e4';
 
 /// See also [NodeEditorTarget].
 @ProviderFor(NodeEditorTarget)

@@ -156,7 +156,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                 ),
               ),
             if (widget.choiceType == ChoiceType.node && ref.watch(nodeEditorTargetProvider).isSelectableMode) const Divider(),
-            if (widget.choiceType != ChoiceType.node || ref.watch(nodeModeProvider) != ChoiceNodeMode.onlyCode)
+            if (widget.choiceType != ChoiceType.node || ref.watch(nodeEditorTargetProvider).choiceNodeMode != ChoiceNodeMode.onlyCode)
               rowColumn(
                 leftOrTop: SizedBox(
                   width: size,
@@ -468,10 +468,7 @@ class _ViewQuillCodeIdeState extends ConsumerState<ViewQuillCodeIde> {
               },
               child: QuillEditor(
                 controller: ref.watch(ideControllerProvider(widget.choiceType)),
-                configurations: QuillEditorConfigurations(
-                  sharedConfigurations: QuillSharedConfigurations(
-                    locale: ref.watch(localeStateProvider),
-                  ),
+                config: const QuillEditorConfig(
                   scrollable: false,
                   autoFocus: false,
                   padding: EdgeInsets.zero,

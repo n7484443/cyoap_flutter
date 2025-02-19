@@ -56,6 +56,25 @@ class NodeEditorTarget extends _$NodeEditorTarget {
   void setState(ChoiceNode Function(ChoiceNode) func) {
     state = func(state);
   }
+  void setChoiceNodeOption(ChoiceNodeOption option) {
+    setState((node) {
+      node.choiceNodeOption = option;
+      return node;
+    });
+  }
+
+  void setChoiceMode(ChoiceNodeMode option){
+    setState((node){
+      node.choiceNodeMode = option;
+      if (option == ChoiceNodeMode.onlyCode) {
+        node.conditionalCodeHandler.conditionClickableCode = [];
+        node.conditionalCodeHandler.conditionVisibleCode = [];
+        node.conditionalCodeHandler.conditionClickableString = null;
+        node.conditionalCodeHandler.conditionVisibleString = null;
+      }
+      return node;
+    });
+  }
 }
 
 final lineEditorTargetPosProvider = StateProvider<Pos?>((ref) {
@@ -78,49 +97,15 @@ class LineEditorTarget extends _$LineEditorTarget {
   }
 }
 
-final nodeEditorDesignProvider =
-    StateProvider.autoDispose<ChoiceNodeOption>((ref) {
-  ref.listenSelf((previous, ChoiceNodeOption next) {
-    ref.read(nodeEditorTargetProvider.notifier).setState((node) {
-      node.choiceNodeOption = next;
-      return node;
-    });
-  });
+final nodeEditorDesignProvider = Provider<ChoiceNodeOption>((ref) {
   return ref.watch(nodeEditorTargetProvider).choiceNodeOption;
 });
 
-final nodeModeProvider = StateProvider.autoDispose<ChoiceNodeMode>((ref) {
-  ref.listenSelf((previous, ChoiceNodeMode next) {
-    ref.read(nodeEditorTargetProvider.notifier).setState((node) {
-      node.choiceNodeMode = next;
-      return node;
-    });
-    if (next == ChoiceNodeMode.onlyCode) {
-      ref.read(nodeEditorTargetProvider.notifier).setState((node) {
-        node.conditionalCodeHandler.conditionClickableCode = [];
-        return node;
-      });
-      ref.read(nodeEditorTargetProvider.notifier).setState((node) {
-        node.conditionalCodeHandler.conditionVisibleCode = [];
-        return node;
-      });
-      ref.read(nodeEditorTargetProvider.notifier).setState((node) {
-        node.conditionalCodeHandler.conditionClickableString = null;
-        return node;
-      });
-      ref.read(nodeEditorTargetProvider.notifier).setState((node) {
-        node.conditionalCodeHandler.conditionVisibleString = null;
-        return node;
-      });
-    }
-  });
-  return ref.watch(nodeEditorTargetProvider).choiceNodeMode;
-});
 final nodeTitleProvider = StateProvider.autoDispose<String>(
     (ref) => ref.watch(nodeEditorTargetProvider).title);
 
 @riverpod
-TextEditingController maximum(MaximumRef ref) {
+TextEditingController maximum(Ref ref) {
   var node = ref.watch(nodeEditorTargetProvider);
   var controller = TextEditingController(text: node.maximumStatus.toString());
   controller.addListener(() {

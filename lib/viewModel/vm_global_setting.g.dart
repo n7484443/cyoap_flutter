@@ -6,7 +6,7 @@ part of 'vm_global_setting.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$maximumSizeHash() => r'43fe64ac420c4aa27d9ee983723ae713234a3835';
+String _$maximumSizeHash() => r'90d3b0ce4f536dc79a8c76679c0895d951e25e00';
 
 /// See also [maximumSize].
 @ProviderFor(maximumSize)

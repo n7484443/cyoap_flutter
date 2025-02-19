@@ -229,7 +229,7 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
         onPerformDrop: (PerformDropEvent event) async {
           var item = event.session.items.first;
           var data = Pos(data: (item.localData as List).cast<int>());
-          if (isEntered) {
+          if (isEntered && index >= 0) {
             if (index < widget.sizeData.length &&
                 widget.sizeData[index].pos != null) {
               add(data, widget.sizeData[index].pos!, ref);

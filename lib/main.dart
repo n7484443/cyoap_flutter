@@ -251,6 +251,7 @@ void main() async {
                     GlobalMaterialLocalizations.delegate,
                     GlobalCupertinoLocalizations.delegate,
                     GlobalWidgetsLocalizations.delegate,
+                    FlutterQuillLocalizations.delegate,
                   ],
                   supportedLocales: [
                     const Locale('en'),
