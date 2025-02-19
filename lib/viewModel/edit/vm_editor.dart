@@ -128,8 +128,7 @@ class ImageListState extends _$ImageListState {
     var out = await PlatformUtil().platform.webpConverter.convert(before, name);
 
     ImageDB().uploadImages(out.$1, out.$2);
-    ref.read(imageStateProvider.notifier).state =
-        ImageDB().getImageIndex(out.$1);
+    ref.read(imageStateProvider.notifier).setImageIndex(ImageDB().getImageIndex(out.$1));
     ref
         .read(currentProjectChangedProvider.notifier)
         .changed(needUpdateCode: false);
@@ -139,16 +138,25 @@ class ImageListState extends _$ImageListState {
   }
 }
 
-final imageStateProvider = StateProvider.autoDispose<int>((ref) {
-  ref.listenSelf((previous, int index) {
+
+final imageStateProvider = StateNotifierProvider<ImageStateNotifier, int>((ref) {
+  var initialIndex = ImageDB().getImageIndex(ref.read(nodeEditorTargetProvider).imageString);
+  return ImageStateNotifier(ref, initialIndex);
+});
+
+
+class ImageStateNotifier extends StateNotifier<int> {
+  Ref ref;
+  ImageStateNotifier(this.ref, int initIndex) : super(initIndex);
+
+  void setImageIndex(int index){
     ref.read(nodeEditorTargetProvider.notifier).setState((node) {
       node.imageString = ImageDB().getImageName(index);
       return node;
     });
-  });
-  return ImageDB()
-      .getImageIndex(ref.read(nodeEditorTargetProvider).imageString);
-});
+    state = index;
+  }
+}
 
 final lastImageProvider = StateProvider<Uint8List?>((ref) => null);
 

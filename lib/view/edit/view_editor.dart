@@ -69,16 +69,10 @@ class _ViewEditorState extends ConsumerState<ViewEditor> with TickerProviderStat
             child: GestureDetector(
               child: ViewImageLoading(ref.watch(imageListStateProvider)[index]),
               onDoubleTap: () {
-                if (ref
-                    .read(imageStateProvider.notifier)
-                    .state == index) {
-                  ref
-                      .read(imageStateProvider.notifier)
-                      .state = -1;
+                if (ref.read(imageStateProvider) == index) {
+                  ref.read(imageStateProvider.notifier).setImageIndex(-1);
                 } else {
-                  ref
-                      .read(imageStateProvider.notifier)
-                      .state = index;
+                  ref.read(imageStateProvider.notifier).setImageIndex(index);
                 }
               },
             ),
@@ -157,7 +151,9 @@ class ViewContentsEditor extends ConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Visibility(
-              visible: ref.watch(nodeEditorTargetProvider).choiceNodeMode != ChoiceNodeMode.onlyCode,
+              visible: ref
+                  .watch(nodeEditorTargetProvider)
+                  .choiceNodeMode != ChoiceNodeMode.onlyCode,
               child: const ViewTextContentsEditor(),
             ),
           ),
@@ -494,7 +490,9 @@ class ViewNodeOptionEditor extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var design = ref.watch(nodeEditorDesignProvider);
-    var nodeMode = ref.watch(nodeEditorTargetProvider).choiceNodeMode;
+    var nodeMode = ref
+        .watch(nodeEditorTargetProvider)
+        .choiceNodeMode;
     var nodeOption = ref
         .watch(nodeEditorTargetProvider)
         .choiceNodeOption;
@@ -531,7 +529,9 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                   ref.read(nodeEditorTargetProvider.notifier).setChoiceMode(value);
                 }
               },
-              value: ref.watch(nodeEditorTargetProvider).choiceNodeMode,
+              value: ref
+                  .watch(nodeEditorTargetProvider)
+                  .choiceNodeMode,
             ),
           ],
         ),
@@ -621,7 +621,10 @@ class _MaximumStateEditorState extends ConsumerState<MaximumStateEditor> {
   void initState() {
     super.initState();
 
-    _controller = TextEditingController(text: ref.read(nodeEditorTargetProvider).maximumStatus.toString());
+    _controller = TextEditingController(text: ref
+        .read(nodeEditorTargetProvider)
+        .maximumStatus
+        .toString());
     _controller.addListener(() {
       ref.read(nodeEditorTargetProvider.notifier).setState((node) {
         node.maximumStatus = int.tryParse(_controller.text) ?? 0;
@@ -639,7 +642,9 @@ class _MaximumStateEditorState extends ConsumerState<MaximumStateEditor> {
   @override
   Widget build(BuildContext context) {
     var title = ref.watch(nodeTitleProvider);
-    var nodeMode = ref.watch(nodeEditorTargetProvider).choiceNodeMode;
+    var nodeMode = ref
+        .watch(nodeEditorTargetProvider)
+        .choiceNodeMode;
     return Visibility(
       visible: nodeMode == ChoiceNodeMode.multiSelect || nodeMode == ChoiceNodeMode.randomMode,
       child: Row(

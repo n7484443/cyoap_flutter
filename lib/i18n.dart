@@ -225,6 +225,7 @@ extension Localization on String {
           'code_hint_visible_condition':'Visible Conditions',
           'code_hint_visible_condition_sub': 'Visible when true',
           'code_hint_execute': 'Executable code on selection',
+          'from_simple_to_code_button': 'Change to code editor (this action on this node cannot be undone)',
           'space_hide': 'Takes up space when hidden',
           'sort': 'Sort',
           'sort_error':
@@ -311,6 +312,7 @@ extension Localization on String {
           'code_hint_visible_condition': '보이는 조건',
           'code_hint_visible_condition_sub': 'true 일 때 보임, 비어있을 시 true',
           'code_hint_execute': '선택 시 시행 코드',
+          'from_simple_to_code_button': '코드 에디터로 변경 (해당 노드의 에디터는 되돌릴 수 없음)',
           'code_hint_fin': '라인 종료 시 시행 코드',
           'space_hide': '숨김 시 공간 차지',
           'sort': '정렬',
