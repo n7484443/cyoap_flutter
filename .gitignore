@@ -27,4 +27,4 @@ doc/api/
 
 *.run
 *.lock
-*.sentry-native
+.sentry-native/
