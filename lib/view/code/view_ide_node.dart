@@ -15,7 +15,7 @@ class ViewIdeNode extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Widget editor;
-    if (!kReleaseMode) {
+    if (!kReleaseMode && ref.watch(isSimpleCodeEditorProvider)) {
       editor = SimpleCodeEditor(
         choiceType: ChoiceType.node,
         choice: ref.watch(nodeEditorTargetProvider),

@@ -93,107 +93,130 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
   @override
   Widget build(BuildContext context) {
     var size = 240.0;
-    return CustomScrollView(
-      controller: _scrollController,
-      slivers: [
-        SliverAppBar(
-          title: SizedBox(
-            height: 44,
-            child: Row(
-              children: [
-                Text(
-                  'auto_complete'.i18n,
-                  style: ConstList.getCurrentFont(context).bodyMedium,
-                ),
-                const VerticalDivider(),
-                Expanded(
-                  child: HorizontalScroll(
-                    itemBuilder: (BuildContext context, int index) {
-                      var text = ref.watch(ideVariableListProvider)[index];
-                      return FittedBox(
-                        child: TextButton(
-                          onPressed: () {
-                            ref.read(ideCurrentInputProvider.notifier).insertText(text);
-                          },
-                          child: Text(
-                            text,
-                            style: ConstList.getCurrentFont(context).bodyLarge,
-                          ),
+    return Column(
+      children: [
+        SizedBox(
+          height: 44,
+          child: Row(
+            children: [
+              Text(
+                'auto_complete'.i18n,
+                style: ConstList.getCurrentFont(context).bodyMedium,
+              ),
+              const VerticalDivider(),
+              Expanded(
+                child: HorizontalScroll(
+                  itemBuilder: (BuildContext context, int index) {
+                    var text = ref.watch(ideVariableListProvider)[index];
+                    return FittedBox(
+                      child: TextButton(
+                        onPressed: () {
+                          ref.read(ideCurrentInputProvider.notifier).insertText(text);
+                        },
+                        child: Text(
+                          text,
+                          style: ConstList.getCurrentFont(context).bodyLarge,
                         ),
+                      ),
+                    );
+                  },
+                  itemCount: ref.watch(ideVariableListProvider).length,
+                ),
+              ),
+              const VerticalDivider(),
+              Text("from_code_to_simple_button".i18n),
+              IconButton(
+                icon: const Icon(Icons.rotate_right),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return ViewWarningDialog(
+                        content: 'from_code_to_simple_button'.i18n,
+                        acceptFunction: () {
+                          print("convert");
+                          var codeHandler = widget.choice.conditionalCodeHandler;
+                          codeHandler.convertCodeToSimple();
+                          ref.invalidate(isSimpleCodeEditorProvider);
+                          print("complete convert");
+                        },
                       );
                     },
-                    itemCount: ref.watch(ideVariableListProvider).length,
-                  ),
-                ),
-              ],
-            ),
+                  );
+                },
+              )
+            ],
           ),
-          floating: true,
-          pinned: true,
-          expandedHeight: 44.0,
-          toolbarHeight: 44.0,
         ),
-        SliverList(
-          delegate: SliverChildListDelegate([
-            if (widget.choiceType == ChoiceType.node && ref.watch(nodeEditorTargetProvider).isSelectableMode)
-              rowColumn(
-                leftOrTop: SizedBox(
-                  width: size,
-                  child: Text('code_hint_execute_condition'.i18n),
-                ),
-                rightOrBottom: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(ConstList.padding),
-                    child: Focus(
-                      onFocusChange: (bool hasFocus) {
-                        ref.read(ideCurrentInputProvider.notifier).lastFocusText = _controllerClickable;
-                        ref.read(ideCurrentInputProvider.notifier).lastFocusQuill = null;
-                      },
-                      child: TextField(
-                        controller: _controllerClickable,
-                        textAlign: TextAlign.left,
+        const VerticalDivider(),
+        Expanded(
+          child: Scrollbar(
+              thumbVisibility: true,
+              trackVisibility: true,
+              controller: _scrollController,
+              child: ListView(
+                controller: _scrollController,
+                children: [
+                  if (widget.choiceType == ChoiceType.node && ref.watch(nodeEditorTargetProvider).isSelectableMode)
+                    rowColumn(
+                      leftOrTop: SizedBox(
+                        width: size,
+                        child: Text('code_hint_execute_condition'.i18n),
+                      ),
+                      rightOrBottom: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(ConstList.padding),
+                          child: Focus(
+                            onFocusChange: (bool hasFocus) {
+                              ref.read(ideCurrentInputProvider.notifier).lastFocusText = _controllerClickable;
+                              ref.read(ideCurrentInputProvider.notifier).lastFocusQuill = null;
+                            },
+                            child: TextField(
+                              controller: _controllerClickable,
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  if (widget.choiceType == ChoiceType.node && ref.watch(nodeEditorTargetProvider).isSelectableMode) const Divider(),
+                  if (widget.choiceType != ChoiceType.node || ref.watch(nodeEditorTargetProvider).choiceNodeMode != ChoiceNodeMode.onlyCode)
+                    rowColumn(
+                      leftOrTop: SizedBox(
+                        width: size,
+                        child: Text('code_hint_visible_condition'.i18n),
+                      ),
+                      rightOrBottom: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(ConstList.padding),
+                          child: Focus(
+                            onFocusChange: (bool hasFocus) {
+                              ref.read(ideCurrentInputProvider.notifier).lastFocusText = _controllerVisible;
+                              ref.read(ideCurrentInputProvider.notifier).lastFocusQuill = null;
+                            },
+                            child: TextField(
+                              controller: _controllerVisible,
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  const Divider(),
+                  rowColumn(
+                    leftOrTop: SizedBox(
+                      width: size,
+                      child: Text(widget.choiceType == ChoiceType.node ? "code_hint_execute".i18n : "code_hint_fin".i18n),
+                    ),
+                    rightOrBottom: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(ConstList.padding),
+                        child: ViewQuillCodeIde(choiceType: widget.choiceType),
                       ),
                     ),
                   ),
-                ),
-              ),
-            if (widget.choiceType == ChoiceType.node && ref.watch(nodeEditorTargetProvider).isSelectableMode) const Divider(),
-            if (widget.choiceType != ChoiceType.node || ref.watch(nodeEditorTargetProvider).choiceNodeMode != ChoiceNodeMode.onlyCode)
-              rowColumn(
-                leftOrTop: SizedBox(
-                  width: size,
-                  child: Text('code_hint_visible_condition'.i18n),
-                ),
-                rightOrBottom: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(ConstList.padding),
-                    child: Focus(
-                      onFocusChange: (bool hasFocus) {
-                        ref.read(ideCurrentInputProvider.notifier).lastFocusText = _controllerVisible;
-                        ref.read(ideCurrentInputProvider.notifier).lastFocusQuill = null;
-                      },
-                      child: TextField(
-                        controller: _controllerVisible,
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            const Divider(),
-            rowColumn(
-              leftOrTop: SizedBox(
-                width: size,
-                child: Text(widget.choiceType == ChoiceType.node ? "${"code_hint_execute".i18n}\n${"code_hint_execute_sub".i18n}" : "code_hint_fin".i18n),
-              ),
-              rightOrBottom: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(ConstList.padding),
-                  child: ViewQuillCodeIde(choiceType: widget.choiceType),
-                ),
-              ),
-            ),
-          ]),
+                ],
+              )),
         ),
       ],
     );
@@ -231,60 +254,70 @@ class _SimpleCodeEditorState extends ConsumerState<SimpleCodeEditor> {
   @override
   Widget build(BuildContext context) {
     var codeHandler = widget.choice.conditionalCodeHandler;
-    return Column(children: [
-      SizedBox(
-        height: 30,
-        child: TextButton(
-          child: Text('from_simple_to_code_button'.i18n),
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return ViewWarningDialog(
-                  content: 'from_simple_to_code_button'.i18n,
-                  acceptFunction: () {
-                    print("convert");
-
-                    print("complete convert");
-                  },
-                );
-              },
-            );
-          },
-        ),
-      ),
-      const SizedBox(
-        height: 10,
-      ),
-      Expanded(
-        child: Scrollbar(
-          thumbVisibility: true,
-          trackVisibility: true,
-          controller: _scrollController,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            controller: _scrollController,
-            children: [
-              SimpleCodeBlockEditor(
-                title: 'code_hint_execute_condition'.i18n,
-                simpleCodes: codeHandler.conditionClickableSimple,
-                codeActivationType: CodeActivationType.clickable,
-              ),
-              SimpleCodeBlockEditor(
-                title: 'code_hint_visible_condition'.i18n,
-                simpleCodes: codeHandler.conditionVisibleSimple,
-                codeActivationType: CodeActivationType.visible,
-              ),
-              SimpleCodeBlockEditor(
-                title: 'code_hint_execute'.i18n,
-                simpleCodes: codeHandler.executeSimple,
-                codeActivationType: CodeActivationType.execute,
-              ),
-            ],
+    return Scrollbar(
+      thumbVisibility: true,
+      trackVisibility: true,
+      controller: _scrollController,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        controller: _scrollController,
+        children: [
+          SimpleCodeBlockEditor(
+            title: 'code_hint_execute_condition'.i18n,
+            simpleCodes: codeHandler.conditionClickableSimple,
+            codeActivationType: CodeActivationType.clickable,
           ),
-        ),
-      )
-    ]);
+          SimpleCodeBlockEditor(
+            title: 'code_hint_visible_condition'.i18n,
+            simpleCodes: codeHandler.conditionVisibleSimple,
+            codeActivationType: CodeActivationType.visible,
+          ),
+          SimpleCodeBlockEditor(
+            title: 'code_hint_execute'.i18n,
+            simpleCodes: codeHandler.executeSimple,
+            codeActivationType: CodeActivationType.execute,
+          ),
+          SizedBox(
+            width: 200,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('from_simple_to_code_button'.i18n),
+                ),
+                const ColoredBox(
+                  color: Colors.black12,
+                  child: SizedBox(
+                    width: 160,
+                    height: 2,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.rotate_right),
+                  tooltip: "sort".i18n,
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return ViewWarningDialog(
+                          content: 'from_simple_to_code_button'.i18n,
+                          acceptFunction: () {
+                            print("convert");
+                            codeHandler.convertSimpleToCode();
+                            ref.invalidate(isSimpleCodeEditorProvider);
+                            print("complete convert");
+                          },
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -323,8 +356,8 @@ class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
     );
     List<Widget> children = [];
     var codeIdeProvider = ref.watch(simpleCodesIdeProvider(widget.codeActivationType));
-    if(codeIdeProvider != null){
-      for(int index = 0; index < codeIdeProvider.code.length; index++){
+    if (codeIdeProvider != null) {
+      for (int index = 0; index < codeIdeProvider.code.length; index++) {
         children.add(SimpleCodeBlockEditorUnit(codeActivationType: widget.codeActivationType, index: index));
       }
     }
@@ -371,6 +404,7 @@ class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
 class SimpleCodeBlockEditorUnit extends ConsumerStatefulWidget {
   final int index;
   final CodeActivationType codeActivationType;
+
   const SimpleCodeBlockEditorUnit({required this.codeActivationType, required this.index, super.key});
 
   @override
@@ -386,14 +420,14 @@ class _SimpleCodeBlockEditorUnitState extends ConsumerState<SimpleCodeBlockEdito
     super.initState();
   }
 
-  void setController(SimpleCodeBlock simpleCodeBlock){
+  void setController(SimpleCodeBlock simpleCodeBlock) {
     arg = simpleCodeBlock.argumentLength;
-    for(int i = 0; i < simpleCodeBlock.argumentLength; i++){
-      while(_currentController.length <= i){
+    for (int i = 0; i < simpleCodeBlock.argumentLength; i++) {
+      while (_currentController.length <= i) {
         _currentController.add(TextEditingController());
         _currentController[i].text = simpleCodeBlock.arguments[i].data;
         _currentController[i].addListener(() {
-          EasyDebounce.debounce('SimpleCodeBlockArg ${widget.index} $i', ConstList.debounceDuration, (){
+          EasyDebounce.debounce('SimpleCodeBlockArg ${widget.index} $i', ConstList.debounceDuration, () {
             var simpleCodeBlock = ref.read(simpleCodesIdeProvider(widget.codeActivationType))!.code[widget.index];
             var currentArgument = List<ValueType>.from(simpleCodeBlock.arguments);
             currentArgument[i] = getValueTypeFromDynamicInput(_currentController[i].text);
@@ -408,7 +442,7 @@ class _SimpleCodeBlockEditorUnitState extends ConsumerState<SimpleCodeBlockEdito
   @override
   void dispose() {
     super.dispose();
-    for(int i = 0; i < (arg ?? 0); i++){
+    for (int i = 0; i < (arg ?? 0); i++) {
       EasyDebounce.cancel('SimpleCodeBlockArg ${widget.index} $i');
       _currentController[i].dispose();
     }
@@ -426,10 +460,10 @@ class _SimpleCodeBlockEditorUnitState extends ConsumerState<SimpleCodeBlockEdito
         items: SimpleActionType.values
             .map(
               (e) => DropdownMenuItem(
-            value: e,
-            child: Text(e.toString()),
-          ),
-        )
+                value: e,
+                child: Text(e.toString()),
+              ),
+            )
             .toList(),
         onChanged: (SimpleActionType? type) {
           if (type == null) return;
@@ -446,10 +480,10 @@ class _SimpleCodeBlockEditorUnitState extends ConsumerState<SimpleCodeBlockEdito
         items: SimpleConditionType.values
             .map(
               (e) => DropdownMenuItem(
-            value: e,
-            child: Text(e.toString()),
-          ),
-        )
+                value: e,
+                child: Text(e.toString()),
+              ),
+            )
             .toList(),
         onChanged: (SimpleConditionType? type) {
           if (type == null) return;
@@ -470,7 +504,8 @@ class _SimpleCodeBlockEditorUnitState extends ConsumerState<SimpleCodeBlockEdito
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: List.generate(simpleCodeBlock.argumentLength, (index) {
-                return Expanded(child: SearchField<String>(
+                return Expanded(
+                    child: SearchField<String>(
                   controller: _currentController[index],
                   suggestions: variableList.keys.map((name) => SearchFieldListItem<String>(name)).toList(),
                   onSuggestionTap: (SearchFieldListItem<String> suggestion) {

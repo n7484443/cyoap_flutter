@@ -26,4 +26,5 @@ doc/api/
 .flutter-plugins
 
 *.run
-*.run.lock
+*.lock
+*.sentry-native

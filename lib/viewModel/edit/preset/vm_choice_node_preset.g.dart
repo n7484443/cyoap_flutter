@@ -6,7 +6,8 @@ part of 'vm_choice_node_preset.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$choiceNodePresetDistanceHash() => r'5cf2b52b528c0358d11621efbff4521ab4c48082';
+String _$choiceNodePresetDistanceHash() =>
+    r'5cf2b52b528c0358d11621efbff4521ab4c48082';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -64,14 +65,16 @@ class ChoiceNodePresetDistanceFamily extends Family<TextEditingController> {
   static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies => _allTransitiveDependencies;
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
 
   @override
   String? get name => r'choiceNodePresetDistanceProvider';
 }
 
 /// See also [choiceNodePresetDistance].
-class ChoiceNodePresetDistanceProvider extends AutoDisposeProvider<TextEditingController> {
+class ChoiceNodePresetDistanceProvider
+    extends AutoDisposeProvider<TextEditingController> {
   /// See also [choiceNodePresetDistance].
   ChoiceNodePresetDistanceProvider({
     required String position,
@@ -82,9 +85,13 @@ class ChoiceNodePresetDistanceProvider extends AutoDisposeProvider<TextEditingCo
           ),
           from: choiceNodePresetDistanceProvider,
           name: r'choiceNodePresetDistanceProvider',
-          debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$choiceNodePresetDistanceHash,
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$choiceNodePresetDistanceHash,
           dependencies: ChoiceNodePresetDistanceFamily._dependencies,
-          allTransitiveDependencies: ChoiceNodePresetDistanceFamily._allTransitiveDependencies,
+          allTransitiveDependencies:
+              ChoiceNodePresetDistanceFamily._allTransitiveDependencies,
           position: position,
         );
 
@@ -125,7 +132,8 @@ class ChoiceNodePresetDistanceProvider extends AutoDisposeProvider<TextEditingCo
 
   @override
   bool operator ==(Object other) {
-    return other is ChoiceNodePresetDistanceProvider && other.position == position;
+    return other is ChoiceNodePresetDistanceProvider &&
+        other.position == position;
   }
 
   @override
@@ -139,19 +147,23 @@ class ChoiceNodePresetDistanceProvider extends AutoDisposeProvider<TextEditingCo
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin ChoiceNodePresetDistanceRef on AutoDisposeProviderRef<TextEditingController> {
+mixin ChoiceNodePresetDistanceRef
+    on AutoDisposeProviderRef<TextEditingController> {
   /// The parameter `position` of this provider.
   String get position;
 }
 
-class _ChoiceNodePresetDistanceProviderElement extends AutoDisposeProviderElement<TextEditingController> with ChoiceNodePresetDistanceRef {
+class _ChoiceNodePresetDistanceProviderElement
+    extends AutoDisposeProviderElement<TextEditingController>
+    with ChoiceNodePresetDistanceRef {
   _ChoiceNodePresetDistanceProviderElement(super.provider);
 
   @override
   String get position => (origin as ChoiceNodePresetDistanceProvider).position;
 }
 
-String _$choiceNodePresetRoundHash() => r'68d04b92188b6c281e217b61aa165ac62309179e';
+String _$choiceNodePresetRoundHash() =>
+    r'68d04b92188b6c281e217b61aa165ac62309179e';
 
 /// See also [choiceNodePresetRound].
 @ProviderFor(choiceNodePresetRound)
@@ -188,14 +200,16 @@ class ChoiceNodePresetRoundFamily extends Family<TextEditingController> {
   static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies => _allTransitiveDependencies;
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
 
   @override
   String? get name => r'choiceNodePresetRoundProvider';
 }
 
 /// See also [choiceNodePresetRound].
-class ChoiceNodePresetRoundProvider extends AutoDisposeProvider<TextEditingController> {
+class ChoiceNodePresetRoundProvider
+    extends AutoDisposeProvider<TextEditingController> {
   /// See also [choiceNodePresetRound].
   ChoiceNodePresetRoundProvider({
     required String position,
@@ -206,9 +220,13 @@ class ChoiceNodePresetRoundProvider extends AutoDisposeProvider<TextEditingContr
           ),
           from: choiceNodePresetRoundProvider,
           name: r'choiceNodePresetRoundProvider',
-          debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$choiceNodePresetRoundHash,
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$choiceNodePresetRoundHash,
           dependencies: ChoiceNodePresetRoundFamily._dependencies,
-          allTransitiveDependencies: ChoiceNodePresetRoundFamily._allTransitiveDependencies,
+          allTransitiveDependencies:
+              ChoiceNodePresetRoundFamily._allTransitiveDependencies,
           position: position,
         );
 
@@ -263,26 +281,32 @@ class ChoiceNodePresetRoundProvider extends AutoDisposeProvider<TextEditingContr
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin ChoiceNodePresetRoundRef on AutoDisposeProviderRef<TextEditingController> {
+mixin ChoiceNodePresetRoundRef
+    on AutoDisposeProviderRef<TextEditingController> {
   /// The parameter `position` of this provider.
   String get position;
 }
 
-class _ChoiceNodePresetRoundProviderElement extends AutoDisposeProviderElement<TextEditingController> with ChoiceNodePresetRoundRef {
+class _ChoiceNodePresetRoundProviderElement
+    extends AutoDisposeProviderElement<TextEditingController>
+    with ChoiceNodePresetRoundRef {
   _ChoiceNodePresetRoundProviderElement(super.provider);
 
   @override
   String get position => (origin as ChoiceNodePresetRoundProvider).position;
 }
 
-String _$choiceNodePresetOutlineDistanceHash() => r'9e36d43d5afa4354b02bafda4b8256a7ca80402f';
+String _$choiceNodePresetOutlineDistanceHash() =>
+    r'9e36d43d5afa4354b02bafda4b8256a7ca80402f';
 
 /// See also [choiceNodePresetOutlineDistance].
 @ProviderFor(choiceNodePresetOutlineDistance)
-const choiceNodePresetOutlineDistanceProvider = ChoiceNodePresetOutlineDistanceFamily();
+const choiceNodePresetOutlineDistanceProvider =
+    ChoiceNodePresetOutlineDistanceFamily();
 
 /// See also [choiceNodePresetOutlineDistance].
-class ChoiceNodePresetOutlineDistanceFamily extends Family<TextEditingController> {
+class ChoiceNodePresetOutlineDistanceFamily
+    extends Family<TextEditingController> {
   /// See also [choiceNodePresetOutlineDistance].
   const ChoiceNodePresetOutlineDistanceFamily();
 
@@ -315,14 +339,16 @@ class ChoiceNodePresetOutlineDistanceFamily extends Family<TextEditingController
   static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies => _allTransitiveDependencies;
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
 
   @override
   String? get name => r'choiceNodePresetOutlineDistanceProvider';
 }
 
 /// See also [choiceNodePresetOutlineDistance].
-class ChoiceNodePresetOutlineDistanceProvider extends AutoDisposeProvider<TextEditingController> {
+class ChoiceNodePresetOutlineDistanceProvider
+    extends AutoDisposeProvider<TextEditingController> {
   /// See also [choiceNodePresetOutlineDistance].
   ChoiceNodePresetOutlineDistanceProvider({
     required String position,
@@ -335,9 +361,13 @@ class ChoiceNodePresetOutlineDistanceProvider extends AutoDisposeProvider<TextEd
           ),
           from: choiceNodePresetOutlineDistanceProvider,
           name: r'choiceNodePresetOutlineDistanceProvider',
-          debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$choiceNodePresetOutlineDistanceHash,
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$choiceNodePresetOutlineDistanceHash,
           dependencies: ChoiceNodePresetOutlineDistanceFamily._dependencies,
-          allTransitiveDependencies: ChoiceNodePresetOutlineDistanceFamily._allTransitiveDependencies,
+          allTransitiveDependencies:
+              ChoiceNodePresetOutlineDistanceFamily._allTransitiveDependencies,
           position: position,
           isSelected: isSelected,
         );
@@ -358,7 +388,8 @@ class ChoiceNodePresetOutlineDistanceProvider extends AutoDisposeProvider<TextEd
 
   @override
   Override overrideWith(
-    TextEditingController Function(ChoiceNodePresetOutlineDistanceRef provider) create,
+    TextEditingController Function(ChoiceNodePresetOutlineDistanceRef provider)
+        create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -382,7 +413,9 @@ class ChoiceNodePresetOutlineDistanceProvider extends AutoDisposeProvider<TextEd
 
   @override
   bool operator ==(Object other) {
-    return other is ChoiceNodePresetOutlineDistanceProvider && other.position == position && other.isSelected == isSelected;
+    return other is ChoiceNodePresetOutlineDistanceProvider &&
+        other.position == position &&
+        other.isSelected == isSelected;
   }
 
   @override
@@ -397,7 +430,8 @@ class ChoiceNodePresetOutlineDistanceProvider extends AutoDisposeProvider<TextEd
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin ChoiceNodePresetOutlineDistanceRef on AutoDisposeProviderRef<TextEditingController> {
+mixin ChoiceNodePresetOutlineDistanceRef
+    on AutoDisposeProviderRef<TextEditingController> {
   /// The parameter `position` of this provider.
   String get position;
 
@@ -405,20 +439,26 @@ mixin ChoiceNodePresetOutlineDistanceRef on AutoDisposeProviderRef<TextEditingCo
   bool get isSelected;
 }
 
-class _ChoiceNodePresetOutlineDistanceProviderElement extends AutoDisposeProviderElement<TextEditingController> with ChoiceNodePresetOutlineDistanceRef {
+class _ChoiceNodePresetOutlineDistanceProviderElement
+    extends AutoDisposeProviderElement<TextEditingController>
+    with ChoiceNodePresetOutlineDistanceRef {
   _ChoiceNodePresetOutlineDistanceProviderElement(super.provider);
 
   @override
-  String get position => (origin as ChoiceNodePresetOutlineDistanceProvider).position;
+  String get position =>
+      (origin as ChoiceNodePresetOutlineDistanceProvider).position;
   @override
-  bool get isSelected => (origin as ChoiceNodePresetOutlineDistanceProvider).isSelected;
+  bool get isSelected =>
+      (origin as ChoiceNodePresetOutlineDistanceProvider).isSelected;
 }
 
-String _$choiceNodePresetOutlineRoundHash() => r'710c8a6256c40ed4acbee5f955599e3fd4a78be9';
+String _$choiceNodePresetOutlineRoundHash() =>
+    r'710c8a6256c40ed4acbee5f955599e3fd4a78be9';
 
 /// See also [choiceNodePresetOutlineRound].
 @ProviderFor(choiceNodePresetOutlineRound)
-const choiceNodePresetOutlineRoundProvider = ChoiceNodePresetOutlineRoundFamily();
+const choiceNodePresetOutlineRoundProvider =
+    ChoiceNodePresetOutlineRoundFamily();
 
 /// See also [choiceNodePresetOutlineRound].
 class ChoiceNodePresetOutlineRoundFamily extends Family<TextEditingController> {
@@ -454,14 +494,16 @@ class ChoiceNodePresetOutlineRoundFamily extends Family<TextEditingController> {
   static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies => _allTransitiveDependencies;
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
 
   @override
   String? get name => r'choiceNodePresetOutlineRoundProvider';
 }
 
 /// See also [choiceNodePresetOutlineRound].
-class ChoiceNodePresetOutlineRoundProvider extends AutoDisposeProvider<TextEditingController> {
+class ChoiceNodePresetOutlineRoundProvider
+    extends AutoDisposeProvider<TextEditingController> {
   /// See also [choiceNodePresetOutlineRound].
   ChoiceNodePresetOutlineRoundProvider({
     required String position,
@@ -474,9 +516,13 @@ class ChoiceNodePresetOutlineRoundProvider extends AutoDisposeProvider<TextEditi
           ),
           from: choiceNodePresetOutlineRoundProvider,
           name: r'choiceNodePresetOutlineRoundProvider',
-          debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$choiceNodePresetOutlineRoundHash,
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$choiceNodePresetOutlineRoundHash,
           dependencies: ChoiceNodePresetOutlineRoundFamily._dependencies,
-          allTransitiveDependencies: ChoiceNodePresetOutlineRoundFamily._allTransitiveDependencies,
+          allTransitiveDependencies:
+              ChoiceNodePresetOutlineRoundFamily._allTransitiveDependencies,
           position: position,
           isSelected: isSelected,
         );
@@ -497,7 +543,8 @@ class ChoiceNodePresetOutlineRoundProvider extends AutoDisposeProvider<TextEditi
 
   @override
   Override overrideWith(
-    TextEditingController Function(ChoiceNodePresetOutlineRoundRef provider) create,
+    TextEditingController Function(ChoiceNodePresetOutlineRoundRef provider)
+        create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -521,7 +568,9 @@ class ChoiceNodePresetOutlineRoundProvider extends AutoDisposeProvider<TextEditi
 
   @override
   bool operator ==(Object other) {
-    return other is ChoiceNodePresetOutlineRoundProvider && other.position == position && other.isSelected == isSelected;
+    return other is ChoiceNodePresetOutlineRoundProvider &&
+        other.position == position &&
+        other.isSelected == isSelected;
   }
 
   @override
@@ -536,7 +585,8 @@ class ChoiceNodePresetOutlineRoundProvider extends AutoDisposeProvider<TextEditi
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin ChoiceNodePresetOutlineRoundRef on AutoDisposeProviderRef<TextEditingController> {
+mixin ChoiceNodePresetOutlineRoundRef
+    on AutoDisposeProviderRef<TextEditingController> {
   /// The parameter `position` of this provider.
   String get position;
 
@@ -544,29 +594,38 @@ mixin ChoiceNodePresetOutlineRoundRef on AutoDisposeProviderRef<TextEditingContr
   bool get isSelected;
 }
 
-class _ChoiceNodePresetOutlineRoundProviderElement extends AutoDisposeProviderElement<TextEditingController> with ChoiceNodePresetOutlineRoundRef {
+class _ChoiceNodePresetOutlineRoundProviderElement
+    extends AutoDisposeProviderElement<TextEditingController>
+    with ChoiceNodePresetOutlineRoundRef {
   _ChoiceNodePresetOutlineRoundProviderElement(super.provider);
 
   @override
-  String get position => (origin as ChoiceNodePresetOutlineRoundProvider).position;
+  String get position =>
+      (origin as ChoiceNodePresetOutlineRoundProvider).position;
   @override
-  bool get isSelected => (origin as ChoiceNodePresetOutlineRoundProvider).isSelected;
+  bool get isSelected =>
+      (origin as ChoiceNodePresetOutlineRoundProvider).isSelected;
 }
 
-String _$choiceNodePresetImageMaxHeightRatioHash() => r'09d6f97f4255e4e1cc8e6df123bb8e1253c6e9e7';
+String _$choiceNodePresetImageMaxHeightRatioHash() =>
+    r'09d6f97f4255e4e1cc8e6df123bb8e1253c6e9e7';
 
 /// See also [choiceNodePresetImageMaxHeightRatio].
 @ProviderFor(choiceNodePresetImageMaxHeightRatio)
-final choiceNodePresetImageMaxHeightRatioProvider = AutoDisposeProvider<TextEditingController>.internal(
+final choiceNodePresetImageMaxHeightRatioProvider =
+    AutoDisposeProvider<TextEditingController>.internal(
   choiceNodePresetImageMaxHeightRatio,
   name: r'choiceNodePresetImageMaxHeightRatioProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$choiceNodePresetImageMaxHeightRatioHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$choiceNodePresetImageMaxHeightRatioHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef ChoiceNodePresetImageMaxHeightRatioRef = AutoDisposeProviderRef<TextEditingController>;
+typedef ChoiceNodePresetImageMaxHeightRatioRef
+    = AutoDisposeProviderRef<TextEditingController>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

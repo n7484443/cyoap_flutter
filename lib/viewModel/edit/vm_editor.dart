@@ -162,3 +162,8 @@ final textColorProvider = StateProvider<Color>((ref) {
 final shownImageNumProvider = StateProvider<int>((ref) {
   return ConstList.isMobile() ? 3 : 4;
 });
+
+@riverpod
+bool isSimpleCodeEditor(Ref ref) {
+  return ref.watch(nodeEditorTargetProvider).conditionalCodeHandler.isSimple;
+}
