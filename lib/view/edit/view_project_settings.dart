@@ -47,8 +47,7 @@ class ViewGlobalVariableEditor extends ConsumerStatefulWidget {
   ConsumerState createState() => _ViewGlobalVariableEditorState();
 }
 
-class _ViewGlobalVariableEditorState
-    extends ConsumerState<ViewGlobalVariableEditor> {
+class _ViewGlobalVariableEditorState extends ConsumerState<ViewGlobalVariableEditor> {
   ScrollController controller = ScrollController();
 
   @override
@@ -67,9 +66,7 @@ class _ViewGlobalVariableEditorState
         child: IconButton(
           icon: const Icon(Icons.add),
           onPressed: () {
-            ref.read(valueTypeWrapperListProvider.notifier).addInitialValue(
-                'point',
-                ValueTypeWrapper(valueType: getValueTypeFromDynamicInput(0)));
+            ref.read(valueTypeWrapperListProvider.notifier).addInitialValue('point', ValueTypeWrapper(valueType: getValueTypeFromDynamicInput(0)));
           },
         ),
       ),
@@ -84,11 +81,8 @@ class _ViewGlobalVariableEditorState
             var indexFiltered = filteredList.indexOf(currentIndex);
             if (indexFiltered > 0) {
               var newIndex = filteredList[indexFiltered - 1];
-              ref
-                  .read(valueTypeWrapperListProvider.notifier)
-                  .swap(currentIndex, newIndex);
-              ref.read(currentEditGlobalVariableProvider.notifier).state =
-                  newIndex;
+              ref.read(valueTypeWrapperListProvider.notifier).swap(currentIndex, newIndex);
+              ref.read(currentEditGlobalVariableProvider.notifier).state = newIndex;
             }
           },
         ),
@@ -103,11 +97,8 @@ class _ViewGlobalVariableEditorState
             var indexFiltered = filteredList.indexOf(currentIndex);
             if (indexFiltered < filteredList.length - 1) {
               var newIndex = filteredList[indexFiltered + 1];
-              ref
-                  .read(valueTypeWrapperListProvider.notifier)
-                  .swap(currentIndex, newIndex);
-              ref.read(currentEditGlobalVariableProvider.notifier).state =
-                  newIndex;
+              ref.read(valueTypeWrapperListProvider.notifier).swap(currentIndex, newIndex);
+              ref.read(currentEditGlobalVariableProvider.notifier).state = newIndex;
             }
           },
         ),
@@ -121,9 +112,7 @@ class _ViewGlobalVariableEditorState
               return;
             }
             ref.read(currentEditGlobalVariableProvider.notifier).state = null;
-            ref
-                .read(valueTypeWrapperListProvider.notifier)
-                .deleteInitialValue(currentIndex);
+            ref.read(valueTypeWrapperListProvider.notifier).deleteInitialValue(currentIndex);
           },
         ),
       ),
@@ -165,32 +154,21 @@ class _ViewGlobalVariableEditorState
                               IconButton(
                                 icon: const Icon(Icons.visibility),
                                 onPressed: () {
-                                  ref
-                                      .read(
-                                          globalVariableFilterProvider.notifier)
-                                      .state = FilterType.showVisible;
+                                  ref.read(globalVariableFilterProvider.notifier).state = FilterType.showVisible;
                                 },
-                                isSelected:
-                                    filterType == FilterType.showVisible,
+                                isSelected: filterType == FilterType.showVisible,
                               ),
                               IconButton(
                                 icon: const Icon(Icons.visibility_off),
                                 onPressed: () {
-                                  ref
-                                      .read(
-                                          globalVariableFilterProvider.notifier)
-                                      .state = FilterType.hideVisible;
+                                  ref.read(globalVariableFilterProvider.notifier).state = FilterType.hideVisible;
                                 },
-                                isSelected:
-                                    filterType == FilterType.hideVisible,
+                                isSelected: filterType == FilterType.hideVisible,
                               ),
                               IconButton(
                                 icon: const Icon(Icons.filter_list_off),
                                 onPressed: () {
-                                  ref
-                                      .read(
-                                          globalVariableFilterProvider.notifier)
-                                      .state = FilterType.showAll;
+                                  ref.read(globalVariableFilterProvider.notifier).state = FilterType.showAll;
                                 },
                                 isSelected: filterType == FilterType.showAll,
                               ),
@@ -219,22 +197,12 @@ class _ViewGlobalVariableEditorState
                         subtitle: Text(
                             '${ref.watch(valueTypeWrapperListProvider)[index].$2.valueType}\n${ref.watch(valueTypeWrapperListProvider)[index].$2.displayName}    ${ref.watch(valueTypeWrapperListProvider)[index].$2.valueType.type}'),
                         onTap: () {
-                          ref
-                              .read(currentEditGlobalVariableProvider.notifier)
-                              .state = index;
+                          ref.read(currentEditGlobalVariableProvider.notifier).state = index;
                         },
                         selected: currentIndex == index,
-                        selectedTileColor:
-                            Theme.of(context).colorScheme.inversePrimary,
+                        selectedTileColor: Theme.of(context).colorScheme.inversePrimary,
                         dense: true,
-                        trailing: ref
-                                    .watch(
-                                        valueTypeWrapperListProvider.notifier)
-                                    .getEditTargetValueTypeWrapper(index)
-                                    ?.visible ??
-                                false
-                            ? const Icon(Icons.visibility)
-                            : null,
+                        trailing: ref.watch(valueTypeWrapperListProvider.notifier).getEditTargetValueTypeWrapper(index)?.visible ?? false ? const Icon(Icons.visibility) : null,
                       ),
                     );
                   },
@@ -245,9 +213,7 @@ class _ViewGlobalVariableEditorState
           ),
         ),
       ),
-      ConstList.isSmallDisplay(context)
-          ? const Divider()
-          : const VerticalDivider(width: 40),
+      ConstList.isSmallDisplay(context) ? const Divider() : const VerticalDivider(width: 40),
       ConstList.isSmallDisplay(context)
           ? SizedBox(
               height: 44,
@@ -261,9 +227,7 @@ class _ViewGlobalVariableEditorState
                 children: iconList,
               ),
             ),
-      ConstList.isSmallDisplay(context)
-          ? const Divider()
-          : const VerticalDivider(width: 40),
+      ConstList.isSmallDisplay(context) ? const Divider() : const VerticalDivider(width: 40),
       const Expanded(
         flex: 3,
         child: ViewGlobalVariableInnerEditor(),
@@ -287,8 +251,7 @@ class ViewGlobalVariableInnerEditor extends ConsumerStatefulWidget {
   ConsumerState createState() => _ViewGlobalVariableInnerEditorState();
 }
 
-class _ViewGlobalVariableInnerEditorState
-    extends ConsumerState<ViewGlobalVariableInnerEditor> {
+class _ViewGlobalVariableInnerEditorState extends ConsumerState<ViewGlobalVariableInnerEditor> {
   ScrollController controller = ScrollController();
   int index = 1;
 
@@ -320,10 +283,7 @@ class _ViewGlobalVariableInnerEditorState
         children: [
           ViewSwitchLabel(
             () {
-              ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(
-                  currentIndex,
-                  value: currentEditValue.copyWith(
-                      visible: !currentEditValue.visible));
+              ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(currentIndex, value: currentEditValue.copyWith(visible: !currentEditValue.visible));
             },
             currentEditValue.visible,
             label: 'variable_show'.i18n,

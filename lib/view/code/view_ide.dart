@@ -1,6 +1,7 @@
 import 'package:cyoap_core/choiceNode/choice.dart';
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 import 'package:cyoap_core/grammar/simple_code.dart';
+import 'package:cyoap_core/grammar/value_type.dart';
 import 'package:cyoap_core/variable_db.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/view/util/controller_adjustable_scroll.dart';
@@ -76,17 +77,17 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
   Widget rowColumn({required Widget leftOrTop, required Widget rightOrBottom}) {
     return ConstList.isMobile()
         ? Column(
-      children: [
-        leftOrTop,
-        rightOrBottom,
-      ],
-    )
+            children: [
+              leftOrTop,
+              rightOrBottom,
+            ],
+          )
         : Row(
-      children: [
-        leftOrTop,
-        Expanded(child: rightOrBottom),
-      ],
-    );
+            children: [
+              leftOrTop,
+              Expanded(child: rightOrBottom),
+            ],
+          );
   }
 
   @override
@@ -102,9 +103,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
               children: [
                 Text(
                   'auto_complete'.i18n,
-                  style: ConstList
-                      .getCurrentFont(context)
-                      .bodyMedium,
+                  style: ConstList.getCurrentFont(context).bodyMedium,
                 ),
                 const VerticalDivider(),
                 Expanded(
@@ -118,16 +117,12 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                           },
                           child: Text(
                             text,
-                            style: ConstList
-                                .getCurrentFont(context)
-                                .bodyLarge,
+                            style: ConstList.getCurrentFont(context).bodyLarge,
                           ),
                         ),
                       );
                     },
-                    itemCount: ref
-                        .watch(ideVariableListProvider)
-                        .length,
+                    itemCount: ref.watch(ideVariableListProvider).length,
                   ),
                 ),
               ],
@@ -140,9 +135,7 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
         ),
         SliverList(
           delegate: SliverChildListDelegate([
-            if (widget.choiceType == ChoiceType.node && ref
-                .watch(nodeEditorTargetProvider)
-                .isSelectableMode)
+            if (widget.choiceType == ChoiceType.node && ref.watch(nodeEditorTargetProvider).isSelectableMode)
               rowColumn(
                 leftOrTop: SizedBox(
                   width: size,
@@ -153,12 +146,8 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                     padding: const EdgeInsets.all(ConstList.padding),
                     child: Focus(
                       onFocusChange: (bool hasFocus) {
-                        ref
-                            .read(ideCurrentInputProvider.notifier)
-                            .lastFocusText = _controllerClickable;
-                        ref
-                            .read(ideCurrentInputProvider.notifier)
-                            .lastFocusQuill = null;
+                        ref.read(ideCurrentInputProvider.notifier).lastFocusText = _controllerClickable;
+                        ref.read(ideCurrentInputProvider.notifier).lastFocusQuill = null;
                       },
                       child: TextField(
                         controller: _controllerClickable,
@@ -168,12 +157,8 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                   ),
                 ),
               ),
-            if (widget.choiceType == ChoiceType.node && ref
-                .watch(nodeEditorTargetProvider)
-                .isSelectableMode) const Divider(),
-            if (widget.choiceType != ChoiceType.node || ref
-                .watch(nodeEditorTargetProvider)
-                .choiceNodeMode != ChoiceNodeMode.onlyCode)
+            if (widget.choiceType == ChoiceType.node && ref.watch(nodeEditorTargetProvider).isSelectableMode) const Divider(),
+            if (widget.choiceType != ChoiceType.node || ref.watch(nodeEditorTargetProvider).choiceNodeMode != ChoiceNodeMode.onlyCode)
               rowColumn(
                 leftOrTop: SizedBox(
                   width: size,
@@ -184,12 +169,8 @@ class _ViewCodeIdeState extends ConsumerState<ViewIde> {
                     padding: const EdgeInsets.all(ConstList.padding),
                     child: Focus(
                       onFocusChange: (bool hasFocus) {
-                        ref
-                            .read(ideCurrentInputProvider.notifier)
-                            .lastFocusText = _controllerVisible;
-                        ref
-                            .read(ideCurrentInputProvider.notifier)
-                            .lastFocusQuill = null;
+                        ref.read(ideCurrentInputProvider.notifier).lastFocusText = _controllerVisible;
+                        ref.read(ideCurrentInputProvider.notifier).lastFocusQuill = null;
                       },
                       child: TextField(
                         controller: _controllerVisible,
@@ -318,8 +299,6 @@ class SimpleCodeBlockEditor extends ConsumerStatefulWidget {
 
 class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
   final ScrollController _scrollController = ScrollController();
-  final ScrollController _searchScrollController = ScrollController();
-  final Map<int, List<TextEditingController>> _controllers = {};
 
   @override
   void initState() {
@@ -330,12 +309,6 @@ class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
   void dispose() {
     super.dispose();
     _scrollController.dispose();
-    _searchScrollController.dispose();
-    for (var key in _controllers.keys) {
-      for (var controller in _controllers[key]!) {
-        controller.dispose();
-      }
-    }
   }
 
   @override
@@ -346,14 +319,10 @@ class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
         ref.read(simpleCodesIdeProvider(widget.codeActivationType).notifier).addSimpleCodeBlock(getDefaultValue());
       },
     );
-    var children = ref
-        .watch(simpleCodesIdeProvider(widget.codeActivationType))
-        ?.code
-        .indexed
-        .map((e) {
-      var (index, data) = e;
-      return buildFromSimpleCodeBlock(data, index);
-    }).toList() ??
+    var children = ref.watch(simpleCodesIdeProvider(widget.codeActivationType))?.code.indexed.map((e) {
+          var (index, data) = e;
+          return buildFromSimpleCodeBlock(data, index);
+        }).toList() ??
         [];
     children.add(addButton);
     return Column(
@@ -394,12 +363,11 @@ class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
         value: simpleCodeBlock.type,
         items: SimpleActionType.values
             .map(
-              (e) =>
-              DropdownMenuItem(
+              (e) => DropdownMenuItem(
                 value: e,
                 child: Text(e.toString()),
               ),
-        )
+            )
             .toList(),
         onChanged: (SimpleActionType? type) {
           if (type == null) return;
@@ -415,12 +383,11 @@ class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
         value: simpleCodeBlock.type,
         items: SimpleConditionType.values
             .map(
-              (e) =>
-              DropdownMenuItem(
+              (e) => DropdownMenuItem(
                 value: e,
                 child: Text(e.toString()),
               ),
-        )
+            )
             .toList(),
         onChanged: (SimpleConditionType? type) {
           if (type == null) return;
@@ -431,23 +398,7 @@ class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
         useCard: false,
       );
     }
-    var count = simpleCodeBlock.argumentLength;
-    if (_controllers[index] == null) {
-      _controllers[index] = [];
-    }
-    var currentControllerList = _controllers[index]!;
-    for (var i = 0; i < count; i++) {
-      if (currentControllerList.length <= i) {
-        currentControllerList.add(TextEditingController());
-      }
-      if (simpleCodeBlock.arguments.length <= i) {
-        currentControllerList[i].text = "";
-      } else {
-        currentControllerList[i].text = simpleCodeBlock.arguments[i].data;
-      }
-    }
 
-    var variableList = VariableDataBase().stackFrames.last.getVariableMap();
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
@@ -456,19 +407,8 @@ class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
             dropdown,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: List.generate(count, (index) {
-                return Expanded(
-                  child: SearchField<String>(
-                    controller: currentControllerList[index],
-                    suggestions: variableList.keys.map((name) => SearchFieldListItem<String>(name)).toList(),
-                    onSuggestionTap: (SearchFieldListItem<String> suggestion) {
-                      currentControllerList[index].text = suggestion.searchKey;
-                      return suggestion.searchKey;
-                    },
-                    scrollController: _searchScrollController,
-                    scrollbarDecoration: ScrollbarDecoration(),
-                  ),
-                );
+              children: List.generate(simpleCodeBlock.argumentLength, (index) {
+                return Expanded(child: VariableSearchField(index: index, simpleCodeBlock: simpleCodeBlock, codeActivationType: widget.codeActivationType));
               }),
             ),
           ],
@@ -482,6 +422,57 @@ class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
       return const SimpleCodeBlock.action(type: SimpleActionType.nothing);
     }
     return const SimpleCodeBlock.condition(type: SimpleConditionType.alwaysOn);
+  }
+}
+
+class VariableSearchField extends ConsumerStatefulWidget {
+  final int index;
+  final SimpleCodeBlock simpleCodeBlock;
+  final CodeActivationType codeActivationType;
+
+  const VariableSearchField({required this.index, required this.simpleCodeBlock, required this.codeActivationType, super.key});
+
+  @override
+  ConsumerState createState() => _VariableSearchFieldState();
+}
+
+class _VariableSearchFieldState extends ConsumerState<VariableSearchField> {
+  final TextEditingController currentController = TextEditingController();
+  final ScrollController _searchScrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    while (widget.simpleCodeBlock.arguments.length <= widget.index) {
+      widget.simpleCodeBlock.arguments.add(const ValueType(data: "", type: DataType.strings));
+    }
+    currentController.text = widget.simpleCodeBlock.arguments[widget.index].data;
+    currentController.addListener(() {
+      print(widget.simpleCodeBlock.arguments);
+      widget.simpleCodeBlock.arguments[widget.index] = widget.simpleCodeBlock.arguments[widget.index].copyWith(data: currentController.text);
+      ref.read(simpleCodesIdeProvider(widget.codeActivationType).notifier).setSimpleCodeBlock(widget.simpleCodeBlock, widget.index);
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    currentController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var variableList = VariableDataBase().stackFrames.last.getVariableMap();
+    return SearchField<String>(
+      controller: currentController,
+      suggestions: variableList.keys.map((name) => SearchFieldListItem<String>(name)).toList(),
+      onSuggestionTap: (SearchFieldListItem<String> suggestion) {
+        currentController.text = suggestion.searchKey;
+        return suggestion.searchKey;
+      },
+      scrollController: _searchScrollController,
+      scrollbarDecoration: ScrollbarDecoration(),
+    );
   }
 }
 
@@ -514,12 +505,8 @@ class _ViewQuillCodeIdeState extends ConsumerState<ViewQuillCodeIde> {
           Expanded(
             child: Focus(
               onFocusChange: (bool hasFocus) {
-                ref
-                    .read(ideCurrentInputProvider.notifier)
-                    .lastFocusText = null;
-                ref
-                    .read(ideCurrentInputProvider.notifier)
-                    .lastFocusQuill = ref.watch(ideControllerProvider(widget.choiceType));
+                ref.read(ideCurrentInputProvider.notifier).lastFocusText = null;
+                ref.read(ideCurrentInputProvider.notifier).lastFocusQuill = ref.watch(ideControllerProvider(widget.choiceType));
               },
               child: QuillEditor(
                 controller: ref.watch(ideControllerProvider(widget.choiceType)),
@@ -543,28 +530,17 @@ class _ViewQuillCodeIdeState extends ConsumerState<ViewQuillCodeIde> {
                   icon: const Icon(Icons.reorder),
                   tooltip: "sort".i18n,
                   onPressed: () {
-                    var text = ref
-                        .read(IdeControllerProvider(ChoiceType.node))
-                        .document
-                        .toPlainText();
+                    var text = ref.read(IdeControllerProvider(ChoiceType.node)).document.toPlainText();
                     var (output, checkGrammerWrong) = ref.read(ideCurrentInputProvider.notifier).formatting(text);
                     if (checkGrammerWrong) {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text("sort_error".i18n),
                       ));
                     }
-                    ref
-                        .read(ideCurrentInputProvider.notifier)
-                        .reformat = true;
-                    var length = ref
-                        .read(ideControllerProvider(widget.choiceType))
-                        .plainTextEditingValue
-                        .text
-                        .length - 1;
+                    ref.read(ideCurrentInputProvider.notifier).reformat = true;
+                    var length = ref.read(ideControllerProvider(widget.choiceType)).plainTextEditingValue.text.length - 1;
                     ref.read(ideControllerProvider(widget.choiceType)).replaceText(0, length, output, const TextSelection.collapsed(offset: 0));
-                    ref
-                        .read(ideCurrentInputProvider.notifier)
-                        .reformat = false;
+                    ref.read(ideCurrentInputProvider.notifier).reformat = false;
                   },
                 ),
               ],

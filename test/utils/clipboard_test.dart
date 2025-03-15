@@ -32,8 +32,8 @@ void main() async {
 
     var posCopy0 = const Pos(data: [-1]);
     var posCopy1 = const Pos(data: [-2]);
-    var vCopy0 = find.byWidgetPredicate((widget){
-      if(widget is! ViewChoiceNode){
+    var vCopy0 = find.byWidgetPredicate((widget) {
+      if (widget is! ViewChoiceNode) {
         return false;
       }
       print(widget.pos);

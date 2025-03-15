@@ -27,10 +27,7 @@ class SaveProjectImp extends SaveProject {
     if (ConstList.isMobile()) {
       var grantedUri = (await openDocumentTree());
       if (grantedUri == null) return;
-      await createFile(grantedUri,
-          mimeType: 'application/zip',
-          displayName: 'extract.zip',
-          bytes: uint8data);
+      await createFile(grantedUri, mimeType: 'application/zip', displayName: 'extract.zip', bytes: uint8data);
       return;
     }
     path ??= await FilePicker.platform.getDirectoryPath();
@@ -52,10 +49,8 @@ class SaveProjectImp extends SaveProject {
     if (archiveA.length != archiveB.length) return false;
     for (int i = 0; i < archiveA.length; i++) {
       if (archiveA[i].name != archiveB[i].name) return false;
-      var hashA =
-          await calculateFileHash(data: archiveA[i].rawContent!.readBytes());
-      var hashB =
-          await calculateFileHash(data: archiveB[i].rawContent!.readBytes());
+      var hashA = await calculateFileHash(data: archiveA[i].rawContent!.readBytes());
+      var hashB = await calculateFileHash(data: archiveB[i].rawContent!.readBytes());
       if (hashA != hashB) return false;
     }
     return true;
@@ -66,15 +61,13 @@ class SaveProjectImp extends SaveProject {
     var uint8data = await compute(mapToArchive, dataInput);
 
     var latest = await findMostRecentlyModifiedFile('$path/backup');
-    if (latest != null &&
-        await checkZipSameFile(uint8data, await latest.readAsBytes())) {
+    if (latest != null && await checkZipSameFile(uint8data, await latest.readAsBytes())) {
       print("same backup file. skip this backup");
       return;
     }
 
     var currentTime = DateTime.now();
-    var formatDate =
-        "${currentTime.year}-${currentTime.month}-${currentTime.day}_${currentTime.hour}-${currentTime.minute}";
+    var formatDate = "${currentTime.year}-${currentTime.month}-${currentTime.day}_${currentTime.hour}-${currentTime.minute}";
     var name = '$path/backup/$formatDate.zip';
     if (!await Directory('$path/backup').exists()) {
       await Directory('$path/backup').create();
@@ -94,8 +87,7 @@ class SaveProjectImp extends SaveProject {
     File? mostRecentFile;
     DateTime mostRecentModification = DateTime.fromMillisecondsSinceEpoch(0);
 
-    await for (final entity
-        in directory.list(recursive: false, followLinks: false)) {
+    await for (final entity in directory.list(recursive: false, followLinks: false)) {
       if (entity is File) {
         final lastModified = await entity.lastModified();
         if (lastModified.isAfter(mostRecentModification)) {
@@ -127,20 +119,14 @@ class SaveProjectImp extends SaveProject {
     if (!await dirNode.exists()) {
       await dirNode.create();
     }
-    var nameList = dirNode
-        .listSync(recursive: true)
-        .map((e) => ('nodes/${basename(e.path)}'))
-        .toList();
+    var nameList = dirNode.listSync(recursive: true).map((e) => ('nodes/${basename(e.path)}')).toList();
     existMap.addAll(nameList);
 
     Directory dirImages = Directory('$path/images');
     if (!await dirImages.exists()) {
       await dirImages.create();
     }
-    nameList = dirImages
-        .listSync(recursive: true)
-        .map((e) => ('images/${basename(e.path)}'))
-        .toList();
+    nameList = dirImages.listSync(recursive: true).map((e) => ('images/${basename(e.path)}')).toList();
     existMap.addAll(nameList);
 
     var needRemove = existMap.toSet().difference(dataInput.keys.toSet());

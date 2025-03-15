@@ -15,8 +15,7 @@ void main() {
     ChoiceNode(
       width: 4,
       title: "Design",
-      contents:
-          "[{\"insert\":\"Adjust and view layouts, fonts, designs, sizes, and more.\\n\"}]",
+      contents: "[{\"insert\":\"Adjust and view layouts, fonts, designs, sizes, and more.\\n\"}]",
       imageString: "noImage",
     ),
   );
@@ -56,8 +55,7 @@ void main() {
       ChoiceNode(
         width: 4,
         title: "Design",
-        contents:
-            "[{\"insert\":\"Adjust and view layouts, fonts, designs, sizes, and more.\\n\"}]",
+        contents: "[{\"insert\":\"Adjust and view layouts, fonts, designs, sizes, and more.\\n\"}]",
         imageString: "noImage",
       ));
   getPlatform.addData(
@@ -65,8 +63,7 @@ void main() {
       ChoiceNode(
         width: 4,
         title: "Design",
-        contents:
-            "[{\"insert\":\"Adjust and view layouts, fonts, designs, sizes, and more.\\n\"}]",
+        contents: "[{\"insert\":\"Adjust and view layouts, fonts, designs, sizes, and more.\\n\"}]",
         imageString: "noImage",
       ));
 
@@ -74,9 +71,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
       home: ProviderScope(
         overrides: [],
-        child: ViewWrapCustomReorder(parentPos1,
-            isReorderAble: false,
-            builder: (i) => ViewChoiceNode(parentPos1.addLast(i))),
+        child: ViewWrapCustomReorder(parentPos1, isReorderAble: false, builder: (i) => ViewChoiceNode(parentPos1.addLast(i))),
       ),
     ));
     var node1 = getPlatform.getChoiceNode(pos1_0)!;
@@ -91,9 +86,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
       home: ProviderScope(
         overrides: [],
-        child: ViewWrapCustomReorder(parentPos1,
-            isReorderAble: false,
-            builder: (i) => ViewChoiceNode(parentPos1.addLast(i))),
+        child: ViewWrapCustomReorder(parentPos1, isReorderAble: false, builder: (i) => ViewChoiceNode(parentPos1.addLast(i))),
       ),
     ));
     var node1 = getPlatform.getChoiceNode(pos1_0)!;

@@ -27,14 +27,9 @@ class ViewChangeRotation extends ConsumerWidget {
         IconButton(
           onPressed: () {
             if (MediaQuery.of(context).orientation == Orientation.portrait) {
-              SystemChrome.setPreferredOrientations(
-                  [DeviceOrientation.landscapeLeft]);
+              SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
             } else {
-              SystemChrome.setPreferredOrientations([
-                DeviceOrientation.portraitUp,
-                DeviceOrientation.landscapeRight,
-                DeviceOrientation.landscapeLeft
-              ]);
+              SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft]);
             }
           },
           icon: const Icon(Icons.rotate_right),
@@ -42,14 +37,9 @@ class ViewChangeRotation extends ConsumerWidget {
         IconButton(
           onPressed: () {
             if (MediaQuery.of(context).orientation == Orientation.portrait) {
-              SystemChrome.setPreferredOrientations(
-                  [DeviceOrientation.landscapeRight]);
+              SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeRight]);
             } else {
-              SystemChrome.setPreferredOrientations([
-                DeviceOrientation.portraitUp,
-                DeviceOrientation.landscapeRight,
-                DeviceOrientation.landscapeLeft
-              ]);
+              SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft]);
             }
           },
           icon: const Icon(Icons.rotate_left),
@@ -121,18 +111,14 @@ class _ViewPlayDrawerState extends ConsumerState<ViewPlayDrawer> {
             ),
             ListTile(
               title: ViewSwitchLabel(
-                () => ref
-                    .read(isVisibleSourceProvider.notifier)
-                    .update((state) => !state),
+                () => ref.read(isVisibleSourceProvider.notifier).update((state) => !state),
                 ref.watch(isVisibleSourceProvider),
                 label: 'show_image_source'.i18n,
               ),
             ),
             ListTile(
               title: ViewSwitchLabel(
-                () => ref
-                    .read(isDebugModeProvider.notifier)
-                    .update((state) => !state),
+                () => ref.read(isDebugModeProvider.notifier).update((state) => !state),
                 ref.watch(isDebugModeProvider),
                 label: 'debug_mode'.i18n,
               ),
@@ -151,17 +137,12 @@ class BottomDisplayedVariableWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var variableList = List<Widget>.empty(growable: true);
-    for (var (name, valueTypeWrapper)
-        in ref.watch(displayedVariablesProvider)) {
+    for (var (name, valueTypeWrapper) in ref.watch(displayedVariablesProvider)) {
       if (valueTypeWrapper.visible) {
-        name = valueTypeWrapper.displayName.isEmpty
-            ? name
-            : valueTypeWrapper.displayName;
+        name = valueTypeWrapper.displayName.isEmpty ? name : valueTypeWrapper.displayName;
         variableList.add(
           Chip(
-            label: Text("$name   ${valueTypeWrapper.valueType.data.toString()}",
-                style: ConstList.getFont(
-                    ref.watch(platformDesignSettingProvider).variableFont)),
+            label: Text("$name   ${valueTypeWrapper.valueType.data.toString()}", style: ConstList.getFont(ref.watch(platformDesignSettingProvider).variableFont)),
             padding: const EdgeInsets.all(0),
           ),
         );
@@ -193,14 +174,12 @@ class VariableTiles extends ConsumerWidget {
     for (var key in ref.watch(vmVariableTableProvider).keys) {
       var values = ref.watch(vmVariableTableProvider)[key]!;
       if (isPlatformEditable) {
-        if (isVisibleHideVariable ||
-            (!isVisibleHideVariable && values.visible)) {
+        if (isVisibleHideVariable || (!isVisibleHideVariable && values.visible)) {
           if (search.isEmpty || (search.isNotEmpty && key.contains(search))) {
             variableList.add(ListTile(
               dense: true,
               title: Text(key),
-              subtitle:
-                  values.displayName.isEmpty ? null : Text(values.displayName),
+              subtitle: values.displayName.isEmpty ? null : Text(values.displayName),
               trailing: Text(values.valueType.type.name),
             ));
           }
@@ -225,9 +204,7 @@ class VariableTiles extends ConsumerWidget {
             constraints: const BoxConstraints(maxWidth: 200, maxHeight: 25),
             child: ViewSwitchLabel(
               () {
-                ref
-                    .read(isVisibleHideVariableProvider.notifier)
-                    .update((state) => !state);
+                ref.read(isVisibleHideVariableProvider.notifier).update((state) => !state);
               },
               isVisibleHideVariable,
               label: 'variable_show_hidden'.i18n,
@@ -255,17 +232,14 @@ class NodeTiles extends ConsumerWidget {
       var nodeChildren = node.children;
       if (nodeChildren != null) {
         children = nodeChildren
-            .where((element) =>
-                search.isEmpty ||
-                (search.isNotEmpty && element.name.contains(search)))
+            .where((element) => search.isEmpty || (search.isNotEmpty && element.name.contains(search)))
             .map(
               (e) => ListTile(
                 dense: true,
                 title: Text(e.name),
                 onTap: () async {
                   if (e.pos.length > 1) {
-                    if (ref.read(changeTabProvider) ==
-                        tabList.indexOf("viewEditor")) {
+                    if (ref.read(changeTabProvider) == tabList.indexOf("viewEditor")) {
                       await ref.read(changeTabProvider.notifier).home(context);
                       await Future.delayed(const Duration(milliseconds: 200));
                     }

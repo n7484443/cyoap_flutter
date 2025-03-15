@@ -18,16 +18,13 @@ extension ColorHelper on ColorOption {
     switch (gradientType) {
       case GradientType.linear:
         return LinearGradient(
-          begin: Alignment(gradientData[0].gradientPos.$1 * 2 - 1,
-              gradientData[0].gradientPos.$2 * 2 - 1),
-          end: Alignment(gradientData[1].gradientPos.$1 * 2 - 1,
-              gradientData[1].gradientPos.$2 * 2 - 1),
+          begin: Alignment(gradientData[0].gradientPos.$1 * 2 - 1, gradientData[0].gradientPos.$2 * 2 - 1),
+          end: Alignment(gradientData[1].gradientPos.$1 * 2 - 1, gradientData[1].gradientPos.$2 * 2 - 1),
           colors: [Color(gradientData[0].color), Color(gradientData[1].color)],
         );
       case GradientType.radial:
         return CssLikeRadialGradient(
-          center: Alignment(gradientData[0].gradientPos.$1 * 2.0 - 1.0,
-              gradientData[0].gradientPos.$2 * 2.0 - 1.0),
+          center: Alignment(gradientData[0].gradientPos.$1 * 2.0 - 1.0, gradientData[0].gradientPos.$2 * 2.0 - 1.0),
           colors: [Color(gradientData[0].color), Color(gradientData[1].color)],
           stops: [
             0.0,
@@ -40,11 +37,7 @@ extension ColorHelper on ColorOption {
         var pos = gradientData[0].gradientPos;
         return SweepGradient(
           center: Alignment(pos.$1 * 2.0 - 1.0, pos.$2 * 2.0 - 1.0),
-          colors: [
-            Color(gradientData[0].color),
-            Color(gradientData[1].color),
-            Color(gradientData[0].color)
-          ],
+          colors: [Color(gradientData[0].color), Color(gradientData[1].color), Color(gradientData[0].color)],
           stops: [0.0, 0.5, 1.0],
           transform: GradientTranslateRotation(angle, Offset(pos.$1, pos.$2)),
         );
@@ -105,8 +98,7 @@ class GradientTranslateRotation extends GradientRotation {
 }
 
 class CssLikeRadialGradient extends RadialGradient {
-  const CssLikeRadialGradient(
-      {required super.colors, super.center, super.radius, super.stops});
+  const CssLikeRadialGradient({required super.colors, super.center, super.radius, super.stops});
 
   List<double> _impliedStops() {
     if (stops != null) {

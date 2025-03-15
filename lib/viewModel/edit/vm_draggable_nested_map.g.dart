@@ -6,18 +6,14 @@ part of 'vm_draggable_nested_map.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$currentProjectChangedHash() =>
-    r'eeb7772bdfb93373945462c615bf71e7f7714e53';
+String _$currentProjectChangedHash() => r'eeb7772bdfb93373945462c615bf71e7f7714e53';
 
 /// See also [CurrentProjectChanged].
 @ProviderFor(CurrentProjectChanged)
-final currentProjectChangedProvider =
-    AutoDisposeNotifierProvider<CurrentProjectChanged, bool>.internal(
+final currentProjectChangedProvider = AutoDisposeNotifierProvider<CurrentProjectChanged, bool>.internal(
   CurrentProjectChanged.new,
   name: r'currentProjectChangedProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$currentProjectChangedHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$currentProjectChangedHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

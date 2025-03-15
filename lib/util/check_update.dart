@@ -9,9 +9,7 @@ class CheckUpdate {
     var github = GitHub();
     Release lastRelease;
     try {
-      lastRelease = await github.repositories
-          .listReleases(RepositorySlug('n7484443', 'cyoap_flutter'))
-          .first;
+      lastRelease = await github.repositories.listReleases(RepositorySlug('n7484443', 'cyoap_flutter')).first;
     } catch (e) {
       return null;
     }
@@ -24,8 +22,7 @@ class CheckUpdate {
       return null;
     }
     if (kDebugMode) {
-      print(
-          '마지막 업데이트 버전 : ${lastRelease.tagName} | 현재 버전 : v${ConstList.version}');
+      print('마지막 업데이트 버전 : ${lastRelease.tagName} | 현재 버전 : v${ConstList.version}');
     }
     if (lastRelease.tagName == null) return null;
     if (ConstList.version == '') return null;

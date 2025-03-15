@@ -218,7 +218,7 @@ class SimpleCodesIde extends _$SimpleCodesIde {
   }
 
   void setSimpleCodes(Choice choice, CodeActivationType type, SimpleCodes? simpleCodes) {
-    ref.read(nodeEditorTargetProvider.notifier).setState((e){
+    ref.read(nodeEditorTargetProvider.notifier).setState((e) {
       switch (type) {
         case CodeActivationType.visible:
           e.conditionalCodeHandler.conditionVisibleSimple = simpleCodes;

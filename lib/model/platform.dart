@@ -17,8 +17,7 @@ const int designSamplePosition = -100;
 class EditablePlatform extends PlayablePlatform {
   Clipboard clipboard;
 
-  ListQueue<Color> lastColorList =
-      ListQueue.from(List.filled(10, Colors.black));
+  ListQueue<Color> lastColorList = ListQueue.from(List.filled(10, Colors.black));
 
   void addLastColor(Color color) {
     if (lastColorList.contains(color)) {
@@ -31,8 +30,7 @@ class EditablePlatform extends PlayablePlatform {
 
   Map<int, Color> getLastColor(Color color) {
     var lastColorMap = getPlatform.lastColorList.toList().asMap();
-    return lastColorMap
-        .map((key, value) => MapEntry(key == 0 ? 50 : key * 100, value));
+    return lastColorMap.map((key, value) => MapEntry(key == 0 ? 50 : key * 100, value));
   }
 
   void init() {
@@ -51,8 +49,7 @@ class EditablePlatform extends PlayablePlatform {
       : clipboard = Clipboard.fromJson(json['clipboard'] ?? {}),
         super.fromJson(json) {
     if (json['lastColorList'] != null) {
-      lastColorList = ListQueue.from(
-          (json['lastColorList'] as List).map((e) => Color(e)).toList());
+      lastColorList = ListQueue.from((json['lastColorList'] as List).map((e) => Color(e)).toList());
     } else {
       lastColorList = ListQueue.from(List.filled(10, Colors.black));
     }
@@ -157,8 +154,7 @@ class EditablePlatform extends PlayablePlatform {
       for (var choice in line.children) {
         (choice as ChoiceNode).recursiveFunction((node) {
           if ((node as ChoiceNode).choiceNodeOption.presetName == before) {
-            node.choiceNodeOption =
-                node.choiceNodeOption.copyWith(presetName: after);
+            node.choiceNodeOption = node.choiceNodeOption.copyWith(presetName: after);
           }
           return true;
         });
@@ -169,8 +165,7 @@ class EditablePlatform extends PlayablePlatform {
   void updateLinePresetNameAll(String before, String after) {
     for (var line in choicePage.choiceLines) {
       if (line.choiceLineOption.presetName == before) {
-        line.choiceLineOption =
-            line.choiceLineOption.copyWith(presetName: after);
+        line.choiceLineOption = line.choiceLineOption.copyWith(presetName: after);
       }
     }
   }

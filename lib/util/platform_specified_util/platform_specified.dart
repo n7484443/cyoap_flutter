@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'vm/export_list.dart' if (dart.library.html) 'web/export_list.dart';
 
-class PlatformUtil{
+class PlatformUtil {
   static final PlatformUtil _instance = PlatformUtil._internal();
   final PlatformSpecified platform = PlatformSpecifiedImp();
 
@@ -55,8 +55,7 @@ abstract class SaveProject {
 }
 
 abstract class WebpConverter {
-  Future<(String, Uint8List)> convert(Uint8List input, String name) async =>
-      throw "doesn't work in this platform";
+  Future<(String, Uint8List)> convert(Uint8List input, String name) async => throw "doesn't work in this platform";
 
   void init() async {}
   bool saveAsWebp = false;

@@ -52,17 +52,13 @@ class FrequentlyUsedPath extends _$FrequentlyUsedPath {
 
   void addPath(String newString) {
     state = [...state, newString];
-    ref
-        .read(devicePreferenceStateProvider.notifier)
-        .update('cyoap_frequent_path', state);
+    ref.read(devicePreferenceStateProvider.notifier).update('cyoap_frequent_path', state);
   }
 
   void deletePath(int index) {
     state.removeAt(index);
     state = [...state];
-    ref
-        .read(devicePreferenceStateProvider.notifier)
-        .update('cyoap_frequent_path', state);
+    ref.read(devicePreferenceStateProvider.notifier).update('cyoap_frequent_path', state);
   }
 
   Future<bool> addDirectory() async {
@@ -95,8 +91,7 @@ class FrequentlyUsedPath extends _$FrequentlyUsedPath {
     getPlatformFileSystem.clear();
     var index = ref.read(pathListSelectedProvider);
     if (ConstList.isWeb()) {
-      return await PlatformSystem()
-          .openPlatformZipForWeb(ref.watch(pathListFileProvider));
+      return await PlatformSystem().openPlatformZipForWeb(ref.watch(pathListFileProvider));
     }
     if (index == -1 || index >= state.length) {
       return LoadProjectState(ProjectState.nonSelected);
@@ -125,8 +120,7 @@ class FrequentlyUsedPath extends _$FrequentlyUsedPath {
     }
   }
 
-  Future<void> removeFrequentPath(
-      int index, Future<bool?> Function() dialog) async {
+  Future<void> removeFrequentPath(int index, Future<bool?> Function() dialog) async {
     if (ConstList.isMobile()) {
       if (!(await dialog() ?? false)) {
         return;

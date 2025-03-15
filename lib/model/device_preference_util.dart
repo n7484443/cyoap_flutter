@@ -35,8 +35,7 @@ class DevicePreferenceUtil {
     await prefs.setInt(option, data);
   }
 
-  Future<List<String>> getStringListVariable(String option,
-      {List<String> defaultValue = const []}) async {
+  Future<List<String>> getStringListVariable(String option, {List<String> defaultValue = const []}) async {
     var prefs = await SharedPreferences.getInstance();
     return prefs.getStringList(option) ?? defaultValue;
   }

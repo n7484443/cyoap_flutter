@@ -4,8 +4,7 @@ class RoundedRectangleSliderShape extends SliderComponentShape {
   final double thumbRadius;
   final double cornerRadius;
 
-  const RoundedRectangleSliderShape(
-      {required this.thumbRadius, required this.cornerRadius});
+  const RoundedRectangleSliderShape({required this.thumbRadius, required this.cornerRadius});
 
   @override
   Size getPreferredSize(bool isEnabled, bool isDiscrete) {
@@ -34,11 +33,7 @@ class RoundedRectangleSliderShape extends SliderComponentShape {
       ..color = sliderTheme.thumbColor ?? Colors.white;
     // draw the background shape here..
     canvas.drawRRect(
-      RRect.fromRectXY(
-          Rect.fromCenter(
-              center: center, width: thumbRadius, height: thumbRadius * 2),
-          cornerRadius,
-          cornerRadius),
+      RRect.fromRectXY(Rect.fromCenter(center: center, width: thumbRadius, height: thumbRadius * 2), cornerRadius, cornerRadius),
       paint,
     );
   }

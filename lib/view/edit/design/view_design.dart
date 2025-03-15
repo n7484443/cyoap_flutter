@@ -38,18 +38,12 @@ class ViewDesignSetting extends ConsumerWidget {
           ),
         ),
         body: Padding(
-          padding: const EdgeInsets.only(
-              top: ConstList.paddingHuge,
-              bottom: ConstList.padding,
-              left: ConstList.padding,
-              right: ConstList.padding),
+          padding: const EdgeInsets.only(top: ConstList.paddingHuge, bottom: ConstList.padding, left: ConstList.padding, right: ConstList.padding),
           child: Column(
             children: [
               Expanded(
                 child: Padding(
-                  padding: ConstList.isSmallDisplay(context)
-                      ? const EdgeInsets.symmetric(horizontal: ConstList.paddingSmall)
-                      : const EdgeInsets.symmetric(horizontal: ConstList.paddingHuge),
+                  padding: ConstList.isSmallDisplay(context) ? const EdgeInsets.symmetric(horizontal: ConstList.paddingSmall) : const EdgeInsets.symmetric(horizontal: ConstList.paddingHuge),
                   child: TabBarView(
                     children: [
                       const ViewGeneralSettingTab(),
@@ -88,13 +82,9 @@ class _ViewGeneralSettingTabState extends ConsumerState<ViewGeneralSettingTab> {
     var fontEditor = CustomDropdownButton(
       label: 'font_score'.i18n,
       value: designSetting.variableFont,
-      items: ConstList.textFontList.keys
-          .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(
-              value: name, child: Text(name, style: ConstList.getFont(name))))
-          .toList(),
+      items: ConstList.textFontList.keys.map<DropdownMenuItem<String>>((name) => DropdownMenuItem(value: name, child: Text(name, style: ConstList.getFont(name)))).toList(),
       onChanged: (String? value) {
-        ref.read(platformDesignSettingProvider.notifier).state =
-            designSetting.copyWith(variableFont: value!);
+        ref.read(platformDesignSettingProvider.notifier).state = designSetting.copyWith(variableFont: value!);
       },
     );
     var colorEditor = Card(
@@ -103,8 +93,7 @@ class _ViewGeneralSettingTabState extends ConsumerState<ViewGeneralSettingTab> {
         child: ViewColorOptionEditor(
           colorOption: designSetting.backgroundColorOption,
           changeFunction: (ColorOption color) {
-            ref.read(platformDesignSettingProvider.notifier).state =
-                designSetting.copyWith(
+            ref.read(platformDesignSettingProvider.notifier).state = designSetting.copyWith(
               backgroundColorOption: color,
             );
           },
@@ -131,12 +120,7 @@ class _ViewGeneralSettingTabState extends ConsumerState<ViewGeneralSettingTab> {
     if (ConstList.isSmallDisplay(context)) {
       return ListView(
         controller: scrollController,
-        children: [
-          fontEditor,
-          const ViewPositionSetting(),
-          backgroundPreview,
-          colorEditor
-        ],
+        children: [fontEditor, const ViewPositionSetting(), backgroundPreview, colorEditor],
       );
     }
     return Row(
@@ -187,11 +171,7 @@ class _ViewPositionSettingState extends ConsumerState<ViewPositionSetting> {
     );
     _controller?.addListener(() {
       EasyDebounce.debounce('marginController', ConstList.debounceDuration, () {
-        ref.read(platformDesignSettingProvider.notifier).state = ref
-            .read(platformDesignSettingProvider)
-            .copyWith(
-                marginVertical:
-                    double.tryParse(_controller?.text ?? '') ?? 12.0);
+        ref.read(platformDesignSettingProvider.notifier).state = ref.read(platformDesignSettingProvider).copyWith(marginVertical: double.tryParse(_controller?.text ?? '') ?? 12.0);
       });
     });
     super.initState();

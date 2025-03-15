@@ -43,9 +43,7 @@ class Clipboard {
   }
 
   Clipboard.fromJson(Map<String, dynamic> json) {
-    queue = Queue.from(((json['queue'] as List?) ?? [])
-        .map((e) => ChoiceNode.fromJson(e))
-        .toList());
+    queue = Queue.from(((json['queue'] as List?) ?? []).map((e) => ChoiceNode.fromJson(e)).toList());
     length = json['length'] ?? length;
   }
 }

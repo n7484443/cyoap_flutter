@@ -22,17 +22,11 @@ class OutlineOverlay extends SingleChildRenderObjectWidget {
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return RenderOutlineOverlay(
-        outlineType: outlineType,
-        edgeInsets: edgeInsets,
-        borderRadius: borderRadius,
-        color: color,
-        strokeWidth: strokeWidth);
+    return RenderOutlineOverlay(outlineType: outlineType, edgeInsets: edgeInsets, borderRadius: borderRadius, color: color, strokeWidth: strokeWidth);
   }
 
   @override
-  void updateRenderObject(
-      BuildContext context, RenderOutlineOverlay renderObject) {
+  void updateRenderObject(BuildContext context, RenderOutlineOverlay renderObject) {
     super.updateRenderObject(context, renderObject);
     renderObject.edgeInsets = edgeInsets;
     renderObject.borderRadius = borderRadius;
@@ -126,24 +120,18 @@ class RenderOutlineOverlay extends RenderProxyBox {
       return;
     }
     Path path = Path()
-      ..addRRect(RRect.fromRectAndCorners(
-          Rect.fromLTRB(left, top, right, bottom),
-          bottomLeft: _borderRadius.bottomLeft,
-          bottomRight: _borderRadius.bottomRight,
-          topLeft: _borderRadius.topLeft,
-          topRight: _borderRadius.topRight));
+      ..addRRect(RRect.fromRectAndCorners(Rect.fromLTRB(left, top, right, bottom),
+          bottomLeft: _borderRadius.bottomLeft, bottomRight: _borderRadius.bottomRight, topLeft: _borderRadius.topLeft, topRight: _borderRadius.topRight));
     switch (_outlineType) {
       case OutlineType.none:
         return;
       case OutlineType.solid:
         break;
       case OutlineType.dotted:
-        path = dashPath(path,
-            dashArray: CircularIntervalList([strokeWidth, strokeWidth]));
+        path = dashPath(path, dashArray: CircularIntervalList([strokeWidth, strokeWidth]));
         break;
       case OutlineType.dashed:
-        path = dashPath(path,
-            dashArray: CircularIntervalList([strokeWidth * 2, strokeWidth]));
+        path = dashPath(path, dashArray: CircularIntervalList([strokeWidth * 2, strokeWidth]));
         break;
     }
     canvas.drawPath(

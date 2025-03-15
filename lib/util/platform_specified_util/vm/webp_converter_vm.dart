@@ -21,14 +21,10 @@ class WebpConverterImp extends WebpConverter {
 
 class WebpConverterImpWindows implements WebpConverterImp {
   late final DynamicLibrary nativeWebp;
-  late final int Function(Pointer<Uint8> rgb, int width, int height, int stride,
-      double qualityFactor, Pointer<Pointer<Uint8>> output) webPEncodeRGB;
-  late final int Function(Pointer<Uint8> rgb, int width, int height, int stride,
-      double qualityFactor, Pointer<Pointer<Uint8>> output) webPEncodeRGBA;
-  late final Function(Pointer<Uint8> rgb, int width, int height, int stride,
-      Pointer<Pointer<Uint8>> output) webPEncodeLosslessRGB;
-  late final Function(Pointer<Uint8> rgb, int width, int height, int stride,
-      Pointer<Pointer<Uint8>> output) webPEncodeLosslessRGBA;
+  late final int Function(Pointer<Uint8> rgb, int width, int height, int stride, double qualityFactor, Pointer<Pointer<Uint8>> output) webPEncodeRGB;
+  late final int Function(Pointer<Uint8> rgb, int width, int height, int stride, double qualityFactor, Pointer<Pointer<Uint8>> output) webPEncodeRGBA;
+  late final Function(Pointer<Uint8> rgb, int width, int height, int stride, Pointer<Pointer<Uint8>> output) webPEncodeLosslessRGB;
+  late final Function(Pointer<Uint8> rgb, int width, int height, int stride, Pointer<Pointer<Uint8>> output) webPEncodeLosslessRGBA;
 
   @override
   void init() async {
@@ -42,36 +38,14 @@ class WebpConverterImpWindows implements WebpConverterImp {
     }
     nativeWebp = DynamicLibrary.open(startPath);
 
-    webPEncodeRGB = nativeWebp.lookupFunction<
-        Uint64 Function(Pointer<Uint8>, Int32, Int32, Int32, Float,
-            Pointer<Pointer<Uint8>>),
-        int Function(
-            Pointer<Uint8> rgb,
-            int width,
-            int height,
-            int stride,
-            double qualityFactor,
-            Pointer<Pointer<Uint8>> output)>('WebPEncodeRGB');
-    webPEncodeRGBA = nativeWebp.lookupFunction<
-        Uint64 Function(Pointer<Uint8>, Int32, Int32, Int32, Float,
-            Pointer<Pointer<Uint8>>),
-        int Function(
-            Pointer<Uint8> rgb,
-            int width,
-            int height,
-            int stride,
-            double qualityFactor,
-            Pointer<Pointer<Uint8>> output)>('WebPEncodeRGBA');
-    webPEncodeLosslessRGB = nativeWebp.lookupFunction<
-        Uint64 Function(
-            Pointer<Uint8>, Int32, Int32, Int32, Pointer<Pointer<Uint8>>),
-        int Function(Pointer<Uint8> rgb, int width, int height, int stride,
-            Pointer<Pointer<Uint8>> output)>('WebPEncodeLosslessRGB');
-    webPEncodeLosslessRGBA = nativeWebp.lookupFunction<
-        Uint64 Function(
-            Pointer<Uint8>, Int32, Int32, Int32, Pointer<Pointer<Uint8>>),
-        int Function(Pointer<Uint8> rgb, int width, int height, int stride,
-            Pointer<Pointer<Uint8>> output)>('WebPEncodeLosslessRGBA');
+    webPEncodeRGB = nativeWebp.lookupFunction<Uint64 Function(Pointer<Uint8>, Int32, Int32, Int32, Float, Pointer<Pointer<Uint8>>),
+        int Function(Pointer<Uint8> rgb, int width, int height, int stride, double qualityFactor, Pointer<Pointer<Uint8>> output)>('WebPEncodeRGB');
+    webPEncodeRGBA = nativeWebp.lookupFunction<Uint64 Function(Pointer<Uint8>, Int32, Int32, Int32, Float, Pointer<Pointer<Uint8>>),
+        int Function(Pointer<Uint8> rgb, int width, int height, int stride, double qualityFactor, Pointer<Pointer<Uint8>> output)>('WebPEncodeRGBA');
+    webPEncodeLosslessRGB = nativeWebp.lookupFunction<Uint64 Function(Pointer<Uint8>, Int32, Int32, Int32, Pointer<Pointer<Uint8>>),
+        int Function(Pointer<Uint8> rgb, int width, int height, int stride, Pointer<Pointer<Uint8>> output)>('WebPEncodeLosslessRGB');
+    webPEncodeLosslessRGBA = nativeWebp.lookupFunction<Uint64 Function(Pointer<Uint8>, Int32, Int32, Int32, Pointer<Pointer<Uint8>>),
+        int Function(Pointer<Uint8> rgb, int width, int height, int stride, Pointer<Pointer<Uint8>> output)>('WebPEncodeLosslessRGBA');
   }
 
   final double quality = 90;
@@ -87,9 +61,7 @@ class WebpConverterImpWindows implements WebpConverterImp {
       if (name.endsWith(".png")) {
         decodedImage = decodeImage(input)!;
         isLossless = true;
-      } else if (name.endsWith(".jpg") |
-          name.endsWith(".jpeg") |
-          name.endsWith(".bmp")) {
+      } else if (name.endsWith(".jpg") | name.endsWith(".jpeg") | name.endsWith(".bmp")) {
         decodedImage = decodeImage(input)!;
         isLossless = false;
       } else {
@@ -108,16 +80,9 @@ class WebpConverterImpWindows implements WebpConverterImp {
             inputBuff[i] = inputBuffered[i];
           }
           if (isLossless) {
-            outputSize = webPEncodeLosslessRGB(inputBuff, decodedImage.width,
-                decodedImage.height, decodedImage.width * 3, outputBuff);
+            outputSize = webPEncodeLosslessRGB(inputBuff, decodedImage.width, decodedImage.height, decodedImage.width * 3, outputBuff);
           } else {
-            outputSize = webPEncodeRGB(
-                inputBuff,
-                decodedImage.width,
-                decodedImage.height,
-                decodedImage.width * 3,
-                quality,
-                outputBuff);
+            outputSize = webPEncodeRGB(inputBuff, decodedImage.width, decodedImage.height, decodedImage.width * 3, quality, outputBuff);
           }
         } else {
           //rgba
@@ -128,24 +93,14 @@ class WebpConverterImpWindows implements WebpConverterImp {
             inputBuff[i] = inputBuffered[i];
           }
           if (isLossless) {
-            outputSize = webPEncodeLosslessRGBA(inputBuff, decodedImage.width,
-                decodedImage.height, decodedImage.width * 4, outputBuff);
+            outputSize = webPEncodeLosslessRGBA(inputBuff, decodedImage.width, decodedImage.height, decodedImage.width * 4, outputBuff);
           } else {
-            outputSize = webPEncodeRGBA(
-                inputBuff,
-                decodedImage.width,
-                decodedImage.height,
-                decodedImage.width * 4,
-                quality,
-                outputBuff);
+            outputSize = webPEncodeRGBA(inputBuff, decodedImage.width, decodedImage.height, decodedImage.width * 4, quality, outputBuff);
           }
         }
         if (outputSize == 0) throw 'encoding error!';
         output = outputBuff.value.asTypedList(outputSize);
-        return (
-          name.replaceAll(RegExp('[.](png|jpg|jpeg|bmp)'), '.webp'),
-          output
-        );
+        return (name.replaceAll(RegExp('[.](png|jpg|jpeg|bmp)'), '.webp'), output);
       });
     } catch (e) {
       print(e);
@@ -171,9 +126,7 @@ class WebpConverterImpAndroid implements WebpConverterImp {
     Image decodedImage;
     if (name.endsWith(".png")) {
       decodedImage = decodeImage(input)!;
-    } else if (name.endsWith(".jpg") |
-        name.endsWith(".jpeg") |
-        name.endsWith(".bmp")) {
+    } else if (name.endsWith(".jpg") | name.endsWith(".jpeg") | name.endsWith(".bmp")) {
       decodedImage = decodeImage(input)!;
     } else {
       return (name, input);

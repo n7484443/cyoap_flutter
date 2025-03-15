@@ -78,10 +78,7 @@ class _ViewEditorState extends ConsumerState<ViewEditor> with TickerProviderStat
             ),
           );
         },
-        widgetLength: (ref) =>
-        ref
-            .watch(imageListStateProvider)
-            .length,
+        widgetLength: (ref) => ref.watch(imageListStateProvider).length,
         imageName: (ref, index) => ref.watch(imageListStateProvider)[index],
       ),
     ];
@@ -97,9 +94,7 @@ class _ViewEditorState extends ConsumerState<ViewEditor> with TickerProviderStat
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
               _tabController?.index = 0;
-              if (ref
-                  .watch(nodeTitleProvider)
-                  .isNotEmpty) {
+              if (ref.watch(nodeTitleProvider).isNotEmpty) {
                 ref.read(changeTabProvider.notifier).home(context);
               }
             },
@@ -113,14 +108,8 @@ class _ViewEditorState extends ConsumerState<ViewEditor> with TickerProviderStat
               height: ConstList.appBarSize,
               child: TabBar(
                 controller: _tabController,
-                labelColor: Theme
-                    .of(context)
-                    .colorScheme
-                    .secondary,
-                unselectedLabelColor: Theme
-                    .of(context)
-                    .colorScheme
-                    .primary,
+                labelColor: Theme.of(context).colorScheme.secondary,
+                unselectedLabelColor: Theme.of(context).colorScheme.primary,
                 tabs: childrenText.map((String e) => Tab(text: e)).toList(),
                 isScrollable: true,
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -151,9 +140,7 @@ class ViewContentsEditor extends ConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Visibility(
-              visible: ref
-                  .watch(nodeEditorTargetProvider)
-                  .choiceNodeMode != ChoiceNodeMode.onlyCode,
+              visible: ref.watch(nodeEditorTargetProvider).choiceNodeMode != ChoiceNodeMode.onlyCode,
               child: const ViewTextContentsEditor(),
             ),
           ),
@@ -181,9 +168,7 @@ class _ViewTitleTextFieldInputState extends ConsumerState<ViewTitleTextFieldInpu
     _controller = TextEditingController(text: node.title);
     _controller!.addListener(() {
       node.title = _controller!.text;
-      ref
-          .read(nodeTitleProvider.notifier)
-          .state = node.title;
+      ref.read(nodeTitleProvider.notifier).state = node.title;
     });
     super.initState();
   }
@@ -304,51 +289,43 @@ class _ViewTextContentsEditorState extends ConsumerState<ViewTextContentsEditor>
   @override
   Widget build(BuildContext context) {
     void colorIconDialog(Color color, bool background) {
-      ref
-          .read(textColorProvider.notifier)
-          .state = color;
+      ref.read(textColorProvider.notifier).state = color;
       showDialog(
         context: context,
-        builder: (context) =>
-            Consumer(
-              builder: (BuildContext context, WidgetRef ref, Widget? _) =>
-                  AlertDialog(
-                    backgroundColor: Theme
-                        .of(context)
-                        .canvasColor,
-                    content: SizedBox(
-                      width: ConstList.isSmallDisplay(context) ? 400 : 370,
-                      child: SingleChildScrollView(
-                        child: ViewColorPicker(
-                          text: 'Select Color',
-                          color: ref.watch(textColorProvider),
-                          onColorChanged: (color) {
-                            ref
-                                .read(textColorProvider.notifier)
-                                .state = color;
-                          },
-                          hasAlpha: true,
-                        ),
-                      ),
-                    ),
-                    actionsAlignment: MainAxisAlignment.spaceEvenly,
-                    actions: [
-                      IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.check),
-                        onPressed: () {
-                          changeColor(_quillController!, ref.read(textColorProvider), background);
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  ),
+        builder: (context) => Consumer(
+          builder: (BuildContext context, WidgetRef ref, Widget? _) => AlertDialog(
+            backgroundColor: Theme.of(context).canvasColor,
+            content: SizedBox(
+              width: ConstList.isSmallDisplay(context) ? 400 : 370,
+              child: SingleChildScrollView(
+                child: ViewColorPicker(
+                  text: 'Select Color',
+                  color: ref.watch(textColorProvider),
+                  onColorChanged: (color) {
+                    ref.read(textColorProvider.notifier).state = color;
+                  },
+                  hasAlpha: true,
+                ),
+              ),
             ),
+            actionsAlignment: MainAxisAlignment.spaceEvenly,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.check),
+                onPressed: () {
+                  changeColor(_quillController!, ref.read(textColorProvider), background);
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        ),
       );
     }
 
@@ -430,7 +407,8 @@ class _ViewTextContentsEditorState extends ConsumerState<ViewTextContentsEditor>
 class ImageSourceDialog extends ConsumerStatefulWidget {
   final String name;
 
-  const ImageSourceDialog(this.name, {
+  const ImageSourceDialog(
+    this.name, {
     super.key,
   });
 
@@ -490,12 +468,8 @@ class ViewNodeOptionEditor extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var design = ref.watch(nodeEditorDesignProvider);
-    var nodeMode = ref
-        .watch(nodeEditorTargetProvider)
-        .choiceNodeMode;
-    var nodeOption = ref
-        .watch(nodeEditorTargetProvider)
-        .choiceNodeOption;
+    var nodeMode = ref.watch(nodeEditorTargetProvider).choiceNodeMode;
+    var nodeOption = ref.watch(nodeEditorTargetProvider).choiceNodeOption;
     var left = Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -503,11 +477,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
           children: [
             DropdownButtonFormField<String>(
               decoration: InputDecoration(labelText: 'preset_setting'.i18n),
-              items: ref
-                  .watch(choiceNodePresetListProvider)
-                  .keys
-                  .map<DropdownMenuItem<String>>((name) => DropdownMenuItem(value: name, child: Text(name)))
-                  .toList(),
+              items: ref.watch(choiceNodePresetListProvider).keys.map<DropdownMenuItem<String>>((name) => DropdownMenuItem(value: name, child: Text(name))).toList(),
               onChanged: (String? t) {
                 if (t != null) {
                   ref.read(nodeEditorTargetProvider.notifier).setChoiceNodeOption(nodeOption.copyWith(presetName: t));
@@ -529,9 +499,7 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                   ref.read(nodeEditorTargetProvider.notifier).setChoiceMode(value);
                 }
               },
-              value: ref
-                  .watch(nodeEditorTargetProvider)
-                  .choiceNodeMode,
+              value: ref.watch(nodeEditorTargetProvider).choiceNodeMode,
             ),
           ],
         ),
@@ -551,28 +519,28 @@ class ViewNodeOptionEditor extends ConsumerWidget {
                 ),
                 if (nodeMode != ChoiceNodeMode.unSelectableMode && nodeMode != ChoiceNodeMode.onlyCode)
                   ViewSwitchLabel(
-                        () => ref.read(nodeEditorTargetProvider.notifier).setChoiceNodeOption(nodeOption.copyWith(hideAsResult: !design.hideAsResult, showAsResult: false)),
+                    () => ref.read(nodeEditorTargetProvider.notifier).setChoiceNodeOption(nodeOption.copyWith(hideAsResult: !design.hideAsResult, showAsResult: false)),
                     design.hideAsResult,
                     label: 'hide_result'.i18n,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   ),
                 if (nodeMode == ChoiceNodeMode.unSelectableMode)
                   ViewSwitchLabel(
-                        () => ref.read(nodeEditorTargetProvider.notifier).setChoiceNodeOption(nodeOption.copyWith(showAsResult: !design.showAsResult, hideAsResult: false)),
+                    () => ref.read(nodeEditorTargetProvider.notifier).setChoiceNodeOption(nodeOption.copyWith(showAsResult: !design.showAsResult, hideAsResult: false)),
                     design.showAsResult,
                     label: 'show_result'.i18n,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   ),
                 if (nodeMode == ChoiceNodeMode.unSelectableMode)
                   ViewSwitchLabel(
-                        () => ref.read(nodeEditorTargetProvider.notifier).setChoiceNodeOption(nodeOption.copyWith(executeWhenVisible: design.executeWhenVisible)),
+                    () => ref.read(nodeEditorTargetProvider.notifier).setChoiceNodeOption(nodeOption.copyWith(executeWhenVisible: design.executeWhenVisible)),
                     design.executeWhenVisible,
                     label: 'execute_when_visible'.i18n,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   ),
                 if (nodeMode == ChoiceNodeMode.multiSelect)
                   ViewSwitchLabel(
-                        () => ref.read(nodeEditorTargetProvider.notifier).setChoiceNodeOption(nodeOption.copyWith(showAsSlider: !design.showAsSlider)),
+                    () => ref.read(nodeEditorTargetProvider.notifier).setChoiceNodeOption(nodeOption.copyWith(showAsSlider: !design.showAsSlider)),
                     design.showAsSlider,
                     label: 'slider_mode'.i18n,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -621,10 +589,7 @@ class _MaximumStateEditorState extends ConsumerState<MaximumStateEditor> {
   void initState() {
     super.initState();
 
-    _controller = TextEditingController(text: ref
-        .read(nodeEditorTargetProvider)
-        .maximumStatus
-        .toString());
+    _controller = TextEditingController(text: ref.read(nodeEditorTargetProvider).maximumStatus.toString());
     _controller.addListener(() {
       ref.read(nodeEditorTargetProvider.notifier).setState((node) {
         node.maximumStatus = int.tryParse(_controller.text) ?? 0;
@@ -642,18 +607,13 @@ class _MaximumStateEditorState extends ConsumerState<MaximumStateEditor> {
   @override
   Widget build(BuildContext context) {
     var title = ref.watch(nodeTitleProvider);
-    var nodeMode = ref
-        .watch(nodeEditorTargetProvider)
-        .choiceNodeMode;
+    var nodeMode = ref.watch(nodeEditorTargetProvider).choiceNodeMode;
     return Visibility(
       visible: nodeMode == ChoiceNodeMode.multiSelect || nodeMode == ChoiceNodeMode.randomMode,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text('${'variable_name'.i18n} \n${title.replaceAll(" ", "")}:${nodeMode == ChoiceNodeMode.multiSelect ? 'multi' : 'random'}', style: Theme
-              .of(context)
-              .textTheme
-              .labelLarge),
+          Text('${'variable_name'.i18n} \n${title.replaceAll(" ", "")}:${nodeMode == ChoiceNodeMode.multiSelect ? 'multi' : 'random'}', style: Theme.of(context).textTheme.labelLarge),
           const SizedBox(width: 40),
           SizedBox(
             width: 120,

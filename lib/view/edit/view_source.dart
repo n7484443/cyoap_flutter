@@ -98,17 +98,11 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
                 Expanded(
                   child: CustomDropdownButton<ImageAttribute>(
                     label: 'background_image_batch_option'.i18n,
-                    value: ref
-                        .watch(platformDesignSettingProvider)
-                        .backgroundAttribute,
-                    items: ImageAttribute.values
-                        .map((e) =>
-                            DropdownMenuItem(value: e, child: Text(e.name)))
-                        .toList(),
+                    value: ref.watch(platformDesignSettingProvider).backgroundAttribute,
+                    items: ImageAttribute.values.map((e) => DropdownMenuItem(value: e, child: Text(e.name))).toList(),
                     onChanged: (ImageAttribute? t) {
                       if (t != null) {
-                        ref.read(platformDesignSettingProvider.notifier).state =
-                            designSetting.copyWith(backgroundAttribute: t);
+                        ref.read(platformDesignSettingProvider.notifier).state = designSetting.copyWith(backgroundAttribute: t);
                       }
                     },
                   ),
@@ -123,8 +117,7 @@ class _ViewSourceState extends ConsumerState<ViewSource> {
                 widgetLength: (ref) => ref.watch(vmSourceProvider).length,
                 imageName: (ref, index) => ref.read(vmSourceProvider)[index],
                 isRemovable: ref.watch(deleteModeProvider),
-                removeFunction: (ref, index) =>
-                    ref.read(vmSourceProvider.notifier).checkRemove(index),
+                removeFunction: (ref, index) => ref.read(vmSourceProvider.notifier).checkRemove(index),
               ),
             ),
           ]),
@@ -154,8 +147,7 @@ class _ViewSourceItemState extends ConsumerState<ViewSourceItem> {
     var name = ref.read(vmSourceProvider)[widget.index];
     _textEditingController = TextEditingController();
     if (getPlatformFileSystem.hasSource(name)) {
-      _textEditingController?.text =
-          getPlatformFileSystem.getSource(name) ?? '';
+      _textEditingController?.text = getPlatformFileSystem.getSource(name) ?? '';
     }
     _textEditingController?.addListener(() {
       getPlatformFileSystem.addSource(name, _textEditingController?.text ?? '');
@@ -178,15 +170,10 @@ class _ViewSourceItemState extends ConsumerState<ViewSourceItem> {
       onDoubleTap: () {
         if (ref.read(backgroundCurrentStateProvider) == widget.index) {
           ref.read(backgroundCurrentStateProvider.notifier).state = -1;
-          ref.read(platformDesignSettingProvider.notifier).state =
-              designSetting.copyWith(backgroundImage: null);
+          ref.read(platformDesignSettingProvider.notifier).state = designSetting.copyWith(backgroundImage: null);
         } else {
-          ref.read(backgroundCurrentStateProvider.notifier).state =
-              widget.index;
-          ref.read(platformDesignSettingProvider.notifier).state =
-              designSetting.copyWith(
-                  backgroundImage:
-                      ref.read(imageListStateProvider)[widget.index]);
+          ref.read(backgroundCurrentStateProvider.notifier).state = widget.index;
+          ref.read(platformDesignSettingProvider.notifier).state = designSetting.copyWith(backgroundImage: ref.read(imageListStateProvider)[widget.index]);
         }
       },
       child: Card(
@@ -199,9 +186,7 @@ class _ViewSourceItemState extends ConsumerState<ViewSourceItem> {
                 borderRadius: BorderRadius.all(Radius.circular(4)),
               )
             : null,
-        color: deleteList.contains(name)
-            ? Theme.of(context).colorScheme.secondaryContainer
-            : null,
+        color: deleteList.contains(name) ? Theme.of(context).colorScheme.secondaryContainer : null,
         child: Column(
           children: [
             Expanded(
@@ -220,8 +205,7 @@ class _ViewSourceItemState extends ConsumerState<ViewSourceItem> {
                 child: TextField(
                   textAlign: TextAlign.start,
                   decoration: InputDecoration(
-                    contentPadding:
-                        const EdgeInsets.fromLTRB(2.0, 1.0, 2.0, 11.0),
+                    contentPadding: const EdgeInsets.fromLTRB(2.0, 1.0, 2.0, 11.0),
                     hintText: 'source_hint'.i18n,
                     alignLabelWithHint: true,
                     border: InputBorder.none,

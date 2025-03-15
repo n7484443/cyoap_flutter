@@ -6,8 +6,7 @@ class HorizontalScroll extends StatefulWidget {
   final int itemCount;
   final Widget? Function(BuildContext context, int index) itemBuilder;
 
-  const HorizontalScroll(
-      {required this.itemCount, required this.itemBuilder, super.key});
+  const HorizontalScroll({required this.itemCount, required this.itemBuilder, super.key});
 
   @override
   State<HorizontalScroll> createState() => _HorizontalScrollState();
@@ -51,12 +50,10 @@ class HorizontalScrollSingleChild extends StatefulWidget {
   const HorizontalScrollSingleChild({required this.child, super.key});
 
   @override
-  State<HorizontalScrollSingleChild> createState() =>
-      _HorizontalScrollSingleChildState();
+  State<HorizontalScrollSingleChild> createState() => _HorizontalScrollSingleChildState();
 }
 
-class _HorizontalScrollSingleChildState
-    extends State<HorizontalScrollSingleChild> {
+class _HorizontalScrollSingleChildState extends State<HorizontalScrollSingleChild> {
   final ScrollController _scrollController = ScrollController();
 
   @override

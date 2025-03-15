@@ -63,8 +63,7 @@ class DevicePreference {
       if (!await directory.exists()) {
         await directory.create(recursive: true);
       }
-      data["cyoap_frequent_path"] =
-          directory.listSync().map((e) => e.path).toList();
+      data["cyoap_frequent_path"] = directory.listSync().map((e) => e.path).toList();
     }
   }
 

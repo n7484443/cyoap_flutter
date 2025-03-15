@@ -200,10 +200,8 @@ extension Localization on String {
 
           'unsaved': 'There is something unsaved. Do you want to save it?',
           'warning': 'Warning',
-          'warning_message_project_delete':
-              'This is a complete deletion of the selected project and cannot be recovered. Are you sure you want to delete it?',
-          'warning_message_line_delete':
-              'This is a complete deletion of the selected line and cannot be recovered. Are you sure you want to delete it?',
+          'warning_message_project_delete': 'This is a complete deletion of the selected project and cannot be recovered. Are you sure you want to delete it?',
+          'warning_message_line_delete': 'This is a complete deletion of the selected line and cannot be recovered. Are you sure you want to delete it?',
 
           'add_image': 'Upload image',
           'add_image_description': 'Drop image here or',
@@ -222,14 +220,13 @@ extension Localization on String {
           'crop': 'Crop',
           'code_hint_execute_condition': 'Execution Conditions',
           'code_hint_fin': 'Executable code when the line ends',
-          'code_hint_visible_condition':'Visible Conditions',
+          'code_hint_visible_condition': 'Visible Conditions',
           'code_hint_visible_condition_sub': 'Visible when true',
           'code_hint_execute': 'Executable code on selection',
           'from_simple_to_code_button': 'Change to code editor (this action on this node cannot be undone)',
           'space_hide': 'Takes up space when hidden',
           'sort': 'Sort',
-          'sort_error':
-              'The number of {\'s and }\'s in the code are not equal.',
+          'sort_error': 'The number of {\'s and }\'s in the code are not equal.',
           'auto_complete': 'Auto Complete',
           'hide_result': 'Hide in viewer',
           'show_result': 'Show in viewer',
@@ -288,10 +285,8 @@ extension Localization on String {
 
           'unsaved': '저장되지 않은 내용이 있습니다. 저장하시겠습니까?',
           'warning': '경고',
-          'warning_message_project_delete':
-              '선택된 프로젝트를 완전히 삭제하며, 복구할 수 없습니다. 삭제하시겠습니까?',
-          'warning_message_line_delete':
-              '선택된 라인을 완전히 삭제하며, 복구할 수 없습니다. 삭제하시겠습니까?',
+          'warning_message_project_delete': '선택된 프로젝트를 완전히 삭제하며, 복구할 수 없습니다. 삭제하시겠습니까?',
+          'warning_message_line_delete': '선택된 라인을 완전히 삭제하며, 복구할 수 없습니다. 삭제하시겠습니까?',
 
           'add_image': '이미지 추가',
           'add_image_description': '이미지를 추가하려면 드래그하세요. 혹은, ',
@@ -353,8 +348,7 @@ extension Localization on String {
           'outline_shape': 'Outline shape',
           'outline_distance_round_nonactive': 'Outline distance(No-select)',
           'outline_distance_round_active': 'Outline distance(Select)',
-          'outline_distance_round_sub':
-              'Edge: Positive(Margin) / Negative(Padding)',
+          'outline_distance_round_sub': 'Edge: Positive(Margin) / Negative(Padding)',
           'outline_width': 'Outline width',
           'slider_thumb_shape': 'Slider thumb shape',
           'slider_thumb_color': 'Slider thumb color',
@@ -439,12 +433,9 @@ extension Localization on String {
         //error message
         "en": {
           'no_file_selected': 'No file selected.\n Please select a file.',
-          'failed_load_project_cyoap_error':
-              'Failed to open project.\nYou may not have selected a project.\nPlease make sure you have added and selected the folder or file.',
-          'failed_load_project_version':
-              'Failed to open project.\nCheck the version.\nfile version : %i\nCYOAP version : %i',
-          'failed_load_project_non_exist':
-              'Failed to open project.\nFile or directory does not exist.',
+          'failed_load_project_cyoap_error': 'Failed to open project.\nYou may not have selected a project.\nPlease make sure you have added and selected the folder or file.',
+          'failed_load_project_version': 'Failed to open project.\nCheck the version.\nfile version : %i\nCYOAP version : %i',
+          'failed_load_project_non_exist': 'Failed to open project.\nFile or directory does not exist.',
           'cyoap_error': 'Error due to cyoap. Please report this error.',
           'save_web': 'Start downloading file. Wait a moment.',
           'save_non_web': 'Saved file/directory to %s.',
@@ -452,12 +443,9 @@ extension Localization on String {
         },
         "ko": {
           'no_file_selected': '선택된 파일이 없습니다.\n파일을 선택해주세요.',
-          'failed_load_project_cyoap_error':
-              '프로젝트를 여는데 실패하였습니다.\n프로젝트를 선택하지 않았을 수 있습니다.\n폴더 혹은 파일을 추가하여 선택하였는지 확인해주세요.',
-          'failed_load_project_version':
-              '프로젝트를 여는데 실패하였습니다.\n버전을 확인해주세요.\n파일 버전 : %i\nCYOAP 버전 : %i',
-          'failed_load_project_non_exist':
-              '프로젝트를 여는데 실패하였습니다.\n 파일 혹은 디렉토리가 없습니다.',
+          'failed_load_project_cyoap_error': '프로젝트를 여는데 실패하였습니다.\n프로젝트를 선택하지 않았을 수 있습니다.\n폴더 혹은 파일을 추가하여 선택하였는지 확인해주세요.',
+          'failed_load_project_version': '프로젝트를 여는데 실패하였습니다.\n버전을 확인해주세요.\n파일 버전 : %i\nCYOAP 버전 : %i',
+          'failed_load_project_non_exist': '프로젝트를 여는데 실패하였습니다.\n 파일 혹은 디렉토리가 없습니다.',
           'cyoap_error': 'CYOAP 에러. 이 에러를 보고해주세요.',
           'save_web': '다운로드를 시작하였습니다. 조금만 기다리세요.',
           'save_non_web': '%s 로 파일/폴더를 저장하였습니다.',

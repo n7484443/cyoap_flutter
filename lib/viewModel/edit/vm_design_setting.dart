@@ -6,20 +6,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../model/image_db.dart';
 
-final platformDesignSettingProvider =
-    StateProvider.autoDispose<PlatformDesignSetting>((ref) {
+final platformDesignSettingProvider = StateProvider.autoDispose<PlatformDesignSetting>((ref) {
   ref.listenSelf((PlatformDesignSetting? previous, PlatformDesignSetting next) {
     if (previous == null || previous == next) return;
-    ref
-        .read(currentProjectChangedProvider.notifier)
-        .changed(needUpdateCode: false);
+    ref.read(currentProjectChangedProvider.notifier).changed(needUpdateCode: false);
     getPlatform.designSetting = next;
   });
   return getPlatform.designSetting;
 });
 
-final platformDesignSettingImageDecorationProvider =
-    Provider.autoDispose<DecorationImage?>((ref) {
+final platformDesignSettingImageDecorationProvider = Provider.autoDispose<DecorationImage?>((ref) {
   var designSetting = ref.watch(platformDesignSettingProvider);
   if (designSetting.backgroundImage == null) {
     return null;
@@ -46,8 +42,7 @@ final platformDesignSettingImageDecorationProvider =
       break;
   }
   return DecorationImage(
-    image:
-        Image.memory(ImageDB().getImage(designSetting.backgroundImage!)!).image,
+    image: Image.memory(ImageDB().getImage(designSetting.backgroundImage!)!).image,
     fit: backgroundBoxFit,
     repeat: backgroundRepeat,
     filterQuality: FilterQuality.high,

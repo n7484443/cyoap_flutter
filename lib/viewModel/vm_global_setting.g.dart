@@ -13,8 +13,7 @@ String _$maximumSizeHash() => r'90d3b0ce4f536dc79a8c76679c0895d951e25e00';
 final maximumSizeProvider = AutoDisposeProvider<int>.internal(
   maximumSize,
   name: r'maximumSizeProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$maximumSizeHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$maximumSizeHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -26,12 +25,10 @@ String _$saveAsWebpHash() => r'1b332887de99567f274110af5762bd40160cc233';
 
 /// See also [SaveAsWebp].
 @ProviderFor(SaveAsWebp)
-final saveAsWebpProvider =
-    AutoDisposeNotifierProvider<SaveAsWebp, bool>.internal(
+final saveAsWebpProvider = AutoDisposeNotifierProvider<SaveAsWebp, bool>.internal(
   SaveAsWebp.new,
   name: r'saveAsWebpProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$saveAsWebpHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$saveAsWebpHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -44,25 +41,20 @@ String _$forceWideHash() => r'7a68ab82f7e48f64f3148ee8c688b622df138ace';
 final forceWideProvider = AutoDisposeNotifierProvider<ForceWide, bool>.internal(
   ForceWide.new,
   name: r'forceWideProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$forceWideHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$forceWideHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
 typedef _$ForceWide = AutoDisposeNotifier<bool>;
-String _$clipboardMaximumCapacityHash() =>
-    r'6ee7ae5962ea9b16cfd357f2555f19a976b513e0';
+String _$clipboardMaximumCapacityHash() => r'6ee7ae5962ea9b16cfd357f2555f19a976b513e0';
 
 /// See also [ClipboardMaximumCapacity].
 @ProviderFor(ClipboardMaximumCapacity)
-final clipboardMaximumCapacityProvider =
-    AutoDisposeNotifierProvider<ClipboardMaximumCapacity, int>.internal(
+final clipboardMaximumCapacityProvider = AutoDisposeNotifierProvider<ClipboardMaximumCapacity, int>.internal(
   ClipboardMaximumCapacity.new,
   name: r'clipboardMaximumCapacityProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$clipboardMaximumCapacityHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$clipboardMaximumCapacityHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -72,13 +64,10 @@ String _$backupFrequencyHash() => r'a1e9d4f9e7735e38a399c8e4ea5f10bb030bdb2a';
 
 /// See also [BackupFrequency].
 @ProviderFor(BackupFrequency)
-final backupFrequencyProvider =
-    AutoDisposeNotifierProvider<BackupFrequency, int>.internal(
+final backupFrequencyProvider = AutoDisposeNotifierProvider<BackupFrequency, int>.internal(
   BackupFrequency.new,
   name: r'backupFrequencyProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$backupFrequencyHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$backupFrequencyHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -88,12 +77,10 @@ String _$backupTimerHash() => r'bd72bb231e6fd12e527e16496d60405089d4c063';
 
 /// See also [BackupTimer].
 @ProviderFor(BackupTimer)
-final backupTimerProvider =
-    AutoDisposeNotifierProvider<BackupTimer, Timer?>.internal(
+final backupTimerProvider = AutoDisposeNotifierProvider<BackupTimer, Timer?>.internal(
   BackupTimer.new,
   name: r'backupTimerProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$backupTimerHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$backupTimerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

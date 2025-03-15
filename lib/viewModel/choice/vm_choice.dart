@@ -21,8 +21,7 @@ import '../edit/preset/vm_preset.dart';
 part 'vm_choice.g.dart';
 
 const double nodeBaseHeight = 200;
-final choiceStatusProvider =
-    ChangeNotifierProvider.family.autoDispose<ChoiceStatus, Pos>((ref, pos) {
+final choiceStatusProvider = ChangeNotifierProvider.family.autoDispose<ChoiceStatus, Pos>((ref, pos) {
   return ChoiceStatus(ref, pos);
 });
 
@@ -47,12 +46,8 @@ class ChoiceStatus extends ChangeNotifier {
         ..choiceNodeMode = ChoiceNodeMode.multiSelect
         ..maximumStatus = 4;
 
-      choiceNode.choiceNodeOption = choiceNode.choiceNodeOption.copyWith(
-          presetName: ref.read(currentPresetNameProvider)!,
-          showAsSlider: true);
-      choiceNode.select = ref.read(choiceNodePresetTestSelectProvider)
-          ? choiceNode.maximumStatus ~/ 2
-          : 0;
+      choiceNode.choiceNodeOption = choiceNode.choiceNodeOption.copyWith(presetName: ref.read(currentPresetNameProvider)!, showAsSlider: true);
+      choiceNode.select = ref.read(choiceNodePresetTestSelectProvider) ? choiceNode.maximumStatus ~/ 2 : 0;
       node = choiceNode;
     } else if (pos.first < 0) {
       node = ref.read(choiceNodeClipboardStatusProvider).getIndexPos(pos);
@@ -180,6 +175,5 @@ bool isEditable(Ref ref, {required Pos pos}) {
   if (pos.length == 2) {
     return isPlatformEditable && ref.watch(isEditableStateProvider(pos));
   }
-  return isPlatformEditable &&
-      ref.watch(isEditableStateProvider(Pos(data: [pos.data[0], pos.data[1]])));
+  return isPlatformEditable && ref.watch(isEditableStateProvider(Pos(data: [pos.data[0], pos.data[1]])));
 }
