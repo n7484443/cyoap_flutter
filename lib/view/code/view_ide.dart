@@ -244,6 +244,8 @@ class _SimpleCodeEditorState extends ConsumerState<SimpleCodeEditor> {
                   content: 'from_simple_to_code_button'.i18n,
                   acceptFunction: () {
                     print("convert");
+
+                    print("complete convert");
                   },
                 );
               },
@@ -319,11 +321,13 @@ class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
         ref.read(simpleCodesIdeProvider(widget.codeActivationType).notifier).addSimpleCodeBlock(getDefaultValue());
       },
     );
-    var children = ref.watch(simpleCodesIdeProvider(widget.codeActivationType))?.code.indexed.map((e) {
-          var (index, data) = e;
-          return buildFromSimpleCodeBlock(data, index);
-        }).toList() ??
-        [];
+    List<Widget> children = [];
+    var codeIdeProvider = ref.watch(simpleCodesIdeProvider(widget.codeActivationType));
+    if(codeIdeProvider != null){
+      for(int index = 0; index < codeIdeProvider.code.length; index++){
+        children.add(SimpleCodeBlockEditorUnit(codeActivationType: widget.codeActivationType, index: index));
+      }
+    }
     children.add(addButton);
     return Column(
       children: [
@@ -356,7 +360,65 @@ class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
     );
   }
 
-  Widget buildFromSimpleCodeBlock(SimpleCodeBlock simpleCodeBlock, int index) {
+  SimpleCodeBlock getDefaultValue() {
+    if (widget.codeActivationType == CodeActivationType.execute) {
+      return const SimpleCodeBlock.action(type: SimpleActionType.nothing);
+    }
+    return const SimpleCodeBlock.condition(type: SimpleConditionType.alwaysOn);
+  }
+}
+
+class SimpleCodeBlockEditorUnit extends ConsumerStatefulWidget {
+  final int index;
+  final CodeActivationType codeActivationType;
+  const SimpleCodeBlockEditorUnit({required this.codeActivationType, required this.index, super.key});
+
+  @override
+  ConsumerState createState() => _SimpleCodeBlockEditorUnitState();
+}
+
+class _SimpleCodeBlockEditorUnitState extends ConsumerState<SimpleCodeBlockEditorUnit> {
+  final List<TextEditingController> _currentController = [];
+  int? arg;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void setController(SimpleCodeBlock simpleCodeBlock){
+    arg = simpleCodeBlock.argumentLength;
+    for(int i = 0; i < simpleCodeBlock.argumentLength; i++){
+      while(_currentController.length <= i){
+        _currentController.add(TextEditingController());
+        _currentController[i].text = simpleCodeBlock.arguments[i].data;
+        _currentController[i].addListener(() {
+          EasyDebounce.debounce('SimpleCodeBlockArg ${widget.index} $i', ConstList.debounceDuration, (){
+            var simpleCodeBlock = ref.read(simpleCodesIdeProvider(widget.codeActivationType))!.code[widget.index];
+            var currentArgument = List<ValueType>.from(simpleCodeBlock.arguments);
+            currentArgument[i] = getValueTypeFromDynamicInput(_currentController[i].text);
+            var codeBlock = simpleCodeBlock.copyWith(arguments: currentArgument);
+            ref.read(simpleCodesIdeProvider(widget.codeActivationType).notifier).setSimpleCodeBlock(codeBlock, widget.index);
+          });
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    for(int i = 0; i < (arg ?? 0); i++){
+      EasyDebounce.cancel('SimpleCodeBlockArg ${widget.index} $i');
+      _currentController[i].dispose();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var simpleCodeBlock = ref.watch(simpleCodesIdeProvider(widget.codeActivationType))!.code[widget.index];
+    setController(simpleCodeBlock);
+
     Widget dropdown;
     if (simpleCodeBlock is Action) {
       dropdown = CustomDropdownButton<SimpleActionType>(
@@ -364,15 +426,15 @@ class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
         items: SimpleActionType.values
             .map(
               (e) => DropdownMenuItem(
-                value: e,
-                child: Text(e.toString()),
-              ),
-            )
+            value: e,
+            child: Text(e.toString()),
+          ),
+        )
             .toList(),
         onChanged: (SimpleActionType? type) {
           if (type == null) return;
           simpleCodeBlock = (simpleCodeBlock as Action).copyWith(type: type);
-          ref.read(simpleCodesIdeProvider(widget.codeActivationType).notifier).setSimpleCodeBlock(simpleCodeBlock, index);
+          ref.read(simpleCodesIdeProvider(widget.codeActivationType).notifier).setSimpleCodeBlock(simpleCodeBlock, widget.index);
         },
         forceWidth: 230,
         useCard: false,
@@ -384,21 +446,21 @@ class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
         items: SimpleConditionType.values
             .map(
               (e) => DropdownMenuItem(
-                value: e,
-                child: Text(e.toString()),
-              ),
-            )
+            value: e,
+            child: Text(e.toString()),
+          ),
+        )
             .toList(),
         onChanged: (SimpleConditionType? type) {
           if (type == null) return;
           simpleCodeBlock = (simpleCodeBlock as Condition).copyWith(type: type);
-          ref.read(simpleCodesIdeProvider(widget.codeActivationType).notifier).setSimpleCodeBlock(simpleCodeBlock, index);
+          ref.read(simpleCodesIdeProvider(widget.codeActivationType).notifier).setSimpleCodeBlock(simpleCodeBlock, widget.index);
         },
         forceWidth: 230,
         useCard: false,
       );
     }
-
+    var variableList = VariableDataBase().stackFrames.last.getVariableMap();
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
@@ -408,70 +470,21 @@ class _SimpleCodeBlockEditorState extends ConsumerState<SimpleCodeBlockEditor> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: List.generate(simpleCodeBlock.argumentLength, (index) {
-                return Expanded(child: VariableSearchField(index: index, simpleCodeBlock: simpleCodeBlock, codeActivationType: widget.codeActivationType));
+                return Expanded(child: SearchField<String>(
+                  controller: _currentController[index],
+                  suggestions: variableList.keys.map((name) => SearchFieldListItem<String>(name)).toList(),
+                  onSuggestionTap: (SearchFieldListItem<String> suggestion) {
+                    _currentController[index].text = suggestion.searchKey;
+                    return suggestion.searchKey;
+                  },
+                  scrollController: ScrollController(),
+                  scrollbarDecoration: ScrollbarDecoration(),
+                ));
               }),
             ),
           ],
         ),
       ),
-    );
-  }
-
-  SimpleCodeBlock getDefaultValue() {
-    if (widget.codeActivationType == CodeActivationType.execute) {
-      return const SimpleCodeBlock.action(type: SimpleActionType.nothing);
-    }
-    return const SimpleCodeBlock.condition(type: SimpleConditionType.alwaysOn);
-  }
-}
-
-class VariableSearchField extends ConsumerStatefulWidget {
-  final int index;
-  final SimpleCodeBlock simpleCodeBlock;
-  final CodeActivationType codeActivationType;
-
-  const VariableSearchField({required this.index, required this.simpleCodeBlock, required this.codeActivationType, super.key});
-
-  @override
-  ConsumerState createState() => _VariableSearchFieldState();
-}
-
-class _VariableSearchFieldState extends ConsumerState<VariableSearchField> {
-  final TextEditingController currentController = TextEditingController();
-  final ScrollController _searchScrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-    while (widget.simpleCodeBlock.arguments.length <= widget.index) {
-      widget.simpleCodeBlock.arguments.add(const ValueType(data: "", type: DataType.strings));
-    }
-    currentController.text = widget.simpleCodeBlock.arguments[widget.index].data;
-    currentController.addListener(() {
-      print(widget.simpleCodeBlock.arguments);
-      widget.simpleCodeBlock.arguments[widget.index] = widget.simpleCodeBlock.arguments[widget.index].copyWith(data: currentController.text);
-      ref.read(simpleCodesIdeProvider(widget.codeActivationType).notifier).setSimpleCodeBlock(widget.simpleCodeBlock, widget.index);
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    currentController.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var variableList = VariableDataBase().stackFrames.last.getVariableMap();
-    return SearchField<String>(
-      controller: currentController,
-      suggestions: variableList.keys.map((name) => SearchFieldListItem<String>(name)).toList(),
-      onSuggestionTap: (SearchFieldListItem<String> suggestion) {
-        currentController.text = suggestion.searchKey;
-        return suggestion.searchKey;
-      },
-      scrollController: _searchScrollController,
-      scrollbarDecoration: ScrollbarDecoration(),
     );
   }
 }
