@@ -64,8 +64,7 @@ class IdeControllerFamily extends Family<QuillController> {
   static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies => _allTransitiveDependencies;
 
   @override
   String? get name => r'ideControllerProvider';
@@ -83,13 +82,9 @@ class IdeControllerProvider extends AutoDisposeProvider<QuillController> {
           ),
           from: ideControllerProvider,
           name: r'ideControllerProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$ideControllerHash,
+          debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$ideControllerHash,
           dependencies: IdeControllerFamily._dependencies,
-          allTransitiveDependencies:
-              IdeControllerFamily._allTransitiveDependencies,
+          allTransitiveDependencies: IdeControllerFamily._allTransitiveDependencies,
           type: type,
         );
 
@@ -149,8 +144,7 @@ mixin IdeControllerRef on AutoDisposeProviderRef<QuillController> {
   ChoiceType get type;
 }
 
-class _IdeControllerProviderElement
-    extends AutoDisposeProviderElement<QuillController> with IdeControllerRef {
+class _IdeControllerProviderElement extends AutoDisposeProviderElement<QuillController> with IdeControllerRef {
   _IdeControllerProviderElement(super.provider);
 
   @override
@@ -159,8 +153,7 @@ class _IdeControllerProviderElement
 
 String _$simpleCodesIdeHash() => r'4a730c1dec49b57caa9f943404b6fd96d338c691';
 
-abstract class _$SimpleCodesIde
-    extends BuildlessAutoDisposeNotifier<SimpleCodes?> {
+abstract class _$SimpleCodesIde extends BuildlessAutoDisposeNotifier<SimpleCodes?> {
   late final CodeActivationType type;
 
   SimpleCodes? build(
@@ -203,16 +196,14 @@ class SimpleCodesIdeFamily extends Family<SimpleCodes?> {
   static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies => _allTransitiveDependencies;
 
   @override
   String? get name => r'simpleCodesIdeProvider';
 }
 
 /// See also [SimpleCodesIde].
-class SimpleCodesIdeProvider
-    extends AutoDisposeNotifierProviderImpl<SimpleCodesIde, SimpleCodes?> {
+class SimpleCodesIdeProvider extends AutoDisposeNotifierProviderImpl<SimpleCodesIde, SimpleCodes?> {
   /// See also [SimpleCodesIde].
   SimpleCodesIdeProvider(
     CodeActivationType type,
@@ -220,13 +211,9 @@ class SimpleCodesIdeProvider
           () => SimpleCodesIde()..type = type,
           from: simpleCodesIdeProvider,
           name: r'simpleCodesIdeProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$simpleCodesIdeHash,
+          debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$simpleCodesIdeHash,
           dependencies: SimpleCodesIdeFamily._dependencies,
-          allTransitiveDependencies:
-              SimpleCodesIdeFamily._allTransitiveDependencies,
+          allTransitiveDependencies: SimpleCodesIdeFamily._allTransitiveDependencies,
           type: type,
         );
 
@@ -268,8 +255,7 @@ class SimpleCodesIdeProvider
   }
 
   @override
-  AutoDisposeNotifierProviderElement<SimpleCodesIde, SimpleCodes?>
-      createElement() {
+  AutoDisposeNotifierProviderElement<SimpleCodesIde, SimpleCodes?> createElement() {
     return _SimpleCodesIdeProviderElement(this);
   }
 
@@ -294,9 +280,7 @@ mixin SimpleCodesIdeRef on AutoDisposeNotifierProviderRef<SimpleCodes?> {
   CodeActivationType get type;
 }
 
-class _SimpleCodesIdeProviderElement
-    extends AutoDisposeNotifierProviderElement<SimpleCodesIde, SimpleCodes?>
-    with SimpleCodesIdeRef {
+class _SimpleCodesIdeProviderElement extends AutoDisposeNotifierProviderElement<SimpleCodesIde, SimpleCodes?> with SimpleCodesIdeRef {
   _SimpleCodesIdeProviderElement(super.provider);
 
   @override

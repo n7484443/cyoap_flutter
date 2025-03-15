@@ -64,16 +64,14 @@ class LineDesignPresetFamily extends Family<ChoiceLineDesignPreset> {
   static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies => _allTransitiveDependencies;
 
   @override
   String? get name => r'lineDesignPresetProvider';
 }
 
 /// See also [lineDesignPreset].
-class LineDesignPresetProvider
-    extends AutoDisposeProvider<ChoiceLineDesignPreset> {
+class LineDesignPresetProvider extends AutoDisposeProvider<ChoiceLineDesignPreset> {
   /// See also [lineDesignPreset].
   LineDesignPresetProvider({
     required Pos pos,
@@ -84,13 +82,9 @@ class LineDesignPresetProvider
           ),
           from: lineDesignPresetProvider,
           name: r'lineDesignPresetProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$lineDesignPresetHash,
+          debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$lineDesignPresetHash,
           dependencies: LineDesignPresetFamily._dependencies,
-          allTransitiveDependencies:
-              LineDesignPresetFamily._allTransitiveDependencies,
+          allTransitiveDependencies: LineDesignPresetFamily._allTransitiveDependencies,
           pos: pos,
         );
 
@@ -150,9 +144,7 @@ mixin LineDesignPresetRef on AutoDisposeProviderRef<ChoiceLineDesignPreset> {
   Pos get pos;
 }
 
-class _LineDesignPresetProviderElement
-    extends AutoDisposeProviderElement<ChoiceLineDesignPreset>
-    with LineDesignPresetRef {
+class _LineDesignPresetProviderElement extends AutoDisposeProviderElement<ChoiceLineDesignPreset> with LineDesignPresetRef {
   _LineDesignPresetProviderElement(super.provider);
 
   @override
@@ -161,8 +153,7 @@ class _LineDesignPresetProviderElement
 
 String _$lineOptionHash() => r'14d67fc53fd65d2c266b17b303cecafb1469b682';
 
-abstract class _$LineOption
-    extends BuildlessAutoDisposeNotifier<ChoiceLineOption> {
+abstract class _$LineOption extends BuildlessAutoDisposeNotifier<ChoiceLineOption> {
   late final Pos pos;
 
   ChoiceLineOption build({
@@ -205,16 +196,14 @@ class LineOptionFamily extends Family<ChoiceLineOption> {
   static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies => _allTransitiveDependencies;
 
   @override
   String? get name => r'lineOptionProvider';
 }
 
 /// See also [LineOption].
-class LineOptionProvider
-    extends AutoDisposeNotifierProviderImpl<LineOption, ChoiceLineOption> {
+class LineOptionProvider extends AutoDisposeNotifierProviderImpl<LineOption, ChoiceLineOption> {
   /// See also [LineOption].
   LineOptionProvider({
     required Pos pos,
@@ -222,13 +211,9 @@ class LineOptionProvider
           () => LineOption()..pos = pos,
           from: lineOptionProvider,
           name: r'lineOptionProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$lineOptionHash,
+          debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$lineOptionHash,
           dependencies: LineOptionFamily._dependencies,
-          allTransitiveDependencies:
-              LineOptionFamily._allTransitiveDependencies,
+          allTransitiveDependencies: LineOptionFamily._allTransitiveDependencies,
           pos: pos,
         );
 
@@ -270,8 +255,7 @@ class LineOptionProvider
   }
 
   @override
-  AutoDisposeNotifierProviderElement<LineOption, ChoiceLineOption>
-      createElement() {
+  AutoDisposeNotifierProviderElement<LineOption, ChoiceLineOption> createElement() {
     return _LineOptionProviderElement(this);
   }
 
@@ -296,9 +280,7 @@ mixin LineOptionRef on AutoDisposeNotifierProviderRef<ChoiceLineOption> {
   Pos get pos;
 }
 
-class _LineOptionProviderElement
-    extends AutoDisposeNotifierProviderElement<LineOption, ChoiceLineOption>
-    with LineOptionRef {
+class _LineOptionProviderElement extends AutoDisposeNotifierProviderElement<LineOption, ChoiceLineOption> with LineOptionRef {
   _LineOptionProviderElement(super.provider);
 
   @override
@@ -350,8 +332,7 @@ class LineFoldFamily extends Family<bool> {
   static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies => _allTransitiveDependencies;
 
   @override
   String? get name => r'lineFoldProvider';
@@ -366,10 +347,7 @@ class LineFoldProvider extends AutoDisposeNotifierProviderImpl<LineFold, bool> {
           () => LineFold()..pos = pos,
           from: lineFoldProvider,
           name: r'lineFoldProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$lineFoldHash,
+          debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$lineFoldHash,
           dependencies: LineFoldFamily._dependencies,
           allTransitiveDependencies: LineFoldFamily._allTransitiveDependencies,
           pos: pos,
@@ -438,9 +416,7 @@ mixin LineFoldRef on AutoDisposeNotifierProviderRef<bool> {
   Pos get pos;
 }
 
-class _LineFoldProviderElement
-    extends AutoDisposeNotifierProviderElement<LineFold, bool>
-    with LineFoldRef {
+class _LineFoldProviderElement extends AutoDisposeNotifierProviderElement<LineFold, bool> with LineFoldRef {
   _LineFoldProviderElement(super.provider);
 
   @override

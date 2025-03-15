@@ -6,8 +6,7 @@ part of 'vm_choice_node.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$choiceNodeDesignSettingHash() =>
-    r'3bcbc44af07552ccd20278b83dc3643e7cc7d545';
+String _$choiceNodeDesignSettingHash() => r'3bcbc44af07552ccd20278b83dc3643e7cc7d545';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -65,16 +64,14 @@ class ChoiceNodeDesignSettingFamily extends Family<ChoiceNodeOption> {
   static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies => _allTransitiveDependencies;
 
   @override
   String? get name => r'choiceNodeDesignSettingProvider';
 }
 
 /// See also [choiceNodeDesignSetting].
-class ChoiceNodeDesignSettingProvider
-    extends AutoDisposeProvider<ChoiceNodeOption> {
+class ChoiceNodeDesignSettingProvider extends AutoDisposeProvider<ChoiceNodeOption> {
   /// See also [choiceNodeDesignSetting].
   ChoiceNodeDesignSettingProvider({
     required Pos pos,
@@ -85,13 +82,9 @@ class ChoiceNodeDesignSettingProvider
           ),
           from: choiceNodeDesignSettingProvider,
           name: r'choiceNodeDesignSettingProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$choiceNodeDesignSettingHash,
+          debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$choiceNodeDesignSettingHash,
           dependencies: ChoiceNodeDesignSettingFamily._dependencies,
-          allTransitiveDependencies:
-              ChoiceNodeDesignSettingFamily._allTransitiveDependencies,
+          allTransitiveDependencies: ChoiceNodeDesignSettingFamily._allTransitiveDependencies,
           pos: pos,
         );
 
@@ -151,9 +144,7 @@ mixin ChoiceNodeDesignSettingRef on AutoDisposeProviderRef<ChoiceNodeOption> {
   Pos get pos;
 }
 
-class _ChoiceNodeDesignSettingProviderElement
-    extends AutoDisposeProviderElement<ChoiceNodeOption>
-    with ChoiceNodeDesignSettingRef {
+class _ChoiceNodeDesignSettingProviderElement extends AutoDisposeProviderElement<ChoiceNodeOption> with ChoiceNodeDesignSettingRef {
   _ChoiceNodeDesignSettingProviderElement(super.provider);
 
   @override
@@ -197,8 +188,7 @@ class ImageStringFamily extends Family<String> {
   static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies => _allTransitiveDependencies;
 
   @override
   String? get name => r'imageStringProvider';
@@ -216,13 +206,9 @@ class ImageStringProvider extends AutoDisposeProvider<String> {
           ),
           from: imageStringProvider,
           name: r'imageStringProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$imageStringHash,
+          debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$imageStringHash,
           dependencies: ImageStringFamily._dependencies,
-          allTransitiveDependencies:
-              ImageStringFamily._allTransitiveDependencies,
+          allTransitiveDependencies: ImageStringFamily._allTransitiveDependencies,
           pos: pos,
         );
 
@@ -282,8 +268,7 @@ mixin ImageStringRef on AutoDisposeProviderRef<String> {
   Pos get pos;
 }
 
-class _ImageStringProviderElement extends AutoDisposeProviderElement<String>
-    with ImageStringRef {
+class _ImageStringProviderElement extends AutoDisposeProviderElement<String> with ImageStringRef {
   _ImageStringProviderElement(super.provider);
 
   @override
@@ -327,8 +312,7 @@ class ContentsQuillFamily extends Family<String?> {
   static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies => _allTransitiveDependencies;
 
   @override
   String? get name => r'contentsQuillProvider';
@@ -346,13 +330,9 @@ class ContentsQuillProvider extends AutoDisposeProvider<String?> {
           ),
           from: contentsQuillProvider,
           name: r'contentsQuillProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$contentsQuillHash,
+          debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$contentsQuillHash,
           dependencies: ContentsQuillFamily._dependencies,
-          allTransitiveDependencies:
-              ContentsQuillFamily._allTransitiveDependencies,
+          allTransitiveDependencies: ContentsQuillFamily._allTransitiveDependencies,
           pos: pos,
         );
 
@@ -412,8 +392,7 @@ mixin ContentsQuillRef on AutoDisposeProviderRef<String?> {
   Pos get pos;
 }
 
-class _ContentsQuillProviderElement extends AutoDisposeProviderElement<String?>
-    with ContentsQuillRef {
+class _ContentsQuillProviderElement extends AutoDisposeProviderElement<String?> with ContentsQuillRef {
   _ContentsQuillProviderElement(super.provider);
 
   @override

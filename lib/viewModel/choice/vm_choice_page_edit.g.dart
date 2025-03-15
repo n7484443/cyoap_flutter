@@ -10,13 +10,10 @@ String _$choicePageTargetHash() => r'60d7fc5827fdc3788a0e40fa4265744dcaa4621a';
 
 /// See also [ChoicePageTarget].
 @ProviderFor(ChoicePageTarget)
-final choicePageTargetProvider =
-    AutoDisposeNotifierProvider<ChoicePageTarget, Pos?>.internal(
+final choicePageTargetProvider = AutoDisposeNotifierProvider<ChoicePageTarget, Pos?>.internal(
   ChoicePageTarget.new,
   name: r'choicePageTargetProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$choicePageTargetHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$choicePageTargetHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
