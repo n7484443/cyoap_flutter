@@ -45,7 +45,7 @@ class ChoicePageFindUtil {
     if (target == null) {
       return RelativePosition.contain;
     }
-    if(list.isEmpty){
+    if (list.isEmpty) {
       return RelativePosition.moveSomething;
     }
     if (target < list.first) {

@@ -13,7 +13,7 @@ final choiceLinePresetCurrentEditProvider = Provider.autoDispose<ChoiceLineDesig
   return ref.watch(choiceLinePresetProvider(name));
 });
 
-final choiceLinePresetProvider = Provider.family.autoDispose<ChoiceLineDesignPreset, String>((ref, presetName){
+final choiceLinePresetProvider = Provider.family.autoDispose<ChoiceLineDesignPreset, String>((ref, presetName) {
   var map = ref.watch(choiceLinePresetListProvider);
   return map[presetName] ?? map["default"] ?? const ChoiceLineDesignPreset();
 });

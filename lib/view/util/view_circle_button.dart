@@ -7,12 +7,7 @@ class CircleButton extends StatelessWidget {
   final (double, double) size;
   final String? tooltip;
 
-  const CircleButton(
-      {required this.onPressed,
-      required this.child,
-      this.size = const (40, 36),
-      this.tooltip,
-      super.key});
+  const CircleButton({required this.onPressed, required this.child, this.size = const (40, 36), this.tooltip, super.key});
 
   @override
   Widget build(BuildContext context) {

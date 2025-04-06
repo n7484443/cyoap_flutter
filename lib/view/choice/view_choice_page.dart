@@ -60,7 +60,7 @@ class _ViewChoicePageState extends ConsumerState<ViewChoicePage> {
       case RelativePosition.moveSomething:
         if (_scrollController.offset - move <= 0) {
           _scrollController.jumpTo(_scrollController.offset + move / 4.0);
-        }else{
+        } else {
           _scrollController.jumpTo(_scrollController.offset - move / 4.0);
         }
         break;
@@ -78,8 +78,7 @@ class _ViewChoicePageState extends ConsumerState<ViewChoicePage> {
         _scrollController.jumpTo(_scrollController.offset - move);
         break;
       case RelativePosition.down:
-        if (_scrollController.offset + move >=
-            _scrollController.position.maxScrollExtent) {
+        if (_scrollController.offset + move >= _scrollController.position.maxScrollExtent) {
           ChoicePageFindUtil().clear();
           return;
         }
@@ -100,12 +99,9 @@ class _ViewChoicePageState extends ConsumerState<ViewChoicePage> {
     });
     var pos = ref.watch(currentChoicePageProvider);
     var designSetting = ref.watch(platformDesignSettingProvider);
-    var childrenLength =
-        ref.watch(choiceStatusProvider(pos)).getChildrenList().length;
+    var childrenLength = ref.watch(choiceStatusProvider(pos)).getChildrenList().length;
 
-    var length = getPlatformFileSystem.isEditable
-        ? (childrenLength + 1) * 2
-        : childrenLength * 2;
+    var length = getPlatformFileSystem.isEditable ? (childrenLength + 1) * 2 : childrenLength * 2;
     var sliverList = List.generate(
       length,
       (index) {

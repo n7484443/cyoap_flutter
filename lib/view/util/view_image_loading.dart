@@ -6,8 +6,7 @@ import '../../model/image_db.dart';
 class ViewImageLoading extends StatelessWidget {
   final String name;
   final BoxFit boxFit;
-  ViewImageLoading(this.name, {this.boxFit = BoxFit.contain})
-      : super(key: GlobalKey());
+  ViewImageLoading(this.name, {this.boxFit = BoxFit.contain}) : super(key: GlobalKey());
 
   @override
   Widget build(BuildContext context) {

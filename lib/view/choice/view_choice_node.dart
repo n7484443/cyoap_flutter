@@ -12,8 +12,7 @@ import 'package:cyoap_flutter/view/choice/view_wrap_custom.dart';
 import 'package:cyoap_flutter/view/util/view_image_loading.dart';
 import 'package:cyoap_flutter/viewModel/choice/vm_choice_node.dart';
 import 'package:cyoap_flutter/viewModel/choice/vm_choice_page_edit.dart';
-import 'package:cyoap_flutter/viewModel/edit/vm_editor.dart'
-    show nodeEditorTargetPosProvider;
+import 'package:cyoap_flutter/viewModel/edit/vm_editor.dart' show nodeEditorTargetPosProvider;
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,8 +41,7 @@ class NodeDraggable extends ConsumerWidget {
   final Pos pos;
   final ChoiceNodeChildRender ignoreOption;
 
-  const NodeDraggable(this.pos,
-      {this.ignoreOption = ChoiceNodeChildRender.noOption, super.key});
+  const NodeDraggable(this.pos, {this.ignoreOption = ChoiceNodeChildRender.noOption, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -65,8 +63,7 @@ class NodeDraggable extends ConsumerWidget {
         }
       },
       child: DragItemWidget(
-        dragItemProvider: (DragItemRequest request) =>
-            DragItem(localData: Int32List.fromList(pos.data)),
+        dragItemProvider: (DragItemRequest request) => DragItem(localData: Int32List.fromList(pos.data)),
         allowedOperations: () => [DropOperation.copy],
         child: DraggableWidget(
           child: ViewChoiceNode(pos, ignoreOption: ignoreOption),
@@ -81,10 +78,7 @@ class ViewChoiceNode extends ConsumerWidget {
   final bool ignoreOpacity;
   final ChoiceNodeChildRender ignoreOption;
 
-  const ViewChoiceNode(this.pos,
-      {this.ignoreOpacity = false,
-        this.ignoreOption = ChoiceNodeChildRender.noOption,
-        super.key});
+  const ViewChoiceNode(this.pos, {this.ignoreOpacity = false, this.ignoreOption = ChoiceNodeChildRender.noOption, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -92,38 +86,37 @@ class ViewChoiceNode extends ConsumerWidget {
       return ViewChoiceNodeMain(pos, ignoreOption: ignoreOption);
     }
 
-    if (ref.watch(isEditableProvider(pos: pos)) &&
-        ignoreOption == ChoiceNodeChildRender.noOption) {
+    if (ref.watch(isEditableProvider(pos: pos)) && ignoreOption == ChoiceNodeChildRender.noOption) {
       var popupList = [
         (
-        'modify_size'.i18n,
-            () {
-          showDialog(
-            context: context,
-            builder: (builder) => SizeDialog(pos),
-          );
-        }
+          'modify_size'.i18n,
+          () {
+            showDialog(
+              context: context,
+              builder: (builder) => SizeDialog(pos),
+            );
+          }
         ),
         (
-        'modify_preset'.i18n,
-            () {
-          showDialog(
-            context: context,
-            builder: (builder) => PresetDialog(pos),
-          );
-        }
+          'modify_preset'.i18n,
+          () {
+            showDialog(
+              context: context,
+              builder: (builder) => PresetDialog(pos),
+            );
+          }
         ),
         (
-        'copy'.i18n,
-            () {
-          ref.read(choiceStatusProvider(pos)).copyData();
-        }
+          'copy'.i18n,
+          () {
+            ref.read(choiceStatusProvider(pos)).copyData();
+          }
         ),
         (
-        'delete'.i18n,
-            () {
-          ref.read(choiceStatusProvider(pos)).removeData();
-        }
+          'delete'.i18n,
+          () {
+            ref.read(choiceStatusProvider(pos)).removeData();
+          }
         ),
       ];
       if (ConstList.isMobile()) {
@@ -139,16 +132,14 @@ class ViewChoiceNode extends ConsumerWidget {
                   child: PopupMenuButton<int>(
                     padding: EdgeInsets.zero,
                     icon: const Icon(Icons.more_vert),
-                    popUpAnimationStyle:
-                    AnimationStyle(duration: ConstList.durationAnimation),
+                    popUpAnimationStyle: AnimationStyle(duration: ConstList.durationAnimation),
                     onSelected: (result) {
                       popupList[result].$2();
                     },
                     itemBuilder: (context) {
                       return List.generate(
                           popupList.length,
-                              (index) =>
-                              PopupMenuItem(
+                          (index) => PopupMenuItem(
                                 value: index,
                                 child: Text(popupList[index].$1),
                               ));
@@ -166,11 +157,10 @@ class ViewChoiceNode extends ConsumerWidget {
           contextMenu: GenericContextMenu(
             buttonConfigs: List.generate(
               popupList.length,
-                  (index) =>
-                  ContextMenuButtonConfig(
-                    popupList[index].$1,
-                    onPressed: popupList[index].$2,
-                  ),
+              (index) => ContextMenuButtonConfig(
+                popupList[index].$1,
+                onPressed: popupList[index].$2,
+              ),
             ),
           ),
           isEnabled: !ConstList.isMobile(),
@@ -190,8 +180,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
   final bool ignoreChild;
   final ChoiceNodeChildRender ignoreOption;
 
-  const ViewChoiceNodeMain(this.pos,
-      {this.ignoreChild = false, required this.ignoreOption, super.key});
+  const ViewChoiceNodeMain(this.pos, {this.ignoreChild = false, required this.ignoreOption, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -199,12 +188,8 @@ class ViewChoiceNodeMain extends ConsumerWidget {
     var design = ref.watch(choiceNodeDesignSettingProvider(pos: pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     var isSelected = node.select > 0;
-    var defaultColor = isSelected && preset.selectColorEnable!
-        ? preset.selectColorOption!
-        : preset.defaultColorOption!;
-    var outline = isSelected && preset.selectOutlineEnable!
-        ? preset.selectOutlineOption!
-        : preset.defaultOutlineOption!;
+    var defaultColor = isSelected && preset.selectColorEnable! ? preset.selectColorOption! : preset.defaultColorOption!;
+    var outline = isSelected && preset.selectOutlineEnable! ? preset.selectOutlineOption! : preset.defaultOutlineOption!;
 
     var borderRadius = BorderRadius.only(
       topLeft: Radius.circular(preset.round!.topLeft),
@@ -233,31 +218,21 @@ class ViewChoiceNodeMain extends ConsumerWidget {
         child: InkWell(
           onDoubleTap: ref.watch(isEditableProvider(pos: pos))
               ? () {
-            ref
-                .read(nodeEditorTargetPosProvider.notifier)
-                .state =
-                node.pos;
-            ref
-                .read(changeTabProvider.notifier)
-                .changePageString("viewEditor", context);
-          }
+                  ref.read(nodeEditorTargetPosProvider.notifier).state = node.pos;
+                  ref.read(changeTabProvider.notifier).changePageString("viewEditor", context);
+                }
               : null,
           onTap: !ref.watch(isEditableProvider(pos: pos))
               ? () {
-            ref.read(choiceStatusProvider(pos).notifier).select(0);
-          }
+                  ref.read(choiceStatusProvider(pos).notifier).select(0);
+                }
               : null,
-          child: ViewChoiceNodeContent(pos,
-              ignoreOption: ignoreOption, ignoreChild: ignoreChild),
+          child: ViewChoiceNodeContent(pos, ignoreOption: ignoreOption, ignoreChild: ignoreChild),
         ),
       ),
     );
 
-    var outlineEdgeInsets = EdgeInsets.only(
-        top: outline.distance.top,
-        right: outline.distance.right,
-        bottom: outline.distance.bottom,
-        left: outline.distance.left);
+    var outlineEdgeInsets = EdgeInsets.only(top: outline.distance.top, right: outline.distance.right, bottom: outline.distance.bottom, left: outline.distance.left);
     var outlineRound = BorderRadius.only(
         topLeft: Radius.circular(outline.round.topLeft),
         topRight: Radius.circular(outline.round.topRight),
@@ -271,11 +246,7 @@ class ViewChoiceNodeMain extends ConsumerWidget {
       color: outline.outlineColor.getColorIgnoreGradient(),
       strokeWidth: outline.outlineWidth,
       child: Padding(
-        padding: EdgeInsets.only(
-            top: preset.padding!.top,
-            right: preset.padding!.right,
-            bottom: preset.padding!.bottom,
-            left: preset.padding!.left),
+        padding: EdgeInsets.only(top: preset.padding!.top, right: preset.padding!.right, bottom: preset.padding!.bottom, left: preset.padding!.left),
         child: innerWidget,
       ),
     );
@@ -294,12 +265,12 @@ class ViewTitleWithEdit extends ConsumerWidget {
     if (!preset.hideTitle!) {
       return Center(
           child: Text(
-            ref.watch(titleStringProvider(pos)),
-            style: ConstList.getFont(preset.titleFont!).copyWith(
-              fontSize: 20 * ConstList.scale(context),
-              color: Color(preset.colorTitle!),
-            ),
-          ));
+        ref.watch(titleStringProvider(pos)),
+        style: ConstList.getFont(preset.titleFont!).copyWith(
+          fontSize: 20 * ConstList.scale(context),
+          color: Color(preset.colorTitle!),
+        ),
+      ));
     } else {
       return const SizedBox.shrink();
     }
@@ -320,32 +291,20 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
       return SizedBox(
         height: 36,
         child: SliderTheme(
-          data: Theme
-              .of(context)
-              .sliderTheme
-              .copyWith(
-            thumbShape: preset.sliderOption?.sliderThumbShape ==
-                SliderThumbShape.circle
-                ? null
-                : const RoundedRectangleSliderShape(
-                thumbRadius: 10, cornerRadius: 2),
-          ),
+          data: Theme.of(context).sliderTheme.copyWith(
+                thumbShape: preset.sliderOption?.sliderThumbShape == SliderThumbShape.circle ? null : const RoundedRectangleSliderShape(thumbRadius: 10, cornerRadius: 2),
+              ),
           child: Slider(
             value: select.toDouble(),
             min: 0,
-            max: ref
-                .watch(choiceStatusProvider(pos).notifier)
-                .maxSelect()
-                .toDouble(),
+            max: ref.watch(choiceStatusProvider(pos).notifier).maxSelect().toDouble(),
             label: select.toString(),
             thumbColor: preset.sliderOption!.sliderThumbColor.getColor(),
             activeColor: preset.sliderOption!.sliderTrackActiveColor.getColor(),
-            inactiveColor:
-            preset.sliderOption!.sliderTrackInactiveColor.getColor(),
+            inactiveColor: preset.sliderOption!.sliderTrackInactiveColor.getColor(),
             onChanged: (value) {
               var valueInt = value.toInt();
-              if (!ref.watch(isEditableProvider(pos: pos)) &&
-                  valueInt != select) {
+              if (!ref.watch(isEditableProvider(pos: pos)) && valueInt != select) {
                 ref.read(choiceStatusProvider(pos).notifier).select(valueInt);
               }
             },
@@ -380,13 +339,9 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
         Expanded(
           child: Text(
             select.toString(),
-            style: Theme
-                .of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(
-              color: Colors.black,
-            ),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Colors.black,
+                ),
             textAlign: TextAlign.center,
           ),
         ),
@@ -418,7 +373,8 @@ class ViewChoiceNodeMultiSelect extends ConsumerWidget {
 class ViewContents extends ConsumerStatefulWidget {
   final Pos pos;
 
-  const ViewContents(this.pos, {
+  const ViewContents(
+    this.pos, {
     super.key,
   });
 
@@ -470,9 +426,7 @@ class _ViewContentsState extends ConsumerState<ViewContents> {
         showCursor: false,
         scrollable: false,
         enableInteractiveSelection: false,
-        customStyles: ConstList.getDefaultThemeData(
-            context, ConstList.scale(context),
-            fontStyle: ConstList.getFontWithColor(preset.mainFont!)),
+        customStyles: ConstList.getDefaultThemeData(context, ConstList.scale(context), fontStyle: ConstList.getFontWithColor(preset.mainFont!)),
       ),
       focusNode: _focusNode!,
       scrollController: _scrollController!,
@@ -485,25 +439,18 @@ class ViewChoiceNodeContent extends ConsumerWidget {
   final bool ignoreChild;
   final ChoiceNodeChildRender ignoreOption;
 
-  const ViewChoiceNodeContent(this.pos,
-      {this.ignoreChild = false, required this.ignoreOption, super.key});
+  const ViewChoiceNodeContent(this.pos, {this.ignoreChild = false, required this.ignoreOption, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var node = ref.watch(choiceStatusProvider(pos)).asChoiceNode() ??
-        ChoiceNode.empty();
+    var node = ref.watch(choiceStatusProvider(pos)).asChoiceNode() ?? ChoiceNode.empty();
     var design = ref.watch(choiceNodeDesignSettingProvider(pos: pos));
     var preset = ref.watch(choiceNodePresetProvider(design.presetName));
     Widget image;
-    if (ref
-        .watch(imageStringProvider(pos: pos))
-        .isNotEmpty) {
+    if (ref.watch(imageStringProvider(pos: pos)).isNotEmpty) {
       image = ConstrainedBox(
         constraints: BoxConstraints(
-          maxHeight: MediaQuery
-              .of(context)
-              .size
-              .height * preset.imageMaxHeightRatio!,
+          maxHeight: MediaQuery.of(context).size.height * preset.imageMaxHeightRatio!,
         ),
         child: ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(5)),
@@ -515,25 +462,19 @@ class ViewChoiceNodeContent extends ConsumerWidget {
     }
 
     Widget? child;
-    if (ref.watch(isEditableProvider(pos: pos)) &&
-        ignoreOption == ChoiceNodeChildRender.noOption) {
+    if (ref.watch(isEditableProvider(pos: pos)) && ignoreOption == ChoiceNodeChildRender.noOption) {
       child = ViewWrapCustomReorder(
         pos,
-        isReorderAble:
-        ignoreOption != ChoiceNodeChildRender.noOptionWithViewOnly,
+        isReorderAble: ignoreOption != ChoiceNodeChildRender.noOptionWithViewOnly,
         parentMaxSize: node.getMaxSize(getPlatform, true),
       );
-    } else if (!ignoreChild &&
-        node.children.isNotEmpty &&
-        ignoreOption != ChoiceNodeChildRender.onlySelf) {
+    } else if (!ignoreChild && node.children.isNotEmpty && ignoreOption != ChoiceNodeChildRender.onlySelf) {
       child = ViewWrapCustomReorder(
         pos,
         isReorderAble: false,
         parentMaxSize: node.getMaxSize(getPlatform, true),
         builder: (i) {
-          if (ignoreOption == ChoiceNodeChildRender.selected &&
-              !getPlatform.checkIsSelected(
-                  node.children[i] as ChoiceNode, true)) {
+          if (ignoreOption == ChoiceNodeChildRender.selected && !getPlatform.checkIsSelected(node.children[i] as ChoiceNode, true)) {
             return const SizedBox.shrink();
           }
           return ViewChoiceNode(
@@ -557,8 +498,7 @@ class ViewChoiceNodeContent extends ConsumerWidget {
               Expanded(child: image),
             ],
           ),
-          if (node.choiceNodeMode == ChoiceNodeMode.multiSelect)
-            ViewChoiceNodeMultiSelect(pos),
+          if (node.choiceNodeMode == ChoiceNodeMode.multiSelect) ViewChoiceNodeMultiSelect(pos),
           child,
         ],
       );
@@ -575,43 +515,36 @@ class ViewChoiceNodeContent extends ConsumerWidget {
               ),
             ],
           ),
-          if (node.choiceNodeMode == ChoiceNodeMode.multiSelect)
-            ViewChoiceNodeMultiSelect(pos),
+          if (node.choiceNodeMode == ChoiceNodeMode.multiSelect) ViewChoiceNodeMultiSelect(pos),
           child,
         ],
       );
     }
     List<Widget> subWidget = preset.titlePosition!
         ? [
-      ViewTitleWithEdit(pos),
-      image,
-    ]
+            ViewTitleWithEdit(pos),
+            image,
+          ]
         : [
-      image,
-      ViewTitleWithEdit(pos),
-    ];
+            image,
+            ViewTitleWithEdit(pos),
+          ];
 
     subWidget.addAll([
       ViewContents(pos),
-      if (node.choiceNodeMode == ChoiceNodeMode.multiSelect)
-        ViewChoiceNodeMultiSelect(pos),
+      if (node.choiceNodeMode == ChoiceNodeMode.multiSelect) ViewChoiceNodeMultiSelect(pos),
       child,
     ]);
 
-    if (!ref.watch(isEditableProvider(pos: pos)) &&
-        getPlatformFileSystem
-            .hasSource(ref.watch(imageStringProvider(pos: pos))) &&
-        ref.watch(isVisibleSourceProvider)) {
+    if (!ref.watch(isEditableProvider(pos: pos)) && getPlatformFileSystem.hasSource(ref.watch(imageStringProvider(pos: pos))) && ref.watch(isVisibleSourceProvider)) {
       subWidget.add(
         TextButton(
           child: Text(
             'source'.i18n,
-            style: const TextStyle(
-                color: Colors.blue, fontWeight: FontWeight.w800),
+            style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.w800),
           ),
           onPressed: () {
-            var url = getPlatformFileSystem
-                .getSource(ref.watch(imageStringProvider(pos: pos)));
+            var url = getPlatformFileSystem.getSource(ref.watch(imageStringProvider(pos: pos)));
             if (url != null && url.isNotEmpty) {
               launchUrlString(url);
             }

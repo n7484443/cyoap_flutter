@@ -10,9 +10,7 @@ import '../../model/clipboard.dart';
 
 part 'vm_draggable_nested_map.g.dart';
 
-final choiceNodeClipboardStatusProvider =
-    ChangeNotifierProvider.autoDispose<ChoiceNodeClipboardNotifier>(
-        (ref) => ChoiceNodeClipboardNotifier(ref));
+final choiceNodeClipboardStatusProvider = ChangeNotifierProvider.autoDispose<ChoiceNodeClipboardNotifier>((ref) => ChoiceNodeClipboardNotifier(ref));
 
 class ChoiceNodeClipboardNotifier extends ChangeNotifier {
   List<ChoiceNode> choiceNodeQueue = [];
@@ -27,9 +25,7 @@ class ChoiceNodeClipboardNotifier extends ChangeNotifier {
     getPlatform.clipboard.addData(choiceNode);
     choiceNodeQueue = getPlatform.clipboard.queue.toList();
     for (int i = 0; i < length; i++) {
-      ref
-          .read(choiceStatusProvider(Pos(data: [-i - constClipboard])).notifier)
-          .refreshSelf();
+      ref.read(choiceStatusProvider(Pos(data: [-i - constClipboard])).notifier).refreshSelf();
     }
     notifyListeners();
   }
@@ -56,8 +52,7 @@ class ChoiceNodeClipboardNotifier extends ChangeNotifier {
   }
 
   List<Pos> get posList {
-    return List.generate(
-        length, (index) => Pos(data: [-index - constClipboard]));
+    return List.generate(length, (index) => Pos(data: [-index - constClipboard]));
   }
 }
 

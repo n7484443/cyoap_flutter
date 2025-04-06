@@ -7,6 +7,7 @@ import 'package:cyoap_core/preset/line_preset.dart';
 import 'package:cyoap_core/preset/preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
+import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/util/view_circle_button.dart';
 import 'package:cyoap_flutter/viewModel/vm_global_setting.dart';
@@ -29,13 +30,7 @@ class DropRegionRow extends ConsumerStatefulWidget {
   final int maxChildrenPerRow;
   final bool isEmpty;
 
-  const DropRegionRow(
-      {super.key,
-      required this.widgets,
-      required this.sizeData,
-      required this.maxChildrenPerRow,
-      required this.startPos,
-      this.isEmpty = false});
+  const DropRegionRow({super.key, required this.widgets, required this.sizeData, required this.maxChildrenPerRow, required this.startPos, this.isEmpty = false});
 
   @override
   ConsumerState createState() => _DropRegionRowState();
@@ -47,23 +42,14 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
 
   void add(Pos drag, Pos target, WidgetRef ref) {
     if (drag.first < 0) {
-      ref.read(choiceStatusProvider(target.removeLast()).notifier).addChoice(
-          ref
-              .read(choiceNodeClipboardStatusProvider)
-              .choiceNodeQueue[-drag.first - 1]
-              .clone(),
-          index: target.last);
-    } else if (target.equalExceptLast(drag) &&
-        (target.data.last - 1) >= drag.last) {
-      ref
-          .read(choiceStatusProvider(drag).notifier)
-          .swapChoice(Pos(data: List.from(target.data)..last -= 1));
+      var choice = ref.read(choiceNodeClipboardStatusProvider).choiceNodeQueue[-drag.first - 1].clone();
+      ref.read(choiceStatusProvider(target.removeLast()).notifier).addChoice(choice, index: target.last);
+    } else if (target.equalExceptLast(drag) && (target.data.last - 1) >= drag.last) {
+      ref.read(choiceStatusProvider(drag).notifier).swapChoice(Pos(data: List.from(target.data)..last -= 1));
     } else {
       ref.read(choiceStatusProvider(drag).notifier).swapChoice(target);
     }
-    ref
-        .read(currentProjectChangedProvider.notifier)
-        .changed(needUpdateCode: true);
+    ref.read(currentProjectChangedProvider.notifier).changed(needUpdateCode: true);
   }
 
   bool checkEmpty() {
@@ -97,19 +83,15 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
     } else if (!(isEntered && index >= 0)) {
       render = widget.widgets;
     } else {
-      render = widget.widgets
-          .map((e) => Expanded(flex: e.flex * multiplier, child: e.child))
-          .toList();
+      render = widget.widgets.map((e) => Expanded(flex: e.flex * multiplier, child: e.child)).toList();
       int i = index;
       int flex = 2;
       if (i == 0) {
         render[0] = Expanded(flex: render[0].flex - 2, child: render[0].child);
       } else if (i == widget.widgets.length) {
-        render[i - 1] =
-            Expanded(flex: render[i - 1].flex - 2, child: render[i - 1].child);
+        render[i - 1] = Expanded(flex: render[i - 1].flex - 2, child: render[i - 1].child);
       } else {
-        render[i - 1] =
-            Expanded(flex: render[i - 1].flex - 1, child: render[i - 1].child);
+        render[i - 1] = Expanded(flex: render[i - 1].flex - 1, child: render[i - 1].child);
         render[i] = Expanded(flex: render[i].flex - 1, child: render[i].child);
       }
 
@@ -211,9 +193,7 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
               setState(() {
                 this.index = index;
               });
-            } else if (0 <= right &&
-                right <=
-                    (index == widget.sizeData.length - 1 ? 2 : 1) * minLength) {
+            } else if (0 <= right && right <= (index == widget.sizeData.length - 1 ? 2 : 1) * minLength) {
               setState(() {
                 this.index = index + 1;
               });
@@ -230,8 +210,7 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
           var item = event.session.items.first;
           var data = Pos(data: (item.localData as List).cast<int>());
           if (isEntered && index >= 0) {
-            if (index < widget.sizeData.length &&
-                widget.sizeData[index].pos != null) {
+            if (index < widget.sizeData.length && widget.sizeData[index].pos != null) {
               add(data, widget.sizeData[index].pos!, ref);
             } else {
               Iterator<SizeData> iterator;
@@ -285,12 +264,7 @@ class ViewWrapCustomReorder extends ConsumerWidget {
   final bool isReorderAble;
   final Widget Function(int)? builder;
 
-  const ViewWrapCustomReorder(this.parentPos,
-      {required this.isReorderAble,
-      this.builder,
-      this.parentMaxSize = 100,
-      this.isInner = true,
-      super.key});
+  const ViewWrapCustomReorder(this.parentPos, {required this.isReorderAble, this.builder, this.parentMaxSize = 100, this.isInner = true, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -301,17 +275,13 @@ class ViewWrapCustomReorder extends ConsumerWidget {
     var height = isReorderAble ? defaultHeight : 0.0;
     if (!isInner) {
       var preset = ref.watch(lineDesignPresetProvider(pos: parentPos));
-      presetMaxChildrenPerRow =
-          preset.maxChildrenPerRow ?? presetMaxChildrenPerRow;
+      presetMaxChildrenPerRow = preset.maxChildrenPerRow ?? presetMaxChildrenPerRow;
       align = preset.alignment ?? align;
     }
     var maxChildrenPerRow = min(parentMaxSize, ref.watch(maximumSizeProvider));
     maxChildrenPerRow = min(maxChildrenPerRow, presetMaxChildrenPerRow);
 
-    var (sizeDataList, _) = node.node.getSizeDataList(
-        align: align,
-        maxChildrenPerRow: maxChildrenPerRow,
-        showAll: isReorderAble);
+    var (sizeDataList, _) = node.node.getSizeDataList(align: align, maxChildrenPerRow: maxChildrenPerRow, showAll: isReorderAble, platform: getPlatform);
     List<Widget> outputWidget = List<Widget>.empty(growable: true);
     for (var y = 0; y < sizeDataList.length; y++) {
       var verticalList = sizeDataList[y];
@@ -320,9 +290,7 @@ class ViewWrapCustomReorder extends ConsumerWidget {
         if (element.pos != null) {
           elementList.add(Expanded(
             flex: element.width,
-            child: isReorderAble
-                ? NodeDraggable(element.pos!)
-                : builder!(element.pos!.last),
+            child: isReorderAble ? NodeDraggable(element.pos!) : builder!(element.pos!.last),
           ));
         } else {
           elementList.add(Expanded(
@@ -367,12 +335,8 @@ class ViewWrapCustomReorder extends ConsumerWidget {
             child: Card(
               child: CircleButton(
                 onPressed: () {
-                  ref.read(choiceStatusProvider(parentPos).notifier).addChoice(
-                      ChoiceNode.empty()..width = 3,
-                      index: children.length);
-                  ref
-                      .read(currentProjectChangedProvider.notifier)
-                      .changed(needUpdateCode: true);
+                  ref.read(choiceStatusProvider(parentPos).notifier).addChoice(ChoiceNode.empty()..width = 3, index: children.length);
+                  ref.read(currentProjectChangedProvider.notifier).changed(needUpdateCode: true);
                 },
                 tooltip: 'create_tooltip_node'.i18n,
                 child: const Icon(Icons.add),
@@ -412,9 +376,7 @@ class ViewWrapCustomReorder extends ConsumerWidget {
         delegate: SliverChildBuilderDelegate(
           (context, index) {
             return Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical:
-                      ref.watch(platformDesignSettingProvider).marginVertical),
+              padding: EdgeInsets.symmetric(vertical: ref.watch(platformDesignSettingProvider).marginVertical),
               child: outputWidget[index],
             );
           },

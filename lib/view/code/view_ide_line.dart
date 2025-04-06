@@ -13,12 +13,12 @@ class ViewIdeLine extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Widget editor;
-    if(!kReleaseMode){
+    if (!kReleaseMode) {
       editor = SimpleCodeEditor(
         choiceType: ChoiceType.line,
         choice: ref.watch(lineEditorTargetProvider),
       );
-    }else{
+    } else {
       editor = ViewIde(
         choiceType: ChoiceType.line,
         choice: ref.watch(lineEditorTargetProvider),

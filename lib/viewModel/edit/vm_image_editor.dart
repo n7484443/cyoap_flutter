@@ -5,9 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image/image.dart';
 
-final globalEditorKeyProvider =
-    Provider.autoDispose<GlobalKey<ExtendedImageEditorState>>(
-        (ref) => GlobalKey<ExtendedImageEditorState>());
+final globalEditorKeyProvider = Provider.autoDispose<GlobalKey<ExtendedImageEditorState>>((ref) => GlobalKey<ExtendedImageEditorState>());
 
 final imageProvider = StateProvider<(String, Uint8List)?>((ref) => null);
 
@@ -15,20 +13,14 @@ final cropImageProvider = FutureProvider.autoDispose<Uint8List>((ref) async {
   var state = ref.watch(globalEditorKeyProvider).currentState!;
   var cropRect = state.getCropRect()!;
   var image = decodeImage(ref.watch(imageProvider)!.$2)!;
-  var output = copyCrop(image,
-      x: cropRect.left.toInt(),
-      y: cropRect.top.toInt(),
-      width: cropRect.width.toInt(),
-      height: cropRect.height.toInt());
+  var output = copyCrop(image, x: cropRect.left.toInt(), y: cropRect.top.toInt(), width: cropRect.width.toInt(), height: cropRect.height.toInt());
   return encodePng(output, singleFrame: image.numFrames == 1);
 });
 
-final imageCropRatioProvider =
-    StateProvider<(double?, double?)?>((ref) => null);
+final imageCropRatioProvider = StateProvider<(double?, double?)?>((ref) => null);
 final imageCropIndexProvider = StateProvider<int>((ref) => 0);
 
-final textFieldWidthRatioProvider =
-    StateProvider.autoDispose<TextEditingController>((ref) {
+final textFieldWidthRatioProvider = StateProvider.autoDispose<TextEditingController>((ref) {
   var controller = TextEditingController();
   ref.onDispose(() {
     controller.dispose();
@@ -41,8 +33,7 @@ final textFieldWidthRatioProvider =
   return controller;
 });
 
-final textFieldHeightRatioProvider =
-    StateProvider.autoDispose<TextEditingController>((ref) {
+final textFieldHeightRatioProvider = StateProvider.autoDispose<TextEditingController>((ref) {
   var controller = TextEditingController();
   ref.onDispose(() {
     controller.dispose();

@@ -23,17 +23,10 @@ class ViewImageDraggable extends ConsumerWidget {
   final void Function(WidgetRef, int)? removeFunction;
 
   const ViewImageDraggable(
-      {required this.addImageFunction,
-      required this.widgetBuilder,
-      required this.widgetLength,
-      required this.imageName,
-      this.isRemovable = false,
-      this.removeFunction,
-      super.key});
+      {required this.addImageFunction, required this.widgetBuilder, required this.widgetLength, required this.imageName, this.isRemovable = false, this.removeFunction, super.key});
 
   void addImage(BuildContext context, WidgetRef ref) async {
-    List<PlatformFile>? platformFileList =
-        await ref.read(imageListStateProvider.notifier).addImage();
+    List<PlatformFile>? platformFileList = await ref.read(imageListStateProvider.notifier).addImage();
     if (platformFileList == null) {
       return;
     }
@@ -55,20 +48,14 @@ class ViewImageDraggable extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     widgetBuilderEdit(ref, index) {
       return Stack(children: [
-        Positioned(
-            top: 0,
-            right: 0,
-            left: 0,
-            bottom: 0,
-            child: widgetBuilder(ref, index)),
+        Positioned(top: 0, right: 0, left: 0, bottom: 0, child: widgetBuilder(ref, index)),
         Positioned(
           top: 0,
           right: 0,
           child: IconButton(
             icon: const Icon(Icons.crop),
             onPressed: () {
-              openImageEditor(ref, context, imageName(ref, index),
-                  justOpen: true);
+              openImageEditor(ref, context, imageName(ref, index), justOpen: true);
             },
           ),
         ),
@@ -95,10 +82,7 @@ class ViewImageDraggable extends ConsumerWidget {
             onPressed: () => addImage(context, ref),
             child: Text('add_image'.i18n),
           ),
-          Expanded(
-              child: ViewImageSelector(
-                  widgetBuilder: widgetBuilderEdit,
-                  widgetLength: widgetLength)),
+          Expanded(child: ViewImageSelector(widgetBuilder: widgetBuilderEdit, widgetLength: widgetLength)),
         ],
       );
     }
@@ -126,9 +110,7 @@ class ViewImageDraggable extends ConsumerWidget {
         ),
         Expanded(
           child: Card(
-            color: ref.watch(editorImageDragDropColorProvider)
-                ? Theme.of(context).highlightColor
-                : null,
+            color: ref.watch(editorImageDragDropColorProvider) ? Theme.of(context).highlightColor : null,
             child: DropRegion(
               formats: [...Formats.standardFormats]
                 ..remove(Formats.plainText)
@@ -150,8 +132,7 @@ class ViewImageDraggable extends ConsumerWidget {
                     continue;
                   }
                   item.dataReader!.getFile(null, (file) async {
-                    var fileName =
-                        file.fileName ?? Random().nextInt(10000000).toString();
+                    var fileName = file.fileName ?? Random().nextInt(10000000).toString();
                     if (!ImageDB.regCheckImage.hasMatch(fileName)) {
                       return;
                     }
@@ -165,18 +146,14 @@ class ViewImageDraggable extends ConsumerWidget {
                 }
               },
               onDropEnter: (DropEvent event) {
-                ref.read(editorImageDragDropColorProvider.notifier).state =
-                    true;
+                ref.read(editorImageDragDropColorProvider.notifier).state = true;
               },
               onDropLeave: (DropEvent event) {
-                ref.read(editorImageDragDropColorProvider.notifier).state =
-                    false;
+                ref.read(editorImageDragDropColorProvider.notifier).state = false;
               },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: ViewImageSelector(
-                    widgetBuilder: widgetBuilderEdit,
-                    widgetLength: widgetLength),
+                child: ViewImageSelector(widgetBuilder: widgetBuilderEdit, widgetLength: widgetLength),
               ),
             ),
           ),
@@ -191,17 +168,13 @@ class ViewImageDraggable extends ConsumerWidget {
     }
     ref.read(lastImageProvider.notifier).update((state) => data);
     var defaultName = name;
-    while (ImageDB().imageList.contains(name) ||
-        ImageDB()
-            .imageList
-            .contains(name.replaceAll(ImageDB.regCheckImage, ".webp"))) {
+    while (ImageDB().imageList.contains(name) || ImageDB().imageList.contains(name.replaceAll(ImageDB.regCheckImage, ".webp"))) {
       name = defaultName + Random().nextInt(999999).toString();
     }
     ref.read(imageListStateProvider.notifier).addImageToList(name);
   }
 
-  void openImageEditor(WidgetRef ref, BuildContext context, String name,
-      {required bool justOpen}) async {
+  void openImageEditor(WidgetRef ref, BuildContext context, String name, {required bool justOpen}) async {
     if (!justOpen) {
       var value = await showDialog<(bool, String)>(
         builder: (_) => ImageSourceDialog(name),
@@ -212,12 +185,8 @@ class ViewImageDraggable extends ConsumerWidget {
         return;
       }
     }
-    ref
-        .read(imageProvider.notifier)
-        .update((state) => (name, ImageDB().getImage(name)!));
-    ref
-        .read(changeTabProvider.notifier)
-        .changePageString('viewImageEditor', context);
+    ref.read(imageProvider.notifier).update((state) => (name, ImageDB().getImage(name)!));
+    ref.read(changeTabProvider.notifier).changePageString('viewImageEditor', context);
     addImageFunction(ref, name);
   }
 }
@@ -258,8 +227,7 @@ class _ViewImageSelectorState extends ConsumerState<ViewImageSelector> {
       slivers: [
         SliverGrid(
           delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) =>
-                widget.widgetBuilder(ref, index),
+            (BuildContext context, int index) => widget.widgetBuilder(ref, index),
             childCount: widget.widgetLength(ref),
           ),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

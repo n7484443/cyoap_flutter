@@ -9,8 +9,7 @@ class SaveProjectImp extends SaveProject {
   @override
   Future<void> saveZip(String? path, Map<String, Uint8List> dataInput) async {
     await JsIsolatedWorker().importScripts(['save_web.js', 'jszip.js']);
-    Uint8List output = await JsIsolatedWorker()
-        .run(functionName: '_compressToZip', arguments: jsonEncode(dataInput));
+    Uint8List output = await JsIsolatedWorker().run(functionName: '_compressToZip', arguments: jsonEncode(dataInput));
     downloadCapture("", path!, output);
   }
 

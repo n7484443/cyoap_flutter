@@ -10,8 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../main.dart';
 import '../model/device_preference.dart';
 
-final playDataProvider = StateNotifierProvider<PlayDataNotifier, void>(
-    (ref) => PlayDataNotifier(ref));
+final playDataProvider = StateNotifierProvider<PlayDataNotifier, void>((ref) => PlayDataNotifier(ref));
 
 class PlayDataNotifier extends StateNotifier<void> {
   Ref ref;
@@ -32,8 +31,7 @@ class PlayDataNotifier extends StateNotifier<void> {
   }
 
   Future<String?> loadPlayData() async {
-    var selected = await FilePicker.platform.pickFiles(
-        type: FileType.custom, allowedExtensions: ['json'], withData: true);
+    var selected = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['json'], withData: true);
     if (selected == null) {
       return 'no_file_selected'.i18n;
     }

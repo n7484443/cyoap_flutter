@@ -54,39 +54,24 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
             selectedItemColor: Theme.of(context).colorScheme.tertiary,
             unselectedItemColor: Theme.of(context).colorScheme.onSurface,
             items: [
-              BottomNavigationBarItem(
-                  icon: const Icon(Icons.space_dashboard),
-                  label: 'main_dashboard'.i18n),
-              BottomNavigationBarItem(
-                  icon: const Icon(Icons.layers),
-                  label: 'design_settings'.i18n),
-              BottomNavigationBarItem(
-                  icon: const Icon(Icons.image), label: 'image_settings'.i18n),
-              BottomNavigationBarItem(
-                  icon: const Icon(Icons.settings),
-                  label: 'project_settings'.i18n),
+              BottomNavigationBarItem(icon: const Icon(Icons.space_dashboard), label: 'main_dashboard'.i18n),
+              BottomNavigationBarItem(icon: const Icon(Icons.layers), label: 'design_settings'.i18n),
+              BottomNavigationBarItem(icon: const Icon(Icons.image), label: 'image_settings'.i18n),
+              BottomNavigationBarItem(icon: const Icon(Icons.settings), label: 'project_settings'.i18n),
             ],
             onTap: (index) {
               switch (index) {
                 case 0:
-                  ref
-                      .read(changeTabProvider.notifier)
-                      .changePageString('viewMake', context);
+                  ref.read(changeTabProvider.notifier).changePageString('viewMake', context);
                   break;
                 case 1:
-                  ref
-                      .read(changeTabProvider.notifier)
-                      .changePageString('viewDesignSetting', context);
+                  ref.read(changeTabProvider.notifier).changePageString('viewDesignSetting', context);
                   break;
                 case 2:
-                  ref
-                      .read(changeTabProvider.notifier)
-                      .changePageString('viewSource', context);
+                  ref.read(changeTabProvider.notifier).changePageString('viewSource', context);
                   break;
                 case 3:
-                  ref
-                      .read(changeTabProvider.notifier)
-                      .changePageString('viewProjectSetting', context);
+                  ref.read(changeTabProvider.notifier).changePageString('viewProjectSetting', context);
                   break;
               }
               ref.read(bottomTabProvider.notifier).state = index;
@@ -94,19 +79,14 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
             currentIndex: ref.watch(bottomTabProvider),
           ),
           body: Stack(
-            children: [
-              defaultMap,
-              if (ref.watch(changeTabProvider) != 0)
-                childrenFunction[ref.watch(changeTabProvider) - 1]()
-            ],
+            children: [defaultMap, if (ref.watch(changeTabProvider) != 0) childrenFunction[ref.watch(changeTabProvider) - 1]()],
           ),
         ),
       );
     }
     return CallbackShortcuts(
       bindings: {
-        const SingleActivator(LogicalKeyboardKey.keyS, control: true):
-            () async {
+        const SingleActivator(LogicalKeyboardKey.keyS, control: true): () async {
           await savePlatform(ref, asZip: getPlatformFileSystem.openAsFile);
           showSnackBar(context, "save_successfully".i18n);
         }
@@ -120,8 +100,7 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
               title: Row(
                 children: [
                   const ViewSaveIcons(),
-                  if (!getPlatformFileSystem.openAsFile)
-                    const ViewCompressIcon(),
+                  if (!getPlatformFileSystem.openAsFile) const ViewCompressIcon(),
                   const SizedBox(width: 20),
                   const Expanded(child: SizedBox.shrink()),
                   const BackButton(),
@@ -149,20 +128,17 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
                     ),
                     NavigationRailDestination(
                       icon: const Icon(Icons.layers),
-                      label: Text('design_settings'.i18n,
-                          textAlign: TextAlign.center),
+                      label: Text('design_settings'.i18n, textAlign: TextAlign.center),
                       padding: const EdgeInsets.symmetric(vertical: 10),
                     ),
                     NavigationRailDestination(
                       icon: const Icon(Icons.image),
-                      label: Text('image_settings'.i18n,
-                          textAlign: TextAlign.center),
+                      label: Text('image_settings'.i18n, textAlign: TextAlign.center),
                       padding: const EdgeInsets.symmetric(vertical: 10),
                     ),
                     NavigationRailDestination(
                       icon: const Icon(Icons.settings),
-                      label: Text('project_settings'.i18n,
-                          textAlign: TextAlign.center),
+                      label: Text('project_settings'.i18n, textAlign: TextAlign.center),
                       padding: const EdgeInsets.symmetric(vertical: 10),
                     ),
                   ],
@@ -171,19 +147,13 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
                   onDestinationSelected: (int index) {
                     switch (index) {
                       case 3:
-                        ref
-                            .read(changeTabProvider.notifier)
-                            .changePageString('viewDesignSetting', context);
+                        ref.read(changeTabProvider.notifier).changePageString('viewDesignSetting', context);
                         break;
                       case 4:
-                        ref
-                            .read(changeTabProvider.notifier)
-                            .changePageString('viewSource', context);
+                        ref.read(changeTabProvider.notifier).changePageString('viewSource', context);
                         break;
                       case 5:
-                        ref
-                            .read(changeTabProvider.notifier)
-                            .changePageString('viewProjectSetting', context);
+                        ref.read(changeTabProvider.notifier).changePageString('viewProjectSetting', context);
                         break;
                       default:
                         if (ref.watch(sideTabProvider) == index) {
@@ -203,11 +173,7 @@ class _ViewMakePlatformState extends ConsumerState<ViewMakePlatform> {
                 ),
                 Flexible(
                   child: Stack(
-                    children: [
-                      defaultMap,
-                      if (ref.watch(changeTabProvider) != 0)
-                        childrenFunction[ref.watch(changeTabProvider) - 1]()
-                    ],
+                    children: [defaultMap, if (ref.watch(changeTabProvider) != 0) childrenFunction[ref.watch(changeTabProvider) - 1]()],
                   ),
                 ),
               ],
@@ -226,8 +192,7 @@ class ViewEditDrawerMobile extends ConsumerStatefulWidget {
   ConsumerState createState() => _ViewEditDrawerMobileState();
 }
 
-class _ViewEditDrawerMobileState extends ConsumerState<ViewEditDrawerMobile>
-    with TickerProviderStateMixin {
+class _ViewEditDrawerMobileState extends ConsumerState<ViewEditDrawerMobile> with TickerProviderStateMixin {
   TabController? _tabController;
 
   @override
@@ -360,11 +325,7 @@ class BackButton extends ConsumerWidget {
             context: context,
             builder: (_) => ViewBackDialog(() async {
               final navigator = Navigator.of(context);
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) =>
-                      ViewSaveDialog(asZip: getPlatformFileSystem.openAsFile),
-                  barrierDismissible: false);
+              showDialog(context: context, builder: (BuildContext context) => ViewSaveDialog(asZip: getPlatformFileSystem.openAsFile), barrierDismissible: false);
               await savePlatform(ref, asZip: getPlatformFileSystem.openAsFile);
               navigator.pop();
               ref.read(currentProjectChangedProvider.notifier).save();

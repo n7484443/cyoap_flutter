@@ -1,9 +1,5 @@
 List<int> _versionParse(String version) {
-  return version
-      .replaceFirst('v', '')
-      .split('.')
-      .map((e) => int.parse(e))
-      .toList();
+  return version.replaceFirst('v', '').split('.').map((e) => int.parse(e)).toList();
 }
 
 int versionCheck(String versionA, String versionB) {

@@ -5,8 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/platform_system.dart';
 
-final stopWatchProvider =
-    StateNotifierProvider<SaveStopWatch, String>((ref) => SaveStopWatch());
+final stopWatchProvider = StateNotifierProvider<SaveStopWatch, String>((ref) => SaveStopWatch());
 
 class SaveStopWatch extends StateNotifier<String> {
   SaveStopWatch() : super("");

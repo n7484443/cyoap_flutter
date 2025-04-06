@@ -4,12 +4,9 @@ import 'package:cyoap_flutter/viewModel/edit/vm_draggable_nested_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final deleteModeProvider = StateProvider.autoDispose<bool>((ref) => false);
-final deleteImageListProvider =
-    StateProvider.autoDispose<List<String>>((ref) => []);
+final deleteImageListProvider = StateProvider.autoDispose<List<String>>((ref) => []);
 
-final vmSourceProvider =
-    StateNotifierProvider.autoDispose<VMSource, List<String>>(
-        (ref) => VMSource(ref, List<String>.from(ImageDB().imageList)));
+final vmSourceProvider = StateNotifierProvider.autoDispose<VMSource, List<String>>((ref) => VMSource(ref, List<String>.from(ImageDB().imageList)));
 
 class VMSource extends StateNotifier<List<String>> {
   final Ref ref;
@@ -18,9 +15,7 @@ class VMSource extends StateNotifier<List<String>> {
 
   void checkRemove(int index) {
     var name = state[index];
-    ref
-        .read(deleteImageListProvider.notifier)
-        .update((state) => [...state, name]);
+    ref.read(deleteImageListProvider.notifier).update((state) => [...state, name]);
   }
 
   void remove() {
@@ -29,8 +24,6 @@ class VMSource extends StateNotifier<List<String>> {
     }
     state = List<String>.from(ImageDB().imageList);
     updateImageAll(ref);
-    ref
-        .read(currentProjectChangedProvider.notifier)
-        .changed(needUpdateCode: false);
+    ref.read(currentProjectChangedProvider.notifier).changed(needUpdateCode: false);
   }
 }

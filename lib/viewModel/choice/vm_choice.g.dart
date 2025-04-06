@@ -64,8 +64,7 @@ class IsEditableFamily extends Family<bool> {
   static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies => _allTransitiveDependencies;
 
   @override
   String? get name => r'isEditableProvider';
@@ -83,13 +82,9 @@ class IsEditableProvider extends AutoDisposeProvider<bool> {
           ),
           from: isEditableProvider,
           name: r'isEditableProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$isEditableHash,
+          debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$isEditableHash,
           dependencies: IsEditableFamily._dependencies,
-          allTransitiveDependencies:
-              IsEditableFamily._allTransitiveDependencies,
+          allTransitiveDependencies: IsEditableFamily._allTransitiveDependencies,
           pos: pos,
         );
 
@@ -149,8 +144,7 @@ mixin IsEditableRef on AutoDisposeProviderRef<bool> {
   Pos get pos;
 }
 
-class _IsEditableProviderElement extends AutoDisposeProviderElement<bool>
-    with IsEditableRef {
+class _IsEditableProviderElement extends AutoDisposeProviderElement<bool> with IsEditableRef {
   _IsEditableProviderElement(super.provider);
 
   @override
@@ -161,13 +155,10 @@ String _$currentChoicePageHash() => r'003ac8515eccc0256082707b068b20c41e61dd88';
 
 /// See also [CurrentChoicePage].
 @ProviderFor(CurrentChoicePage)
-final currentChoicePageProvider =
-    AutoDisposeNotifierProvider<CurrentChoicePage, Pos>.internal(
+final currentChoicePageProvider = AutoDisposeNotifierProvider<CurrentChoicePage, Pos>.internal(
   CurrentChoicePage.new,
   name: r'currentChoicePageProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$currentChoicePageHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$currentChoicePageHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

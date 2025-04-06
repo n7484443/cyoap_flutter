@@ -10,6 +10,7 @@ import '../../util/view_options.dart';
 
 const double unitWidth = 300.0;
 const double largeUnitWidth = unitWidth * 2.1;
+
 class ViewPresetTab extends ConsumerWidget {
   final List<String> tabName = ['node', 'line'];
 

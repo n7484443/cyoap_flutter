@@ -15,8 +15,7 @@ class ViewSelectedResultGrid extends ConsumerStatefulWidget {
   ConsumerState createState() => _ViewSelectedResultGridState();
 }
 
-class _ViewSelectedResultGridState
-    extends ConsumerState<ViewSelectedResultGrid> {
+class _ViewSelectedResultGridState extends ConsumerState<ViewSelectedResultGrid> {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -37,8 +36,7 @@ class _ViewSelectedResultGridState
       insetPadding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 10.0),
       content: Consumer(builder: (context, ref, child) {
         var numRow = ref.watch(numRowProvider);
-        var posList =
-            getPlatform.selectedResult(ref.watch(separateChildProvider));
+        var posList = getPlatform.selectedResult(ref.watch(separateChildProvider));
         return SizedBox(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
@@ -50,9 +48,7 @@ class _ViewSelectedResultGridState
                     padding: const EdgeInsets.all(8.0),
                     child: ViewSwitchLabel(
                       () {
-                        ref
-                            .read(separateLineProvider.notifier)
-                            .update((b) => !b);
+                        ref.read(separateLineProvider.notifier).update((b) => !b);
                       },
                       ref.watch(separateLineProvider),
                       label: 'separate_line'.i18n,
@@ -62,9 +58,7 @@ class _ViewSelectedResultGridState
                     padding: const EdgeInsets.all(8.0),
                     child: ViewSwitchLabel(
                       () {
-                        ref
-                            .read(separateChildProvider.notifier)
-                            .update((b) => !b);
+                        ref.read(separateChildProvider.notifier).update((b) => !b);
                       },
                       ref.watch(separateChildProvider),
                       label: 'separate_child'.i18n,
@@ -76,9 +70,7 @@ class _ViewSelectedResultGridState
                       Text('change_result_size'.i18n),
                       Slider(
                         onChanged: (value) {
-                          ref
-                              .read(numRowProvider.notifier)
-                              .update((i) => value.toInt());
+                          ref.read(numRowProvider.notifier).update((i) => value.toInt());
                         },
                         value: ref.watch(numRowProvider).toDouble(),
                         min: 1,
@@ -90,58 +82,53 @@ class _ViewSelectedResultGridState
                 ],
               ),
               const Padding(padding: EdgeInsets.all(8.0)),
-              if(posList.isNotEmpty)
-              Expanded(
-                child: RepaintBoundary(
-                  key: globalKey,
-                  child: SingleChildScrollView(
-                    controller: _scrollController,
-                    child: ColoredBox(
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      child: Column(
-                        children:
-                            List.generate(posList.length * 2 - 1, (index) {
-                          if (index.isEven) {
-                            var columnItem = posList[index ~/ 2];
-                            var maxLength = (columnItem.length / numRow).ceil();
-                            return Column(
-                              children: List.generate(maxLength, (innerIndex) {
-                                return Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: List.generate(numRow, (rowIndex) {
-                                    var itemPos =
-                                        innerIndex * numRow + rowIndex;
-                                    if (itemPos >= columnItem.length) {
-                                      return const Expanded(
-                                        child: SizedBox.shrink(),
-                                      );
-                                    }
-                                    return Expanded(
-                                      child: IgnorePointer(
-                                        child: ViewChoiceNode(
-                                          Pos(data: columnItem[itemPos]),
-                                          ignoreOpacity: true,
-                                          ignoreOption: ref
-                                                  .watch(separateChildProvider)
-                                              ? ChoiceNodeChildRender.onlySelf
-                                              : ChoiceNodeChildRender.selected,
+              if (posList.isNotEmpty)
+                Expanded(
+                  child: RepaintBoundary(
+                    key: globalKey,
+                    child: SingleChildScrollView(
+                      controller: _scrollController,
+                      child: ColoredBox(
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        child: Column(
+                          children: List.generate(posList.length * 2 - 1, (index) {
+                            if (index.isEven) {
+                              var columnItem = posList[index ~/ 2];
+                              var maxLength = (columnItem.length / numRow).ceil();
+                              return Column(
+                                children: List.generate(maxLength, (innerIndex) {
+                                  return Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: List.generate(numRow, (rowIndex) {
+                                      var itemPos = innerIndex * numRow + rowIndex;
+                                      if (itemPos >= columnItem.length) {
+                                        return const Expanded(
+                                          child: SizedBox.shrink(),
+                                        );
+                                      }
+                                      return Expanded(
+                                        child: IgnorePointer(
+                                          child: ViewChoiceNode(
+                                            Pos(data: columnItem[itemPos]),
+                                            ignoreOpacity: true,
+                                            ignoreOption: ref.watch(separateChildProvider) ? ChoiceNodeChildRender.onlySelf : ChoiceNodeChildRender.selected,
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  }),
-                                );
-                              }),
+                                      );
+                                    }),
+                                  );
+                                }),
+                              );
+                            }
+                            return const Padding(
+                              padding: EdgeInsets.all(8.0),
                             );
-                          }
-                          return const Padding(
-                            padding: EdgeInsets.all(8.0),
-                          );
-                        }),
+                          }),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
             ],
           ),
         );

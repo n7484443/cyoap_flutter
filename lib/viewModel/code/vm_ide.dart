@@ -218,7 +218,7 @@ class SimpleCodesIde extends _$SimpleCodesIde {
   }
 
   void setSimpleCodes(Choice choice, CodeActivationType type, SimpleCodes? simpleCodes) {
-    ref.read(nodeEditorTargetProvider.notifier).setState((e){
+    ref.read(nodeEditorTargetProvider.notifier).setState((e) {
       switch (type) {
         case CodeActivationType.visible:
           e.conditionalCodeHandler.conditionVisibleSimple = simpleCodes;
@@ -229,12 +229,13 @@ class SimpleCodesIde extends _$SimpleCodesIde {
       }
       return e;
     });
+    ref.invalidateSelf();
   }
 
   void setSimpleCodeBlock(SimpleCodeBlock simpleCodeBlock, int index) {
     var simpleCodes = getSimpleCodes(choice!, type);
     var codes = [...?simpleCodes?.code];
-    codes[index] = simpleCodeBlock;
+    codes[index] = simpleCodeBlock.generateArguments();
     simpleCodes = simpleCodes?.copyWith(code: codes) ?? SimpleCodes(code: codes, type: type == CodeActivationType.execute ? SimpleType.action : SimpleType.condition);
     state = simpleCodes;
     setSimpleCodes(choice!, type, state);
@@ -244,9 +245,9 @@ class SimpleCodesIde extends _$SimpleCodesIde {
     var simpleCodes = getSimpleCodes(choice!, type);
     var codes = [...?simpleCodes?.code];
     if (index != null) {
-      codes.insert(index, simpleCodeBlock);
+      codes.insert(index, simpleCodeBlock.generateArguments());
     } else {
-      codes.add(simpleCodeBlock);
+      codes.add(simpleCodeBlock.generateArguments());
     }
     simpleCodes = simpleCodes?.copyWith(code: codes) ?? SimpleCodes(code: codes, type: type == CodeActivationType.execute ? SimpleType.action : SimpleType.condition);
     state = simpleCodes;

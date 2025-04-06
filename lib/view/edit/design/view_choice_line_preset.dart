@@ -141,7 +141,6 @@ class _ViewLineOptionEditorState extends ConsumerState<ViewLineOptionEditor> {
     _scrollController.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     var preset = ref.watch(choiceLinePresetCurrentEditProvider)!;

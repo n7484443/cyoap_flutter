@@ -41,8 +41,7 @@ class PlatformSystem {
 
   Future<LoadProjectState> openPlatformJson(File file, Ref ref) async {
     platformFileSystem.path = file.parent.path;
-    return await platformFileSystem.createFromJson(
-        file.readAsStringSync(), ref);
+    return await platformFileSystem.createFromJson(file.readAsStringSync(), ref);
   }
 
   Future<LoadProjectState> openPlatformFolder(String path) async {
@@ -50,10 +49,8 @@ class PlatformSystem {
     return await platformFileSystem.createFromFolder(path);
   }
 
-  Future<LoadProjectState> openPlatformList(Map<String, String> choiceNodes,
-      String imageSource, String platform) async {
-    return await platformFileSystem.createPlatformList(
-        choiceNodes, imageSource, platform);
+  Future<LoadProjectState> openPlatformList(Map<String, String> choiceNodes, String imageSource, String platform) async {
+    return await platformFileSystem.createPlatformList(choiceNodes, imageSource, platform);
   }
 
   Future<void> openPlatformVoid() async {
@@ -70,5 +67,4 @@ EditablePlatform get getPlatform {
 
 bool get isPlatformEditable => getPlatformFileSystem.isEditable;
 
-PlatformFileSystem get getPlatformFileSystem =>
-    PlatformSystem.platformFileSystem;
+PlatformFileSystem get getPlatformFileSystem => PlatformSystem.platformFileSystem;

@@ -33,12 +33,12 @@ dependencies:
     git:
       url: https://github.com/n7484443/cyoap_core.git
   image: ^4.0.12
-  extended_image: ^9.1.0
-  file_picker : ^9.0.0
+  extended_image: ^10.0.0
+  file_picker : ^10.0.0
   http: ^1.2.0
   shared_preferences: ^2.0.15
   google_fonts: ^6.2.1
-  archive: ^4.0.2
+  archive: ^4.0.5
   flutter_quill: ^11.0.0
   package_info_plus: ^8.0.0
   github: ^9.14.0
@@ -51,7 +51,7 @@ dependencies:
   url_strategy: ^0.3.0
   path_provider: ^2.0.11
   path: ^1.8.3
-  freezed_annotation: any
+  freezed_annotation: 3.0.0
   json_annotation: any
   js: ^0.7.1
   sentry_flutter: ^8.5.0
@@ -74,7 +74,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  freezed: ^2.5.2
+  freezed: ^3.0.3
   build_runner: ^2.3.3
   json_serializable: ^6.6.0
   riverpod_generator: ^2.4.0
@@ -83,8 +83,8 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^4.0.0
-  custom_lint: ^0.6.4
+  flutter_lints: ^5.0.0
+  custom_lint: ^0.7.5
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

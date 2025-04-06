@@ -21,9 +21,7 @@ class SaveAsWebp extends _$SaveAsWebp {
 
   void rev() {
     PlatformUtil().platform.webpConverter.saveAsWebp = !state;
-    ref
-        .read(devicePreferenceStateProvider.notifier)
-        .update('save_as_webp', !state);
+    ref.read(devicePreferenceStateProvider.notifier).update('save_as_webp', !state);
   }
 }
 
@@ -36,9 +34,7 @@ class ForceWide extends _$ForceWide {
   }
 
   void rev() {
-    ref
-        .read(devicePreferenceStateProvider.notifier)
-        .update('force_wide', !state);
+    ref.read(devicePreferenceStateProvider.notifier).update('force_wide', !state);
   }
 }
 
@@ -46,14 +42,11 @@ class ForceWide extends _$ForceWide {
 class ClipboardMaximumCapacity extends _$ClipboardMaximumCapacity {
   @override
   int build() {
-    return ref
-        .watch(devicePreferenceStateProvider)['clipboard_maximum_capacity'];
+    return ref.watch(devicePreferenceStateProvider)['clipboard_maximum_capacity'];
   }
 
   void setVariable(int value) {
-    ref
-        .read(devicePreferenceStateProvider.notifier)
-        .update('clipboard_maximum_capacity', value);
+    ref.read(devicePreferenceStateProvider.notifier).update('clipboard_maximum_capacity', value);
   }
 }
 
@@ -65,9 +58,7 @@ class BackupFrequency extends _$BackupFrequency {
   }
 
   void setVariable(int value) {
-    ref
-        .read(devicePreferenceStateProvider.notifier)
-        .update('backup_frequency', value);
+    ref.read(devicePreferenceStateProvider.notifier).update('backup_frequency', value);
   }
 }
 

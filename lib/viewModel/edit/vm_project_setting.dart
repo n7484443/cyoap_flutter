@@ -12,23 +12,17 @@ import '../../main.dart';
 part 'vm_project_setting.g.dart';
 
 @riverpod
-TextEditingController projectSettingNameTextEditing(
-    ProjectSettingNameTextEditingRef ref) {
+TextEditingController projectSettingNameTextEditing(ProjectSettingNameTextEditingRef ref) {
   var index = ref.watch(currentEditGlobalVariableProvider)!;
-  var name =
-      ref.read(valueTypeWrapperListProvider.notifier).getEditTargetName(index)!;
+  var name = ref.read(valueTypeWrapperListProvider.notifier).getEditTargetName(index)!;
   var controller = TextEditingController(text: name);
   controller.addListener(() {
-    EasyDebounce.debounce(
-        'projectSettingNameTextEditingProvider', ConstList.debounceDuration,
-        () {
+    EasyDebounce.debounce('projectSettingNameTextEditingProvider', ConstList.debounceDuration, () {
       var newName = controller.text.trim();
       if (newName.isEmpty) {
         return;
       }
-      ref
-          .read(valueTypeWrapperListProvider.notifier)
-          .editInitialValue(index, name: newName);
+      ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(index, name: newName);
     });
   });
   ref.onDispose(() {
@@ -39,29 +33,20 @@ TextEditingController projectSettingNameTextEditing(
 }
 
 @riverpod
-TextEditingController projectSettingValueTextEditing(
-    ProjectSettingValueTextEditingRef ref) {
+TextEditingController projectSettingValueTextEditing(ProjectSettingValueTextEditingRef ref) {
   var index = ref.watch(currentEditGlobalVariableProvider)!;
-  var value = ref
-      .read(valueTypeWrapperListProvider.notifier)
-      .getEditTargetValueTypeWrapper(index)!;
+  var value = ref.read(valueTypeWrapperListProvider.notifier).getEditTargetValueTypeWrapper(index)!;
   var data = value.valueType;
   var text = data.type.isString ? '"${data.dataUnzip}"' : data.data;
   var controller = TextEditingController(text: text);
   controller.addListener(() {
-    EasyDebounce.debounce(
-        'projectSettingValueTextEditingProvider', ConstList.debounceDuration,
-        () {
+    EasyDebounce.debounce('projectSettingValueTextEditingProvider', ConstList.debounceDuration, () {
       var newValue = controller.text.trim();
       if (newValue.isEmpty) {
         return;
       }
-      var value = ref
-          .read(valueTypeWrapperListProvider.notifier)
-          .getEditTargetValueTypeWrapper(index)!;
-      ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(index,
-          value:
-              value.copyWith(valueType: getValueTypeFromStringInput(newValue)));
+      var value = ref.read(valueTypeWrapperListProvider.notifier).getEditTargetValueTypeWrapper(index)!;
+      ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(index, value: value.copyWith(valueType: getValueTypeFromStringInput(newValue)));
     });
   });
   ref.onDispose(() {
@@ -72,27 +57,18 @@ TextEditingController projectSettingValueTextEditing(
 }
 
 @riverpod
-TextEditingController projectSettingDisplayNameTextEditing(
-    ProjectSettingDisplayNameTextEditingRef ref) {
+TextEditingController projectSettingDisplayNameTextEditing(ProjectSettingDisplayNameTextEditingRef ref) {
   var index = ref.watch(currentEditGlobalVariableProvider)!;
-  var value = ref
-      .read(valueTypeWrapperListProvider.notifier)
-      .getEditTargetValueTypeWrapper(index)!;
+  var value = ref.read(valueTypeWrapperListProvider.notifier).getEditTargetValueTypeWrapper(index)!;
   var controller = TextEditingController(text: value.displayName);
   controller.addListener(() {
-    EasyDebounce.debounce('projectSettingDisplayNameTextEditingProvider',
-        ConstList.debounceDuration, () {
+    EasyDebounce.debounce('projectSettingDisplayNameTextEditingProvider', ConstList.debounceDuration, () {
       var newDisplayName = controller.text.trim();
       if (newDisplayName.isEmpty) {
-        newDisplayName = ref
-            .read(valueTypeWrapperListProvider.notifier)
-            .getEditTargetName(index)!;
+        newDisplayName = ref.read(valueTypeWrapperListProvider.notifier).getEditTargetName(index)!;
       }
-      var value = ref
-          .read(valueTypeWrapperListProvider.notifier)
-          .getEditTargetValueTypeWrapper(index)!;
-      ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(index,
-          value: value.copyWith(displayName: newDisplayName));
+      var value = ref.read(valueTypeWrapperListProvider.notifier).getEditTargetValueTypeWrapper(index)!;
+      ref.read(valueTypeWrapperListProvider.notifier).editInitialValue(index, value: value.copyWith(displayName: newDisplayName));
     });
   });
   ref.onDispose(() {
@@ -102,8 +78,7 @@ TextEditingController projectSettingDisplayNameTextEditing(
   return controller;
 }
 
-final currentEditGlobalVariableProvider =
-    StateProvider.autoDispose<int?>((ref) {
+final currentEditGlobalVariableProvider = StateProvider.autoDispose<int?>((ref) {
   return null;
 });
 
@@ -121,8 +96,7 @@ class ValueTypeWrapperList extends _$ValueTypeWrapperList {
       state = [...state, (name, type)];
     } else {
       while (true) {
-        pos =
-            state.indexWhere((element) => element.$1 == (name + t.toString()));
+        pos = state.indexWhere((element) => element.$1 == (name + t.toString()));
         if (pos != -1) {
           t += 1;
         } else {
@@ -151,9 +125,7 @@ class ValueTypeWrapperList extends _$ValueTypeWrapperList {
   void save() {
     getPlatform.setGlobalSetting(state);
     VariableDataBase().updateVariableTiles();
-    ref
-        .read(currentProjectChangedProvider.notifier)
-        .changed(needUpdateCode: true);
+    ref.read(currentProjectChangedProvider.notifier).changed(needUpdateCode: true);
   }
 
   String? getEditTargetName(int index) {

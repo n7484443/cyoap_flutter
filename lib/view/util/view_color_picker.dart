@@ -13,12 +13,7 @@ class ViewColorPicker extends ConsumerWidget {
   final Color color;
   final bool hasAlpha;
 
-  const ViewColorPicker(
-      {this.text,
-      required this.onColorChanged,
-      required this.color,
-      required this.hasAlpha,
-      super.key});
+  const ViewColorPicker({this.text, required this.onColorChanged, required this.color, required this.hasAlpha, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -67,11 +62,7 @@ class ViewRGBAInput extends ConsumerStatefulWidget {
   final Color color;
   final bool hasAlpha;
 
-  const ViewRGBAInput(
-      {required this.onColorChanged,
-      required this.color,
-      required this.hasAlpha,
-      super.key});
+  const ViewRGBAInput({required this.onColorChanged, required this.color, required this.hasAlpha, super.key});
 
   @override
   ConsumerState createState() => _ViewRGBInputState();
@@ -124,10 +115,7 @@ class _ViewRGBInputState extends ConsumerState<ViewRGBAInput> {
 
   @override
   Widget build(BuildContext context) {
-    var filter = [
-      FilteringTextInputFormatter.digitsOnly,
-      NumericalRangeFormatter(minRange: 0, maxRange: 255)
-    ];
+    var filter = [FilteringTextInputFormatter.digitsOnly, NumericalRangeFormatter(minRange: 0, maxRange: 255)];
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 320),
       child: Row(
@@ -150,8 +138,7 @@ class _ViewRGBInputState extends ConsumerState<ViewRGBAInput> {
                   onChanged: (String value) {
                     var t = int.tryParse(value);
                     if (t != null) {
-                      widget.onColorChanged(
-                          widget.color.withRed(t.clamp(0, 255)));
+                      widget.onColorChanged(widget.color.withRed(t.clamp(0, 255)));
                     }
                   },
                 ),
@@ -176,8 +163,7 @@ class _ViewRGBInputState extends ConsumerState<ViewRGBAInput> {
                   onChanged: (String value) {
                     var t = int.tryParse(value);
                     if (t != null) {
-                      widget.onColorChanged(
-                          widget.color.withGreen(t.clamp(0, 255)));
+                      widget.onColorChanged(widget.color.withGreen(t.clamp(0, 255)));
                     }
                   },
                 )
@@ -202,8 +188,7 @@ class _ViewRGBInputState extends ConsumerState<ViewRGBAInput> {
                   onChanged: (String value) {
                     var t = int.tryParse(value);
                     if (t != null) {
-                      widget.onColorChanged(
-                          widget.color.withBlue(t.clamp(0, 255)));
+                      widget.onColorChanged(widget.color.withBlue(t.clamp(0, 255)));
                     }
                   },
                 ),
@@ -229,8 +214,7 @@ class _ViewRGBInputState extends ConsumerState<ViewRGBAInput> {
                     onChanged: (String value) {
                       var t = int.tryParse(value);
                       if (t != null) {
-                        widget.onColorChanged(
-                            widget.color.withAlpha(t.clamp(0, 255)));
+                        widget.onColorChanged(widget.color.withAlpha(t.clamp(0, 255)));
                       }
                     },
                   )
@@ -274,11 +258,7 @@ class ViewColorOptionEditor extends StatefulWidget {
   final ColorOption colorOption;
   final void Function(ColorOption after) changeFunction;
 
-  const ViewColorOptionEditor(
-      {required this.colorOption,
-      required this.changeFunction,
-      this.hasAlpha = true,
-      super.key});
+  const ViewColorOptionEditor({required this.colorOption, required this.changeFunction, this.hasAlpha = true, super.key});
 
   @override
   State createState() => _ViewColorOptionEditorState();
@@ -291,11 +271,7 @@ class _ViewColorOptionEditorState extends State<ViewColorOptionEditor> {
   Widget build(BuildContext context) {
     var dropdown = DropdownButtonFormField<ColorType>(
       decoration: InputDecoration(labelText: 'color_type'.i18n),
-      items: ColorType.values
-          .getRange(0, 2)
-          .map<DropdownMenuItem<ColorType>>(
-              (type) => DropdownMenuItem(value: type, child: Text(type.name)))
-          .toList(),
+      items: ColorType.values.getRange(0, 2).map<DropdownMenuItem<ColorType>>((type) => DropdownMenuItem(value: type, child: Text(type.name))).toList(),
       onChanged: (ColorType? t) {
         if (t != null) {
           widget.changeFunction(widget.colorOption.copyWith(colorType: t));
@@ -305,10 +281,7 @@ class _ViewColorOptionEditorState extends State<ViewColorOptionEditor> {
     );
     var dropdownGrad = DropdownButtonFormField<GradientType>(
       decoration: InputDecoration(labelText: 'grad_type'.i18n),
-      items: GradientType.values
-          .map<DropdownMenuItem<GradientType>>(
-              (type) => DropdownMenuItem(value: type, child: Text(type.name)))
-          .toList(),
+      items: GradientType.values.map<DropdownMenuItem<GradientType>>((type) => DropdownMenuItem(value: type, child: Text(type.name))).toList(),
       onChanged: (GradientType? t) {
         if (t != null) {
           widget.changeFunction(widget.colorOption.copyWith(gradientType: t));
@@ -345,8 +318,7 @@ class _ViewColorOptionEditorState extends State<ViewColorOptionEditor> {
         dropdown,
         ViewColorPicker(
           onColorChanged: (Color value) {
-            widget.changeFunction(
-                widget.colorOption.copyWith(color: value.value));
+            widget.changeFunction(widget.colorOption.copyWith(color: value.value));
           },
           color: widget.colorOption.getColor()!,
           hasAlpha: widget.hasAlpha,
@@ -363,13 +335,7 @@ class ViewGradientOption extends StatelessWidget {
   final int currentIndex;
   final bool hasAlpha;
 
-  const ViewGradientOption(
-      {required this.colorOption,
-      required this.changeFunction,
-      required this.currentIndexFunction,
-      required this.currentIndex,
-      this.hasAlpha = true,
-      super.key});
+  const ViewGradientOption({required this.colorOption, required this.changeFunction, required this.currentIndexFunction, required this.currentIndex, this.hasAlpha = true, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -399,8 +365,7 @@ class ViewGradientOption extends StatelessWidget {
             text: 'node_select_grad_color'.i18n.fill([currentIndex]),
             color: Color(colorOption.gradientData[currentIndex].color),
             onColorChanged: (Color value) {
-              changeFunction(
-                  colorOption.changeGradientColor(currentIndex, value));
+              changeFunction(colorOption.changeGradientColor(currentIndex, value));
             },
             hasAlpha: hasAlpha,
           ),
@@ -415,18 +380,13 @@ class ViewGradientPositionOption extends StatefulWidget {
   final void Function(ColorOption after) changeFunction;
   final int currentIndex;
 
-  const ViewGradientPositionOption(
-      {required this.colorOption,
-      required this.changeFunction,
-      required this.currentIndex,
-      super.key});
+  const ViewGradientPositionOption({required this.colorOption, required this.changeFunction, required this.currentIndex, super.key});
 
   @override
   State createState() => _ViewGradientPositionOptionState();
 }
 
-class _ViewGradientPositionOptionState
-    extends State<ViewGradientPositionOption> {
+class _ViewGradientPositionOptionState extends State<ViewGradientPositionOption> {
   double x = 0.5;
   double y = 0.5;
 
@@ -469,8 +429,7 @@ class _ViewGradientPositionOptionState
                 x = x.clamp(0, 1);
                 y = y.clamp(0, 1);
               });
-              widget.changeFunction(widget.colorOption
-                  .changeGradientPosition(widget.currentIndex, x, y));
+              widget.changeFunction(widget.colorOption.changeGradientPosition(widget.currentIndex, x, y));
             },
             onTapDown: (TapDownDetails? tapDownDetails) {
               setState(() {
@@ -479,8 +438,7 @@ class _ViewGradientPositionOptionState
                 x = x.clamp(0, 1);
                 y = y.clamp(0, 1);
               });
-              widget.changeFunction(widget.colorOption
-                  .changeGradientPosition(widget.currentIndex, x, y));
+              widget.changeFunction(widget.colorOption.changeGradientPosition(widget.currentIndex, x, y));
             }),
       ],
     );
@@ -491,12 +449,10 @@ class _ViewGradientPositionOptionState
     if (widget.colorOption.gradientType == GradientType.linear) {
       return _buildPoint(context);
     }
-    if (widget.colorOption.gradientType == GradientType.radial &&
-        widget.currentIndex == 0) {
+    if (widget.colorOption.gradientType == GradientType.radial && widget.currentIndex == 0) {
       return _buildPoint(context);
     }
-    if (widget.colorOption.gradientType == GradientType.sweep &&
-        widget.currentIndex == 0) {
+    if (widget.colorOption.gradientType == GradientType.sweep && widget.currentIndex == 0) {
       return _buildPoint(context);
     }
     if (widget.colorOption.gradientType == GradientType.radial) {
@@ -510,15 +466,13 @@ class _ViewGradientPositionOptionState
           setState(() {
             x = value;
           });
-          widget.changeFunction(widget.colorOption
-              .changeGradientPosition(widget.currentIndex, x, y));
+          widget.changeFunction(widget.colorOption.changeGradientPosition(widget.currentIndex, x, y));
         },
         onChangeEnd: (double value) {
           setState(() {
             x = value;
           });
-          widget.changeFunction(widget.colorOption
-              .changeGradientPosition(widget.currentIndex, x, y));
+          widget.changeFunction(widget.colorOption.changeGradientPosition(widget.currentIndex, x, y));
         },
         label: x.toString(),
         divisions: 80,
@@ -536,15 +490,13 @@ class _ViewGradientPositionOptionState
         setState(() {
           x = value;
         });
-        widget.changeFunction(widget.colorOption
-            .changeGradientPosition(widget.currentIndex, x, y));
+        widget.changeFunction(widget.colorOption.changeGradientPosition(widget.currentIndex, x, y));
       },
       onChangeEnd: (double value) {
         setState(() {
           x = value;
         });
-        widget.changeFunction(widget.colorOption
-            .changeGradientPosition(widget.currentIndex, x, y));
+        widget.changeFunction(widget.colorOption.changeGradientPosition(widget.currentIndex, x, y));
       },
       label: x.round().toString(),
       divisions: 360,

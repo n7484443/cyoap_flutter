@@ -60,18 +60,12 @@ class ViewImageEditor extends ConsumerWidget {
       ),
       bottomNavigationBar: NavigationBar(
         destinations: [
-          NavigationDestination(
-              icon: const Icon(Icons.close), label: "crop_ratio_free".i18n),
-          const NavigationDestination(
-              icon: Icon(Icons.aspect_ratio), label: "4:3"),
-          const NavigationDestination(
-              icon: Icon(Icons.aspect_ratio), label: "3:2"),
-          const NavigationDestination(
-              icon: Icon(Icons.aspect_ratio), label: "16:9"),
-          const NavigationDestination(
-              icon: Icon(Icons.aspect_ratio), label: "1:1"),
-          NavigationDestination(
-              icon: const Icon(Icons.crop_rotate), label: "crop_rotate".i18n),
+          NavigationDestination(icon: const Icon(Icons.close), label: "crop_ratio_free".i18n),
+          const NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "4:3"),
+          const NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "3:2"),
+          const NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "16:9"),
+          const NavigationDestination(icon: Icon(Icons.aspect_ratio), label: "1:1"),
+          NavigationDestination(icon: const Icon(Icons.crop_rotate), label: "crop_rotate".i18n),
         ],
         selectedIndex: ref.watch(imageCropIndexProvider),
         onDestinationSelected: (index) {
@@ -97,8 +91,7 @@ class ViewImageEditor extends ConsumerWidget {
             case 5:
               var data = ref.read(imageCropRatioProvider);
               if (data != null) {
-                ref.read(imageCropRatioProvider.notifier).state =
-                    (data.$2, data.$1);
+                ref.read(imageCropRatioProvider.notifier).state = (data.$2, data.$1);
               }
               break;
           }
@@ -146,13 +139,10 @@ class ViewImageEditorContents extends ConsumerWidget {
           child: const Icon(Icons.crop),
           onPressed: () async {
             ref.read(lastImageProvider.notifier).update((state) => null);
-            await ref.read(imageListStateProvider.notifier).addImageToList(
-                image.$1,
-                data: await ref.read(cropImageProvider.future));
+            await ref.read(imageListStateProvider.notifier).addImageToList(image.$1, data: await ref.read(cropImageProvider.future));
             var pos = ref.read(nodeEditorTargetPosProvider);
             if (pos != null) {
-              ref.read(choiceStatusProvider(pos)).asChoiceNode()?.imageString =
-                  image.$1;
+              ref.read(choiceStatusProvider(pos)).asChoiceNode()?.imageString = image.$1;
             }
             ref.read(currentChoicePageProvider.notifier).refresh();
             ref.read(changeTabProvider.notifier).home(context);

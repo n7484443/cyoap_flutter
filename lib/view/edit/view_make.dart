@@ -75,14 +75,9 @@ class ViewCompressIcon extends ConsumerWidget {
     return IconButton(
         tooltip: 'extract'.i18n,
         onPressed: () async {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) =>
-                  const ViewSaveDialog(asZip: true),
-              barrierDismissible: false);
+          showDialog(context: context, builder: (BuildContext context) => const ViewSaveDialog(asZip: true), barrierDismissible: false);
           await savePlatform(ref, asZip: true);
-          showSnackBar(context, 'save_successfully'.i18n,
-              ref: ref, errorLog: Analyser().errorList, autoHide: true);
+          showSnackBar(context, 'save_successfully'.i18n, ref: ref, errorLog: Analyser().errorList, autoHide: true);
           Navigator.of(context).pop();
         },
         icon: const Icon(Icons.folder_zip));
@@ -100,15 +95,10 @@ class ViewSaveIcons extends ConsumerWidget {
       tooltip: 'save'.i18n,
       icon: const Icon(Icons.save),
       onPressed: () async {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) =>
-                ViewSaveDialog(asZip: getPlatformFileSystem.openAsFile),
-            barrierDismissible: false);
+        showDialog(context: context, builder: (BuildContext context) => ViewSaveDialog(asZip: getPlatformFileSystem.openAsFile), barrierDismissible: false);
         await savePlatform(ref, asZip: getPlatformFileSystem.openAsFile);
         Navigator.of(context).pop();
-        showSnackBar(context, "save_successfully".i18n,
-            ref: ref, errorLog: Analyser().errorList, autoHide: true);
+        showSnackBar(context, "save_successfully".i18n, ref: ref, errorLog: Analyser().errorList, autoHide: true);
       },
     );
   }

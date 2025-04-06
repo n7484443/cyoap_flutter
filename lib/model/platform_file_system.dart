@@ -55,8 +55,7 @@ class PlatformFileSystem {
       if (dirDirectory.listSync().isEmpty) {
         platform = EditablePlatform.none();
         platform?.init();
-        return LoadProjectState(ProjectState.success,
-            version: version, description: description);
+        return LoadProjectState(ProjectState.success, version: version, description: description);
       }
       var dirImages = Directory('$path/images');
       var dirNodes = Directory('$path/nodes');
@@ -116,8 +115,7 @@ class PlatformFileSystem {
             var value = await f.readAsString();
             if (f.path.contains('lineSetting_')) {
               var starts = f.path.lastIndexOf('lineSetting_');
-              var y = int.parse(
-                  f.path.substring(starts).split('_')[1].split('.json')[0]);
+              var y = int.parse(f.path.substring(starts).split('_')[1].split('.json')[0]);
               lineSettingList.add((ChoiceLine.fromJson(jsonDecode(value)), y));
             }
           }
@@ -129,12 +127,10 @@ class PlatformFileSystem {
     } on Exception catch (e, stacktrace) {
       description = '$e\n$stacktrace';
     }
-    return LoadProjectState(projectState,
-        version: version, description: description);
+    return LoadProjectState(projectState, version: version, description: description);
   }
 
-  Future<LoadProjectState> createPlatformList(Map<String, String> choiceNodes,
-      String imageSource, String platformData) async {
+  Future<LoadProjectState> createPlatformList(Map<String, String> choiceNodes, String imageSource, String platformData) async {
     ProjectState projectState = ProjectState.fail;
     int version = 0;
     String description = '';
@@ -147,8 +143,7 @@ class PlatformFileSystem {
         var data = choiceNodes[name]!;
         var decoded = jsonDecode(data);
         if (name.contains('lineSetting_')) {
-          var y = int.parse(
-              name.replaceAll('lineSetting_', '').replaceAll('.json', ''));
+          var y = int.parse(name.replaceAll('lineSetting_', '').replaceAll('.json', ''));
           lineSettingList.add((ChoiceLine.fromJson(decoded), y));
         }
       }
@@ -166,8 +161,7 @@ class PlatformFileSystem {
       description = '$e\n$stacktrace';
     }
 
-    return LoadProjectState(projectState,
-        version: version, description: description);
+    return LoadProjectState(projectState, version: version, description: description);
   }
 
   Future<LoadProjectState> createFromZip(Archive archive) async {
@@ -196,11 +190,8 @@ class PlatformFileSystem {
             String dataConverted = utf8.decode(data, allowMalformed: true);
             if (fileName.startsWith('nodes')) {
               if (fileName.contains('lineSetting_')) {
-                var y = int.parse(fileName
-                    .replaceAll('nodes/lineSetting_', '')
-                    .replaceAll('.json', ''));
-                lineSettingList
-                    .add((ChoiceLine.fromJson(jsonDecode(dataConverted)), y));
+                var y = int.parse(fileName.replaceAll('nodes/lineSetting_', '').replaceAll('.json', ''));
+                lineSettingList.add((ChoiceLine.fromJson(jsonDecode(dataConverted)), y));
               }
             } else if (fileName.endsWith('platform.json')) {
               platformJson = dataConverted;
@@ -228,8 +219,7 @@ class PlatformFileSystem {
     } on Exception catch (e, stacktrace) {
       description = '$e\n$stacktrace';
     }
-    return LoadProjectState(projectState,
-        version: version, description: description);
+    return LoadProjectState(projectState, version: version, description: description);
   }
 
   Future<LoadProjectState> createFromJson(String input, Ref ref) async {
@@ -248,8 +238,7 @@ class PlatformFileSystem {
     } on Exception catch (e, stacktrace) {
       description = '$e\n$stacktrace';
     }
-    return LoadProjectState(projectState,
-        version: version, description: description);
+    return LoadProjectState(projectState, version: version, description: description);
   }
 
   void createFromVoid() {
@@ -259,8 +248,7 @@ class PlatformFileSystem {
 
   Future<Map<String, Uint8List>> get saveDataMap async {
     Map<String, Uint8List> input = {
-      'imageSource.json':
-          utf8.encode(jsonEncode(getPlatformFileSystem.imageSource)),
+      'imageSource.json': utf8.encode(jsonEncode(getPlatformFileSystem.imageSource)),
       'platform.json': utf8.encode(jsonEncode(getPlatform)),
     };
     var imageMap = await ImageDB().imageMap;
@@ -270,16 +258,12 @@ class PlatformFileSystem {
     }
     for (int i = 0; i < getPlatform.choicePage.choiceLines.length; i++) {
       var line = getPlatform.choicePage.choiceLines[i];
-      input['nodes/lineSetting_${line.currentPos}.json'] =
-          utf8.encode(jsonEncode(line));
+      input['nodes/lineSetting_${line.currentPos}.json'] = utf8.encode(jsonEncode(line));
     }
     var page = getPlatform.choicePage;
     input['nodes/choicePage_0.json'] = utf8.encode(jsonEncode(page));
 
-    input['nodes/list.json'] = utf8.encode(jsonEncode(getPlatform
-        .choicePage.choiceLines
-        .map((e) => "lineSetting_${e.currentPos}.json")
-        .toList()));
+    input['nodes/list.json'] = utf8.encode(jsonEncode(getPlatform.choicePage.choiceLines.map((e) => "lineSetting_${e.currentPos}.json").toList()));
 
     return input;
   }

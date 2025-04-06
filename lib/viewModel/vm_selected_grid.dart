@@ -24,14 +24,12 @@ void saveAsImage(GlobalKey globalKey) async {
   var renderObject = globalKey.currentContext?.findRenderObject();
   if (renderObject == null) return;
   if (renderObject is! RenderRepaintBoundary) return;
-  var image = await (await renderObject.toImage())
-      .toByteData(format: ImageByteFormat.png);
+  var image = await (await renderObject.toImage()).toByteData(format: ImageByteFormat.png);
   var pngBytes = image?.buffer.asUint8List();
   var name = "result.png";
   if (ConstList.isWeb()) {
     PlatformUtil().platform.saveProject.downloadCapture("", name, pngBytes!);
   } else {
-    PlatformUtil().platform.saveProject.downloadCapture(
-        await DevicePreference.getDownloadFolder(), name, pngBytes!);
+    PlatformUtil().platform.saveProject.downloadCapture(await DevicePreference.getDownloadFolder(), name, pngBytes!);
   }
 }

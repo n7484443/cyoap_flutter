@@ -27,8 +27,7 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children:
-                ref.read(snackBarErrorProvider).map((e) => Text(e)).toList(),
+            children: ref.read(snackBarErrorProvider).map((e) => Text(e)).toList(),
           ),
         ),
         action: SnackBarAction(
@@ -66,8 +65,7 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
       padding: const EdgeInsets.all(8.0),
       child: IconButton(
           onPressed: () async {
-            var status =
-                await ref.read(playDataProvider.notifier).savePlayData();
+            var status = await ref.read(playDataProvider.notifier).savePlayData();
             showSnackBar(context, status);
           },
           icon: const Icon(Icons.save)),
@@ -76,8 +74,7 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
       padding: const EdgeInsets.all(8.0),
       child: IconButton(
           onPressed: () async {
-            var status =
-                await ref.read(playDataProvider.notifier).loadPlayData();
+            var status = await ref.read(playDataProvider.notifier).loadPlayData();
             if (status != null) {
               showSnackBar(context, status);
             }
@@ -126,8 +123,7 @@ class _ViewPlayState extends ConsumerState<ViewPlay> {
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(Icons.list),
-            onPressed: () =>
-                ref.read(isOpenSideProvider.notifier).update((state) => !state),
+            onPressed: () => ref.read(isOpenSideProvider.notifier).update((state) => !state),
           ),
           actions: [
             IconButton(

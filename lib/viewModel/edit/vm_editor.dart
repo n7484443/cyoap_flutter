@@ -19,13 +19,10 @@ import '../code/vm_ide.dart';
 
 part 'vm_editor.g.dart';
 
-final editEndProvider =
-    StateProvider.family<bool, ChoiceType>((ref, choiceType) {
+final editEndProvider = StateProvider.family<bool, ChoiceType>((ref, choiceType) {
   ref.listenSelf((previous, next) {
     if (next) {
-      ref
-          .read(currentProjectChangedProvider.notifier)
-          .changed(needUpdateCode: true);
+      ref.read(currentProjectChangedProvider.notifier).changed(needUpdateCode: true);
       Pos? pos;
       if (choiceType == ChoiceType.node) {
         pos = ref.read(nodeEditorTargetPosProvider);
@@ -57,6 +54,7 @@ class NodeEditorTarget extends _$NodeEditorTarget {
     state = func(state);
     ref.notifyListeners();
   }
+
   void setChoiceNodeOption(ChoiceNodeOption option) {
     setState((node) {
       node.choiceNodeOption = option;
@@ -64,8 +62,8 @@ class NodeEditorTarget extends _$NodeEditorTarget {
     });
   }
 
-  void setChoiceMode(ChoiceNodeMode option){
-    setState((node){
+  void setChoiceMode(ChoiceNodeMode option) {
+    setState((node) {
       node.choiceNodeMode = option;
       if (option == ChoiceNodeMode.onlyCode) {
         node.conditionalCodeHandler.conditionClickableCode = [];
@@ -102,8 +100,7 @@ final nodeEditorDesignProvider = Provider<ChoiceNodeOption>((ref) {
   return ref.watch(nodeEditorTargetProvider).choiceNodeOption;
 });
 
-final nodeTitleProvider = StateProvider.autoDispose<String>(
-    (ref) => ref.watch(nodeEditorTargetProvider).title);
+final nodeTitleProvider = StateProvider.autoDispose<String>((ref) => ref.watch(nodeEditorTargetProvider).title);
 
 @riverpod
 class ImageListState extends _$ImageListState {
@@ -129,27 +126,23 @@ class ImageListState extends _$ImageListState {
 
     ImageDB().uploadImages(out.$1, out.$2);
     ref.read(imageStateProvider.notifier).setImageIndex(ImageDB().getImageIndex(out.$1));
-    ref
-        .read(currentProjectChangedProvider.notifier)
-        .changed(needUpdateCode: false);
+    ref.read(currentProjectChangedProvider.notifier).changed(needUpdateCode: false);
     ref.read(lastImageProvider.notifier).update((state) => null);
     ref.invalidate(vmSourceProvider);
     state = [...ImageDB().imageList];
   }
 }
 
-
 final imageStateProvider = StateNotifierProvider<ImageStateNotifier, int>((ref) {
   var initialIndex = ImageDB().getImageIndex(ref.read(nodeEditorTargetProvider).imageString);
   return ImageStateNotifier(ref, initialIndex);
 });
 
-
 class ImageStateNotifier extends StateNotifier<int> {
   Ref ref;
   ImageStateNotifier(this.ref, int initIndex) : super(initIndex);
 
-  void setImageIndex(int index){
+  void setImageIndex(int index) {
     ref.read(nodeEditorTargetProvider.notifier).setState((node) {
       node.imageString = ImageDB().getImageName(index);
       return node;
@@ -160,8 +153,7 @@ class ImageStateNotifier extends StateNotifier<int> {
 
 final lastImageProvider = StateProvider<Uint8List?>((ref) => null);
 
-final editorImageDragDropColorProvider =
-    StateProvider.autoDispose<bool>((ref) => false);
+final editorImageDragDropColorProvider = StateProvider.autoDispose<bool>((ref) => false);
 
 final textColorProvider = StateProvider<Color>((ref) {
   return Colors.black;
@@ -170,3 +162,8 @@ final textColorProvider = StateProvider<Color>((ref) {
 final shownImageNumProvider = StateProvider<int>((ref) {
   return ConstList.isMobile() ? 3 : 4;
 });
+
+@riverpod
+bool isSimpleCodeEditor(Ref ref) {
+  return ref.watch(nodeEditorTargetProvider).conditionalCodeHandler.isSimple;
+}

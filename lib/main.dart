@@ -3,8 +3,7 @@ import 'dart:io';
 
 import 'package:context_menus/context_menus.dart';
 import 'package:cyoap_core/option.dart';
-import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart'
-    deferred as platform_specified;
+import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart' deferred as platform_specified;
 import 'package:cyoap_flutter/view/edit/view_make_platform.dart';
 import 'package:cyoap_flutter/view/view_font_source.dart';
 import 'package:cyoap_flutter/view/view_play.dart';
@@ -70,8 +69,7 @@ class ConstList {
   }
 
   static bool isRotatable(BuildContext context) {
-    return ConstList.isMobile() ||
-        (ConstList.isWeb() && ConstList.isSmallDisplay(context));
+    return ConstList.isMobile() || (ConstList.isWeb() && ConstList.isSmallDisplay(context));
   }
 
   static double getScreenWidth(BuildContext context) {
@@ -111,8 +109,7 @@ class ConstList {
       'version': _version,
     };
     if (isMobile()) {
-      userInfo['androidVersion'] =
-          (await DeviceInfoPlugin().androidInfo).version.sdkInt.toString();
+      userInfo['androidVersion'] = (await DeviceInfoPlugin().androidInfo).version.sdkInt.toString();
     }
     Sentry.configureScope((scope) => scope.setContexts('USER_INFO', userInfo));
     Option().isDebugMode = false;
@@ -123,46 +120,26 @@ class ConstList {
     Option().enableRecursiveStack = true;
   }
 
-  static DefaultStyles getDefaultThemeData(BuildContext context, double scale,
-      {TextStyle? fontStyle}) {
+  static DefaultStyles getDefaultThemeData(BuildContext context, double scale, {TextStyle? fontStyle}) {
     var defaultTextStyle = fontStyle ?? DefaultTextStyle.of(context).style;
     return DefaultStyles(
-      paragraph: DefaultTextBlockStyle(
-          defaultTextStyle,
-          const HorizontalSpacing(0, 0),
-          const VerticalSpacing(0, 0),
-          const VerticalSpacing(0, 0),
-          null),
+      paragraph: DefaultTextBlockStyle(defaultTextStyle, const HorizontalSpacing(0, 0), const VerticalSpacing(0, 0), const VerticalSpacing(0, 0), null),
     );
   }
 
   static Map<String, TextStyle> textFontList = {
-    "jua": GoogleFonts.jua(
-        fontFeatures: const [FontFeature.proportionalFigures()]),
-    "notoSans": GoogleFonts.notoSansKr(
-        fontFeatures: const [FontFeature.proportionalFigures()]),
-    "notoSerif": const TextStyle(
-        fontFamily: 'NotoSerifKR',
-        fontFeatures: [FontFeature.proportionalFigures()]),
-    "나눔고딕": GoogleFonts.nanumGothic(
-        fontFeatures: const [FontFeature.proportionalFigures()]),
-    "나눔손글씨 붓": GoogleFonts.nanumBrushScript(
-        fontFeatures: const [FontFeature.proportionalFigures()]),
-    "나눔손글씨 펜": GoogleFonts.nanumPenScript(
-        fontFeatures: const [FontFeature.proportionalFigures()]),
-    "Poor Story": GoogleFonts.poorStory(
-        fontFeatures: const [FontFeature.proportionalFigures()]),
-    "East Sea Dokdo": GoogleFonts.eastSeaDokdo(
-        fontFeatures: const [FontFeature.proportionalFigures()]),
-    "Black Han Sans": GoogleFonts.blackHanSans(
-        fontFeatures: const [FontFeature.proportionalFigures()]),
-    "Black And White Picture": GoogleFonts.blackAndWhitePicture(
-        fontFeatures: const [FontFeature.proportionalFigures()]),
-    "IBM Plex Sans KR": GoogleFonts.ibmPlexSansKr(
-        fontFeatures: const [FontFeature.proportionalFigures()]),
-    "Neo 둥근모": const TextStyle(
-        fontFamily: 'NeoDGM',
-        fontFeatures: [FontFeature.proportionalFigures()]),
+    "jua": GoogleFonts.jua(fontFeatures: const [FontFeature.proportionalFigures()]),
+    "notoSans": GoogleFonts.notoSansKr(fontFeatures: const [FontFeature.proportionalFigures()]),
+    "notoSerif": const TextStyle(fontFamily: 'NotoSerifKR', fontFeatures: [FontFeature.proportionalFigures()]),
+    "나눔고딕": GoogleFonts.nanumGothic(fontFeatures: const [FontFeature.proportionalFigures()]),
+    "나눔손글씨 붓": GoogleFonts.nanumBrushScript(fontFeatures: const [FontFeature.proportionalFigures()]),
+    "나눔손글씨 펜": GoogleFonts.nanumPenScript(fontFeatures: const [FontFeature.proportionalFigures()]),
+    "Poor Story": GoogleFonts.poorStory(fontFeatures: const [FontFeature.proportionalFigures()]),
+    "East Sea Dokdo": GoogleFonts.eastSeaDokdo(fontFeatures: const [FontFeature.proportionalFigures()]),
+    "Black Han Sans": GoogleFonts.blackHanSans(fontFeatures: const [FontFeature.proportionalFigures()]),
+    "Black And White Picture": GoogleFonts.blackAndWhitePicture(fontFeatures: const [FontFeature.proportionalFigures()]),
+    "IBM Plex Sans KR": GoogleFonts.ibmPlexSansKr(fontFeatures: const [FontFeature.proportionalFigures()]),
+    "Neo 둥근모": const TextStyle(fontFamily: 'NeoDGM', fontFeatures: [FontFeature.proportionalFigures()]),
   };
 
   static TextStyle getFont(String font) {
@@ -192,15 +169,12 @@ class ConstList {
   static int clipboardMaximumCapacity = 10;
 }
 
-const String sentryDsn =
-    'https://300bedade0de419fb189b2c5634ca1d8@o1393272.ingest.sentry.io/6714767';
+const String sentryDsn = 'https://300bedade0de419fb189b2c5634ca1d8@o1393272.ingest.sentry.io/6714767';
 
 final localeStateProvider = StateProvider<Locale?>((ref) {
   ref.listenSelf((previous, next) {
     if (previous == null) return;
-    ref
-        .read(devicePreferenceStateProvider.notifier)
-        .update("cyoap_language", next?.toString().toLowerCase());
+    ref.read(devicePreferenceStateProvider.notifier).update("cyoap_language", next?.toString().toLowerCase());
     Option().locale = next?.toString().toLowerCase();
   });
   Option().locale = DevicePreference().getLocale().toString().toLowerCase();
@@ -210,9 +184,7 @@ final localeStateProvider = StateProvider<Locale?>((ref) {
 final themeStateProvider = StateProvider<ThemeMode>((ref) {
   ref.listenSelf((previous, next) {
     if (previous == null) return;
-    ref
-        .read(devicePreferenceStateProvider.notifier)
-        .update("cyoap_theme", next == ThemeMode.dark ? "dark" : "light");
+    ref.read(devicePreferenceStateProvider.notifier).update("cyoap_theme", next == ThemeMode.dark ? "dark" : "light");
   });
   return DevicePreference().getThemeMode();
 });
@@ -223,7 +195,7 @@ void main() async {
       options.dsn = kDebugMode ? '' : sentryDsn;
       options.attachStacktrace = true;
     },
-    appRunner: () async{
+    appRunner: () async {
       WidgetsFlutterBinding.ensureInitialized();
       await ConstList.preInit();
       if (ConstList.isDesktop()) {

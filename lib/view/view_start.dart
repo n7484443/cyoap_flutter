@@ -51,11 +51,9 @@ class ViewStart extends ConsumerWidget {
                             child: TextButton(
                               onPressed: () {
                                 if (ConstList.isMobile()) {
-                                  launchUrlString(
-                                      'market://details?id=com.clearApple.cyoap_flutter');
+                                  launchUrlString('market://details?id=com.clearApple.cyoap_flutter');
                                 } else {
-                                  launchUrlString(
-                                      'https://github.com/n7484443/FlutterCyoap/releases');
+                                  launchUrlString('https://github.com/n7484443/FlutterCyoap/releases');
                                 }
                               },
                               child: Text('version_check'.i18n),
@@ -67,21 +65,15 @@ class ViewStart extends ConsumerWidget {
                       IconButton(
                           icon: const Icon(Icons.info),
                           onPressed: () {
-                            launchUrlString(
-                                'https://github.com/n7484443/cyoap_flutter/wiki');
+                            launchUrlString('https://github.com/n7484443/cyoap_flutter/wiki');
                           }),
                       IconButton(
-                        icon: ref.watch(themeStateProvider) == ThemeMode.light
-                            ? const Icon(Icons.dark_mode)
-                            : const Icon(Icons.light_mode),
+                        icon: ref.watch(themeStateProvider) == ThemeMode.light ? const Icon(Icons.dark_mode) : const Icon(Icons.light_mode),
                         onPressed: () {
-                          if (ref.watch(themeStateProvider) ==
-                              ThemeMode.light) {
-                            ref.read(themeStateProvider.notifier).state =
-                                ThemeMode.dark;
+                          if (ref.watch(themeStateProvider) == ThemeMode.light) {
+                            ref.read(themeStateProvider.notifier).state = ThemeMode.dark;
                           } else {
-                            ref.read(themeStateProvider.notifier).state =
-                                ThemeMode.light;
+                            ref.read(themeStateProvider.notifier).state = ThemeMode.light;
                           }
                         },
                       ),
@@ -99,8 +91,7 @@ class ViewStart extends ConsumerWidget {
                         onPressed: () {
                           showDialog(
                             context: context,
-                            builder: (context) =>
-                                const ViewGlobalSettingDialog(),
+                            builder: (context) => const ViewGlobalSettingDialog(),
                           );
                         },
                       ),
@@ -127,14 +118,8 @@ class ViewStart extends ConsumerWidget {
                             child: TextButton(
                               child: Text('add_file'.i18n),
                               onPressed: () async {
-                                if (await ref
-                                        .read(
-                                            frequentlyUsedPathProvider.notifier)
-                                        .addFile() ==
-                                    0) {
-                                  ref
-                                      .read(pathListSelectedProvider.notifier)
-                                      .state = 0;
+                                if (await ref.read(frequentlyUsedPathProvider.notifier).addFile() == 0) {
+                                  ref.read(pathListSelectedProvider.notifier).state = 0;
                                 }
                               },
                             ),
@@ -149,19 +134,11 @@ class ViewStart extends ConsumerWidget {
                                   if (ConstList.isMobile()) {
                                     showDialog(
                                       context: context,
-                                      builder: (context) =>
-                                          const ViewAddProjectDialog(),
+                                      builder: (context) => const ViewAddProjectDialog(),
                                       barrierDismissible: false,
                                     );
-                                  } else if (await ref
-                                      .read(frequentlyUsedPathProvider.notifier)
-                                      .addDirectory()) {
-                                    ref
-                                        .read(pathListSelectedProvider.notifier)
-                                        .state = ref
-                                            .read(frequentlyUsedPathProvider)
-                                            .length -
-                                        1;
+                                  } else if (await ref.read(frequentlyUsedPathProvider.notifier).addDirectory()) {
+                                    ref.read(pathListSelectedProvider.notifier).state = ref.read(frequentlyUsedPathProvider).length - 1;
                                   }
                                 },
                               ),
@@ -174,8 +151,7 @@ class ViewStart extends ConsumerWidget {
                         child: Row(
                       children: [
                         const SelectModeButton(isPlay: true),
-                        if (ConstList.isSmallDisplay(context))
-                          const Padding(padding: EdgeInsets.all(8.0)),
+                        if (ConstList.isSmallDisplay(context)) const Padding(padding: EdgeInsets.all(8.0)),
                         const SelectModeButton(isPlay: false),
                       ],
                     )),
@@ -228,9 +204,9 @@ class _ViewProjectListState extends ConsumerState<ViewProjectList> {
             padding: const EdgeInsets.all(4.0),
             child: FilterChip.elevated(
               onSelected: (bool value) {
-                if(ref.read(pathListSelectedProvider) != index){
+                if (ref.read(pathListSelectedProvider) != index) {
                   ref.read(pathListSelectedProvider.notifier).state = index;
-                }else{
+                } else {
                   ref.read(pathListSelectedProvider.notifier).state = -1;
                 }
               },
@@ -243,9 +219,7 @@ class _ViewProjectListState extends ConsumerState<ViewProjectList> {
                 ),
               ),
               onDeleted: () {
-                ref
-                    .read(frequentlyUsedPathProvider.notifier)
-                    .removeFrequentPath(
+                ref.read(frequentlyUsedPathProvider.notifier).removeFrequentPath(
                       index,
                       () async => await showDialog<bool?>(
                         context: context,
@@ -281,8 +255,7 @@ class SelectModeButton extends ConsumerWidget {
         if (!isPlay) {
           ref.read(backupTimerProvider.notifier).start();
         }
-        LoadProjectState loadState =
-            await ref.read(frequentlyUsedPathProvider.notifier).openProject();
+        LoadProjectState loadState = await ref.read(frequentlyUsedPathProvider.notifier).openProject();
         Navigator.pop(context);
         switch (loadState.state) {
           case ProjectState.success:
@@ -296,22 +269,16 @@ class SelectModeButton extends ConsumerWidget {
             }
             break;
           case ProjectState.nonExist:
-            showSnackBar(context, 'failed_load_project_non_exist'.i18n,
-                autoHide: false);
+            showSnackBar(context, 'failed_load_project_non_exist'.i18n, autoHide: false);
             break;
           case ProjectState.fail:
             print(loadState.version!);
-            showSnackBar(
-                context,
-                'failed_load_project_version'
-                    .i18nF([loadState.version!, fileVersion]),
-                autoHide: false);
+            showSnackBar(context, 'failed_load_project_version'.i18nF([loadState.version!, fileVersion]), autoHide: false);
             break;
           case ProjectState.nonSelected:
             if (isPlay) {
-              showSnackBar(context, 'failed_load_project_non_exist'.i18n,
-                  autoHide: false);
-            }else{
+              showSnackBar(context, 'failed_load_project_non_exist'.i18n, autoHide: false);
+            } else {
               getPlatformFileSystem.isEditable = true;
               getPlatformFileSystem.openAsFile = true;
               Navigator.of(context).pushReplacementNamed('/viewEdit');
@@ -319,8 +286,7 @@ class SelectModeButton extends ConsumerWidget {
             }
             break;
           default:
-            showSnackBar(context, 'failed_load_project_cyoap_error'.i18n,
-                autoHide: false);
+            showSnackBar(context, 'failed_load_project_cyoap_error'.i18n, autoHide: false);
             break;
         }
       },
@@ -329,9 +295,7 @@ class SelectModeButton extends ConsumerWidget {
         child: Text(
           isPlay ? 'Play' : 'Edit',
           textAlign: TextAlign.center,
-          style: ConstList.isSmallDisplay(context)
-              ? Theme.of(context).textTheme.titleLarge
-              : Theme.of(context).textTheme.displaySmall,
+          style: ConstList.isSmallDisplay(context) ? Theme.of(context).textTheme.titleLarge : Theme.of(context).textTheme.displaySmall,
         ),
       ),
     );
@@ -380,8 +344,7 @@ class _ViewAddProjectDialogState extends ConsumerState<ViewAddProjectDialog> {
           onPressed: () async {
             Navigator.of(context).pop();
             if (_textEditingController?.text.isNotEmpty ?? false) {
-              var path = await DevicePreference.getProjectFolder(
-                  _textEditingController?.text);
+              var path = await DevicePreference.getProjectFolder(_textEditingController?.text);
               await Directory(path).create(recursive: true);
               ref.read(frequentlyUsedPathProvider.notifier).addPath(path);
             }
@@ -492,9 +455,7 @@ class ViewGlobalSettingDialog extends ConsumerWidget {
               text: 'clipboard_maximum'.i18n,
               initialValue: ref.read(clipboardMaximumCapacityProvider),
               onChanged: (value) {
-                ref
-                    .read(clipboardMaximumCapacityProvider.notifier)
-                    .setVariable(value);
+                ref.read(clipboardMaximumCapacityProvider.notifier).setVariable(value);
               },
             ),
           ),
@@ -516,12 +477,7 @@ class IntSettingInput extends ConsumerStatefulWidget {
   final int initialValue;
   final void Function(int afterValue) onChanged;
 
-  const IntSettingInput(
-      {required this.text,
-      this.textLength = 3,
-      required this.initialValue,
-      required this.onChanged,
-      super.key});
+  const IntSettingInput({required this.text, this.textLength = 3, required this.initialValue, required this.onChanged, super.key});
 
   @override
   ConsumerState createState() => _IntSettingInputState();

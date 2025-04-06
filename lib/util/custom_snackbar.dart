@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-void showSnackBar(BuildContext context, String text,
-    {String? describe,
-    bool autoHide = true,
-    List<String>? errorLog,
-    WidgetRef? ref}) {
+void showSnackBar(BuildContext context, String text, {String? describe, bool autoHide = true, List<String>? errorLog, WidgetRef? ref}) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Row(
