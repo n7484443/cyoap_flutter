@@ -28,3 +28,4 @@ doc/api/
 *.lock
 .sentry-native/
 
+/android/app/.cxx
