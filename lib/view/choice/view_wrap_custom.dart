@@ -7,6 +7,7 @@ import 'package:cyoap_core/preset/line_preset.dart';
 import 'package:cyoap_core/preset/preset.dart';
 import 'package:cyoap_flutter/i18n.dart';
 import 'package:cyoap_flutter/main.dart';
+import 'package:cyoap_flutter/model/platform_system.dart';
 import 'package:cyoap_flutter/util/color_helper.dart';
 import 'package:cyoap_flutter/view/util/view_circle_button.dart';
 import 'package:cyoap_flutter/viewModel/vm_global_setting.dart';
@@ -41,7 +42,8 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
 
   void add(Pos drag, Pos target, WidgetRef ref) {
     if (drag.first < 0) {
-      ref.read(choiceStatusProvider(target.removeLast()).notifier).addChoice(ref.read(choiceNodeClipboardStatusProvider).choiceNodeQueue[-drag.first - 1].clone(), index: target.last);
+      var choice = ref.read(choiceNodeClipboardStatusProvider).choiceNodeQueue[-drag.first - 1].clone();
+      ref.read(choiceStatusProvider(target.removeLast()).notifier).addChoice(choice, index: target.last);
     } else if (target.equalExceptLast(drag) && (target.data.last - 1) >= drag.last) {
       ref.read(choiceStatusProvider(drag).notifier).swapChoice(Pos(data: List.from(target.data)..last -= 1));
     } else {
@@ -279,7 +281,7 @@ class ViewWrapCustomReorder extends ConsumerWidget {
     var maxChildrenPerRow = min(parentMaxSize, ref.watch(maximumSizeProvider));
     maxChildrenPerRow = min(maxChildrenPerRow, presetMaxChildrenPerRow);
 
-    var (sizeDataList, _) = node.node.getSizeDataList(align: align, maxChildrenPerRow: maxChildrenPerRow, showAll: isReorderAble);
+    var (sizeDataList, _) = node.node.getSizeDataList(align: align, maxChildrenPerRow: maxChildrenPerRow, showAll: isReorderAble, platform: getPlatform);
     List<Widget> outputWidget = List<Widget>.empty(growable: true);
     for (var y = 0; y < sizeDataList.length; y++) {
       var verticalList = sizeDataList[y];

@@ -12,13 +12,13 @@ import '../../model/platform_system.dart';
 part 'vm_choice_node.g.dart';
 
 @riverpod
-ChoiceNodeOption choiceNodeDesignSetting(ChoiceNodeDesignSettingRef ref, {required Pos pos}) {
+ChoiceNodeOption choiceNodeDesignSetting(Ref ref, {required Pos pos}) {
   var node = ref.watch(choiceStatusProvider(pos)).asChoiceNode();
   return node!.choiceNodeOption;
 }
 
 @riverpod
-String imageString(ImageStringRef ref, {required Pos pos}) {
+String imageString(Ref ref, {required Pos pos}) {
   var node = ref.watch(choiceStatusProvider(pos)).asChoiceNode()!;
   if (!ImageDB().contains(node.imageString) && node.imageString.isNotEmpty) {
     if (node.imageString != "noImage") {
@@ -31,7 +31,7 @@ String imageString(ImageStringRef ref, {required Pos pos}) {
 final titleStringProvider = Provider.family.autoDispose<String, Pos>((ref, pos) => ref.watch(choiceStatusProvider(pos)).asChoiceNode()!.title);
 
 @riverpod
-String? contentsQuill(ContentsQuillRef ref, {required Pos pos}) {
+String? contentsQuill(Ref ref, {required Pos pos}) {
   var node = ref.watch(choiceStatusProvider(pos)).asChoiceNode()!;
   if (node.contentsString.isEmpty) {
     return null;
@@ -86,7 +86,7 @@ class ChoiceNodeSizeNotifier extends StateNotifier<int> {
 
   ChoiceNodeSizeNotifier(this.pos, this.ref)
       : node = ref.read(choiceStatusProvider(pos)).asChoiceNode() ?? ChoiceNode.empty(),
-        super(ref.read(choiceStatusProvider(pos)).asChoiceNode()?.width ?? 12);
+        super(ref.read(choiceStatusProvider(pos)).asChoiceNode()?.getWidth(getPlatform) ?? 12);
 
   void sizeChange(int width) {
     if (width == -1) {
