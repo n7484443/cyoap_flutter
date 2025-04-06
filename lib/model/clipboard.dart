@@ -2,7 +2,7 @@ import 'dart:collection';
 
 import 'package:cyoap_core/choiceNode/choice_node.dart';
 
-const int constClipboard = 1;
+const int clipboardBaseIndex = 1000000; // 클립보드 항목의 시작 인덱스 (백만)
 
 class Clipboard {
   Queue<ChoiceNode> queue = Queue();
@@ -17,6 +17,13 @@ class Clipboard {
     update();
   }
 
+  void removeData(int index) {
+    if (index >= 0 && index < queue.length) {
+      queue.remove(queue.elementAt(index));
+      update();
+    }
+  }
+
   ChoiceNode getData(int index) {
     var node = queue.elementAt(index);
     queue.remove(node);
@@ -28,7 +35,7 @@ class Clipboard {
   void update() {
     for (var i = 0; i < queue.length; i++) {
       var choice = queue.elementAt(i);
-      choice.currentPos = -i - constClipboard;
+      choice.currentPos = clipboardBaseIndex + i; // 양수 인덱스 사용
       choice.checkDataCorrect();
     }
   }

@@ -14,6 +14,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../model/clipboard.dart';
 import '../../model/platform.dart';
 import '../../model/platform_system.dart';
 import '../edit/preset/vm_preset.dart';
@@ -49,7 +50,7 @@ class ChoiceStatus extends ChangeNotifier {
       choiceNode.choiceNodeOption = choiceNode.choiceNodeOption.copyWith(presetName: ref.read(currentPresetNameProvider)!, showAsSlider: true);
       choiceNode.select = ref.read(choiceNodePresetTestSelectProvider) ? choiceNode.maximumStatus ~/ 2 : 0;
       node = choiceNode;
-    } else if (pos.first < 0) {
+    } else if (pos.first >= clipboardBaseIndex) {
       node = ref.read(choiceNodeClipboardStatusProvider).getIndexPos(pos);
     } else {
       node = getPlatform.getChoice(pos)!;

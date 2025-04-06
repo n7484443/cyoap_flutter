@@ -102,9 +102,7 @@ class EditablePlatform extends PlayablePlatform {
   }
 
   void insertDataWithParent(Choice a, Choice parentB) {
-    var parentA = a.parent!;
-
-    parentA.removeChildren(a);
+    a.parent?.removeChildren(a);
     parentB.addChild(this, a);
     checkDataCorrect();
   }

@@ -25,9 +25,20 @@ class ChoiceNodeClipboardNotifier extends ChangeNotifier {
     getPlatform.clipboard.addData(choiceNode);
     choiceNodeQueue = getPlatform.clipboard.queue.toList();
     for (int i = 0; i < length; i++) {
-      ref.read(choiceStatusProvider(Pos(data: [-i - constClipboard])).notifier).refreshSelf();
+      ref.read(choiceStatusProvider(Pos(data: [clipboardBaseIndex + i])).notifier).refreshSelf();
     }
     notifyListeners();
+  }
+
+  void remove(int index) {
+    if (index >= 0 && index < length) {
+      getPlatform.clipboard.removeData(index);
+      choiceNodeQueue = getPlatform.clipboard.queue.toList();
+      for (int i = 0; i < length; i++) {
+        ref.read(choiceStatusProvider(Pos(data: [clipboardBaseIndex + i])).notifier).refreshSelf();
+      }
+      notifyListeners();
+    }
   }
 
   ChoiceNode getIndex(int index) {
@@ -35,7 +46,7 @@ class ChoiceNodeClipboardNotifier extends ChangeNotifier {
   }
 
   ChoiceNode getIndexPos(Pos pos) {
-    var node = getIndex(-pos.first - constClipboard);
+    var node = getIndex(pos.first - clipboardBaseIndex);
     if (pos.length == 1) {
       return node;
     }
@@ -52,7 +63,7 @@ class ChoiceNodeClipboardNotifier extends ChangeNotifier {
   }
 
   List<Pos> get posList {
-    return List.generate(length, (index) => Pos(data: [-index - constClipboard]));
+    return List.generate(length, (index) => Pos(data: [clipboardBaseIndex + index]));
   }
 }
 

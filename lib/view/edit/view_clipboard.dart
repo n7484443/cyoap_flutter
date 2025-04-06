@@ -1,3 +1,4 @@
+import 'package:cyoap_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,9 +21,23 @@ class _ViewClipboardState extends ConsumerState<ViewClipboard> {
         var pos = list[index];
         return Padding(
           padding: const EdgeInsets.all(4.0),
-          child: NodeDraggable(
-            pos,
-            ignoreOption: ChoiceNodeChildRender.noOptionWithViewOnly,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: NodeDraggable(
+                  pos,
+                  ignoreOption: ChoiceNodeChildRender.noOptionWithViewOnly,
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () {
+                  ref.read(choiceNodeClipboardStatusProvider.notifier).remove(index);
+                },
+                tooltip: 'delete'.i18n,
+              ),
+            ],
           ),
         );
       },

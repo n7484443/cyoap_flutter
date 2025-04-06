@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 
+import '../../model/clipboard.dart';
 import '../../viewModel/choice/vm_choice.dart';
 import '../../viewModel/choice/vm_choice_line.dart';
 import '../../viewModel/edit/vm_design_setting.dart';
@@ -41,8 +42,8 @@ class _DropRegionRowState extends ConsumerState<DropRegionRow> {
   int index = -1;
 
   void add(Pos drag, Pos target, WidgetRef ref) {
-    if (drag.first < 0) {
-      var choice = ref.read(choiceNodeClipboardStatusProvider).choiceNodeQueue[-drag.first - 1].clone();
+    if (drag.first >= clipboardBaseIndex) {
+      var choice = ref.read(choiceNodeClipboardStatusProvider).choiceNodeQueue[drag.first - clipboardBaseIndex].clone();
       ref.read(choiceStatusProvider(target.removeLast()).notifier).addChoice(choice, index: target.last);
     } else if (target.equalExceptLast(drag) && (target.data.last - 1) >= drag.last) {
       ref.read(choiceStatusProvider(drag).notifier).swapChoice(Pos(data: List.from(target.data)..last -= 1));

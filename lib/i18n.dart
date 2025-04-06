@@ -21,6 +21,7 @@ extension Localization on String {
           'no': 'No',
           'edit': 'Edit',
           'length': 'Width',
+          'delete': 'Delete',
         },
         "ko": {
           'language': '언어 설정',
@@ -39,6 +40,7 @@ extension Localization on String {
           'no': '아니오',
           'edit': '편집',
           'length': '크기',
+          'delete': '삭제',
         }
       } +
       const {
