@@ -7,9 +7,12 @@ import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.da
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
-import 'package:shared_storage/shared_storage.dart';
+import 'package:saf_stream/saf_stream.dart';
+import 'package:saf_util/saf_util.dart';
 
 class SaveProjectImp extends SaveProject {
+  final _safStream = SafStream();
+  final _safUtil = SafUtil();
   Future<Uint8List> mapToArchive(Map<String, Uint8List> dataInput) async {
     var archive = Archive();
     for (var name in dataInput.keys) {
@@ -25,9 +28,9 @@ class SaveProjectImp extends SaveProject {
     var uint8data = await compute(mapToArchive, dataInput);
 
     if (ConstList.isMobile()) {
-      var grantedUri = (await openDocumentTree());
+      var grantedUri = (await _safUtil.pickDirectory(writePermission: true));
       if (grantedUri == null) return;
-      await createFile(grantedUri, mimeType: 'application/zip', displayName: 'extract.zip', bytes: uint8data);
+      await _safStream.writeFileBytes(grantedUri.uri, 'extract.zip', 'application/zip', uint8data);
       return;
     }
     path ??= await FilePicker.platform.getDirectoryPath();

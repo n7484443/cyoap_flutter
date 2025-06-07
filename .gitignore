@@ -29,3 +29,4 @@ doc/api/
 .sentry-native/
 
 /android/app/.cxx
+/android/.kotlin

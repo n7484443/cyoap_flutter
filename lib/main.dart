@@ -190,13 +190,13 @@ final themeStateProvider = StateProvider<ThemeMode>((ref) {
 });
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await SentryFlutter.init(
     (options) {
       options.dsn = kDebugMode ? '' : sentryDsn;
       options.attachStacktrace = true;
     },
     appRunner: () async {
-      WidgetsFlutterBinding.ensureInitialized();
       await ConstList.preInit();
       if (ConstList.isDesktop()) {
         await windowManager.ensureInitialized();
