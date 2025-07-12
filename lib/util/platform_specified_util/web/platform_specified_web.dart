@@ -1,5 +1,5 @@
 import 'package:cyoap_flutter/util/platform_specified_util/platform_specified.dart';
-import 'package:url_strategy/url_strategy.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 import 'dart:html';
 
 class PlatformSpecifiedImp extends PlatformSpecified {
@@ -14,6 +14,6 @@ class PlatformSpecifiedImp extends PlatformSpecified {
   @override
   void preInit() {
     super.preInit();
-    setPathUrlStrategy();
+    usePathUrlStrategy();
   }
 }
