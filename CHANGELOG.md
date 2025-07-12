@@ -1,3 +1,5 @@
+### 5.4.12
+* flutter upgrade
 ### 5.4.11
 * 이미지 클립 버그 수정
 * flutter upgrade
