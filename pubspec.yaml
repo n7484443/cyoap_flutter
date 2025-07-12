@@ -39,7 +39,10 @@ dependencies:
   shared_preferences: ^2.0.15
   google_fonts: ^6.2.1
   archive: ^4.0.5
-  flutter_quill: ^11.0.0
+  flutter_quill:
+    git:
+      url: https://github.com/theniceboy/flutter-quill.git
+      ref: fix-flutter-3-32-macos-crash
   package_info_plus: ^8.0.0
   github: ^9.14.0
   flex_color_picker: ^3.0.2
@@ -48,7 +51,6 @@ dependencies:
   ffi: ^2.1.4
   device_info_plus: ^10.1.0
   isolated_worker: ^0.1.1
-  url_strategy: ^0.3.0
   path_provider: ^2.0.11
   path: ^1.8.3
   freezed_annotation: 3.0.0
@@ -61,8 +63,6 @@ dependencies:
   i18n_extension: ^15.0.4
   path_drawing: ^1.0.1
   window_manager: ^0.5.0
-  flutter_localizations:
-    sdk: flutter
 
   flutter_riverpod: ^2.4.9
   riverpod_annotation: ^2.3.3
@@ -70,7 +70,12 @@ dependencies:
   context_menus: ^2.0.0
   visibility_detector: ^0.4.0+2
   crypto: ^3.0.5
-  searchfield: 1.2.2
+  searchfield: 1.3.2
+
+  flutter_localizations:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:
